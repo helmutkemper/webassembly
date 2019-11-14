@@ -1,9 +1,5 @@
 package iotmaker_platform_webbrowser
 
-import (
-	"syscall/js"
-)
-
 func NewCanvasWith2DContext(width, height float64) Canvas {
 	el := Canvas{}
 

@@ -16,6 +16,10 @@ func (el *Document) Get() js.Value {
 	return el.selfDocument
 }
 
-func (el *Document) BodySet(value js.Value) {
-	el.selfDocument.Set("body", value)
+func (el *Document) AppendChildToBody(value interface{}) {
+	el.selfDocument.Get("body").Call("appendChild", value)
+}
+
+func (el *Document) AppendChild(element string, value interface{}) {
+	el.selfDocument.Get(element).Call("appendChild", value)
 }

@@ -29,8 +29,8 @@ func (el *Canvas) Call(jsFunction string, value interface{}) js.Value {
 	return el.selfDocument.Call(jsFunction, value)
 }
 
-func (el *Canvas) Set(jsParam string, value ...interface{}) js.Value {
-	return el.selfDocument.Set(jsParam, value)
+func (el *Canvas) Set(jsParam string, value ...interface{}) {
+	el.selfDocument.Set(jsParam, value)
 }
 
 /*func (el *Canvas) CreateNewWith3DContext(width, height float64) {
@@ -49,15 +49,18 @@ func (el *Canvas) MoveTo(x, y float64) {
 }
 
 func (el *Canvas) LineTo(x, y float64) {
-	el.selfContext.Set("lineTo", x, y)
+	el.selfContext.Call("lineTo", x, y)
 }
 
 func (el *Canvas) StrokeStyle(value string) {
 	el.selfContext.Set("strokeStyle", value)
 }
 
+func (el *Canvas) Stroke() {
+	el.selfContext.Call("stroke")
+}
+
 func (el *Canvas) L() {
-	el.selfContext.Set("strokeStyle", "orange")
 
 	el.selfContext.Call("beginPath")
 	el.selfContext.Call("stroke")
@@ -65,14 +68,14 @@ func (el *Canvas) L() {
 
 // todo: tem que saber que id é um canvas
 func (el *Canvas) InitializeContext2DById(id string) {
-	el.Element.InitializeById(id)
+	el.Element.NewCanvas(id)
 	el.selfContextType = 1
 	el.selfContext = el.selfCanvas.Call("getContext", "2d")
 }
 
 // todo: tem que saber que id é um canvas
 func (el *Canvas) InitializeContext3DById(id string) {
-	el.Element.InitializeById(id)
+	el.Element.NewCanvas(id)
 	el.selfContextType = 2
 	el.selfContext = el.selfCanvas.Call("getContext", "3d")
 }

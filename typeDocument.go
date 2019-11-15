@@ -17,5 +17,5 @@ func (el *Document) Get() js.Value {
 }
 
 func (el *Document) BodySet(value js.Value) {
-	el.selfDocument.Get("body").Set(value)
+	el.selfDocument.Set("body", value)
 }

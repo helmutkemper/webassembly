@@ -15,3 +15,7 @@ func (el *Document) Initialize() {
 func (el *Document) Get() js.Value {
 	return el.selfDocument
 }
+
+func (el *Document) BodySet(value js.Value) {
+	el.selfDocument.Get("body").Set(value)
+}

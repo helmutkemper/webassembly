@@ -25,6 +25,18 @@ type Canvas struct {
 	Element
 }
 
+func (el *Canvas) GetCanvas() js.Value {
+	return el.selfCanvas
+}
+
+func (el *Canvas) GetContext() js.Value {
+	return el.selfContext
+}
+
+func (el *Canvas) GetElement() js.Value {
+	return el.selfElement
+}
+
 func (el *Canvas) Call(jsFunction string, value interface{}) js.Value {
 	return el.selfDocument.Call(jsFunction, value)
 }
@@ -41,13 +53,14 @@ func (el *Canvas) Set(jsParam string, value ...interface{}) {
 }*/
 
 func (el *Canvas) GlobalAlpha(value float64) {
-	el.Set("globalAlpha", value)
+	el.selfContext.Call("globalAlpha", value)
 }
 
 func (el *Canvas) MoveTo(x, y float64) {
-	el.Set("moveTo", x, y)
+	el.selfContext.Call("moveTo", x, y)
 }
 
+// en: Adds a new point and creates a line from that point to the last specified point in the canvas
 func (el *Canvas) LineTo(x, y float64) {
 	el.selfContext.Call("lineTo", x, y)
 }
@@ -60,15 +73,14 @@ func (el *Canvas) Stroke() {
 	el.selfContext.Call("stroke")
 }
 
-func (el *Canvas) L() {
-
+func (el *Canvas) BeginPath() {
 	el.selfContext.Call("beginPath")
-	el.selfContext.Call("stroke")
 }
 
 // todo: tem que saber que id é um canvas
 func (el *Canvas) InitializeContext2DById(id string) {
-	el.Element.NewCanvas(id)
+	el.Document.Initialize()
+	el.selfCanvas = el.Element.NewCanvas(id)
 	el.selfContextType = 1
 	el.selfContext = el.selfCanvas.Call("getContext", "2d")
 }
@@ -78,4 +90,8 @@ func (el *Canvas) InitializeContext3DById(id string) {
 	el.Element.NewCanvas(id)
 	el.selfContextType = 2
 	el.selfContext = el.selfCanvas.Call("getContext", "3d")
+}
+
+func (el *Canvas) AppendToDocumentBody() {
+	el.selfDocument.Get("body").Call("appendChild", el.selfElement)
 }

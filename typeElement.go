@@ -9,19 +9,34 @@ type Element struct {
 	Document
 }
 
-func (el *Element) NewCanvas(id string) {
-	el.Create("canvas", id)
+func (el *Element) NewCanvas(id string) js.Value {
+	return el.Create("canvas", id)
 }
 
-func (el *Element) Create(name, id string) {
+func (el *Element) NewCanvas2D(id string) js.Value {
+	return el.Create("canvas", id)
+
+}
+
+func (el *Element) NewCanvas3D(id string) js.Value {
+	return el.Create("canvas", id)
+}
+
+func (el *Element) Create(name, id string) js.Value {
 	el.Document.Initialize()
 	el.selfElement = el.selfDocument.Call("createElement", name)
 	el.selfElement.Set("id", id)
+
+	return el.selfElement
 }
 
 func (el *Element) InitializeExistentElementById(id string) {
 	el.Document = NewDocument()
 	el.selfElement = el.selfDocument.Call("getElementById", id)
+}
+
+func (el *Element) InitializeDocument() {
+	el.Document = NewDocument()
 }
 
 func (el *Element) Get() js.Value {

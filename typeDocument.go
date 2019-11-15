@@ -23,7 +23,7 @@ func (el *Document) Get() js.Value {
 	return el.selfDocument
 }
 
-func (el *Document) AppendChildToBody(value interface{}) {
+func (el *Document) AppendChildToDocumentBody(value interface{}) {
 
 	if el.hasInitialized == false {
 		el.Initialize()

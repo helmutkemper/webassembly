@@ -6,8 +6,8 @@ func NewCanvasWith2DContext(id string, width, height float64) Canvas {
 
 	//el.selfCanvas = el.selfElement
 
-	el.selfCanvas.Set("width", width)
-	el.selfCanvas.Set("height", height)
+	el.selfElement.Set("width", width)
+	el.selfElement.Set("height", height)
 	//el.selfContext = el.selfCanvas.Call("getContext", "2d")
 
 	return el

@@ -9,7 +9,17 @@ type Element struct {
 	Document
 }
 
-func (el *Element) InitializeById(id string) {
+func (el *Element) NewCanvas(id string) {
+	el.Create("canvas", id)
+}
+
+func (el *Element) Create(name, id string) {
+	el.Document.Initialize()
+	el.selfElement = el.selfDocument.Call("createElement", name)
+	el.selfElement.Set("id", id)
+}
+
+func (el *Element) InitializeExistentElementById(id string) {
 	el.Document = NewDocument()
 	el.selfElement = el.selfDocument.Call("getElementById", id)
 }

@@ -120,6 +120,7 @@ func (el *Canvas) CreatePattern(image js.Value, repeatRule CanvasRepeatRule) {
 //     r1: The radius of the ending circle
 //
 //
+//
 //     Example:
 //     var c = document.getElementById("myCanvas");
 //     var ctx = c.getContext("2d");

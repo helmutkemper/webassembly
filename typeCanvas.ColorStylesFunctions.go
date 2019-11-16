@@ -119,6 +119,7 @@ func (el *Canvas) CreatePattern(image js.Value, repeatRule CanvasRepeatRule) {
 //     y1: The y-coordinate of the ending circle of the gradient
 //     r1: The radius of the ending circle
 //
+//
 //     Example:
 //     var c = document.getElementById("myCanvas");
 //     var ctx = c.getContext("2d");

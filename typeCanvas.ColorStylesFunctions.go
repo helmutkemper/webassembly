@@ -50,13 +50,81 @@ func (el *Canvas) ShadowOffsetX(value string) {
 	el.selfContext.Set("shadowOffsetX", value)
 }
 
-//shadowOffsetY
 // en: Sets or returns the vertical distance of the shadow from the shape
-//createLinearGradient()
+//     The shadowOffsetY property sets or returns the vertical distance of the shadow from the shape.
+//     shadowOffsety = 0 indicates that the shadow is right behind the shape.
+//     shadowOffsetY = 20 indicates that the shadow starts 20 pixels below the shape's top position.
+//     shadowOffsetY = -20 indicates that the shadow starts 20 pixels above the shape's top position.
+//     Tip: To adjust the horizontal distance of the shadow from the shape, use the shadowOffsetX property.
+//     Default value: 0
+//     JavaScript syntax: context.shadowOffsetY = number;
+func (el *Canvas) ShadowOffsetY(value string) {
+	el.selfContext.Set("shadowOffsetY", value)
+}
+
 // en: Creates a linear gradient (to use on canvas content)
-//createPattern()
+//     x0: The x-coordinate of the start point of the gradient
+//     y0: The y-coordinate of the start point of the gradient
+//     x1: The x-coordinate of the end point of the gradient
+//     y1: The y-coordinate of the end point of the gradient
+//
+//     The createLinearGradient() method creates a linear gradient object.
+//     The gradient can be used to fill rectangles, circles, lines, text, etc.
+//     Tip: Use this object as the value to the strokeStyle or fillStyle properties.
+//     Tip: Use the addColorStop() method to specify different colors, and where to position the colors in the gradient object.
+//     JavaScript syntax:	context.createLinearGradient(x0, y0, x1, y1);
+//
+//     Example:
+//     var c = document.getElementById("myCanvas");
+//     var ctx = c.getContext("2d");
+//     var grd = ctx.createLinearGradient(0, 0, 170, 0);
+//     grd.addColorStop(0, "black");
+//     grd.addColorStop(1, "white");
+//     ctx.fillStyle = grd;
+//     ctx.fillRect(20, 20, 150, 100);
+func (el *Canvas) CreateLinearGradient(x0, y0, x1, y1 float64) {
+	el.selfContext.Call("createLinearGradient", x0, y0, x1, y1)
+}
+
 // en: Repeats a specified element in the specified direction
-//createRadialGradient()
+//     image: Specifies the image, canvas, or video element of the pattern to use
+//     repeatedElement
+//          repeat: Default. The pattern repeats both horizontally and vertically
+//          repeat-x: The pattern repeats only horizontally
+//          repeat-y: The pattern repeats only vertically
+//          no-repeat: The pattern will be displayed only once (no repeat)
+//
+//     The createPattern() method repeats the specified element in the specified direction.
+//     The element can be an image, video, or another <canvas> element.
+//     The repeated element can be used to draw/fill rectangles, circles, lines etc.
+//     JavaScript syntax:	context.createPattern(image, "repeat|repeat-x|repeat-y|no-repeat");
+//
+//     Example:
+//     var c = document.getElementById("myCanvas");
+//     var ctx = c.getContext("2d");
+//     var img = document.getElementById("lamp");
+//     var pat = ctx.createPattern(img, "repeat");
+//     ctx.rect(0, 0, 150, 100);
+//     ctx.fillStyle = pat;
+//     ctx.fill();
+func (el *Canvas) CreatePattern(image js.Value, repeatRule CanvasRepeatRule) {
+	el.selfContext.Call("createPattern", image, repeatRule)
+}
+
 // en: Creates a radial/circular gradient (to use on canvas content)
+//
+//     Example:
+//     var c = document.getElementById("myCanvas");
+//     var ctx = c.getContext("2d");
+//     var grd = ctx.createRadialGradient(75, 50, 5, 90, 60, 100);
+//     grd.addColorStop(0, "red");
+//     grd.addColorStop(1, "white");
+//     // Fill with gradient
+//     ctx.fillStyle = grd;
+//     ctx.fillRect(10, 10, 150, 100);
+func (el *Canvas) CreateRadialGradient(image js.Value, repeatRule CanvasRepeatRule) {
+	el.selfContext.Call("createRadialGradient", image, repeatRule)
+}
+
 //addColorStop()
 // en: Specifies the colors and stop positions in a gradient object

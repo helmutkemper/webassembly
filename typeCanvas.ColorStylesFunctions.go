@@ -112,6 +112,12 @@ func (el *Canvas) CreatePattern(image js.Value, repeatRule CanvasRepeatRule) {
 }
 
 // en: Creates a radial/circular gradient (to use on canvas content)
+//     x0: The x-coordinate of the starting circle of the gradient
+//     y0: The y-coordinate of the starting circle of the gradient
+//     r0: The radius of the starting circle
+//     x1: The x-coordinate of the ending circle of the gradient
+//     y1: The y-coordinate of the ending circle of the gradient
+//     r1: The radius of the ending circle
 //
 //     Example:
 //     var c = document.getElementById("myCanvas");
@@ -122,8 +128,8 @@ func (el *Canvas) CreatePattern(image js.Value, repeatRule CanvasRepeatRule) {
 //     // Fill with gradient
 //     ctx.fillStyle = grd;
 //     ctx.fillRect(10, 10, 150, 100);
-func (el *Canvas) CreateRadialGradient(image js.Value, repeatRule CanvasRepeatRule) {
-	el.selfContext.Call("createRadialGradient", image, repeatRule)
+func (el *Canvas) CreateRadialGradient(x0, y0, r0, x1, y1, r1 float64) {
+	el.selfContext.Call("createRadialGradient", x0, y0, r0, x1, y1, r1)
 }
 
 //addColorStop()

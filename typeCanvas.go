@@ -69,7 +69,3 @@ func (el *Canvas) InitializeContext3DById(id string) {
 func (el *Canvas) AppendToDocumentBody() {
 	el.selfDocument.Get("body").Call("appendChild", el.selfElement)
 }
-
-func (el *Canvas) StrokeStyle(value string) {
-	el.selfContext.Set("strokeStyle", value)
-}

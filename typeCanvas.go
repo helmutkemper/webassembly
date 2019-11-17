@@ -47,10 +47,6 @@ func (el *Canvas) Set(jsParam string, value ...interface{}) {
 	el.selfCanvas.Call("getContext", "3d")
 }*/
 
-func (el *Canvas) GlobalAlpha(value float64) {
-	el.selfContext.Call("globalAlpha", value)
-}
-
 // todo: tem que saber que id é um canvas
 func (el *Canvas) InitializeContext2DById(id string) {
 	el.Document.Initialize()

@@ -1,10 +1,5 @@
 package iotmaker_platform_webbrowser
 
-import (
-	"strconv"
-	"strings"
-)
-
 // en: Sets or returns the current font properties for text content
 //     font-style:            Specifies the font style. Possible values:
 //          normal | italic | oblique

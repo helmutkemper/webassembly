@@ -1,9 +1,5 @@
 package iotmaker_platform_webbrowser
 
-import (
-	"syscall/js"
-)
-
 // en: Scales the current drawing bigger or smaller
 //     scaleWidth:  Scales the width of the current drawing (1=100%, 0.5=50%, 2=200%, etc.)
 //     scaleHeight: Scales the height of the current drawing (1=100%, 0.5=50%, 2=200%, etc.)

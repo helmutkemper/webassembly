@@ -1,9 +1,5 @@
 package iotmaker_platform_webbrowser
 
-import (
-	"syscall/js"
-)
-
 // en: Sets or returns the style of the end caps for a line
 //     Value: "butt|round|square"
 //
@@ -22,7 +18,7 @@ import (
 //     ctx.lineTo(20, 200);
 //     ctx.stroke();
 func (el *Canvas) LineCap(value CanvasCapRule) {
-	el.selfContext.Call("lineCap", value.String())
+	el.selfContext.Set("lineCap", value.String())
 }
 
 // en: Sets or returns the type of corner created, when two lines meet
@@ -43,7 +39,7 @@ func (el *Canvas) LineCap(value CanvasCapRule) {
 //     ctx.lineTo(20, 100);
 //     ctx.stroke();
 func (el *Canvas) LineJoin(value CanvasJoinRule) {
-	el.selfContext.Call("lineJoin", value.String())
+	el.selfContext.Set("lineJoin", value.String())
 }
 
 // en: Sets or returns the current line width
@@ -59,7 +55,7 @@ func (el *Canvas) LineJoin(value CanvasJoinRule) {
 //     ctx.lineWidth = 10;
 //     ctx.strokeRect(20, 20, 80, 100);
 func (el *Canvas) LineWidth(value float64) {
-	el.selfContext.Call("lineWidth", value.String())
+	el.selfContext.Set("lineWidth", value)
 }
 
 // en: Sets or returns the maximum miter length
@@ -83,5 +79,5 @@ func (el *Canvas) LineWidth(value float64) {
 //     ctx.lineTo(20, 34);
 //     ctx.stroke();
 func (el *Canvas) MiterLimit(value float64) {
-	el.selfContext.Call("miterLimit", value.String())
+	el.selfContext.Set("miterLimit", value)
 }

@@ -1,9 +1,5 @@
 package iotmaker_platform_webbrowser
 
-import (
-	"syscall/js"
-)
-
 // en: Draws an image, canvas, or video onto the canvas
 //     img:     Specifies the image, canvas, or video element to use
 //     sx:      Optional. The x coordinate where to start clipping

@@ -1,9 +1,5 @@
 package iotmaker_platform_webbrowser
 
-import (
-	"syscall/js"
-)
-
 // en: Creates a rectangle
 //     x:      The x-coordinate of the upper-left corner of the rectangle
 //     y:      The y-coordinate of the upper-left corner of the rectangle

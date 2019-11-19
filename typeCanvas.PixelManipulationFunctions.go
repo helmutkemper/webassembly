@@ -10,7 +10,7 @@ import (
 //     Tip: Look at createImageData(), getImageData(), and putImageData() to learn more about the ImageData object.
 //     JavaScript syntax: imgData.width;
 func (el *Canvas) Width() float64 {
-	return el.selfContext.Get("width").Float64()
+	return el.selfContext.Get("width").Float()
 }
 
 // en: Returns the height of an ImageData object
@@ -19,7 +19,7 @@ func (el *Canvas) Width() float64 {
 //     Tip: Look at createImageData(), getImageData(), and putImageData() to learn more about the ImageData object.
 //     JavaScript syntax: imgData.height;
 func (el *Canvas) Height() float64 {
-	return el.selfContext.Get("height").Float64()
+	return el.selfContext.Get("height").Float()
 }
 
 // en: Returns an object that contains image data of a specified ImageData object

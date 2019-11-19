@@ -65,3 +65,19 @@ func (el *Canvas) InitializeContext3DById(id string) {
 func (el *Canvas) AppendToDocumentBody() {
 	el.selfDocument.Get("body").Call("appendChild", el.selfElement)
 }
+
+// en: Saves the state of the current context
+func (el *Canvas) Save() {
+	el.selfDocument.Call("save")
+}
+
+// en: Returns previously saved path state and attributes
+func (el *Canvas) Restore() {
+	el.selfDocument.Call("restore")
+}
+
+func (el *Canvas) CreateEvent() {
+	el.selfDocument.Call("createEvent")
+}
+
+// todo: toDataURL()

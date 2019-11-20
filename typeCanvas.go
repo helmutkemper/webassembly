@@ -10,7 +10,7 @@ const (
 	kCanvas3DContext
 )
 
-// todo: selfContextType deve ser um enum
+// todo: SelfContextType deve ser um enum
 
 // en: The Canvas API provides a means for drawing graphics via JavaScript and the HTML <canvas> element. Among other
 // things, it can be used for animation, game graphics, data visualization, photo manipulation, and real-time video
@@ -19,17 +19,17 @@ const (
 // The Canvas API largely focuses on 2D graphics. The WebGL API, which also uses the <canvas> element, draws
 // hardware-accelerated 2D and 3D graphics.
 type Canvas struct {
-	selfContext     js.Value
-	selfContextType int
+	SelfContext     js.Value
+	SelfContextType int
 	Element
 }
 
 func (el *Canvas) GetCanvas() js.Value {
-	return el.selfElement
+	return el.SelfElement
 }
 
 func (el *Canvas) GetContext() js.Value {
-	return el.selfContext
+	return el.SelfContext
 }
 
 func (el *Canvas) Call(jsFunction string, value interface{}) js.Value {
@@ -50,20 +50,20 @@ func (el *Canvas) Set(jsParam string, value ...interface{}) {
 // todo: tem que saber que id é um canvas
 func (el *Canvas) InitializeContext2DById(id string) {
 	el.Document.Initialize()
-	el.selfElement = el.Element.NewCanvas(id)
-	el.selfContextType = 1
-	el.selfContext = el.selfElement.Call("getContext", "2d")
+	el.SelfElement = el.Element.NewCanvas(id)
+	el.SelfContextType = 1
+	el.SelfContext = el.SelfElement.Call("getContext", "2d")
 }
 
 // todo: tem que saber que id é um canvas
 func (el *Canvas) InitializeContext3DById(id string) {
 	el.Element.NewCanvas(id)
-	el.selfContextType = 2
-	el.selfContext = el.selfElement.Call("getContext", "3d")
+	el.SelfContextType = 2
+	el.SelfContext = el.SelfElement.Call("getContext", "3d")
 }
 
 func (el *Canvas) AppendToDocumentBody() {
-	el.selfDocument.Get("body").Call("appendChild", el.selfElement)
+	el.selfDocument.Get("body").Call("appendChild", el.SelfElement)
 }
 
 // en: Saves the state of the current context

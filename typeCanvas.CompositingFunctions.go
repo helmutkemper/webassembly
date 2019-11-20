@@ -21,7 +21,7 @@ package iotmaker_platform_webbrowser
 //     ctx.fillStyle = "green";
 //     ctx.fillRect(80, 80, 75, 50);
 func (el *Canvas) GlobalAlpha(value float64) {
-	el.selfContext.Set("globalAlpha", value)
+	el.SelfContext.Set("globalAlpha", value)
 }
 
 // en: Sets or returns how a new image are drawn onto an existing image
@@ -47,5 +47,5 @@ func (el *Canvas) GlobalAlpha(value float64) {
 //     ctx.fillStyle = "blue";
 //     ctx.fillRect(180, 50, 75, 50);
 func (el *Canvas) GlobalCompositeOperation(value CanvasCompositeOperationsRule) {
-	el.selfContext.Set("globalCompositeOperation", value.String())
+	el.SelfContext.Set("globalCompositeOperation", value.String())
 }

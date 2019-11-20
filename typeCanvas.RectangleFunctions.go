@@ -16,7 +16,7 @@ package iotmaker_platform_webbrowser
 //     ctx.rect(20, 20, 150, 100);
 //     ctx.stroke();
 func (el *Canvas) Rect(x, y, width, height float64) {
-	el.selfContext.Call("rect", x, y, width, height)
+	el.SelfContext.Call("rect", x, y, width, height)
 }
 
 // en: Draws a "filled" rectangle
@@ -34,7 +34,7 @@ func (el *Canvas) Rect(x, y, width, height float64) {
 //     var ctx = c.getContext("2d");
 //     ctx.fillRect(20, 20, 150, 100);
 func (el *Canvas) fillRect(x, y, width, height float64) {
-	el.selfContext.Call("fillRect", x, y, width, height)
+	el.SelfContext.Call("fillRect", x, y, width, height)
 }
 
 // en: Draws a rectangle (no fill)
@@ -52,7 +52,7 @@ func (el *Canvas) fillRect(x, y, width, height float64) {
 //     var ctx = c.getContext("2d");
 //     ctx.strokeRect(20, 20, 150, 100);
 func (el *Canvas) StrokeRect(x, y, width, height float64) {
-	el.selfContext.Call("strokeRect", x, y, width, height)
+	el.SelfContext.Call("strokeRect", x, y, width, height)
 }
 
 // en: Clears the specified pixels within a given rectangle
@@ -71,5 +71,5 @@ func (el *Canvas) StrokeRect(x, y, width, height float64) {
 //     ctx.fillRect(0, 0, 300, 150);
 //     ctx.clearRect(20, 20, 100, 50);
 func (el *Canvas) ClearRect(x, y, width, height float64) {
-	el.selfContext.Call("clearRect", x, y, width, height)
+	el.SelfContext.Call("clearRect", x, y, width, height)
 }

@@ -10,7 +10,7 @@ import (
 //     Tip: Look at createImageData(), getImageData(), and putImageData() to learn more about the ImageData object.
 //     JavaScript syntax: imgData.width;
 func (el *Canvas) Width() float64 {
-	return el.selfContext.Get("width").Float()
+	return el.SelfContext.Get("width").Float()
 }
 
 // en: Returns the height of an ImageData object
@@ -19,7 +19,7 @@ func (el *Canvas) Width() float64 {
 //     Tip: Look at createImageData(), getImageData(), and putImageData() to learn more about the ImageData object.
 //     JavaScript syntax: imgData.height;
 func (el *Canvas) Height() float64 {
-	return el.selfContext.Get("height").Float()
+	return el.SelfContext.Get("height").Float()
 }
 
 // en: Returns an object that contains image data of a specified ImageData object
@@ -65,7 +65,7 @@ func (el *Canvas) Height() float64 {
 //     }
 //     ctx.putImageData(imgData, 10, 10);
 func (el *Canvas) Data() js.Value {
-	return el.selfContext.Get("data")
+	return el.SelfContext.Get("data")
 }
 
 // en: Creates a new, blank ImageData object
@@ -129,7 +129,7 @@ func (el *Canvas) Data() js.Value {
 //     ctx.putImageData(imgData, 10, 10);
 //todo: fazer
 func (el *Canvas) CreateImageData(data js.Value) {
-	el.selfContext.Call("createImageData", data)
+	el.SelfContext.Call("createImageData", data)
 }
 
 // en: Returns an ImageData object that copies the pixel data for the specified rectangle on a canvas
@@ -179,7 +179,7 @@ func (el *Canvas) CreateImageData(data js.Value) {
 //       ctx.putImageData(imgData, 10, 70);
 //     }
 func (el *Canvas) GetImageData(x, y, width, height float64) {
-	el.selfContext.Call("getImageData", x, y, width, height)
+	el.SelfContext.Call("getImageData", x, y, width, height)
 }
 
 // en: Puts the image data (from a specified ImageData object) back onto the canvas
@@ -212,5 +212,5 @@ func (el *Canvas) GetImageData(x, y, width, height float64) {
 //     }
 //todo: fazer
 func (el *Canvas) PutImageData(imgData js.Value, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight float64) {
-	el.selfContext.Call("putImageData", imgData, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
+	el.SelfContext.Call("putImageData", imgData, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
 }

@@ -16,7 +16,7 @@ package iotmaker_platform_webbrowser
 //     ctx.scale(2, 2);
 //     ctx.strokeRect(5, 5, 25, 15);
 func (el *Canvas) Scale(scaleWidth, scaleHeight float64) {
-	el.selfContext.Call("scale", scaleWidth, scaleHeight)
+	el.SelfContext.Call("scale", scaleWidth, scaleHeight)
 }
 
 // en: Rotates the current drawing
@@ -34,7 +34,7 @@ func (el *Canvas) Scale(scaleWidth, scaleHeight float64) {
 //     ctx.rotate(20 * Math.PI / 180);
 //     ctx.fillRect(50, 20, 100, 50);
 func (el *Canvas) Rotate(angle float64) {
-	el.selfContext.Call("rotate", angle)
+	el.SelfContext.Call("rotate", angle)
 }
 
 // en: Remaps the (0,0) position on the canvas
@@ -53,7 +53,7 @@ func (el *Canvas) Rotate(angle float64) {
 //     ctx.translate(70, 70);
 //     ctx.fillRect(10, 10, 100, 50);
 func (el *Canvas) Translate(x, y float64) {
-	el.selfContext.Call("translate", x, y)
+	el.SelfContext.Call("translate", x, y)
 }
 
 // en: Replaces the current transformation matrix for the drawing
@@ -94,7 +94,7 @@ func (el *Canvas) Translate(x, y float64) {
 //     ctx.fillStyle = "blue";
 //     ctx.fillRect(0, 0, 250, 100);
 func (el *Canvas) Transform(a, b, c, d, e, f float64) {
-	el.selfContext.Call("transform", a, b, c, d, e, f)
+	el.SelfContext.Call("transform", a, b, c, d, e, f)
 }
 
 // en: Resets the current transform to the identity matrix. Then runs transform()
@@ -124,5 +124,5 @@ func (el *Canvas) Transform(a, b, c, d, e, f float64) {
 //     ctx.fillStyle = "blue";
 //     ctx.fillRect(0, 0, 250, 100);
 func (el *Canvas) SetTransform(a, b, c, d, e, f float64) {
-	el.selfContext.Call("setTransform", a, b, c, d, e, f)
+	el.SelfContext.Call("setTransform", a, b, c, d, e, f)
 }

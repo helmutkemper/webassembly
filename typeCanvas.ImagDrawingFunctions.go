@@ -32,12 +32,12 @@ func (el *Canvas) DrawImage(value DrawImage) {
 
 	if value.SX != 0 || value.SY != 0 || value.SWidth != 0 || value.SHeight != 0 {
 		//context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
-		el.selfContext.Call("drawImage", value.Image, value.SX, value.SY, value.SWidth, value.SHeight, value.X, value.Y, value.Width, value.Height)
+		el.SelfContext.Call("drawImage", value.Image, value.SX, value.SY, value.SWidth, value.SHeight, value.X, value.Y, value.Width, value.Height)
 	} else if value.Width != 0 || value.Height != 0 {
 		//context.drawImage(img, x, y, width, height);
-		el.selfContext.Call("drawImage", value.Image, value.X, value.Y, value.Width, value.Height)
+		el.SelfContext.Call("drawImage", value.Image, value.X, value.Y, value.Width, value.Height)
 	} else {
 		//context.drawImage(img, x, y);
-		el.selfContext.Call("drawImage", value.Image, value.X, value.Y)
+		el.SelfContext.Call("drawImage", value.Image, value.X, value.Y)
 	}
 }

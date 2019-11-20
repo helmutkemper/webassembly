@@ -30,7 +30,7 @@ package iotmaker_platform_webbrowser
 //     ctx.font = "30px Arial";
 //     ctx.fillText("Hello World", 10, 50);
 func (el *Canvas) Font(font Font) {
-	el.selfContext.Set("font", font.String())
+	el.SelfContext.Set("font", font.String())
 }
 
 // en: Sets or returns the current alignment for text content
@@ -62,7 +62,7 @@ func (el *Canvas) Font(font Font) {
 //     ctx.textAlign = "right";
 //     ctx.fillText("textAlign = right", 150, 140);
 func (el *Canvas) TextAlign(value CanvasFontAlignRule) {
-	el.selfContext.Set("textAlign", value.String())
+	el.SelfContext.Set("textAlign", value.String())
 }
 
 // en: Sets or returns the current text baseline used when drawing text
@@ -101,7 +101,7 @@ func (el *Canvas) TextAlign(value CanvasFontAlignRule) {
 //     ctx.textBaseline = "hanging";
 //     ctx.fillText("Hanging", 290, 100);
 func (el *Canvas) TextBaseline(value CanvasTextBaseLineRule) {
-	el.selfContext.Set("textBaseline", value.String())
+	el.SelfContext.Set("textBaseline", value.String())
 }
 
 // en: Draws "filled" text on the canvas
@@ -129,7 +129,7 @@ func (el *Canvas) TextBaseline(value CanvasTextBaseLineRule) {
 //     ctx.fillStyle = gradient;
 //     ctx.fillText("Big smile!", 10, 90);
 func (el *Canvas) FillText(text string, x, y, maxWidth float64) {
-	el.selfContext.Call("fillText", text, x, y, maxWidth)
+	el.SelfContext.Call("fillText", text, x, y, maxWidth)
 }
 
 // en: Draws text on the canvas (no fill)
@@ -156,7 +156,7 @@ func (el *Canvas) FillText(text string, x, y, maxWidth float64) {
 //     ctx.strokeStyle = gradient;
 //     ctx.strokeText("Big smile!", 10, 90);
 func (el *Canvas) StrokeText(text string, x, y, maxWidth float64) {
-	el.selfContext.Call("strokeText", text, x, y, maxWidth)
+	el.SelfContext.Call("strokeText", text, x, y, maxWidth)
 }
 
 // en: Returns an object that contains the width of the specified text
@@ -174,5 +174,5 @@ func (el *Canvas) StrokeText(text string, x, y, maxWidth float64) {
 //     ctx.fillText("width:" + ctx.measureText(txt).width, 10, 50)
 //     ctx.fillText(txt, 10, 100);
 func (el *Canvas) MeasureText(text string) {
-	el.selfContext.Call("measureText", text)
+	el.SelfContext.Call("measureText", text)
 }

@@ -5,7 +5,7 @@ import (
 )
 
 type Element struct {
-	selfElement js.Value
+	SelfElement js.Value
 	Document
 }
 
@@ -15,15 +15,15 @@ func (el *Element) NewCanvas(id string) js.Value {
 
 func (el *Element) Create(name, id string) js.Value {
 	el.Document.Initialize()
-	el.selfElement = el.selfDocument.Call("createElement", name)
-	el.selfElement.Set("id", id)
+	el.SelfElement = el.selfDocument.Call("createElement", name)
+	el.SelfElement.Set("id", id)
 
-	return el.selfElement
+	return el.SelfElement
 }
 
 func (el *Element) InitializeExistentElementById(id string) {
 	el.Document = NewDocument()
-	el.selfElement = el.selfDocument.Call("getElementById", id)
+	el.SelfElement = el.selfDocument.Call("getElementById", id)
 }
 
 func (el *Element) InitializeDocument() {
@@ -31,9 +31,9 @@ func (el *Element) InitializeDocument() {
 }
 
 func (el *Element) Get() js.Value {
-	return el.selfElement
+	return el.SelfElement
 }
 
 func (el *Element) AppendElementToDocumentBody() {
-	el.Document.AppendChildToDocumentBody(el.selfElement)
+	el.Document.AppendChildToDocumentBody(el.SelfElement)
 }

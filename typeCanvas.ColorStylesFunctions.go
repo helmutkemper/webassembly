@@ -9,7 +9,7 @@ import (
 //     Default value:	#000000
 //     JavaScript syntax:	context.fillStyle = color|gradient|pattern;
 func (el *Canvas) FillStyle(value string) {
-	el.selfContext.Set("fillStyle", value)
+	el.SelfContext.Set("fillStyle", value)
 }
 
 // en: Sets or returns the color, gradient, or pattern used for strokes
@@ -17,7 +17,7 @@ func (el *Canvas) FillStyle(value string) {
 //     Default value: #000000
 //     JavaScript syntax: context.strokeStyle = color|gradient|pattern;
 func (el *Canvas) StrokeStyle(value string) {
-	el.selfContext.Set("strokeStyle", value)
+	el.SelfContext.Set("strokeStyle", value)
 }
 
 // en: Sets or returns the color to use for shadows
@@ -27,7 +27,7 @@ func (el *Canvas) StrokeStyle(value string) {
 //     Default value: #000000
 //     JavaScript syntax: context.shadowColor = color;
 func (el *Canvas) ShadowColor(value string) {
-	el.selfContext.Set("shadowColor", value)
+	el.SelfContext.Set("shadowColor", value)
 }
 
 // en: Sets or returns the blur level for shadows
@@ -35,7 +35,7 @@ func (el *Canvas) ShadowColor(value string) {
 //     Default value: 0
 //     JavaScript syntax: context.shadowBlur = number;
 func (el *Canvas) ShadowBlur(value string) {
-	el.selfContext.Set("shadowBlur", value)
+	el.SelfContext.Set("shadowBlur", value)
 }
 
 // en: Sets or returns the horizontal distance of the shadow from the shape
@@ -47,7 +47,7 @@ func (el *Canvas) ShadowBlur(value string) {
 //     Default value: 0
 //     JavaScript syntax: context.shadowOffsetX = number;
 func (el *Canvas) ShadowOffsetX(value string) {
-	el.selfContext.Set("shadowOffsetX", value)
+	el.SelfContext.Set("shadowOffsetX", value)
 }
 
 // en: Sets or returns the vertical distance of the shadow from the shape
@@ -59,7 +59,7 @@ func (el *Canvas) ShadowOffsetX(value string) {
 //     Default value: 0
 //     JavaScript syntax: context.shadowOffsetY = number;
 func (el *Canvas) ShadowOffsetY(value string) {
-	el.selfContext.Set("shadowOffsetY", value)
+	el.SelfContext.Set("shadowOffsetY", value)
 }
 
 // en: Creates a linear gradient (to use on canvas content)
@@ -83,7 +83,7 @@ func (el *Canvas) ShadowOffsetY(value string) {
 //     ctx.fillStyle = grd;
 //     ctx.fillRect(20, 20, 150, 100);
 func (el *Canvas) CreateLinearGradient(x0, y0, x1, y1 float64) {
-	el.selfContext.Call("createLinearGradient", x0, y0, x1, y1)
+	el.SelfContext.Call("createLinearGradient", x0, y0, x1, y1)
 }
 
 // en: Repeats a specified element in the specified direction
@@ -108,7 +108,7 @@ func (el *Canvas) CreateLinearGradient(x0, y0, x1, y1 float64) {
 //     ctx.fillStyle = pat;
 //     ctx.fill();
 func (el *Canvas) CreatePattern(image js.Value, repeatRule CanvasRepeatRule) {
-	el.selfContext.Call("createPattern", image, repeatRule)
+	el.SelfContext.Call("createPattern", image, repeatRule)
 }
 
 // en: Creates a radial/circular gradient (to use on canvas content)
@@ -129,7 +129,7 @@ func (el *Canvas) CreatePattern(image js.Value, repeatRule CanvasRepeatRule) {
 //     ctx.fillStyle = grd;
 //     ctx.fillRect(10, 10, 150, 100);
 func (el *Canvas) CreateRadialGradient(x0, y0, r0, x1, y1, r1 float64) {
-	el.selfContext.Call("createRadialGradient", x0, y0, r0, x1, y1, r1)
+	el.SelfContext.Call("createRadialGradient", x0, y0, r0, x1, y1, r1)
 }
 
 // en: Specifies the colors and stop positions in a gradient object
@@ -151,5 +151,5 @@ func (el *Canvas) CreateRadialGradient(x0, y0, r0, x1, y1, r1 float64) {
 //     ctx.fillStyle = grd;
 //     ctx.fillRect(20, 20, 150, 100);
 func (el *Canvas) AddColorStop(stop float64, color js.Value) {
-	el.selfContext.Call("addColorStop", stop, color)
+	el.SelfContext.Call("addColorStop", stop, color)
 }

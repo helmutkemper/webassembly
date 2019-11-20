@@ -4,11 +4,11 @@ func NewCanvasWith2DContext(id string, width, height float64) Canvas {
 	el := Canvas{}
 	el.InitializeContext2DById(id)
 
-	//el.selfCanvas = el.selfElement
+	//el.selfCanvas = el.SelfElement
 
-	el.selfElement.Set("width", width)
-	el.selfElement.Set("height", height)
-	//el.selfContext = el.selfCanvas.Call("getContext", "2d")
+	el.SelfElement.Set("width", width)
+	el.SelfElement.Set("height", height)
+	//el.SelfContext = el.selfCanvas.Call("getContext", "2d")
 
 	return el
 }

@@ -140,6 +140,8 @@ func (el *Canvas) CreateImageData(data js.Value) {
 //     y:      The y coordinate (in pixels) of the upper-left corner to start copy from
 //     width:  The width of the rectangular area you will copy
 //     height: The height of the rectangular area you will copy
+//     return: [x][y]color.RGBA
+//             Note: return x and y are relative to the coordinate (0,0) on the image
 //
 //     JavaScript syntax: context.getImageData(x, y, width, height);
 //
@@ -182,15 +184,37 @@ func (el *Canvas) CreateImageData(data js.Value) {
 //       ctx.putImageData(imgData, 10, 70);
 //     }
 func (el *Canvas) GetImageData(x, y, width, height iotmaker_types.Pixel) [][]color.RGBA {
-	rgbaLength := 4.0
+
 	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)
 	dataJs := dataInterface.Get("data")
 
 	out := make([][]color.RGBA, 0)
 
-	for i := 0; i != int(util.Round(width*height*rgbaLength)); i += 1 {
+	var rgbaLength int = 4
 
+	var i int = 0
+	var xp iotmaker_types.Pixel
+	var yp iotmaker_types.Pixel
+	for yp = 0; yp != height; yp += 1 {
+
+		line := make([]color.RGBA, 0)
+		for xp = 0; xp != width; xp += 1 {
+
+			line = append(line, color.RGBA{
+				R: uint8(dataJs.Index(i + 0).Int()),
+				G: uint8(dataJs.Index(i + 1).Int()),
+				B: uint8(dataJs.Index(i + 2).Int()),
+				A: uint8(dataJs.Index(i + 3).Int()),
+			})
+
+			i += rgbaLength
+
+		}
+
+		out = append(out, line)
 	}
+
+	return out
 }
 
 // en: Puts the image data (from a specified ImageData object) back onto the canvas

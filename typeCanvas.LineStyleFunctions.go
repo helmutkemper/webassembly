@@ -1,7 +1,7 @@
 package iotmaker_platform_webbrowser
 
 // en: Sets or returns the style of the end caps for a line
-//     Value: "butt|round|square"
+//     PlatformBasicType: "butt|round|square"
 //
 //     The lineCap property sets or returns the style of the end caps for a line.
 //     Note: The value "round" and "square" make the lines slightly longer.
@@ -22,7 +22,7 @@ func (el *Canvas) LineCap(value CanvasCapRule) {
 }
 
 // en: Sets or returns the type of corner created, when two lines meet
-//     Value: "bevel|round|miter"
+//     PlatformBasicType: "bevel|round|miter"
 //
 //     The lineJoin property sets or returns the type of corner created, when two lines meet.
 //     Note: The "miter" value is affected by the miterLimit property.
@@ -43,7 +43,7 @@ func (el *Canvas) LineJoin(value CanvasJoinRule) {
 }
 
 // en: Sets or returns the current line width
-//     Value: The current line width, in pixels
+//     PlatformBasicType: The current line width, in pixels
 //
 //     The lineWidth property sets or returns the current line width, in pixels.
 //     Default value: 1
@@ -59,7 +59,7 @@ func (el *Canvas) LineWidth(value float64) {
 }
 
 // en: Sets or returns the maximum miter length
-//     Value: A positive number that specifies the maximum miter length. If the current miter length exceeds the
+//     PlatformBasicType: A positive number that specifies the maximum miter length. If the current miter length exceeds the
 //            miterLimit, the corner will display as lineJoin "bevel"
 //
 //     The miterLimit property sets or returns the maximum miter length.

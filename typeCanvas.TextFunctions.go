@@ -66,7 +66,7 @@ func (el *Canvas) TextAlign(value CanvasFontAlignRule) {
 }
 
 // en: Sets or returns the current text baseline used when drawing text
-//     Value:
+//     PlatformBasicType:
 //          alphabetic:  Default. The text baseline is the normal alphabetic baseline
 //          top:         The text baseline is the top of the em square
 //          hanging:     The text baseline is the hanging baseline

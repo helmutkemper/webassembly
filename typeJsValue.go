@@ -4,4 +4,4 @@ import (
 	"syscall/js"
 )
 
-type Value js.Value
+type PlatformBasicType js.Value

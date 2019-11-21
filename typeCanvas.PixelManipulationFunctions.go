@@ -1,6 +1,7 @@
 package iotmaker_platform_webbrowser
 
 import (
+	"github.com/helmutkemper/util"
 	"syscall/js"
 )
 
@@ -178,8 +179,13 @@ func (el *Canvas) CreateImageData(data js.Value) {
 //       var imgData = ctx.getImageData(10, 10, 50, 50);
 //       ctx.putImageData(imgData, 10, 70);
 //     }
-func (el *Canvas) GetImageData(x, y, width, height float64) {
-	el.SelfContext.Call("getImageData", x, y, width, height)
+func (el *Canvas) GetImageData(x, y, width, height float64) js.Value {
+	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)
+	dataJs := dataInterface.Get("data")
+
+	for i := 0; i != int(util.Round(width*height)); i += 1 {
+
+	}
 }
 
 // en: Puts the image data (from a specified ImageData object) back onto the canvas

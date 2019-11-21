@@ -40,7 +40,7 @@ func (el *Canvas) Set(jsParam string, value ...interface{}) {
 	el.selfDocument.Set(jsParam, value)
 }
 
-/*func (el *Canvas) CreateNewWith3DContext(width, height float64) {
+/*func (el *Canvas) CreateNewWith3DContext(width, height iotmaker_types.Pixel) {
 	el.selfCanvas = el.Call("getElementsById", "myCanvas")
 	el.Set("width", width)
 	el.selfCanvas.Set("height", height)

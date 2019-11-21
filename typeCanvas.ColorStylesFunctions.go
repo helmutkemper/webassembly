@@ -1,6 +1,7 @@
 package iotmaker_platform_webbrowser
 
 import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
 	"syscall/js"
 )
 
@@ -82,7 +83,7 @@ func (el *Canvas) ShadowOffsetY(value string) {
 //     grd.addColorStop(1, "white");
 //     ctx.fillStyle = grd;
 //     ctx.fillRect(20, 20, 150, 100);
-func (el *Canvas) CreateLinearGradient(x0, y0, x1, y1 float64) {
+func (el *Canvas) CreateLinearGradient(x0, y0, x1, y1 iotmaker_types.Pixel) {
 	el.SelfContext.Call("createLinearGradient", x0, y0, x1, y1)
 }
 
@@ -128,7 +129,7 @@ func (el *Canvas) CreatePattern(image js.Value, repeatRule CanvasRepeatRule) {
 //     // Fill with gradient
 //     ctx.fillStyle = grd;
 //     ctx.fillRect(10, 10, 150, 100);
-func (el *Canvas) CreateRadialGradient(x0, y0, r0, x1, y1, r1 float64) {
+func (el *Canvas) CreateRadialGradient(x0, y0, r0, x1, y1, r1 iotmaker_types.Pixel) {
 	el.SelfContext.Call("createRadialGradient", x0, y0, r0, x1, y1, r1)
 }
 
@@ -150,6 +151,6 @@ func (el *Canvas) CreateRadialGradient(x0, y0, r0, x1, y1, r1 float64) {
 //     grd.addColorStop(1, "white");
 //     ctx.fillStyle = grd;
 //     ctx.fillRect(20, 20, 150, 100);
-func (el *Canvas) AddColorStop(stop float64, color js.Value) {
+func (el *Canvas) AddColorStop(stop iotmaker_types.Pixel, color js.Value) {
 	el.SelfContext.Call("addColorStop", stop, color)
 }

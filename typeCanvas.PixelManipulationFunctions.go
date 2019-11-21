@@ -1,7 +1,9 @@
 package iotmaker_platform_webbrowser
 
 import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
 	"github.com/helmutkemper/util"
+	"image/color"
 	"syscall/js"
 )
 
@@ -10,7 +12,7 @@ import (
 //     The width property returns the width of an ImageData object, in pixels.
 //     Tip: Look at createImageData(), getImageData(), and putImageData() to learn more about the ImageData object.
 //     JavaScript syntax: imgData.width;
-func (el *Canvas) Width() float64 {
+func (el *Canvas) Width() iotmaker_types.Pixel {
 	return el.SelfContext.Get("width").Float()
 }
 
@@ -19,7 +21,7 @@ func (el *Canvas) Width() float64 {
 //     The height property returns the height of an ImageData object, in pixels.
 //     Tip: Look at createImageData(), getImageData(), and putImageData() to learn more about the ImageData object.
 //     JavaScript syntax: imgData.height;
-func (el *Canvas) Height() float64 {
+func (el *Canvas) Height() iotmaker_types.Pixel {
 	return el.SelfContext.Get("height").Float()
 }
 
@@ -179,11 +181,14 @@ func (el *Canvas) CreateImageData(data js.Value) {
 //       var imgData = ctx.getImageData(10, 10, 50, 50);
 //       ctx.putImageData(imgData, 10, 70);
 //     }
-func (el *Canvas) GetImageData(x, y, width, height float64) js.Value {
+func (el *Canvas) GetImageData(x, y, width, height iotmaker_types.Pixel) [][]color.RGBA {
+	rgbaLength := 4.0
 	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)
 	dataJs := dataInterface.Get("data")
 
-	for i := 0; i != int(util.Round(width*height)); i += 1 {
+	out := make([][]color.RGBA, 0)
+
+	for i := 0; i != int(util.Round(width*height*rgbaLength)); i += 1 {
 
 	}
 }
@@ -217,6 +222,6 @@ func (el *Canvas) GetImageData(x, y, width, height float64) js.Value {
 //       ctx.putImageData(imgData, 10, 70);
 //     }
 //todo: fazer
-func (el *Canvas) PutImageData(imgData js.Value, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight float64) {
+func (el *Canvas) PutImageData(imgData js.Value, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight iotmaker_types.Pixel) {
 	el.SelfContext.Call("putImageData", imgData, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
 }

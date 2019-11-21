@@ -1,6 +1,10 @@
 package iotmaker_platform_webbrowser
 
-func NewCanvasWith2DContext(id string, width, height float64) Canvas {
+import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
+)
+
+func NewCanvasWith2DContext(id string, width, height iotmaker_types.Pixel) Canvas {
 	el := Canvas{}
 	el.InitializeContext2DById(id)
 

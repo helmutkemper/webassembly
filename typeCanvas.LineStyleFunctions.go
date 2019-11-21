@@ -1,5 +1,9 @@
 package iotmaker_platform_webbrowser
 
+import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
+)
+
 // en: Sets or returns the style of the end caps for a line
 //     PlatformBasicType: "butt|round|square"
 //
@@ -54,7 +58,7 @@ func (el *Canvas) LineJoin(value CanvasJoinRule) {
 //     var ctx = c.getContext("2d");
 //     ctx.lineWidth = 10;
 //     ctx.strokeRect(20, 20, 80, 100);
-func (el *Canvas) LineWidth(value float64) {
+func (el *Canvas) LineWidth(value iotmaker_types.Pixel) {
 	el.SelfContext.Set("lineWidth", value)
 }
 
@@ -78,6 +82,6 @@ func (el *Canvas) LineWidth(value float64) {
 //     ctx.lineTo(50, 27);
 //     ctx.lineTo(20, 34);
 //     ctx.stroke();
-func (el *Canvas) MiterLimit(value float64) {
+func (el *Canvas) MiterLimit(value iotmaker_types.Pixel) {
 	el.SelfContext.Set("miterLimit", value)
 }

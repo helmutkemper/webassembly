@@ -1,5 +1,9 @@
 package iotmaker_platform_webbrowser
 
+import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
+)
+
 // en: Sets or returns the current font properties for text content
 //     font-style:            Specifies the font style. Possible values:
 //          normal | italic | oblique
@@ -128,7 +132,7 @@ func (el *Canvas) TextBaseline(value CanvasTextBaseLineRule) {
 //     // Fill with gradient
 //     ctx.fillStyle = gradient;
 //     ctx.fillText("Big smile!", 10, 90);
-func (el *Canvas) FillText(text string, x, y, maxWidth float64) {
+func (el *Canvas) FillText(text string, x, y, maxWidth iotmaker_types.Pixel) {
 	el.SelfContext.Call("fillText", text, x, y, maxWidth)
 }
 
@@ -155,7 +159,7 @@ func (el *Canvas) FillText(text string, x, y, maxWidth float64) {
 //     // Fill with gradient
 //     ctx.strokeStyle = gradient;
 //     ctx.strokeText("Big smile!", 10, 90);
-func (el *Canvas) StrokeText(text string, x, y, maxWidth float64) {
+func (el *Canvas) StrokeText(text string, x, y, maxWidth iotmaker_types.Pixel) {
 	el.SelfContext.Call("strokeText", text, x, y, maxWidth)
 }
 

@@ -1,6 +1,7 @@
 package iotmaker_platform_webbrowser
 
 import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
 	"syscall/js"
 )
 
@@ -9,26 +10,26 @@ type DrawImage struct {
 	Image js.Value
 
 	// en: The x coordinate where to place the image on the canvas
-	X float64
+	X iotmaker_types.Pixel
 
 	// en: The y coordinate where to place the image on the canvas
-	Y float64
+	Y iotmaker_types.Pixel
 
 	// en: Optional. The x coordinate where to start clipping
-	SX float64
+	SX iotmaker_types.Pixel
 
 	// en: Optional. The y coordinate where to start clipping
-	SY float64
+	SY iotmaker_types.Pixel
 
 	// en: Optional. The width of the clipped image
-	SWidth float64
+	SWidth iotmaker_types.Pixel
 
 	// en: Optional. The height of the clipped image
-	SHeight float64
+	SHeight iotmaker_types.Pixel
 
 	// en: Optional. The width of the image to use (stretch or reduce the image)
-	Width float64
+	Width iotmaker_types.Pixel
 
 	// en: Optional. The height of the image to use (stretch or reduce the image)
-	Height float64
+	Height iotmaker_types.Pixel
 }

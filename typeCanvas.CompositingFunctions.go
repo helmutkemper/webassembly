@@ -1,5 +1,9 @@
 package iotmaker_platform_webbrowser
 
+import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
+)
+
 // en: Sets or returns the current alpha or transparency value of the drawing
 //     number: The transparency value. Must be a number between 0.0 (fully transparent) and 1.0 (no transparancy)
 //
@@ -20,7 +24,7 @@ package iotmaker_platform_webbrowser
 //     ctx.fillRect(50, 50, 75, 50);
 //     ctx.fillStyle = "green";
 //     ctx.fillRect(80, 80, 75, 50);
-func (el *Canvas) GlobalAlpha(value float64) {
+func (el *Canvas) GlobalAlpha(value iotmaker_types.Pixel) {
 	el.SelfContext.Set("globalAlpha", value)
 }
 

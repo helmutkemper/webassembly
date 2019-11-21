@@ -1,5 +1,9 @@
 package iotmaker_platform_webbrowser
 
+import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
+)
+
 // en: Scales the current drawing bigger or smaller
 //     scaleWidth:  Scales the width of the current drawing (1=100%, 0.5=50%, 2=200%, etc.)
 //     scaleHeight: Scales the height of the current drawing (1=100%, 0.5=50%, 2=200%, etc.)
@@ -15,7 +19,7 @@ package iotmaker_platform_webbrowser
 //     ctx.strokeRect(5, 5, 25, 15);
 //     ctx.scale(2, 2);
 //     ctx.strokeRect(5, 5, 25, 15);
-func (el *Canvas) Scale(scaleWidth, scaleHeight float64) {
+func (el *Canvas) Scale(scaleWidth, scaleHeight iotmaker_types.Pixel) {
 	el.SelfContext.Call("scale", scaleWidth, scaleHeight)
 }
 
@@ -33,7 +37,7 @@ func (el *Canvas) Scale(scaleWidth, scaleHeight float64) {
 //     var ctx = c.getContext("2d");
 //     ctx.rotate(20 * Math.PI / 180);
 //     ctx.fillRect(50, 20, 100, 50);
-func (el *Canvas) Rotate(angle float64) {
+func (el *Canvas) Rotate(angle iotmaker_types.Pixel) {
 	el.SelfContext.Call("rotate", angle)
 }
 
@@ -52,7 +56,7 @@ func (el *Canvas) Rotate(angle float64) {
 //     ctx.fillRect(10, 10, 100, 50);
 //     ctx.translate(70, 70);
 //     ctx.fillRect(10, 10, 100, 50);
-func (el *Canvas) Translate(x, y float64) {
+func (el *Canvas) Translate(x, y iotmaker_types.Pixel) {
 	el.SelfContext.Call("translate", x, y)
 }
 
@@ -93,7 +97,7 @@ func (el *Canvas) Translate(x, y float64) {
 //     ctx.transform(1, 0.5, -0.5, 1, 30, 10);
 //     ctx.fillStyle = "blue";
 //     ctx.fillRect(0, 0, 250, 100);
-func (el *Canvas) Transform(a, b, c, d, e, f float64) {
+func (el *Canvas) Transform(a, b, c, d, e, f iotmaker_types.Pixel) {
 	el.SelfContext.Call("transform", a, b, c, d, e, f)
 }
 
@@ -123,6 +127,6 @@ func (el *Canvas) Transform(a, b, c, d, e, f float64) {
 //     ctx.setTransform(1, 0.5, -0.5, 1, 30, 10);
 //     ctx.fillStyle = "blue";
 //     ctx.fillRect(0, 0, 250, 100);
-func (el *Canvas) SetTransform(a, b, c, d, e, f float64) {
+func (el *Canvas) SetTransform(a, b, c, d, e, f iotmaker_types.Pixel) {
 	el.SelfContext.Call("setTransform", a, b, c, d, e, f)
 }

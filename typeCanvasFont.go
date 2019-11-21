@@ -1,7 +1,7 @@
 package iotmaker_platform_webbrowser
 
 import (
-	"strconv"
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
 	"strings"
 )
 
@@ -16,7 +16,7 @@ type Font struct {
 	Weight CanvasFontWeightRule
 
 	// en: Specifies the font size and the line-height, in pixels
-	Size float64
+	Size iotmaker_types.Pixel
 
 	// en: Specifies the font family
 	Family string
@@ -58,7 +58,7 @@ func (el *Font) String() string {
 	}
 
 	if el.Size != 0 {
-		ret += strconv.FormatFloat(el.Size, 'E', -1, 64)
+		ret += el.Size.String()
 		ret += " "
 	}
 

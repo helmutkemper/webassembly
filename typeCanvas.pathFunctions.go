@@ -1,6 +1,7 @@
 package iotmaker_platform_webbrowser
 
 import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
 	"syscall/js"
 )
 
@@ -34,7 +35,7 @@ func (el *Canvas) BeginPath() {
 //     y: The y-coordinate of where to move the path to
 //     The moveTo() method moves the path to the specified point in the canvas, without creating a line.
 //     Tip: Use the stroke() method to actually draw the path on the canvas.
-func (el *Canvas) MoveTo(x, y float64) {
+func (el *Canvas) MoveTo(x, y iotmaker_types.Pixel) {
 	el.SelfContext.Call("moveTo", x, y)
 }
 
@@ -43,7 +44,7 @@ func (el *Canvas) MoveTo(x, y float64) {
 //     Tip: Use the stroke() method to actually draw the path on the canvas.
 //     Tip: Use the fill() method to fill the drawing (black is default). Use the fillStyle property to fill with
 //     another color/gradient.
-func (el *Canvas) ClosePath(x, y float64) {
+func (el *Canvas) ClosePath(x, y iotmaker_types.Pixel) {
 	el.SelfContext.Call("closePath", x, y)
 }
 
@@ -53,7 +54,7 @@ func (el *Canvas) ClosePath(x, y float64) {
 //     The lineTo() method adds a new point and creates a line from that point to the last specified point in the canvas
 //     (this method does not draw the line).
 //     Tip: Use the stroke() method to actually draw the path on the canvas.
-func (el *Canvas) LineTo(x, y float64) {
+func (el *Canvas) LineTo(x, y iotmaker_types.Pixel) {
 	el.SelfContext.Call("lineTo", x, y)
 }
 
@@ -62,7 +63,7 @@ func (el *Canvas) LineTo(x, y float64) {
 //     Tip: Once a region is clipped, all future drawing will be limited to the clipped region (no access to other
 //     regions on the canvas). You can however save the current canvas region using the save() method before using the
 //     clip() method, and restore it (with the restore() method) any time in the future.
-func (el *Canvas) Clip(x, y float64) {
+func (el *Canvas) Clip(x, y iotmaker_types.Pixel) {
 	el.SelfContext.Call("clip", x, y)
 }
 
@@ -79,7 +80,7 @@ func (el *Canvas) Clip(x, y float64) {
 //     ctx.moveTo(20, 20);
 //     ctx.quadraticCurveTo(20, 100, 200, 20);
 //     ctx.stroke();
-func (el *Canvas) QuadraticCurveTo(cpx, cpy, x, y float64) {
+func (el *Canvas) QuadraticCurveTo(cpx, cpy, x, y iotmaker_types.Pixel) {
 	el.SelfContext.Call("quadraticCurveTo", cpx, cpy, x, y)
 }
 
@@ -98,7 +99,7 @@ func (el *Canvas) QuadraticCurveTo(cpx, cpy, x, y float64) {
 //     ctx.moveTo(20, 20);
 //     ctx.bezierCurveTo(20, 100, 200, 100, 200, 20);
 //     ctx.stroke();
-func (el *Canvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y float64) {
+func (el *Canvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y iotmaker_types.Pixel) {
 	el.SelfContext.Call("bezierCurveTo", cp1x, cp1y, cp2x, cp2y, x, y)
 }
 
@@ -116,7 +117,7 @@ func (el *Canvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y float64) {
 //     ctx.beginPath();
 //     ctx.arc(100, 75, 50, 0, 2 * Math.PI);
 //     ctx.stroke();
-func (el *Canvas) Arc(x, y, radius, startAngle, endAngle float64, anticlockwise bool) {
+func (el *Canvas) Arc(x, y, radius, startAngle, endAngle iotmaker_types.Pixel, anticlockwise bool) {
 	el.SelfContext.Call("arc", x, y, radius, startAngle, endAngle, anticlockwise)
 }
 
@@ -136,7 +137,7 @@ func (el *Canvas) Arc(x, y, radius, startAngle, endAngle float64, anticlockwise 
 //     ctx.arcTo(150, 20, 150, 70, 50); // Create an arc
 //     ctx.lineTo(150, 120);            // Continue with vertical line
 //     ctx.stroke();                    // Draw it
-func (el *Canvas) ArcTo(x1, y1, x2, y2, radius float64) {
+func (el *Canvas) ArcTo(x1, y1, x2, y2, radius iotmaker_types.Pixel) {
 	el.SelfContext.Call("arcTo", x1, y1, x2, y2, radius)
 }
 
@@ -155,6 +156,6 @@ func (el *Canvas) ArcTo(x1, y1, x2, y2, radius float64) {
 //    if (ctx.isPointInPath(20, 50)) {
 //      ctx.stroke();
 //    };
-func (el *Canvas) IsPointInPath(path js.Value, x, y float64, fillRule CanvasFillRule) bool {
+func (el *Canvas) IsPointInPath(path js.Value, x, y iotmaker_types.Pixel, fillRule CanvasFillRule) bool {
 	return el.SelfContext.Call("isPointInPath", path, x, y, fillRule.String()).Bool()
 }

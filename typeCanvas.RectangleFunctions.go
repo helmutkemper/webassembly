@@ -1,5 +1,9 @@
 package iotmaker_platform_webbrowser
 
+import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
+)
+
 // en: Creates a rectangle
 //     x:      The x-coordinate of the upper-left corner of the rectangle
 //     y:      The y-coordinate of the upper-left corner of the rectangle
@@ -15,7 +19,7 @@ package iotmaker_platform_webbrowser
 //     var ctx = c.getContext("2d");
 //     ctx.rect(20, 20, 150, 100);
 //     ctx.stroke();
-func (el *Canvas) Rect(x, y, width, height float64) {
+func (el *Canvas) Rect(x, y, width, height iotmaker_types.Pixel) {
 	el.SelfContext.Call("rect", x, y, width, height)
 }
 
@@ -33,7 +37,7 @@ func (el *Canvas) Rect(x, y, width, height float64) {
 //     var c = document.getElementById("myCanvas");
 //     var ctx = c.getContext("2d");
 //     ctx.fillRect(20, 20, 150, 100);
-func (el *Canvas) fillRect(x, y, width, height float64) {
+func (el *Canvas) fillRect(x, y, width, height iotmaker_types.Pixel) {
 	el.SelfContext.Call("fillRect", x, y, width, height)
 }
 
@@ -51,7 +55,7 @@ func (el *Canvas) fillRect(x, y, width, height float64) {
 //     var c = document.getElementById("myCanvas");
 //     var ctx = c.getContext("2d");
 //     ctx.strokeRect(20, 20, 150, 100);
-func (el *Canvas) StrokeRect(x, y, width, height float64) {
+func (el *Canvas) StrokeRect(x, y, width, height iotmaker_types.Pixel) {
 	el.SelfContext.Call("strokeRect", x, y, width, height)
 }
 
@@ -70,6 +74,6 @@ func (el *Canvas) StrokeRect(x, y, width, height float64) {
 //     ctx.fillStyle = "red";
 //     ctx.fillRect(0, 0, 300, 150);
 //     ctx.clearRect(20, 20, 100, 50);
-func (el *Canvas) ClearRect(x, y, width, height float64) {
+func (el *Canvas) ClearRect(x, y, width, height iotmaker_types.Pixel) {
 	el.SelfContext.Call("clearRect", x, y, width, height)
 }

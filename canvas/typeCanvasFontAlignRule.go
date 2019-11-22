@@ -1,4 +1,4 @@
-package iotmaker_platform_webbrowser
+package canvas
 
 type CanvasFontAlignRule int
 

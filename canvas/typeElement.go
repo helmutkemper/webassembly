@@ -1,6 +1,7 @@
-package iotmaker_platform_webbrowser
+package canvas
 
 import (
+	"github.com/helmutkemper/iotmaker.platform.webbrowser"
 	"syscall/js"
 )
 
@@ -22,12 +23,12 @@ func (el *Element) Create(name, id string) js.Value {
 }
 
 func (el *Element) InitializeExistentElementById(id string) {
-	el.Document = NewDocument()
+	el.Document = iotmaker_platform_webbrowser.NewDocument()
 	el.SelfElement = el.selfDocument.Call("getElementById", id)
 }
 
 func (el *Element) InitializeDocument() {
-	el.Document = NewDocument()
+	el.Document = iotmaker_platform_webbrowser.NewDocument()
 }
 
 func (el *Element) Get() js.Value {

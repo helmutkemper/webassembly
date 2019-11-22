@@ -1,4 +1,9 @@
-package iotmaker_platform_webbrowser
+package canvas
+
+import (
+	iotmaker_types "github.com/helmutkemper/iotmaker.types"
+	"syscall/js"
+)
 
 // en: Draws an image, canvas, or video onto the canvas
 //     img:     Specifies the image, canvas, or video element to use

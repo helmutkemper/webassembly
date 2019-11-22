@@ -1,0 +1,3 @@
+package canvas
+
+//todo: toDataURL()

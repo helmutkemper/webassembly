@@ -20,6 +20,6 @@ import (
 //     ctx.arcTo(150, 20, 150, 70, 50); // Create an arc
 //     ctx.lineTo(150, 120);            // Continue with vertical line
 //     ctx.stroke();                    // Draw it
-func (el *Canvas) ArcTo(x1, y1, x2, y2, radius int) {
+func (el *Canvas) ArcTo(x1, y1, x2, y2, radius iotmaker_types.Coordinate) {
 	el.SelfContext.Call("arcTo", x1, y1, x2, y2, radius)
 }

@@ -20,6 +20,6 @@ import (
 //     ctx.moveTo(20, 20);
 //     ctx.bezierCurveTo(20, 100, 200, 100, 200, 20);
 //     ctx.stroke();
-func (el *Canvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y iotmaker_types.Pixel) {
+func (el *Canvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y iotmaker_types.Coordinate) {
 	el.SelfContext.Call("bezierCurveTo", cp1x, cp1y, cp2x, cp2y, x, y)
 }

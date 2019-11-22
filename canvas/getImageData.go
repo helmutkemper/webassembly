@@ -54,7 +54,7 @@ import (
 //       var imgData = ctx.getImageData(10, 10, 50, 50);
 //       ctx.putImageData(imgData, 10, 70);
 //     }
-func (el *Canvas) GetImageData(x, y, width, height iotmaker_types.Pixel) [][]color.RGBA {
+func (el *Canvas) GetImageData(x, y, width, height iotmaker_types.Coordinate) [][]color.RGBA {
 
 	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)
 	dataJs := dataInterface.Get("data")
@@ -64,8 +64,8 @@ func (el *Canvas) GetImageData(x, y, width, height iotmaker_types.Pixel) [][]col
 	var rgbaLength int = 4
 
 	var i int = 0
-	var xp iotmaker_types.Pixel
-	var yp iotmaker_types.Pixel
+	var xp iotmaker_types.Coordinate
+	var yp iotmaker_types.Coordinate
 	for yp = 0; yp != height; yp += 1 {
 
 		line := make([]color.RGBA, 0)

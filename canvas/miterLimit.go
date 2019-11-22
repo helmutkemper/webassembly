@@ -25,6 +25,6 @@ import (
 //     ctx.lineTo(50, 27);
 //     ctx.lineTo(20, 34);
 //     ctx.stroke();
-func (el *Canvas) MiterLimit(value iotmaker_types.Pixel) {
+func (el *Canvas) MiterLimit(value iotmaker_types.Coordinate) {
 	el.SelfContext.Set("miterLimit", value)
 }

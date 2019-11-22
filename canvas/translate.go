@@ -20,6 +20,6 @@ import (
 //     ctx.fillRect(10, 10, 100, 50);
 //     ctx.translate(70, 70);
 //     ctx.fillRect(10, 10, 100, 50);
-func (el *Canvas) Translate(x, y iotmaker_types.Pixel) {
+func (el *Canvas) Translate(x, y iotmaker_types.Coordinate) {
 	el.SelfContext.Call("translate", x, y)
 }

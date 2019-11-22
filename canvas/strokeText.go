@@ -28,6 +28,6 @@ import (
 //     // Fill with gradient
 //     ctx.strokeStyle = gradient;
 //     ctx.strokeText("Big smile!", 10, 90);
-func (el *Canvas) StrokeText(text string, x, y, maxWidth iotmaker_types.Pixel) {
+func (el *Canvas) StrokeText(text string, x, y, maxWidth iotmaker_types.Coordinate) {
 	el.SelfContext.Call("strokeText", text, x, y, maxWidth)
 }

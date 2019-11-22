@@ -20,6 +20,6 @@ import (
 //     ctx.strokeRect(5, 5, 25, 15);
 //     ctx.scale(2, 2);
 //     ctx.strokeRect(5, 5, 25, 15);
-func (el *Canvas) Scale(scaleWidth, scaleHeight iotmaker_types.Pixel) {
+func (el *Canvas) Scale(scaleWidth, scaleHeight iotmaker_types.Coordinate) {
 	el.SelfContext.Call("scale", scaleWidth, scaleHeight)
 }

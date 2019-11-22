@@ -19,6 +19,6 @@ import (
 //     ctx.beginPath();
 //     ctx.arc(100, 75, 50, 0, 2 * Math.PI);
 //     ctx.stroke();
-func (el *Canvas) Arc(x, y, radius, startAngle, endAngle iotmaker_types.Pixel, anticlockwise bool) {
+func (el *Canvas) Arc(x, y, radius, startAngle, endAngle iotmaker_types.Coordinate, anticlockwise bool) {
 	el.SelfContext.Call("arc", x, y, radius, startAngle, endAngle, anticlockwise)
 }

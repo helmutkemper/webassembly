@@ -20,6 +20,6 @@ import (
 //     ctx.fillStyle = "red";
 //     ctx.fillRect(0, 0, 300, 150);
 //     ctx.clearRect(20, 20, 100, 50);
-func (el *Canvas) ClearRect(x, y, width, height iotmaker_types.Pixel) {
+func (el *Canvas) ClearRect(x, y, width, height iotmaker_types.Coordinate) {
 	el.SelfContext.Call("clearRect", x, y, width, height)
 }

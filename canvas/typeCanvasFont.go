@@ -16,7 +16,7 @@ type Font struct {
 	Weight CanvasFontWeightRule
 
 	// en: Specifies the font size and the line-height, in pixels
-	Size iotmaker_types.Pixel
+	Size iotmaker_types.Coordinate
 
 	// en: Specifies the font family
 	Family string

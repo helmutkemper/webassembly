@@ -20,6 +20,6 @@ import (
 //     var ctx = c.getContext("2d");
 //     ctx.rect(20, 20, 150, 100);
 //     ctx.stroke();
-func (el *Canvas) Rect(x, y, width, height iotmaker_types.Pixel) {
+func (el *Canvas) Rect(x, y, width, height iotmaker_types.Coordinate) {
 	el.SelfContext.Call("rect", x, y, width, height)
 }

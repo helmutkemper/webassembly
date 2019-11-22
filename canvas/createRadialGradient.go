@@ -22,6 +22,6 @@ import (
 //     // Fill with gradient
 //     ctx.fillStyle = grd;
 //     ctx.fillRect(10, 10, 150, 100);
-func (el *Canvas) CreateRadialGradient(x0, y0, r0, x1, y1, r1 iotmaker_types.Pixel) {
+func (el *Canvas) CreateRadialGradient(x0, y0, r0, x1, y1, r1 iotmaker_types.Coordinate) {
 	el.SelfContext.Call("createRadialGradient", x0, y0, r0, x1, y1, r1)
 }

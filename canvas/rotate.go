@@ -19,6 +19,6 @@ import (
 //     var ctx = c.getContext("2d");
 //     ctx.rotate(20 * Math.PI / 180);
 //     ctx.fillRect(50, 20, 100, 50);
-func (el *Canvas) Rotate(angle iotmaker_types.Pixel) {
+func (el *Canvas) Rotate(angle iotmaker_types.Coordinate) {
 	el.SelfContext.Call("rotate", angle)
 }

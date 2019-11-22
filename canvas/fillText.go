@@ -29,6 +29,6 @@ import (
 //     // Fill with gradient
 //     ctx.fillStyle = gradient;
 //     ctx.fillText("Big smile!", 10, 90);
-func (el *Canvas) FillText(text string, x, y, maxWidth iotmaker_types.Pixel) {
+func (el *Canvas) FillText(text string, x, y, maxWidth iotmaker_types.Coordinate) {
 	el.SelfContext.Call("fillText", text, x, y, maxWidth)
 }

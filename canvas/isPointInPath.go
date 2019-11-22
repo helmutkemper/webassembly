@@ -20,6 +20,6 @@ import (
 //    if (ctx.isPointInPath(20, 50)) {
 //      ctx.stroke();
 //    };
-func (el *Canvas) IsPointInPath(path js.Value, x, y iotmaker_types.Pixel, fillRule CanvasFillRule) bool {
+func (el *Canvas) IsPointInPath(path js.Value, x, y iotmaker_types.Coordinate, fillRule CanvasFillRule) bool {
 	return el.SelfContext.Call("isPointInPath", path, x, y, fillRule.String()).Bool()
 }

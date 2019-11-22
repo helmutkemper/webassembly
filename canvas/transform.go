@@ -42,6 +42,6 @@ import (
 //     ctx.transform(1, 0.5, -0.5, 1, 30, 10);
 //     ctx.fillStyle = "blue";
 //     ctx.fillRect(0, 0, 250, 100);
-func (el *Canvas) Transform(a, b, c, d, e, f iotmaker_types.Pixel) {
+func (el *Canvas) Transform(a, b, c, d, e, f iotmaker_types.Coordinate) {
 	el.SelfContext.Call("transform", a, b, c, d, e, f)
 }

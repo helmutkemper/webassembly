@@ -4,7 +4,7 @@ import (
 	iotmaker_types "github.com/helmutkemper/iotmaker.types"
 )
 
-func NewCanvasWith2DContext(id string, width, height iotmaker_types.Pixel) Canvas {
+func NewCanvasWith2DContext(id string, width, height iotmaker_types.Coordinate) Canvas {
 	el := Canvas{}
 	el.InitializeContext2DById(id)
 

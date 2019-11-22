@@ -34,6 +34,6 @@ import (
 //       ctx.putImageData(imgData, 10, 70);
 //     }
 //todo: fazer
-func (el *Canvas) PutImageData(imgData js.Value, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight iotmaker_types.Pixel) {
+func (el *Canvas) PutImageData(imgData js.Value, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight iotmaker_types.Coordinate) {
 	el.SelfContext.Call("putImageData", imgData, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
 }

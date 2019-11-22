@@ -10,26 +10,26 @@ type DrawImage struct {
 	Image js.Value
 
 	// en: The x coordinate where to place the image on the canvas
-	X iotmaker_types.Pixel
+	X iotmaker_types.Coordinate
 
 	// en: The y coordinate where to place the image on the canvas
-	Y iotmaker_types.Pixel
+	Y iotmaker_types.Coordinate
 
 	// en: Optional. The x coordinate where to start clipping
-	SX iotmaker_types.Pixel
+	SX iotmaker_types.Coordinate
 
 	// en: Optional. The y coordinate where to start clipping
-	SY iotmaker_types.Pixel
+	SY iotmaker_types.Coordinate
 
 	// en: Optional. The width of the clipped image
-	SWidth iotmaker_types.Pixel
+	SWidth iotmaker_types.Coordinate
 
 	// en: Optional. The height of the clipped image
-	SHeight iotmaker_types.Pixel
+	SHeight iotmaker_types.Coordinate
 
 	// en: Optional. The width of the image to use (stretch or reduce the image)
-	Width iotmaker_types.Pixel
+	Width iotmaker_types.Coordinate
 
 	// en: Optional. The height of the image to use (stretch or reduce the image)
-	Height iotmaker_types.Pixel
+	Height iotmaker_types.Coordinate
 }

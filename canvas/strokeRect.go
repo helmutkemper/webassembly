@@ -19,6 +19,6 @@ import (
 //     var c = document.getElementById("myCanvas");
 //     var ctx = c.getContext("2d");
 //     ctx.strokeRect(20, 20, 150, 100);
-func (el *Canvas) StrokeRect(x, y, width, height iotmaker_types.Pixel) {
+func (el *Canvas) StrokeRect(x, y, width, height iotmaker_types.Coordinate) {
 	el.SelfContext.Call("strokeRect", x, y, width, height)
 }

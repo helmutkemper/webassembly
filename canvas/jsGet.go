@@ -5,6 +5,6 @@ import (
 	"syscall/js"
 )
 
-func (el *Canvas) Get(jsParam string, value ...interface{}) iotmaker_types.Pixel {
+func (el *Canvas) Get(jsParam string, value ...interface{}) iotmaker_types.Coordinate {
 	return el.selfDocument.Get(jsParam, value)
 }

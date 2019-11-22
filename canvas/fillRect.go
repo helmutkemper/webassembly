@@ -19,6 +19,6 @@ import (
 //     var c = document.getElementById("myCanvas");
 //     var ctx = c.getContext("2d");
 //     ctx.fillRect(20, 20, 150, 100);
-func (el *Canvas) fillRect(x, y, width, height iotmaker_types.Pixel) {
+func (el *Canvas) FillRect(x, y, width, height iotmaker_types.Pixel) {
 	el.SelfContext.Call("fillRect", x, y, width, height)
 }

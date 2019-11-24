@@ -1,5 +1,7 @@
 package iotmaker_platform_webbrowser
 
+import iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.platform.coordinate"
+
 type Stage struct {
 	Canvas
 	Density        float64
@@ -7,10 +9,10 @@ type Stage struct {
 	originalY      int
 	originalHeight int
 	originalWidth  int
-	X              ICoordinate
-	Y              ICoordinate
-	Width          ICoordinate
-	Height         ICoordinate
+	X              iotmaker_platform_coordinate.Coordinate
+	Y              iotmaker_platform_coordinate.Coordinate
+	Width          iotmaker_platform_coordinate.Coordinate
+	Height         iotmaker_platform_coordinate.Coordinate
 }
 
 func (el *Stage) SetDensityFactor(density float64) {

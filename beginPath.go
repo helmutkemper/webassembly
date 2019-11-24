@@ -1,9 +1,4 @@
-package canvas
-
-import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-	"syscall/js"
-)
+package iotmaker_platform_webbrowser
 
 //	en: Begins a path, or resets the current path
 //      The beginPath() method begins a path, or resets the current path.

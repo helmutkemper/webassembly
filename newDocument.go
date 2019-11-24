@@ -1,11 +1,7 @@
 package iotmaker_platform_webbrowser
 
-import (
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/canvas"
-)
-
-func NewDocument() canvas.Document {
-	el := canvas.Document{}
+func NewDocument() Document {
+	el := Document{}
 	el.Initialize()
 
 	return el

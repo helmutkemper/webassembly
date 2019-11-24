@@ -1,8 +1,4 @@
-package canvas
-
-import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-)
+package iotmaker_platform_webbrowser
 
 // en: Creates an arc/curve between two tangents
 //     x1:     The x-axis coordinate of the first control point.

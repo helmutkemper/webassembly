@@ -1,9 +1,4 @@
-package canvas
-
-import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-	"syscall/js"
-)
+package iotmaker_platform_webbrowser
 
 // en: Moves the path to the specified point in the canvas, without creating a line
 //     x: The x-coordinate of where to move the path to

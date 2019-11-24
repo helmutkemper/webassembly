@@ -1,4 +1,4 @@
-package canvas
+package iotmaker_platform_webbrowser
 
 const (
 	kCanvasNotSet int = iota

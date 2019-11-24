@@ -1,18 +1,14 @@
 package iotmaker_platform_webbrowser
 
-import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-)
-
-func NewCanvasWith2DContext(id string, width, height iotmaker_types.Coordinate) Canvas {
+func NewCanvasWith2DContext(id string, width, height int) Canvas {
 	el := Canvas{}
-	el.InitializeContext2DById(id)
+	el.SelfElement = el.Element.SelfElement
 
-	//el.selfCanvas = el.SelfElement
+	el.InitializeContext2DById(id)
 
 	el.SelfElement.Set("width", width)
 	el.SelfElement.Set("height", height)
-	//el.SelfContext = el.selfCanvas.Call("getContext", "2d")
+	el.SelfContext = el.SelfElement.Call("getContext", "2d")
 
 	return el
 }

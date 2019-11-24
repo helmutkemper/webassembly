@@ -1,9 +1,4 @@
-package canvas
-
-import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-	"syscall/js"
-)
+package iotmaker_platform_webbrowser
 
 // todo: tem que saber que id é um canvas
 func (el *Canvas) InitializeContext2DById(id string) {

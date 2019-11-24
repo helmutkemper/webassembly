@@ -1,7 +1,6 @@
-package canvas
+package iotmaker_platform_webbrowser
 
 import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
 	"syscall/js"
 )
 

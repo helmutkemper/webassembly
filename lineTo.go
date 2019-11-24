@@ -1,8 +1,4 @@
-package canvas
-
-import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-)
+package iotmaker_platform_webbrowser
 
 // en: Adds a new point and creates a line from that point to the last specified point in the canvas
 //     x: The x-coordinate of where to create the line to

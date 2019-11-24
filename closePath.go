@@ -1,8 +1,4 @@
-package canvas
-
-import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-)
+package iotmaker_platform_webbrowser
 
 // en: Creates a path from the current point back to the starting point
 //     The closePath() method creates a path from the current point back to the starting point.

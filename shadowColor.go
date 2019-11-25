@@ -1,8 +1,7 @@
-package canvas
+package iotmaker_platform_webbrowser
 
 import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-	"syscall/js"
+	"image/color"
 )
 
 // en: Sets or returns the color to use for shadows
@@ -11,6 +10,6 @@ import (
 //     Tip: Adjust the shadow by using the shadowOffsetX and shadowOffsetY properties.
 //     Default value: #000000
 //     JavaScript syntax: context.shadowColor = color;
-func (el *Canvas) ShadowColor(value string) {
-	el.SelfContext.Set("shadowColor", value)
+func (el *Canvas) ShadowColor(value color.RGBA) {
+	el.SelfContext.Set("shadowColor", RGBAToJs(value))
 }

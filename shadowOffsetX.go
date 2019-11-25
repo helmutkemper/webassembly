@@ -1,9 +1,4 @@
-package canvas
-
-import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-	"syscall/js"
-)
+package iotmaker_platform_webbrowser
 
 // en: Sets or returns the horizontal distance of the shadow from the shape
 //     The shadowOffsetX property sets or returns the horizontal distance of the shadow from the shape.
@@ -13,6 +8,6 @@ import (
 //     Tip: To adjust the vertical distance of the shadow from the shape, use the shadowOffsetY property.
 //     Default value: 0
 //     JavaScript syntax: context.shadowOffsetX = number;
-func (el *Canvas) ShadowOffsetX(value string) {
+func (el *Canvas) ShadowOffsetX(value int) {
 	el.SelfContext.Set("shadowOffsetX", value)
 }

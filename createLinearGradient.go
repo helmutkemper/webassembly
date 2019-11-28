@@ -1,10 +1,5 @@
 package iotmaker_platform_webbrowser
 
-import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-	"syscall/js"
-)
-
 // en: Creates a linear gradient (to use on canvas content)
 //     x0: The x-coordinate of the start point of the gradient
 //     y0: The y-coordinate of the start point of the gradient

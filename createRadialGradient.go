@@ -1,9 +1,5 @@
 package iotmaker_platform_webbrowser
 
-import (
-	iotmaker_types "github.com/helmutkemper/iotmaker.types"
-)
-
 // en: Creates a radial/circular gradient (to use on canvas content)
 //     x0: The x-coordinate of the starting circle of the gradient
 //     y0: The y-coordinate of the starting circle of the gradient

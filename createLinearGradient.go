@@ -1,6 +1,7 @@
 package iotmaker_platform_webbrowser
 
-// en: Creates a linear gradient (to use on canvas content)
+// en: This method of the Canvas 2D API creates a gradient along the line connecting two given coordinates, starting at
+// (x0, y0) point and ending at (x1, y1) point
 //     x0: The x-coordinate of the start point of the gradient
 //     y0: The y-coordinate of the start point of the gradient
 //     x1: The x-coordinate of the end point of the gradient
@@ -20,6 +21,6 @@ package iotmaker_platform_webbrowser
 //     grd.addColorStop(1, "white");
 //     ctx.fillStyle = grd;
 //     ctx.fillRect(20, 20, 150, 100);
-func (el *Canvas) CreateLinearGradient(x0, y0, x1, y1 int) interface{} {
+func (el *Canvas) CreateLinearGradient(x0, y0, x1, y1 interface{}) interface{} {
 	return el.SelfContext.Call("createLinearGradient", x0, y0, x1, y1)
 }

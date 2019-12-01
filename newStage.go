@@ -4,6 +4,8 @@ import (
 	"errors"
 )
 
+// fixme: density compatibility
+// fixme: return must be an interface
 func NewStage(id string, width, height int, density float64) (error, Stage) {
 
 	if density <= 0 {

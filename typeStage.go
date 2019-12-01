@@ -9,10 +9,10 @@ type Stage struct {
 	originalY      int
 	originalHeight int
 	originalWidth  int
-	X              iotmaker_platform_coordinate.Coordinate
-	Y              iotmaker_platform_coordinate.Coordinate
-	Width          iotmaker_platform_coordinate.Coordinate
-	Height         iotmaker_platform_coordinate.Coordinate
+	X              iotmaker_platform_coordinate.Density
+	Y              iotmaker_platform_coordinate.Density
+	Width          iotmaker_platform_coordinate.Density
+	Height         iotmaker_platform_coordinate.Density
 }
 
 func (el *Stage) SetDensityFactor(density float64) {

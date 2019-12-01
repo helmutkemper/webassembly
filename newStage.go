@@ -1,21 +1,21 @@
 package iotmaker_platform_webbrowser
 
-import (
-	"errors"
-)
+import iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.platform.coordinate"
 
-// fixme: density compatibility
-// fixme: return must be an interface
-func NewStage(id string, width, height int, density float64) (error, Stage) {
-
-	if density <= 0 {
-		return errors.New("density must be greater then 0"), Stage{}
-	}
-
+func NewStage(id string, width, height int, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) Stage {
 	stage := Stage{}
-	stage.Canvas = NewCanvasWith2DContext(id, width, height)
+
+	densityWidth := iDensity
+	densityWidth.Set(width)
+	densityWidth.SetDensityFactor(density)
+
+	densityHeight := iDensity
+	densityHeight.Set(height)
+	densityHeight.SetDensityFactor(density)
+
+	stage.Canvas = NewCanvasWith2DContext(id, densityWidth.Int(), densityHeight.Int())
 
 	stage.Canvas.AppendElementToDocumentBody()
 
-	return nil, stage
+	return stage
 }

@@ -39,7 +39,7 @@ func StartMouseMoveListener() js.Func {
 
 		return nil
 	})
-
+	//mouseMoveEvt.Release()
 	return mouseMoveEvt
 }
 

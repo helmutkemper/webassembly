@@ -1,6 +1,7 @@
 package document
 
 import (
+	"fmt"
 	"syscall/js"
 )
 
@@ -10,6 +11,7 @@ type Document struct {
 }
 
 func (el *Document) Initialize() {
+	fmt.Printf("documento inicializado\n")
 	el.hasInitialized = true
 	el.SelfDocument = js.Global().Get("document")
 }
@@ -39,4 +41,8 @@ func (el *Document) AppendChild(element string, value interface{}) {
 	}
 
 	el.SelfDocument.Get(element).Call("appendChild", value)
+}
+
+func (el *Document) SetMouseMoveListener(mouseMoveEvt js.Func) {
+	el.SelfDocument.Call("addEventListener", "mousemove", mouseMoveEvt)
 }

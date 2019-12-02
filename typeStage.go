@@ -1,9 +1,13 @@
 package iotmaker_platform_webbrowser
 
-import iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.platform.coordinate"
+import (
+	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.platform.coordinate"
+)
 
+// todo: density
 type Stage struct {
 	Canvas
+	ScratchPad     Canvas
 	Density        float64
 	originalX      int
 	originalY      int

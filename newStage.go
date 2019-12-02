@@ -14,6 +14,7 @@ func NewStage(id string, width, height int, density interface{}, iDensity iotmak
 	densityHeight.SetDensityFactor(density)
 
 	stage.Canvas = NewCanvasWith2DContext(id, densityWidth.Int(), densityHeight.Int())
+	stage.ScratchPad = NewCanvasWith2DContext(id+"ScratchPad", densityWidth.Int(), densityHeight.Int())
 
 	stage.Canvas.AppendElementToDocumentBody()
 

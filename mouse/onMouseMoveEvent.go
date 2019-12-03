@@ -4,20 +4,25 @@ import (
 	"syscall/js"
 )
 
-type PointerFunction func(x, y int)
+type PointerRitFunction func(x, y int) uint8
+type PointerPositiveEventFunction func(x, y int)
+type PointerComplexFunction func(ritFunction PointerRitFunction, positiveEventFunction PointerPositiveEventFunction)
 
-func AddFunctionPointer(f PointerFunction) int {
-	if len(listFunctions) == 0 {
-		listFunctions = make([]PointerFunction, 0)
+func AddFunctionPointer(ritFunction PointerRitFunction, positiveEventFunction PointerPositiveEventFunction) int {
+	if len(listRitFunctions) == 0 {
+		listRitFunctions = make([]PointerRitFunction, 0)
+		listPositEventFunctions = make([]PointerPositiveEventFunction, 0)
 	}
 
-	listFunctions = append(listFunctions, f)
+	listRitFunctions = append(listRitFunctions, ritFunction)
+	listPositEventFunctions = append(listPositEventFunctions, positiveEventFunction)
 
-	return len(listFunctions) - 1
+	return len(listRitFunctions) - 1
 }
 
 var x, y int
-var listFunctions []PointerFunction
+var listRitFunctions []PointerRitFunction
+var listPositEventFunctions []PointerPositiveEventFunction
 var mouseMoveEvt js.Func
 
 func GetDefaultFunction() js.Func {
@@ -31,9 +36,12 @@ func StartMouseMoveListener() js.Func {
 		x = e.Get("clientX").Int()
 		y = e.Get("clientY").Int()
 
-		for _, f := range listFunctions {
+		for k, f := range listRitFunctions {
 			if f != nil {
-				f(x, y)
+				retValue := f(x, y)
+				if retValue > 0 && listPositEventFunctions[k] != nil {
+					listPositEventFunctions[k](x, y)
+				}
 			}
 		}
 

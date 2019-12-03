@@ -9,8 +9,9 @@ import (
 //     y:      The y coordinate (in pixels) of the upper-left corner to start copy from
 //     width:  The width of the rectangular area you will copy
 //     height: The height of the rectangular area you will copy
-//     return: [x][y]color.RGBA
-//             Note: return x and y are relative to the coordinate (0,0) on the image
+//     return: map[x(int)][y(int)]color.RGBA
+//             Note: return x and y are NOT relative to the coordinate (0,0) on the image, are relative to the
+//                   coordinate (0,0) on the canvas
 //
 //     JavaScript syntax: context.getImageData(x, y, width, height);
 //
@@ -52,12 +53,13 @@ import (
 //       var imgData = ctx.getImageData(10, 10, 50, 50);
 //       ctx.putImageData(imgData, 10, 70);
 //     }
-func (el *Canvas) GetImageData(x, y, width, height int) [][]color.RGBA {
+func (el *Canvas) GetImageData(x, y, width, height int) map[int]map[int]color.RGBA {
 
 	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)
 	dataJs := dataInterface.Get("data")
 
-	out := make([][]color.RGBA, 0)
+	ret := make(map[int]map[int]color.RGBA, 0)
+	tmp := color.RGBA{}
 
 	var rgbaLength int = 4
 
@@ -65,23 +67,28 @@ func (el *Canvas) GetImageData(x, y, width, height int) [][]color.RGBA {
 	var xp int
 	var yp int
 	for yp = 0; yp != height; yp += 1 {
-
-		line := make([]color.RGBA, 0)
 		for xp = 0; xp != width; xp += 1 {
 
-			line = append(line, color.RGBA{
+			tmp = color.RGBA{
 				R: uint8(dataJs.Index(i + 0).Int()),
 				G: uint8(dataJs.Index(i + 1).Int()),
 				B: uint8(dataJs.Index(i + 2).Int()),
 				A: uint8(dataJs.Index(i + 3).Int()),
-			})
+			}
 
 			i += rgbaLength
 
-		}
+			if tmp.R == 0 && tmp.G == 0 && tmp.B == 0 && tmp.A == 0 {
+				continue
+			}
 
-		out = append(out, line)
+			if len(ret[x+xp]) == 0 {
+				ret[x+xp] = make(map[int]color.RGBA)
+			}
+
+			ret[x+xp][y+yp] = tmp
+		}
 	}
 
-	return out
+	return ret
 }

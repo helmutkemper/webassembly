@@ -1,9 +1,5 @@
 package canvas
 
-import (
-	"image/color"
-)
-
 // en: Returns an ImageData object that copies the pixel data for the specified rectangle on a canvas
 //     x:      The x coordinate (in pixels) of the upper-left corner to start copy from
 //     y:      The y coordinate (in pixels) of the upper-left corner to start copy from

@@ -50,7 +50,7 @@ package canvas
 //       var imgData = ctx.getImageData(10, 10, 50, 50);
 //       ctx.putImageData(imgData, 10, 70);
 //     }
-func (el *Canvas) GetImageDataHitByAlphaChannelValue(x, y, width, height int, minimumAcceptableValue uint8) map[int]map[int]bool {
+func (el *Canvas) GetImageDataCollisionByAlphaChannelValue(x, y, width, height int, minimumAcceptableValue uint8) map[int]map[int]bool {
 
 	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)
 	dataJs := dataInterface.Get("data")

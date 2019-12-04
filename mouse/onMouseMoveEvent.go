@@ -4,24 +4,24 @@ import (
 	"syscall/js"
 )
 
-type PointerRitFunction func(x, y int) uint8
-type PointerPositiveEventFunction func(x, y int)
-type PointerComplexFunction func(ritFunction PointerRitFunction, positiveEventFunction PointerPositiveEventFunction)
+type PointerCollisionFunction func(x, y int) bool
+type PointerPositiveEventFunction func(x, y int, collision bool)
+type PointerComplexFunction func(ritFunction PointerCollisionFunction, positiveEventFunction PointerPositiveEventFunction)
 
-func AddFunctionPointer(ritFunction PointerRitFunction, positiveEventFunction PointerPositiveEventFunction) int {
-	if len(listRitFunctions) == 0 {
-		listRitFunctions = make([]PointerRitFunction, 0)
+func AddFunctionPointer(collisionFunction PointerCollisionFunction, positiveEventFunction PointerPositiveEventFunction) int {
+	if len(listCollisionFunctions) == 0 {
+		listCollisionFunctions = make([]PointerCollisionFunction, 0)
 		listPositEventFunctions = make([]PointerPositiveEventFunction, 0)
 	}
 
-	listRitFunctions = append(listRitFunctions, ritFunction)
+	listCollisionFunctions = append(listCollisionFunctions, collisionFunction)
 	listPositEventFunctions = append(listPositEventFunctions, positiveEventFunction)
 
-	return len(listRitFunctions) - 1
+	return len(listCollisionFunctions) - 1
 }
 
 var x, y int
-var listRitFunctions []PointerRitFunction
+var listCollisionFunctions []PointerCollisionFunction
 var listPositEventFunctions []PointerPositiveEventFunction
 var mouseMoveEvt js.Func
 
@@ -36,11 +36,11 @@ func StartMouseMoveListener() js.Func {
 		x = e.Get("clientX").Int()
 		y = e.Get("clientY").Int()
 
-		for k, f := range listRitFunctions {
+		for k, f := range listCollisionFunctions {
 			if f != nil {
 				retValue := f(x, y)
-				if retValue > 0 && listPositEventFunctions[k] != nil {
-					listPositEventFunctions[k](x, y)
+				if listPositEventFunctions[k] != nil {
+					listPositEventFunctions[k](x, y, retValue)
 				}
 			}
 		}

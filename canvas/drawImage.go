@@ -6,33 +6,47 @@ import (
 )
 
 // en: Draws an image, canvas, or video onto the canvas
-//     img:     Specifies the image, canvas, or video element to use
-//     sx:      Optional. The x coordinate where to start clipping
-//     sy:      Optional. The y coordinate where to start clipping
-//     swidth:  Optional. The width of the clipped image
-//     sheight: Optional. The height of the clipped image
-//     x:       The x coordinate where to place the image on the canvas
-//     y:       The y coordinate where to place the image on the canvas
-//     width:   Optional. The width of the image to use (stretch or reduce the image)
-//     height:  Optional. The height of the image to use (stretch or reduce the image)
-//
-//     The drawImage() method draws an image, canvas, or video onto the canvas.
-//     The drawImage() method can also draw parts of an image, and/or increase/reduce the image size.
+//     image: Specifies the image, canvas, or video element to use
+//     sx: [optional] The x coordinate where to start clipping
+//     sy: [optional] The y coordinate where to start clipping
+//     sWidth: [optional] The width of the clipped image
+//     sHeight: [optional] The height of the clipped image
+//     x: The x coordinate where to place the image on the canvas
+//     y: The y coordinate where to place the image on the canvas
+//     width: [optional] The width of the image to use (stretch or reduce the image)
+//     height: [optional] The height of the image to use (stretch or reduce the image)
 //
 //     Position the image on the canvas:
-//     JavaScript syntax: context.drawImage(img, x, y);
+//     Golang Syntax: platform.DrawImage(img, x, y)
 //
 //     Position the image on the canvas, and specify width and height of the image:
-//     JavaScript syntax: context.drawImage(img, x, y, width, height);
+//     Golang Syntax: platform.DrawImage(img, x, y, width, height)
 //
 //     Clip the image and position the clipped part on the canvas:
-//     JavaScript syntax: context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
+//     Golang Syntax: platform.drawImage(img, sx, sy, sWidth, sHeight, x, y, width,
+//                    height)
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     var img = document.getElementById("scream");
-//     ctx.drawImage(img, 10, 10);
+// pt_br: Desenha uma imagem, canvas ou vídeo no elemento canvas
+//     image: Especifica a imagem, canvas ou vídeo a ser usado
+//     sx: [opcional] Coordenada x de onde o corte vai começar
+//     sy: [opcional] Coordenada y de onde o corte vai começar
+//     sWidth: [opcional] largura do corte
+//     sHeight: [opcional] altura do corte
+//     x: Coordenada x do canvas de onde o corte vai ser colocado
+//     y: Coordenada y do canvas de onde o corte vai ser colocado
+//     width: [opcional] Novo comprimento da imagem
+//     height: [opcional] Nova largura da imagem
+//
+//     Posiciona a imagem no canvas
+//     Golang Sintaxe: platform.DrawImage(img, x, y)
+//
+//     Posiciona a imagem no canvas e determina um novo tamanho da imagem final
+//     Golang Sintaxe: platform.DrawImage(img, x, y, width, height)
+//
+//     Corta um pedaço da imagem e determina uma nova posição e tamanho para a imagem
+//     final
+//     Golang Sintaxe: platform.drawImage(img, sx, sy, sWidth, sHeight, x, y, width,
+//                     height)
 func (el *Canvas) DrawImage(image interface{}, value ...int) {
 
 	if len(value) == 8 {
@@ -45,14 +59,14 @@ func (el *Canvas) DrawImage(image interface{}, value ...int) {
 		width := value[6]
 		height := value[7]
 
-		el.SelfContext.Call("drawImage", image, sx, sy, sWidth, sHeight, x, y, width, height)
+		el.SelfContext.Call("drawImage", image.(js.Value), sx, sy, sWidth, sHeight, x, y, width, height)
 	} else if len(value) == 4 {
 		x := value[0]
 		y := value[1]
 		width := value[2]
 		height := value[3]
 
-		el.SelfContext.Call("drawImage", image, x, y, width, height)
+		el.SelfContext.Call("drawImage", image.(js.Value), x, y, width, height)
 	} else if len(value) == 2 {
 		x := value[0]
 		y := value[1]

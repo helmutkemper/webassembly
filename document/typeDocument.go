@@ -1,7 +1,6 @@
 package document
 
 import (
-	"fmt"
 	"syscall/js"
 )
 
@@ -11,7 +10,6 @@ type Document struct {
 }
 
 func (el *Document) Initialize() {
-	fmt.Printf("documento inicializado\n")
 	el.hasInitialized = true
 	el.SelfDocument = js.Global().Get("document")
 }

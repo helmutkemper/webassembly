@@ -13,6 +13,10 @@ func (el *Element) NewCanvas(id string) js.Value {
 	return el.Create("canvas", id)
 }
 
+func (el *Element) NewImage(id string) js.Value {
+	return el.Create("img", id)
+}
+
 func (el *Element) Create(name, id string) js.Value {
 	el.Document.Initialize()
 	el.SelfElement = el.Document.SelfDocument.Call("createElement", name)

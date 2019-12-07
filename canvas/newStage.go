@@ -8,16 +8,17 @@ import (
 func NewStage(document document.Document, id string, width, height int, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) Stage {
 	stage := Stage{}
 
-	densityWidth := iDensity
-	densityWidth.Set(width)
-	densityWidth.SetDensityFactor(density)
+	densityCalc := iDensity
+	densityCalc.SetDensityFactor(density)
 
-	densityHeight := iDensity
-	densityHeight.Set(height)
-	densityHeight.SetDensityFactor(density)
+	densityCalc.Set(width)
+	width = densityCalc.Int()
 
-	stage.Canvas = NewCanvasWith2DContext(document.SelfDocument, id, densityWidth.Int(), densityHeight.Int())
-	stage.ScratchPad = NewCanvasWith2DContext(document.SelfDocument, id+"ScratchPad", densityWidth.Int(), densityHeight.Int())
+	densityCalc.Set(height)
+	height = densityCalc.Int()
+
+	stage.Canvas = NewCanvasWith2DContext(document.SelfDocument, id, width, height)
+	stage.ScratchPad = NewCanvasWith2DContext(document.SelfDocument, id+"ScratchPad", width, height)
 
 	document.AppendChildToDocumentBody(stage.SelfElement)
 

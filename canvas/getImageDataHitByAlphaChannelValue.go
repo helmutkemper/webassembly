@@ -1,55 +1,49 @@
 package canvas
 
-// en: Returns an ImageData object that copies the pixel data for the specified rectangle on a canvas
-//     x:                      The x coordinate (in pixels) of the upper-left corner to start copy from
-//     y:                      The y coordinate (in pixels) of the upper-left corner to start copy from
-//     width:                  The width of the rectangular area you will copy
-//     height:                 The height of the rectangular area you will copy
-//     minimumAcceptableValue: Minimum acceptable value between 0 and 255
-//     return: map[x(int)][y(int)](bool) alpha channel >= minimumAcceptableValue
-//             Note: return x and y are NOT relative to the coordinate (0,0) on the image, are relative to the
-//                   coordinate (0,0) on the canvas
+// en: Returns an ImageData map[x][y]bool that copies the pixel alpha channel for
+// the specified rectangle on a canvas
+//     x: The x coordinate (in pixels) of the upper-left corner to start copy from
+//     y: The y coordinate (in pixels) of the upper-left corner to start copy from
+//     width: The width of the rectangular area you will copy
+//     height: The height of the rectangular area you will copy
+//     minimumAcceptableValue: (alpha channel < minimumAcceptableValue) true : false
+//     return: map[x(int)][y(int)]bool
+//             Note: return x and y are NOT relative to the coordinate (0,0) on the
+//             image, are relative to the coordinate (0,0) on the canvas
 //
-//     JavaScript syntax: context.getImageData(x, y, width, height);
+//     Note: The ImageData object is not a picture, it specifies a part (rectangle)
+//     on the canvas, and holds information only for alpha channel of every pixel
+//     inside that rectangle.
 //
-//     The getImageData() method returns an ImageData object that copies the pixel data for the specified rectangle on a
-//     canvas.
-//     Note: The ImageData object is not a picture, it specifies a part (rectangle) on the canvas, and holds information
-//     of every pixel inside that rectangle.
+//     For every pixel in the map[x][y] there are one piece of information, the
+//     alpha channel bool value, visible or invisible
 //
-//     For every pixel in an ImageData object there are four pieces of information, the RGBA values:
-//     R - The color red (from 0-255)
-//     G - The color green (from 0-255)
-//     B - The color blue (from 0-255)
-//     A - The alpha channel (from 0-255; 0 is transparent and 255 is fully visible)
+//     Tip: After you have manipulated the color/alpha information in the
+//     map[x][y], you can copy the image data back onto the canvas with the
+//     putImageData() method.
 //
-//     The color/alpha information is held in an array, and is stored in the data property of the ImageData object.
-//     Tip: After you have manipulated the color/alpha information in the array, you can copy the image data back onto
-//     the canvas with the putImageData() method.
+// pr_br: Retorna um mapa map[x][y]bool com parte dos dados da imagem contida
+// no retângulo especificado.
+//     x: Coordenada x (em pixels) do canto superior esquerdo de onde os dados vão
+//     ser copiados
+//     y: Coordenada y (em pixels) do canto superior esquerdo de onde os dados vão
+//     ser copiados
+//     width: comprimento do retângulo a ser copiado
+//     height: altura do retângulo a ser copiado
+//     minimumAcceptableValue: (canal alpha < minimumAcceptableValue) true : false
+//     return: map[x(int)][y(int)]bool
+//             Nota: x e y do retorno não são relativos a coordenada (0,0) da
+//             imagem, são relativos a coordenada (0,0) do canvas
 //
-//     Example:
-//     The code for getting color/alpha information of the first pixel in the returned ImageData object:
-//          red = imgData.data[0];
-//          green = imgData.data[1];
-//          blue = imgData.data[2];
-//          alpha = imgData.data[3];
+//     Nota: Os dados da imagem não são uma figura, eles representam uma parte
+//     retangular do canvas e guardam informações booleanas apenas do canal alpha de
+//     cada pixel contido nessa área.
 //
-//     Tip: You can also use the getImageData() method to invert the color of every pixels of an image on the canvas.
+//     Para cada pixel contido no mapa há apenas uma peça da informação do canal
+//     alpha com valores no formato bool, visível ou invisível.
 //
-//     Loop through all the pixels and change the color values using this formula:
-//          red = 255-old_red;
-//          green = 255-old_green;
-//          blue = 255-old_blue;
-//
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.fillStyle = "red";
-//     ctx.fillRect(10, 10, 50, 50);
-//     function copy() {
-//       var imgData = ctx.getImageData(10, 10, 50, 50);
-//       ctx.putImageData(imgData, 10, 70);
-//     }
+//     Dica: Depois de manipular as informações de cor/alpha contidas no map[x][y],
+//     elas podem ser colocadas de volta no canvas com o método putImageData().
 func (el *Canvas) GetImageDataCollisionByAlphaChannelValue(x, y, width, height int, minimumAcceptableValue uint8) map[int]map[int]bool {
 
 	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)

@@ -1,19 +1,22 @@
 package canvas
 
 // en: Draws a "filled" rectangle
-//     x:      The x-coordinate of the upper-left corner of the rectangle
-//     y:      The y-coordinate of the upper-left corner of the rectangle
-//     width:  The width of the rectangle, in pixels
+//     x: The x-coordinate of the upper-left corner of the rectangle
+//     y: The y-coordinate of the upper-left corner of the rectangle
+//     width: The width of the rectangle, in pixels
 //     height: The height of the rectangle, in pixels
 //
-//     The fillRect() method draws a "filled" rectangle. The default color of the fill is black.
-//     Tip: Use the fillStyle property to set a color, gradient, or pattern used to fill the drawing.
-//     JavaScript syntax: context.fillRect(x, y, width, height);
+//     Tip: Use the fillStyle property to set a color, gradient, or pattern used to
+//     fill the drawing.
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.fillRect(20, 20, 150, 100);
+// pt_br: Desenha um retângulo preenchido com "tinta"
+//     x: Coordenada x da parte superior esquerda do retângulo
+//     y: Coordenada y da parte superior esquerda do retângulo
+//     width: Comprimento do retângulo
+//     height: Altura do retângulo
+//
+//     Dica: Use a propriedade fillStile() para determinar a cor, gradiente ou padrão
+//     a ser usado no reenchimento.
 func (el *Canvas) FillRect(x, y, width, height int) {
 	el.SelfContext.Call("fillRect", x, y, width, height)
 }

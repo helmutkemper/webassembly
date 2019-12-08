@@ -16,6 +16,10 @@ import (
 //     width: [optional] The width of the image to use (stretch or reduce the image)
 //     height: [optional] The height of the image to use (stretch or reduce the image)
 //
+//     This method is based on book Eloquent JavaScript from Marijn Haverbeke
+//     chapter 17 - Canvas, https://eloquentjavascript.net/index.html
+//     Thanks Marijn!
+//
 //     Position the image on the canvas:
 //     Golang Syntax: platform.DrawImage(img, x, y)
 //
@@ -37,6 +41,10 @@ import (
 //     width: [opcional] Novo comprimento da imagem
 //     height: [opcional] Nova largura da imagem
 //
+//     Este método é baseado no livro Eloquent JavaScript de Marijn Haverbeke
+//     capítulo 17 - Canvas, https://eloquentjavascript.net/index.html
+//     Obrigado Marijn!
+//
 //     Posiciona a imagem no canvas
 //     Golang Sintaxe: platform.DrawImage(img, x, y)
 //
@@ -47,27 +55,41 @@ import (
 //     final
 //     Golang Sintaxe: platform.drawImage(img, sx, sy, sWidth, sHeight, x, y, width,
 //                     height)
-func (el *Canvas) DrawImageMultiplesSprites(image interface{}, spriteW, spriteH int) {
+func (el *Canvas) DrawImageMultiplesSprites(image interface{}, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex int, spriteChangeInterval time.Duration, x, y, width, height, lifeCycleLimit int) {
+	previousBackgroundImageData := el.SelfContext.Call("getImageData", x, y, width, height)
+	go threadDrawImageMultiplesSprites(el, image, previousBackgroundImageData, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex, spriteChangeInterval, x, y, width, height, lifeCycleLimit)
+}
 
-	ticker := time.NewTicker(80 * time.Millisecond)
+func threadDrawImageMultiplesSprites(el *Canvas, image, previousBackgroundImageData interface{}, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex int, spriteChangeInterval time.Duration, x, y, width, height, lifeCycleLimit int) {
+	var cycle = spriteFirstElementIndex
+	var lifeCycle = 0
 
-	go func(el *Canvas, image interface{}, spriteW, spriteH int) {
-		var cycle = 0
+	ticker := time.NewTicker(spriteChangeInterval)
 
-		dataInterface := el.SelfContext.Call("getImageData", 0, 0, spriteW, spriteH)
+	el.SelfContext.Call("drawImage", image.(js.Value), cycle*spriteWidth, 0, spriteWidth, spriteHeight, x, y, width, height)
 
-		el.SelfContext.Call("drawImage", image.(js.Value), cycle*spriteW, 0, spriteW, spriteH, 0, 0, spriteW, spriteH)
+	for {
+		select {
+		case <-ticker.C:
+			if cycle < spriteLastElementIndex {
+				cycle += 1
+			} else {
+				cycle = spriteFirstElementIndex
+			}
 
-		for {
-			select {
-			case <-ticker.C:
-				cycle = (cycle + 1) % 8
-				el.SelfContext.Call("clearRect", 0, 0, spriteW, spriteH)
-				el.SelfContext.Call("putImageData", dataInterface, 0, 0)
+			el.SelfContext.Call("clearRect", x, y, width, height)
+			el.SelfContext.Call("putImageData", previousBackgroundImageData, x, y)
+			el.SelfContext.Call("drawImage", image.(js.Value), cycle*spriteWidth, 0, spriteWidth, spriteHeight, x, y, width, height)
 
-				el.SelfContext.Call("drawImage", image.(js.Value), cycle*spriteW, 0, spriteW, spriteH, 0, 0, spriteW, spriteH)
+			lifeCycle += 1
+
+			if lifeCycleLimit == lifeCycle {
+				go func() {
+					time.Sleep(1000 * time.Millisecond)
+					threadDrawImageMultiplesSprites(el, image, previousBackgroundImageData, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex, spriteChangeInterval, x, y, width, height, lifeCycleLimit)
+				}()
+				return
 			}
 		}
-	}(el, image, spriteW, spriteH)
-
+	}
 }

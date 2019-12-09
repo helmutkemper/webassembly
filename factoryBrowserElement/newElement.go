@@ -1,4 +1,4 @@
-package factoryElement
+package factoryBrowserElement
 
 func NewElement() Element {
 	el := Element{}

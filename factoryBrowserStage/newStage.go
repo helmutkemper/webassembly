@@ -1,10 +1,10 @@
-package factoryStage
+package factoryBrowserStage
 
 import (
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/canvas"
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/document"
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryCanvas"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryBrowserCanvas"
 )
 
 func NewStage(document document.Document, id string, width, height int, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) canvas.Stage {
@@ -19,8 +19,8 @@ func NewStage(document document.Document, id string, width, height int, density 
 	densityCalc.Set(height)
 	height = densityCalc.Int()
 
-	stage.Canvas = factoryCanvas.NewCanvasWith2DContext(document.SelfDocument, id, width, height)
-	stage.ScratchPad = factoryCanvas.NewCanvasWith2DContext(document.SelfDocument, id+"ScratchPad", width, height)
+	stage.Canvas = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, id, width, height)
+	stage.ScratchPad = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, id+"ScratchPad", width, height)
 
 	document.AppendChildToDocumentBody(stage.SelfElement)
 

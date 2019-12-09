@@ -1,4 +1,4 @@
-package factoryCanvas
+package factoryBrowserCanvas
 
 import (
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/canvas"

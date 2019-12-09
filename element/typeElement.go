@@ -28,12 +28,12 @@ func (el *Element) Create(name, id string) js.Value {
 }
 
 func (el *Element) InitializeExistentElementById(id string) {
-	el.Document = factoryDocument.NewDocument()
+	el.Document = factoryBrowserDocument.NewDocument()
 	el.SelfElement = el.Document.SelfDocument.Call("getElementById", id)
 }
 
 func (el *Element) InitializeDocument() {
-	el.Document = factoryDocument.NewDocument()
+	el.Document = factoryBrowserDocument.NewDocument()
 }
 
 func (el *Element) Get() js.Value {

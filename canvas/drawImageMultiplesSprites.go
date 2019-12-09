@@ -73,28 +73,32 @@ func threadDrawImageMultiplesSprites(el *Canvas, image, previousBackgroundImageD
 	for {
 		select {
 		case <-ticker.C:
+
 			if cycle < spriteLastElementIndex {
 				cycle += 1
 			} else {
 				cycle = spriteFirstElementIndex
+				lifeCycle += 1
 			}
 
 			el.SelfContext.Call("clearRect", x, y, width, height)
 			el.SelfContext.Call("putImageData", previousBackgroundImageData, x, y)
 			el.SelfContext.Call("drawImage", image.(js.Value), cycle*spriteWidth, 0, spriteWidth, spriteHeight, x, y, width, height)
 
-			lifeCycle += 1
-
 			if lifeCycleLimit != 0 && lifeCycleLimit == lifeCycle {
-				if lifeCycleRepeatLimit != 0 && lifeCycleRepeatLimit != lifeCycleRepeatLimitCounter {
+				if lifeCycleRepeatInterval != 0 && lifeCycleRepeatLimit == 0 || lifeCycleRepeatLimit != 0 && lifeCycleRepeatLimit != lifeCycleRepeatLimitCounter {
+
 					go func() {
 						time.Sleep(lifeCycleRepeatInterval)
-						threadDrawImageMultiplesSprites(el, image, previousBackgroundImageData, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex, spriteChangeInterval, x, y, width, height, lifeCycleLimit, lifeCycleRepeatLimit, lifeCycleRepeatLimitCounter, lifeCycleRepeatInterval)
+						threadDrawImageMultiplesSprites(el, image, previousBackgroundImageData, spriteWidth, spriteHeight, spriteFirstElementIndex,
+							spriteLastElementIndex, spriteChangeInterval, x, y, width, height, lifeCycleLimit, lifeCycleRepeatLimit,
+							lifeCycleRepeatLimitCounter, lifeCycleRepeatInterval)
 					}()
 
 					lifeCycleRepeatLimitCounter += 1
 				}
 				return
+
 			}
 		}
 	}

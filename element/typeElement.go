@@ -1,12 +1,14 @@
-package document
+package element
 
 import (
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/document"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryDocument"
 	"syscall/js"
 )
 
 type Element struct {
 	SelfElement js.Value
-	Document    Document
+	Document    document.Document
 }
 
 func (el *Element) NewCanvas(id string) js.Value {
@@ -26,12 +28,12 @@ func (el *Element) Create(name, id string) js.Value {
 }
 
 func (el *Element) InitializeExistentElementById(id string) {
-	el.Document = NewDocument()
+	el.Document = factoryDocument.NewDocument()
 	el.SelfElement = el.Document.SelfDocument.Call("getElementById", id)
 }
 
 func (el *Element) InitializeDocument() {
-	el.Document = NewDocument()
+	el.Document = factoryDocument.NewDocument()
 }
 
 func (el *Element) Get() js.Value {

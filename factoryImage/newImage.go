@@ -1,8 +1,9 @@
-package html
+package factoryImage
 
 import (
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/document"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/element"
 	"sync"
 	"syscall/js"
 )
@@ -20,16 +21,16 @@ func NewImage(parent document.Document, id, source string, width, height int, ap
 	densityCalc.Set(height)
 	height = densityCalc.Int()
 
-	element := document.Element{}
-	element.SelfElement = parent.SelfDocument.Call("createElement", "img")
-	element.SelfElement.Set("id", id)
-	element.SelfElement.Set("width", width)
-	element.SelfElement.Set("height", height)
-	element.SelfElement.Set("src", source)
+	imageElement := element.Element{}
+	imageElement.SelfElement = parent.SelfDocument.Call("createElement", "img")
+	imageElement.SelfElement.Set("id", id)
+	imageElement.SelfElement.Set("width", width)
+	imageElement.SelfElement.Set("height", height)
+	imageElement.SelfElement.Set("src", source)
 
 	if waitOnLoad == true {
 		wg.Add(1)
-		element.SelfElement.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		imageElement.SelfElement.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			wg.Done()
 			return nil
 		}))
@@ -38,8 +39,8 @@ func NewImage(parent document.Document, id, source string, width, height int, ap
 	}
 
 	if appendToParent == true {
-		parent.AppendChildToDocumentBody(element.SelfElement)
+		parent.AppendChildToDocumentBody(imageElement.SelfElement)
 	}
 
-	return element.SelfElement
+	return imageElement.SelfElement
 }

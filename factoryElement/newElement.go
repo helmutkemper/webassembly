@@ -1,4 +1,4 @@
-package document
+package factoryElement
 
 func NewElement() Element {
 	el := Element{}

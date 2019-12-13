@@ -1,21 +1,20 @@
 package mouse
 
 import (
-	"github.com/helmutkemper/iotmaker.platform/mouse"
 	"syscall/js"
 )
 
-var currentCursor mouse.CursorType = mouse.KCursorAuto
+var currentCursor CursorType = KCursorAuto
 
 // Example:
 // mouse.SetCursor(stage.SelfElement, mouse.KCursorAuto)
 // mouse.SetCursor(stage.SelfElement, mouse.KCursorColResize)
-func SetCursor(element js.Value, cursor mouse.CursorType) {
+func SetCursor(element interface{}, cursor interface{}) {
 	if cursor == currentCursor {
 		return
 	}
 
-	currentCursor = cursor
+	currentCursor = cursor.(CursorType)
 
-	element.Call("setAttribute", "style", cursor.String())
+	element.(js.Value).Call("setAttribute", "style", cursor.(CursorType).String())
 }

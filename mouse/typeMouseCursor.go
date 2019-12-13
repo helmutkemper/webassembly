@@ -100,10 +100,10 @@ const (
 	KCursorEResize
 
 	// ##
-	// en: Indicates a bidirectional resize cursor
+	// en: Indicates a bidirectional resize cursor horizontal
 	//
-	// pt_br: O cursor indica um redimensionamento bidirecional
-	KCursorEwResize
+	// pt_br: O cursor indica um redimensionamento horizontal bidirecional
+	KCursorEWResize
 
 	// en: The cursor indicates that help is available
 	//
@@ -130,16 +130,16 @@ const (
 	KCursorNeResize
 
 	// ##
-	// en: Indicates a bidirectional resize cursor
+	// en: Indicates a bidirectional resize cursor 45º right
 	//
-	// pt_br: O cursor indica um redimensionamento bidirecional
-	KCursorNeSwResize
+	// pt_br: O cursor indica um redimensionamento bidirecional 45º a direita
+	KCursorNESwResize
 
 	// ##
 	// en: Indicates a bidirectional resize cursor
 	//
 	// pt_br: O cursor indica um redimensionamento bidirecional
-	KCursorNsResize
+	KCursorNSResize
 
 	// ##
 	// en: The cursor indicates that an edge of a box is to be moved up and left
@@ -153,7 +153,7 @@ const (
 	// en: Indicates a bidirectional resize cursor
 	//
 	// pt_br: O cursor indica um redimensionamento bidirecional
-	KCursorNwSeResize
+	KCursorNWSeResize
 
 	// en: The cursor indicates that the dragged item cannot be dropped here
 	//

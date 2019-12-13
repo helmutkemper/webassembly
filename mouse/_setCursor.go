@@ -9,7 +9,7 @@ var currentCursor CursorType = KCursorAuto
 // Example:
 // mouse.SetCursor(stage.SelfElement, mouse.KCursorAuto)
 // mouse.SetCursor(stage.SelfElement, mouse.KCursorColResize)
-func SetCursor(element interface{}, cursor interface{}) {
+func _SetCursor(element interface{}, cursor interface{}) {
 	if cursor == currentCursor {
 		return
 	}

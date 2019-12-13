@@ -13,6 +13,6 @@ package canvas
 //     var ctx = c.getContext("2d");
 //     ctx.lineWidth = 10;
 //     ctx.strokeRect(20, 20, 80, 100);
-func (el *Canvas) SetLineWidth(value int) {
+func (el *Canvas) SetLineWidth(value interface{}) {
 	el.SelfContext.Set("lineWidth", value)
 }

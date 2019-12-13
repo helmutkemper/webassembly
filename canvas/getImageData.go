@@ -1,9 +1,6 @@
 package canvas
 
-import (
-	"image/color"
-)
-
+// todo: rewrite documentation
 // en: Returns an ImageData map[x][y]color.RGBA that copies the pixel data for the
 // specified rectangle on a canvas
 //     x: The x coordinate (in pixels) of the upper-left corner to start copy from
@@ -52,42 +49,8 @@ import (
 //
 //     Dica: Depois de manipular as informações de cor/alpha contidas no map[x][y],
 //     elas podem ser colocadas de volta no canvas com o método putImageData().
-func (el *Canvas) GetImageData(x, y, width, height int) map[int]map[int]color.RGBA {
-
+func (el *Canvas) GetImageData(x, y, width, height int) interface{} {
 	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)
-	dataJs := dataInterface.Get("data")
-
-	ret := make(map[int]map[int]color.RGBA, 0)
-	tmp := color.RGBA{}
-
-	var rgbaLength int = 4
-
-	var i int = 0
-	var xp int
-	var yp int
-	for yp = 0; yp != height; yp += 1 {
-		for xp = 0; xp != width; xp += 1 {
-
-			tmp = color.RGBA{
-				R: uint8(dataJs.Index(i + 0).Int()),
-				G: uint8(dataJs.Index(i + 1).Int()),
-				B: uint8(dataJs.Index(i + 2).Int()),
-				A: uint8(dataJs.Index(i + 3).Int()),
-			}
-
-			i += rgbaLength
-
-			if tmp.R == 0 && tmp.G == 0 && tmp.B == 0 && tmp.A == 0 {
-				continue
-			}
-
-			if len(ret[x+xp]) == 0 {
-				ret[x+xp] = make(map[int]color.RGBA)
-			}
-
-			ret[x+xp][y+yp] = tmp
-		}
-	}
-
-	return ret
+	el.SelfContext.Call("putImageData", dataInterface, 0, 0)
+	return dataInterface.Get("data")
 }

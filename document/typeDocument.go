@@ -1,6 +1,19 @@
 package document
 
 import (
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/event"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventAnimation"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventClipBoard"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventDrag"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventFocus"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventHashChange"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventInput"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventKeyboard"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventMouse"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventPageTransition"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventUi"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/eventWheel"
+	"log"
 	"syscall/js"
 )
 
@@ -41,6 +54,46 @@ func (el *Document) AppendChild(element string, value interface{}) {
 	el.SelfDocument.Get(element).Call("appendChild", value)
 }
 
-func (el *Document) SetMouseMoveListener(mouseMoveEvt js.Func) {
-	el.SelfDocument.Call("addEventListener", "mousemove", mouseMoveEvt)
+func (el *Document) AddEventListener(eventType interface{}, mouseMoveEvt js.Func) {
+	switch converted := eventType.(type) {
+	case event.Event:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventAnimation.EventAnimation:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventClipBoard.EventClipBoard:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventDrag.EventDrag:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventFocus.EventFocus:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventHashChange.EventHashChange:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventInput.EventInput:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventKeyboard.EventKeyboard:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventMouse.EventMouse:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventPageTransition.EventPageTransition:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventUi.EventUi:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventWheel.EventWheel:
+		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	default:
+		log.Fatalf("event must be a event type")
+	}
+
 }

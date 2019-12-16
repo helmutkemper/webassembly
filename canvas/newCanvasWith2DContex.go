@@ -4,7 +4,7 @@ import (
 	"syscall/js"
 )
 
-func (el *Canvas) newCanvasWith2DContext(document js.Value, id string, width, height int) Canvas {
+func (el *Canvas) NewCanvasWith2DContext(document js.Value, id string, width, height int) Canvas {
 	el.SelfElement = document
 
 	el.InitializeContext2DById(id)

@@ -95,5 +95,4 @@ func (el *Document) AddEventListener(eventType interface{}, mouseMoveEvt js.Func
 	default:
 		log.Fatalf("event must be a event type")
 	}
-
 }

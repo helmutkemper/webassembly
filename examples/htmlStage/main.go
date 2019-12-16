@@ -52,7 +52,7 @@ func main() {
 	coordinateP1 := factoryPoint.NewPoint(120, 150, density, densityManager)
 	gradientFilter = factoryGradient.NewGradientLinearToFillAndStroke(coordinateP0, coordinateP1, colorList)
 
-	basicBox.NewBasicBox(
+	draw.NewBasicBox(
 		&stage.Canvas,
 		&stage.ScratchPad,
 		"bbox",

@@ -5,12 +5,19 @@ import (
 	iotmaker_platform_textMetrics "github.com/helmutkemper/iotmaker.platform.textMetrics"
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/font"
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/mouse"
+	"github.com/helmutkemper/iotmaker.platform/abstractType/genericTypes"
 	"image/color"
 	"time"
 )
 
 type Sprite struct {
-	Platform iotmaker_platform_IDraw.IDraw
+	Id                                   string
+	Platform                             iotmaker_platform_IDraw.IDraw
+	Dimensions                           genericTypes.Dimensions
+	OutBoxDimensions                     genericTypes.Dimensions
+	Ink                                  genericTypes.Ink
+	prepareShadowFilterFunctionPointer   func(iotmaker_platform_IDraw.ICanvasShadow)
+	prepareGradientFilterFunctionPointer func(iotmaker_platform_IDraw.ICanvasGradient)
 }
 
 func (el *Sprite) SetPlatform(platform iotmaker_platform_IDraw.IDraw) {

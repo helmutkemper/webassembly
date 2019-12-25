@@ -49,8 +49,12 @@ package canvas
 //
 //     Dica: Depois de manipular as informações de cor/alpha contidas no map[x][y],
 //     elas podem ser colocadas de volta no canvas com o método putImageData().
-func (el *Canvas) GetImageData(x, y, width, height int) interface{} {
+func (el *Canvas) GetImageData(x, y, width, height int, separeData bool) interface{} {
 	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)
-	el.SelfContext.Call("putImageData", dataInterface, 0, 0)
-	return dataInterface.Get("data")
+
+	if separeData == true {
+		return dataInterface.Get("data")
+	} else {
+		return dataInterface
+	}
 }

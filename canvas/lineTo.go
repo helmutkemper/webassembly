@@ -9,6 +9,6 @@ package canvas
 //     x: coordenada x para a criação da linha
 //     y: coordenada y para a criação da linha
 //     Dica: Use o método stroke() para desenhar a rota no elemento canvas
-func (el *Canvas) LineTo(x, y int) {
+func (el *Canvas) LineTo(x, y float64) {
 	el.SelfContext.Call("lineTo", x, y)
 }

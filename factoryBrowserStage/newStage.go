@@ -7,17 +7,17 @@ import (
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryBrowserCanvas"
 )
 
-func NewStage(document document.Document, id string, width, height int, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) canvas.Stage {
+func NewStage(document document.Document, id string, width, height float64, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) canvas.Stage {
 	stage := canvas.Stage{}
 
 	densityCalc := iDensity
 	densityCalc.SetDensityFactor(density)
 
 	densityCalc.Set(width)
-	width = densityCalc.Int()
+	width = densityCalc.Float64()
 
 	densityCalc.Set(height)
-	height = densityCalc.Int()
+	height = densityCalc.Float64()
 
 	stage.Canvas = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, id, width, height)
 	stage.ScratchPad = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, id+"ScratchPad", width, height)

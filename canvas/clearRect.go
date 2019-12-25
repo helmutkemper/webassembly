@@ -12,6 +12,6 @@ package canvas
 //     width: Comprimento do retângulo a ser limpo
 //     height: Altura do retângulo a ser limpo
 //
-func (el *Canvas) ClearRect(x, y, width, height int) {
+func (el *Canvas) ClearRect(x, y, width, height float64) {
 	el.SelfContext.Call("clearRect", x, y, width, height)
 }

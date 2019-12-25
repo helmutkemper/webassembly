@@ -56,15 +56,15 @@ import (
 //     final
 //     Golang Sintaxe: platform.drawImage(img, sx, sy, sWidth, sHeight, x, y, width,
 //                     height)
-func (el *Canvas) DrawImageMultiplesSprites(image interface{}, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex int, spriteChangeInterval time.Duration, x, y, width, height, clearRectDeltaX, clearRectDeltaY, clearRectDeltaWidth, clearRectDeltaHeight, lifeCycleLimit, lifeCycleRepeatLimit int, lifeCycleRepeatInterval time.Duration) {
+func (el *Canvas) DrawImageMultiplesSprites(image interface{}, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex float64, spriteChangeInterval time.Duration, x, y, width, height, clearRectDeltaX, clearRectDeltaY, clearRectDeltaWidth, clearRectDeltaHeight, lifeCycleLimit, lifeCycleRepeatLimit float64, lifeCycleRepeatInterval time.Duration) {
 
 	previousBackgroundImageData := el.SelfContext.Call("getImageData", x+clearRectDeltaX, y+clearRectDeltaY, width+clearRectDeltaWidth, height+clearRectDeltaHeight)
 	go threadDrawImageMultiplesSprites(el, image, previousBackgroundImageData, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex, spriteChangeInterval, x, y, width, height, clearRectDeltaX, clearRectDeltaY, clearRectDeltaWidth, clearRectDeltaHeight, lifeCycleLimit, lifeCycleRepeatLimit, 1, lifeCycleRepeatInterval)
 }
 
-func threadDrawImageMultiplesSprites(el *Canvas, image, previousBackgroundImageData interface{}, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex int, spriteChangeInterval time.Duration, x, y, width, height, clearRectDeltaX, clearRectDeltaY, clearRectDeltaWidth, clearRectDeltaHeight, lifeCycleLimit, lifeCycleRepeatLimit, lifeCycleRepeatLimitCounter int, lifeCycleRepeatInterval time.Duration) {
+func threadDrawImageMultiplesSprites(el *Canvas, image, previousBackgroundImageData interface{}, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex float64, spriteChangeInterval time.Duration, x, y, width, height, clearRectDeltaX, clearRectDeltaY, clearRectDeltaWidth, clearRectDeltaHeight, lifeCycleLimit, lifeCycleRepeatLimit, lifeCycleRepeatLimitCounter float64, lifeCycleRepeatInterval time.Duration) {
 	var cycle = spriteFirstElementIndex
-	var lifeCycle = 0
+	var lifeCycle = 0.0
 
 	ticker := time.NewTicker(spriteChangeInterval)
 
@@ -97,7 +97,7 @@ func threadDrawImageMultiplesSprites(el *Canvas, image, previousBackgroundImageD
 							lifeCycleRepeatLimitCounter, lifeCycleRepeatInterval)
 					}()
 
-					lifeCycleRepeatLimitCounter += 1
+					lifeCycleRepeatLimitCounter += 1.0
 				}
 				return
 

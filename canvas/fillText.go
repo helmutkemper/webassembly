@@ -11,7 +11,7 @@ package canvas
 //     x: coordenada x do texto a ser escrito (relativo ao elemento canvas)
 //     y: coordenada x do texto a ser escrito (relativo ao elemento canvas)
 //     maxWidth: [Opcional] Comprimento máximo do texto em pixels
-func (el *Canvas) FillText(text string, x, y int, maxWidth ...int) {
+func (el *Canvas) FillText(text string, x, y float64, maxWidth ...float64) {
 	if maxWidth == nil {
 		el.SelfContext.Call("fillText", text, x, y)
 	} else {

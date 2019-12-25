@@ -4,15 +4,15 @@ import (
 	"syscall/js"
 )
 
-type Manager func(x, y int)
+type Manager func(x, y float64)
 
 var mouseMoveEvt js.Func
 
 func SetMouseMoveManager(manager Manager) js.Func {
 	mouseMoveEvt = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		e := args[0]
-		x := e.Get("clientX").Int()
-		y := e.Get("clientY").Int()
+		x := e.Get("clientX").Float()
+		y := e.Get("clientY").Float()
 
 		if manager != nil {
 			manager(x, y)

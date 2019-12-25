@@ -11,7 +11,7 @@ import (
 )
 
 type Font struct {
-	Size     int
+	Size     float64
 	SizeUnit string
 	Color    color.RGBA
 	Family   interface{}
@@ -28,10 +28,10 @@ type Font struct {
 func (el *Font) String() string {
 	switch converted := el.Family.(type) {
 	case fontFamily.FontFamily:
-		return el.Style.String() + " " + el.Variant.String() + el.Weight.String() + strconv.Itoa(el.Size) + el.SizeUnit + " " + converted.String()
+		return el.Style.String() + " " + el.Variant.String() + el.Weight.String() + strconv.FormatFloat(el.Size, 'E', -1, 64) + el.SizeUnit + " " + converted.String()
 
 	case string:
-		return el.Style.String() + " " + el.Variant.String() + el.Weight.String() + strconv.Itoa(el.Size) + el.SizeUnit + " " + converted
+		return el.Style.String() + " " + el.Variant.String() + el.Weight.String() + strconv.FormatFloat(el.Size, 'E', -1, 64) + el.SizeUnit + " " + converted
 	}
 
 	log.Fatalf("error: font.Font.Family must be a string or a fontFamily.FontFamily constant")

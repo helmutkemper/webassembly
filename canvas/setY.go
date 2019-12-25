@@ -1,5 +1,5 @@
 package canvas
 
-func (el *Canvas) SetY(y int) {
+func (el *Canvas) SetY(y float64) {
 	el.SelfContext.Set("y", y)
 }

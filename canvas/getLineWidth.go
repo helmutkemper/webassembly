@@ -14,6 +14,6 @@ package canvas
 //     ctx.lineWidth = 10;
 //     ctx.strokeRect(20, 20, 80, 100);
 //     var l = ctx.lineWidth;
-func (el *Canvas) GetLineWidth() int {
-	return el.SelfContext.Get("lineWidth").Int()
+func (el *Canvas) GetLineWidth() float64 {
+	return el.SelfContext.Get("lineWidth").Float()
 }

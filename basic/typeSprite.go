@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+type Drag struct {
+	IsDraggable bool
+}
+
 type Sprite struct {
 	Id                                   string
 	Platform                             iotmaker_platform_IDraw.IDraw
@@ -19,6 +23,7 @@ type Sprite struct {
 	Ink                                  genericTypes.Ink
 	prepareShadowFilterFunctionPointer   func(iotmaker_platform_IDraw.ICanvasShadow)
 	prepareGradientFilterFunctionPointer func(iotmaker_platform_IDraw.ICanvasGradient)
+	Drag
 }
 
 func (el *Sprite) SetPlatform(platform iotmaker_platform_IDraw.IDraw) {
@@ -433,6 +438,7 @@ func (el *Sprite) PutImageData(imgData interface{}, values ...float64) {
 func (el *Sprite) GetImageDataAlphaChannelByCoordinate(data interface{}, x, y, width int) uint8 {
 	return el.Platform.GetImageDataAlphaChannelByCoordinate(data, x, y, width)
 }
+
 func (el *Sprite) GetImageDataPixelByCoordinate(data interface{}, x, y, width int) color.RGBA {
 	return el.Platform.GetImageDataPixelByCoordinate(data, x, y, width)
 }
@@ -678,27 +684,35 @@ func (el *Sprite) MeasureText(text string) iotmaker_platform_textMetrics.TextMet
 func (el *Sprite) ResetFillStyle() {
 	el.Platform.ResetFillStyle()
 }
+
 func (el *Sprite) ResetStrokeStyle() {
 	el.Platform.ResetStrokeStyle()
 }
+
 func (el *Sprite) ResetShadow() {
 	el.Platform.ResetShadow()
 }
+
 func (el *Sprite) ResetLineWidth() {
 	el.Platform.ResetLineWidth()
 }
+
 func (el *Sprite) SetMouseCursor(cursor mouse.CursorType) {
 	el.Platform.SetMouseCursor(cursor)
 }
+
 func (el *Sprite) AddEventListener(eventType interface{}, mouseMoveEvt interface{}) {
 	el.Platform.AddEventListener(eventType, mouseMoveEvt)
 }
+
 func (el *Sprite) SetPixel(x, y float64, pixel interface{}) {
 	el.Platform.SetPixel(x, y, pixel)
 }
+
 func (el *Sprite) MakePixel(pixelColor color.RGBA) interface{} {
 	return el.Platform.MakePixel(pixelColor)
 }
+
 func (el *Sprite) CreateImageData(width, height float64, pixelColor color.RGBA) interface{} {
 	return el.Platform.CreateImageData(width, height, pixelColor)
 }

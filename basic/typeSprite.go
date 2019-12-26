@@ -3,6 +3,7 @@ package basic
 import (
 	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.platform.IDraw"
 	iotmaker_platform_textMetrics "github.com/helmutkemper/iotmaker.platform.textMetrics"
+	"github.com/helmutkemper/iotmaker.platform.webbrowser/canvas"
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/font"
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/mouse"
 	"github.com/helmutkemper/iotmaker.platform/abstractType/genericTypes"
@@ -51,7 +52,7 @@ func (el *Sprite) BeginPath() {
 //     X: Coordenada x para onde o ponto vai ser deslocado
 //     Y: Coordenada y para onde o ponto vai ser deslocado
 //     Dica: Use o método stroke() para desenhar a rota no elemento canvas
-func (el *Sprite) MoveTo(x, y int) {
+func (el *Sprite) MoveTo(x, y float64) {
 	el.Platform.MoveTo(x, y)
 }
 
@@ -77,7 +78,7 @@ func (el *Sprite) MoveTo(x, y int) {
 //     ctx.arcTo(150, 20, 150, 70, 50); // Create an arc
 //     ctx.lineTo(150, 120);            // Continue with vertical line
 //     ctx.stroke();                    // Draw it
-func (el *Sprite) ArcTo(x, y, radius, startAngle, endAngle int) {
+func (el *Sprite) ArcTo(x, y, radius, startAngle, endAngle float64) {
 	el.Platform.ArcTo(x, y, radius, startAngle, endAngle)
 }
 
@@ -92,7 +93,7 @@ func (el *Sprite) ArcTo(x, y, radius, startAngle, endAngle int) {
 //     x: coordenada x para a criação da linha
 //     y: coordenada y para a criação da linha
 //     Dica: Use o método stroke() para desenhar a rota no elemento canvas
-func (el *Sprite) LineTo(x, y int) {
+func (el *Sprite) LineTo(x, y float64) {
 	el.Platform.LineTo(x, y)
 }
 
@@ -106,7 +107,7 @@ func (el *Sprite) LineTo(x, y int) {
 //     Dica: Use o método fill() para preencher o desenho (petro é a cor padrão).
 //           Use a propriedade fillStyle para mudar a cor de preenchimento ou
 //           adicionar um gradiente
-func (el *Sprite) ClosePath(x, y int) {
+func (el *Sprite) ClosePath(x, y float64) {
 	el.Platform.ClosePath(x, y)
 }
 
@@ -153,7 +154,7 @@ func (el *Sprite) SetLineWidth(value interface{}) {
 //     ctx.lineWidth = 10;
 //     ctx.strokeRect(20, 20, 80, 100);
 //     var l = ctx.lineWidth;
-func (el *Sprite) GetLineWidth() int {
+func (el *Sprite) GetLineWidth() float64 {
 	return el.Platform.GetLineWidth()
 }
 
@@ -162,7 +163,7 @@ func (el *Sprite) GetLineWidth() int {
 //
 // pt_br: Define o valor de borrão da sombra
 //     Valor padrão: 0
-func (el *Sprite) SetShadowBlur(value int) {
+func (el *Sprite) SetShadowBlur(value float64) {
 	el.Platform.SetShadowBlur(value)
 }
 
@@ -171,7 +172,7 @@ func (el *Sprite) SetShadowBlur(value int) {
 //
 // pt_br: Retorna o valor de borrão da sombra
 //     Valor padrão: 0
-func (el *Sprite) GetShadowBlur() int {
+func (el *Sprite) GetShadowBlur() float64 {
 	return el.Platform.GetShadowBlur()
 }
 
@@ -211,7 +212,7 @@ func (el *Sprite) SetShadowColor(value color.RGBA) {
 //     afastadas a esquerda (em relação a parte mais a esquerda da forma)
 //     Dica: Para ajustar a distância vertical, use a propriedade shadowOffsetY
 //     Valor padrão: 0
-func (el *Sprite) ShadowOffsetX(value int) {
+func (el *Sprite) ShadowOffsetX(value float64) {
 	el.Platform.ShadowOffsetX(value)
 }
 
@@ -236,7 +237,7 @@ func (el *Sprite) ShadowOffsetX(value int) {
 //     afastadas para cima (em relação a parte mais elevada da forma)
 //     Dica: Para ajustar a distância horizontal, use a propriedade shadowOffsetX
 //     Valor padrão: 0
-func (el *Sprite) ShadowOffsetY(value int) {
+func (el *Sprite) ShadowOffsetY(value float64) {
 	el.Platform.ShadowOffsetY(value)
 }
 
@@ -421,18 +422,22 @@ func (el *Sprite) SetStrokeStyle(value interface{}) {
 //
 //     Dica: Depois de manipular as informações de cor/alpha contidas no map[x][y],
 //     elas podem ser colocadas de volta no canvas com o método putImageData().
-func (el *Sprite) GetImageData(x, y, width, height int) interface{} {
-	return el.Platform.GetImageData(x, y, width, height)
+//GetImageData(x, y, width, height int, separeData bool) interface{}
+
+// todo: documentation
+func (el *Sprite) PutImageData(imgData interface{}, values ...float64) {
+	el.Platform.PutImageData(imgData, values...)
 }
 
 // todo: documentation
 func (el *Sprite) GetImageDataAlphaChannelByCoordinate(data interface{}, x, y, width int) uint8 {
 	return el.Platform.GetImageDataAlphaChannelByCoordinate(data, x, y, width)
 }
-
 func (el *Sprite) GetImageDataPixelByCoordinate(data interface{}, x, y, width int) color.RGBA {
 	return el.Platform.GetImageDataPixelByCoordinate(data, x, y, width)
 }
+
+//(x, y, width, height float64) map[int]map[int]color.RGBA
 
 // en: Returns an ImageData map[x][y]uint8 that copies the pixel alpha channel for
 // the specified rectangle on a canvas
@@ -542,7 +547,7 @@ func (el *Sprite) GetImageDataCollisionByAlphaChannelValue(x, y, width, height i
 //     width: Comprimento do retângulo a ser limpo
 //     height: Altura do retângulo a ser limpo
 //
-func (el *Sprite) ClearRect(x, y, width, height int) {
+func (el *Sprite) ClearRect(x, y, width, height float64) {
 	el.Platform.ClearRect(x, y, width, height)
 }
 
@@ -563,7 +568,7 @@ func (el *Sprite) ClearRect(x, y, width, height int) {
 //
 //     Dica: Use a propriedade fillStile() para determinar a cor, gradiente ou
 //     padrão a ser usado no reenchimento.
-func (el *Sprite) FillRect(x, y, width, height int) {
+func (el *Sprite) FillRect(x, y, width, height float64) {
 	el.Platform.FillRect(x, y, width, height)
 }
 
@@ -611,12 +616,12 @@ func (el *Sprite) FillRect(x, y, width, height int) {
 //     imagem final
 //     Golang Sintaxe: platform.drawImage(img, sx, sy, sWidth, sHeight, x, y,
 //                     width, height)
-func (el *Sprite) DrawImage(image interface{}, value ...int) {
+func (el *Sprite) DrawImage(image interface{}, value ...float64) {
 	el.Platform.DrawImage(image, value...)
 }
 
 // todo: descrição aqui
-func (el *Sprite) DrawImageMultiplesSprites(image interface{}, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex int, spriteChangeInterval time.Duration, x, y, width, height, clearRectX, clearRectY, clearRectWidth, clearRectHeight, lifeCycleLimit, lifeCycleRepeatLimit int, lifeCycleRepeatInterval time.Duration) {
+func (el *Sprite) DrawImageMultiplesSprites(image interface{}, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex float64, spriteChangeInterval time.Duration, x, y, width, height, clearRectX, clearRectY, clearRectWidth, clearRectHeight, lifeCycleLimit, lifeCycleRepeatLimit float64, lifeCycleRepeatInterval time.Duration) {
 	el.Platform.DrawImageMultiplesSprites(image, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex, spriteChangeInterval, x, y, width, height, clearRectX, clearRectY, clearRectWidth, clearRectHeight, lifeCycleLimit, lifeCycleRepeatLimit, lifeCycleRepeatInterval)
 }
 
@@ -633,7 +638,7 @@ func (el *Sprite) DrawImageMultiplesSprites(image interface{}, spriteWidth, spri
 //     x: coordenada x do texto a ser escrito (relativo ao elemento canvas)
 //     y: coordenada x do texto a ser escrito (relativo ao elemento canvas)
 //     maxWidth: [Opcional] Comprimento máximo do texto em pixels
-func (el *Sprite) FillText(text string, x, y int, maxWidth ...int) {
+func (el *Sprite) FillText(text string, x, y float64, maxWidth ...float64) {
 	el.Platform.FillText(text, x, y, maxWidth...)
 }
 
@@ -650,7 +655,7 @@ func (el *Sprite) FillText(text string, x, y int, maxWidth ...int) {
 //     x: coordenada x do texto a ser escrito (relativo ao elemento canvas)
 //     y: coordenada x do texto a ser escrito (relativo ao elemento canvas)
 //     maxWidth: [Opcional] Comprimento máximo do texto em pixels
-func (el *Sprite) StrokeText(text string, x, y int, maxWidth ...int) {
+func (el *Sprite) StrokeText(text string, x, y float64, maxWidth ...float64) {
 	el.Platform.StrokeText(text, x, y, maxWidth...)
 }
 
@@ -673,35 +678,32 @@ func (el *Sprite) MeasureText(text string) iotmaker_platform_textMetrics.TextMet
 func (el *Sprite) ResetFillStyle() {
 	el.Platform.ResetFillStyle()
 }
-
 func (el *Sprite) ResetStrokeStyle() {
 	el.Platform.ResetStrokeStyle()
 }
-
 func (el *Sprite) ResetShadow() {
 	el.Platform.ResetShadow()
 }
-
 func (el *Sprite) ResetLineWidth() {
 	el.Platform.ResetLineWidth()
 }
-
 func (el *Sprite) SetMouseCursor(cursor mouse.CursorType) {
 	el.Platform.SetMouseCursor(cursor)
 }
-
 func (el *Sprite) AddEventListener(eventType interface{}, mouseMoveEvt interface{}) {
 	el.Platform.AddEventListener(eventType, mouseMoveEvt)
 }
-
-func (el *Sprite) SetPixel(x, y int, pixel interface{}) {
+func (el *Sprite) SetPixel(x, y float64, pixel interface{}) {
 	el.Platform.SetPixel(x, y, pixel)
 }
-
 func (el *Sprite) MakePixel(pixelColor color.RGBA) interface{} {
 	return el.Platform.MakePixel(pixelColor)
 }
-
-func (el *Sprite) CreateImageData(width, height int, pixelColor color.RGBA) interface{} {
+func (el *Sprite) CreateImageData(width, height float64, pixelColor color.RGBA) interface{} {
 	return el.Platform.CreateImageData(width, height, pixelColor)
+}
+
+//todo: documentation
+func (el *Sprite) NewCanvasWith2DContext(document interface{}, id string, width, height float64) canvas.Canvas {
+	return el.Platform.NewCanvasWith2DContext(document, id, width, height)
 }

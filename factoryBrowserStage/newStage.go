@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/canvas"
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/document"
 	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryBrowserCanvas"
+	"github.com/helmutkemper/iotmaker.platform/fps"
 )
 
 func NewStage(document document.Document, id string, width, height float64, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) canvas.Stage {
@@ -14,15 +15,17 @@ func NewStage(document document.Document, id string, width, height float64, dens
 	densityCalc.SetDensityFactor(density)
 
 	densityCalc.Set(width)
-	width = densityCalc.Float64()
+	stage.Width = densityCalc.Float64()
 
 	densityCalc.Set(height)
-	height = densityCalc.Float64()
+	stage.Height = densityCalc.Float64()
 
-	stage.Canvas = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, id, width, height)
-	stage.ScratchPad = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, id+"ScratchPad", width, height)
+	stage.Canvas = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, id, stage.Width, stage.Height)
+	stage.ScratchPad = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, id+"ScratchPad", stage.Width, stage.Height)
 
 	document.AppendChildToDocumentBody(stage.SelfElement)
+
+	fps.AddRunner(stage.Clear, false)
 
 	return stage
 }

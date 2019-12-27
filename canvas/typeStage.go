@@ -1,5 +1,9 @@
 package canvas
 
+import (
+	"github.com/helmutkemper/iotmaker.platform/fps"
+)
+
 // todo: density
 type Stage struct {
 	Canvas
@@ -19,4 +23,12 @@ func (el *Stage) SetHeight(height float64) {
 
 func (el *Stage) Clear() {
 	el.ClearRect(0, 0, el.Width, el.Height)
+}
+
+func (el *Stage) Add(drawFunc func()) string {
+	return fps.AddToRunner(drawFunc, true)
+}
+
+func (el *Stage) AddSync(drawFunc func()) string {
+	return fps.AddToRunner(drawFunc, false)
 }

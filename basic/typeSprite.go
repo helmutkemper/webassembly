@@ -18,6 +18,7 @@ type Drag struct {
 type Sprite struct {
 	Id                                   string
 	Platform                             iotmaker_platform_IDraw.IDraw
+	ScratchPad                           iotmaker_platform_IDraw.IDraw
 	Dimensions                           genericTypes.Dimensions
 	OutBoxDimensions                     genericTypes.Dimensions
 	Ink                                  genericTypes.Ink

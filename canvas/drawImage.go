@@ -2,7 +2,6 @@ package canvas
 
 import (
 	"log"
-	"syscall/js"
 )
 
 // en: Draws an image, canvas, or video onto the canvas
@@ -59,19 +58,19 @@ func (el *Canvas) DrawImage(image interface{}, value ...float64) {
 		width := value[6]
 		height := value[7]
 
-		el.SelfContext.Call("drawImage", image.(js.Value), sx, sy, sWidth, sHeight, x, y, width, height)
+		el.SelfContext.Call("drawImage", image, sx, sy, sWidth, sHeight, x, y, width, height)
 	} else if len(value) == 4 {
 		x := value[0]
 		y := value[1]
 		width := value[2]
 		height := value[3]
 
-		el.SelfContext.Call("drawImage", image.(js.Value), x, y, width, height)
+		el.SelfContext.Call("drawImage", image, x, y, width, height)
 	} else if len(value) == 2 {
 		x := value[0]
 		y := value[1]
 
-		el.SelfContext.Call("drawImage", image.(js.Value), x, y)
+		el.SelfContext.Call("drawImage", image, x, y)
 	} else {
 		log.Fatalf("canvas.drawImage must be canvas.drawImage(image, sx, sy, sWidth, sHeight, x, y, width, height), canvas.drawImage(image, x, y, width, height) or canvas.drawImage(image, x, y)")
 	}

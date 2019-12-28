@@ -23,6 +23,8 @@ func (el *Stage) SetHeight(height float64) {
 
 func (el *Stage) Clear() {
 	el.ClearRect(0, 0, el.Width, el.Height)
+	el.DrawImage(el.ScratchPad.GetCanvas(), 0, 0)
+	el.ScratchPad.ClearRect(0, 0, el.Width, el.Height)
 }
 
 func (el *Stage) Add(drawFunc func()) string {

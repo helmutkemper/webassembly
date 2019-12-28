@@ -25,7 +25,7 @@ func NewStage(document document.Document, id string, width, height float64, dens
 
 	document.AppendChildToDocumentBody(stage.SelfElement)
 
-	fps.AddToRunnerPriorityFunc(stage.Clear, false)
+	fps.AddToRunnerPriorityFunc(stage.Clear)
 
 	return stage
 }

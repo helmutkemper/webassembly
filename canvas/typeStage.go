@@ -36,6 +36,10 @@ func (el *Stage) Add(drawFunc func()) string {
 	return fps.AddToRunner(drawFunc)
 }
 
+func (el *Stage) Remove(id string) {
+	fps.DeleteFromRunner(id)
+}
+
 func (el *Stage) AddToCache(drawFunc func()) string {
 	return fps.AddToCacheRunner(drawFunc)
 }

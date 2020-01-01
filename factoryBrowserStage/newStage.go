@@ -23,6 +23,7 @@ func NewStage(document document.Document, id string, width, height float64, dens
 	stage.Canvas = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, id, stage.Width, stage.Height)
 	stage.ScratchPad = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, id+"ScratchPad", stage.Width, stage.Height)
 
+	document.HideMousePointer()
 	document.AppendChildToDocumentBody(stage.SelfElement)
 
 	fps.AddToRunnerPriorityFunc(stage.Clear)

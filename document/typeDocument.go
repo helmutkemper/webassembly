@@ -36,6 +36,14 @@ func (el *Document) Get() js.Value {
 	return el.SelfDocument
 }
 
+func (el *Document) HideMousePointer() {
+	if el.hasInitialized == false {
+		el.Initialize()
+	}
+
+	el.SelfDocument.Get("body").Set("style", "cursor: none")
+}
+
 func (el *Document) AppendChildToDocumentBody(value interface{}) {
 
 	if el.hasInitialized == false {

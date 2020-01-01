@@ -6,7 +6,7 @@ import (
 )
 
 // en: The Image{} struct creates a new HTMLImageElement instance. It is equivalent
-// to document.createElement('img').
+// to document.createElement('Img').
 type Image struct {
 	// en: html parent element
 	HtmlParent js.Value
@@ -29,7 +29,11 @@ func (el *Image) Get() js.Value {
 }
 
 func (el *Image) Create() {
-	el.element = el.HtmlParent.Call("createElement", "img")
+	if el.element != js.Undefined() {
+		el.element.Call("delete")
+	}
+
+	el.element = el.HtmlParent.Call("createElement", "Img")
 
 	for property, value := range el.SetProperty {
 		el.element.Set(property, value)

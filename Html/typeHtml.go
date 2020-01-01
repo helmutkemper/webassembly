@@ -6,7 +6,7 @@ import (
 
 type Html struct{}
 
-func (el Html) NewImage(parent interface{}, propertiesList map[string]interface{}, waitLoad bool) interface{} {
+func (el Html) NewImage(parent interface{}, propertiesList map[string]interface{}, waitLoad bool) Image {
 	img := Image{
 		SetProperty: propertiesList,
 		WaitLoad:    waitLoad,
@@ -14,9 +14,13 @@ func (el Html) NewImage(parent interface{}, propertiesList map[string]interface{
 	img.SetParent(parent)
 	img.Create()
 
-	return img.Get()
+	return img
 }
 
 func (el Html) Append(document, element interface{}) {
-	document.(js.Value).Get("body").Call("appendChild", element.(js.Value))
+	document.(js.Value).Get("body").Call("appendChild", element)
+}
+
+func (el Html) Remove(document, element interface{}) {
+	document.(js.Value).Get("body").Call("removeChild", element)
 }

@@ -53,6 +53,28 @@ func (el *Document) AppendChildToDocumentBody(value interface{}) {
 	el.SelfDocument.Get("body").Call("appendChild", value)
 }
 
+func (el *Document) RemoveChildFromDocumentBody(value interface{}) {
+
+	if el.hasInitialized == false {
+		el.Initialize()
+	}
+
+	el.SelfDocument.Get("body").Call("removeChild", value)
+}
+
+func (el Document) GetDocumentWidth() int {
+	return el.SelfDocument.Get("body").Get("clientWidth").Int()
+}
+
+func (el Document) GetDocumentHeight() int {
+	return el.SelfDocument.Get("body").Get("clientHeight").Int()
+}
+
+func (el Document) ResizeToScreen() {
+	el.SelfDocument.Get("body").Set("width", el.SelfDocument.Get("body").Get("clientWidth").Int())
+	el.SelfDocument.Get("body").Set("height", el.SelfDocument.Get("body").Get("clientHeight").Int())
+}
+
 func (el *Document) AppendChild(element string, value interface{}) {
 
 	if el.hasInitialized == false {

@@ -24,3 +24,11 @@ func (el Html) Append(document, element interface{}) {
 func (el Html) Remove(document, element interface{}) {
 	document.(js.Value).Get("body").Call("removeChild", element)
 }
+
+func (el Html) GetDocumentWidth(document interface{}) int {
+	return document.(js.Value).Get("body").Get("clientWidth").Int()
+}
+
+func (el Html) GetDocumentHeight(document interface{}) int {
+	return document.(js.Value).Get("body").Get("clientHeight").Int()
+}

@@ -10,16 +10,22 @@ type Stage struct {
 	ScratchPad  Canvas
 	Cache       Canvas
 	CacheEnable bool
-	Density     float64
 	Width       float64
 	Height      float64
+	Id          string
 }
 
 func (el *Stage) SetWidth(width float64) {
+	el.Canvas.SetWidth(width)
+	el.ScratchPad.SetWidth(width)
+	el.Cache.SetWidth(width)
 	el.Width = width
 }
 
 func (el *Stage) SetHeight(height float64) {
+	el.Canvas.SetHeight(height)
+	el.ScratchPad.SetHeight(height)
+	el.Cache.SetHeight(height)
 	el.Height = height
 }
 

@@ -1,11 +1,11 @@
 package factoryBrowserStage
 
 import (
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/Html"
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/canvas"
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/document"
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryBrowserCanvas"
-	"github.com/helmutkemper/iotmaker.platform/fps"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/Html"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/canvas"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/document"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserCanvas"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/fps"
 )
 
 func NewStage(document document.Document, id string) *canvas.Stage {

@@ -1,10 +1,10 @@
 package font
 
 import (
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/fontFamily"
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/fontStyle"
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/fontVariant"
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/fontWeight"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/fontFamily"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/fontStyle"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/fontVariant"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/fontWeight"
 	"image/color"
 	"log"
 	"strconv"

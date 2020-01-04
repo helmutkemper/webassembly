@@ -1,7 +1,7 @@
 package canvas
 
 import (
-	iotmaker_platform_textMetrics "github.com/helmutkemper/iotmaker.platform.textMetrics"
+	iotmaker_platform_textMetrics "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.textMetrics"
 	"syscall/js"
 )
 

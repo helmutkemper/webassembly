@@ -1,6 +1,6 @@
 package canvas
 
-import "github.com/helmutkemper/iotmaker.platform.webbrowser/font"
+import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/font"
 
 // en: Sets the current font properties for text content
 //

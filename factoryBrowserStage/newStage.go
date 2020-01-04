@@ -1,14 +1,15 @@
 package factoryBrowserStage
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/Html"
+	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
+	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/canvas"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/document"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserCanvas"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/fps"
 )
 
-func NewStage(document document.Document, id string) *canvas.Stage {
+func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Document, id string, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) *canvas.Stage {
 	stage := &canvas.Stage{}
 	stage.Id = id
 
@@ -41,7 +42,18 @@ func NewStage(document document.Document, id string) *canvas.Stage {
 		}
 	})
 
-	Html.PreLoadCursor(document.SelfDocument, Html.KTemplarianPath, Html.KTemplarianList)
+	PreLoadCursor(
+		document.SelfDocument,
+		htmlPlatform,
+		&stage.Canvas,
+		&stage.ScratchPad,
+		KTemplarianPath,
+		KTemplarianList,
+		density,
+		iDensity,
+	)
+
+	stage.SetCursor = SetCursor
 
 	return stage
 }

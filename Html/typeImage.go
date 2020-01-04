@@ -29,10 +29,6 @@ func (el *Image) Get() js.Value {
 }
 
 func (el *Image) Create() {
-	if el.element != js.Undefined() {
-		el.element.Call("delete")
-	}
-
 	el.element = el.HtmlParent.Call("createElement", "Img")
 
 	for property, value := range el.SetProperty {

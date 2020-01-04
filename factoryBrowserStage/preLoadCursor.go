@@ -1,4 +1,13 @@
-package Html
+package factoryBrowserStage
+
+import (
+	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
+	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/Html"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/abstractType/image"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/fps"
+)
 
 const KTemplarianPath = "./fonts/Templarian/MaterialDesign/svg"
 
@@ -36,13 +45,28 @@ var KTemplarianList = map[string]string{
 }
 
 type PreLoadImage struct {
-	Img Image
+	Img Html.Image
 	id  string
 }
 
 var PreLoadMouseList []PreLoadImage
+var cursor PreLoadImage
 
-func PreLoadCursor(parent interface{}, path string, list map[string]string) {
+var cursorWidth = 24.0
+var cursorHeight = 24.0
+
+var imageCursor *image.Image
+var cursorId string
+
+func PreLoadCursor(
+	parent interface{},
+	htmlPlatform iotmaker_platform_IDraw.IHtml,
+	canvas,
+	scratchPad iotmaker_platform_IDraw.IDraw,
+	path string,
+	list map[string]string,
+	density interface{},
+	iDensity iotmaker_platform_coordinate.IDensity) {
 
 	if len(PreLoadMouseList) == 0 {
 		PreLoadMouseList = make([]PreLoadImage, len(list))
@@ -52,18 +76,46 @@ func PreLoadCursor(parent interface{}, path string, list map[string]string) {
 	for id, img := range list {
 
 		PreLoadMouseList[key] = PreLoadImage{
-			Img: Image{
-				SetProperty: map[string]interface{}{
+			Img: htmlPlatform.NewImage(
+				parent,
+				map[string]interface{}{
 					"id":  "visibleMousePointer",
 					"src": path + "/" + img,
 				},
-				WaitLoad: true,
-			},
+				true,
+			),
 			id: id,
 		}
 		PreLoadMouseList[key].Img.SetParent(parent)
 		PreLoadMouseList[key].Img.Create()
 
+		if id == "default" {
+			cursor = PreLoadMouseList[key]
+		}
+
 		key += 1
 	}
+
+	densityCalc := iDensity
+	densityCalc.SetDensityFactor(density)
+
+	densityCalc.Set(cursorWidth)
+	cursorWidth = densityCalc.Float64()
+
+	densityCalc.Set(cursorHeight)
+	cursorHeight = densityCalc.Float64()
+
+	imageCursor = factoryImage.NewImage(
+		canvas,
+		scratchPad,
+		cursor.Img.Get(),
+		-1000,
+		-1000,
+		cursorWidth,
+		cursorHeight,
+		density,
+		iDensity,
+	)
+	imageCursor.DragStart()
+	cursorId = fps.AddToRunner(imageCursor.Draw)
 }

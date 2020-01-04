@@ -2,6 +2,7 @@ package canvas
 
 import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/fps"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mouse"
 )
 
 // todo: density
@@ -13,6 +14,8 @@ type Stage struct {
 	Width       float64
 	Height      float64
 	Id          string
+
+	SetCursor func(cursorType mouse.CursorType)
 }
 
 func (el *Stage) SetWidth(width float64) {

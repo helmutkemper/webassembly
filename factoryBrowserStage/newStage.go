@@ -59,6 +59,9 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 
 			stage.ScratchPad.SetWidth(stage.Width)
 			stage.ScratchPad.SetHeight(stage.Height)
+
+			stage.Cache.SetWidth(stage.Width)
+			stage.Cache.SetHeight(stage.Height)
 		}
 	})
 

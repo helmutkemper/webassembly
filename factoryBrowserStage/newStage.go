@@ -28,8 +28,18 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 	stage.ScratchPad.SetWidth(stage.Width)
 	stage.ScratchPad.SetHeight(stage.Height)
 
-	fps.AddToRunnerPriorityFunc(stage.Clear)
-	fps.AddLowLatencyFunc(func() {
+	stage.AddToRunnerFunc(fps.AddToRunner)
+	stage.DeleteFromRunnerFunc(fps.DeleteFromRunner)
+	stage.AddToCacheRunnerFunc(fps.AddToCacheRunner)
+	stage.DeleteFromCacheRunnerFunc(fps.DeleteFromCacheRunner)
+
+	stage.AddToRunnerPriorityFunc(fps.AddToRunnerPriorityFunc)
+	stage.DeleteFromRunnerPriorityFunc(fps.DeleteFromRunnerPriorityFunc)
+	stage.AddLowLatencyFunc(fps.AddLowLatencyFunc)
+	stage.DeleteLowLatencyFunc(fps.DeleteLowLatencyFunc)
+
+	stage.AddWidthPriority(stage.Clear)
+	stage.AddWidthLowLatency(func() {
 		if document.GetDocumentWidth() != int(stage.Width) || document.GetDocumentHeight() != int(stage.Height) {
 			stage.Width = float64(document.GetDocumentWidth())
 			stage.Height = float64(document.GetDocumentHeight())
@@ -53,7 +63,10 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 		iDensity,
 	)
 
+	stage.SetCursorDrawFunc(imageCursor.Draw)
 	stage.SetCursor = SetCursor
+
+	stage.SetCursorStageId(stage.Add(imageCursor.Draw))
 
 	return stage
 }

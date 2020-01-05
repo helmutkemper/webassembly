@@ -6,7 +6,6 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/Html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/abstractType/image"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/fps"
 )
 
 const KTemplarianPath = "./fonts/Templarian/MaterialDesign/svg"
@@ -56,7 +55,6 @@ var cursorWidth = 24.0
 var cursorHeight = 24.0
 
 var imageCursor *image.Image
-var cursorId string
 
 func PreLoadCursor(
 	parent interface{},
@@ -117,5 +115,4 @@ func PreLoadCursor(
 		iDensity,
 	)
 	imageCursor.DragStart()
-	cursorId = fps.AddToRunner(imageCursor.Draw)
 }

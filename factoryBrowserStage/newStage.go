@@ -21,6 +21,7 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 
 	stage.Canvas = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, stage.Id, stage.Width, stage.Height)
 	stage.ScratchPad = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, stage.Id+"ScratchPad", stage.Width, stage.Height)
+	stage.Cache = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, stage.Id+"Cache", stage.Width, stage.Height)
 
 	document.HideMousePointer()
 	document.AppendChildToDocumentBody(stage.SelfElement)

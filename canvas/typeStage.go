@@ -27,6 +27,33 @@ type Stage struct {
 	deleteFromCacheRunnerFunc    func(string)
 	deleteFromRunnerPriorityFunc func(string)
 	deleteLowLatencyFunc         func(string)
+
+	fpsFunc      func(int)
+	fpsCacheFunc func(int)
+}
+
+func (el *Stage) SetFps(value int) {
+	if el.fpsFunc != nil {
+		return
+	}
+
+	el.fpsFunc(value)
+}
+
+func (el *Stage) SetCacheFps(value int) {
+	if el.fpsCacheFunc != nil {
+		return
+	}
+
+	el.fpsCacheFunc(value)
+}
+
+func (el *Stage) AddToFpsFunc(function func(int)) {
+	el.fpsFunc = function
+}
+
+func (el *Stage) AddToFpsCacheFunc(function func(int)) {
+	el.fpsCacheFunc = function
 }
 
 func (el *Stage) AddToRunnerFunc(function func(func()) string) {
@@ -132,7 +159,7 @@ func (el *Stage) RemoveFromPriority(id string) {
 	el.deleteFromRunnerPriorityFunc(id)
 }
 
-func (el *Stage) Add(drawFunc func()) string {
+func (el *Stage) AddToStage(drawFunc func()) string {
 	if el.addToRunnerFunc == nil {
 		return ""
 	}
@@ -140,7 +167,7 @@ func (el *Stage) Add(drawFunc func()) string {
 	return el.addToRunnerFunc(drawFunc)
 }
 
-func (el *Stage) Remove(id string) {
+func (el *Stage) RemoveFromStage(id string) {
 	if el.deleteFromRunnerFunc == nil {
 		return
 	}
@@ -148,7 +175,7 @@ func (el *Stage) Remove(id string) {
 	el.deleteFromRunnerFunc(id)
 }
 
-func (el *Stage) AddToCache(drawFunc func()) string {
+func (el *Stage) AddToStageAndCache(drawFunc func()) string {
 	if el.addToCacheRunnerFunc == nil {
 		return ""
 	}
@@ -156,7 +183,7 @@ func (el *Stage) AddToCache(drawFunc func()) string {
 	return el.addToCacheRunnerFunc(drawFunc)
 }
 
-func (el *Stage) RemoveFromCache(id string) {
+func (el *Stage) RemoveFromStageAndCache(id string) {
 	if el.deleteFromCacheRunnerFunc == nil {
 		return
 	}

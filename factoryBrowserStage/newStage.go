@@ -28,6 +28,9 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 	stage.ScratchPad.SetWidth(stage.Width)
 	stage.ScratchPad.SetHeight(stage.Height)
 
+	stage.AddToFpsFunc(fps.Set)
+	stage.AddToFpsCacheFunc(fps.SetCacheUpdate)
+
 	stage.AddToRunnerFunc(fps.AddToRunner)
 	stage.DeleteFromRunnerFunc(fps.DeleteFromRunner)
 	stage.AddToCacheRunnerFunc(fps.AddToCacheRunner)
@@ -66,7 +69,7 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 	stage.SetCursorDrawFunc(imageCursor.Draw)
 	stage.SetCursor = SetCursor
 
-	stage.SetCursorStageId(stage.Add(imageCursor.Draw))
+	stage.SetCursorStageId(stage.AddToStage(imageCursor.Draw))
 
 	return stage
 }

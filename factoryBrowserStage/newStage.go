@@ -81,14 +81,20 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 
 	stage.SetCursorStageId(stage.AddToStage(imageCursor.Draw))
 
-	// pt_br: Adiciona o novo cursor do mouse
-	document.AddEventListener(eventMouse.KMouseMove, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseMove))
-
 	// pt_br: Mostra o cursor do mouse sempre que o mesmo entra no documento
 	document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseSimpleEventManager(stage.CursorShow))
 
-	// pt_br: Esconte de cursor do mouse sempre que o mesmo sai de cima do documento
+	// pt_br: Esconde de cursor do mouse sempre que o mesmo sai de cima do documento
 	document.AddEventListener(eventMouse.KMouseOut, webBrowserMouse.SetMouseSimpleEventManager(stage.CursorHide))
+
+	document.AddEventListener(eventMouse.KMouseMove, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseMove))
+	document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseEnter))
+	document.AddEventListener(eventMouse.KMouseOut, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseOut))
+	document.AddEventListener(eventMouse.KMouseUp, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseUp))
+	document.AddEventListener(eventMouse.KMouseDown, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseDown))
+	document.AddEventListener(eventMouse.KClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerClick))
+	document.AddEventListener(eventMouse.KDoubleClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerDoubleClick))
+	document.AddEventListener(eventMouse.KContextMenu, webBrowserMouse.SetMouseMoveManager(mouse.ManagerContextMenu))
 
 	return stage
 }

@@ -1,22 +1,41 @@
 package eventMouse
 
+import "strings"
+
 type EventMouse int
 
 func (el EventMouse) String() string {
 	return eventMouseString[el]
 }
 
+func (el EventMouse) StringToType(value string) EventMouse {
+	return eventFromStringMap[strings.ToLower(value)]
+}
+
+var eventFromStringMap = map[string]EventMouse{
+	"click":       KClick,
+	"contextMenu": KContextMenu,
+	"doubleClick": KDoubleClick,
+	"mouseDown":   KMouseDown,
+	"mouseEnter":  KMouseEnter,
+	"mouseLeave":  KMouseLeave,
+	"mouseMove":   KMouseMove,
+	"mouseOver":   KMouseOver,
+	"mouseOut":    KMouseOut,
+	"mouseUp":     KMouseUp,
+}
+
 var eventMouseString = [...]string{
 	"click",
-	"contextmenu",
-	"dblclick",
-	"mousedown",
-	"mouseenter",
-	"mouseleave",
-	"mousemove",
-	"mouseover",
-	"mouseout",
-	"mouseup",
+	"contextMenu",
+	"doubleClick",
+	"mouseDown",
+	"mouseEnter",
+	"mouseLeave",
+	"mouseMove",
+	"mouseOver",
+	"mouseOut",
+	"mouseUp",
 }
 
 const (
@@ -28,7 +47,7 @@ const (
 	KContextMenu
 
 	// en: The event occurs when the user double-clicks on an element
-	KDblClick
+	KDoubleClick
 
 	// en: The event occurs when the user presses a mouse button over an element
 	KMouseDown

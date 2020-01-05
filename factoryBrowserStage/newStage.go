@@ -5,8 +5,11 @@ import (
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/canvas"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/document"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserCanvas"
+	webBrowserMouse "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/mouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/fps"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mouse"
 )
 
 func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Document, id string, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) *canvas.Stage {
@@ -70,6 +73,15 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 	stage.SetCursor = SetCursor
 
 	stage.SetCursorStageId(stage.AddToStage(imageCursor.Draw))
+
+	// pt_br: Adiciona o novo cursor do mouse
+	document.AddEventListener(eventMouse.KMouseMove, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseMove))
+
+	// pt_br: Mostra o cursor do mouse sempre que o mesmo entra no documento
+	document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseSimpleEventManager(stage.CursorShow))
+
+	// pt_br: Esconte de cursor do mouse sempre que o mesmo sai de cima do documento
+	document.AddEventListener(eventMouse.KMouseOut, webBrowserMouse.SetMouseSimpleEventManager(stage.CursorHide))
 
 	return stage
 }

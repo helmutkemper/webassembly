@@ -20,7 +20,7 @@ func SetMouseMoveManager(manager Manager) js.Func {
 
 		return nil
 	})
-	//mouseMoveEvt.Release()
+
 	return mouseMoveEvt
 }
 

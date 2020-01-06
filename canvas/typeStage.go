@@ -18,11 +18,13 @@ type Stage struct {
 	cursorStageId  string
 	cursorDrawFunc func()
 
+	addCursorRunnerFunc     func(func()) string
 	addToRunnerFunc         func(func()) string
 	addToCacheRunnerFunc    func(func()) string
 	addToRunnerPriorityFunc func(func()) string
 	addLowLatencyFunc       func(func()) string
 
+	deleteCursorFromRunnerFunc   func(string)
 	deleteFromRunnerFunc         func(string)
 	deleteFromCacheRunnerFunc    func(string)
 	deleteFromRunnerPriorityFunc func(string)
@@ -54,6 +56,14 @@ func (el *Stage) AddToFpsFunc(function func(int)) {
 
 func (el *Stage) AddToFpsCacheFunc(function func(int)) {
 	el.fpsCacheFunc = function
+}
+
+func (el *Stage) AddCursorRunnerFunc(function func(func()) string) {
+	el.addCursorRunnerFunc = function
+}
+
+func (el *Stage) DeleteCursorFromRunnerFunc(function func(string)) {
+	el.deleteCursorFromRunnerFunc = function
 }
 
 func (el *Stage) AddToRunnerFunc(function func(func()) string) {
@@ -89,11 +99,11 @@ func (el *Stage) DeleteLowLatencyFunc(function func(string)) {
 }
 
 func (el *Stage) CursorHide() {
-	el.deleteFromRunnerFunc(el.cursorStageId)
+	el.deleteCursorFromRunnerFunc(el.cursorStageId)
 }
 
 func (el *Stage) CursorShow() {
-	el.cursorStageId = el.addToRunnerFunc(el.cursorDrawFunc)
+	el.cursorStageId = el.addCursorRunnerFunc(el.cursorDrawFunc)
 }
 
 func (el *Stage) SetCursorDrawFunc(function func()) {
@@ -173,6 +183,22 @@ func (el *Stage) RemoveFromStage(id string) {
 	}
 
 	el.deleteFromRunnerFunc(id)
+}
+
+func (el *Stage) AddCursor(drawFunc func()) string {
+	if el.addCursorRunnerFunc == nil {
+		return ""
+	}
+
+	return el.addCursorRunnerFunc(drawFunc)
+}
+
+func (el *Stage) RemoveCursor(id string) {
+	if el.deleteCursorFromRunnerFunc == nil {
+		return
+	}
+
+	el.deleteCursorFromRunnerFunc(id)
 }
 
 func (el *Stage) AddToStageAndCache(drawFunc func()) string {

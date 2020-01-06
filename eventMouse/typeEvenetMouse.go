@@ -14,28 +14,28 @@ func (el EventMouse) StringToType(value string) EventMouse {
 
 var eventFromStringMap = map[string]EventMouse{
 	"click":       KClick,
-	"contextMenu": KContextMenu,
-	"doubleClick": KDoubleClick,
-	"mouseDown":   KMouseDown,
-	"mouseEnter":  KMouseEnter,
-	"mouseLeave":  KMouseLeave,
-	"mouseMove":   KMouseMove,
-	"mouseOver":   KMouseOver,
-	"mouseOut":    KMouseOut,
-	"mouseUp":     KMouseUp,
+	"contextmenu": KContextMenu,
+	"dblclick":    KDoubleClick,
+	"mousedown":   KMouseDown,
+	"mouseenter":  KMouseEnter,
+	"mouseleave":  KMouseLeave,
+	"mousemove":   KMouseMove,
+	"mouseover":   KMouseOver,
+	"mouseout":    KMouseOut,
+	"mouseup":     KMouseUp,
 }
 
 var eventMouseString = [...]string{
 	"click",
-	"contextMenu",
-	"doubleClick",
-	"mouseDown",
-	"mouseEnter",
-	"mouseLeave",
-	"mouseMove",
-	"mouseOver",
-	"mouseOut",
-	"mouseUp",
+	"contextmenu",
+	"dblclick",
+	"mousedown",
+	"mouseenter",
+	"mouseleave",
+	"mousemove",
+	"mouseover",
+	"mouseout",
+	"mouseup",
 }
 
 const (

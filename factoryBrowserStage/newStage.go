@@ -48,6 +48,9 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 	stage.AddLowLatencyFunc(fps.AddLowLatencyFunc)
 	stage.DeleteLowLatencyFunc(fps.DeleteLowLatencyFunc)
 
+	stage.AddCursorRunnerFunc(fps.AddCursor)
+	stage.DeleteCursorFromRunnerFunc(fps.RemoveCursor)
+
 	stage.AddWidthPriority(stage.Clear)
 	stage.AddWidthLowLatency(func() {
 		if document.GetDocumentWidth() != int(stage.Width) || document.GetDocumentHeight() != int(stage.Height) {
@@ -79,7 +82,7 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 	stage.SetCursorDrawFunc(imageCursor.Draw)
 	stage.SetCursor = SetCursor
 
-	stage.SetCursorStageId(stage.AddToStage(imageCursor.Draw))
+	stage.SetCursorStageId(stage.AddCursor(imageCursor.Draw))
 
 	// pt_br: Mostra o cursor do mouse sempre que o mesmo entra no documento
 	document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseSimpleEventManager(stage.CursorShow))

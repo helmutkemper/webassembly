@@ -5,6 +5,7 @@ import (
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/Html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/abstractType/image"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/basic"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
 )
 
@@ -114,5 +115,6 @@ func PreLoadCursor(
 		density,
 		iDensity,
 	)
+	imageCursor.SetDragMode(basic.KDragModeAlways)
 	imageCursor.DragStart()
 }

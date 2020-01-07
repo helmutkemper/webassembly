@@ -105,6 +105,7 @@ func PreLoadCursor(
 	cursorHeight = densityCalc.Float64()
 
 	imageCursor = factoryImage.NewImage(
+		"__mouse__cursor__",
 		canvas,
 		scratchPad,
 		cursor.Img.Get(),

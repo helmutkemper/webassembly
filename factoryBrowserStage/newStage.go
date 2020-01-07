@@ -82,7 +82,7 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 	stage.SetCursorDrawFunc(imageCursor.Draw)
 	stage.SetCursor = SetCursor
 
-	stage.SetCursorStageId(stage.AddCursor(imageCursor.Draw))
+	stage.AddCursor(imageCursor.Draw)
 
 	// pt_br: Mostra o cursor do mouse sempre que o mesmo entra no documento
 	document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseSimpleEventManager(stage.CursorShow))

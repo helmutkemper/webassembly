@@ -14,6 +14,10 @@ type Stage struct {
 	Height      float64
 	Id          string
 
+	// drag gera o evento de mouse out, porém, não gera o vento de mouse enter
+	// por isto de haver este flag
+	cursorIsVisible bool
+
 	SetCursor      func(cursorType mouse.CursorType)
 	cursorStageId  string
 	cursorDrawFunc func()
@@ -99,10 +103,17 @@ func (el *Stage) DeleteLowLatencyFunc(function func(string)) {
 }
 
 func (el *Stage) CursorHide() {
+	if el.cursorIsVisible == false {
+		el.CursorShow()
+		return
+	}
+
+	el.cursorIsVisible = false
 	el.deleteCursorFromRunnerFunc(el.cursorStageId)
 }
 
 func (el *Stage) CursorShow() {
+	el.cursorIsVisible = true
 	el.cursorStageId = el.addCursorRunnerFunc(el.cursorDrawFunc)
 }
 
@@ -130,9 +141,9 @@ func (el *Stage) SetHeight(height float64) {
 
 func (el *Stage) Clear() {
 	el.ClearRect(0, 0, el.Width, el.Height)
-	if el.CacheEnable == true {
-		el.ScratchPad.DrawImage(el.Cache.GetCanvas(), 0, 0)
-	}
+	//if el.CacheEnable == true {
+	//el.ScratchPad.DrawImage(el.Cache.GetCanvas(), 0, 0)
+	//}
 	el.DrawImage(el.ScratchPad.GetCanvas(), 0, 0)
 	el.ScratchPad.ClearRect(0, 0, el.Width, el.Height)
 }
@@ -190,6 +201,7 @@ func (el *Stage) AddCursor(drawFunc func()) string {
 		return ""
 	}
 
+	el.cursorIsVisible = true
 	return el.addCursorRunnerFunc(drawFunc)
 }
 

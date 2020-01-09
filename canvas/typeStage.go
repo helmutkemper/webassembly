@@ -39,7 +39,7 @@ type Stage struct {
 }
 
 func (el *Stage) SetFps(value int) {
-	if el.fpsFunc != nil {
+	if el.fpsFunc == nil {
 		return
 	}
 
@@ -47,7 +47,7 @@ func (el *Stage) SetFps(value int) {
 }
 
 func (el *Stage) SetCacheFps(value int) {
-	if el.fpsCacheFunc != nil {
+	if el.fpsCacheFunc == nil {
 		return
 	}
 

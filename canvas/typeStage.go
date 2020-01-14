@@ -54,54 +54,6 @@ func (el *Stage) SetCacheFps(value int) {
 	el.fpsCacheFunc(value)
 }
 
-func (el *Stage) AddToFpsFunc(function func(int)) {
-	el.fpsFunc = function
-}
-
-func (el *Stage) AddToFpsCacheFunc(function func(int)) {
-	el.fpsCacheFunc = function
-}
-
-func (el *Stage) AddCursorRunnerFunc(function func(func()) string) {
-	el.addCursorRunnerFunc = function
-}
-
-func (el *Stage) DeleteCursorFromRunnerFunc(function func(string)) {
-	el.deleteCursorFromRunnerFunc = function
-}
-
-func (el *Stage) AddToRunnerFunc(function func(func()) string) {
-	el.addToRunnerFunc = function
-}
-
-func (el *Stage) DeleteFromRunnerFunc(function func(string)) {
-	el.deleteFromRunnerFunc = function
-}
-
-func (el *Stage) AddToCacheRunnerFunc(function func(func()) string) {
-	el.addToCacheRunnerFunc = function
-}
-
-func (el *Stage) DeleteFromCacheRunnerFunc(function func(string)) {
-	el.deleteFromCacheRunnerFunc = function
-}
-
-func (el *Stage) AddToRunnerPriorityFunc(function func(func()) string) {
-	el.addToRunnerPriorityFunc = function
-}
-
-func (el *Stage) DeleteFromRunnerPriorityFunc(function func(string)) {
-	el.deleteFromRunnerPriorityFunc = function
-}
-
-func (el *Stage) AddLowLatencyFunc(function func(func()) string) {
-	el.addLowLatencyFunc = function
-}
-
-func (el *Stage) DeleteLowLatencyFunc(function func(string)) {
-	el.deleteLowLatencyFunc = function
-}
-
 func (el *Stage) CursorHide() {
 	if el.cursorIsVisible == false {
 		el.CursorShow()

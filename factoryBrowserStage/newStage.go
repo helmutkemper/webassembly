@@ -8,8 +8,6 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserCanvas"
 	webBrowserMouse "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/mouse"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/fps"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mouse"
 )
 
 func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Document, id string, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) *canvas.Stage {
@@ -34,22 +32,6 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 
 	stage.Cache.SetWidth(stage.Width)
 	stage.Cache.SetHeight(stage.Height)
-
-	stage.AddToFpsFunc(fps.Set)
-	stage.AddToFpsCacheFunc(fps.SetCacheUpdate)
-
-	stage.AddToRunnerFunc(fps.AddToRunner)
-	stage.DeleteFromRunnerFunc(fps.DeleteFromRunner)
-	stage.AddToCacheRunnerFunc(fps.AddToCacheRunner)
-	stage.DeleteFromCacheRunnerFunc(fps.DeleteFromCacheRunner)
-
-	stage.AddToRunnerPriorityFunc(fps.AddToRunnerPriorityFunc)
-	stage.DeleteFromRunnerPriorityFunc(fps.DeleteFromRunnerPriorityFunc)
-	stage.AddLowLatencyFunc(fps.AddLowLatencyFunc)
-	stage.DeleteLowLatencyFunc(fps.DeleteLowLatencyFunc)
-
-	stage.AddCursorRunnerFunc(fps.AddCursor)
-	stage.DeleteCursorFromRunnerFunc(fps.RemoveCursor)
 
 	stage.AddWidthPriority(stage.Clear)
 	stage.AddWidthLowLatency(func() {
@@ -90,14 +72,14 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 	// pt_br: Esconde de cursor do mouse sempre que o mesmo sai de cima do documento
 	document.AddEventListener(eventMouse.KMouseOut, webBrowserMouse.SetMouseSimpleEventManager(stage.CursorHide))
 
-	document.AddEventListener(eventMouse.KMouseMove, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseMove))
-	document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseEnter))
-	document.AddEventListener(eventMouse.KMouseOut, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseOut))
-	document.AddEventListener(eventMouse.KMouseUp, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseUp))
-	document.AddEventListener(eventMouse.KMouseDown, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseDown))
-	document.AddEventListener(eventMouse.KClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerClick))
-	document.AddEventListener(eventMouse.KDoubleClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerDoubleClick))
-	document.AddEventListener(eventMouse.KContextMenu, webBrowserMouse.SetMouseMoveManager(mouse.ManagerContextMenu))
+	//document.AddEventListener(eventMouse.KMouseMove, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseMove))
+	//document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseEnter))
+	//document.AddEventListener(eventMouse.KMouseOut, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseOut))
+	//document.AddEventListener(eventMouse.KMouseUp, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseUp))
+	//document.AddEventListener(eventMouse.KMouseDown, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseDown))
+	//document.AddEventListener(eventMouse.KClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerClick))
+	//document.AddEventListener(eventMouse.KDoubleClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerDoubleClick))
+	//document.AddEventListener(eventMouse.KContextMenu, webBrowserMouse.SetMouseMoveManager(mouse.ManagerContextMenu))
 
 	return stage
 }

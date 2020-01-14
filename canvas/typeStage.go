@@ -1,11 +1,13 @@
 package canvas
 
 import (
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mouse"
 )
 
 // todo: density
 type Stage struct {
+	Engine engine.IEngine
 	Canvas
 	ScratchPad  Canvas
 	Cache       Canvas
@@ -21,37 +23,38 @@ type Stage struct {
 	SetCursor      func(cursorType mouse.CursorType)
 	cursorStageId  string
 	cursorDrawFunc func()
-
-	addCursorRunnerFunc     func(func()) string
-	addToRunnerFunc         func(func()) string
-	addToCacheRunnerFunc    func(func()) string
-	addToRunnerPriorityFunc func(func()) string
-	addLowLatencyFunc       func(func()) string
-
-	deleteCursorFromRunnerFunc   func(string)
-	deleteFromRunnerFunc         func(string)
-	deleteFromCacheRunnerFunc    func(string)
-	deleteFromRunnerPriorityFunc func(string)
-	deleteLowLatencyFunc         func(string)
-
-	fpsFunc      func(int)
-	fpsCacheFunc func(int)
 }
 
-func (el *Stage) SetFps(value int) {
-	if el.fpsFunc == nil {
-		return
-	}
-
-	el.fpsFunc(value)
+func (el *Stage) AddToDraw(f func()) {
+	el.Engine.AddToDraw(f)
 }
 
-func (el *Stage) SetCacheFps(value int) {
-	if el.fpsCacheFunc == nil {
-		return
-	}
+func (el *Stage) RemoveFromDraw(id string) {
+	el.Engine.DeleteFromDraw(id)
+}
 
-	el.fpsCacheFunc(value)
+func (el *Stage) AddToCalc(f func()) {
+	el.Engine.AddToCalculate(f)
+}
+
+func (el *Stage) RemoveFromCalc(id string) {
+	el.Engine.DeleteFromCalculate(id)
+}
+
+func (el *Stage) AddToHighLatency(f func()) {
+	el.Engine.AddToHighLatency(f)
+}
+
+func (el *Stage) RemoveFromHighLatency(id string) {
+	el.Engine.DeleteFromHighLatency(id)
+}
+
+func (el *Stage) AddToSystem(f func()) {
+	el.Engine.AddToSystem(f)
+}
+
+func (el *Stage) RemoveFromSystem(id string) {
+	el.Engine.DeleteFromSystem(id)
 }
 
 func (el *Stage) CursorHide() {
@@ -61,12 +64,12 @@ func (el *Stage) CursorHide() {
 	}
 
 	el.cursorIsVisible = false
-	el.deleteCursorFromRunnerFunc(el.cursorStageId)
+	el.Engine.RemoveCursorDrawFunc(el.cursorStageId)
 }
 
 func (el *Stage) CursorShow() {
 	el.cursorIsVisible = true
-	el.cursorStageId = el.addCursorRunnerFunc(el.cursorDrawFunc)
+	el.cursorStageId = el.Engine.AddCursorDrawFunc(el.cursorDrawFunc)
 }
 
 func (el *Stage) SetCursorDrawFunc(function func()) {
@@ -98,85 +101,4 @@ func (el *Stage) Clear() {
 	//}
 	el.DrawImage(el.ScratchPad.GetCanvas(), 0, 0)
 	el.ScratchPad.ClearRect(0, 0, el.Width, el.Height)
-}
-
-func (el *Stage) AddWidthLowLatency(drawFunc func()) string {
-	if el.addLowLatencyFunc == nil {
-		return ""
-	}
-
-	return el.addLowLatencyFunc(drawFunc)
-}
-
-func (el *Stage) RemoveFromLowLatency(id string) {
-	if el.deleteLowLatencyFunc == nil {
-		return
-	}
-
-	el.deleteLowLatencyFunc(id)
-}
-
-func (el *Stage) AddWidthPriority(drawFunc func()) string {
-	if el.addToRunnerPriorityFunc == nil {
-		return ""
-	}
-
-	return el.addToRunnerPriorityFunc(drawFunc)
-}
-
-func (el *Stage) RemoveFromPriority(id string) {
-	if el.deleteFromRunnerPriorityFunc == nil {
-		return
-	}
-
-	el.deleteFromRunnerPriorityFunc(id)
-}
-
-func (el *Stage) AddToStage(drawFunc func()) string {
-	if el.addToRunnerFunc == nil {
-		return ""
-	}
-
-	return el.addToRunnerFunc(drawFunc)
-}
-
-func (el *Stage) RemoveFromStage(id string) {
-	if el.deleteFromRunnerFunc == nil {
-		return
-	}
-
-	el.deleteFromRunnerFunc(id)
-}
-
-func (el *Stage) AddCursor(drawFunc func()) string {
-	if el.addCursorRunnerFunc == nil {
-		return ""
-	}
-
-	el.cursorIsVisible = true
-	return el.addCursorRunnerFunc(drawFunc)
-}
-
-func (el *Stage) RemoveCursor(id string) {
-	if el.deleteCursorFromRunnerFunc == nil {
-		return
-	}
-
-	el.deleteCursorFromRunnerFunc(id)
-}
-
-func (el *Stage) AddToStageAndCache(drawFunc func()) string {
-	if el.addToCacheRunnerFunc == nil {
-		return ""
-	}
-
-	return el.addToCacheRunnerFunc(drawFunc)
-}
-
-func (el *Stage) RemoveFromStageAndCache(id string) {
-	if el.deleteFromCacheRunnerFunc == nil {
-		return
-	}
-
-	el.deleteFromCacheRunnerFunc(id)
 }

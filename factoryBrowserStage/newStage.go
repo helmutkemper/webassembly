@@ -8,11 +8,15 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserCanvas"
 	webBrowserMouse "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/mouse"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 )
 
-func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Document, id string, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) *canvas.Stage {
+func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, engine engine.IEngine, document document.Document, id string, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) *canvas.Stage {
 	stage := &canvas.Stage{}
 	stage.Id = id
+
+	stage.Engine = engine
+	stage.Engine.Init()
 
 	stage.Width = float64(document.GetDocumentWidth())
 	stage.Height = float64(document.GetDocumentHeight())
@@ -33,8 +37,8 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 	stage.Cache.SetWidth(stage.Width)
 	stage.Cache.SetHeight(stage.Height)
 
-	stage.AddWidthPriority(stage.Clear)
-	stage.AddWidthLowLatency(func() {
+	stage.AddToSystem(stage.Clear)
+	stage.AddToHighLatency(func() {
 		if document.GetDocumentWidth() != int(stage.Width) || document.GetDocumentHeight() != int(stage.Height) {
 			stage.Width = float64(document.GetDocumentWidth())
 			stage.Height = float64(document.GetDocumentHeight())
@@ -64,7 +68,7 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, document document.Docu
 	stage.SetCursorDrawFunc(imageCursor.Draw)
 	stage.SetCursor = SetCursor
 
-	stage.AddCursor(imageCursor.Draw)
+	stage.Engine.AddCursorDrawFunc(imageCursor.Draw)
 
 	// pt_br: Mostra o cursor do mouse sempre que o mesmo entra no documento
 	document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseSimpleEventManager(stage.CursorShow))

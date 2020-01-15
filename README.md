@@ -1,5 +1,7 @@
 # iotmaker.webassembly.platform
 
+![uml](./canvas.uml.png)
+
 Experimental webassembly framework / Framework webassembly experimental
 
 ``` golang

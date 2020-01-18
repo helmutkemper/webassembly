@@ -1,0 +1,1 @@
+![./platform.png](./platform.png)

@@ -1,0 +1,1 @@
+![./new_document.png](./new_document.png)

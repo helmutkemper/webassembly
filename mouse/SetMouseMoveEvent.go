@@ -1,7 +1,7 @@
 package mouse
 
 import (
-	"fmt"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go/mouse"
 	"syscall/js"
 )
 
@@ -9,15 +9,13 @@ var mouseMoveEvt js.Func
 var X int
 var Y int
 
-var mouseChannelCoordinate chan []int
-
-func SetMouseMoveManager() js.Func {
+func SetMouseMoveEvent() js.Func {
 	mouseMoveEvt = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		e := args[0]
 		X = e.Get("clientX").Int()
 		Y = e.Get("clientY").Int()
 
-		mouseChannelCoordinate <- []int{X, Y}
+		mouse.BrowserMouseToPlatformMouseCoordinate <- mouse.Move{X: X, Y: Y}
 
 		return nil
 	})
@@ -27,17 +25,4 @@ func SetMouseMoveManager() js.Func {
 
 func ReleaseMouseMoveListener() {
 	mouseMoveEvt.Release()
-}
-
-func init() {
-	mouseChannelCoordinate = make(chan []int)
-
-	go func() {
-		//var coordinate = make( chan mouseChnn.CoordinateChannel )
-		for {
-
-			fmt.Printf("(%v)\n", <-mouseChannelCoordinate)
-
-		}
-	}()
 }

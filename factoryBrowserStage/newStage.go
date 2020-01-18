@@ -56,6 +56,7 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, engine engine.IEngine,
 
 	PreLoadCursor(
 		document.SelfDocument,
+		engine,
 		htmlPlatform,
 		&stage.Canvas,
 		&stage.ScratchPad,

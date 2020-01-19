@@ -26,35 +26,35 @@ type Stage struct {
 }
 
 func (el *Stage) AddToDraw(f func()) {
-	el.Engine.AddToDraw(f)
+	el.Engine.DrawAddToFunctions(f)
 }
 
 func (el *Stage) RemoveFromDraw(id string) {
-	el.Engine.DeleteFromDraw(id)
+	el.Engine.DrawDeleteFromFunctions(id)
 }
 
 func (el *Stage) AddToCalc(f func()) {
-	el.Engine.AddToCalculate(f)
+	el.Engine.MathAddToFunctions(f)
 }
 
 func (el *Stage) RemoveFromCalc(id string) {
-	el.Engine.DeleteFromCalculate(id)
+	el.Engine.MathDeleteFromFunctions(id)
 }
 
 func (el *Stage) AddToHighLatency(f func()) {
-	el.Engine.AddToHighLatency(f)
+	el.Engine.HighLatencyAddToFunctions(f)
 }
 
 func (el *Stage) RemoveFromHighLatency(id string) {
-	el.Engine.DeleteFromHighLatency(id)
+	el.Engine.HighLatencyDeleteFromFunctions(id)
 }
 
 func (el *Stage) AddToSystem(f func()) {
-	el.Engine.AddToSystem(f)
+	el.Engine.SystemAddToFunctions(f)
 }
 
 func (el *Stage) RemoveFromSystem(id string) {
-	el.Engine.DeleteFromSystem(id)
+	el.Engine.SystemDeleteFromFunctions(id)
 }
 
 func (el *Stage) CursorHide() {
@@ -64,12 +64,12 @@ func (el *Stage) CursorHide() {
 	}
 
 	el.cursorIsVisible = false
-	el.Engine.RemoveCursorDrawFunc(el.cursorStageId)
+	el.Engine.CursorRemoveDrawFunction(el.cursorStageId)
 }
 
 func (el *Stage) CursorShow() {
 	el.cursorIsVisible = true
-	el.cursorStageId = el.Engine.AddCursorDrawFunc(el.cursorDrawFunc)
+	el.cursorStageId = el.Engine.CursorAddDrawFunction(el.cursorDrawFunc)
 }
 
 func (el *Stage) SetCursorDrawFunc(function func()) {

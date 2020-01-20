@@ -80,7 +80,7 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, engine engine.IEngine,
 	//document.AddEventListener(eventMouse.KMouseMove, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseMove))
 	//document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseEnter))
 	//document.AddEventListener(eventMouse.KMouseOut, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseOut))
-	//document.AddEventListener(eventMouse.KMouseUp, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseUp))
+	//document.AddEventListener(eventMouse.KMouseUp, webBrowserMouse.SetMouseUpEvent(mouse.ManagerMouseUp))
 	//document.AddEventListener(eventMouse.KMouseDown, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseDown))
 	//document.AddEventListener(eventMouse.KClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerClick))
 	//document.AddEventListener(eventMouse.KDoubleClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerDoubleClick))

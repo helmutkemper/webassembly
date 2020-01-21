@@ -106,7 +106,7 @@ func PreLoadCursor(
 	densityCalc.Set(cursorHeight)
 	cursorHeight = densityCalc.Float64()
 
-	imageCursor = factoryImage.NewImage(
+	imageCursor = factoryImage.NewImageWithDelta(
 		"__mouse__cursor__",
 		engine,
 		canvas,
@@ -116,6 +116,8 @@ func PreLoadCursor(
 		-1000,
 		cursorWidth,
 		cursorHeight,
+		-8,
+		-4,
 		density,
 		iDensity,
 	)

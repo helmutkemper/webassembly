@@ -22,6 +22,6 @@ package canvas
 //     ctx.arcTo(150, 20, 150, 70, 50); // Create an arc
 //     ctx.lineTo(150, 120);            // Continue with vertical line
 //     ctx.stroke();                    // Draw it
-func (el *Canvas) ArcTo(x0, y0, x1, y1, radius float64) {
+func (el *Canvas) ArcTo(x0, y0, x1, y1, radius interface{}) {
 	el.SelfContext.Call("arcTo", x0, y0, x1, y1, radius)
 }

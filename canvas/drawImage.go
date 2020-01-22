@@ -46,7 +46,7 @@ import (
 //     final
 //     Golang Sintaxe: platform.drawImage(img, sx, sy, sWidth, sHeight, x, y, width,
 //                     height)
-func (el *Canvas) DrawImage(image interface{}, value ...float64) {
+func (el *Canvas) DrawImage(image interface{}, value ...interface{}) {
 
 	if len(value) == 8 {
 		sx := value[0]

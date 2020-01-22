@@ -9,6 +9,6 @@ package canvas
 //     Dica: Use o método stroke() para desenhar a rota no elemento canvas
 //     Dica: Use o método fill() para preencher o desenho (petro é a cor padrão). Use a propriedade fillStyle para mudar
 //     a cor de preenchimento ou adicionar um gradiente
-func (el *Canvas) ClosePath(x, y float64) {
+func (el *Canvas) ClosePath(x, y interface{}) {
 	el.SelfContext.Call("closePath", x, y)
 }

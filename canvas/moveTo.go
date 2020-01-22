@@ -9,6 +9,6 @@ package canvas
 //     X: Coordenada x para onde o ponto vai ser deslocado
 //     Y: Coordenada y para onde o ponto vai ser deslocado
 //     Dica: Use o método stroke() para desenhar a rota no elemento canvas
-func (el *Canvas) MoveTo(x, y float64) {
+func (el *Canvas) MoveTo(x, y interface{}) {
 	el.SelfContext.Call("moveTo", x, y)
 }

@@ -1,12 +1,12 @@
 package factoryBrowserStage
 
 import (
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.interfaces/iStage"
 	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/Html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/abstractType/image"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/basic"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
 )
 
@@ -60,7 +60,7 @@ var imageCursor *image.Image
 
 func PreLoadCursor(
 	parent interface{},
-	engine engine.IEngine,
+	stage iStage.IStage,
 	htmlPlatform iotmaker_platform_IDraw.IHtml,
 	canvas,
 	scratchPad iotmaker_platform_IDraw.IDraw,
@@ -108,7 +108,7 @@ func PreLoadCursor(
 
 	imageCursor = factoryImage.NewImageWithDelta(
 		"__mouse__cursor__",
-		engine,
+		stage,
 		canvas,
 		scratchPad,
 		cursor.Img.Get(),

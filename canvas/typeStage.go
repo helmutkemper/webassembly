@@ -1,13 +1,21 @@
 package canvas
 
 import (
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/dimensions"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mouse"
 )
 
+type Index struct {
+	Id         string
+	Index      int
+	Dimensions dimensions.Dimensions
+}
+
 // todo: density
 type Stage struct {
-	Engine engine.IEngine
+	Engine    engine.IEngine
+	IndexList []Index
 	Canvas
 	ScratchPad  Canvas
 	Cache       Canvas
@@ -25,32 +33,56 @@ type Stage struct {
 	cursorDrawFunc func()
 }
 
-func (el *Stage) AddToDraw(f func()) {
-	el.Engine.DrawAddToFunctions(f)
+func (el *Stage) AddEngine(engine engine.IEngine) {
+	el.Engine = engine
+}
+
+func (el *Stage) GetEngine() engine.IEngine {
+	return el.Engine
+}
+
+func (el *Stage) AddToIndexList(id string, index int, dimensions dimensions.Dimensions) {
+	if len(el.IndexList) == 0 {
+		el.IndexList = make([]Index, 0)
+	}
+
+	el.IndexList = append(el.IndexList, Index{Id: id, Index: index, Dimensions: dimensions})
+}
+
+func (el *Stage) RemoveFromIndexList(id string) {
+	for k, v := range el.IndexList {
+		if v.Id == id {
+			el.IndexList = append(el.IndexList[:k], el.IndexList[k+1:]...)
+		}
+	}
+}
+
+func (el *Stage) AddToDraw(f func()) (string, int) {
+	return el.Engine.DrawAddToFunctions(f)
 }
 
 func (el *Stage) RemoveFromDraw(id string) {
 	el.Engine.DrawDeleteFromFunctions(id)
 }
 
-func (el *Stage) AddToCalc(f func()) {
-	el.Engine.MathAddToFunctions(f)
+func (el *Stage) AddToCalc(f func()) (string, int) {
+	return el.Engine.MathAddToFunctions(f)
 }
 
 func (el *Stage) RemoveFromCalc(id string) {
 	el.Engine.MathDeleteFromFunctions(id)
 }
 
-func (el *Stage) AddToHighLatency(f func()) {
-	el.Engine.HighLatencyAddToFunctions(f)
+func (el *Stage) AddToHighLatency(f func()) (string, int) {
+	return el.Engine.HighLatencyAddToFunctions(f)
 }
 
 func (el *Stage) RemoveFromHighLatency(id string) {
 	el.Engine.HighLatencyDeleteFromFunctions(id)
 }
 
-func (el *Stage) AddToSystem(f func()) {
-	el.Engine.SystemAddToFunctions(f)
+func (el *Stage) AddToSystem(f func()) (string, int) {
+	return el.Engine.SystemAddToFunctions(f)
 }
 
 func (el *Stage) RemoveFromSystem(id string) {

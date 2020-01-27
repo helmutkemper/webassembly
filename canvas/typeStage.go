@@ -1,15 +1,15 @@
 package canvas
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/dimensions"
+	iotmaker_santa_isabel_theater_interfaces "github.com/helmutkemper/iotmaker.santa_isabel_theater.interfaces"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mouse"
 )
 
 type Index struct {
-	Id         string
-	Index      int
-	Dimensions dimensions.Dimensions
+	Id        string
+	Index     int
+	Collision func(x, y float64) bool
 }
 
 // todo: density
@@ -41,12 +41,12 @@ func (el *Stage) GetEngine() engine.IEngine {
 	return el.Engine
 }
 
-func (el *Stage) AddToIndexList(id string, index int, dimensions dimensions.Dimensions) {
+func (el *Stage) AddToIndexList(id string, index int, collision func(x, y float64) bool) {
 	if len(el.IndexList) == 0 {
 		el.IndexList = make([]Index, 0)
 	}
 
-	el.IndexList = append(el.IndexList, Index{Id: id, Index: index, Dimensions: dimensions})
+	el.IndexList = append([]Index{{Id: id, Index: index, Collision: collision}}, el.IndexList...)
 }
 
 func (el *Stage) RemoveFromIndexList(id string) {
@@ -57,8 +57,21 @@ func (el *Stage) RemoveFromIndexList(id string) {
 	}
 }
 
-func (el *Stage) AddToDraw(f func()) (string, int) {
-	return el.Engine.DrawAddToFunctions(f)
+func (el *Stage) IsDraggable(x, y float64) string {
+	for _, v := range el.IndexList {
+
+		if v.Collision(x, y) == true {
+			return v.Id
+		}
+	}
+
+	return ""
+}
+
+func (el *Stage) AddToDraw(sprite iotmaker_santa_isabel_theater_interfaces.ISpriteDraw) (string, int) {
+	_, index := el.Engine.DrawAddToFunctions(sprite.Draw)
+	el.AddToIndexList(sprite.GetId(), index, sprite.GetCollisionBox)
+	return sprite.GetId(), index
 }
 
 func (el *Stage) RemoveFromDraw(id string) {

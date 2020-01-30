@@ -53,8 +53,8 @@ type PreLoadImage struct {
 var PreLoadMouseList []PreLoadImage
 var cursor PreLoadImage
 
-var cursorWidth = 24.0
-var cursorHeight = 24.0
+var cursorWidth = 24
+var cursorHeight = 24
 
 var imageCursor *image.Image
 
@@ -100,11 +100,11 @@ func PreLoadCursor(
 	densityCalc := iDensity
 	densityCalc.SetDensityFactor(density)
 
-	densityCalc.Set(cursorWidth)
-	cursorWidth = densityCalc.Float64()
+	densityCalc.SetInt(cursorWidth)
+	cursorWidth = densityCalc.Int()
 
-	densityCalc.Set(cursorHeight)
-	cursorHeight = densityCalc.Float64()
+	densityCalc.SetInt(cursorHeight)
+	cursorHeight = densityCalc.Int()
 
 	imageCursor = factoryImage.NewImageWithDelta(
 		"__mouse__cursor__",

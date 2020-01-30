@@ -9,7 +9,7 @@ import (
 type Index struct {
 	Id        string
 	Index     int
-	Collision func(x, y float64) bool
+	Collision func(x, y int) bool
 }
 
 // todo: density
@@ -20,8 +20,8 @@ type Stage struct {
 	ScratchPad  Canvas
 	Cache       Canvas
 	CacheEnable bool
-	Width       float64
-	Height      float64
+	Width       int
+	Height      int
 	Id          string
 
 	// drag gera o evento de mouse out, porém, não gera o vento de mouse enter
@@ -41,7 +41,7 @@ func (el *Stage) GetEngine() engine.IEngine {
 	return el.Engine
 }
 
-func (el *Stage) AddToIndexList(id string, index int, collision func(x, y float64) bool) {
+func (el *Stage) AddToIndexList(id string, index int, collision func(x, y int) bool) {
 	if len(el.IndexList) == 0 {
 		el.IndexList = make([]Index, 0)
 	}
@@ -57,7 +57,7 @@ func (el *Stage) RemoveFromIndexList(id string) {
 	}
 }
 
-func (el *Stage) IsDraggable(x, y float64) string {
+func (el *Stage) IsDraggable(x, y int) string {
 	for _, v := range el.IndexList {
 
 		if v.Collision(x, y) == true {
@@ -125,14 +125,14 @@ func (el *Stage) SetCursorStageId(id string) {
 	el.cursorStageId = id
 }
 
-func (el *Stage) SetWidth(width float64) {
+func (el *Stage) SetWidth(width int) {
 	el.Canvas.SetWidth(width)
 	el.ScratchPad.SetWidth(width)
 	el.Cache.SetWidth(width)
 	el.Width = width
 }
 
-func (el *Stage) SetHeight(height float64) {
+func (el *Stage) SetHeight(height int) {
 	el.Canvas.SetHeight(height)
 	el.ScratchPad.SetHeight(height)
 	el.Cache.SetHeight(height)

@@ -17,6 +17,6 @@ package canvas
 //
 //     Dica: Use a propriedade fillStile() para determinar a cor, gradiente ou padrão
 //     a ser usado no reenchimento.
-func (el *Canvas) FillRect(x, y, width, height float64) {
+func (el *Canvas) FillRect(x, y, width, height int) {
 	el.SelfContext.Call("fillRect", x, y, width, height)
 }

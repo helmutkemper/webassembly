@@ -13,6 +13,6 @@ package canvas
 //     shadowOffsetX = -20 indica que a forma e a sua sombra estão 20 pixels afastadas a esquerda (em relação a parte mais a esquerda da forma)
 //     Dica: Para ajustar a distância vertical, use a propriedade shadowOffsetY
 //     Valor padrão: 0
-func (el *Canvas) ShadowOffsetX(value float64) {
+func (el *Canvas) ShadowOffsetX(value int) {
 	el.SelfContext.Set("shadowOffsetX", value)
 }

@@ -5,6 +5,6 @@ package canvas
 //
 // pt_br: Define o valor de borrão da sombra
 //     Valor padrão: 0
-func (el *Canvas) SetShadowBlur(value float64) {
+func (el *Canvas) SetShadowBlur(value int) {
 	el.SelfContext.Set("shadowBlur", value)
 }

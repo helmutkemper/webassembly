@@ -22,6 +22,6 @@ import (
 //     Nota: Você pode chamar o método AddColorStopPosition() várias vezes para adicionar várias cores ao gradiente, porém, se
 //     você omitir o método, o gradiente não será visivel. Você tem a obrigação de chamar o método pelo menos uma vez com uma cor
 //     para que o gradiente seja visível.
-func (el *Canvas) AddColorStopPosition(gradient interface{}, stopPosition float64, color color.RGBA) {
+func (el *Canvas) AddColorStopPosition(gradient interface{}, stopPosition int, color color.RGBA) {
 	gradient.(js.Value).Call("addColorStop", stopPosition, RGBAToJs(color))
 }

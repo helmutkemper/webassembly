@@ -18,8 +18,8 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, engine engine.IEngine,
 	stage.Engine = engine
 	stage.Engine.Init()
 
-	stage.Width = float64(document.GetDocumentWidth())
-	stage.Height = float64(document.GetDocumentHeight())
+	stage.Width = document.GetDocumentWidth()
+	stage.Height = document.GetDocumentHeight()
 
 	stage.Canvas = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, stage.Id, stage.Width, stage.Height)
 	stage.ScratchPad = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, stage.Id+"ScratchPad", stage.Width, stage.Height)
@@ -40,8 +40,8 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, engine engine.IEngine,
 	stage.AddToSystem(stage.Clear)
 	stage.AddToHighLatency(func() {
 		if document.GetDocumentWidth() != int(stage.Width) || document.GetDocumentHeight() != int(stage.Height) {
-			stage.Width = float64(document.GetDocumentWidth())
-			stage.Height = float64(document.GetDocumentHeight())
+			stage.Width = document.GetDocumentWidth()
+			stage.Height = document.GetDocumentHeight()
 
 			stage.Canvas.SetWidth(stage.Width)
 			stage.Canvas.SetHeight(stage.Height)

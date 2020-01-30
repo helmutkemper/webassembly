@@ -49,7 +49,7 @@ package canvas
 //
 //     Dica: Depois de manipular as informações de cor/alpha contidas no map[x][y],
 //     elas podem ser colocadas de volta no canvas com o método putImageData().
-func (el *Canvas) GetImageData(x, y, width, height float64, separeData bool) interface{} {
+func (el *Canvas) GetImageData(x, y, width, height int, separeData bool) interface{} {
 	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)
 
 	if separeData == true {

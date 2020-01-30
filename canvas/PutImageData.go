@@ -19,7 +19,7 @@ package canvas
 //     Default: the width of the extracted image
 //     dirtyHeight: Optional. The height to use when drawing the image on the canvas.
 //     Default: the height of the extracted image
-func (el *Canvas) PutImageData(imgData interface{}, values ...float64) {
+func (el *Canvas) PutImageData(imgData interface{}, values ...int) {
 	if len(values) == 2 {
 		x := values[0]
 		y := values[1]

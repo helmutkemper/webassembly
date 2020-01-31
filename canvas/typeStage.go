@@ -140,10 +140,10 @@ func (el *Stage) SetHeight(height int) {
 }
 
 func (el *Stage) Clear() {
-	el.ClearRect(0, 0, el.Width, el.Height)
+	el.Canvas.ClearRect(0, 0, el.Width, el.Height)
 	//if el.CacheEnable == true {
 	//el.ScratchPad.DrawImage(el.Cache.GetCanvas(), 0, 0)
 	//}
-	el.DrawImage(el.ScratchPad.GetCanvas(), 0, 0)
+	el.Canvas.DrawImage(el.ScratchPad.GetCanvas(), 0, 0)
 	el.ScratchPad.ClearRect(0, 0, el.Width, el.Height)
 }

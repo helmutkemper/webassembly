@@ -46,6 +46,7 @@ import (
 //     final
 //     Golang Sintaxe: platform.drawImage(img, sx, sy, sWidth, sHeight, x, y, width,
 //                     height)
+// todo: testar se dividido em três fica mais rápido
 func (el *Canvas) DrawImage(image interface{}, value ...interface{}) {
 
 	if len(value) == 8 {

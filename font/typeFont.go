@@ -1,7 +1,6 @@
 package font
 
 import (
-	"image/color"
 	"strconv"
 )
 
@@ -18,7 +17,7 @@ type Font struct {
 	//
 	// pt_br: use um struct color.RGBA{} ou uma fabrica com as cores de fontes, ex.:
 	// factoryColorNames.NewBlack()
-	Color color.RGBA
+	//Color color.RGBA
 
 	// en: use a string like 'verdana' ou a font family factory, ex.:
 	// factoryFontFamily.NewArialBlack()

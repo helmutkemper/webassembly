@@ -1,5 +1,6 @@
 package canvas
 
+// FillText
 // en: Draws "filled" text on the canvas
 //     text: Specifies the text that will be written on the canvas
 //     x: The x coordinate where to start painting the text (relative to the canvas)

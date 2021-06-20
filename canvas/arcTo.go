@@ -1,5 +1,6 @@
 package canvas
 
+// ArcTo
 // en: Creates an arc/curve between two tangents
 //     x0:     The x-axis coordinate of the first control point.
 //     y0:     The y-axis coordinate of the first control point.

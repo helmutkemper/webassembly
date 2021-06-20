@@ -2,6 +2,7 @@ package canvas
 
 import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/font"
 
+// Font
 // en: Sets the current font properties for text content
 //
 // pt_br: Define as propriedades da fonte atual

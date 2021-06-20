@@ -11,6 +11,7 @@ var eventTransitionString = [...]string{
 }
 
 const (
+	// KTransitionend
 	// en: The event occurs when a CSS transition has completed
 	KTransitionend EventTransition = iota
 )

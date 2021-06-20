@@ -1,5 +1,6 @@
 package canvas
 
+// ClosePath
 // en: Creates a path from the current point back to the starting point
 //     Tip: Use the stroke() method to actually draw the path on the canvas.
 //     Tip: Use the fill() method to fill the drawing (black is default). Use the fillStyle property to fill with

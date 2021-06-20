@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// DrawImageMultiplesSprites
 // en: todo: complete this text
 //     Draws an image, canvas, or video onto the canvas
 //     image: Specifies the image, canvas, or video element to use

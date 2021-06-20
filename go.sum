@@ -1,0 +1,14 @@
+github.com/helmutkemper/iotmaker.platform.webbrowser v0.0.0-20200208001228-b665b1f435bb h1:m99YLjz3/pRNErMS1notxaWM5dNm1zphrgUw1GPzADg=
+github.com/helmutkemper/iotmaker.platform.webbrowser v0.0.0-20200208001228-b665b1f435bb/go.mod h1:QUbS2Rmofhi8TU3QHKxdbydS0e3bOzOMKlKNY5F1zmM=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go v0.0.0-20200120233119-9d62fed13020 h1:6iqqLYaLPYNVBOSahSGltkgPqjpyn3cbnzvy3yGIbOY=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go v0.0.0-20200120233119-9d62fed13020/go.mod h1:HA3lnQ50R+4hrCjx5MYkUvvHFX7WJjTBjJ5+0xqxW1I=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.interfaces v0.0.0-20200130010342-66d246a51491 h1:UWqrW52nJcPpkfP4pp1Kir14X+cPSFQ2MqvNyUOF2hc=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.interfaces v0.0.0-20200130010342-66d246a51491/go.mod h1:dusDmSs8K/xDdrSJdQsWtOqi8yDYT9wh7c33ZI0TYx4=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.platform v0.0.0-20210620200154-222ca2439b5c h1:55MJk0PMbTVc6d5gIbgAg/EMj+uY6nwej8TvxhEkd7I=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.platform v0.0.0-20210620200154-222ca2439b5c/go.mod h1:N/N5Yn4ksnERffRJtl+hg/R+vTGtETGUo97M4zfzWyI=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw v0.0.0-20210620202128-b4450cbd9fe3 h1:+1Zfy6qA1vNtH6pMG2gyoUoM8v5yO1WcSSdrbnYXN5k=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw v0.0.0-20210620202128-b4450cbd9fe3/go.mod h1:hdQAacZSqv+aURe4W78PeY4O6WQ2WP/zRaUwv1Wxlb0=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate v0.0.0-20210620194652-f7df0a8bb189 h1:bxx21YGIvctAuveq6EXgaTUrDHwyHpzTeFobTbUe+Ms=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate v0.0.0-20210620194652-f7df0a8bb189/go.mod h1:hmY25kjzadIvkujGQ120hOKQ3EE28hsMxMS2sxx8x58=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.textMetrics v0.0.0-20191210235158-9eb9854a60fe h1:9H5IRftzHUDNxcfZJX07/PIgA3h5mAsPFx5qh6T7wDI=
+github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.textMetrics v0.0.0-20191210235158-9eb9854a60fe/go.mod h1:Hwy/oENXe9wbL+/tEXk98Mw9cet835SWuG4+u+r4fIE=

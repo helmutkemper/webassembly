@@ -4,6 +4,7 @@ import (
 	"log"
 )
 
+// DrawImage
 // en: Draws an image, canvas, or video onto the canvas
 //     image: Specifies the image, canvas, or video element to use
 //     sx: [optional] The x coordinate where to start clipping

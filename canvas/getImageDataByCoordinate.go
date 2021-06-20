@@ -9,7 +9,7 @@ func (el *Canvas) GetImageDataAlphaChannelByCoordinate(data interface{}, x, y, w
 	width *= 4
 	index := y*width + x*4
 
-	if data.(js.Value).Index(index+3) == js.Undefined() {
+	if data.(js.Value).Index(index+3).IsUndefined() == true {
 		return 0
 	}
 

@@ -1,8 +1,8 @@
 package element
 
 import (
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/document"
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryDocument"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/document"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserDocument"
 	"syscall/js"
 )
 

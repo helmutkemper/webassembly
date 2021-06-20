@@ -5,6 +5,7 @@ import (
 	"syscall/js"
 )
 
+// Image
 // en: The Image{} struct creates a new HTMLImageElement instance. It is equivalent
 // to document.createElement('Img').
 type Image struct {

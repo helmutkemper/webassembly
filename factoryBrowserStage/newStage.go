@@ -11,8 +11,18 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 )
 
-func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, engine engine.IEngine, document document.Document, id string, density interface{}, iDensity iotmaker_platform_coordinate.IDensity) *canvas.Stage {
-	stage := canvas.Stage{}
+func NewStage(
+	htmlPlatform iotmaker_platform_IDraw.IHtml,
+	engine engine.IEngine,
+	document document.Document,
+	id string,
+	density interface{},
+	iDensity iotmaker_platform_coordinate.IDensity,
+) (
+	stage *canvas.Stage,
+) {
+
+	stage = &canvas.Stage{}
 	stage.Id = id
 
 	stage.Engine = engine
@@ -56,7 +66,7 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, engine engine.IEngine,
 
 	PreLoadCursor(
 		document.SelfDocument,
-		&stage,
+		stage,
 		htmlPlatform,
 		&stage.Canvas,
 		&stage.ScratchPad,
@@ -86,5 +96,5 @@ func NewStage(htmlPlatform iotmaker_platform_IDraw.IHtml, engine engine.IEngine,
 	//document.AddEventListener(eventMouse.KDoubleClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerDoubleClick))
 	//document.AddEventListener(eventMouse.KContextMenu, webBrowserMouse.SetMouseMoveManager(mouse.ManagerContextMenu))
 
-	return &stage
+	return
 }

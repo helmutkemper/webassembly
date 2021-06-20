@@ -1,5 +1,6 @@
 package canvas
 
+// CreateRadialGradient
 // en: Creates a radial gradient (to use on canvas content). The parameters represent two circles, one with its center at (x0, y0) and a radius of r0, and the other with its center at (x1, y1) with a radius of r1.
 //     x0: The x-coordinate of the starting circle of the gradient
 //     y0: The y-coordinate of the starting circle of the gradient

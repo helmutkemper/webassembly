@@ -1,5 +1,6 @@
 package canvas
 
+// SetLineWidth
 // en: Sets the current line width in pixels
 //     Default value: 1
 //     JavaScript syntax: context.lineWidth = number;

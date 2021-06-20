@@ -6,6 +6,8 @@ import (
 
 type Html struct{}
 
+// fixme:
+
 func (el Html) NewImage(parent interface{}, propertiesList map[string]interface{}, waitLoad bool) Image {
 	img := Image{
 		SetProperty: propertiesList,

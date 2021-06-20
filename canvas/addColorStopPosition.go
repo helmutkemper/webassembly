@@ -5,6 +5,7 @@ import (
 	"syscall/js"
 )
 
+// AddColorStopPosition
 // en: Specifies the colors and stop positions in a gradient object
 //     gradient:     A gradient object created by CreateLinearGradient() or CreateRadialGradient() methods
 //     stopPosition: A value between 0.0 and 1.0 that represents the position between start (0%) and end (100%) in a gradient

@@ -11,6 +11,7 @@ var eventStorageString = [...]string{
 }
 
 const (
+	// KStorage
 	// en: The event occurs when a Web Storage area is updated
 	KStorage EventStorage = iota
 )

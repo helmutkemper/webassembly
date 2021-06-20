@@ -1,5 +1,6 @@
 package canvas
 
+// CreateLinearGradient
 // en: This method of the Canvas 2D API creates a gradient along the line connecting two given coordinates, starting at (x0, y0) point and ending at (x1, y1) point
 //     x0: The x-coordinate of the start point of the gradient
 //     y0: The y-coordinate of the start point of the gradient

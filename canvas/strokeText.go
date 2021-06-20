@@ -1,5 +1,6 @@
 package canvas
 
+// StrokeText
 // en: Draws text on the canvas with no fill
 //     text: Specifies the text that will be written on the canvas
 //     x: The x coordinate where to start painting the text (relative to the canvas)

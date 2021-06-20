@@ -1,5 +1,6 @@
 package canvas
 
+// GetShadowBlur
 // en: Return the blur level for shadows
 //     Default value: 0
 //

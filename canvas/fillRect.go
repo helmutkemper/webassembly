@@ -1,5 +1,6 @@
 package canvas
 
+// FillRect
 // en: Draws a "filled" rectangle
 //     x: The x-coordinate of the upper-left corner of the rectangle
 //     y: The y-coordinate of the upper-left corner of the rectangle

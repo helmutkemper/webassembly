@@ -12,9 +12,11 @@ var eventPageTransitionString = [...]string{
 }
 
 const (
+	// KPageHide
 	// en: The event occurs when the user navigates away from a webpage
 	KPageHide EventPageTransition = iota
 
+	// KPageShow
 	// en: The event occurs when the user navigates to a webpage
 	KPageShow
 )

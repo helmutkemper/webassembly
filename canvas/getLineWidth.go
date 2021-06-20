@@ -1,5 +1,6 @@
 package canvas
 
+// GetLineWidth
 // en: Return the current line width in pixels
 //     Default value: 1
 //     JavaScript syntax: var l = context.lineWidth;

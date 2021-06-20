@@ -1,5 +1,6 @@
 package canvas
 
+// GetImageDataAlphaChannelOnly
 // en: Returns an ImageData map[x][y]uint8 that copies the pixel alpha channel for
 // the specified rectangle on a canvas
 //     x: The x coordinate (in pixels) of the upper-left corner to start copy from

@@ -1,5 +1,6 @@
 package canvas
 
+// Stroke
 // en: The stroke() method actually draws the path you have defined with all those moveTo() and lineTo() methods. The default color is black.
 //     Tip: Use the strokeStyle property to draw with another color/gradient.
 //

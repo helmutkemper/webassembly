@@ -1,5 +1,6 @@
 package canvas
 
+// ShadowOffsetY
 // en: Sets or returns the vertical distance of the shadow from the shape
 //     The shadowOffsetY property sets or returns the vertical distance of the shadow from the shape.
 //     shadowOffsetY = 0 indicates that the shadow is right behind the shape.

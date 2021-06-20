@@ -1,5 +1,6 @@
 package canvas
 
+// LineTo
 // en: Adds a new point and creates a line from that point to the last specified point in the canvas. (this method does not draw the line).
 //     x: The x-coordinate of where to create the line to
 //     y: The y-coordinate of where to create the line to

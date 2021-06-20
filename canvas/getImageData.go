@@ -1,6 +1,8 @@
 package canvas
 
 // todo: rewrite documentation
+
+// GetImageData
 // en: Returns an ImageData map[x][y]color.RGBA that copies the pixel data for the
 // specified rectangle on a canvas
 //     x: The x coordinate (in pixels) of the upper-left corner to start copy from

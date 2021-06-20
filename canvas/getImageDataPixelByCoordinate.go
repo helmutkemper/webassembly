@@ -6,11 +6,15 @@ import (
 )
 
 // todo: documentation
+
 func (el *Canvas) GetImageDataPixelByCoordinate(data interface{}, x, y, width int) color.RGBA {
 	width *= 4
 	index := y*width + x*4
 
-	if data.(js.Value).Index(index+0) == js.Undefined() || data.(js.Value).Index(index+1) == js.Undefined() || data.(js.Value).Index(index+2) == js.Undefined() || data.(js.Value).Index(index+3) == js.Undefined() {
+	if data.(js.Value).Index(index+0).IsUndefined() == true ||
+		data.(js.Value).Index(index+1).IsUndefined() == true ||
+		data.(js.Value).Index(index+2).IsUndefined() == true ||
+		data.(js.Value).Index(index+3).IsUndefined() == true {
 		return color.RGBA{}
 	}
 

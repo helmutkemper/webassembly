@@ -1,5 +1,6 @@
 package canvas
 
+// ShadowOffsetX
 // en: Sets the horizontal distance of the shadow from the shape
 //     shadowOffsetX = 0 indicates that the shadow is right behind the shape.
 //     shadowOffsetX = 20 indicates that the shadow starts 20 pixels to the right (from the shape's left position).

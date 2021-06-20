@@ -31,21 +31,27 @@ var textBaseLineStringStringToTextBaseLineStringMap = map[string]TextBaseLine{
 }
 
 const (
+	// KAlphabetic
 	// en: Default. The text baseline is the normal alphabetic baseline
 	KAlphabetic TextBaseLine = iota
 
+	// KTop
 	// en: The text baseline is the top of the em square
 	KTop
 
+	// KHanging
 	// en: The text baseline is the hanging baseline
 	KHanging
 
+	// KMiddle
 	// en: The text baseline is the middle of the em square
 	KMiddle
 
+	// KIdeographic
 	// en: The text baseline is the ideographic baseline
 	KIdeographic
 
+	// KBottom
 	// en: The text baseline is the bottom of the bounding box
 	KBottom
 )

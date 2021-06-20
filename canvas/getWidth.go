@@ -1,5 +1,6 @@
 package canvas
 
+// GetWidth
 // en: Returns the width of an ImageData object
 //
 //     The width property returns the width of an ImageData object, in pixels.

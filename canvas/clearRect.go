@@ -1,5 +1,6 @@
 package canvas
 
+// ClearRect
 // en: Clears the specified pixels within a given rectangle
 //     x: The x-coordinate of the upper-left corner of the rectangle to clear
 //     y: The y-coordinate of the upper-left corner of the rectangle to clear

@@ -11,6 +11,7 @@ var eventPopStateString = [...]string{
 }
 
 const (
+	// KPopState
 	// en: The event occurs when the window's history changes
 	KPopState EventPopState = iota
 )

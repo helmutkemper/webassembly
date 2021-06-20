@@ -13,12 +13,15 @@ var eventKeyboardString = [...]string{
 }
 
 const (
+	// KKeyDown
 	// en: The event occurs when the user is pressing a key
 	KKeyDown EventKeyboard = iota
 
+	// KKeyPress
 	// en: The event occurs when the user presses a key
 	KKeyPress
 
+	// KKeyUp
 	// en: The event occurs when the user releases a key
 	KKeyUp
 )

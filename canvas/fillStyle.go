@@ -2,6 +2,7 @@ package canvas
 
 import "image/color"
 
+// SetFillStyle
 // en: Sets the color, gradient, or pattern used to fill the drawing
 //     value: a valid JavaScript value or a color.RGBA{} struct
 //     Default value:	#000000

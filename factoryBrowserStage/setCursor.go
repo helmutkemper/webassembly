@@ -6,6 +6,8 @@ import (
 
 //var mouseChannelSendToThread chan mouseChnn.Cursor
 
+// fixme:
+
 func SetCursor(name mouse.CursorType) {
 
 	for _, cursor := range PreLoadMouseList {

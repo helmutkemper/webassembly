@@ -4,6 +4,7 @@ import (
 	"image/color"
 )
 
+// SetShadowColor
 // en: Sets the color to use for shadows
 //     Note: Use the shadowColor property together with the shadowBlur property to create a shadow.
 //     Tip: Adjust the shadow by using the shadowOffsetX and shadowOffsetY properties.

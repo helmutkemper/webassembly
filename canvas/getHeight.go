@@ -1,5 +1,6 @@
 package canvas
 
+// GetHeight
 // en: Returns the height of an ImageData object
 //
 //     The height property returns the height of an ImageData object, in pixels.

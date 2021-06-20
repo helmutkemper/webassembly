@@ -11,6 +11,7 @@ var eventInputString = [...]string{
 }
 
 const (
+	// KInput
 	// en: The event occurs when an element gets user input
 	KInput EventInput = iota
 )

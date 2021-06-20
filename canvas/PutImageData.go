@@ -1,5 +1,6 @@
 package canvas
 
+// PutImageData
 // en: The putImageData() method puts the image data (from a specified ImageData
 // object) back onto the canvas.
 // Tip: Read about the getImageData() method that copies the pixel data for a

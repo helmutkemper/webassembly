@@ -11,6 +11,7 @@ var eventHashChangeString = [...]string{
 }
 
 const (
+	// KHashChange
 	// en: The event occurs when there has been changes to the anchor part of a URL
 	KHashChange EventHashChange = iota
 )

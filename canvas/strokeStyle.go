@@ -2,6 +2,7 @@ package canvas
 
 import "image/color"
 
+// SetStrokeStyle
 // en: Sets the color, gradient, or pattern used for strokes
 //     value: a valid JavaScript value or a color.RGBA{} struct
 //     Default value: #000000

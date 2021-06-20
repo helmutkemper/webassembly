@@ -1,5 +1,6 @@
 package canvas
 
+// MoveTo
 // en: Moves the path to the specified point in the canvas, without creating a line
 //     x: The x-coordinate of where to move the path to
 //     y: The y-coordinate of where to move the path to

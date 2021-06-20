@@ -1,5 +1,6 @@
 package canvas
 
+// SetShadowBlur
 // en: Sets the blur level for shadows
 //     Default value: 0
 //

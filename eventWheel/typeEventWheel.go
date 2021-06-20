@@ -12,9 +12,11 @@ var eventWheelString = [...]string{
 }
 
 const (
+	// KMouseWheel
 	// en: Deprecated. Use the wheel event instead
 	KMouseWheel EventWheel = iota
 
+	// KWheel
 	// en: The event occurs when the mouse wheel rolls up or down over an element
 	KWheel
 )

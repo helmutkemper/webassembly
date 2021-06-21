@@ -5,14 +5,18 @@ import (
 	coordinateManager "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserDocument"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserStage"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontStyle"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorGradient"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorNames"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryDraw"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryFont"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryGradient"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryPoint"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryShadow"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryText"
 )
 
 func main() {
@@ -66,6 +70,28 @@ func main() {
 		2,
 		shadowFilter,
 		gradientFilter,
+		density,
+		densityManager,
+	)
+
+	var f = factoryFont.NewFont(
+		10,
+		factoryFontFamily.NewArial(),
+		factoryFontStyle.NewItalic(),
+		density,
+		densityManager,
+	)
+
+	factoryText.NewText(
+		"text",
+		stage,
+		&stage.Canvas,
+		&stage.ScratchPad,
+		nil,
+		f,
+		"Olá Mundo! Estou Vivo",
+		10,
+		10,
 		density,
 		densityManager,
 	)

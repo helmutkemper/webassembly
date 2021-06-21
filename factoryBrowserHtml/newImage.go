@@ -1,9 +1,9 @@
 package factoryBrowserHtml
 
-import "github.com/helmutkemper/iotmaker.platform.webbrowser/Html"
+import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 
 func NewImage(parent interface{}, propertiesList map[string]interface{}, waitLoad, append bool) interface{} {
-	img := Html.Html{}
+	img := html.Html{}
 	ret := img.NewImage(parent, propertiesList, waitLoad)
 
 	if append == true {

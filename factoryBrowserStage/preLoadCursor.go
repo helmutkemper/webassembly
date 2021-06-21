@@ -4,7 +4,7 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.interfaces/iStage"
 	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/Html"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/abstractType/image"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/basic"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
@@ -46,7 +46,7 @@ var KTemplarianList = map[string]string{
 }
 
 type PreLoadImage struct {
-	Img Html.Image
+	Img html.Image
 	id  string
 }
 

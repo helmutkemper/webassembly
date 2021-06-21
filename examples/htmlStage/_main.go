@@ -3,14 +3,10 @@
 package main
 
 import (
-  iotmakerPlatformIDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
   coordinateManager "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
-  "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/Html"
   "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserDocument"
   "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserStage"
-  "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/abstractType/shadow"
   "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
-  "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryDraw"
   "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factorySimpleBox"
 )
 
@@ -23,7 +19,7 @@ func main() {
 
 	browserDocument := factoryBrowserDocument.NewDocument()
 
-	var htmlB = &Html.Html{}
+	var htmlB = &html.Html{}
 	var stage = factoryBrowserStage.NewStage(
 	  htmlB,
 	  &engine.Engine{},

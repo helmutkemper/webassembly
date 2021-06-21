@@ -3,8 +3,8 @@
 package main
 
 import (
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryBrowserDocument"
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryBrowserHtml"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserDocument"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserHtml"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package canvas
 
 import (
-	"github.com/helmutkemper/iotmaker.platform.webbrowser"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser"
 	"syscall/js"
 )
 

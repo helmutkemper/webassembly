@@ -2,7 +2,7 @@ package factoryBrowserImage
 
 import (
 	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/Html"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 )
 
 // fixme:
@@ -13,7 +13,7 @@ func NewImage(
 	propertiesList map[string]interface{},
 	waitLoad,
 	append bool,
-) Html.Image {
+) html.Image {
 	img := platform.NewImage(parent, propertiesList, waitLoad)
 
 	if append == true {

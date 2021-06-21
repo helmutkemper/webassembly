@@ -1,4 +1,4 @@
-package Html
+package html
 
 import (
 	"sync"

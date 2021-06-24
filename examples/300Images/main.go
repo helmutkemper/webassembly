@@ -21,6 +21,7 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryText"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/ink"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
 	"strconv"
 	"time"
 )
@@ -82,7 +83,7 @@ func main() {
 		false,
 	)
 
-	for a := 0; a != 1; a += 1 {
+	for a := 0; a != 500; a += 1 {
 		i := factoryImage.NewImage(
 			"id_"+strconv.FormatInt(int64(a), 10),
 			stage,
@@ -90,8 +91,8 @@ func main() {
 			&stage.ScratchPad,
 			nil,
 			imgSpace.Get(),
-			10,
-			100,
+			-100,
+			-100,
 			29,
 			50,
 			density,
@@ -102,9 +103,9 @@ func main() {
 
 		factoryTween.NewSelectRandom(
 			eng,
-			3*1000*time.Millisecond,
-			0,
-			800,
+			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
+			mathUtil.Float64FomInt(0, 1000),
+			mathUtil.Float64FomInt(0, 1000),
 			nil,
 			nil,
 			nil,
@@ -116,6 +117,27 @@ func main() {
 				//i.OutBoxDimensions.X = int(x)
 				//i.MoveY(int(x), int(100))
 				i.MoveX(int(x))
+				//i.Draw()
+			},
+			-1,
+		)
+
+		factoryTween.NewSelectRandom(
+			eng,
+			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
+			mathUtil.Float64FomInt(0, 800),
+			mathUtil.Float64FomInt(0, 900),
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			func(y, p float64, ars ...interface{}) {
+				//log.Printf("x: %v", x)
+				//i.Dimensions.X = int(x)
+				//i.OutBoxDimensions.X = int(x)
+				//i.MoveY(int(x), int(100))
+				i.MoveY(0, int(y))
 				//i.Draw()
 			},
 			-1,

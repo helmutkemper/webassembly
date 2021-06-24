@@ -20,7 +20,7 @@ func (el *Element) NewImage(id string) js.Value {
 }
 
 func (el *Element) Create(name, id string) js.Value {
-	el.Document.Initialize()
+	el.Document.Init()
 	el.SelfElement = el.Document.SelfDocument.Call("createElement", name)
 	el.SelfElement.Set("id", id)
 

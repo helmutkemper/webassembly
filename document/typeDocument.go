@@ -22,7 +22,7 @@ type Document struct {
 	SelfDocument   js.Value
 }
 
-func (el *Document) Initialize() {
+func (el *Document) Init() {
 	el.hasInitialized = true
 	el.SelfDocument = js.Global().Get("document")
 }
@@ -30,7 +30,7 @@ func (el *Document) Initialize() {
 func (el *Document) Get() js.Value {
 
 	if el.hasInitialized == false {
-		el.Initialize()
+		el.Init()
 	}
 
 	return el.SelfDocument
@@ -38,7 +38,7 @@ func (el *Document) Get() js.Value {
 
 func (el *Document) HideMousePointer() {
 	if el.hasInitialized == false {
-		el.Initialize()
+		el.Init()
 	}
 
 	el.SelfDocument.Get("body").Set("style", "cursor: none")
@@ -47,7 +47,7 @@ func (el *Document) HideMousePointer() {
 func (el *Document) AppendChildToDocumentBody(value interface{}) {
 
 	if el.hasInitialized == false {
-		el.Initialize()
+		el.Init()
 	}
 
 	el.SelfDocument.Get("body").Call("appendChild", value)
@@ -56,7 +56,7 @@ func (el *Document) AppendChildToDocumentBody(value interface{}) {
 func (el *Document) RemoveChildFromDocumentBody(value interface{}) {
 
 	if el.hasInitialized == false {
-		el.Initialize()
+		el.Init()
 	}
 
 	el.SelfDocument.Get("body").Call("removeChild", value)
@@ -78,7 +78,7 @@ func (el Document) ResizeToScreen() {
 func (el *Document) AppendChild(element string, value interface{}) {
 
 	if el.hasInitialized == false {
-		el.Initialize()
+		el.Init()
 	}
 
 	el.SelfDocument.Get(element).Call("appendChild", value)

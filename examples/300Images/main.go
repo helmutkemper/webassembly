@@ -4,18 +4,23 @@
 package main
 
 import (
-	iotmakerPlatformIDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	coordinateManager "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/canvas"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/document"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserDocument"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserImage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserStage"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontStyle"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/basic"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorNames"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryFont"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryInk"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryText"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/ink"
 	"strconv"
 	"time"
 )
@@ -23,30 +28,49 @@ import (
 var (
 	density                                   = 1.0
 	densityManager coordinateManager.IDensity = &coordinateManager.Density{}
-	stage                                     = &canvas.Stage{}
-	eng                                       = engine.Engine{}
 )
 
-var htm iotmakerPlatformIDraw.IHtml
-var browserDocument document.Document
-var imgSpace interface{}
+var imgSpace html.Image
 
-func prepareDataBeforeRun() {
+func main() {
 
-	htm = &html.Html{}
+	done := make(chan struct{}, 0)
 
-	browserDocument = factoryBrowserDocument.NewDocument()
+	var browserDocument = factoryBrowserDocument.NewDocument()
+	var stage = &canvas.Stage{}
+	var eng = &engine.Engine{}
+	var hml = &html.Html{}
+
 	stage = factoryBrowserStage.NewStage(
-		htm,
-		&eng,
+		hml,
+		eng,
 		browserDocument,
 		"stage",
 		density,
 		densityManager,
 	)
 
+	fontText := factoryFont.NewFont(45, factoryFontFamily.NewArial(), factoryFontStyle.NewNotSet(), density, densityManager)
+	inkText := factoryInk.NewInk(ink.Ink{}, 1, factoryColorNames.NewRed(), nil, nil, density, densityManager)
+
+	text := factoryText.NewText(
+		"text",
+		stage,
+		&stage.Canvas,
+		&stage.ScratchPad,
+		&inkText,
+		fontText,
+		"Olá Mundo!",
+		125,
+		20,
+		density,
+		densityManager,
+	)
+	text.SetDragMode(basic.KDragModeDesktop)
+	stage.AddToDraw(text)
+
 	imgSpace = factoryBrowserImage.NewImage(
-		htm,
+		hml,
 		browserDocument.SelfDocument,
 		map[string]interface{}{
 			"width": 29,
@@ -55,14 +79,8 @@ func prepareDataBeforeRun() {
 			"src":   "./small.png",
 		},
 		true,
-		true,
+		false,
 	)
-}
-
-func main() {
-
-	done := make(chan struct{}, 0)
-	prepareDataBeforeRun()
 
 	for a := 0; a != 1; a += 1 {
 		i := factoryImage.NewImage(
@@ -71,48 +89,38 @@ func main() {
 			&stage.Canvas,
 			&stage.ScratchPad,
 			nil,
-			imgSpace,
-			-100,
-			-100,
+			imgSpace.Get(),
+			10,
+			100,
 			29,
 			50,
 			density,
 			densityManager,
 		)
-		//i.SetDraggable(true)
+		i.SetDraggableToDesktop()
 		stage.AddToDraw(i)
+
 		factoryTween.NewSelectRandom(
-			&eng,
-			time.Millisecond*time.Duration(mathUtil.Float64FomInt(500, 3000)),
-			mathUtil.Float64FomInt(0, 800),
-			mathUtil.Float64FomInt(0, 800),
-			nil,
-			nil,
-			nil,
-			func(x float64, ars ...interface{}) {
-				i.Dimensions.X = int(x)
-				i.OutBoxDimensions.X = int(x)
-			},
-			nil,
-			nil,
+			eng,
+			3*1000*time.Millisecond,
 			0,
-		)
-		factoryTween.NewSelectRandom(
-			&eng,
-			time.Millisecond*time.Duration(mathUtil.Float64FomInt(500, 3000)),
-			mathUtil.Float64FomInt(0, 600),
-			mathUtil.Float64FomInt(0, 600),
+			800,
 			nil,
 			nil,
 			nil,
-			func(y float64, ars ...interface{}) {
-				i.Dimensions.Y = int(y)
-				i.OutBoxDimensions.Y = int(y)
+			nil,
+			nil,
+			func(x, p float64, ars ...interface{}) {
+				//log.Printf("x: %v", x)
+				//i.Dimensions.X = int(x)
+				//i.OutBoxDimensions.X = int(x)
+				//i.MoveY(int(x), int(100))
+				i.MoveX(int(x))
+				//i.Draw()
 			},
-			nil,
-			nil,
-			0,
+			-1,
 		)
+
 	}
 
 	<-done

@@ -8,7 +8,7 @@ import (
 
 func NewDocument() document.Document {
 	el := document.Document{}
-	el.Initialize()
+	el.Init()
 
 	el.AddEventListener(eventMouse.KMouseMove, webBrowserMouse.SetMouseMoveEvent())
 	el.AddEventListener(eventMouse.KClick, webBrowserMouse.SetMouseClickEvent())

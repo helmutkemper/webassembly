@@ -1,3 +1,4 @@
+//go:build js
 // +build js
 
 //
@@ -83,7 +84,7 @@ func main() {
 		false,
 	)
 
-	for a := 0; a != 500; a += 1 {
+	for a := 0; a != 10; a += 1 {
 		i := factoryImage.NewImage(
 			"id_"+strconv.FormatInt(int64(a), 10),
 			stage,

@@ -102,10 +102,10 @@ func main() {
 		i.Move(100, 30)
 		i.SetOnDragEndFunc(func(x, y int) {
 			factoryTween.NewLinear(
-				eng,
 				1000*time.Millisecond,
 				float64(x),
 				100,
+				false,
 				nil,
 				func(x float64, arguments ...interface{}) {
 					i.MoveX(100)
@@ -124,13 +124,13 @@ func main() {
 				0,
 			)
 			factoryTween.NewLinear(
-				eng,
 				1000*time.Millisecond,
 				float64(y),
 				30,
+				false,
 				nil,
 				func(y float64, arguments ...interface{}) {
-					i.MoveY(0, 30)
+					i.MoveY(30)
 				},
 				nil,
 				nil,
@@ -140,7 +140,7 @@ func main() {
 					//i.Dimensions.X = int(x)
 					//i.OutBoxDimensions.X = int(x)
 					//i.MoveY(int(x), int(100))
-					i.MoveY(0, int(y))
+					i.MoveY(int(y))
 					//i.Draw()
 				},
 				0,
@@ -149,10 +149,10 @@ func main() {
 		stage.AddToDraw(i)
 		<-done
 		factoryTween.NewSelectRandom(
-			eng,
 			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
 			mathUtil.Float64FomInt(0, 1000),
 			mathUtil.Float64FomInt(0, 1000),
+			false,
 			nil,
 			nil,
 			nil,
@@ -170,10 +170,10 @@ func main() {
 		)
 
 		factoryTween.NewSelectRandom(
-			eng,
 			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
 			mathUtil.Float64FomInt(0, 800),
 			mathUtil.Float64FomInt(0, 900),
+			false,
 			nil,
 			nil,
 			nil,
@@ -184,7 +184,7 @@ func main() {
 				//i.Dimensions.X = int(x)
 				//i.OutBoxDimensions.X = int(x)
 				//i.MoveY(int(x), int(100))
-				i.MoveY(0, int(y))
+				i.MoveY(int(y))
 				//i.Draw()
 			},
 			-1,

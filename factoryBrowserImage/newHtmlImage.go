@@ -6,6 +6,7 @@ import (
 )
 
 // fixme:
+// fixme: width e heght deven ser passados por parametro e ter density
 
 func NewImage(
 	platform iotmaker_platform_IDraw.IHtml,

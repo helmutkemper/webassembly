@@ -5,10 +5,10 @@
 package main
 
 import (
+	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserImage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontStyle"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/global"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/basic"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorNames"
@@ -80,11 +80,11 @@ func main() {
 		i.SetDraggableToDesktop()
 		stage.AddToDraw(i)
 
-		factoryTween.NewSelectRandom(
-			global.Global.Engine,
+		factoryTween.NewLinear(
 			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
 			mathUtil.Float64FomInt(0, 1000),
 			mathUtil.Float64FomInt(0, 1000),
+			false,
 			nil,
 			nil,
 			nil,
@@ -101,11 +101,11 @@ func main() {
 			-1,
 		)
 
-		factoryTween.NewSelectRandom(
-			global.Global.Engine,
+		factoryTween.NewLinear(
 			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
 			mathUtil.Float64FomInt(0, 800),
 			mathUtil.Float64FomInt(0, 900),
+			false,
 			nil,
 			nil,
 			nil,

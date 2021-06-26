@@ -7,17 +7,9 @@ package main
 import (
 	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserImage"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontStyle"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/basic"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorNames"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryFont"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryInk"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryText"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/ink"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
 	"strconv"
 	"time"
@@ -30,34 +22,18 @@ func main() {
 	done := make(chan struct{}, 0)
 	stage := global.Global.Stage
 
-	fontText := factoryFont.NewFont(45, factoryFontFamily.NewArial(), factoryFontStyle.NewNotSet(), global.Global.Density, global.Global.DensityManager)
-	inkText := factoryInk.NewInk(ink.Ink{}, 1, factoryColorNames.NewRed(), nil, nil, global.Global.Density, global.Global.DensityManager)
-
-	text := factoryText.NewText(
-		"text",
-		&inkText,
-		fontText,
-		"Olá Mundo!",
-		125,
-		20,
-	)
-	text.SetDragMode(basic.KDragModeDesktop)
-	stage.AddToDraw(text)
-
 	imgSpace = factoryBrowserImage.NewImage(
-		global.Global.Html,
-		global.Global.Document.SelfDocument,
+		29,
+		50,
 		map[string]interface{}{
-			"width": 29,
-			"heght": 50,
-			"id":    "spacecraft",
-			"src":   "./small.png",
+			"id":  "spacecraft",
+			"src": "./small.png",
 		},
 		true,
 		false,
 	)
 
-	for a := 0; a != 10; a += 1 {
+	for a := 0; a != 300; a += 1 {
 		i := factoryImage.NewImage(
 			"id_"+strconv.FormatInt(int64(a), 10),
 			global.Global.Stage,
@@ -77,8 +53,8 @@ func main() {
 
 		factoryTween.NewLinear(
 			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
-			mathUtil.Float64FomInt(0, 1000),
-			mathUtil.Float64FomInt(0, 1000),
+			mathUtil.Float64FomInt(0, global.Global.Document.GetDocumentWidth()-29),
+			mathUtil.Float64FomInt(0, global.Global.Document.GetDocumentWidth()-29),
 			false,
 			nil,
 			nil,
@@ -98,8 +74,8 @@ func main() {
 
 		factoryTween.NewLinear(
 			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
-			mathUtil.Float64FomInt(0, 800),
-			mathUtil.Float64FomInt(0, 900),
+			mathUtil.Float64FomInt(0, global.Global.Document.GetDocumentHeight()-50),
+			mathUtil.Float64FomInt(0, global.Global.Document.GetDocumentHeight()-50),
 			false,
 			nil,
 			nil,

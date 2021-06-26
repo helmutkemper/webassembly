@@ -1,20 +1,35 @@
 package factoryBrowserImage
 
 import (
+	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
 	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 )
 
 // fixme:
-// fixme: width e heght deven ser passados por parametro e ter density
 
 func NewImage(
-	platform iotmaker_platform_IDraw.IHtml,
-	parent interface{},
+	width int,
+	heght int,
 	propertiesList map[string]interface{},
 	waitLoad,
 	append bool,
 ) html.Image {
+	var platform iotmaker_platform_IDraw.IHtml = global.Global.Html
+	var parent interface{} = global.Global.Document.SelfDocument
+
+	densityCalc := global.Global.DensityManager
+	densityCalc.SetDensityFactor(global.Global.Density)
+
+	densityCalc.SetInt(width)
+	width = densityCalc.Int()
+
+	densityCalc.SetInt(heght)
+	heght = densityCalc.Int()
+
+	propertiesList["width"] = width
+	propertiesList["heght"] = heght
+
 	img := platform.NewImage(parent, propertiesList, waitLoad)
 
 	if append == true {

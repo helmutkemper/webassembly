@@ -32,8 +32,7 @@ func main() {
 		factoryFontStyle.NewNotSet(),
 	)
 
-	inkText := factoryInk.NewInk(
-		0,
+	inkText := factoryInk.NewTextInk(
 		factoryColorNames.NewBlack(),
 	)
 
@@ -49,13 +48,11 @@ func main() {
 	stage.AddToDraw(text)
 
 	imgSpace = factoryBrowserImage.NewImage(
-		global.Global.Html,
-		global.Global.Document.SelfDocument,
+		29,
+		50,
 		map[string]interface{}{
-			"width": 29,
-			"heght": 50,
-			"id":    "spacecraft",
-			"src":   "./small.png",
+			"id":  "spacecraft",
+			"src": "./small.png",
 		},
 		true,
 		false,

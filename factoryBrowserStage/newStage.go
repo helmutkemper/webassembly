@@ -11,6 +11,8 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 )
 
+// fixme: stage está estranho
+
 func NewStage(
 	htmlPlatform iotmaker_platform_IDraw.IHtml,
 	engine engine.IEngine,

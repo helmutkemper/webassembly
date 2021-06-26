@@ -138,7 +138,7 @@ func main() {
 				//i.Dimensions.X = int(x)
 				//i.OutBoxDimensions.X = int(x)
 				//i.MoveY(int(x), int(100))
-				i.MoveY(0, int(y))
+				i.MoveY(int(y))
 				//i.Draw()
 			},
 			-1,

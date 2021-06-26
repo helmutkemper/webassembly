@@ -5,30 +5,18 @@
 package main
 
 import (
-	coordinateManager "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/canvas"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserDocument"
+	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserImage"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserStage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontStyle"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorNames"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryFont"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryInk"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryText"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/ink"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
-	"strconv"
 	"time"
-)
-
-var (
-	density                                   = 1.0
-	densityManager coordinateManager.IDensity = &coordinateManager.Density{}
 )
 
 var imgSpace html.Image
@@ -36,43 +24,33 @@ var imgSpace html.Image
 func main() {
 
 	done := make(chan struct{}, 0)
+	stage := global.Global.Stage
 
-	var browserDocument = factoryBrowserDocument.NewDocument()
-	var stage = &canvas.Stage{}
-	var eng = &engine.Engine{}
-	var hml = &html.Html{}
-
-	stage = factoryBrowserStage.NewStage(
-		hml,
-		eng,
-		browserDocument,
-		"stage",
-		density,
-		densityManager,
+	fontText := factoryFont.NewFont(
+		14,
+		factoryFontFamily.NewHelvetica(),
+		factoryFontStyle.NewNotSet(),
 	)
 
-	fontText := factoryFont.NewFont(45, factoryFontFamily.NewArial(), factoryFontStyle.NewNotSet(), density, densityManager)
-	inkText := factoryInk.NewInk(ink.Ink{}, 1, factoryColorNames.NewRed(), nil, nil, density, densityManager)
+	inkText := factoryInk.NewInk(
+		0,
+		factoryColorNames.NewBlack(),
+	)
 
 	text := factoryText.NewText(
 		"text",
-		stage,
-		&stage.Canvas,
-		&stage.ScratchPad,
 		&inkText,
 		fontText,
-		"Olá Mundo!",
-		125,
-		20,
-		density,
-		densityManager,
+		"<-- Drad me",
+		135,
+		40,
 	)
 	text.SetDraggableToDesktop()
 	stage.AddToDraw(text)
 
 	imgSpace = factoryBrowserImage.NewImage(
-		hml,
-		browserDocument.SelfDocument,
+		global.Global.Html,
+		global.Global.Document.SelfDocument,
 		map[string]interface{}{
 			"width": 29,
 			"heght": 50,
@@ -83,78 +61,32 @@ func main() {
 		false,
 	)
 
-	for a := 0; a != 100; a += 1 {
-		i := factoryImage.NewImage(
-			"id_"+strconv.FormatInt(int64(a), 10),
-			stage,
-			&stage.Canvas,
-			&stage.ScratchPad,
-			nil,
-			imgSpace.Get(),
-			-100,
-			-100,
-			29,
-			50,
-			density,
-			densityManager,
-		)
-		i.SetDraggableToDesktop()
-		i.Move(100, 30)
-		i.SetOnDragEndFunc(func(x, y int) {
-			factoryTween.NewLinear(
-				1000*time.Millisecond,
-				float64(x),
-				100,
-				false,
-				nil,
-				func(x float64, arguments ...interface{}) {
-					i.MoveX(100)
-				},
-				nil,
-				nil,
-				nil,
-				func(x, p float64, ars ...interface{}) {
-					//log.Printf("x: %v", x)
-					//i.Dimensions.X = int(x)
-					//i.OutBoxDimensions.X = int(x)
-					//i.MoveY(int(x), int(100))
-					i.MoveX(int(x))
-					//i.Draw()
-				},
-				0,
-			)
-			factoryTween.NewLinear(
-				1000*time.Millisecond,
-				float64(y),
-				30,
-				false,
-				nil,
-				func(y float64, arguments ...interface{}) {
-					i.MoveY(30)
-				},
-				nil,
-				nil,
-				nil,
-				func(y, p float64, ars ...interface{}) {
-					//log.Printf("x: %v", x)
-					//i.Dimensions.X = int(x)
-					//i.OutBoxDimensions.X = int(x)
-					//i.MoveY(int(x), int(100))
-					i.MoveY(int(y))
-					//i.Draw()
-				},
-				0,
-			)
-		})
-		stage.AddToDraw(i)
-		<-done
-		factoryTween.NewSelectRandom(
-			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
-			mathUtil.Float64FomInt(0, 1000),
-			mathUtil.Float64FomInt(0, 1000),
+	i := factoryImage.NewImage(
+		"id_image",
+		stage,
+		&stage.Canvas,
+		&stage.ScratchPad,
+		nil,
+		imgSpace.Get(),
+		-100,
+		-100,
+		29,
+		50,
+		global.Global.Density,
+		global.Global.DensityManager,
+	)
+	i.SetDraggableToDesktop()
+	i.Move(100, 30)
+	i.SetOnDragEndFunc(func(x, y int) {
+		factoryTween.NewLinear(
+			300*time.Millisecond,
+			float64(x),
+			100,
 			false,
 			nil,
-			nil,
+			func(x float64, arguments ...interface{}) {
+				i.MoveX(100)
+			},
 			nil,
 			nil,
 			nil,
@@ -166,16 +98,17 @@ func main() {
 				i.MoveX(int(x))
 				//i.Draw()
 			},
-			-1,
+			0,
 		)
-
-		factoryTween.NewSelectRandom(
-			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
-			mathUtil.Float64FomInt(0, 800),
-			mathUtil.Float64FomInt(0, 900),
+		factoryTween.NewLinear(
+			300*time.Millisecond,
+			float64(y),
+			30,
 			false,
 			nil,
-			nil,
+			func(y float64, arguments ...interface{}) {
+				i.MoveY(30)
+			},
 			nil,
 			nil,
 			nil,
@@ -187,10 +120,10 @@ func main() {
 				i.MoveY(int(y))
 				//i.Draw()
 			},
-			-1,
+			0,
 		)
-
-	}
+	})
+	stage.AddToDraw(i)
 
 	<-done
 }

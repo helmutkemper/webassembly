@@ -35,16 +35,11 @@ func main() {
 
 	text := factoryText.NewText(
 		"text",
-		global.Global.Stage,
-		global.Global.Canvas,
-		global.Global.ScratchPad,
 		&inkText,
 		fontText,
 		"Olá Mundo!",
 		125,
 		20,
-		global.Global.Density,
-		global.Global.DensityManager,
 	)
 	text.SetDragMode(basic.KDragModeDesktop)
 	stage.AddToDraw(text)

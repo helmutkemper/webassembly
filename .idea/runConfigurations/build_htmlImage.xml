@@ -17,11 +17,11 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </EXTENSION>
-    <kind value="DIRECTORY" />
+    <kind value="FILE" />
     <package value="github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/examples/htmlImage" />
-    <directory value="$PROJECT_DIR$" />
+    <directory value="$PROJECT_DIR$/examples/htmlImage/main.go" />
     <filePath value="$PROJECT_DIR$/examples/htmlImage/main.go" />
-    <output_directory value="github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/examples/" />
+    <output_directory value="$PROJECT_DIR$/examples/htmlImage" />
     <option name="run" value="false" />
     <method v="2" />
   </configuration>

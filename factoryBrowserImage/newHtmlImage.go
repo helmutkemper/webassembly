@@ -10,11 +10,12 @@ import (
 
 func NewImage(
 	width int,
-	heght int,
+	height int,
 	propertiesList map[string]interface{},
 	waitLoad,
 	append bool,
 ) html.Image {
+
 	var platform iotmaker_platform_IDraw.IHtml = global.Global.Html
 	var parent interface{} = global.Global.Document.SelfDocument
 
@@ -24,11 +25,11 @@ func NewImage(
 	densityCalc.SetInt(width)
 	width = densityCalc.Int()
 
-	densityCalc.SetInt(heght)
-	heght = densityCalc.Int()
+	densityCalc.SetInt(height)
+	height = densityCalc.Int()
 
 	propertiesList["width"] = width
-	propertiesList["heght"] = heght
+	propertiesList["height"] = height
 
 	img := platform.NewImage(parent, propertiesList, waitLoad)
 

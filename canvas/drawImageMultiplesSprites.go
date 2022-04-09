@@ -1,6 +1,7 @@
 package canvas
 
 import (
+	"log"
 	"syscall/js"
 	"time"
 )
@@ -57,13 +58,71 @@ import (
 //     final
 //     Golang Sintaxe: platform.drawImage(img, sx, sy, sWidth, sHeight, x, y, width,
 //                     height)
-func (el *Canvas) DrawImageMultiplesSprites(image interface{}, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex int, spriteChangeInterval time.Duration, x, y, width, height, clearRectDeltaX, clearRectDeltaY, clearRectDeltaWidth, clearRectDeltaHeight, lifeCycleLimit, lifeCycleRepeatLimit int, lifeCycleRepeatInterval time.Duration) {
+func (el *Canvas) DrawImageMultiplesSprites(
+	image interface{},
+	spriteWidth,
+	spriteHeight,
+	spriteFirstElementIndex,
+	spriteLastElementIndex int,
+	spriteChangeInterval time.Duration,
+	x,
+	y,
+	width,
+	height,
+	clearRectDeltaX,
+	clearRectDeltaY,
+	clearRectDeltaWidth,
+	clearRectDeltaHeight,
+	lifeCycleLimit,
+	lifeCycleRepeatLimit int,
+	lifeCycleRepeatInterval time.Duration,
+) {
+
+	log.Printf("image: %v", image)
+	log.Printf("spriteWidth: %v", spriteWidth)
+	log.Printf("spriteHeight: %v", spriteHeight)
+	log.Printf("spriteFirstElementIndex: %v", spriteFirstElementIndex)
+	log.Printf("spriteLastElementIndex: %v", spriteLastElementIndex)
+	log.Printf("spriteChangeInterval: %v", spriteChangeInterval)
+	log.Printf("x: %v", x)
+	log.Printf("y: %v", y)
+	log.Printf("width: %v", width)
+	log.Printf("height: %v", height)
+	log.Printf("clearRectDeltaX: %v", clearRectDeltaX)
+	log.Printf("clearRectDeltaY: %v", clearRectDeltaY)
+	log.Printf("clearRectDeltaWidth: %v", clearRectDeltaWidth)
+	log.Printf("clearRectDeltaHeight: %v", clearRectDeltaHeight)
+	log.Printf("lifeCycleLimit: %v", lifeCycleLimit)
+	log.Printf("lifeCycleRepeatLimit: %v", lifeCycleRepeatLimit)
+	log.Printf("lifeCycleRepeatInterval: %v", lifeCycleRepeatInterval)
 
 	previousBackgroundImageData := el.SelfContext.Call("getImageData", x+clearRectDeltaX, y+clearRectDeltaY, width+clearRectDeltaWidth, height+clearRectDeltaHeight)
 	go threadDrawImageMultiplesSprites(el, image, previousBackgroundImageData, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex, spriteChangeInterval, x, y, width, height, clearRectDeltaX, clearRectDeltaY, clearRectDeltaWidth, clearRectDeltaHeight, lifeCycleLimit, lifeCycleRepeatLimit, 1, lifeCycleRepeatInterval)
 }
 
-func threadDrawImageMultiplesSprites(el *Canvas, image, previousBackgroundImageData interface{}, spriteWidth, spriteHeight, spriteFirstElementIndex, spriteLastElementIndex int, spriteChangeInterval time.Duration, x, y, width, height, clearRectDeltaX, clearRectDeltaY, clearRectDeltaWidth, clearRectDeltaHeight, lifeCycleLimit, lifeCycleRepeatLimit, lifeCycleRepeatLimitCounter int, lifeCycleRepeatInterval time.Duration) {
+func threadDrawImageMultiplesSprites(
+	el *Canvas,
+	image,
+	previousBackgroundImageData interface{},
+	spriteWidth,
+	spriteHeight,
+	spriteFirstElementIndex,
+	spriteLastElementIndex int,
+	spriteChangeInterval time.Duration,
+	x,
+	y,
+	width,
+	height,
+	clearRectDeltaX,
+	clearRectDeltaY,
+	clearRectDeltaWidth,
+	clearRectDeltaHeight,
+	lifeCycleLimit,
+	lifeCycleRepeatLimit,
+	lifeCycleRepeatLimitCounter int,
+	lifeCycleRepeatInterval time.Duration,
+) {
+
 	var cycle = spriteFirstElementIndex
 	var lifeCycle = 0
 
@@ -71,12 +130,11 @@ func threadDrawImageMultiplesSprites(el *Canvas, image, previousBackgroundImageD
 
 	el.SelfContext.Call("clearRect", x+clearRectDeltaX, y+clearRectDeltaY, width+clearRectDeltaWidth, height+clearRectDeltaHeight)
 	el.SelfContext.Call("putImageData", previousBackgroundImageData, x+clearRectDeltaX, y+clearRectDeltaY)
-	el.SelfContext.Call("drawImage", image.(js.Value), cycle*spriteWidth, 0, spriteWidth, spriteHeight, x, y, width, height)
+	el.SelfContext.Call("drawImage", image.(js.Value), cycle*width, 0, width, height, x, y, width, height)
 
 	for {
 		select {
 		case <-ticker.C:
-
 			if cycle < spriteLastElementIndex {
 				cycle += 1
 			} else {
@@ -86,7 +144,7 @@ func threadDrawImageMultiplesSprites(el *Canvas, image, previousBackgroundImageD
 
 			el.SelfContext.Call("clearRect", x+clearRectDeltaX, y+clearRectDeltaY, width+clearRectDeltaWidth, height+clearRectDeltaHeight)
 			el.SelfContext.Call("putImageData", previousBackgroundImageData, x+clearRectDeltaX, y+clearRectDeltaY)
-			el.SelfContext.Call("drawImage", image.(js.Value), cycle*spriteWidth, 0, spriteWidth, spriteHeight, x, y, width, height)
+			el.SelfContext.Call("drawImage", image.(js.Value), cycle*width, 0, width, height, x, y, width, height)
 
 			if lifeCycleLimit != 0 && lifeCycleLimit == lifeCycle {
 				if lifeCycleRepeatInterval != 0 && lifeCycleRepeatLimit == 0 || lifeCycleRepeatLimit != 0 && lifeCycleRepeatLimit != lifeCycleRepeatLimitCounter {

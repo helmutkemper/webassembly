@@ -18,7 +18,7 @@ type Image struct {
 
 	// en: wait onLoad event to release create() method
 	WaitLoad  bool
-	waitGroup sync.WaitGroup
+	waitGroup *sync.WaitGroup
 }
 
 func (el *Image) SetParent(parent interface{}) {
@@ -37,11 +37,21 @@ func (el *Image) Create() {
 	}
 
 	if el.WaitLoad == true {
+		if el.waitGroup == nil {
+			el.waitGroup = new(sync.WaitGroup)
+		}
+
 		el.waitGroup.Add(1)
-		el.element.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			el.waitGroup.Done()
-			return nil
-		}))
+		el.element.Call(
+			"addEventListener",
+			"load",
+			js.FuncOf(
+				func(this js.Value, args []js.Value) interface{} {
+					el.waitGroup.Done()
+					return nil
+				},
+			),
+		)
 
 		el.waitGroup.Wait()
 	}

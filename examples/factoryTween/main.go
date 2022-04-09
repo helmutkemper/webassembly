@@ -1,7 +1,8 @@
 //go:build js
 // +build js
 
-//
+// GOARCH=wasm;GOOS=js
+// -o main.wasm
 package main
 
 import (
@@ -26,8 +27,8 @@ func main() {
 
 	// a imagem deve ser pre-carregada no navegador
 	imgSpace = factoryBrowserImage.NewImage(
-		global.Global.Html,
-		global.Global.Document.SelfDocument,
+		29,
+		50,
 		map[string]interface{}{
 			"width": 29,
 			"heght": 50,
@@ -38,7 +39,7 @@ func main() {
 		false,
 	)
 
-	for a := 0; a != 10; a += 1 {
+	for a := 0; a != 100; a += 1 {
 		i := factoryImage.NewImage(
 			"id_"+strconv.FormatInt(int64(a), 10),
 			global.Global.Stage,

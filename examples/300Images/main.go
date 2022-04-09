@@ -30,10 +30,10 @@ func main() {
 			"src": "./small.png",
 		},
 		true,
-		false,
+		true,
 	)
 
-	for a := 0; a != 300; a += 1 {
+	for a := 0; a != 10; a += 1 {
 		i := factoryImage.NewImage(
 			"id_"+strconv.FormatInt(int64(a), 10),
 			global.Global.Stage,
@@ -53,8 +53,8 @@ func main() {
 
 		factoryTween.NewLinear(
 			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,
-			mathUtil.Float64FomInt(0, global.Global.Document.GetDocumentWidth()-29),
-			mathUtil.Float64FomInt(0, global.Global.Document.GetDocumentWidth()-29),
+			mathUtil.Float64FomInt(0, 1000),
+			mathUtil.Float64FomInt(0, 1000),
 			false,
 			nil,
 			nil,

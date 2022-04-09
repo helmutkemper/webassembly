@@ -1,5 +1,9 @@
 package canvas
 
+import (
+	"image/color"
+)
+
 // todo: rewrite documentation
 
 // GetImageData
@@ -51,12 +55,64 @@ package canvas
 //
 //     Dica: Depois de manipular as informações de cor/alpha contidas no map[x][y],
 //     elas podem ser colocadas de volta no canvas com o método putImageData().
-func (el *Canvas) GetImageData(x, y, width, height int, separeData bool) interface{} {
+func (el *Canvas) GetImageData(x, y, width, height int) map[int]map[int]color.RGBA {
 	dataInterface := el.SelfContext.Call("getImageData", x, y, width, height)
+	dataJs := dataInterface.Get("data")
 
-	if separeData == true {
-		return dataInterface.Get("data")
-	} else {
-		return dataInterface
+	ret := make(map[int]map[int]color.RGBA)
+
+	var rgbaLength int = 4
+
+	var tmpR, tmpG, tmpB, tmpA uint8
+	var i int = 0
+	var xp int
+	var yp int
+	for yp = 0; yp != height; yp += 1 {
+		for xp = 0; xp != width; xp += 1 {
+
+			//Red:   uint8(dataJs.Index(i + 0).Int()),
+			//Green: uint8(dataJs.Index(i + 1).Int()),
+			//Blue:  uint8(dataJs.Index(i + 2).Int()),
+			//Alpha: uint8(dataJs.Index(i + 3).Int()),
+
+			if dataJs.Index(i+0).IsUndefined() == true {
+				tmpR = 0
+			} else {
+				tmpR = uint8(dataJs.Index(i + 0).Int())
+			}
+
+			if dataJs.Index(i+1).IsUndefined() == true {
+				tmpG = 0
+			} else {
+				tmpG = uint8(dataJs.Index(i + 1).Int())
+			}
+
+			if dataJs.Index(i+2).IsUndefined() == true {
+				tmpB = 0
+			} else {
+				tmpB = uint8(dataJs.Index(i + 2).Int())
+			}
+
+			if dataJs.Index(i+3).IsUndefined() == true {
+				tmpA = 0
+			} else {
+				tmpA = uint8(dataJs.Index(i + 3).Int())
+			}
+
+			i += rgbaLength
+
+			if len(ret[x+xp]) == 0 {
+				ret[x+xp] = make(map[int]color.RGBA)
+			}
+
+			ret[x+xp][y+yp] = color.RGBA{
+				R: tmpR,
+				G: tmpG,
+				B: tmpB,
+				A: tmpA,
+			}
+		}
 	}
+
+	return ret
 }

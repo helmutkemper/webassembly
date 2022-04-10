@@ -3,10 +3,11 @@ package factoryBrowserStage
 import (
 	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/canvas"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/config"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/document"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserCanvas"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/javascript/canvas"
 	webBrowserMouse "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/mouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 )
@@ -72,7 +73,7 @@ func NewStage(
 		htmlPlatform,
 		&stage.Canvas,
 		&stage.ScratchPad,
-		KTemplarianPath,
+		config.KTemplarianPath,
 		KTemplarianList,
 		density,
 		iDensity,

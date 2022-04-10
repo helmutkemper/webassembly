@@ -33,7 +33,7 @@ func main() {
 		true,
 	)
 
-	for a := 0; a != 10; a += 1 {
+	for a := 0; a != 100; a += 1 {
 		i := factoryImage.NewImage(
 			"id_"+strconv.FormatInt(int64(a), 10),
 			global.Global.Stage,

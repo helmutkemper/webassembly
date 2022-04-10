@@ -37,3 +37,4 @@ func main() {
 ``` 
 
 
+https://github.com/mattn/go-generics-example

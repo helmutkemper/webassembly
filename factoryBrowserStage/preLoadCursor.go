@@ -10,8 +10,6 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
 )
 
-const KTemplarianPath = "./fonts/Templarian/MaterialDesign/svg"
-
 var KTemplarianList = map[string]string{
 	"default":                 "cursor-default-outline.svg",
 	"arrowBottomLeft":         "arrow-bottom-left.svg",

@@ -1,5 +1,14 @@
-package mouse
+package browserMouse
 
+// Event
+//
+// English:
+//
+//  Type referring to mouse events, such as click, move, up, down and others.
+//
+// Português:
+//
+//  Tipo referente aos eventos do mouse, como click, move, up, down, etc.
 type Event int
 
 func (el Event) String() string {

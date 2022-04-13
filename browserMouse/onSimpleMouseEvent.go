@@ -1,4 +1,4 @@
-package mouse
+package browserMouse
 
 import (
 	"syscall/js"

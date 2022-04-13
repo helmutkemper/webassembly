@@ -1,4 +1,4 @@
-package mouse
+package browserMouse
 
 import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go/mouse"

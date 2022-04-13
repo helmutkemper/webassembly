@@ -1,12 +1,31 @@
 package html
 
 import (
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/document"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
 	"log"
+	"strconv"
 	"strings"
 	"syscall/js"
 )
+
+func (e *Tag) Move(x, y int) (ref *Tag) {
+	px := strconv.FormatInt(int64(x), 10) + "px"
+	py := strconv.FormatInt(int64(y), 10) + "py"
+
+	e.selfElement.Get("style").Set("left", px)
+	e.selfElement.Get("style").Set("top", py)
+
+	return e
+}
+
+func (e *Tag) GetXY() (x, y int) {
+	x = e.selfElement.Get("style").Get("left").Int()
+	y = e.selfElement.Get("style").Get("top").Int()
+
+	return
+}
 
 const (
 	KIdToAppendNotFound    = "html.AppendById().error: id to append not found:"
@@ -16,7 +35,11 @@ const (
 type Tag struct {
 	id          string
 	selfElement js.Value
-	document    document.Document
+	document    globalDocument.Document
+
+	cursor browserMouse.CursorType
+	// css recebe os nomes das classes css do elemento quando o mesmo é criado, pois, css.Class só passa
+	// a funcionar quando o elemento é criado.
 
 	css      string
 	cssClass *css.Class
@@ -70,13 +93,22 @@ func (e *Tag) Css(classes ...string) (ref *Tag) {
 //	  * Quando uma tag é chamada, por exemplo, NewDiv(), ela já monta os dados. Por isto, esta função
 //	    deve ser chamada sempre que uma tag html muda.
 func (e *Tag) mount() {
-	log.Print("css:", e.css)
+
 	if e.css != "" {
 		e.selfElement.Set("classList", e.css)
 	}
+
+	if e.selfElement.IsUndefined() == false {
+
+		e.selfElement.Set("style", e.cursor.String())
+
+		if e.selfElement.Get("body").IsUndefined() == false {
+			e.selfElement.Get("body").Set("style", browserMouse.KCursorAuto.String())
+		}
+	}
 }
 
-// SetCss
+// SetCssController
 //
 // English:
 //
@@ -104,15 +136,12 @@ func (e *Tag) mount() {
 //     * Css tem uma funcionalidade que permite trocar a lista de classes css de uma tag html de forma
 //       fácil, com as funções SetList(), CssToggle() e CssToggleTime();
 //     * Equivale a <... css="name1 name2 nameN">
-func (e *Tag) SetCss(value *css.Class) (ref *Tag) {
+func (e *Tag) SetCssController(value *css.Class) (ref *Tag) {
 	e.cssClass = value
 	e.cssClass.SetRef(e.id, &e.selfElement)
 
 	return e
 }
-
-// todo: um elemento "remove" que pare todas threads e coisas do tipo
-// todo: css tem que ser ponteiro?
 
 // AppendById
 //
@@ -178,6 +207,67 @@ func (e Tag) AppendById(appendId string) (ref *Tag) {
 //         document.body.appendChild(p);
 func (e *Tag) Append(append interface{}) (ref *Tag) {
 	append.(Tag).selfElement.Call("appendChild", e.selfElement)
+	return e
+}
+
+// MousePointerAuto
+//
+// English:
+//
+//  Sets the mouse pointer to auto.
+//
+// Português:
+//
+//  Define o ponteiro do mouse como automático.
+func (e *Tag) MousePointerAuto() (ref *Tag) {
+	//e.selfElement.Get("body").Set("style", mouse.KCursorAuto.String())
+	e.cursor = browserMouse.KCursorAuto
+	e.mount()
+
+	return e
+}
+
+// MousePointerHide
+//
+// English:
+//
+//  Sets the mouse pointer to hide.
+//
+// Português:
+//
+//  Define o ponteiro do mouse como oculto.
+func (e *Tag) MousePointerHide() (ref *Tag) {
+	//e.selfElement.Get("body").Set("style", mouse.KCursorNone.String())
+	e.cursor = browserMouse.KCursorNone
+	e.mount()
+
+	return e
+}
+
+// SetMousePointer
+//
+// English:
+//
+//  Defines the shape of the mouse pointer.
+//
+//   Input:
+//     value: mouse pointer shape.
+//       Example: SetMousePointer(mouse.KCursorCell) // Use mouse.K... and let autocomplete do the
+//                rest
+//
+// Português:
+//
+//  Define o formato do ponteiro do mouse.
+//
+//   Entrada:
+//     V: formato do ponteiro do mouse.
+//       Exemplo: SetMousePointer(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
+//                o resto
+func (e *Tag) SetMousePointer(value browserMouse.CursorType) (ref *Tag) {
+	//e.selfElement.Get("body").Set("style", value.String())
+	e.cursor = value
+	e.mount()
+
 	return e
 }
 

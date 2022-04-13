@@ -3,12 +3,12 @@ package factoryBrowserStage
 import (
 	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/config"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/document"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserCanvas"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/javascript/canvas"
-	webBrowserMouse "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/mouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 )
 
@@ -17,7 +17,7 @@ import (
 func NewStage(
 	htmlPlatform iotmaker_platform_IDraw.IHtml,
 	engine engine.IEngine,
-	document document.Document,
+	document globalDocument.Document,
 	id string,
 	density interface{},
 	iDensity iotmaker_platform_coordinate.IDensity,
@@ -85,10 +85,10 @@ func NewStage(
 	stage.Engine.CursorAddDrawFunction(imageCursor.Draw)
 
 	// pt_br: Mostra o cursor do mouse sempre que o mesmo entra no documento
-	document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseSimpleEventManager(stage.CursorShow))
+	document.AddEventListener(eventMouse.KMouseEnter, browserMouse.SetMouseSimpleEventManager(stage.CursorShow))
 
 	// pt_br: Esconde de cursor do mouse sempre que o mesmo sai de cima do documento
-	document.AddEventListener(eventMouse.KMouseOut, webBrowserMouse.SetMouseSimpleEventManager(stage.CursorHide))
+	document.AddEventListener(eventMouse.KMouseOut, browserMouse.SetMouseSimpleEventManager(stage.CursorHide))
 
 	//document.AddEventListener(eventMouse.KMouseMove, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseMove))
 	//document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseEnter))

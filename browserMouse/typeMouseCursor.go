@@ -1,4 +1,4 @@
-package mouse
+package browserMouse
 
 type CursorType int
 
@@ -51,7 +51,7 @@ const (
 	// en: Default. The browser sets a cursor
 	//
 	// pt_br: O navegador define o cursor
-	KCursorAuto CursorType = iota
+	KCursorAuto CursorType = iota // este valor sempre deve ser zero!
 
 	// KCursorAlias
 	// en: The cursor indicates an alias of something is to be created

@@ -1,20 +1,20 @@
 package factoryBrowserDocument
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/document"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventMouse"
-	webBrowserMouse "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/mouse"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
 )
 
-func NewDocument() document.Document {
-	el := document.Document{}
+func NewDocument() globalDocument.Document {
+	el := globalDocument.Document{}
 	el.Init()
 
-	el.AddEventListener(eventMouse.KMouseMove, webBrowserMouse.SetMouseMoveEvent())
-	el.AddEventListener(eventMouse.KClick, webBrowserMouse.SetMouseClickEvent())
-	el.AddEventListener(eventMouse.KDoubleClick, webBrowserMouse.SetMouseDoubleClickEvent())
-	el.AddEventListener(eventMouse.KMouseDown, webBrowserMouse.SetMouseDownEvent())
-	el.AddEventListener(eventMouse.KMouseUp, webBrowserMouse.SetMouseUpEvent())
+	el.AddEventListener(eventMouse.KMouseMove, browserMouse.SetMouseMoveEvent())
+	el.AddEventListener(eventMouse.KClick, browserMouse.SetMouseClickEvent())
+	el.AddEventListener(eventMouse.KDoubleClick, browserMouse.SetMouseDoubleClickEvent())
+	el.AddEventListener(eventMouse.KMouseDown, browserMouse.SetMouseDownEvent())
+	el.AddEventListener(eventMouse.KMouseUp, browserMouse.SetMouseUpEvent())
 
 	return el
 }

@@ -30,7 +30,7 @@ const (
 //       // Limit trades to 10 interactions
 //       ToggleLoop(10).
 //       // Defines the list named "norm" as the active list at the end of interactions
-//       OnLoopEnd("normal").
+//       OnLoopEnd("user").
 //       // Start interactions. Caution: they only work after being added to the element
 //       ToggleStart()
 //
@@ -49,7 +49,7 @@ const (
 //       Css("name_a", "name_b", "name_N").
 //       // css.Class cannot work properly before being added, due to lack of reference to the parent
 //       // object.
-//       SetCss(class).
+//       SetCssController(class).
 //       // Adds the div to the element id "stage".
 //       AppendById("stage")
 //
@@ -70,7 +70,7 @@ const (
 //       // Limita as trocas em 10 interações
 //       ToggleLoop(10).
 //       // Define  alista de nome "normal" como sendo a lista ativa ao final das interações
-//       OnLoopEnd("normal").
+//       OnLoopEnd("user").
 //       // Inicia as interações. Cuidado: elas só funcionam após serem adicionadas ao elemento
 //       ToggleStart()
 //
@@ -90,7 +90,7 @@ const (
 //       Css("name_a", "name_b", "name_N").
 //       // css.Class não consegue funcionar corretamente antes de ser adicionada, por falta de
 //       // referência do objeto pai.
-//       SetCss(class).
+//       SetCssController(class).
 //       // Adiciona a div ao elemento de id "stage".
 //       AppendById("stage")
 type Class struct {
@@ -110,6 +110,19 @@ type Class struct {
 	onLoopEnd     string
 	onLoopEndFunc func(name string)
 	onToggleFunc  func(name string)
+}
+
+// Remove
+//
+// English:
+//
+//  This function must be called when the object is removed.
+//
+// Português:
+//
+//  Esta função deve ser chamada quando o objeto for removido.
+func (e *Class) Remove() {
+	e.done <- struct{}{}
 }
 
 // String

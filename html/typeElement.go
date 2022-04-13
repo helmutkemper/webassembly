@@ -31,6 +31,9 @@ type Tag struct {
 	cssOnLoopEnd string
 }
 
+// todo: um elemento "remove" que pare todas threads e coisas do tipo
+// todo: css tem que ser ponteiro?
+
 // AppendById
 //
 // English:

@@ -47,7 +47,7 @@ func main() {
 
 	var err error
 	//document.GetElementById(document, "palco")
-	for a := 0; a != 1; a += 1 {
+	for a := 0; a != 100; a += 1 {
 
 		id := "div_" + strconv.FormatInt(int64(a), 10)
 		_, err = document.CreateElementAndAppend(

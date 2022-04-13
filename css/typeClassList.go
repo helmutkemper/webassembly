@@ -1,6 +1,8 @@
 package css
 
-import "strings"
+import (
+	"strings"
+)
 
 // Class
 //
@@ -20,7 +22,11 @@ type Class struct {
 // Português:
 //
 //  Converte a lista ativa em string.
-func (el Class) String() string {
+func (el Class) String() (list string) {
+	if el.list == nil {
+		return
+	}
+
 	return strings.Join(el.list[el.activeName], " ")
 }
 
@@ -39,7 +45,10 @@ func (el *Class) SetList(name string, classes ...string) {
 		el.activeName = name
 	}
 
-	el.list[name] = make([]string, 0)
+	if el.list[name] == nil {
+		el.list[name] = make([]string, 0)
+	}
+
 	el.list[name] = append(el.list[name], classes...)
 }
 
@@ -93,7 +102,7 @@ func (el *Class) RemoveFromList(name, class string) {
 	}
 }
 
-// Delete
+// DeleteList
 //
 // Português:
 //
@@ -104,8 +113,8 @@ func (el *Class) RemoveFromList(name, class string) {
 //
 //   Saída:
 //     ok: true para comando executado com sucesso.
-func (el *Class) Delete(name string) (ok bool) {
-	if el.activeName == name {
+func (el *Class) DeleteList(name string) (ok bool) {
+	if el.list == nil || el.activeName == name {
 		return
 	}
 
@@ -127,7 +136,11 @@ func (el *Class) Delete(name string) (ok bool) {
 //   Saída:
 //     ok: true para comando executado com sucesso.
 func (el *Class) Toggle(name string) (ok bool) {
+	if el.list == nil {
+		return
+	}
+
 	el.activeName = name
-	_, ok = el.list[el.activeName]
+	_, ok = el.list[name]
 	return
 }

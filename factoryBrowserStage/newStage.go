@@ -38,8 +38,8 @@ func NewStage(
 	stage.ScratchPad = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, stage.Id+"ScratchPad", stage.Width, stage.Height)
 	stage.Cache = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, stage.Id+"Cache", stage.Width, stage.Height)
 
-	document.HideMousePointer()
-	document.AppendChildToDocumentBody(stage.SelfElement)
+	document.MousePointerHide()
+	document.AppendToDocument(stage.SelfElement)
 
 	stage.Canvas.SetWidth(stage.Width)
 	stage.Canvas.SetHeight(stage.Height)

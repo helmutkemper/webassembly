@@ -15,19 +15,16 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventPageTransition"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventUi"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventWheel"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/mouse"
 	"log"
 	"syscall/js"
 )
 
 type GenericElementTypes string
 
-type Controlled interface {
-	Property | css.Class
-}
-
-type Property struct {
-	Property string
-	Value    any
+type P struct {
+	P string
+	V any
 }
 
 type Document struct {
@@ -35,11 +32,29 @@ type Document struct {
 	SelfDocument   js.Value
 }
 
+// Init
+//
+// English:
+//
+//  Initializes the document with the browser's main document.
+//
+// Português:
+//
+//  Inicializa o documento com o documento principal do navegador.
 func (el *Document) Init() {
 	el.hasInitialized = true
 	el.SelfDocument = js.Global().Get("document")
 }
 
+// Get
+//
+// English:
+//
+//  Returns the document.
+//
+// Português:
+//
+//  Retorna o documento.
 func (el *Document) Get() js.Value {
 
 	if el.hasInitialized == false {
@@ -49,15 +64,83 @@ func (el *Document) Get() js.Value {
 	return el.SelfDocument
 }
 
-func (el *Document) HideMousePointer() {
+// MousePointerAuto
+//
+// English:
+//
+//  Sets the mouse pointer to auto.
+//
+// Português:
+//
+//  Define o ponteiro do mouse como automático.
+func (el *Document) MousePointerAuto() {
 	if el.hasInitialized == false {
 		el.Init()
 	}
 
-	el.SelfDocument.Get("body").Set("style", "cursor: none")
+	el.SelfDocument.Get("body").Set("style", mouse.KCursorAuto.String())
 }
 
-func (el *Document) AppendChildToDocumentBody(value interface{}) {
+// MousePointerHide
+//
+// English:
+//
+//  Sets the mouse pointer to hide.
+//
+// Português:
+//
+//  Define o ponteiro do mouse como oculto.
+func (el *Document) MousePointerHide() {
+	if el.hasInitialized == false {
+		el.Init()
+	}
+
+	el.SelfDocument.Get("body").Set("style", mouse.KCursorNone.String())
+}
+
+// SetMousePointer
+//
+// English:
+//
+//  Defines the shape of the mouse pointer.
+//
+//   Input:
+//     value: mouse pointer shape.
+//       Example: SetMousePointer(mouse.KCursorCell) // Use mouse.K... and let autocomplete do the
+//                rest
+//
+// Português:
+//
+//  Define o formato do ponteiro do mouse.
+//
+//   Entrada:
+//     V: formato do ponteiro do mouse.
+//       Exemplo: SetMousePointer(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
+//                o resto
+func (el *Document) SetMousePointer(value mouse.CursorType) {
+	if el.hasInitialized == false {
+		el.Init()
+	}
+
+	el.SelfDocument.Get("body").Set("style", value.String())
+}
+
+// AppendToDocument
+//
+// English:
+//
+//  Adds an element to the document.
+//
+//   Input:
+//     value: js.Value element containing an html document.
+//
+// Português:
+//
+//  Adiciona um elemento ao documento.
+//
+//   Entrada:
+//     value: elemento js.Value contendo um documento html.
+func (el *Document) AppendToDocument(value interface{}) {
 
 	if el.hasInitialized == false {
 		el.Init()
@@ -66,7 +149,22 @@ func (el *Document) AppendChildToDocumentBody(value interface{}) {
 	el.SelfDocument.Get("body").Call("appendChild", value)
 }
 
-func (el *Document) RemoveChildFromDocumentBody(value interface{}) {
+// RemoveFromDocument
+//
+// English:
+//
+//  Removes an html element from the document.
+//
+//   Input:
+//     value: js.Value element containing an html document.
+//
+// Português:
+//
+//  Remove um elemento html do documento.
+//
+//   Entrada:
+//     value: elemento js.Value contendo um documento html.
+func (el *Document) RemoveFromDocument(value interface{}) {
 
 	if el.hasInitialized == false {
 		el.Init()
@@ -75,8 +173,56 @@ func (el *Document) RemoveChildFromDocumentBody(value interface{}) {
 	el.SelfDocument.Get("body").Call("removeChild", value)
 }
 
-func (el Document) GetDocumentWidth() int {
+// GetDocumentWidth
+//
+// English:
+//
+//  Returns the width of the document in pixels.
+//
+//   Output:
+//     width: document size in pixels.
+//
+// Português:
+//
+//  Retorna o comprimento do documento em pixels.
+//
+//   Saída:
+//     width: tamanho do documento em pixels.
+func (el Document) GetDocumentWidth() (width int) {
 	return el.SelfDocument.Get("body").Get("clientWidth").Int()
+}
+
+// GetDocumentHeight
+//
+// English:
+//
+//  Returns the length of the document in pixels.
+//
+//   Output:
+//     width: document size in pixels.
+//
+// Português:
+//
+//  Retorna a altura do documento em pixels.
+//
+//   Saída:
+//     width: tamanho do documento em pixels.
+func (el Document) GetDocumentHeight() (height int) {
+	return el.SelfDocument.Get("body").Get("clientHeight").Int()
+}
+
+// ResizeToScreen
+//
+// English:
+//
+//  Resizes the document to the size of the main document.
+//
+// Português:
+//
+//  Redimensiona o documento para o tamanho do documento principal.
+func (el Document) ResizeToScreen() {
+	el.SelfDocument.Get("body").Set("width", js.Global().Get("document").Get("body").Get("clientWidth").Int())
+	el.SelfDocument.Get("body").Set("height", js.Global().Get("document").Get("body").Get("clientHeight").Int())
 }
 
 // GetElementById
@@ -117,7 +263,26 @@ func (el Document) GetElementById(document Document, id string) (element interfa
 	return elementRet
 }
 
-func (el Document) CreateElement(document Document, appendId interface{}, name string, args ...interface{}) (err error) {
+// CreateElement
+//
+// English:
+//
+//  In an HTML document, the document.createElement() method creates the HTML element specified by
+//  tagName, or an HTMLUnknownElement if tagName isn't recognized.
+//
+//   Note:
+//     * A new HTMLElement is returned if the document is an HTMLDocument, which is the most common
+//       case. Otherwise a new Element is returned.
+//
+// Português:
+//
+//  Em um documento HTML, o método document.createElement() cria o elemento HTML especificado por
+//  tagName ou um HTMLUnknownElement se tagName não for reconhecido.
+//
+//   Note:
+//     * A new HTMLElement is returned if the document is an HTMLDocument, which is the most common
+//       case. Otherwise a new Element is returned.
+func (el Document) CreateElement(name string, cssClass []string, properties ...P) (element js.Value, err error) {
 
 	// Ordem de criação para funcionar:
 	//t := js.Global().Get("document").Call("createElement", "div")
@@ -126,36 +291,71 @@ func (el Document) CreateElement(document Document, appendId interface{}, name s
 	//
 	//js.Global().Get("document").Call("getElementById", "palco").Call("appendChild", t)
 
-	newElement := document.SelfDocument.Call("createElement", name)
-	if newElement.IsUndefined() == true || newElement.IsNull() == true {
+	element = js.Global().Get("document").Call("createElement", name)
+	if element.IsUndefined() == true || element.IsNull() == true {
 		err = errors.New("ls.createElement(" + name + ").error: new element is undefined")
 		return
 	}
 
-	for _, genericElement := range args {
-		switch converted := genericElement.(type) {
-		case Property:
-			newElement.Set(converted.Property, converted.Value)
+	var class = css.Class{}
+	class.SetList("current", cssClass...)
 
-		case css.Class:
-			newElement.Set("classList", converted.String())
-		}
+	for _, p := range properties {
+		element.Set(p.P, p.V)
 	}
 
-	switch appendId.(type) {
-	case nil:
+	return
+}
 
-	case string:
-		toAppend := document.SelfDocument.Call("getElementById", appendId)
-		if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
-			log.Printf("CreateElement().error: id not found")
-			return
-		}
-		toAppend.Call("appendChild", newElement)
+// CreateElementAndAppend
+//
+// English:
+//
+//  In an HTML document, the document.createElement() method creates the HTML element specified by
+//  tagName, or an HTMLUnknownElement if tagName isn't recognized.
+//
+//   Note:
+//     * A new HTMLElement is returned if the document is an HTMLDocument, which is the most common
+//       case. Otherwise a new Element is returned.
+//
+// Português:
+//
+//  Em um documento HTML, o método document.createElement() cria o elemento HTML especificado por
+//  tagName ou um HTMLUnknownElement se tagName não for reconhecido.
+//
+//   Note:
+//     * A new HTMLElement is returned if the document is an HTMLDocument, which is the most common
+//       case. Otherwise a new Element is returned.
+func (el Document) CreateElementAndAppend(appendId string, name string, cssClass []string, properties ...P) (element js.Value, err error) {
 
-	default:
-		log.Printf("CreateElement().error: appendId must be a string or nil")
+	// Ordem de criação para funcionar:
+	//t := js.Global().Get("document").Call("createElement", "div")
+	//t.Set("id", "vivo2")
+	//t.Set("classList", "animate")
+	//
+	//js.Global().Get("document").Call("getElementById", "palco").Call("appendChild", t)
+
+	element = js.Global().Get("document").Call("createElement", name)
+	if element.IsUndefined() == true || element.IsNull() == true {
+		err = errors.New("ls.createElement(" + name + ").error: new element is undefined")
+		return
 	}
+
+	var class = css.Class{}
+	class.SetList("current", cssClass...)
+	element.Set("classList", class.String())
+
+	for _, p := range properties {
+		element.Set(p.P, p.V)
+	}
+
+	toAppend := js.Global().Get("document").Call("getElementById", appendId)
+	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+		err = errors.New("id to append not found")
+		return
+	}
+
+	toAppend.Call("appendChild", element)
 
 	return
 }
@@ -182,15 +382,6 @@ func (el Document) SetElementStyle(element interface{}, style string, value inte
 	}
 
 	jsValue.Get("style").Set(style, value)
-}
-
-func (el Document) GetDocumentHeight() int {
-	return el.SelfDocument.Get("body").Get("clientHeight").Int()
-}
-
-func (el Document) ResizeToScreen() {
-	el.SelfDocument.Get("body").Set("width", el.SelfDocument.Get("body").Get("clientWidth").Int())
-	el.SelfDocument.Get("body").Set("height", el.SelfDocument.Get("body").Get("clientHeight").Int())
 }
 
 func (el *Document) AppendChild(element string, value interface{}) {

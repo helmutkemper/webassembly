@@ -580,6 +580,8 @@ type Div struct {
 //
 // English:
 //
+//  Create a html div.
+//
 //   Note:
 //     * Div inherits Tag, so see Tag documentation for all functions.
 //

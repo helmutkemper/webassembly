@@ -6,6 +6,7 @@ package main
 
 import (
 	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
 	doc "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/document"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserImage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
@@ -33,17 +34,56 @@ func main() {
 		false,
 	)
 
-	var d html.Div
-	d.NewDiv("example").
-		Css("vivo").
-		CssAddList("red", "user", "red").
-		CssAddList("yellow", "user", "yellow").
-		CssAddList("normal", "user").
-		CssToggleTime(time.Second, "red", "yellow").
-		CssToggleLoop(10).
-		CssOnLoopEnd("normal").
-		CssToggleStart().
-		AppendById("palco")
+	var class = new(css.Class)
+	// Create a css list named "red" with value "user red"
+	// Crie uma lista css de nome "red" com o valor "user red"
+	class.SetList("red", "user", "red").
+		// Create a css list named "yellow" with value "user yellow"
+		// Crie uma lista css de nome "yellow" com o valor "user yellow"
+		SetList("yellow", "user", "yellow").
+		// Create a css list named "user" with value "user"
+		// Crie uma lista css de nome "user" com o valor "user"
+		SetList("user", "user").
+		// Defines that the "red" and "yellow" lists will change every second
+		// Define que as listas "red" e "yellow" vão trocar a cada segundo
+		ToggleTime(time.Second, "red", "yellow").
+		// Limit trades to 10 interactions
+		// Limita as trocas em 10 interações
+		ToggleLoop(10).
+		// Defines the list named "norm" as the active list at the end of interactions
+		// Define  alista de nome "normal" como sendo a lista ativa ao final das interações
+		OnLoopEnd("normal").
+		// Start interactions. Caution: they only work after being added to the element
+		// Inicia as interações. Cuidado: elas só funcionam após serem adicionadas ao elemento
+		ToggleStart()
+
+	var a html.Div
+
+	// Create a div with id "example";
+	// Cria uma div de id "example_A";
+	a.NewDiv("example_A").
+		// Sets css to be "name_a name_b name_N";
+		// Define css como sendo "name_a name_b name_N";
+		Css("name_a", "name_b", "name_N").
+		// Adds the div to the element id "stage".
+		// Adiciona a div ao elemento de id "stage".
+		AppendById("stage")
+
+	var b html.Div
+	// Create a div with id "example";
+	// Cria uma div de id "example_A";
+	b.NewDiv("example_B").
+		// Sets css to be "name_a name_b name_N";
+		// Define css como sendo "name_a name_b name_N";
+		Css("name_a", "name_b", "name_N").
+		// css.Class cannot work properly before being added, due to lack of reference to the parent
+		// object.
+		// css.Class não consegue funcionar corretamente antes de ser adicionada, por falta de referência
+		// do objeto pai.
+		SetCss(class).
+		// Adds the div to the element id "stage".
+		// Adiciona a div ao elemento de id "stage".
+		AppendById("stage")
 
 	var err error
 	//document.GetElementById(document, "palco")

@@ -586,9 +586,16 @@ type Div struct {
 //     * Div inherits Tag, so see Tag documentation for all functions.
 //
 //   Example:
-//       var d html.Div
-//       d.NewDiv("example").
-//         Css("vivo").
+//       // basic
+//       var a html.Div
+//       a.NewDiv("example1").
+//         Css("user").
+//         AppendById("stage")
+//
+//       // css
+//       var b html.Div
+//       b.NewDiv("example2").
+//         Css("user").
 //         CssAddList("red", "user", "red").
 //         CssAddList("yellow", "user", "yellow").
 //         CssAddList("normal", "user").
@@ -596,7 +603,7 @@ type Div struct {
 //         CssToggleLoop(10).
 //         CssOnLoopEnd("normal").
 //         CssToggleStart().
-//         AppendById("palco")
+//         AppendById("stage")
 //
 // Português:
 //
@@ -606,9 +613,16 @@ type Div struct {
 //     * Div herda Tag, por isto, veja a documentação de Tag para vê todas as funções.
 //
 //   Exemplo:
-//       var d html.Div
-//       d.NewDiv("example").
-//         Css("vivo").
+//       // basic
+//       var a html.Div
+//       a.NewDiv("example1").
+//         Css("user").
+//         AppendById("stage")
+//
+//       // css
+//       var b html.Div
+//       b.NewDiv("example2").
+//         Css("user").
 //         CssAddList("red", "user", "red").
 //         CssAddList("yellow", "user", "yellow").
 //         CssAddList("normal", "user").
@@ -616,7 +630,7 @@ type Div struct {
 //         CssToggleLoop(10).
 //         CssOnLoopEnd("normal").
 //         CssToggleStart().
-//         AppendById("palco")
+//         AppendById("stage")
 func (e *Div) NewDiv(id string) (ref *Div) {
 	e.id = id
 	e.selfElement = js.Global().Get("document").Call("createElement", "div")

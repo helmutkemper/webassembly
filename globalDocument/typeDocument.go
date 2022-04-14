@@ -12,7 +12,6 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventHashChange"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventInput"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventKeyboard"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventPageTransition"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventUi"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventWheel"
@@ -419,7 +418,7 @@ func (el *Document) AddEventListener(eventType interface{}, mouseMoveEvt js.Func
 	case eventKeyboard.EventKeyboard:
 		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
-	case eventMouse.EventMouse:
+	case browserMouse.Event:
 		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventPageTransition.EventPageTransition:

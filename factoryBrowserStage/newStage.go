@@ -5,7 +5,6 @@ import (
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/config"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserCanvas"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/javascript/canvas"
@@ -85,19 +84,19 @@ func NewStage(
 	stage.Engine.CursorAddDrawFunction(imageCursor.Draw)
 
 	// pt_br: Mostra o cursor do mouse sempre que o mesmo entra no documento
-	document.AddEventListener(eventMouse.KMouseEnter, browserMouse.SetMouseSimpleEventManager(stage.CursorShow))
+	document.AddEventListener(browserMouse.KEventMouseEnter, browserMouse.SetMouseSimpleEventManager(stage.CursorShow))
 
 	// pt_br: Esconde de cursor do mouse sempre que o mesmo sai de cima do documento
-	document.AddEventListener(eventMouse.KMouseOut, browserMouse.SetMouseSimpleEventManager(stage.CursorHide))
+	document.AddEventListener(browserMouse.KEventMouseOut, browserMouse.SetMouseSimpleEventManager(stage.CursorHide))
 
-	//document.AddEventListener(eventMouse.KMouseMove, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseMove))
-	//document.AddEventListener(eventMouse.KMouseEnter, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseEnter))
-	//document.AddEventListener(eventMouse.KMouseOut, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseOut))
-	//document.AddEventListener(eventMouse.KMouseUp, webBrowserMouse.SetMouseUpEvent(mouse.ManagerMouseUp))
-	//document.AddEventListener(eventMouse.KMouseDown, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseDown))
-	//document.AddEventListener(eventMouse.KClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerClick))
-	//document.AddEventListener(eventMouse.KDoubleClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerDoubleClick))
-	//document.AddEventListener(eventMouse.KContextMenu, webBrowserMouse.SetMouseMoveManager(mouse.ManagerContextMenu))
+	//document.AddEventListener(browserMouse.KEventMouseMove, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseMove))
+	//document.AddEventListener(browserMouse.KEventMouseEnter, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseEnter))
+	//document.AddEventListener(browserMouse.KEventMouseOut, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseOut))
+	//document.AddEventListener(browserMouse.KEventMouseUp, webBrowserMouse.SetMouseUpEvent(mouse.ManagerMouseUp))
+	//document.AddEventListener(browserMouse.KEventMouseDown, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseDown))
+	//document.AddEventListener(browserMouse.KEventClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerClick))
+	//document.AddEventListener(browserMouse.KEventDoubleClick, webBrowserMouse.SetMouseMoveManager(mouse.ManagerDoubleClick))
+	//document.AddEventListener(browserMouse.KEventContextMenu, webBrowserMouse.SetMouseMoveManager(mouse.ManagerContextMenu))
 
 	return
 }

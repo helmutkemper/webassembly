@@ -29,46 +29,116 @@ var eventString = [...]string{
 }
 
 const (
-	// KClick
-	// en: The event occurs when the user clicks on an element
-	KClick Event = iota
+	// KEventClick
+	//
+	// English:
+	//
+	//  The event occurs when the user clicks on an element.
+	//
+	// Português:
+	//
+	//  O evento acontece quando o usuário clica em um elemento.
+	KEventClick Event = iota
 
-	// KContextMenu
-	// en: The event occurs when the user right-clicks on an element to open a context
-	// menu
-	KContextMenu
+	// KEventContextMenu
+	//
+	// English:
+	//
+	//  The event occurs when the user right-clicks on an element to open a context menu.
+	//
+	// Português:
+	//
+	//  O evento acontece quando o usuário usa o clique direito para abrir o menu de contexto.
+	KEventContextMenu
 
-	// KDblClick
-	// en: The event occurs when the user double-clicks on an element
-	KDblClick
+	// KEventDoubleClick
+	//
+	// English:
+	//
+	//  The event occurs when the user double-clicks on an element.
+	//
+	// Português:
+	//
+	//  O evento acontece quando o usuário dá dois cliques no elemento.
+	KEventDoubleClick
 
-	// KMouseDown
-	// en: The event occurs when the user presses a mouse button over an element
-	KMouseDown
+	// KEventMouseDown
+	//
+	// English:
+	//
+	//  The event occurs when the user presses a mouse button over an element.
+	//
+	// Português:
+	//
+	//  O evento acontece quando o usuário pressiona o botão do mouse em cima do elemento.
+	KEventMouseDown
 
-	// KMouseEnter
-	// en: The event occurs when the pointer is moved onto an element
-	KMouseEnter
+	// KEventMouseEnter
+	//
+	// English:
+	//
+	//  The event occurs when the pointer is moved onto an element.
+	//
+	// Português:
+	//
+	//  O evento acontece quando o ponteiro do mouse é movido para um elemento
+	KEventMouseEnter
 
-	// KMouseLeave
-	// en: The event occurs when the pointer is moved out of an element
-	KMouseLeave
+	// KEventMouseLeave
+	//
+	// English:
+	//
+	//  The event occurs when the pointer is moved out of an element.
+	//
+	// Português:
+	//
+	//  O evento acontece quando o ponteiro do mouse é movido para fora do elemento.
+	KEventMouseLeave
 
-	// KMouseMove
-	// en: The event occurs when the pointer is moving while it is over an element
-	KMouseMove
+	// KEventMouseMove
+	//
+	// English:
+	//
+	//  The event occurs when the pointer is moving while it is over an element.
+	//
+	// Português:
+	//
+	//  O evento acontece durante o movimento do ponteiro do mouse em cima do elemento.
+	KEventMouseMove
 
-	// KMouseOver
-	// en: The event occurs when the pointer is moved onto an element, or onto one of
-	// its children
-	KMouseOver
+	// KEventMouseOver
+	//
+	// English:
+	//
+	//  The event occurs when the pointer is moved onto an element, or onto one of its children.
+	//
+	// Português:
+	//
+	//  O evento acontece quando quando o ponteiro do mouse é movido para cima do elemento ou um de seus
+	//  elementos filhos.
+	KEventMouseOver
 
-	// KMouseOut
-	// en: The event occurs when a user moves the mouse pointer out of an element, or
-	// out of one of its children
-	KMouseOut
+	// KEventMouseOut
+	//
+	// English:
+	//
+	//  The event occurs when a user moves the mouse pointer out of an element, or out of one of its
+	//  children.
+	//
+	// Português:
+	//
+	//  O evento acontece quando quando o ponteiro do mouse é movido para fora do elemento ou um de seus
+	//  elementos filhos.
+	KEventMouseOut
 
-	// KMouseUp
-	// en: The event occurs when a user releases a mouse button over an element
-	KMouseUp
+	// KEventMouseUp
+	//
+	// English:
+	//
+	//  The event occurs when a user releases a mouse button over an element.
+	//
+	// Português:
+	//
+	//  O evento acontece quando o usuário solta o botão do mouse em cima do elemento.
+	KEventMouseUp
 )

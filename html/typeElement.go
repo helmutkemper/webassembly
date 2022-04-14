@@ -10,6 +10,502 @@ import (
 	"syscall/js"
 )
 
+type Translate int
+
+func (e Translate) String() string {
+	return translateString[e]
+}
+
+const (
+	// KTranslateYes
+	//
+	// English:
+	//
+	//  The translate attribute specifies whether the content of an element should be translated.
+	//
+	// Português:
+	//
+	//  O atributo translate especifica se o conteúdo de um elemento deve ser traduzido.
+	KTranslateYes Translate = iota + 1
+
+	// KTranslateNo
+	//
+	// English:
+	//
+	//  The translate attribute specifies whether the content of an element should not be translated.
+	//
+	// Português:
+	//
+	//  O atributo translate especifica se o conteúdo de um elemento não deve ser traduzido.
+	KTranslateNo
+)
+
+var translateString = [...]string{
+	"",
+	"yes",
+	"no",
+}
+
+// Dir
+//
+// English:
+//
+//  Specifies the text direction for the content in an element.
+//
+// Português:
+//
+//  Especifica a direção do texto para o conteúdo em um elemento.
+type Dir int
+
+func (e Dir) String() string {
+	return dirString[e]
+}
+
+const (
+	// KDirLeftToRight
+	//
+	// English:
+	//
+	//  Default. Left-to-right text direction.
+	//
+	// Português:
+	//
+	//  Padrão. Direção do texto da esquerda para a direita.
+	KDirLeftToRight Dir = iota + 1
+
+	// KDirRightToLeft
+	//
+	// English:
+	//
+	//  Right-to-left text direction.
+	//
+	// Português:
+	//
+	//  Direção do texto da direita para a esquerda.
+	KDirRightToLeft
+
+	// KDirAuto
+	//
+	// English:
+	//
+	//  Let the browser figure out the text direction, based on the content (only recommended if the
+	//  text direction is unknown)
+	//
+	// Português:
+	//
+	//  Deixe o navegador descobrir a direção do texto, com base no conteúdo (recomendado apenas se a
+	//  direção do texto for desconhecida)
+	KDirAuto
+)
+
+var dirString = [...]string{
+	"",
+	"ltr",
+	"rtl",
+	"auto",
+}
+
+type GlobalAttributes struct {
+	accessKey       string
+	class           string
+	contentEditable bool
+	dataX           map[string]string
+	dir             string
+	draggable       bool
+	hidden          bool
+	id              string
+	lang            string
+	spellcheck      bool
+	style           string
+	tabIndex        int
+	title           string
+	translate       Translate
+}
+
+// SetAccessKey
+//
+// English:
+//
+//  Specifies a shortcut key to activate/focus an element.
+//
+//   Input:
+//     character: A single character that specifies the shortcut key to activate/focus the element.
+//
+//   Note:
+//     * The accessKey attribute value must be a single character (a letter or a digit).
+//     * Adapting accessKeys to all international languages are difficult.
+//     * The accessKey value may not be present on all keyboards.
+//
+//
+//   Warning:
+//     Using accessKeys is difficult because they may conflict with other key standards in the
+//     browser;
+//     To avoid this problem, most browsers will use accessKeys only if pressed together with the Alt
+//     key.
+//
+// Português:
+//
+//  Especifica uma tecla de atalho para ativar o foco de um elemento.
+//
+//   Entrada:
+//     character: Um único caractere que especifica a tecla de atalho para ativar o foco do elemento.
+//
+//   Nota:
+//     * O valor do atributo accessKey deve ser um único caractere (uma letra ou um dígito).
+//     * Adaptar as teclas de acesso a todos os idiomas internacionais é difícil.
+//     * O valor accessKey pode não estar presente em todos os teclados.
+//
+//   Aviso:
+//     O uso de accessKeys é difícil porque eles podem entrar em conflito com outros padrões
+//     importantes no navegador;
+//     Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
+//     pressionadas junto com a tecla Alt.
+func (e *GlobalAttributes) SetAccessKey(accessKey string) {
+	e.accessKey = accessKey
+}
+
+// SetClass
+//
+// English:
+//
+//  The class attribute specifies one or more class names for an element.
+//
+//   Input:
+//     classname: Specifies one or more class names for an element. To specify multiple classes,
+//                separate the class names with a space, e.g. <span class="left important">.
+//                This allows you to combine several CSS classes for one HTML element.
+//
+//                Naming rules:
+//                  Must begin with a letter A-Z or a-z;
+//                  Can be followed by: letters (A-Za-z), digits (0-9), hyphens ("-"), and
+//                  underscores ("_").
+//
+// The class attribute is mostly used to point to a class in a style sheet. However, it can also be
+// used by a JavaScript (via the HTML DOM) to make changes to HTML elements with a specified class.
+//
+// Português:
+//
+//  O atributo class especifica um ou mais nomes de classe para um elemento.
+//
+//   Entrada:
+//     classname: Especifica um ou mais nomes de classe para um elemento. Para especificar várias
+//                classes, separe os nomes das classes com um espaço, por exemplo <span class="left
+//                important">.
+//                Isso permite combinar várias classes CSS para um elemento HTML.
+//
+//                Regras de nomenclatura:
+//                  Deve começar com uma letra A-Z ou a-z;
+//                  Pode ser seguido por: letras (A-Za-z), dígitos (0-9), hífens ("-") e
+//                  sublinhados ("_").
+//
+// The class attribute is mostly used to point to a class in a style sheet. However, it can also be
+// used by a JavaScript (via the HTML DOM) to make changes to HTML elements with a specified class.
+func (e *GlobalAttributes) SetClass(classname ...string) {
+	e.class = strings.Join(classname, " ")
+}
+
+// SetContentEditable
+//
+// English:
+//
+//  The contentEditable attribute specifies whether the content of an element is editable or not.
+//
+//   Input:
+//     contentEditable: specifies whether the content of an element is editable or not
+//
+//   Note:
+//     When the contentEditable attribute is not set on an element, the element will inherit it from
+//     its parent.
+//
+// Português:
+//
+//  O atributo contentEditable especifica se o conteúdo de um elemento é editável ou não.
+//
+//   Entrada:
+//     contentEditable: especifica se o conteúdo de um elemento é editável ou não.
+//
+//   Nota:
+//     Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
+//     seu pai.
+func (e *GlobalAttributes) SetContentEditable(contentEditable bool) {
+	e.contentEditable = contentEditable
+}
+
+// SetDataX
+//
+// English:
+//
+//  Used to store custom data private to the page or application.
+//
+//   Input:
+//     data: custom data private to the page or application.
+//
+// The data-* attributes is used to store custom data private to the page or application.
+// The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
+// The stored (custom) data can then be used in the page's JavaScript to create a more engaging user
+// experience (without any Ajax calls or server-side database queries).
+//
+// The data-* attributes consist of two parts:
+//   The attribute name should not contain any uppercase letters, and must be at least one character
+//   long after the prefix "data-";
+//   The attribute value can be any string.
+//
+//   Note:
+//     * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
+//
+// Português:
+//
+//  Usado para armazenar dados personalizados privados para a página ou aplicativo.
+//
+//   Entrada:
+//     data: dados personalizados privados para a página ou aplicativo.
+//
+// Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
+// aplicativo;
+// Os atributos de dados nos dão a capacidade de incorporar atributos de dados personalizados em todos
+// os elementos HTML;
+// Os dados armazenados (personalizados) podem ser usados no JavaScript da página para criar uma
+// experiência de usuário mais envolvente (sem chamadas Ajax ou consultas de banco de dados do lado do
+// servidor).
+//
+// Os atributos de dados consistem em duas partes:
+//   O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+//   prefixo "data-";
+//   O valor do atributo pode ser qualquer string.
+//
+//   Nota:
+//     * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
+//       usuário.
+func (e *GlobalAttributes) SetDataX(data map[string]string) {
+	e.dataX = data
+}
+
+// SetDir
+//
+// English:
+//
+//  Specifies the text direction for the content in an element.
+//
+// Português:
+//
+//  Specifies the text direction for the content in an element.
+func (e *GlobalAttributes) SetDir(dir Dir) {
+	e.dir = dir.String()
+}
+
+// SetDraggable
+//
+// English:
+//
+//  Specifies whether an element is draggable or not.
+//
+// The draggable attribute specifies whether an element is draggable or not.
+//
+//   Note:
+//     * Links and images are draggable by default;
+//     * The draggable attribute is often used in drag and drop operations.
+//     * Read our HTML Drag and Drop tutorial to learn more.
+//       https://www.w3schools.com/html/html5_draganddrop.asp
+//
+// Português:
+//
+//  Especifica se um elemento pode ser arrastado ou não.
+//
+// O atributo arrastável especifica se um elemento é arrastável ou não.
+//
+//   Nota:
+//     * Links e imagens podem ser arrastados por padrão;
+//     * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
+//     * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
+//       https://www.w3schools.com/html/html5_draganddrop.asp
+func (e *GlobalAttributes) SetDraggable(draggable bool) {
+	e.draggable = draggable
+}
+
+// SetHidden
+//
+// English:
+//
+//  Specifies that an element is not yet, or is no longer, relevant.
+//
+// The hidden attribute is a boolean attribute.
+//
+// When present, it specifies that an element is not yet, or is no longer, relevant.
+//
+// Browsers should not display elements that have the hidden attribute specified.
+//
+// The hidden attribute can also be used to keep a user from seeing an element until some other
+// condition has been met (like selecting a checkbox, etc.). Then, a JavaScript could remove the
+// hidden attribute, and make the element visible.
+//
+// Português:
+//
+//  Especifica que um elemento ainda não é ou não é mais relevante.
+//
+// O atributo oculto é um atributo booleano.
+//
+// Quando presente, especifica que um elemento ainda não é ou não é mais relevante.
+//
+// Os navegadores não devem exibir elementos que tenham o atributo oculto especificado.
+//
+// O atributo oculto também pode ser usado para impedir que um usuário veja um elemento até que alguma
+// outra condição seja atendida (como marcar uma caixa de seleção etc.). Então, um JavaScript pode
+// remover o atributo oculto e tornar o elemento visível.
+func (e *GlobalAttributes) SetHidden(hidden bool) {
+	e.hidden = hidden
+}
+
+// SetId
+//
+// English:
+//
+//  Specifies a unique id for an element
+//
+// The id attribute specifies a unique id for an HTML element (the value must be unique within the
+// HTML document).
+//
+// The id attribute is most used to point to a style in a style sheet, and by JavaScript (via the HTML
+// DOM) to manipulate the element with the specific id.
+//
+// Português:
+//
+//  Especifica um ID exclusivo para um elemento
+//
+// O atributo id especifica um id exclusivo para um elemento HTML (o valor deve ser exclusivo no
+// documento HTML).
+//
+// O atributo id é mais usado para apontar para um estilo em uma folha de estilo, e por JavaScript
+// (através do HTML DOM) para manipular o elemento com o id específico.
+func (e *GlobalAttributes) SetId(id string) {
+	e.id = id
+}
+
+// SetLang
+//
+// English:
+//
+//  Specifies the language of the element's content.
+//
+// The lang attribute specifies the language of the element's content.
+//
+// Common examples are "en" for English, "es" for Spanish, "fr" for French, and so on.
+//
+// Português:
+//
+//  Especifica o idioma do conteúdo do elemento.
+//
+// O atributo lang especifica o idioma do conteúdo do elemento.
+//
+// Exemplos comuns são "en" para inglês, "es" para espanhol, "fr" para francês e assim por diante.
+func (e *GlobalAttributes) SetLang(lang string) {
+	e.lang = lang
+}
+
+// SetSpellcheck
+//
+// English:
+//
+//  Specifies whether the element is to have its spelling and grammar checked or not
+//
+//   Note:
+//     * The following can be spellchecked:
+//         Text values in input elements (not password)
+//         Text in <textarea> elements
+//         Text in editable elements
+//
+// Português:
+//
+//  Especifica se o elemento deve ter sua ortografia e gramática verificadas ou não
+//
+// O seguinte pode ser verificado ortográfico:
+//
+//   Nota:
+//     * O seguinte pode ser verificado ortográfico:
+//         Valores de texto em elementos de entrada (não senha)
+//         Texto em elementos <textarea>
+//         Texto em elementos editáveis
+func (e *GlobalAttributes) SetSpellcheck(spellcheck bool) {
+	e.spellcheck = spellcheck
+}
+
+// SetStyle
+//
+// English:
+//
+//  Specifies an inline CSS style for an element.
+//
+// The style attribute will override any style set globally, e.g. styles specified in the <style> tag
+// or in an external style sheet.
+//
+// The style attribute can be used on any HTML element (it will validate on any HTML element.
+// However, it is not necessarily useful).
+//
+// Português:
+//
+//  Especifica um estilo CSS embutido para um elemento
+//
+// O atributo style substituirá qualquer conjunto de estilos globalmente, por exemplo estilos
+// especificados na tag <style> ou em uma folha de estilo externa.
+//
+// O atributo style pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
+// No entanto, não é necessariamente útil).
+func (e *GlobalAttributes) SetStyle(style string) {
+	e.style = style
+}
+
+// SetTabIndex
+//
+// English:
+//
+//  Specifies the tabbing order of an element (when the "tab" button is used for navigating).
+//
+// The tabindex attribute can be used on any HTML element (it will validate on any HTML element.
+// However, it is not necessarily useful).
+//
+// Português:
+//
+//  Especifica a ordem de tabulação de um elemento (quando o botão "tab" é usado para navegar).
+//
+// O atributo tabindex pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento
+// HTML. No entanto, não é necessariamente útil).
+func (e *GlobalAttributes) SetTabIndex(tabIndex int) {
+	e.tabIndex = tabIndex
+}
+
+// SetTitle
+//
+// English:
+//
+//  Specifies extra information about an element.
+//
+// The information is most often shown as a tooltip text when the mouse moves over the element.
+//
+// The title attribute can be used on any HTML element (it will validate on any HTML element.
+// However, it is not necessarily useful).
+//
+// Português:
+//
+//  Especifica informações extras sobre um elemento.
+//
+// As informações geralmente são mostradas como um texto de dica de ferramenta quando o mouse se move
+// sobre o elemento.
+//
+// O atributo title pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
+// No entanto, não é necessariamente útil).
+func (e *GlobalAttributes) SetTitle(tittle string) {
+	e.title = tittle
+}
+
+// SetTranslate
+//
+// English:
+//
+// Specifies whether the content of an element should be translated or not.
+//
+func (e *GlobalAttributes) SetTranslate(translate Translate) {
+	e.translate = translate
+}
+
 func (e *Tag) Move(x, y int) (ref *Tag) {
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	py := strconv.FormatInt(int64(y), 10) + "py"
@@ -288,7 +784,7 @@ type Div struct {
 //
 // English:
 //
-//  Create a html div.
+//  Defines a section in a document, div tag.
 //
 //   Note:
 //     * Div inherits Tag, so see Tag documentation for all functions.
@@ -315,7 +811,7 @@ type Div struct {
 //
 // Português:
 //
-//  Cria uma div html.
+//  Define uma sessão do documento, uma tag div.
 //
 //   Nota:
 //     * Div herda Tag, por isto, veja a documentação de Tag para vê todas as funções.

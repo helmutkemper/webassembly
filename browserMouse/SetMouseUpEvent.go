@@ -7,6 +7,17 @@ import (
 
 var mouseUpEvt js.Func
 
+// SetMouseUpEvent
+//
+// English:
+//
+//  Mouse up coupling function, passing (x, y) in mouse
+//  channel.BrowserMouseUpToPlatformMouseUpEvent
+//
+// Português:
+//
+//  Função de acoplamento do mouse up, transmitindo (x, y) no canal
+//  mouse.BrowserMouseUpToPlatformMouseUpEvent
 func SetMouseUpEvent() js.Func {
 	mouseUpEvt = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		e := args[0]

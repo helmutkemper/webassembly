@@ -7,6 +7,17 @@ import (
 
 var mouseClickEvt js.Func
 
+// SetMouseClickEvent
+//
+// English:
+//
+//  Mouse click coupling function, passing (x, y) in mouse
+//  channel.BrowserMouseClickToPlatformMouseClickEvent
+//
+// Português:
+//
+//  Função de acoplamento do clique do mouse, transmitindo (x, y) no canal
+//  mouse.BrowserMouseClickToPlatformMouseClickEvent
 func SetMouseClickEvent() js.Func {
 	mouseClickEvt = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		e := args[0]

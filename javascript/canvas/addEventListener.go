@@ -1,6 +1,7 @@
 package canvas
 
 import (
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/event"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventAnimation"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventClipBoard"
@@ -9,7 +10,6 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventHashChange"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventInput"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventKeyboard"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventPageTransition"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventUi"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventWheel"
@@ -43,7 +43,7 @@ func (el *Canvas) AddEventListener(eventType interface{}, mouseMoveEvt interface
 	case eventKeyboard.EventKeyboard:
 		el.SelfElement.Call("addEventListener", converted.String(), mouseMoveEvt.(js.Func))
 
-	case eventMouse.EventMouse:
+	case browserMouse.Event:
 		el.SelfElement.Call("addEventListener", converted.String(), mouseMoveEvt.(js.Func))
 
 	case eventPageTransition.EventPageTransition:

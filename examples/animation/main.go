@@ -65,8 +65,14 @@ func main() {
 	a.NewDiv("example_A").
 		// Sets css to be "name_a name_b name_N";
 		// Define css como sendo "name_a name_b name_N";
-		Css("animate").
+		SetClass("animate").
+		SetHidden().
+		SetDraggable(html.KDraggableYes).
 		SetMousePointer(browserMouse.KCursorMove).
+		SetTranslate(html.KTranslateYes).
+		SetDir(html.KDirAuto).
+		SetAccessKey("a").
+		SetLang(html.KPortuguese).
 		// Adds the div to the element id "stage".
 		// Adiciona a div ao elemento de id "stage".
 		AppendById("stage")
@@ -77,7 +83,7 @@ func main() {
 	b.NewDiv("example_B").
 		// Sets css to be "name_a name_b name_N";
 		// Define css como sendo "name_a name_b name_N";
-		Css("name_a", "name_b", "name_N").
+		SetClass("name_a", "name_b", "name_N").
 		// css.Class cannot work properly before being added, due to lack of reference to the parent
 		// object.
 		// css.Class não consegue funcionar corretamente antes de ser adicionada, por falta de referência
@@ -89,7 +95,7 @@ func main() {
 
 	var err error
 	//document.GetElementById(document, "stage")
-	for a := 0; a != 300; a += 1 {
+	for a := 0; a != 10; a += 1 {
 
 		id := "div_" + strconv.FormatInt(int64(a), 10)
 		_, err = document.CreateElementAndAppend(
@@ -102,8 +108,8 @@ func main() {
 			log.Printf("document.CreateElement().error: %v", err.Error())
 		}
 		var e = document.GetElementById(document, id)
-		var border = 0
-		factoryTween.NewLinear(
+		var border = 300
+		factoryTween.NewSelectRandom(
 			time.Duration(mathUtil.Int(1000, 3000))*time.Millisecond,
 			mathUtil.Float64FomInt(border, global.Global.Document.GetDocumentWidth()-29-border),
 			mathUtil.Float64FomInt(border, global.Global.Document.GetDocumentWidth()-29-border),
@@ -114,7 +120,7 @@ func main() {
 			-1,
 		)
 
-		factoryTween.NewLinear(
+		factoryTween.NewSelectRandom(
 			time.Duration(mathUtil.Int(1000, 3000))*time.Millisecond,
 			mathUtil.Float64FomInt(border, global.Global.Document.GetDocumentHeight()-50-border),
 			mathUtil.Float64FomInt(border, global.Global.Document.GetDocumentHeight()-50-border),

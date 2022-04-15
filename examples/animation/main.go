@@ -9,7 +9,6 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserImage"
-	doc "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
@@ -21,7 +20,6 @@ import (
 func main() {
 
 	done := make(chan struct{}, 0)
-	document := global.Global.Document
 
 	// Carrega a imagem
 	factoryBrowserImage.NewImage(
@@ -58,11 +56,9 @@ func main() {
 		// Inicia as interações. Cuidado: elas só funcionam após serem adicionadas ao elemento
 		ToggleStart()
 
-	var a html.Div
-
 	// Create a div with id "example";
 	// Cria uma div de id "example_A";
-	a.NewDiv("example_A").
+	html.NewDiv("example_A").
 		// Sets css to be "name_a name_b name_N";
 		// Define css como sendo "name_a name_b name_N";
 		SetClass("animate").
@@ -72,15 +68,14 @@ func main() {
 		SetTranslate(html.KTranslateYes).
 		SetDir(html.KDirAuto).
 		SetAccessKey("a").
-		SetLang(html.KPortuguese).
+		SetLang(html.KLanguagePortuguese).
 		// Adds the div to the element id "stage".
 		// Adiciona a div ao elemento de id "stage".
 		AppendById("stage")
 
-	var b html.Div
 	// Create a div with id "example";
 	// Cria uma div de id "example_A";
-	b.NewDiv("example_B").
+	html.NewDiv("example_B").
 		// Sets css to be "name_a name_b name_N";
 		// Define css como sendo "name_a name_b name_N";
 		SetClass("name_a", "name_b", "name_N").
@@ -93,29 +88,20 @@ func main() {
 		// Adiciona a div ao elemento de id "stage".
 		AppendById("stage")
 
-	var err error
 	//document.GetElementById(document, "stage")
 	for a := 0; a != 10; a += 1 {
 
 		id := "div_" + strconv.FormatInt(int64(a), 10)
-		_, err = document.CreateElementAndAppend(
-			"stage",
-			"div",
-			[]string{"animate"},
-			doc.P{P: "id", V: id},
-		)
-		if err != nil {
-			log.Printf("document.CreateElement().error: %v", err.Error())
-		}
-		var e = document.GetElementById(document, id)
+		rocket := html.NewDiv(id).SetClass("animate").AppendById("stage")
+
 		var border = 300
 		factoryTween.NewSelectRandom(
 			time.Duration(mathUtil.Int(1000, 3000))*time.Millisecond,
 			mathUtil.Float64FomInt(border, global.Global.Document.GetDocumentWidth()-29-border),
 			mathUtil.Float64FomInt(border, global.Global.Document.GetDocumentWidth()-29-border),
 			func(x, p float64, ars ...interface{}) {
-				px := strconv.FormatFloat(x, 'E', 10, 32) + "px"
-				document.SetElementStyle(e, "left", px)
+				rocket.SetX(int(x))
+				log.Printf("x: %v", x)
 			},
 			-1,
 		)
@@ -125,8 +111,8 @@ func main() {
 			mathUtil.Float64FomInt(border, global.Global.Document.GetDocumentHeight()-50-border),
 			mathUtil.Float64FomInt(border, global.Global.Document.GetDocumentHeight()-50-border),
 			func(y, p float64, ars ...interface{}) {
-				py := strconv.FormatFloat(y, 'E', 10, 32) + "px"
-				document.SetElementStyle(e, "top", py)
+				rocket.SetY(int(y))
+				log.Printf("y: %v", y)
 			},
 			-1,
 		)

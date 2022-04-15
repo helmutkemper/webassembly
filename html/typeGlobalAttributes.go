@@ -9,11 +9,25 @@ import (
 	"syscall/js"
 )
 
-func (e *GlobalAttributes) Move(x, y int) (ref *GlobalAttributes) {
+func (e *GlobalAttributes) SetXY(x, y int) (ref *GlobalAttributes) {
 	px := strconv.FormatInt(int64(x), 10) + "px"
-	py := strconv.FormatInt(int64(y), 10) + "py"
+	py := strconv.FormatInt(int64(y), 10) + "px"
 
 	e.selfElement.Get("style").Set("left", px)
+	e.selfElement.Get("style").Set("top", py)
+
+	return e
+}
+
+func (e *GlobalAttributes) SetX(x int) (ref *GlobalAttributes) {
+	px := strconv.FormatInt(int64(x), 10) + "px"
+	e.selfElement.Get("style").Set("left", px)
+
+	return e
+}
+
+func (e *GlobalAttributes) SetY(y int) (ref *GlobalAttributes) {
+	py := strconv.FormatInt(int64(y), 10) + "px"
 	e.selfElement.Get("style").Set("top", py)
 
 	return e
@@ -69,15 +83,16 @@ type GlobalAttributes struct {
 //     * Qualquer tipo de conteúdo pode ser colocado dentro da tag <div>.
 //
 //  A tag <div> define uma divisão ou uma seção em um documento HTML.
-func (e *Div) NewDiv(id string) (ref *Div) {
-	e.id = id
-	e.selfElement = js.Global().Get("document").Call("createElement", "div")
-	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
+func NewDiv(id string) (ref *Div) {
+	ref = &Div{}
+	ref.id = id
+	ref.selfElement = js.Global().Get("document").Call("createElement", "div")
+	if ref.selfElement.IsUndefined() == true || ref.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined, id)
 		return
 	}
 
-	e.selfElement.Set("id", id)
+	ref.selfElement.Set("id", id)
 
-	return e
+	return ref
 }

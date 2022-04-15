@@ -26,3 +26,8 @@ func (e *GlobalAttributes) SetId(id string) (ref *GlobalAttributes) {
 	e.selfElement.Set("id", id)
 	return e
 }
+
+func (e *GlobalAttributes) SetText(text string) (ref *GlobalAttributes) {
+	e.selfElement.Set("textContent", text)
+	return e
+}

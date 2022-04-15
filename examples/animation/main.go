@@ -8,6 +8,7 @@ import (
 	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserImage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
@@ -56,9 +57,14 @@ func main() {
 		// Inicia as interações. Cuidado: elas só funcionam após serem adicionadas ao elemento
 		ToggleStart()
 
+	factoryBrowser.NewTagA("example_tag_A").
+		SetHRef("#").
+		SetText("Estou vivo!").
+		AppendById("stage")
+
 	// Create a div with id "example";
 	// Cria uma div de id "example_A";
-	html.NewDiv("example_A").
+	factoryBrowser.NewTagDiv("example_A").
 		// Sets css to be "name_a name_b name_N";
 		// Define css como sendo "name_a name_b name_N";
 		SetClass("animate").
@@ -75,7 +81,7 @@ func main() {
 
 	// Create a div with id "example";
 	// Cria uma div de id "example_A";
-	html.NewDiv("example_B").
+	factoryBrowser.NewTagDiv("example_B").
 		// Sets css to be "name_a name_b name_N";
 		// Define css como sendo "name_a name_b name_N";
 		SetClass("name_a", "name_b", "name_N").
@@ -92,7 +98,9 @@ func main() {
 	for a := 0; a != 10; a += 1 {
 
 		id := "div_" + strconv.FormatInt(int64(a), 10)
-		rocket := html.NewDiv(id).SetClass("animate").AppendById("stage")
+		rocket := factoryBrowser.NewTagDiv(id).
+			SetClass("animate").
+			AppendById("stage")
 
 		var border = 300
 		factoryTween.NewSelectRandom(

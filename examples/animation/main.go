@@ -31,7 +31,12 @@ func main() {
 		false,
 	)
 
-	var border = 300
+	factoryBrowser.NewTagDiv("test_A").
+		SetClass("animate").
+		SetInnerHtml("<B>Estou</B> vivo!").
+		AppendById("stage")
+
+	var border = 200
 	var width = global.Global.Document.GetDocumentWidth() - 29 - border
 	var height = global.Global.Document.GetDocumentHeight() - 50 - border
 

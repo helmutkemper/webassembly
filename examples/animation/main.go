@@ -58,7 +58,6 @@ func main() {
 
 	factoryBrowser.NewTagButton("example_tag_A").
 		SetHRef("#").
-		SetFormValidate(true).
 		SetText("Estou vivo!").
 		AppendById("stage")
 

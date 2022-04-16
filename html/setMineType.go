@@ -2,7 +2,7 @@ package html
 
 import "log"
 
-// SetType
+// SetMineType
 //
 // English:
 //
@@ -11,7 +11,7 @@ import "log"
 // Português:
 //
 // Dicas no formato do URL vinculado com um tipo MIME. Nenhuma funcionalidade embutida.
-func (e *GlobalAttributes) SetType(typeProperty Mime) (ref *GlobalAttributes) {
+func (e *GlobalAttributes) SetMineType(typeProperty Mime) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagA:
 	default:

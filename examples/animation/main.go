@@ -13,7 +13,6 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
-	"log"
 	"strconv"
 	"time"
 )
@@ -57,8 +56,9 @@ func main() {
 		// Inicia as interações. Cuidado: elas só funcionam após serem adicionadas ao elemento
 		ToggleStart()
 
-	factoryBrowser.NewTagA("example_tag_A").
+	factoryBrowser.NewTagButton("example_tag_A").
 		SetHRef("#").
+		SetFormValidate(true).
 		SetText("Estou vivo!").
 		AppendById("stage")
 
@@ -109,7 +109,6 @@ func main() {
 			mathUtil.Float64FomInt(border, global.Global.Document.GetDocumentWidth()-29-border),
 			func(x, p float64, ars ...interface{}) {
 				rocket.SetX(int(x))
-				log.Printf("x: %v", x)
 			},
 			-1,
 		)
@@ -120,7 +119,6 @@ func main() {
 			mathUtil.Float64FomInt(border, global.Global.Document.GetDocumentHeight()-50-border),
 			func(y, p float64, ars ...interface{}) {
 				rocket.SetY(int(y))
-				log.Printf("y: %v", y)
 			},
 			-1,
 		)

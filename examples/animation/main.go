@@ -31,51 +31,41 @@ func main() {
 		false,
 	)
 
-	var border = 200
+	var border = 300
+	var width = global.Global.Document.GetDocumentWidth() - 29 - border
+	var height = global.Global.Document.GetDocumentHeight() - 50 - border
 
 	for a := 0; a != 20; a += 1 {
 
-		var intervalX = time.Duration(mathUtil.Int(1000, 3000)) * time.Millisecond
-		var intervalY = time.Duration(mathUtil.Int(1000, 3000)) * time.Millisecond
-		var width = global.Global.Document.GetDocumentWidth() - 29 - border
-		var height = global.Global.Document.GetDocumentHeight() - 50 - border
-		var positionInicialX = mathUtil.Float64FomInt(border, width)
-		var positionFinalX = mathUtil.Float64FomInt(border, width)
-		var positionInicialY = mathUtil.Float64FomInt(border, height)
-		var positionFinalY = mathUtil.Float64FomInt(border, height)
+		var durationX = time.Duration(mathUtil.Int(1000, 3000)) * time.Millisecond
+		var durationY = time.Duration(mathUtil.Int(1000, 3000)) * time.Millisecond
+
+		var xStart = mathUtil.Float64FomInt(border, width)
+		var xEnd = mathUtil.Float64FomInt(border, width)
+
+		var yStart = mathUtil.Float64FomInt(border, height)
+		var yEnd = mathUtil.Float64FomInt(border, height)
+
+		var loopX = mathUtil.Int(-1, 10)
+		var loopY = mathUtil.Int(-1, 10)
 
 		var id = "div_" + strconv.FormatInt(int64(a), 10)
 
-		rocket := factoryBrowser.NewTagDiv(id).
+		rocketImg := factoryBrowser.NewTagDiv(id).
 			SetClass("animate").
 			AppendById("stage")
 
-		factoryTween.NewSelectRandom(
-			intervalX,
-			positionInicialX,
-			positionFinalX,
-			updateX,
-			-1,
-			rocket,
-		)
-
-		factoryTween.NewSelectRandom(
-			intervalY,
-			positionInicialY,
-			positionFinalY,
-			updateY,
-			-1,
-			rocket,
-		)
+		factoryTween.NewSelectRandom(durationX, xStart, xEnd, onUpdateX, loopX, rocketImg)
+		factoryTween.NewSelectRandom(durationY, yStart, yEnd, onUpdateY, loopY, rocketImg)
 	}
 
 	<-done
 }
 
-func updateX(x, p float64, args ...interface{}) {
+func onUpdateX(x, p float64, args ...interface{}) {
 	args[0].([]interface{})[0].(*html.GlobalAttributes).SetX(int(x))
 }
 
-func updateY(y, p float64, args ...interface{}) {
+func onUpdateY(y, p float64, args ...interface{}) {
 	args[0].([]interface{})[0].(*html.GlobalAttributes).SetY(int(y))
 }

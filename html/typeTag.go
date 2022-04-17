@@ -273,11 +273,13 @@ const (
 	//
 	// English:
 	//
-	//
+	//  The <datalist> HTML element contains a set of <option> elements that represent the permissible
+	//  or recommended options available to choose from within other controls.
 	//
 	// Português
 	//
-	//
+	//  O elemento HTML <datalist> contém um conjunto de elementos <option> que representam as opções
+	//  permitidas ou recomendadas disponíveis para escolha em outros controles.
 	KTagDatalist Tag = "datalist"
 
 	// KTagDd
@@ -762,11 +764,15 @@ const (
 	//
 	// English:
 	//
-	//
+	//  The <option> HTML element is used to define an item contained in a <select>, an <optgroup>, or a
+	//  <datalist> element. As such, <option> can represent menu items in popups and other lists of
+	//  items in an HTML document.
 	//
 	// Português
 	//
-	//
+	//  O elemento HTML <option> é usado para definir um item contido em um elemento <select>,
+	//  <optgroup> ou <datalist>. Como tal, <option> pode representar itens de menu em pop-ups e outras
+	//  listas de itens em um documento HTML.
 	KTagOption Tag = "option"
 
 	// KTagOutput

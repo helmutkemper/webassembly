@@ -6,16 +6,17 @@ import "log"
 //
 // English:
 //
-//  Defines the value associated with the button's name when it's submitted with the form data. This value is passed to the server in params when the form is submitted using this button.
+//  Defines the value associated with the element.
 //
 // Português:
 //
-//  Defines the value associated with the button's name when it's submitted with the form data. This value is passed to the server in params when the form is submitted using this button.
+//  Define o valor associado ao elemento.
 func (e *GlobalAttributes) SetValue(value string) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagButton:
+	case KTagOption:
 	default:
-		log.Printf("tag " + e.tag.String() + " does not support value property")
+		log.Printf("tag " + e.tag.String() + " does not support buttonValue property")
 	}
 
 	e.selfElement.Set("value", value)

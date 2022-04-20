@@ -15,6 +15,7 @@ func (e *GlobalAttributes) SetDisabled(disabled bool) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagButton:
 	case KTagOption:
+	case KTagFieldset:
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support disabled property")
 	}

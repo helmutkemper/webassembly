@@ -25,6 +25,7 @@ func (e *GlobalAttributes) SetForm(form string) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagButton:
 	case KTagSelect:
+	case KTagFieldset:
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support form property")
 	}

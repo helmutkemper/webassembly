@@ -412,11 +412,13 @@ const (
 	//
 	// English:
 	//
-	//
+	//  The <fieldset> HTML element is used to group several controls as well as labels (<label>)
+	//  within a web form.
 	//
 	// Português
 	//
-	//
+	//  O elemento HTML <fieldset> é usado para agrupar vários controles, bem como rótulos (<label>)
+	//  dentro de um formulário web.
 	KTagFieldset Tag = "fieldset"
 
 	// KTagFigcaption

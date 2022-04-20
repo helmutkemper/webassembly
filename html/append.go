@@ -1,10 +1,14 @@
 package html
 
+import "syscall/js"
+
 // Append
 //
 // English:
 //
-// Adds a node to the end of the list of children of a specified parent node. If the node already exists in the document, it is removed from its current parent node before being added to the new parent.
+//  Adds a node to the end of the list of children of a specified parent node. If the node already
+//  exists in the document, it is removed from its current parent node before being added to the new
+//  parent.
 //
 //   Input:
 //     append: element in js.Value format.
@@ -16,7 +20,8 @@ package html
 //
 // Português:
 //
-//  Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
+//  Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
+//  documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
 //
 //   Entrada:
 //     appendId: elemento no formato js.Value.
@@ -26,6 +31,12 @@ package html
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
 func (e *GlobalAttributes) Append(append interface{}) (ref *GlobalAttributes) {
-	append.(GlobalAttributes).selfElement.Call("appendChild", e.selfElement)
+	switch append.(type) {
+	case *GlobalAttributes:
+		e.selfElement.Call("appendChild", append.(*GlobalAttributes).selfElement)
+	case js.Value:
+		e.selfElement.Call("appendChild", append)
+	}
+
 	return e
 }

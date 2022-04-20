@@ -944,11 +944,11 @@ const (
 	//
 	// English:
 	//
-	//
+	//  The <select> HTML element represents a control that provides a menu of options.
 	//
 	// Português
 	//
-	//
+	//  O elemento HTML <select> representa um controle que fornece um menu de opções.
 	KTagSelect Tag = "select"
 
 	// KTagSlot

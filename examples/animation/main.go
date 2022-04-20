@@ -31,9 +31,11 @@ func main() {
 		false,
 	)
 
-	factoryBrowser.NewTagDiv("test_A").
-		SetClass("animate").
-		SetInnerHtml("<B>Estou</B> vivo!").
+	factoryBrowser.NewTagDataList("test_A").
+		SetNewOption("test_A_a", "label a", "value_a", true, false).
+		SetNewOption("test_A_b", "label b", "value_b", false, false).
+		SetNewOption("test_A_c", "label c", "value_c", false, false).
+		SetNewOption("test_A_d", "label d", "value_d", false, true).
 		AppendById("stage")
 
 	var border = 200

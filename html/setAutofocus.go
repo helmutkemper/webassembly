@@ -16,6 +16,7 @@ import "log"
 func (e *GlobalAttributes) SetAutofocus(autofocus bool) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagButton:
+	case KTagSelect:
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support autofocus property")
 	}

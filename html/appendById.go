@@ -9,7 +9,9 @@ import (
 //
 // English:
 //
-// Adds a node to the end of the list of children of a specified parent node. If the node already exists in the document, it is removed from its current parent node before being added to the new parent.
+//  Adds a node to the end of the list of children of a specified parent node. If the node already
+//  exists in the document, it is removed from its current parent node before being added to the
+//  new parent.
 //
 //   Input:
 //     appendId: id of parent element.
@@ -21,7 +23,8 @@ import (
 //
 // Português:
 //
-//  Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
+//  Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
+//  documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
 //
 //   Entrada:
 //     appendId: id do elemento pai.

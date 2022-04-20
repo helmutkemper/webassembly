@@ -17,6 +17,15 @@ import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowse
 //
 // O elemento HTML <datalist> contém um conjunto de elementos <option> que representam as opções
 // permitidas ou recomendadas disponíveis para escolha em outros controles.
+//
+// Example:
+//
+//   factoryBrowser.NewTagDataList("test_A").
+//     SetNewOption("test_A_a", "label a", "value_a", true, false).
+//     SetNewOption("test_A_b", "label b", "value_b", false, false).
+//     SetNewOption("test_A_c", "label c", "value_c", false, false).
+//     SetNewOption("test_A_d", "label d", "value_d", false, true).
+//     AppendById("stage")
 func NewTagDataList(id string) (ref *html.DataList) {
 	ref = &html.DataList{}
 	ref.CreateElement(html.KTagDatalist)

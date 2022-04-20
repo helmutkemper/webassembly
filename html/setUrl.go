@@ -30,7 +30,7 @@ func (e *GlobalAttributes) SetUrl(url string) (ref *GlobalAttributes) {
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support url property")
 	}
-	
+
 	e.selfElement.Set("url", url)
 	return e
 }

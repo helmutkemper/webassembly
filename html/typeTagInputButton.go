@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
 	"log"
+	"strconv"
 	"strings"
 	"syscall/js"
 )
@@ -761,6 +762,14 @@ func (e *TagInputButton) Append(append interface{}) (ref *TagInputButton) {
 		e.selfElement.Call("appendChild", append.(*TagInputButton).selfElement)
 	case js.Value:
 		e.selfElement.Call("appendChild", append)
+	case string:
+		toAppend := js.Global().Get("document").Call("getElementById", append.(string))
+		if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+			log.Print(KIdToAppendNotFound, append.(string))
+			return e
+		}
+
+		toAppend.Call("appendChild", e.selfElement)
 	}
 
 	return e
@@ -999,4 +1008,101 @@ func (e *TagInputButton) Type(inputType InputType) (ref *TagInputButton) {
 func (e *TagInputButton) Value(value string) (ref *TagInputButton) {
 	e.selfElement.Set("value", value)
 	return e
+}
+
+// SetXY
+//
+// English:
+//
+//  Sets the X and Y axes in pixels.
+//
+// Português:
+//
+//  Define os eixos X e Y em pixels.
+func (e *TagInputButton) SetXY(x, y int) (ref *TagInputButton) {
+	px := strconv.FormatInt(int64(x), 10) + "px"
+	py := strconv.FormatInt(int64(y), 10) + "px"
+
+	e.selfElement.Get("style").Set("left", px)
+	e.selfElement.Get("style").Set("top", py)
+
+	return e
+}
+
+// SetX
+//
+// English:
+//
+//  Sets the X axe in pixels.
+//
+// Português:
+//
+//  Define o eixo X em pixels.
+func (e *TagInputButton) SetX(x int) (ref *TagInputButton) {
+	px := strconv.FormatInt(int64(x), 10) + "px"
+	e.selfElement.Get("style").Set("left", px)
+
+	return e
+}
+
+// SetY
+//
+// English:
+//
+//  Sets the Y axe in pixels.
+//
+// Português:
+//
+//  Define o eixo Y em pixels.
+func (e *TagInputButton) SetY(y int) (ref *TagInputButton) {
+	py := strconv.FormatInt(int64(y), 10) + "px"
+	e.selfElement.Get("style").Set("top", py)
+
+	return e
+}
+
+// GetXY
+//
+// English:
+//
+//  Returns the X and Y axes in pixels.
+//
+// Português:
+//
+//  Retorna os eixos X e Y em pixels.
+func (e *TagInputButton) GetXY() (x, y int) {
+	x = e.selfElement.Get("style").Get("left").Int()
+	y = e.selfElement.Get("style").Get("top").Int()
+
+	return
+}
+
+// GetX
+//
+// English:
+//
+//  Returns the X axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo X em pixels.
+func (e *TagInputButton) GetX() (x int) {
+	x = e.selfElement.Get("style").Get("left").Int()
+
+	return
+}
+
+// GetY
+//
+// English:
+//
+//  Returns the Y axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo Y em pixels.
+func (e *TagInputButton) GetY() (y int) {
+	y = e.selfElement.Get("style").Get("top").Int()
+
+	return
 }

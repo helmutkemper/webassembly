@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
 	"log"
+	"strconv"
 	"strings"
 	"syscall/js"
 )
@@ -980,4 +981,188 @@ func (e *TagA) CreateElement(tag Tag) (ref *TagA) {
 	e.tag = tag
 
 	return e
+}
+
+// AppendById
+//
+// English:
+//
+//  Adds a node to the end of the list of children of a specified parent node. If the node already
+//  exists in the document, it is removed from its current parent node before being added to the
+//  new parent.
+//
+//   Input:
+//     appendId: id of parent element.
+//
+//   Note:
+//     * The equivalent of:
+//         var p = document.createElement("p");
+//         document.body.appendChild(p);
+//
+// Português:
+//
+//  Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
+//  documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
+//
+//   Entrada:
+//     appendId: id do elemento pai.
+//
+//   Nota:
+//     * Equivale a:
+//         var p = document.createElement("p");
+//         document.body.appendChild(p);
+func (e *TagA) AppendById(appendId string) (ref *TagA) {
+
+	toAppend := js.Global().Get("document").Call("getElementById", appendId)
+	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+		log.Print(KIdToAppendNotFound, appendId)
+		return e
+	}
+
+	toAppend.Call("appendChild", e.selfElement)
+	return e
+}
+
+// Append
+//
+// English:
+//
+//  Adds a node to the end of the list of children of a specified parent node. If the node already
+//  exists in the document, it is removed from its current parent node before being added to the new
+//  parent.
+//
+//   Input:
+//     append: element in js.Value format.
+//
+//   Note:
+//     * The equivalent of:
+//         var p = document.createElement("p");
+//         document.body.appendChild(p);
+//
+// Português:
+//
+//  Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
+//  documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
+//
+//   Entrada:
+//     appendId: elemento no formato js.Value.
+//
+//   Nota:
+//     * Equivale a:
+//         var p = document.createElement("p");
+//         document.body.appendChild(p);
+func (e *TagA) Append(append interface{}) (ref *TagA) {
+	switch append.(type) {
+	case *TagA:
+		e.selfElement.Call("appendChild", append.(*TagA).selfElement)
+	case js.Value:
+		e.selfElement.Call("appendChild", append)
+	case string:
+		toAppend := js.Global().Get("document").Call("getElementById", append.(string))
+		if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+			log.Print(KIdToAppendNotFound, append.(string))
+			return e
+		}
+
+		toAppend.Call("appendChild", e.selfElement)
+	}
+
+	return e
+}
+
+// SetXY
+//
+// English:
+//
+//  Sets the X and Y axes in pixels.
+//
+// Português:
+//
+//  Define os eixos X e Y em pixels.
+func (e *TagA) SetXY(x, y int) (ref *TagA) {
+	px := strconv.FormatInt(int64(x), 10) + "px"
+	py := strconv.FormatInt(int64(y), 10) + "px"
+
+	e.selfElement.Get("style").Set("left", px)
+	e.selfElement.Get("style").Set("top", py)
+
+	return e
+}
+
+// SetX
+//
+// English:
+//
+//  Sets the X axe in pixels.
+//
+// Português:
+//
+//  Define o eixo X em pixels.
+func (e *TagA) SetX(x int) (ref *TagA) {
+	px := strconv.FormatInt(int64(x), 10) + "px"
+	e.selfElement.Get("style").Set("left", px)
+
+	return e
+}
+
+// SetY
+//
+// English:
+//
+//  Sets the Y axe in pixels.
+//
+// Português:
+//
+//  Define o eixo Y em pixels.
+func (e *TagA) SetY(y int) (ref *TagA) {
+	py := strconv.FormatInt(int64(y), 10) + "px"
+	e.selfElement.Get("style").Set("top", py)
+
+	return e
+}
+
+// GetXY
+//
+// English:
+//
+//  Returns the X and Y axes in pixels.
+//
+// Português:
+//
+//  Retorna os eixos X e Y em pixels.
+func (e *TagA) GetXY() (x, y int) {
+	x = e.selfElement.Get("style").Get("left").Int()
+	y = e.selfElement.Get("style").Get("top").Int()
+
+	return
+}
+
+// GetX
+//
+// English:
+//
+//  Returns the X axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo X em pixels.
+func (e *TagA) GetX() (x int) {
+	x = e.selfElement.Get("style").Get("left").Int()
+
+	return
+}
+
+// GetY
+//
+// English:
+//
+//  Returns the Y axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo Y em pixels.
+func (e *TagA) GetY() (y int) {
+	y = e.selfElement.Get("style").Get("top").Int()
+
+	return
 }

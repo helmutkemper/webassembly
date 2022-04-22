@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
 	"log"
+	"strconv"
 	"strings"
 	"syscall/js"
 )
@@ -760,6 +761,14 @@ func (e *TagFieldset) Append(append interface{}) (ref *TagFieldset) {
 		e.selfElement.Call("appendChild", append.(*TagFieldset).selfElement)
 	case js.Value:
 		e.selfElement.Call("appendChild", append)
+	case string:
+		toAppend := js.Global().Get("document").Call("getElementById", append.(string))
+		if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+			log.Print(KIdToAppendNotFound, append.(string))
+			return e
+		}
+
+		toAppend.Call("appendChild", e.selfElement)
 	}
 
 	return e
@@ -817,4 +826,101 @@ func (e *TagFieldset) Form(form string) (ref *TagFieldset) {
 func (e *TagFieldset) Name(name string) (ref *TagFieldset) {
 	e.selfElement.Set("name", name)
 	return e
+}
+
+// SetXY
+//
+// English:
+//
+//  Sets the X and Y axes in pixels.
+//
+// Português:
+//
+//  Define os eixos X e Y em pixels.
+func (e *TagFieldset) SetXY(x, y int) (ref *TagFieldset) {
+	px := strconv.FormatInt(int64(x), 10) + "px"
+	py := strconv.FormatInt(int64(y), 10) + "px"
+
+	e.selfElement.Get("style").Set("left", px)
+	e.selfElement.Get("style").Set("top", py)
+
+	return e
+}
+
+// SetX
+//
+// English:
+//
+//  Sets the X axe in pixels.
+//
+// Português:
+//
+//  Define o eixo X em pixels.
+func (e *TagFieldset) SetX(x int) (ref *TagFieldset) {
+	px := strconv.FormatInt(int64(x), 10) + "px"
+	e.selfElement.Get("style").Set("left", px)
+
+	return e
+}
+
+// SetY
+//
+// English:
+//
+//  Sets the Y axe in pixels.
+//
+// Português:
+//
+//  Define o eixo Y em pixels.
+func (e *TagFieldset) SetY(y int) (ref *TagFieldset) {
+	py := strconv.FormatInt(int64(y), 10) + "px"
+	e.selfElement.Get("style").Set("top", py)
+
+	return e
+}
+
+// GetXY
+//
+// English:
+//
+//  Returns the X and Y axes in pixels.
+//
+// Português:
+//
+//  Retorna os eixos X e Y em pixels.
+func (e *TagFieldset) GetXY() (x, y int) {
+	x = e.selfElement.Get("style").Get("left").Int()
+	y = e.selfElement.Get("style").Get("top").Int()
+
+	return
+}
+
+// GetX
+//
+// English:
+//
+//  Returns the X axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo X em pixels.
+func (e *TagFieldset) GetX() (x int) {
+	x = e.selfElement.Get("style").Get("left").Int()
+
+	return
+}
+
+// GetY
+//
+// English:
+//
+//  Returns the Y axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo Y em pixels.
+func (e *TagFieldset) GetY() (y int) {
+	y = e.selfElement.Get("style").Get("top").Int()
+
+	return
 }

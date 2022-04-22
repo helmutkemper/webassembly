@@ -38,6 +38,11 @@ func main() {
 		NewOption("test_A_d", "label d", "value_d", false, true).
 		AppendById("stage")
 
+	factoryBrowser.NewTagButton("test_B").
+		Value("Ok").
+		Name("Ok").
+		AppendById("stage")
+
 	var border = 200
 	var width = global.Global.Document.GetDocumentWidth() - 29 - border
 	var height = global.Global.Document.GetDocumentHeight() - 50 - border
@@ -59,7 +64,7 @@ func main() {
 		var id = "div_" + strconv.FormatInt(int64(a), 10)
 
 		rocketImg := factoryBrowser.NewTagDiv(id).
-			SetClass("animate").
+			Class("animate").
 			AppendById("stage")
 
 		factoryTween.NewSelectRandom(durationX, xStart, xEnd, onUpdateX, loopX, rocketImg)
@@ -70,9 +75,9 @@ func main() {
 }
 
 func onUpdateX(x, p float64, args ...interface{}) {
-	args[0].([]interface{})[0].(*html.GlobalAttributes).SetX(int(x))
+	args[0].([]interface{})[0].(*html.TagDiv).SetX(int(x))
 }
 
 func onUpdateY(y, p float64, args ...interface{}) {
-	args[0].([]interface{})[0].(*html.GlobalAttributes).SetY(int(y))
+	args[0].([]interface{})[0].(*html.TagDiv).SetY(int(y))
 }

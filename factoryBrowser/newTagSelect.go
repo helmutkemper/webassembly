@@ -1,7 +1,5 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
-
 // NewTagSelect
 //
 // English:
@@ -24,10 +22,3 @@ import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowse
 //     SetNewOption("test_A_c", "label c", "value_c", false, false).
 //     SetNewOption("test_A_d", "label d", "value_d", false, true).
 //     AppendById("stage")
-func NewTagSelect(id string) (ref *html.DataList) {
-	ref = &html.DataList{}
-	ref.CreateElement(html.KTagSelect)
-	ref.SetId(id)
-
-	return ref
-}

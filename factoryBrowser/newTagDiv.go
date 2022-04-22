@@ -34,10 +34,10 @@ import (
 //     * Qualquer tipo de conteúdo pode ser colocado dentro da tag <div>.
 //
 //  A tag <div> define uma divisão ou uma seção em um documento HTML.
-func NewTagDiv(id string) (ref *html.Div) {
-	ref = &html.Div{}
+func NewTagDiv(id string) (ref *html.TagDiv) {
+	ref = &html.TagDiv{}
 	ref.CreateElement(html.KTagDiv)
-	ref.SetId(id)
+	ref.Id(id)
 
 	return ref
 }

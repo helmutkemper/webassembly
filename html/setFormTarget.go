@@ -6,7 +6,12 @@ import "log"
 //
 // English:
 //
-//  If the button is a submit button, this attribute is an author-defined name or standardized, underscore-prefixed keyword indicating where to display the response from submitting the form. This is the name of, or keyword for, a browsing context (a tab, window, or <iframe>). If this attribute is specified, it overrides the target attribute of the button's form owner. The following keywords have special meanings:
+//  If the button is a submit button, this attribute is an author-defined name or standardized,
+//  underscore-prefixed keyword indicating where to display the response from submitting the form.
+//
+// This is the name of, or keyword for, a browsing context (a tab, window, or <iframe>).
+// If this attribute is specified, it overrides the target attribute of the button's form owner.
+// The following keywords have special meanings:
 //
 //   KTargetSelf: the current browsing context; (Default)
 //   KTargetBlank: usually a new tab, but users can configure browsers to open a new window instead;
@@ -15,6 +20,15 @@ import "log"
 //     one). If no ancestors, behaves as _self.
 //
 // Português:
+//
+//  Se o botão for um botão de envio, esse atributo será um nome definido pelo autor ou uma
+//  palavra-chave padronizada com prefixo de sublinhado indicando onde exibir a resposta do envio do
+//  formulário.
+//
+// Este é o nome ou a palavra-chave de um contexto de navegação (uma guia, janela ou <iframe>).
+// Se este atributo for especificado, ele substituirá o atributo de destino do proprietário do
+// formulário do botão.
+// As seguintes palavras-chave têm significados especiais:
 //
 //   KTargetSelf: o contexto de navegação atual; (padrão)
 //   KTargetBlank: geralmente uma nova guia, mas os usuários podem configurar os navegadores para

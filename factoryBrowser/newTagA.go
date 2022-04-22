@@ -24,10 +24,10 @@ import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowse
 //
 // O conteúdo de cada <a> deve indicar o destino do link. Se o atributo href estiver presente,
 // pressionar a tecla enter enquanto estiver focado no elemento <a> irá ativá-lo.
-func NewTagA(id string) (ref *html.A) {
-	ref = &html.A{}
+func NewTagA(id string) (ref *html.TagA) {
+	ref = &html.TagA{}
 	ref.CreateElement(html.KTagA)
-	ref.SetId(id)
+	ref.Id(id)
 
 	return ref
 }

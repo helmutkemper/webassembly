@@ -41,6 +41,7 @@ import "log"
 func (e *GlobalAttributes) SetFormMethod(method FormMethod) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagButton:
+	case KTagForm:
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support formmethod property")
 	}

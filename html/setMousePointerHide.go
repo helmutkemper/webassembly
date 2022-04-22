@@ -1,6 +1,8 @@
 package html
 
-import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
+import (
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
+)
 
 // SetMousePointerHide
 //
@@ -12,7 +14,7 @@ import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowse
 //
 //  Define o ponteiro do mouse como oculto.
 func (e *GlobalAttributes) SetMousePointerHide() (ref *GlobalAttributes) {
-	//e.selfElement.Get("body").Set("style", mouse.KCursorNone.String())
+	e.selfElement.Get("body").Set("style", browserMouse.KCursorNone.String())
 	e.cursor = browserMouse.KCursorNone
 
 	return e

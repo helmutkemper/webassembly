@@ -15,6 +15,7 @@ import "log"
 func (e *GlobalAttributes) SetRequired(required bool) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagSelect:
+	case KTagInput:
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support required property")
 	}

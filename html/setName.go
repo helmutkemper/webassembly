@@ -17,6 +17,7 @@ func (e *GlobalAttributes) SetName(name string) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagButton:
 	case KTagFieldset:
+	case KTagInput:
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support name property")
 	}

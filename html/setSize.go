@@ -30,6 +30,7 @@ import "log"
 func (e *GlobalAttributes) SetSize(size int) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagSelect:
+	case KTagInput:
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support size property")
 	}

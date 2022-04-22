@@ -16,7 +16,7 @@ import "log"
 //     one). If no ancestors, behaves as _self.
 //
 //   Note:
-//     * Setting target="_blank" on <a> elements implicitly provides the same rel behavior as setting
+//     * Setting KTargetBlank on <a> elements implicitly provides the same rel behavior as setting
 //       rel="noopener" which does not set window.opener. See browser compatibility for support
 //       status.
 //
@@ -33,12 +33,13 @@ import "log"
 //     atual). Se não houver ancestrais, se comporta como _self.
 //
 //   Nota:
-//     * Definir target="_blank" em elementos <a> fornece implicitamente o mesmo comportamento rel
+//     * Definir KTargetBlank em elementos <a> fornece implicitamente o mesmo comportamento rel
 //       que definir rel="noopener" que não define window.opener. Consulte a compatibilidade do
 //       navegador para obter o status do suporte.
 func (e *GlobalAttributes) SetTarget(target Target) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagA:
+	case KTagForm:
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support target property")
 	}

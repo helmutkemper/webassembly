@@ -1,6 +1,8 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+import (
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+)
 
 // NewTagFieldSet
 //
@@ -17,10 +19,10 @@ import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowse
 //
 // O elemento HTML <fieldset> é usado para agrupar vários controles, bem como rótulos (<label>)
 // dentro de um formulário web.
-func NewTagFieldSet(id string) (ref *html.A) {
-	ref = &html.A{}
+func NewTagFieldSet(id string) (ref *html.TagFieldset) {
+	ref = &html.TagFieldset{}
 	ref.CreateElement(html.KTagFieldset)
-	ref.SetId(id)
+	ref.Id(id)
 
 	return ref
 }

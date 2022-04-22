@@ -19,6 +19,7 @@ import "log"
 func (e *GlobalAttributes) SetMultiple(multiple bool) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagSelect:
+	case KTagInput:
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support multiple property")
 	}

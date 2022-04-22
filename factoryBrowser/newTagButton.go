@@ -25,10 +25,10 @@ import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowse
 //
 // Por padrão, os botões HTML são apresentados em um estilo semelhante à plataforma na qual o agente
 // do usuário é executado, mas você pode alterar a aparência dos botões com CSS.
-func NewTagButton(id string) (ref *html.Button) {
-	ref = &html.Button{}
+func NewTagButton(id string) (ref *html.TagButton) {
+	ref = &html.TagButton{}
 	ref.CreateElement(html.KTagButton)
-	ref.SetId(id)
+	ref.Id(id)
 
 	return ref
 }

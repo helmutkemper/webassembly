@@ -36,8 +36,9 @@ import "strings"
 //                  Pode ser seguido por: letras (A-Za-z), dígitos (0-9), hífens ("-") e
 //                  sublinhados ("_").
 //
-// The class attribute is mostly used to point to a class in a style sheet. However, it can also be
-// used by a JavaScript (via the HTML DOM) to make changes to HTML elements with a specified class.
+// O atributo class é usado principalmente para apontar para uma classe em uma folha de estilo.
+// No entanto, também pode ser usado por um JavaScript (através do HTML DOM) para fazer alterações
+// em elementos HTML com uma classe especificada.
 func (e *GlobalAttributes) SetClass(class ...string) (ref *GlobalAttributes) {
 	e.selfElement.Set("classList", strings.Join(class, " "))
 	return e

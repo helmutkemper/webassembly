@@ -57,14 +57,14 @@ const (
 	//  The field expects the value to be a person's full name. Using "name" rather than breaking the
 	//  name down into its components is generally preferred because it avoids dealing with the wide
 	//  diversity of human names and how they are structured; however, you can use the following
-	//  autocomplete values if you do need to break the name down into its components:
+	//  autocomplete values if you do need to break the name down into its components
 	//
 	// Português:
 	//
-	//  The field expects the value to be a person's full name. Using "name" rather than breaking the
-	//  name down into its components is generally preferred because it avoids dealing with the wide
-	//  diversity of human names and how they are structured; however, you can use the following
-	//  autocomplete values if you do need to break the name down into its components:
+	//  O campo espera que o valor seja o nome completo de uma pessoa. Usar "nome" em vez de dividir o
+	//  nome em seus componentes é geralmente preferido porque evita lidar com a grande diversidade de
+	//  nomes humanos e como eles são estruturados; no entanto, você pode usar os seguintes valores de
+	//  preenchimento automático se precisar dividir o nome em seus componentes
 	KAutocompleteName Autocomplete = "name"
 
 	// KAutocompleteHonorificPrefix
@@ -283,7 +283,7 @@ const (
 	//
 	// Português:
 	//
-	//  The finest-grained administrative level, in addresses which have four levels.
+	//  O nível administrativo mais refinado, em endereços que têm quatro níveis.
 	KAutocompleteAddressLevel4 Autocomplete = "address-level4"
 
 	// KAutocompleteAddressLevel3
@@ -294,7 +294,7 @@ const (
 	//
 	// Português:
 	//
-	//  The finest-grained administrative level, in addresses which have four levels.
+	//  O nível administrativo mais refinado, em endereços que têm quatro níveis.
 	KAutocompleteAddressLevel3 Autocomplete = "address-level3"
 
 	// KAutocompleteAddressLevel2
@@ -305,7 +305,7 @@ const (
 	//
 	// Português:
 	//
-	//  The finest-grained administrative level, in addresses which have four levels.
+	//  O nível administrativo mais refinado, em endereços que têm quatro níveis.
 	KAutocompleteAddressLevel2 Autocomplete = "address-level2"
 
 	// KAutocompleteAddressLevel1
@@ -316,7 +316,7 @@ const (
 	//
 	// Português:
 	//
-	//  The finest-grained administrative level, in addresses which have four levels.
+	//  O nível administrativo mais refinado, em endereços que têm quatro níveis.
 	KAutocompleteAddressLevel1 Autocomplete = "address-level1"
 
 	// KAutocompleteCountry
@@ -580,8 +580,8 @@ const (
 	//
 	// Português:
 	//
-	//  The country code, such as "1" for the United States, Canada, and other areas in North America
-	//  and parts of the Caribbean.
+	//  O código do país, como "1" para os Estados Unidos, Canadá e outras áreas da América do Norte e
+	//  partes do Caribe.
 	KAutocompleteTelCountryCode Autocomplete = "tel-country-code"
 
 	// KAutocompleteTelNational
@@ -658,8 +658,8 @@ const (
 	//
 	// Português:
 	//
-	//  A URL, such as a home page or company web site address as appropriate given the context of
-	//  the other fields in the form.
+	//  Um URL, como uma página inicial ou endereço do site da empresa, conforme apropriado,
+	//  considerando o contexto dos outros campos do formulário.
 	KAutocompleteUrl Autocomplete = "url"
 
 	// KAutocompletePhoto

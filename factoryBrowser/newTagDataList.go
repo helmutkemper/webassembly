@@ -26,10 +26,10 @@ import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowse
 //     SetNewOption("test_A_c", "label c", "value_c", false, false).
 //     SetNewOption("test_A_d", "label d", "value_d", false, true).
 //     AppendById("stage")
-func NewTagDataList(id string) (ref *html.DataList) {
-	ref = &html.DataList{}
+func NewTagDataList(id string) (ref *html.TagDataList) {
+	ref = &html.TagDataList{}
 	ref.CreateElement(html.KTagDatalist)
-	ref.SetId(id)
+	ref.Id(id)
 
 	return ref
 }

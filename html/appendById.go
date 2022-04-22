@@ -1,7 +1,6 @@
 package html
 
 import (
-	"log"
 	"syscall/js"
 )
 
@@ -37,7 +36,6 @@ func (e *GlobalAttributes) AppendById(appendId string) (ref *GlobalAttributes) {
 
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
-		log.Print(KIdToAppendNotFound, appendId)
 		return e
 	}
 

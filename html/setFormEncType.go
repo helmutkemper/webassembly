@@ -40,6 +40,7 @@ import "log"
 func (e *GlobalAttributes) SetFormEncType(formenctype FormEncType) (ref *GlobalAttributes) {
 	switch e.tag {
 	case KTagButton:
+	case KTagForm:
 	default:
 		log.Printf("tag " + e.tag.String() + " does not support formenctype property")
 	}

@@ -43,9 +43,16 @@ func main() {
 		Name("Ok").
 		AppendById("stage")
 
+	factoryBrowser.NewTagInputButton("test_D").
+		Value("Button Value").
+		Append("stage")
+
 	factoryBrowser.NewTagSelect("test_C").
+		NewOption("test_C_X", "label a", "value_a", false, false).
+		NewOptionGroup("test_C_op_A", "OP A", true).
 		NewOption("test_C_a", "label a", "value_a", true, false).
 		NewOption("test_C_b", "label b", "value_b", false, false).
+		NewOptionGroup("test_C_op_B", "OP B", false).
 		NewOption("test_C_c", "label c", "value_c", false, true).
 		NewOption("test_C_d", "label d", "value_d", false, false).
 		AppendById("stage")

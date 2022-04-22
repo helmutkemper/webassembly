@@ -791,15 +791,28 @@ const (
 	//  listas de itens em um documento HTML.
 	KTagOption Tag = "option"
 
+	// KTagOptionGroup
+	//
+	// English:
+	//
+	//  The <optgroup> HTML element creates a grouping of options within a <select> element.
+	//
+	// Português
+	//
+	//  O elemento HTML <optgroup> cria um agrupamento de opções dentro de um elemento <select>.
+	KTagOptionGroup Tag = "optgroup"
+
 	// KTagOutput
 	//
 	// English:
 	//
-	//
+	//  The <output> HTML element is a container element into which a site or app can inject the results
+	//  of a calculation or the outcome of a user action.
 	//
 	// Português
 	//
-	//
+	//  O elemento HTML <output> é um elemento de contêiner no qual um site ou aplicativo pode injetar
+	//  os resultados de um cálculo ou o resultado de uma ação do usuário.
 	KTagOutput Tag = "output"
 
 	// KTagP

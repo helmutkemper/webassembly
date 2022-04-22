@@ -17,6 +17,8 @@ type TagSelect struct {
 	document    globalDocument.Document
 	cursor      browserMouse.CursorType
 	cssClass    *css.Class
+
+	lastOptionGroup *TagOptionGroup
 }
 
 // AccessKey
@@ -1075,6 +1077,11 @@ func (e *TagSelect) Size(size int) (ref *TagSelect) {
 //       If the <option> element is the descendant of a <select> element whose multiple attribute is
 //       not set, only one single <option> of this <select> element may have the selected attribute.
 //
+//
+//   Nota:
+//     * The new option will be created inside the last NewOptionGroup() created. Use the
+//       ReleaseGroup() function to create the new option at the root.
+//
 // Português:
 //
 //  O elemento HTML <option> é usado para definir um item contido em um elemento <select>, <optgroup>
@@ -1096,23 +1103,47 @@ func (e *TagSelect) Size(size int) (ref *TagSelect) {
 //     selected: Se presente, este atributo booleano indica que a opção foi selecionada inicialmente.
 //       Se o elemento <option> é descendente de um elemento <select> cujo atributo múltiplo não está
 //       definido, apenas um único <option> deste elemento <select> pode ter o atributo selecionado.
+//
+//   Nota:
+//     * O novo option será criado dentro do último NewOptionGroup() criado. Use a função
+//       ReleaseGroup() para criar o novo option na raiz.
 func (e *TagSelect) NewOption(id, label, value string, disabled, selected bool) (ref *TagSelect) {
 
-	ref = &TagSelect{}
-	ref.CreateElement(KTagOption)
-	ref.Id(id)
-	ref.value(value)
-	ref.textContent(label)
+	op := &TagSelect{}
+	op.CreateElement(KTagOption)
+	op.Id(id)
+	op.value(value)
+	op.textContent(label)
 
 	if disabled == true {
-		ref.disabled(disabled)
+		op.Disabled(disabled)
 	}
 
 	if selected == true {
-		ref.selected(selected)
+		op.selected(selected)
 	}
 
-	e.Append(ref.selfElement)
+	if e.lastOptionGroup == nil {
+		e.Append(op.selfElement)
+	} else {
+		e.lastOptionGroup.Append(op.selfElement)
+	}
+
+	return e
+}
+
+func (e *TagSelect) NewOptionGroup(id, label string, disabled bool) (ref *TagSelect) {
+
+	e.lastOptionGroup = &TagOptionGroup{}
+	e.lastOptionGroup.CreateElement(KTagOptionGroup)
+	e.lastOptionGroup.Id(id)
+	e.lastOptionGroup.Label(label)
+
+	if disabled == true {
+		e.lastOptionGroup.Disabled(disabled)
+	}
+
+	e.Append(e.lastOptionGroup.selfElement)
 
 	return e
 }
@@ -1218,20 +1249,6 @@ func (e *TagSelect) textContent(text string) (ref *TagSelect) {
 	return e
 }
 
-// disabled
-//
-// English:
-//
-//  Este atributo booleano impede que o usuário interaja com o elemento.
-//
-// Português:
-//
-//  Este atributo booleano impede que o usuário interaja com o elemento.
-func (e *TagSelect) disabled(disabled bool) (ref *TagSelect) {
-	e.selfElement.Set("disabled", disabled)
-	return e
-}
-
 // SetSelected
 //
 // English:
@@ -1247,5 +1264,19 @@ func (e *TagSelect) disabled(disabled bool) (ref *TagSelect) {
 //  único <option> deste elemento <select> pode ter o atributo selecionado.
 func (e *TagSelect) selected(selected bool) (ref *TagSelect) {
 	e.selfElement.Set("selected", selected)
+	return e
+}
+
+// ReleaseGroup
+//
+// English:
+//
+//  Releases the new option from the last option group created.
+//
+// Português:
+//
+//  Libera o novo option do último option group criado.
+func (e *TagSelect) ReleaseGroup() (ref *TagSelect) {
+	e.lastOptionGroup = nil
 	return e
 }

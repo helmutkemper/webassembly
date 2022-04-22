@@ -10,26 +10,7 @@ import (
 	"syscall/js"
 )
 
-// TagButton
-//
-// English:
-//
-//  The <button> HTML element is an interactive element activated by a user with a mouse, keyboard,
-//  finger, voice command, or other assistive technology. Once activated, it then performs a
-//  programmable action, such as submitting a form or opening a dialog.
-//
-// By default, HTML buttons are presented in a style resembling the platform the user agent runs on,
-// but you can change buttons' appearance with CSS.
-//
-// Português
-//
-//  O elemento HTML <button> é um elemento interativo ativado por um usuário com mouse, teclado,
-//  dedo, comando de voz ou outra tecnologia assistiva. Uma vez ativado, ele executa uma ação
-//  programável, como enviar um formulário ou abrir uma caixa de diálogo.
-//
-// Por padrão, os botões HTML são apresentados em um estilo semelhante à plataforma na qual o agente
-// do usuário é executado, mas você pode alterar a aparência dos botões com CSS.
-type TagButton struct {
+type TagOutput struct {
 	tag         Tag
 	id          string
 	selfElement js.Value
@@ -76,7 +57,7 @@ type TagButton struct {
 //     importantes no navegador;
 //     Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
 //     pressionadas junto com a tecla Alt.
-func (e *TagButton) AccessKey(key string) (ref *TagButton) {
+func (e *TagOutput) AccessKey(key string) (ref *TagOutput) {
 	e.selfElement.Set("accesskey", key)
 	return e
 }
@@ -92,7 +73,7 @@ func (e *TagButton) AccessKey(key string) (ref *TagButton) {
 //
 //  Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
 //  carregada. Apenas um elemento em um documento pode ter esse atributo.
-func (e *TagButton) Autofocus(autofocus bool) (ref *TagButton) {
+func (e *TagOutput) Autofocus(autofocus bool) (ref *TagOutput) {
 	e.selfElement.Set("autofocus", autofocus)
 	return e
 }
@@ -134,7 +115,7 @@ func (e *TagButton) Autofocus(autofocus bool) (ref *TagButton) {
 // O atributo class é usado principalmente para apontar para uma classe em uma folha de estilo.
 // No entanto, também pode ser usado por um JavaScript (através do HTML DOM) para fazer alterações
 // em elementos HTML com uma classe especificada.
-func (e *TagButton) Class(class ...string) (ref *TagButton) {
+func (e *TagOutput) Class(class ...string) (ref *TagOutput) {
 	e.selfElement.Set("classList", strings.Join(class, " "))
 	return e
 }
@@ -162,7 +143,7 @@ func (e *TagButton) Class(class ...string) (ref *TagButton) {
 //   Nota:
 //     Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
 //     seu pai.
-func (e *TagButton) ContentEditable(editable bool) (ref *TagButton) {
+func (e *TagOutput) ContentEditable(editable bool) (ref *TagOutput) {
 	e.selfElement.Set("contenteditable", editable)
 	return e
 }
@@ -212,7 +193,7 @@ func (e *TagButton) ContentEditable(editable bool) (ref *TagButton) {
 //   Nota:
 //     * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
 //       usuário.
-func (e *TagButton) Data(data map[string]string) (ref *TagButton) {
+func (e *TagOutput) Data(data map[string]string) (ref *TagOutput) {
 	for k, v := range data {
 		e.selfElement.Set(" data-"+k, v)
 	}
@@ -235,7 +216,7 @@ func (e *TagButton) Data(data map[string]string) (ref *TagButton) {
 //   Entrada:
 //     dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
 //          KDirAuto ]
-func (e *TagButton) Dir(dir Dir) (ref *TagButton) {
+func (e *TagOutput) Dir(dir Dir) (ref *TagOutput) {
 	e.selfElement.Set("dir", dir.String())
 	return e
 }
@@ -272,7 +253,7 @@ func (e *TagButton) Dir(dir Dir) (ref *TagButton) {
 //     * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
 //     * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
 //       https://www.w3schools.com/html/html5_draganddrop.asp
-func (e *TagButton) Draggable(draggable Draggable) (ref *TagButton) {
+func (e *TagOutput) Draggable(draggable Draggable) (ref *TagOutput) {
 	e.selfElement.Set("draggable", draggable.String())
 	return e
 }
@@ -322,7 +303,7 @@ func (e *TagButton) Draggable(draggable Draggable) (ref *TagButton) {
 //
 // Se nenhum valor enterKeyHint foi especificado ou se foi definido com um valor diferente dos
 // permitidos, ele retornará uma string vazia.
-func (e *TagButton) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagButton) {
+func (e *TagOutput) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagOutput) {
 	e.selfElement.Set("enterKeyHint", enterKeyHint.String())
 	return e
 }
@@ -359,7 +340,7 @@ func (e *TagButton) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagButton) {
 // O atributo oculto também pode ser usado para impedir que um usuário veja um elemento até que alguma
 // outra condição seja atendida (como marcar uma caixa de seleção etc.). Então, um JavaScript pode
 // remover o atributo oculto e tornar o elemento visível.
-func (e *TagButton) Hidden() (ref *TagButton) {
+func (e *TagOutput) Hidden() (ref *TagOutput) {
 	e.selfElement.Get("style").Set("visibility", "hidden")
 	return e
 }
@@ -385,7 +366,7 @@ func (e *TagButton) Hidden() (ref *TagButton) {
 //
 // O atributo id é mais usado para apontar para um estilo em uma folha de estilo, e por JavaScript
 // (através do HTML DOM) para manipular o elemento com o id específico.
-func (e *TagButton) Id(id string) (ref *TagButton) {
+func (e *TagOutput) Id(id string) (ref *TagOutput) {
 	e.id = id
 	e.selfElement.Set("id", id)
 	return e
@@ -419,7 +400,7 @@ func (e *TagButton) Id(id string) (ref *TagButton) {
 // imposto na entrada. Para exigir que a entrada esteja em conformidade com um tipo de dados
 // específico, escolha um tipo de elemento <input> apropriado. Para obter orientações específicas
 // sobre como escolher os tipos de <input>, consulte a seção Valores.
-func (e *TagButton) InputMode(inputMode InputMode) (ref *TagButton) {
+func (e *TagOutput) InputMode(inputMode InputMode) (ref *TagOutput) {
 	e.selfElement.Set("inputmode", inputMode.String())
 	return e
 }
@@ -435,7 +416,7 @@ func (e *TagButton) InputMode(inputMode InputMode) (ref *TagButton) {
 //
 //  Permite especificar que um elemento HTML padrão deve se comportar como um elemento interno
 //  personalizado registrado.
-func (e *TagButton) Is(is string) (ref *TagButton) {
+func (e *TagOutput) Is(is string) (ref *TagOutput) {
 	e.selfElement.Set("is", is)
 	return e
 }
@@ -449,7 +430,7 @@ func (e *TagButton) Is(is string) (ref *TagButton) {
 // Português:
 //
 //  O identificador global exclusivo de um item.
-func (e *TagButton) ItemId(id string) (ref *TagButton) {
+func (e *TagOutput) ItemId(id string) (ref *TagOutput) {
 	e.selfElement.Set("itemid", id)
 	return e
 }
@@ -465,7 +446,7 @@ func (e *TagButton) ItemId(id string) (ref *TagButton) {
 //
 //  Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
 //  especificado, onde um itemprop consiste em um par de nome e valor.
-func (e *TagButton) ItemDrop(itemprop string) (ref *TagButton) {
+func (e *TagOutput) ItemDrop(itemprop string) (ref *TagOutput) {
 	e.selfElement.Set("itemprop", itemprop)
 	return e
 }
@@ -483,7 +464,7 @@ func (e *TagButton) ItemDrop(itemprop string) (ref *TagButton) {
 //  Propriedades que não são descendentes de um elemento com o atributo itemscope podem ser
 //  associadas ao item usando um itemref. Ele fornece uma lista de IDs de elementos (não IDs de itens)
 //  com propriedades adicionais em outras partes do documento.
-func (e *TagButton) ItemRef(itemref string) (ref *TagButton) {
+func (e *TagOutput) ItemRef(itemref string) (ref *TagOutput) {
 	e.selfElement.Set("itemref", itemref)
 	return e
 }
@@ -501,7 +482,7 @@ func (e *TagButton) ItemRef(itemref string) (ref *TagButton) {
 //  Especifica a URL do vocabulário que será usado para definir itemprops (propriedades do item) na
 //  estrutura de dados. itemscope é usado para definir o escopo de onde na estrutura de dados o
 //  vocabulário definido por tipo de item estará ativo.
-func (e *TagButton) ItemType(itemType string) (ref *TagButton) {
+func (e *TagOutput) ItemType(itemType string) (ref *TagOutput) {
 	e.selfElement.Set("itemtype", itemType)
 	return e
 }
@@ -525,7 +506,7 @@ func (e *TagButton) ItemType(itemType string) (ref *TagButton) {
 //
 // Exemplos comuns são KLanguageEnglish para inglês, KLanguageSpanish para espanhol, KLanguageFrench
 // para francês e assim por diante.
-func (e *TagButton) Lang(language Language) (ref *TagButton) {
+func (e *TagOutput) Lang(language Language) (ref *TagOutput) {
 	e.selfElement.Set("lang", language.String())
 	return e
 }
@@ -534,15 +515,16 @@ func (e *TagButton) Lang(language Language) (ref *TagButton) {
 //
 // English:
 //
-//  A cryptographic nonce ("number used once") which can be used by Content Security Policy to
-//  determine whether or not a given fetch will be allowed to proceed.
+//  A space-separated list of the part names of the element. Part names allows CSS to select and style
+//  specific elements in a shadow tree via the ::part pseudo-element.
 //
 // Português:
 //
-//  Um nonce criptográfico ("número usado uma vez") que pode ser usado pela Política de Segurança de
-//  Conteúdo para determinar se uma determinada busca terá permissão para prosseguir.
-func (e *TagButton) Nonce(nonce int64) (ref *TagButton) {
-	e.selfElement.Set("nonce", nonce)
+//  Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
+//  o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
+//  pseudo-elemento ::part.
+func (e *TagOutput) Nonce(part ...string) (ref *TagOutput) {
+	e.selfElement.Set("part", strings.Join(part, " "))
 	return e
 }
 
@@ -559,7 +541,7 @@ func (e *TagButton) Nonce(nonce int64) (ref *TagButton) {
 //  Atribui um slot em uma shadow DOM shadow tree a um elemento: Um elemento com um atributo slot é
 //  atribuído ao slot criado pelo elemento <slot> cujo valor do atributo name corresponde ao valor
 //  desse atributo slot.
-func (e *TagButton) Slot(slot string) (ref *TagButton) {
+func (e *TagOutput) Slot(slot string) (ref *TagOutput) {
 	e.selfElement.Set("slot", slot)
 	return e
 }
@@ -587,7 +569,7 @@ func (e *TagButton) Slot(slot string) (ref *TagButton) {
 //         Valores de texto em elementos de entrada (não senha)
 //         Texto em elementos <textarea>
 //         Texto em elementos editáveis
-func (e *TagButton) Spellcheck(spell bool) (ref *TagButton) {
+func (e *TagOutput) Spellcheck(spell bool) (ref *TagOutput) {
 	e.selfElement.Set("spellcheck", spell)
 
 	return e
@@ -614,7 +596,7 @@ func (e *TagButton) Spellcheck(spell bool) (ref *TagButton) {
 //
 // O atributo style pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagButton) Style(style string) (ref *TagButton) {
+func (e *TagOutput) Style(style string) (ref *TagOutput) {
 	e.selfElement.Set("style", style)
 	return e
 }
@@ -634,7 +616,7 @@ func (e *TagButton) Style(style string) (ref *TagButton) {
 //
 // O atributo tabindex pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento
 // HTML. No entanto, não é necessariamente útil).
-func (e *TagButton) TabIndex(index int) (ref *TagButton) {
+func (e *TagOutput) TabIndex(index int) (ref *TagOutput) {
 	e.selfElement.Set("tabindex", index)
 	return e
 }
@@ -659,7 +641,7 @@ func (e *TagButton) TabIndex(index int) (ref *TagButton) {
 //
 // O atributo title pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagButton) Title(title string) (ref *TagButton) {
+func (e *TagOutput) Title(title string) (ref *TagOutput) {
 	e.selfElement.Set("title", title)
 	return e
 }
@@ -679,7 +661,7 @@ func (e *TagButton) Title(title string) (ref *TagButton) {
 //
 //   Entrada:
 //     translate: elemento deve ser traduzido ou não. [ KTranslateYes | KTranslateNo ]
-func (e *TagButton) Translate(translate Translate) (ref *TagButton) {
+func (e *TagOutput) Translate(translate Translate) (ref *TagOutput) {
 	e.selfElement.Set("translate", translate.String())
 	return e
 }
@@ -695,7 +677,7 @@ func (e *TagButton) Translate(translate Translate) (ref *TagButton) {
 //
 //  Em um documento HTML, o método Document.createElement() cria o elemento HTML especificado ou um
 //  HTMLUnknownElement se o nome do elemento dado não for conhecido.
-func (e *TagButton) CreateElement(tag Tag) (ref *TagButton) {
+func (e *TagOutput) CreateElement(tag Tag) (ref *TagOutput) {
 	e.selfElement = js.Global().Get("document").Call("createElement", tag.String())
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
@@ -734,7 +716,7 @@ func (e *TagButton) CreateElement(tag Tag) (ref *TagButton) {
 //     * Equivale a:
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
-func (e *TagButton) AppendById(appendId string) (ref *TagButton) {
+func (e *TagOutput) AppendById(appendId string) (ref *TagOutput) {
 
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
@@ -774,10 +756,10 @@ func (e *TagButton) AppendById(appendId string) (ref *TagButton) {
 //     * Equivale a:
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
-func (e *TagButton) Append(append interface{}) (ref *TagButton) {
+func (e *TagOutput) Append(append interface{}) (ref *TagOutput) {
 	switch append.(type) {
-	case *TagButton:
-		e.selfElement.Call("appendChild", append.(*TagButton).selfElement)
+	case *TagOutput:
+		e.selfElement.Call("appendChild", append.(*TagOutput).selfElement)
 	case js.Value:
 		e.selfElement.Call("appendChild", append)
 	case string:
@@ -793,341 +775,6 @@ func (e *TagButton) Append(append interface{}) (ref *TagButton) {
 	return e
 }
 
-// Autocomplete
-//
-// English:
-//
-//  The HTML autocomplete attribute lets web developers specify what if any permission the user agent
-//  has to provide automated assistance in filling out form field values, as well as guidance to the
-//  browser as to the type of information expected in the field.
-//
-// It is available on <input> elements that take a text or numeric value as input, <textarea>
-// elements, <select> elements, and <form> elements.
-//
-// The source of the suggested values is generally up to the browser; typically values come from past
-// values entered by the user, but they may also come from pre-configured values. For instance, a
-// browser might let the user save their name, address, phone number, and email addresses for
-// autocomplete purposes. Perhaps the browser offers the ability to save encrypted credit card
-// information, for autocompletion following an authentication procedure.
-//
-// If an <input>, <select> or <textarea> element has no autocomplete attribute, then browsers use the
-// autocomplete attribute of the element's form owner, which is either the <form> element that the
-// element is a descendant of, or the <form> whose id is specified by the form attribute of the
-// element.
-//
-//   Note:
-//     * In order to provide autocompletion, user-agents might require <input>/<select>/<textarea>
-//       elements to:
-//         Have a name and/or id attribute;
-//         Be descendants of a <form> element;
-//         The form to have a submit button.
-//
-// Português:
-//
-//  O atributo autocomplete HTML permite que os desenvolvedores da Web especifiquem se existe alguma
-//  permissão que o agente do usuário tenha para fornecer assistência automatizada no preenchimento
-//  dos valores dos campos do formulário, bem como orientação ao navegador quanto ao tipo de
-//  informação esperado no campo.
-//
-// Ele está disponível em elementos <input> que recebem um texto ou valor numérico como entrada,
-// elementos <textarea>, elementos <select> e elementos <form>.
-//
-// A origem dos valores sugeridos geralmente depende do navegador; normalmente os valores vêm de
-// valores passados inseridos pelo usuário, mas também podem vir de valores pré-configurados.
-// Por exemplo, um navegador pode permitir que o usuário salve seu nome, endereço, número de telefone
-// e endereços de e-mail para fins de preenchimento automático. Talvez o navegador ofereça a
-// capacidade de salvar informações de cartão de crédito criptografadas, para preenchimento automático
-// após um procedimento de autenticação.
-//
-// Se um elemento <input>, <select> ou <textarea> não tiver um atributo autocomplete, os navegadores
-// usarão o atributo autocomplete do proprietário do formulário do elemento, que é o elemento <form>
-// do qual o elemento é descendente ou o < form> cujo id é especificado pelo atributo form do
-// elemento.
-//
-//   Nota:
-//     * Para fornecer preenchimento automático, os agentes do usuário podem exigir elementos
-//       <input> / <select> / <textarea> para:
-//         Ter um atributo name e ou id;
-//         Ser descendentes de um elemento <form>;
-//         O formulário para ter um botão de envio.
-func (e *TagButton) Autocomplete(autocomplete Autocomplete) (ref *TagButton) {
-	e.selfElement.Set("autocomplete", autocomplete.String())
-	return e
-}
-
-// Disabled
-//
-// English:
-//
-//  Este atributo booleano impede que o usuário interaja com o elemento.
-//
-// Português:
-//
-//  Este atributo booleano impede que o usuário interaja com o elemento.
-func (e *TagButton) Disabled(disabled bool) (ref *TagButton) {
-	e.selfElement.Set("disabled", disabled)
-	return e
-}
-
-// Form
-//
-// English:
-//
-//  The <form> element to associate the button with (its form owner). The value of this attribute must
-//  be the id of a <form> in the same document. (If this attribute is not set, the <button> is
-//  associated with its ancestor <form> element, if any.)
-//
-// This attribute lets you associate <button> elements to <form>s anywhere in the document, not just
-// inside a <form>. It can also override an ancestor <form> element.
-//
-// Português:
-//
-//  O elemento <form> ao qual associar o botão (seu proprietário do formulário). O valor deste
-//  atributo deve ser o id de um <form> no mesmo documento. (Se esse atributo não for definido, o
-//  <button> será associado ao elemento <form> ancestral, se houver.)
-//
-// Este atributo permite associar elementos <button> a <form>s em qualquer lugar do documento, não
-// apenas dentro de um <form>. Ele também pode substituir um elemento <form> ancestral.
-func (e *TagButton) Form(form string) (ref *TagButton) {
-	e.selfElement.Set("form", form)
-	return e
-}
-
-// FromAction
-//
-// English:
-//
-//  The URL that processes the information submitted by the button. Overrides the action attribute of
-//  the button's form owner. Does nothing if there is no form owner.
-//
-//   Input:
-//     action: The URL that processes the form submission. This value can be overridden by a
-//             formaction attribute on a <button>, <input type="submit">, or <input type="image">
-//             element. This attribute is ignored when method="dialog" is set.
-//
-// Português:
-//
-//  A URL que processa as informações enviadas pelo botão. Substitui o atributo de ação do
-//  proprietário do formulário do botão. Não faz nada se não houver um proprietário de formulário.
-//
-//   Entrada:
-//     action: A URL que processa o envio do formulário. Esse valor pode ser substituído por um
-//             atributo formaction em um elemento <button>, <input type="submit"> ou
-//             <input type="image">. Este atributo é ignorado quando method="dialog" é definido.
-func (e *TagButton) FromAction(action string) (ref *TagButton) {
-	e.selfElement.Set("formaction", action)
-	return e
-}
-
-// FormEncType
-//
-// English:
-//
-//  If the button is a submit button (it's inside/associated with a <form> and doesn't have
-//  type="button"), specifies how to encode the form data that is submitted. Possible values:
-//
-//   Input:
-//     formenctype: specifies how to encode the form data
-//
-//       application/x-www-form-urlencoded: The default if the attribute is not used.
-//       multipart/form-data: Use to submit <input> elements with their type attributes set to file.
-//       text/plain: Specified as a debugging aid; shouldn't be used for real form submission.
-//
-//   Note:
-//     * If this attribute is specified, it overrides the enctype attribute of the button's form
-//       owner.
-//
-// Português:
-//
-//  Se o botão for um botão de envio (está associado a um <form> e não possui type="button"),
-//  especifica como codificar os dados do formulário que são enviados. Valores possíveis:
-//
-//   Entrada:
-//     formenctype: especifica como codificar os dados do formulário
-//
-//       KFormEncTypeApplication: O padrão se o atributo não for usado.
-//       KFormEncTypeMultiPart: Use para enviar elementos <input> com seus atributos de tipo definidos
-//         para arquivo.
-//       KFormEncTypeText: Especificado como auxiliar de depuração; não deve ser usado para envio de
-//         formulário real.
-//
-//   Note:
-//     * Se este atributo for especificado, ele substituirá o atributo enctype do proprietário do
-//       formulário do botão.
-func (e *TagButton) FormEncType(formenctype FormEncType) (ref *TagButton) {
-	e.selfElement.Set("formenctype", formenctype.String())
-	return e
-}
-
-// FormMethod
-//
-// English:
-//
-//  If the button is a submit button (it's inside/associated with a <form> and doesn't have
-//  type="button"), this attribute specifies the HTTP method used to submit the form.
-//
-//   Input:
-//     method: specifies the HTTP method used to submit
-//       KFormMethodPost: The data from the form are included in the body of the HTTP request when
-//         sent to the server. Use when the form contains information that shouldn't be public, like
-//         login credentials.
-//       KFormMethodGet: The form data are appended to the form's action URL, with a ? as a separator,
-//         and the resulting URL is sent to the server. Use this method when the form has no side
-//         effects, like search forms.
-//
-//   Note:
-//     * If specified, this attribute overrides the method attribute of the button's form owner.
-//
-// Português:
-//
-//  Se o botão for um botão de envio (está associado a um <form> e não possui type="button"),
-//  este atributo especifica o método HTTP usado para enviar o formulário.
-//
-//   Input:
-//     method: especifica o método HTTP usado para enviar
-//       KFormMethodPost: Os dados do formulário são incluídos no corpo da solicitação HTTP quando
-//         enviados ao servidor. Use quando o formulário contém informações que não devem ser
-//         públicas, como credenciais de login.
-//       KFormMethodGet: Os dados do formulário são anexados à URL de ação do formulário, com um ?
-//         como separador e a URL resultante é enviada ao servidor. Use este método quando o
-//         formulário não tiver efeitos colaterais, como formulários de pesquisa.
-//
-//   Nota:
-//     * Se especificado, este atributo substitui o atributo method do proprietário do formulário do
-//       botão.
-func (e *TagButton) FormMethod(method FormMethod) (ref *TagButton) {
-	e.selfElement.Set("formmethod", method.String())
-	return e
-}
-
-// FormValidate
-//
-// English:
-//
-//  If the button is a submit button, this Boolean attribute specifies that the form is not to be
-//  validated when it is submitted.
-//
-// If this attribute is specified, it overrides the novalidate attribute of the button's form owner.
-//
-// Português:
-//
-//  Se o botão for um botão de envio, este atributo booleano especifica que o formulário não deve ser
-//  validado quando for enviado.
-//
-// Se este atributo for especificado, ele substituirá o atributo novalidate do proprietário do
-// formulário do botão.
-func (e *TagButton) FormValidate(validate bool) (ref *TagButton) {
-	e.selfElement.Set("formnovalidate", validate)
-	return e
-}
-
-// FormTarget
-//
-// English:
-//
-//  If the button is a submit button, this attribute is an author-defined name or standardized,
-//  underscore-prefixed keyword indicating where to display the response from submitting the form.
-//
-// This is the name of, or keyword for, a browsing context (a tab, window, or <iframe>).
-//
-// If this attribute is specified, it overrides the target attribute of the button's form owner.
-// The following keywords have special meanings:
-//
-//   KTargetSelf: the current browsing context; (Default)
-//   KTargetBlank: usually a new tab, but users can configure browsers to open a new window instead;
-//   KTargetParent: the parent browsing context of the current one. If no parent, behaves as _self;
-//   KTargetTop: the topmost browsing context (the "highest" context that's an ancestor of the current
-//     one). If no ancestors, behaves as _self.
-//
-// Português:
-//
-//  Se o botão for um botão de envio, esse atributo será um nome definido pelo autor ou uma
-//  palavra-chave padronizada com prefixo de sublinhado indicando onde exibir a resposta do envio do
-//  formulário.
-//
-// Este é o nome ou a palavra-chave de um contexto de navegação (uma guia, janela ou <iframe>).
-// Se este atributo for especificado, ele substituirá o atributo de destino do proprietário do
-// formulário do botão.
-// As seguintes palavras-chave têm significados especiais:
-//
-//   KTargetSelf: o contexto de navegação atual; (padrão)
-//   KTargetBlank: geralmente uma nova guia, mas os usuários podem configurar os navegadores para
-//     abrir uma nova janela;
-//   KTargetParent: o contexto de navegação pai do atual. Se nenhum pai, se comporta como _self;
-//   KTargetTop: o contexto de navegação mais alto (o contexto "mais alto" que é um ancestral do
-//     atual). Se não houver ancestrais, se comporta como _self.
-func (e *TagButton) FormTarget(formtarget Target) (ref *TagButton) {
-	e.selfElement.Set("formtarget", formtarget.String())
-	return e
-}
-
-// Name
-//
-// English:
-//
-//  The name of the button, submitted as a pair with the button's value as part of the form data,
-//  when that button is used to submit the form.
-//
-// Português:
-//
-//  O nome do botão, enviado como um par com o valor do botão como parte dos dados do formulário,
-//  quando esse botão é usado para enviar o formulário.
-func (e *TagButton) Name(name string) (ref *TagButton) {
-	e.selfElement.Set("name", name)
-	return e
-}
-
-// ButtonType
-//
-// English:
-//
-//  The default behavior of the button.
-//
-//   Input:
-//     value: default behavior of the button.
-//       KButtonTypeSubmit: The button submits the form data to the server. This is the default if
-//         the attribute is not specified for buttons associated with a <form>, or if the attribute
-//         is an empty or invalid value.
-//       KButtonTypeReset:  The button resets all the controls to their initial values, like
-//         <input type="reset">. (This behavior tends to annoy users.)
-//       KButtonTypeButton: The button has no default behavior, and does nothing when pressed by
-//         default. It can have client-side scripts listen to the element's events, which are
-//         triggered when the events occur.
-//
-// Português:
-//
-//  O comportamento padrão do botão. Os valores possíveis são:
-//
-//   Entrada:
-//     value: comportamento padrão do botão
-//       KButtonTypeSubmit: O botão envia os dados do formulário para o servidor. Este é o padrão se
-//         o atributo não for especificado para botões associados a um <form> ou se o atributo for um
-//         valor vazio ou inválido.
-//       KButtonTypeReset:  O botão redefine todos os controles para seus valores iniciais, como
-//         <input type="reset">. (Esse comportamento tende a incomodar os usuários.)
-//       KButtonTypeButton: O botão não tem comportamento padrão e não faz nada quando pressionado por
-//         padrão. Ele pode fazer com que os scripts do lado do cliente escutem os eventos do
-//         elemento, que são acionados quando os eventos ocorrem.
-func (e *TagButton) ButtonType(value ButtonType) (ref *TagButton) {
-	e.selfElement.Set("type", value.String())
-	return e
-}
-
-// Value
-//
-// English:
-//
-//  Defines the value associated with the element.
-//
-// Português:
-//
-//  Define o valor associado ao elemento.
-func (e *TagButton) Value(value string) (ref *TagButton) {
-	e.selfElement.Set("value", value)
-	e.selfElement.Set("innerText", value)
-	return e
-}
-
 // SetXY
 //
 // English:
@@ -1137,7 +784,7 @@ func (e *TagButton) Value(value string) (ref *TagButton) {
 // Português:
 //
 //  Define os eixos X e Y em pixels.
-func (e *TagButton) SetXY(x, y int) (ref *TagButton) {
+func (e *TagOutput) SetXY(x, y int) (ref *TagOutput) {
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	py := strconv.FormatInt(int64(y), 10) + "px"
 
@@ -1156,7 +803,7 @@ func (e *TagButton) SetXY(x, y int) (ref *TagButton) {
 // Português:
 //
 //  Define o eixo X em pixels.
-func (e *TagButton) SetX(x int) (ref *TagButton) {
+func (e *TagOutput) SetX(x int) (ref *TagOutput) {
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	e.selfElement.Get("style").Set("left", px)
 
@@ -1172,7 +819,7 @@ func (e *TagButton) SetX(x int) (ref *TagButton) {
 // Português:
 //
 //  Define o eixo Y em pixels.
-func (e *TagButton) SetY(y int) (ref *TagButton) {
+func (e *TagOutput) SetY(y int) (ref *TagOutput) {
 	py := strconv.FormatInt(int64(y), 10) + "px"
 	e.selfElement.Get("style").Set("top", py)
 
@@ -1188,7 +835,7 @@ func (e *TagButton) SetY(y int) (ref *TagButton) {
 // Português:
 //
 //  Retorna os eixos X e Y em pixels.
-func (e *TagButton) GetXY() (x, y int) {
+func (e *TagOutput) GetXY() (x, y int) {
 	x = e.selfElement.Get("style").Get("left").Int()
 	y = e.selfElement.Get("style").Get("top").Int()
 
@@ -1204,7 +851,7 @@ func (e *TagButton) GetXY() (x, y int) {
 // Português:
 //
 //  Retorna o eixo X em pixels.
-func (e *TagButton) GetX() (x int) {
+func (e *TagOutput) GetX() (x int) {
 	x = e.selfElement.Get("style").Get("left").Int()
 
 	return
@@ -1219,8 +866,100 @@ func (e *TagButton) GetX() (x int) {
 // Português:
 //
 //  Retorna o eixo Y em pixels.
-func (e *TagButton) GetY() (y int) {
+func (e *TagOutput) GetY() (y int) {
 	y = e.selfElement.Get("style").Get("top").Int()
 
 	return
+}
+
+// For
+//
+// English:
+//
+//  The value of the for attribute must be a single id for a labelable form-related element in the
+//  same document as the <label> element. So, any given label element can be associated with only
+//  one form control.
+//
+//   Note:
+//     * To programmatically set the for attribute, use htmlFor.
+//
+// The first element in the document with an id attribute matching the value of the for attribute is
+// the labeled control for this label element — if the element with that id is actually a labelable
+// element. If it is not a labelable element, then the for attribute has no effect. If there are
+// other elements that also match the id value, later in the document, they are not considered.
+//
+// Multiple label elements can be given the same value for their for attribute; doing so causes the
+// associated form control (the form control that for value references) to have multiple labels.
+//
+//   Note:
+//     * A <label> element can have both a for attribute and a contained control element, as long as
+//       the for attribute points to the contained control element.
+//
+// Português:
+//
+//  O valor do atributo for deve ser um único id para um elemento rotulável relacionado ao formulário
+//  no mesmo documento que o elemento <label>. Portanto, qualquer elemento de rótulo pode ser
+//  associado a apenas um controle de formulário.
+//
+//   Nota:
+//     * Programaticamente definir o atributo for, use htmlFor.
+//
+// O primeiro elemento no documento com um atributo id correspondente ao valor do atributo é o
+// controle rotulado para este elemento label - se o elemento com esse ID é realmente um elemento
+// labelable. Se não é um elemento labelable, em seguida, o atributo for tem nenhum efeito.
+// Se existem outros elementos que também correspondem ao valor id, mais adiante no documento,
+// eles não são considerados.
+//
+// Vários elementos de rótulo podem receber o mesmo valor para seu atributo for; isso faz com que o
+// controle de formulário associado (o controle de formulário para referências de valor) tenha
+// vários rótulos.
+//
+//   Nota:
+//     * Um elemento <label> pode ter um atributo for e um elemento de controle contido, desde que
+//       o atributo for aponte para o elemento de controle contido.
+func (e *TagOutput) For(value string) (ref *TagOutput) {
+	e.selfElement.Set("for", value)
+	return e
+}
+
+// Form
+//
+// English:
+//
+//  The <form> element to associate the output with (its form owner). The value of this attribute must
+//  be the id of a <form> in the same document.
+//
+//   Note:
+//     * If this attribute is not set, the <output> is associated with its ancestor <form> element,
+//       if any;
+//     * This attribute lets you associate <output> elements to <form>s anywhere in the document, not
+//       just inside a <form>. It can also override an ancestor <form> element.
+//
+// Português:
+//
+//  O elemento <form> ao qual associar a saída (seu proprietário do formulário). O valor deste
+//  atributo deve ser o id de um <form> no mesmo documento.
+//
+//   Nota:
+//     * Se este atributo não for definido, o <output> será associado ao elemento <form> ancestral,
+//       se houver;
+//     * Este atributo permite associar elementos <output> a <form>s em qualquer lugar do documento,
+//       não apenas dentro de um <form>. Ele também pode substituir um elemento <form> ancestral.
+func (e *TagOutput) Form(form string) (ref *TagOutput) {
+	e.selfElement.Set("form", form)
+	return e
+}
+
+// Name
+//
+// English:
+//
+//  The element's name. Used in the form.elements API.
+//
+// Português:
+//
+//  O nome do elemento. Usado na API form.elements.
+func (e *TagOutput) Name(name string) (ref *TagOutput) {
+	e.selfElement.Set("name", name)
+	return e
 }

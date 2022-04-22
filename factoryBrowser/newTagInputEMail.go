@@ -2,7 +2,7 @@ package factoryBrowser
 
 import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 
-// NewTagInput
+// NewTagInputEMail
 //
 // English:
 //
@@ -25,10 +25,11 @@ import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowse
 //
 // O elemento <input> é um dos mais poderosos e complexos dentro do HTML, devido ao grande número
 // de combinações de tipos de entrada e atributos.
-func NewTagInput(id string) (ref *html.A) {
-	ref = &html.A{}
+func NewTagInputEMail(id string) (ref *html.TagInputEMail) {
+	ref = &html.TagInputEMail{}
 	ref.CreateElement(html.KTagInput)
-	ref.SetId(id)
+	ref.Type(html.KInputTypeEmail)
+	ref.Id(id)
 
 	return ref
 }

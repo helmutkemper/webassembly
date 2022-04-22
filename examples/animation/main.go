@@ -43,6 +43,13 @@ func main() {
 		Name("Ok").
 		AppendById("stage")
 
+	factoryBrowser.NewTagSelect("test_C").
+		NewOption("test_C_a", "label a", "value_a", true, false).
+		NewOption("test_C_b", "label b", "value_b", false, false).
+		NewOption("test_C_c", "label c", "value_c", false, true).
+		NewOption("test_C_d", "label d", "value_d", false, false).
+		AppendById("stage")
+
 	var border = 200
 	var width = global.Global.Document.GetDocumentWidth() - 29 - border
 	var height = global.Global.Document.GetDocumentHeight() - 50 - border

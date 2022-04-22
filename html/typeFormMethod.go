@@ -34,4 +34,17 @@ const (
 	//  resultante é enviada ao servidor. Use este método quando o formulário não tiver efeitos
 	//  colaterais, como formulários de pesquisa.
 	KFormMethodGet FormMethod = "get"
+
+	// KFormMethodDialog
+	//
+	// English:
+	//
+	//  When the form is inside a <dialog>, closes the dialog and throws a submit event on submission
+	//  without submitting data or clearing the form.
+	//
+	// Português:
+	//
+	//  When the form is inside a <dialog>, closes the dialog and throws a submit event on submission
+	//  without submitting data or clearing the form.
+	KFormMethodDialog FormMethod = "dialog"
 )

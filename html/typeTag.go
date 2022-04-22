@@ -458,11 +458,13 @@ const (
 	//
 	// English:
 	//
-	//
+	//  The <form> HTML element represents a document section containing interactive controls for
+	//  submitting information.
 	//
 	// Português
 	//
-	//
+	//  O elemento HTML <form> representa uma seção do documento contendo controles interativos para o
+	//  envio de informações.
 	KTagForm Tag = "form"
 
 	// KTagHead

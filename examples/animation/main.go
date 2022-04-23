@@ -7,7 +7,6 @@ package main
 import (
 	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserImage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
@@ -20,15 +19,12 @@ func main() {
 	done := make(chan struct{}, 0)
 
 	// Carrega a imagem
-	factoryBrowserImage.NewImage(
+	factoryBrowser.NewTagImage(
+		"spacecraft",
+		"./small.png",
 		29,
 		50,
-		map[string]interface{}{
-			"id":  "spacecraft",
-			"src": "./small.png",
-		},
 		true,
-		false,
 	)
 
 	factoryBrowser.NewTagDataList("test_A").
@@ -72,17 +68,14 @@ func main() {
 		var yStart = mathUtil.Float64FomInt(border, height)
 		var yEnd = mathUtil.Float64FomInt(border, height)
 
-		var loopX = mathUtil.Int(-1, 10)
-		var loopY = mathUtil.Int(-1, 10)
-
 		var id = "div_" + strconv.FormatInt(int64(a), 10)
 
 		rocketImg := factoryBrowser.NewTagDiv(id).
 			Class("animate").
 			AppendById("stage")
 
-		factoryTween.NewSelectRandom(durationX, xStart, xEnd, onUpdateX, loopX, rocketImg)
-		factoryTween.NewSelectRandom(durationY, yStart, yEnd, onUpdateY, loopY, rocketImg)
+		factoryTween.NewSelectRandom(durationX, xStart, xEnd, onUpdateX, -1, rocketImg)
+		factoryTween.NewSelectRandom(durationY, yStart, yEnd, onUpdateY, -1, rocketImg)
 	}
 
 	<-done

@@ -17,7 +17,7 @@ func NewImage(
 ) html.Image {
 
 	var platform iotmaker_platform_IDraw.IHtml = global.Global.Html
-	var parent interface{} = global.Global.Document.SelfDocument
+	var parent interface{} = global.Global.Document.selfDocument
 
 	densityCalc := global.Global.DensityManager
 	densityCalc.SetDensityFactor(global.Global.Density)

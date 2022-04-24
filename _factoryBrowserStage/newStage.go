@@ -33,9 +33,9 @@ func NewStage(
 	stage.Width = document.GetDocumentWidth()
 	stage.Height = document.GetDocumentHeight()
 
-	stage.Canvas = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, stage.Id, stage.Width, stage.Height)
-	stage.ScratchPad = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, stage.Id+"ScratchPad", stage.Width, stage.Height)
-	stage.Cache = factoryBrowserCanvas.NewCanvasWith2DContext(document.SelfDocument, stage.Id+"Cache", stage.Width, stage.Height)
+	stage.Canvas = factoryBrowserCanvas.NewCanvasWith2DContext(document.Get(), stage.Id, stage.Width, stage.Height)
+	stage.ScratchPad = factoryBrowserCanvas.NewCanvasWith2DContext(document.Get(), stage.Id+"ScratchPad", stage.Width, stage.Height)
+	stage.Cache = factoryBrowserCanvas.NewCanvasWith2DContext(document.Get(), stage.Id+"Cache", stage.Width, stage.Height)
 
 	document.MousePointerHide()
 	document.AppendToDocument(stage.SelfElement)
@@ -67,7 +67,7 @@ func NewStage(
 	})
 
 	PreLoadCursor(
-		document.SelfDocument,
+		document.Get(),
 		stage,
 		htmlPlatform,
 		&stage.Canvas,

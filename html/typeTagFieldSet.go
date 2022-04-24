@@ -1,9 +1,7 @@
 package html
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
 	"log"
 	"strconv"
 	"strings"
@@ -14,8 +12,6 @@ type TagFieldset struct {
 	tag         Tag
 	id          string
 	selfElement js.Value
-	document    globalDocument.Document
-	cursor      browserMouse.CursorType
 	cssClass    *css.Class
 }
 

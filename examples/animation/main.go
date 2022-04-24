@@ -5,27 +5,47 @@
 package main
 
 import (
-	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/browserStage"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
+	"log"
 	"strconv"
 	"time"
 )
+
+var img *html.TagImage
 
 func main() {
 
 	done := make(chan struct{}, 0)
 
+	var stage = browserStage.Stage{}
+	stage.Init()
+
 	// Carrega a imagem
-	factoryBrowser.NewTagImage(
+	img = factoryBrowser.NewTagImage(
 		"spacecraft",
 		"./small.png",
 		29,
 		50,
 		true,
 	)
+
+	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+		// Create a starting point
+		MoveTo(20, 20).
+		// Create a horizontal line
+		LineTo(100, 20).
+		// Create an arc
+		ArcTo(150, 20, 150, 70, 50).
+		// Continue with vertical line
+		LineTo(150, 120).
+		// Draw it
+		Stroke().
+		AppendById("stage")
 
 	factoryBrowser.NewTagDataList("test_A").
 		NewOption("test_A_a", "label a", "value_a", true, false).
@@ -54,8 +74,8 @@ func main() {
 		AppendById("stage")
 
 	var border = 200
-	var width = global.Global.Document.GetDocumentWidth() - 29 - border
-	var height = global.Global.Document.GetDocumentHeight() - 50 - border
+	var width = stage.GetWidth() - 29 - border
+	var height = stage.GetHeight() - 50 - border
 
 	for a := 0; a != 20; a += 1 {
 
@@ -78,7 +98,19 @@ func main() {
 		factoryTween.NewSelectRandom(durationY, yStart, yEnd, onUpdateY, -1, rocketImg)
 	}
 
+	stage.AddListener(browserMouse.KEventMouseOver, move)
+	//document.AddEventListener(browserMouse.KEventMouseEnter, browserMouse.SetMouseSimpleEventManager(stage.CursorShow))
 	<-done
+}
+
+func move(event browserMouse.MouseEvent) {
+	isNull, target := event.GetRelatedTarget()
+	if isNull == false {
+		log.Print("id: ", target.Get("id"))
+		log.Print("tagName: ", target.Get("tagName"))
+	}
+	log.Print(event.GetScreenX())
+	log.Print(event.GetScreenY())
 }
 
 func onUpdateX(x, p float64, args ...interface{}) {

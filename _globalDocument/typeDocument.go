@@ -28,7 +28,7 @@ type P struct {
 
 type Document struct {
 	hasInitialized bool
-	SelfDocument   js.Value
+	selfDocument   js.Value
 }
 
 // Init
@@ -42,7 +42,7 @@ type Document struct {
 //  Inicializa o documento com o documento principal do navegador.
 func (el *Document) Init() {
 	el.hasInitialized = true
-	el.SelfDocument = js.Global().Get("document")
+	el.selfDocument = js.Global().Get("document")
 }
 
 // Get
@@ -55,12 +55,7 @@ func (el *Document) Init() {
 //
 //  Retorna o documento.
 func (el *Document) Get() js.Value {
-
-	if el.hasInitialized == false {
-		el.Init()
-	}
-
-	return el.SelfDocument
+	return el.selfDocument
 }
 
 // MousePointerAuto
@@ -73,11 +68,7 @@ func (el *Document) Get() js.Value {
 //
 //  Define o ponteiro do mouse como automático.
 func (el *Document) MousePointerAuto() {
-	if el.hasInitialized == false {
-		el.Init()
-	}
-
-	el.SelfDocument.Get("body").Set("style", browserMouse.KCursorAuto.String())
+	el.selfDocument.Get("body").Set("style", browserMouse.KCursorAuto.String())
 }
 
 // MousePointerHide
@@ -90,11 +81,7 @@ func (el *Document) MousePointerAuto() {
 //
 //  Define o ponteiro do mouse como oculto.
 func (el *Document) MousePointerHide() {
-	if el.hasInitialized == false {
-		el.Init()
-	}
-
-	el.SelfDocument.Get("body").Set("style", browserMouse.KCursorNone.String())
+	el.selfDocument.Get("body").Set("style", browserMouse.KCursorNone.String())
 }
 
 // SetMousePointer
@@ -117,11 +104,7 @@ func (el *Document) MousePointerHide() {
 //       Exemplo: SetMousePointer(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
 //                o resto
 func (el *Document) SetMousePointer(value browserMouse.CursorType) {
-	if el.hasInitialized == false {
-		el.Init()
-	}
-
-	el.SelfDocument.Get("body").Set("style", value.String())
+	el.selfDocument.Get("body").Set("style", value.String())
 }
 
 // AppendToDocument
@@ -140,12 +123,7 @@ func (el *Document) SetMousePointer(value browserMouse.CursorType) {
 //   Entrada:
 //     value: elemento js.Value contendo um documento html.
 func (el *Document) AppendToDocument(value interface{}) {
-
-	if el.hasInitialized == false {
-		el.Init()
-	}
-
-	el.SelfDocument.Get("body").Call("appendChild", value)
+	el.selfDocument.Get("body").Call("appendChild", value)
 }
 
 // RemoveFromDocument
@@ -164,12 +142,7 @@ func (el *Document) AppendToDocument(value interface{}) {
 //   Entrada:
 //     value: elemento js.Value contendo um documento html.
 func (el *Document) RemoveFromDocument(value interface{}) {
-
-	if el.hasInitialized == false {
-		el.Init()
-	}
-
-	el.SelfDocument.Get("body").Call("removeChild", value)
+	el.selfDocument.Get("body").Call("removeChild", value)
 }
 
 // GetDocumentWidth
@@ -188,7 +161,7 @@ func (el *Document) RemoveFromDocument(value interface{}) {
 //   Saída:
 //     width: tamanho do documento em pixels.
 func (el Document) GetDocumentWidth() (width int) {
-	return el.SelfDocument.Get("body").Get("clientWidth").Int()
+	return el.selfDocument.Get("body").Get("clientWidth").Int()
 }
 
 // GetDocumentHeight
@@ -207,7 +180,7 @@ func (el Document) GetDocumentWidth() (width int) {
 //   Saída:
 //     width: tamanho do documento em pixels.
 func (el Document) GetDocumentHeight() (height int) {
-	return el.SelfDocument.Get("body").Get("clientHeight").Int()
+	return el.selfDocument.Get("body").Get("clientHeight").Int()
 }
 
 // ResizeToScreen
@@ -220,8 +193,8 @@ func (el Document) GetDocumentHeight() (height int) {
 //
 //  Redimensiona o documento para o tamanho do documento principal.
 func (el Document) ResizeToScreen() {
-	el.SelfDocument.Get("body").Set("width", js.Global().Get("document").Get("body").Get("clientWidth").Int())
-	el.SelfDocument.Get("body").Set("height", js.Global().Get("document").Get("body").Get("clientHeight").Int())
+	el.selfDocument.Get("body").Set("width", js.Global().Get("document").Get("body").Get("clientWidth").Int())
+	el.selfDocument.Get("body").Set("height", js.Global().Get("document").Get("body").Get("clientHeight").Int())
 }
 
 // GetElementById
@@ -253,7 +226,7 @@ func (el Document) ResizeToScreen() {
 //       XUL, e outros. Implementações que não reconhecem se os atributos são do tipo ID, ou não são
 //       esperados retornam null.
 func (el Document) GetElementById(document Document, id string) (element interface{}) {
-	elementRet := document.SelfDocument.Call("getElementById", id)
+	elementRet := document.selfDocument.Call("getElementById", id)
 	if elementRet.IsUndefined() == true || elementRet.IsNull() {
 		log.Printf("getElementById(%v).undefined", id)
 		return nil
@@ -389,46 +362,46 @@ func (el *Document) AppendChild(element string, value interface{}) {
 		el.Init()
 	}
 
-	el.SelfDocument.Get(element).Call("appendChild", value)
+	el.selfDocument.Get(element).Call("appendChild", value)
 }
 
 func (el *Document) AddEventListener(eventType interface{}, mouseMoveEvt js.Func) {
 	switch converted := eventType.(type) {
 	case event.Event:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventAnimation.EventAnimation:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventClipBoard.EventClipBoard:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventDrag.EventDrag:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventFocus.EventFocus:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventHashChange.EventHashChange:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventInput.EventInput:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventKeyboard.EventKeyboard:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case browserMouse.Event:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventPageTransition.EventPageTransition:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventUi.EventUi:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventWheel.EventWheel:
-		el.SelfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	default:
 		log.Fatalf("event must be a event type")

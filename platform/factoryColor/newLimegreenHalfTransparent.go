@@ -1,0 +1,7 @@
+package factoryColor
+
+import "image/color"
+
+func NewLimegreenHalfTransparent() color.RGBA {
+	return color.RGBA{R: 0x32, G: 0xcd, B: 0x32, A: 0x80} // rgb(50, 205, 50)
+}

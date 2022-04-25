@@ -8,7 +8,10 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/browserStage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowser"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontStyle"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/factoryColor"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
 	"log"
@@ -34,17 +37,25 @@ func main() {
 		true,
 	)
 
+	var fontA html.Font
+	fontA.Family = factoryFontFamily.NewArial()
+	fontA.Size = 20
+	fontA.Style = factoryFontStyle.NewItalic()
+
+	var fontB html.Font
+	fontB.Family = factoryFontFamily.NewVerdana()
+	fontB.Size = 35
+
 	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-		// Create a starting point
-		MoveTo(20, 20).
-		// Create a horizontal line
-		LineTo(100, 20).
-		// Create an arc
-		ArcTo(150, 20, 150, 70, 50).
-		// Continue with vertical line
-		LineTo(150, 120).
-		// Draw it
-		Stroke().
+		Font(fontA).
+		FillText("Hello World!", 10, 50, 300).
+		CreateLinearGradient(0, 0, 160, 0).
+		AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+		AddColorStopPosition(0.5, factoryColor.NewBlue()).
+		AddColorStopPosition(1.0, factoryColor.NewRed()).
+		FillStyleGradient().
+		Font(fontB).
+		FillText("Big smile!", 10, 90, 300).
 		AppendById("stage")
 
 	factoryBrowser.NewTagDataList("test_A").

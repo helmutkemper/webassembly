@@ -147,7 +147,7 @@ func (e *Font) String() string {
 
 	if e.Size != 0 {
 		ret += strconv.FormatInt(int64(e.Size), 10)
-		ret += " "
+		ret += "px "
 	}
 
 	if e.Family != "" {

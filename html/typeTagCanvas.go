@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
+	"image/color"
 	"log"
 	"syscall/js"
 )
@@ -15,6 +16,9 @@ type TagCanvas struct {
 	context js.Value
 	width   int
 	height  int
+
+	gradient js.Value
+	pattern  js.Value
 }
 
 // Id
@@ -359,22 +363,88 @@ func (el *TagCanvas) PutImageData(imgData [][][]uint8, width, height int) (ref *
 	return el
 }
 
+// AddColorStopPosition
+//
+// English:
+//
+//  Specifies the colors and stop positions in a gradient object
+//
+//     Input:
+//       stopPosition: A value between 0.0 and 1.0 that represents the position between start (0%) and
+//         end (100%) in a gradient;
+//       color: A color RGBA value to display at the stop position. You can use
+//         factoryColor.NewColorName() to make it easier;
+//
+//   Note:
+//     * Before using this function, you need to generate a gradient with the CreateLinearGradient()
+//       or CreateRadialGradient() functions;
+//     * You can call the AddColorStopPosition() method multiple times to change a gradient. If you
+//       omit this method for gradient objects, the gradient will not be visible. You need to create
+//       at least one color stop to have a visible gradient.
+//
+// Português:
+//
+//  Especifica a cor e a posição final para a cor dentro do gradiente
+//   Entrada:
+//     stopPosition: Um valor entre 0.0 e 1.0 que representa a posição entre o início (0%) e o fim
+//       (100%) dentro do gradiente;
+//     color: Uma cor no formato RGBA para ser mostrada na posição determinada. Você pode usar
+//       factoryColor.NewColorName() para facilitar.
+//
+//   Nota:
+//     * Antes de usar esta função, você necessita gerar um gradiente com as funções
+//       CreateLinearGradient() ou CreateRadialGradient();
+//     * Você pode chamar o método AddColorStopPosition() várias vezes para adicionar várias cores ao
+//       gradiente, porém, se você omitir o método, o gradiente não será visível. Você tem à obrigação
+//       de chamar o método pelo menos uma vez com uma cor para que o gradiente seja visível.
+func (el *TagCanvas) AddColorStopPosition(stopPosition float64, color color.RGBA) (ref *TagCanvas) {
+	el.gradient.Call("addColorStop", stopPosition, RGBAToJs(color))
+	return el
+}
+
 // Arc
 //
 // English:
 //
-// Creates an arc/curve (used to create circles, or parts of circles)
+//  Creates an arc/curve (used to create circles, or parts of circles).
+//
 //   Input:
-//     x: The horizontal coordinate of the arc's center.
-//     y: The vertical coordinate of the arc's center.
-//     radius: The arc's radius. Must be positive.
-//     startAngle: The angle at which the arc starts in radians, measured from the positive x-axis.
-//     endAngle: The angle at which the arc ends in radians, measured from the positive x-axis.
+//     x: The horizontal coordinate of the arc's center;
+//     y: The vertical coordinate of the arc's center;
+//     radius: The arc's radius. Must be positive;
+//     startAngle: The angle at which the arc starts in radians, measured from the positive x-axis;
+//     endAngle: The angle at which the arc ends in radians, measured from the positive x-axis;
 //     anticlockwise: An optional Boolean. If true, draws the arc counter-clockwise between the start
 //       and end angles. The default is false (clockwise).
 //
 //     Example:
-//     Arc(100, 75, 50, 0, 2 * Math.PI, false);
+//
+//       factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//         BeginPath().
+//         Arc(100, 75, 50, 0, 2 * math.Pi, false).
+//         Stroke().
+//         AppendById("stage")
+//
+// Português:
+//
+//  Creates an arc/curve (used to create circles, or parts of circles).
+//
+//   Input:
+//     x: A coordenada horizontal do centro do arco;
+//     y: A coordenada vertical do centro do arco;
+//     radius: O raio do arco. Deve ser positivo;
+//     startAngle: O ângulo no qual o arco começa em radianos, medido a partir do eixo x positivo;
+//     endAngle: O ângulo no qual o arco termina em radianos, medido a partir do eixo x positivo;
+//     anticlockwise: Um booleano opcional. Se true, desenha o arco no sentido anti-horário entre os
+//       ângulos inicial e final. O padrão é false (sentido horário).
+//
+//     Example:
+//
+//       factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//         BeginPath().
+//         Arc(100, 75, 50, 0, 2 * math.Pi, false).
+//         Stroke().
+//         AppendById("stage")
 func (el *TagCanvas) Arc(x, y, radius, startAngle int, endAngle float64, anticlockwise bool) (ref *TagCanvas) {
 	el.context.Call("arc", x, y, radius, startAngle, endAngle, anticlockwise)
 	return el
@@ -384,40 +454,67 @@ func (el *TagCanvas) Arc(x, y, radius, startAngle int, endAngle float64, anticlo
 //
 // English:
 //
-//  Creates an arc/curve between two tangents
+//  Creates an arc/curve between two tangents.
+//
 //   Input:
-//     x1:     The x-axis coordinate of the first control point.
-//     y1:     The y-axis coordinate of the first control point.
-//     x2:     The x-axis coordinate of the second control point.
-//     y2:     The y-axis coordinate of the second control point.
+//     x1: The x-axis coordinate of the first control point.
+//     y1: The y-axis coordinate of the first control point.
+//     x2: The x-axis coordinate of the second control point.
+//     y2: The y-axis coordinate of the second control point.
 //     radius: The arc's radius. Must be non-negative.
 //
 //   Example:
 //     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//       // Create a starting point
 //       MoveTo(20, 20).
-//       // Create a horizontal line
 //       LineTo(100, 20).
-//       // Create an arc
 //       ArcTo(150, 20, 150, 70, 50).
-//       // Continue with vertical line
 //       LineTo(150, 120).
-//       // Draw it
 //       Stroke().
 //		   AppendById("stage")
-func (el *TagCanvas) ArcTo(x1, y1, x2, y2, radius int) (ref *TagCanvas) {
+//
+// Português:
+//
+//  Cria um arco / curva entre duas tangentes.
+//
+//   Input:
+//     x1: A coordenada do eixo x do primeiro ponto de controle;
+//     y1: A coordenada do eixo y do primeiro ponto de controle;
+//     x2: A coordenada do eixo x do segundo ponto de controle;
+//     y2: A coordenada do eixo y do segundo ponto de controle;
+//     radius: O raio do arco. Deve ser não negativo.
+//
+//   Example:
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       MoveTo(20, 20).
+//       LineTo(100, 20).
+//       ArcTo(150, 20, 150, 70, 50).
+//       LineTo(150, 120).
+//       Stroke().
+//		   AppendById("stage")
+func (el *TagCanvas) ArcTo(x1, y1, x2, y2 int, radius int) (ref *TagCanvas) {
 	el.context.Call("arcTo", x1, y1, x2, y2, radius)
 	return el
 }
 
 // BeginPath
-//	en: Begins a path, or resets the current path
-//      Tip: Use moveTo(), lineTo(), quadricCurveTo(), bezierCurveTo(), arcTo(), and arc(), to create paths.
-//      Tip: Use the stroke() method to actually draw the path on the canvas.
 //
-// pt_br: Inicia ou reinicializa uma nova rota no desenho
-//      Dica: Use moveTo(), lineTo(), quadricCurveTo(), bezierCurveTo(), arcTo(), e arc(), para criar uma nova rota no desenho
-//      Dica: Use o método stroke() para desenhar a rota no elemento canvas
+// English:
+//
+//	Begins a path, or resets the current path
+//
+//   Note:
+//     * Use MoveTo(), LineTo(), QuadricCurveTo(), BezierCurveTo(), ArcTo(), and Arc(), to
+//        create paths;
+//     * Use the Stroke() method to actually draw the path on the canvas.
+//
+// Português:
+//
+//  Inicia ou reinicializa uma nova rota no desenho
+//
+//   Nota:
+//     * Dica: Use MoveTo(), LineTo(), QuadricCurveTo(), BezierCurveTo(), ArcTo(), e Arc(), para
+//       criar uma nova rota no desenho;
+//     * Use o método Stroke() para desenhar a rota no elemento canvas.
 func (el *TagCanvas) BeginPath() (ref *TagCanvas) {
 	el.context.Call("beginPath")
 	return el
@@ -427,183 +524,472 @@ func (el *TagCanvas) BeginPath() (ref *TagCanvas) {
 //
 // English:
 //
-//  Creates a cubic Bézier curve
+//  Creates a cubic Bézier curve.
+//
 //   Input:
-//     cp1x: The x-axis coordinate of the first control point.
-//     cp1y: The y-axis coordinate of the first control point.
-//     cp2x: The x-axis coordinate of the second control point.
-//     cp2y: The y-axis coordinate of the second control point.
-//     x: The x-axis coordinate of the end point.
+//
+//     cp1x: The x-axis coordinate of the first control point;
+//     cp1y: The y-axis coordinate of the first control point;
+//     cp2x: The x-axis coordinate of the second control point;
+//     cp2y: The y-axis coordinate of the second control point;
+//     x: The x-axis coordinate of the end point;
 //     y: The y-axis coordinate of the end point.
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.beginPath();
-//     ctx.moveTo(20, 20);
-//     ctx.bezierCurveTo(20, 100, 200, 100, 200, 20);
-//     ctx.stroke();
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       MoveTo(20, 20).
+//       BezierCurveTo(20, 100, 200, 100, 200, 20).
+//       Stroke().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Cria uma curva de Bézier cúbica.
+//
+//   Entrada:
+//
+//     cp1x: A coordenada do eixo x do primeiro ponto de controle;
+//     cp1y: A coordenada do eixo y do primeiro ponto de controle;
+//     cp2x: A coordenada do eixo x do segundo ponto de controle;
+//     cp2y: A coordenada do eixo y do segundo ponto de controle;
+//     x: A coordenada do eixo x do ponto final;
+//     y: A coordenada do eixo y do ponto final.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       MoveTo(20, 20).
+//       BezierCurveTo(20, 100, 200, 100, 200, 20).
+//       Stroke().
+//       AppendById("stage")
 func (el *TagCanvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y int) (ref *TagCanvas) {
 	el.context.Call("bezierCurveTo", cp1x, cp1y, cp2x, cp2y, x, y)
 	return el
 }
 
-// en: Clears the specified pixels within a given rectangle
-//     x:      The x-coordinate of the upper-left corner of the rectangle to clear
-//     y:      The y-coordinate of the upper-left corner of the rectangle to clear
-//     width:  The width of the rectangle to clear, in pixels
+// ClearRect
+//
+// English:
+//
+//  Clears the specified pixels within a given rectangle.
+//     x: The x-coordinate of the upper-left corner of the rectangle to clear
+//     y: The y-coordinate of the upper-left corner of the rectangle to clear
+//     width: The width of the rectangle to clear, in pixels
 //     height: The height of the rectangle to clear, in pixels
 //
-//     The clearRect() method clears the specified pixels within a given rectangle.
-//     JavaScript syntax: context.clearRect(x, y, width, height);
+//     The ClearRect() method clears the specified pixels within a given rectangle.
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.fillStyle = "red";
-//     ctx.fillRect(0, 0, 300, 150);
-//     ctx.clearRect(20, 20, 100, 50);
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillStyle("red").
+//       FillRect(0, 0, 300, 150).
+//       ClearRect(20, 20, 100, 50).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Limpa os pixels especificados em um determinado retângulo.
+//     x: A coordenada x do canto superior esquerdo do retângulo para limpar;
+//     y: A coordenada y do canto superior esquerdo do retângulo para limpar;
+//     width: A largura do retângulo a ser limpo, em pixels;
+//     height: A altura do retângulo a ser limpo, em pixels.
+//
+//     O método ClearRect() limpa os pixels especificados em um determinado retângulo.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillStyle("red").
+//       FillRect(0, 0, 300, 150).
+//       ClearRect(20, 20, 100, 50).
+//       AppendById("stage")
 func (el *TagCanvas) ClearRect(x, y, width, height int) (ref *TagCanvas) {
 	el.context.Call("clearRect", x, y, width, height)
 	return el
 }
 
-// en: Clips a region of any shape and size from the original canvas
-//     The clip() method clips a region of any shape and size from the original canvas.
-//     Tip: Once a region is clipped, all future drawing will be limited to the clipped region (no access to other
-//     regions on the canvas). You can however save the current canvas region using the save() method before using the
-//     clip() method, and restore it (with the restore() method) any time in the future.
+// Clip
+//
+// English:
+//
+//  Clips a region of any shape and size from the original canvas.
+//
+// The Clip() method clips a region of any shape and size from the original canvas.
+//
+//   Note:
+//     * Once a region is clipped, all future drawing will be limited to the clipped region (no
+//       access to other regions on the canvas). You can however save the current canvas region using
+//       the Save() method before using the Clip() method, and restore it (with the Restore() method)
+//       any time in the future.
+//
+// Português:
+//
+//  Recorta uma região de qualquer forma e tamanho do canvas original.
+//
+// O método Clip() recorta uma região de qualquer forma e tamanho da tela original.
+//
+//   Nota:
+//     * Uma vez recortada uma região, todos os desenhos futuros serão limitados à região recortada
+//       (sem acesso a outras regiões do canvas). No entanto, você pode salvar a região do canvas
+//       atual usando o método Save() antes de usar o método Clip() e restaurá-la, com o método
+//       Restore(), a qualquer momento no futuro.
 func (el *TagCanvas) Clip(x, y int) (ref *TagCanvas) {
 	el.context.Call("clip", x, y)
 	return el
 }
 
-// en: Creates a path from the current point back to the starting point
-//     The closePath() method creates a path from the current point back to the starting point.
-//     Tip: Use the stroke() method to actually draw the path on the canvas.
-//     Tip: Use the fill() method to fill the drawing (black is default). Use the fillStyle property to fill with
-//     another color/gradient.
+// ClosePath
+//
+// English:
+//
+//  Creates a path from the current point back to the starting point.
+//
+// The ClosePath() method creates a path from the current point back to the starting point.
+//
+//   Note:
+//     * Use the Stroke() method to actually draw the path on the canvas;
+//     * Use the Fill() method to fill the drawing, black is default. Use the FillStyle() property to
+//       fill with another color/gradient.
+//
+// Português:
+//
+//  Cria um caminho do ponto atual de volta ao ponto inicial.
+//
+// O método ClosePath() cria um caminho do ponto atual de volta ao ponto inicial.
+//
+//   Nota:
+//     * Use o método Stroke() para realmente desenhar o caminho na tela;
+//     * Use o método Fill() para preencher o desenho, preto é o padrão. Use a propriedade
+//       FillStyle() para preencher com outra cor / gradiente.
 func (el *TagCanvas) ClosePath(x, y int) (ref *TagCanvas) {
 	el.context.Call("closePath", x, y)
 	return el
 }
 
-// en: Creates a linear gradient (to use on canvas content)
-//     x0: The x-coordinate of the start point of the gradient
-//     y0: The y-coordinate of the start point of the gradient
-//     x1: The x-coordinate of the end point of the gradient
-//     y1: The y-coordinate of the end point of the gradient
+// CreateLinearGradient
 //
-//     The createLinearGradient() method creates a linear gradient object.
-//     The gradient can be used to fill rectangles, circles, lines, text, etc.
-//     Tip: Use this object as the value to the strokeStyle or fillStyle properties.
-//     Tip: Use the addColorStop() method to specify different colors, and where to position the colors in the gradient object.
-//     JavaScript syntax:	context.createLinearGradient(x0, y0, x1, y1);
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     var grd = ctx.createLinearGradient(0, 0, 170, 0);
-//     grd.addColorStop(0, "black");
-//     grd.addColorStop(1, "white");
-//     ctx.fillStyle = grd;
-//     ctx.fillRect(20, 20, 150, 100);
+//  Creates a linear gradient.
+//
+//   Input:
+//     x0: The x-coordinate of the start point of the gradient;
+//     y0: The y-coordinate of the start point of the gradient;
+//     x1: The x-coordinate of the end point of the gradient;
+//     y1: The y-coordinate of the end point of the gradient.
+//
+// The CreateLinearGradient() method creates a linear gradient object.
+//
+// The gradient can be used to fill rectangles, circles, lines, text, etc.
+//
+//   Note:
+//     * Use this object as the value to the strokeStyle or fillStyle properties;
+//     * Use the AddColorStopPosition() method to specify different colors, and where to position the
+//       colors in the gradient object.
+//
+//   Example:
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       CreateLinearGradient(0, 0, 170, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewBlack()).
+//       AddColorStopPosition(0.5, factoryColor.NewOrangered()).
+//       AddColorStopPosition(1.0, factoryColor.NewWhite()).
+//       FillStyleGradient().
+//       FillRect(20, 20, 150, 100).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Cria um gradiente linear.
+//
+//   Entrada:
+//     x0: A coordenada x do ponto inicial do gradiente;
+//     y0: A coordenada y do ponto inicial do gradiente;
+//     x1: A coordenada x do ponto final do gradiente;
+//     y1: A coordenada y do ponto final do gradiente.
+//
+// O método CreateLinearGradient() cria um objeto gradiente linear.
+//
+// O gradiente pode ser usado para preencher retângulos, círculos, linhas, texto, etc.
+//
+//   Nota:
+//     * Use este objeto como o valor para as propriedades strokeStyle ou fillStyle;
+//     * Use o método AddColorStopPosition() para especificar cores diferentes e onde posicionar as
+//       cores no objeto gradiente.
+//
+//   Exemplo:
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       CreateLinearGradient(0, 0, 170, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewBlack()).
+//       AddColorStopPosition(0.5, factoryColor.NewOrangered()).
+//       AddColorStopPosition(1.0, factoryColor.NewWhite()).
+//       FillStyleGradient().
+//       FillRect(20, 20, 150, 100).
+//       AppendById("stage")
 func (el *TagCanvas) CreateLinearGradient(x0, y0, x1, y1 int) (ref *TagCanvas) {
-	el.context.Call("createLinearGradient", x0, y0, x1, y1)
+	el.gradient = el.context.Call("createLinearGradient", x0, y0, x1, y1)
 	return el
 }
 
-// en: Repeats a specified element in the specified direction
+// CreatePattern
+//
+// English:
+//
+//  Repeats a specified element in the specified direction.
+//
+//   Input:
 //     image: Specifies the image, canvas, or video element of the pattern to use
 //     repeatedElement
-//          repeat: Default. The pattern repeats both horizontally and vertically
-//          repeat-x: The pattern repeats only horizontally
-//          repeat-y: The pattern repeats only vertically
-//          no-repeat: The pattern will be displayed only once (no repeat)
+//     repeatRule: Image repetition rule.
+//       KRepeatRuleRepeat: (Default) The pattern repeats both horizontally and vertically
+//       KRepeatRuleRepeatX: The pattern repeats only horizontally
+//       KRepeatRuleRepeatY: The pattern repeats only vertically
+//       KRepeatRuleNoRepeat: The pattern will be displayed only once (no repeat)
 //
-//     The createPattern() method repeats the specified element in the specified direction.
-//     The element can be an image, video, or another <canvas> element.
-//     The repeated element can be used to draw/fill rectangles, circles, lines etc.
-//     JavaScript syntax:	context.createPattern(image, "repeat|repeat-x|repeat-y|no-repeat");
+// The CreatePattern() method repeats the specified element in the specified direction.
+// The element can be an image, video, or another <canvas> element.
+// The repeated element can be used to draw/fill rectangles, circles, lines etc.
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     var img = document.getElementById("lamp");
-//     var pat = ctx.createPattern(img, "repeat");
-//     ctx.rect(0, 0, 150, 100);
-//     ctx.fillStyle = pat;
-//     ctx.fill();
-func (el *TagCanvas) CreatePattern(image js.Value, repeatRule CanvasRepeatRule) (ref *TagCanvas) {
-	el.context.Call("createPattern", image, repeatRule)
-	return
-}
+//   Example:
+//
+//     var img = factoryBrowser.NewTagImage(
+//       "spacecraft",
+//       "./small.png",
+//       29,
+//       50,
+//       true,
+//     )
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       CreatePattern(img, html.KRepeatRuleRepeat).
+//       Rect(0, 0, 300, 300).
+//       FillStylePattern().
+//       Fill().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Repete um elemento especificado na direção especificada.
+//
+//   Entrada:
+//     image: Especifica a imagem, tela ou elemento de vídeo do padrão para usar repeatElement;
+//     repeatRule: Regra de repetição da imagem.
+//       KRepeatRuleRepeat: (Padrão) O padrão se repete horizontal e verticalmente;
+//       KRepeatRuleRepeatX: O padrão se repete apenas horizontalmente;
+//       KRepeatRuleRepeatY: O padrão se repete apenas verticalmente;
+//       KRepeatRuleNoRepeat: O padrão será exibido apenas uma vez (sem repetição).
+//
+// O método CreatePattern() repete o elemento especificado na direção especificada.
+//
+// O elemento pode ser uma imagem, vídeo ou outro elemento <canvas>.
+//
+// O elemento repetido pode ser usado para desenhar retângulos, círculos, linhas etc.
+//
+//   Exemplo:
+//
+//     var img = factoryBrowser.NewTagImage(
+//       "spacecraft",
+//       "./small.png",
+//       29,
+//       50,
+//       true,
+//     )
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       CreatePattern(img, html.KRepeatRuleRepeat).
+//       Rect(0, 0, 300, 300).
+//       FillStylePattern().
+//       Fill().
+//       AppendById("stage")
+func (el *TagCanvas) CreatePattern(image interface{}, repeatRule CanvasRepeatRule) (ref *TagCanvas) {
+	log.Print("createPattern", image.(*TagImage).GetJs(), repeatRule.String())
+	if _, ok := image.(*TagImage); ok {
+		el.pattern = el.context.Call("createPattern", image.(*TagImage).GetJs(), repeatRule.String())
+		return el
+	}
 
-// en: Creates a radial/circular gradient (to use on canvas content)
-//     x0: The x-coordinate of the starting circle of the gradient
-//     y0: The y-coordinate of the starting circle of the gradient
-//     r0: The radius of the starting circle
-//     x1: The x-coordinate of the ending circle of the gradient
-//     y1: The y-coordinate of the ending circle of the gradient
-//     r1: The radius of the ending circle
-//
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     var grd = ctx.createRadialGradient(75, 50, 5, 90, 60, 100);
-//     grd.addColorStop(0, "red");
-//     grd.addColorStop(1, "white");
-//     // Fill with gradient
-//     ctx.fillStyle = grd;
-//     ctx.fillRect(10, 10, 150, 100);
-func (el *TagCanvas) CreateRadialGradient(x0, y0, r0, x1, y1 int, r1 float64) (ref *TagCanvas) {
-	el.context.Call("createRadialGradient", x0, y0, r0, x1, y1, r1)
+	el.pattern = el.context.Call("createPattern", image, repeatRule.String())
 	return el
 }
 
-// en: Draws a "filled" rectangle
-//     x:      The x-coordinate of the upper-left corner of the rectangle
-//     y:      The y-coordinate of the upper-left corner of the rectangle
-//     width:  The width of the rectangle, in pixels
-//     height: The height of the rectangle, in pixels
+// CreateRadialGradient
 //
-//     The fillRect() method draws a "filled" rectangle. The default color of the fill is black.
-//     Tip: Use the fillStyle property to set a color, gradient, or pattern used to fill the drawing.
-//     JavaScript syntax: context.fillRect(x, y, width, height);
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.fillRect(20, 20, 150, 100);
+//  Creates a radial/circular gradient (to use on canvas content)
+//
+//   Input:
+//     x0: The x-coordinate of the starting circle of the gradient;
+//     y0: The y-coordinate of the starting circle of the gradient;
+//     r0: The radius of the starting circle;
+//     x1: The x-coordinate of the ending circle of the gradient;
+//     y1: The y-coordinate of the ending circle of the gradient;
+//     r1: The radius of the ending circle.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       CreateRadialGradient(75, 50, 5, 90, 60, 100).
+//       AddColorStopPosition(0.0, factoryColor.NewRed()).
+//       AddColorStopPosition(1.0, factoryColor.NewWhite()).
+//       FillStyleGradient().
+//       FillRect(10, 10, 150, 100).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Cria um gradiente radial/circular (para usar no conteúdo da tela)
+//
+//   Entrada:
+//     x0: A coordenada x do círculo inicial do gradiente;
+//     y0: A coordenada y do círculo inicial do gradiente;
+//     r0: O raio do círculo inicial;
+//     x1: A coordenada x do círculo final do gradiente;
+//     y1: A coordenada y do círculo final do gradiente;
+//     r1: O raio do círculo final.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       CreateRadialGradient(75, 50, 5, 90, 60, 100).
+//       AddColorStopPosition(0.0, factoryColor.NewRed()).
+//       AddColorStopPosition(1.0, factoryColor.NewWhite()).
+//       FillStyleGradient().
+//       FillRect(10, 10, 150, 100).
+//       AppendById("stage")
+func (el *TagCanvas) CreateRadialGradient(x0, y0, r0, x1, y1 int, r1 float64) (ref *TagCanvas) {
+	el.gradient = el.context.Call("createRadialGradient", x0, y0, r0, x1, y1, r1)
+	return el
+}
+
+// FillRect
+//
+// English:
+//
+//  Draws a "filled" rectangle
+//
+//   Input:
+//     x: The x-coordinate of the upper-left corner of the rectangle;
+//     y: The y-coordinate of the upper-left corner of the rectangle;
+//     width: The width of the rectangle, in pixels;
+//     height: The height of the rectangle, in pixels.
+//
+// The FillRect() method draws a "filled" rectangle. The default color of the fill is black.
+//
+//   Note:
+//     * Use the FillStyle() function to set a color, FillStyleGradient() to set a gradient or
+//       FillStylePattern() to set a pattern used to fill the drawing.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillRect(20, 20, 150, 100).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Desenha um retângulo "preenchido"
+//
+//   Entrada:
+//     x: A coordenada x do canto superior esquerdo do retângulo;
+//     y: A coordenada y do canto superior esquerdo do retângulo;
+//     width: A largura do retângulo, em pixels;
+//     height: A altura do retângulo, em pixels.
+//
+// O método FillRect() desenha um retângulo "preenchido". A cor padrão do preenchimento é preto.
+//
+//   Nota:
+//     * Use a função FillStyle() para definir uma cor, FillStyleGradient() para definir um gradiente
+//       ou FillStylePattern() para definir um padrão usado para preencher o desenho.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillRect(20, 20, 150, 100).
+//       AppendById("stage")
 func (el *TagCanvas) FillRect(x, y, width, height int) (ref *TagCanvas) {
 	el.context.Call("fillRect", x, y, width, height)
 	return el
 }
 
-// en: Draws "filled" text on the canvas
-//     text:     Specifies the text that will be written on the canvas
-//     x:        The x coordinate where to start painting the text (relative to the canvas)
-//     y:        The y coordinate where to start painting the text (relative to the canvas)
-//     maxWidth: Optional. The maximum allowed width of the text, in pixels
+// FillText
 //
-//     The fillText() method draws filled text on the canvas. The default color of the text is black.
-//     Tip: Use the font property to specify font and font size, and use the fillStyle property to render the text in another color/gradient.
-//     JavaScript syntax: context.fillText(text, x, y, maxWidth);
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.font = "20px Georgia";
-//     ctx.fillText("Hello World!", 10, 50);
-//     ctx.font = "30px Verdana";
-//     // Create gradient
-//     var gradient = ctx.createLinearGradient(0, 0, c.width, 0);
-//     gradient.addColorStop("0", "magenta");
-//     gradient.addColorStop("0.5", "blue");
-//     gradient.addColorStop("1.0", "red");
-//     // Fill with gradient
-//     ctx.fillStyle = gradient;
-//     ctx.fillText("Big smile!", 10, 90);
+//  Draws "filled" text on the canvas
+//
+//   Input:
+//     text: Specifies the text that will be written on the canvas;
+//     x: The x coordinate where to start painting the text (relative to the canvas);
+//     y: The y coordinate where to start painting the text (relative to the canvas);
+//     maxWidth: Optional. The maximum allowed width of the text, in pixels.
+//
+// The FillText() method draws filled text on the canvas. The default color of the text is black.
+//
+//   Note:
+//     * Use the Font() function to specify font and font size, and use the FillStyle() function to
+//       render the text in another color/gradient.
+//
+//   Example:
+//     	var fontA html.Font
+//     	fontA.Family = factoryFontFamily.NewArial()
+//     	fontA.Size = 20
+//     	fontA.Style = factoryFontStyle.NewItalic()
+//
+//     	var fontB html.Font
+//     	fontB.Family = factoryFontFamily.NewVerdana()
+//     	fontB.Size = 35
+//
+//     	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//     	  Font(fontA).
+//     	  FillText("Hello World!", 10, 50, 300).
+//     	  CreateLinearGradient(0, 0, 160, 0).
+//     	  AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//     	  AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//     	  AddColorStopPosition(1.0, factoryColor.NewRed()).
+//     	  FillStyleGradient().
+//     	  Font(fontB).
+//     	  FillText("Big smile!", 10, 90, 300).
+//     	  AppendById("stage")
+//
+// Português:
+//
+//  Desenha o texto "preenchido" na tela.
+//
+//   Entrada:
+//     text: Especifica o texto que será escrito na tela;
+//     x: A coordenada x onde começar a pintar o texto (em relação ao canvas)
+//     y: A coordenada y onde começar a pintar o texto (em relação ao canvas)
+//     maxWidth: A largura máxima permitida do texto, em pixels.
+//
+// O método FillText() desenha texto preenchido na tela. A cor padrão do texto é preto.
+//
+//   Nota:
+//     * Use a função Font() para especificar a fonte e o tamanho da fonte e use a função FillStyle()
+//       para renderizar o texto em outra cor/gradiente.
+//
+//   Exemplo:
+//     	var fontA html.Font
+//     	fontA.Family = factoryFontFamily.NewArial()
+//     	fontA.Style = factoryFontStyle.NewItalic()
+//     	fontA.Size = 20
+//
+//     	var fontB html.Font
+//     	fontB.Family = factoryFontFamily.NewVerdana()
+//     	fontB.Size = 35
+//
+//     	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//     	  Font(fontA).
+//     	  FillText("Hello World!", 10, 50, 300).
+//     	  CreateLinearGradient(0, 0, 160, 0).
+//     	  AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//     	  AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//     	  AddColorStopPosition(1.0, factoryColor.NewRed()).
+//     	  FillStyleGradient().
+//     	  Font(fontB).
+//     	  FillText("Big smile!", 10, 90, 300).
+//     	  AppendById("stage")
 func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) {
 	el.context.Call("fillText", text, x, y, maxWidth)
 	return el
@@ -639,6 +1025,7 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 //     ctx.font = "30px Arial";
 //     ctx.fillText("Hello World", 10, 50);
 func (el *TagCanvas) Font(font Font) (ref *TagCanvas) {
+	log.Print(font.String())
 	el.context.Set("font", font.String())
 	return el
 }
@@ -1177,6 +1564,16 @@ func (el *TagCanvas) Translate(x, y int) (ref *TagCanvas) {
 //     JavaScript syntax:	context.fillStyle = color|gradient|pattern;
 func (el *TagCanvas) FillStyle(value string) (ref *TagCanvas) {
 	el.context.Set("fillStyle", value)
+	return el
+}
+
+func (el *TagCanvas) FillStyleGradient() (ref *TagCanvas) {
+	el.context.Set("fillStyle", el.gradient)
+	return el
+}
+
+func (el *TagCanvas) FillStylePattern() (ref *TagCanvas) {
+	el.context.Set("fillStyle", el.pattern)
 	return el
 }
 

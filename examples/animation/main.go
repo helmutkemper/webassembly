@@ -10,6 +10,8 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontStyle"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontVariant"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontWeight"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/factoryColor"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
@@ -39,23 +41,23 @@ func main() {
 
 	var fontA html.Font
 	fontA.Family = factoryFontFamily.NewArial()
-	fontA.Size = 20
+	fontA.Variant = factoryFontVariant.NewSmallCaps()
+	fontA.Weight = factoryFontWeight.NewNotSet()
 	fontA.Style = factoryFontStyle.NewItalic()
+	fontA.Size = 20
 
 	var fontB html.Font
 	fontB.Family = factoryFontFamily.NewVerdana()
 	fontB.Size = 35
 
 	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-		Font(fontA).
-		FillText("Hello World!", 10, 50, 300).
-		CreateLinearGradient(0, 0, 160, 0).
-		AddColorStopPosition(0.0, factoryColor.NewMagenta()).
-		AddColorStopPosition(0.5, factoryColor.NewBlue()).
-		AddColorStopPosition(1.0, factoryColor.NewRed()).
-		FillStyleGradient().
-		Font(fontB).
-		FillText("Big smile!", 10, 90, 300).
+		FillStyle(factoryColor.NewRed()).
+		FillRect(20, 20, 75, 50).
+		GlobalAlpha(0.2).
+		FillStyle(factoryColor.NewBlue()).
+		FillRect(50, 50, 75, 50).
+		FillStyle(factoryColor.NewGreen()).
+		FillRect(80, 80, 75, 50).
 		AppendById("stage")
 
 	factoryBrowser.NewTagDataList("test_A").

@@ -1,5 +1,7 @@
 package factoryFontWeight
 
-func NewLighter() string {
-	return "Lighter "
+import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+
+func NewLighter() html.FontWeightRule {
+	return html.KFontWeightRuleLighter
 }

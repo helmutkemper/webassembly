@@ -1,5 +1,7 @@
 package factoryFontWeight
 
-func NewBold() string {
-	return "Bold "
+import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+
+func NewBold() html.FontWeightRule {
+	return html.KFontWeightRuleBold
 }

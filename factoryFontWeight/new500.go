@@ -1,5 +1,7 @@
 package factoryFontWeight
 
-func New500() string {
-	return "500 "
+import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+
+func New500() html.FontWeightRule {
+	return html.KFontWeightRule500
 }

@@ -1023,66 +1023,149 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 	return el
 }
 
-// en: Sets or returns the current font properties for text content
-//     font-style:            Specifies the font style. Possible values:
-//          normal | italic | oblique
+// Font
 //
-//     font-variant:          Specifies the font variant. Possible values:
-//          normal | small-caps
+// English:
 //
-//     font-weight:           Specifies the font weight. Possible values:
-//          normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
+//  Sets the current font properties for text content.
 //
-//     font-size/line-height: Specifies the font size and the line-height, in pixels
-//     font-family:           Specifies the font family
-//     caption:               Use the font captioned controls (like buttons, drop-downs, etc.)
-//     icon:                  Use the font used to label icons
-//     menu:                  Use the font used in menus (drop-down menus and menu lists)
-//     message-box:           Use the font used in dialog boxes
-//     small-caption:         Use the font used for labeling small controls
-//     status-bar:            Use the fonts used in window status bar
+//    Input:
+//      font-style: Specifies the font style. Use the factory factoryFontStyle. E.g.: factoryFontStyle.NewItalic()
+//      font-variant: Specifies the font variant. Use the factory factoryFontVariant. E.g.: factoryFontVariant.NewSmallCaps()
+//      font-weight: Specifies the font weight. Use the factory factoryFontWeight. E.g.: factoryFontWeight.NewBold()
+//      font-size/line-height: Specifies the font size and the line-height in pixels
+//      font-family: Specifies the font family. Use the factory factoryFontFamily. E.g.: factoryFontFamily.NewArial()
+//      caption: Use the font captioned controls (like buttons, drop-downs, etc.)
+//      icon: Use the font used to label icons
+//      menu: Use the font used in menus (drop-down menus and menu lists)
+//      message-box: Use the font used in dialog boxes
+//      small-caption: Use the font used for labeling small controls
+//      status-bar: Use the fonts used in window status bar
 //
-//     The font property sets or returns the current font properties for text content on the canvas.
-//     The font property uses the same syntax as the CSS font property.
-//     Default value: 10px sans-serif
-//     JavaScript syntax: context.font = "italic small-caps bold 12px arial";
+// The font property sets or returns the current font properties for text content on the canvas.
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.font = "30px Arial";
-//     ctx.fillText("Hello World", 10, 50);
+// The font property uses the same syntax as the CSS font property.
+//
+// Default value: 10px sans-serif
+//
+//   Example:
+//     	var fontA html.Font
+//     	fontA.Family = factoryFontFamily.NewArial()
+//     	fontA.Size = 20
+//     	fontA.Style = factoryFontStyle.NewItalic()
+//
+//     	var fontB html.Font
+//     	fontB.Family = factoryFontFamily.NewVerdana()
+//     	fontB.Size = 35
+//
+//     	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//     	  Font(fontA).
+//     	  FillText("Hello World!", 10, 50, 300).
+//     	  CreateLinearGradient(0, 0, 160, 0).
+//     	  AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//     	  AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//     	  AddColorStopPosition(1.0, factoryColor.NewRed()).
+//     	  FillStyleGradient().
+//     	  Font(fontB).
+//     	  FillText("Big smile!", 10, 90, 300).
+//     	  AppendById("stage")
+//
+// Português:
+//
+//  Define as propriedades de fonte atuais para conteúdo de texto.
+//
+//    Entrada:
+//      font-style: Especifica o estilo da fonte. Usar a fábrica factoryFontStyle. Ex.: factoryFontStyle.NewItalic()
+//      font-variant: Especifica a variante da fonte. Usar a fábrica factoryFontVariant. Ex.: factoryFontVariant.NewSmallCaps()
+//      font-weight: Especifica o peso da fonte. Usar a fábrica factoryFontWeight. Ex.: factoryFontWeight.NewBold()
+//      font-size/line-height: Especifica o tamanho da fonte e a altura da linha em pixels
+//      font-family: Especifica a família de fontes. Usar a fábrica factoryFontFamily. Ex.: factoryFontFamily.NewArial()
+//      caption: Use os controles legendados de fonte (como botões, menus suspensos etc.)
+//      icon: Use a fonte usada para rotular os ícones
+//      menu: Use a fonte usada nos menus (menus suspensos e listas de menus)
+//      message-box: Use a fonte usada nas caixas de diálogo
+//      small-caption: Use a fonte usada para rotular pequenos controles
+//      status-bar: Use as fontes usadas na barra de status da janela
+//
+// A propriedade font define ou retorna as propriedades de fonte atuais para conteúdo de texto na
+// tela.
+//
+// A propriedade font usa a mesma sintaxe que a propriedade font CSS.
+//
+// Valor padrão: 10px sem serifa
+//
+//   Exemplo:
+//     	var fontA html.Font
+//     	fontA.Family = factoryFontFamily.NewArial()
+//     	fontA.Size = 20
+//     	fontA.Style = factoryFontStyle.NewItalic()
+//
+//     	var fontB html.Font
+//     	fontB.Family = factoryFontFamily.NewVerdana()
+//     	fontB.Size = 35
+//
+//     	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//     	  Font(fontA).
+//     	  FillText("Hello World!", 10, 50, 300).
+//     	  CreateLinearGradient(0, 0, 160, 0).
+//     	  AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//     	  AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//     	  AddColorStopPosition(1.0, factoryColor.NewRed()).
+//     	  FillStyleGradient().
+//     	  Font(fontB).
+//     	  FillText("Big smile!", 10, 90, 300).
+//     	  AppendById("stage")
 func (el *TagCanvas) Font(font Font) (ref *TagCanvas) {
 	log.Print(font.String())
 	el.context.Set("font", font.String())
 	return el
 }
 
-// en: Sets or returns the current alpha or transparency value of the drawing
-//     number: The transparency value. Must be a number between 0.0 (fully transparent) and 1.0 (no transparancy)
+// GlobalAlpha
+//
+// English:
+//
+//  Sets the current alpha or transparency value of the drawing
+//     value: The transparency value. Must be a number between 0.0 (fully transparent) and 1.0
+//       (no transparancy)
 //
 //     Default value: 1.0
-//     JavaScript syntax: context.globalAlpha = number;
 //
-//     The globalAlpha property sets or returns the current alpha or transparency value of the drawing.
-//     The globalAlpha property value must be a number between 0.0 (fully transparent) and 1.0 (no transparancy)
+//   Example:
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillStyle(factoryColor.NewRed()).
+//       FillRect(20, 20, 75, 50).
+//       GlobalAlpha(0.2).
+//       FillStyle(factoryColor.NewBlue()).
+//       FillRect(50, 50, 75, 50).
+//       FillStyle(factoryColor.NewGreen()).
+//       FillRect(80, 80, 75, 50).
+//       AppendById("stage")
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.fillStyle = "red";
-//     ctx.fillRect(20, 20, 75, 50);
-//     // Turn transparency on
-//     ctx.globalAlpha = 0.2;
-//     ctx.fillStyle = "blue";
-//     ctx.fillRect(50, 50, 75, 50);
-//     ctx.fillStyle = "green";
-//     ctx.fillRect(80, 80, 75, 50);
+// Português:
+//
+//  Define o valor alfa ou transparência atual do desenho
+//     value: O valor da transparência. Deve ser um número entre 0.0 (totalmente transparente) e
+//       1.0 (sem transparência)
+//
+//     Valor padrão: 1.0
+//
+//   Exemplo:
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillStyle(factoryColor.NewRed()).
+//       FillRect(20, 20, 75, 50).
+//       GlobalAlpha(0.2).
+//       FillStyle(factoryColor.NewBlue()).
+//       FillRect(50, 50, 75, 50).
+//       FillStyle(factoryColor.NewGreen()).
+//       FillRect(80, 80, 75, 50).
+//       AppendById("stage")
 func (el *TagCanvas) GlobalAlpha(value float64) (ref *TagCanvas) {
 	el.context.Set("globalAlpha", value)
 	return el
 }
 
+// GlobalCompositeOperation
 // en: Sets or returns how a new image are drawn onto an existing image
 //
 //     The globalCompositeOperation property sets or returns how a source (new) image are drawn onto a destination
@@ -1590,7 +1673,12 @@ func (el *TagCanvas) Translate(x, y int) (ref *TagCanvas) {
 //     The fillStyle property sets or returns the color, gradient, or pattern used to fill the drawing.
 //     Default value:	#000000
 //     JavaScript syntax:	context.fillStyle = color|gradient|pattern;
-func (el *TagCanvas) FillStyle(value string) (ref *TagCanvas) {
+func (el *TagCanvas) FillStyle(value interface{}) (ref *TagCanvas) {
+	if _, ok := value.(color.RGBA); ok {
+		el.context.Set("fillStyle", RGBAToJs(value.(color.RGBA)))
+		return el
+	}
+
 	el.context.Set("fillStyle", value)
 	return el
 }

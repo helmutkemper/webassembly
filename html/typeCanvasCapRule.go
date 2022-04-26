@@ -1,8 +1,8 @@
 package html
 
-type CanvasCapRule string
+type CapRule string
 
-func (e CanvasCapRule) String() string {
+func (e CapRule) String() string {
 	return string(e)
 }
 
@@ -16,7 +16,7 @@ const (
 	// Português:
 	//
 	//  (Padrão) Uma aresta plana é adicionada a cada extremidade da linha.
-	KCapRuleButt CanvasCapRule = "butt"
+	KCapRuleButt CapRule = "butt"
 
 	// KCapRuleRound
 	//
@@ -27,7 +27,7 @@ const (
 	// Português:
 	//
 	//  Uma tampa de extremidade arredondada é adicionada a cada extremidade da linha.
-	KCapRuleRound CanvasCapRule = "round"
+	KCapRuleRound CapRule = "round"
 
 	// KCapRuleSquare
 	//
@@ -38,5 +38,5 @@ const (
 	// Português:
 	//
 	//  Uma tampa de extremidade quadrada é adicionada a cada extremidade da linha.
-	KCapRuleSquare CanvasCapRule = "square"
+	KCapRuleSquare CapRule = "square"
 )

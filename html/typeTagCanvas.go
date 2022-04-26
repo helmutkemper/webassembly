@@ -680,7 +680,7 @@ func (el *TagCanvas) Clip(x, y int) (ref *TagCanvas) {
 //
 //   Note:
 //     * Use the Stroke() method to actually draw the path on the canvas;
-//     * Use the Fill() method to fill the drawing, black is default. Use the FillStyle() property to
+//     * Use the Fill() method to fill the drawing, black is default. Use the FillStyle() function to
 //       fill with another color/gradient.
 //
 // Português:
@@ -691,7 +691,7 @@ func (el *TagCanvas) Clip(x, y int) (ref *TagCanvas) {
 //
 //   Nota:
 //     * Use o método Stroke() para realmente desenhar o caminho na tela;
-//     * Use o método Fill() para preencher o desenho, preto é o padrão. Use a propriedade
+//     * Use o método Fill() para preencher o desenho, preto é o padrão. Use a função
 //       FillStyle() para preencher com outra cor / gradiente.
 func (el *TagCanvas) ClosePath(x, y int) (ref *TagCanvas) {
 	el.context.Call("closePath", x, y)
@@ -1042,9 +1042,7 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 //      small-caption: Use the font used for labeling small controls
 //      status-bar: Use the fonts used in window status bar
 //
-// The font property sets or returns the current font properties for text content on the canvas.
-//
-// The font property uses the same syntax as the CSS font property.
+// The Font() function sets the current font properties for text content on the canvas.
 //
 // Default value: 10px sans-serif
 //
@@ -1087,8 +1085,7 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 //      small-caption: Use a fonte usada para rotular pequenos controles
 //      status-bar: Use as fontes usadas na barra de status da janela
 //
-// A propriedade font define ou retorna as propriedades de fonte atuais para conteúdo de texto na
-// tela.
+// A função Font() define ou retorna as propriedades de fonte atuais para conteúdo de texto no canvas
 //
 // A propriedade font usa a mesma sintaxe que a propriedade font CSS.
 //
@@ -1127,7 +1124,7 @@ func (el *TagCanvas) Font(font Font) (ref *TagCanvas) {
 //
 //  Sets the current alpha or transparency value of the drawing
 //     value: The transparency value. Must be a number between 0.0 (fully transparent) and 1.0
-//       (no transparancy)
+//       (no transparency)
 //
 //     Default value: 1.0
 //
@@ -1166,174 +1163,475 @@ func (el *TagCanvas) GlobalAlpha(value float64) (ref *TagCanvas) {
 }
 
 // GlobalCompositeOperation
-// en: Sets or returns how a new image are drawn onto an existing image
 //
-//     The globalCompositeOperation property sets or returns how a source (new) image are drawn onto a destination
-//     (existing) image.
-//     source image = drawings you are about to place onto the canvas.
-//     destination image = drawings that are already placed onto the canvas.
+// English:
 //
-//     Default value: source-over
-//     JavaScript syntax: context.globalCompositeOperation = "source-in";
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.fillStyle = "red";
-//     ctx.fillRect(20, 20, 75, 50);
-//     ctx.globalCompositeOperation = "source-over";
-//     ctx.fillStyle = "blue";
-//     ctx.fillRect(50, 50, 75, 50);
-//     ctx.fillStyle = "red";
-//     ctx.fillRect(150, 20, 75, 50);
-//     ctx.globalCompositeOperation = "destination-over";
-//     ctx.fillStyle = "blue";
-//     ctx.fillRect(180, 50, 75, 50);
+//  Sets how a new image are drawn onto an existing image
+//
+//   Input:
+//     value: how a source (new) image are drawn onto a destination image.
+//
+// The GlobalCompositeOperation() function sets how a source (new) image are drawn onto a destination (existing) image.
+//
+//   Note:
+//     * source image = drawings you are about to place onto the canvas;
+//     * destination image = drawings that are already placed onto the canvas;
+//     * Default value: source-over.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillStyle(factoryColor.NewRed()).
+//       FillRect(20, 20, 75, 50).
+//       GlobalCompositeOperation(html.KCompositeOperationsRuleSourceOver).
+//       FillStyle(factoryColor.NewBlue()).
+//       FillRect(50, 50, 75, 50).
+//       FillStyle(factoryColor.NewRed()).
+//       FillRect(150, 20, 75, 50).
+//       GlobalCompositeOperation(html.KCompositeOperationsRuleDestinationOver).
+//       FillStyle(factoryColor.NewBlue()).
+//       FillRect(180, 50, 75, 50).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Define como uma nova imagem é desenhada em uma imagem existente.
+//
+//   Entrada:
+//     value: como uma imagem de origem (nova) é desenhada em uma imagem de destino.
+//
+// A função GlobalCompositeOperation() define como uma imagem de origem (nova) é desenhada em uma imagem de destino (existente).
+//
+//   Nota:
+//     * imagem de origem = desenhos que você está prestes a colocar na tela;
+//     * imagem de destino = desenhos que já estão colocados na tela;
+//     * Valor padrão: source-over.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillStyle(factoryColor.NewRed()).
+//       FillRect(20, 20, 75, 50).
+//       GlobalCompositeOperation(html.KCompositeOperationsRuleSourceOver).
+//       FillStyle(factoryColor.NewBlue()).
+//       FillRect(50, 50, 75, 50).
+//       FillStyle(factoryColor.NewRed()).
+//       FillRect(150, 20, 75, 50).
+//       GlobalCompositeOperation(html.KCompositeOperationsRuleDestinationOver).
+//       FillStyle(factoryColor.NewBlue()).
+//       FillRect(180, 50, 75, 50).
+//       AppendById("stage")
 func (el *TagCanvas) GlobalCompositeOperation(value CompositeOperationsRule) (ref *TagCanvas) {
 	el.context.Set("globalCompositeOperation", value.String())
 	return el
 }
 
-// en: Returns the height of an ImageData object
+// Height
 //
-//     The height property returns the height of an ImageData object, in pixels.
-//     Tip: Look at createImageData(), getImageData(), and putImageData() to learn more about the ImageData object.
-//     JavaScript syntax: imgData.height;
+// English:
+//
+//  Returns the height of an ImageData object.
+//
+//   Output:
+//     height: returns the height of an ImageData object, in pixels.
+//
+// Português:
+//
+//  Retorna a altura de um objeto ImageData.
+//
+//   Saída:
+//     height: retorna à altura de um objeto ImageData, em pixels.
 func (el *TagCanvas) Height() (height int) {
 	return el.context.Get("height").Int()
 }
 
-// en: Returns true if the specified point is in the current path, otherwise false
+// IsPointInPath
+//
+// English:
+//
+//  Returns true if the specified point is in the current path, otherwise false
+//
+//   Input:
 //     x: The x-axis coordinate of the point to check.
 //     y: The y-axis coordinate of the point to check.
 //     fillRule: The algorithm by which to determine if a point is inside or outside the path.
 //          "nonzero": The non-zero winding rule. Default rule.
 //          "evenodd": The even-odd winding rule.
-//     path: A Path2D path to check against. If unspecified, the current path is used.
 //
-//    Example:
-//    var c = document.getElementById("myCanvas");
-//    var ctx = c.getContext("2d");
-//    ctx.rect(20, 20, 150, 100);
-//    if (ctx.isPointInPath(20, 50)) {
-//      ctx.stroke();
-//    };
-func (el *TagCanvas) IsPointInPath(path js.Value, x, y int, fillRule FillRule) (isPointInPath bool) {
-	return el.context.Call("isPointInPath", path, x, y, fillRule.String()).Bool()
+//   Example:
+//
+//     canvas := factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Rect(20, 20, 150, 100).
+//       AppendById("stage")
+//       if canvas.IsPointInPath(20, 51, html.KFillRuleNonZero) {
+//         canvas.Stroke()
+//       }
+//
+// Português:
+//
+//  Retorna true se o ponto especificado estiver no caminho atual, caso contrário, false
+//
+//   Entrada:
+//     x: A coordenada do eixo x do ponto a ser verificado.
+//     y: A coordenada do eixo y do ponto a ser verificado.
+//     fillRule: O algoritmo pelo qual determinar se um ponto está dentro ou fora do caminho.
+//          "nonzero": A regra de enrolamento diferente de zero. Regra padrão.
+//          "evenodd": A regra do enrolamento par-ímpar.
+//
+//   Exemplo:
+//
+//     canvas := factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Rect(20, 20, 150, 100).
+//       AppendById("stage")
+//       if canvas.IsPointInPath(20, 51, html.KFillRuleNonZero) {
+//         canvas.Stroke()
+//       }
+func (el *TagCanvas) IsPointInPath(x, y int, fillRule FillRule) (isPointInPath bool) {
+	return el.context.Call("isPointInPath", x, y, fillRule.String()).Bool()
 }
 
-// en: Sets or returns the style of the end caps for a line
-//     PlatformBasicType: "butt|round|square"
+// LineCap
 //
-//     The lineCap property sets or returns the style of the end caps for a line.
-//     Note: The value "round" and "square" make the lines slightly longer.
+// English::
 //
-//     Default value: butt
-//     JavaScript syntax: context.lineCap = "butt|round|square";
+//  Sets the style of the end caps for a line
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.beginPath();
-//     ctx.lineCap = "round";
-//     ctx.moveTo(20, 20);
-//     ctx.lineTo(20, 200);
-//     ctx.stroke();
-func (el *TagCanvas) LineCap(value CanvasCapRule) (ref *TagCanvas) {
+//   Input:
+//     PlatformBasicType: style of the end caps for a line
+//
+//   Note:
+//     * The value "round" and "square" make the lines slightly longer.
+//     * Default value: butt
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       LineCap(html.KCapRuleRound).
+//       LineWidth(5).
+//       MoveTo(20, 20).
+//       LineTo(20, 200).
+//       Stroke().
+//       AppendById("stage")
+//
+// Português::
+//
+//  Define o estilo das terminações de uma linha
+//
+//   Entrada:
+//     PlatformBasicType: estilo das tampas de extremidade para uma linha
+//
+//   Nota:
+//     * O valor "redondo" e "quadrado" tornam as linhas um pouco mais longas.
+//     * Valor padrão: butt
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       LineCap(html.KCapRuleRound).
+//       LineWidth(5).
+//       MoveTo(20, 20).
+//       LineTo(20, 200).
+//       Stroke().
+//       AppendById("stage")
+func (el *TagCanvas) LineCap(value CapRule) (ref *TagCanvas) {
 	el.context.Set("lineCap", value.String())
 	return el
 }
 
-// en: Sets or returns the type of corner created, when two lines meet
-//     PlatformBasicType: "bevel|round|miter"
+// LineJoin
 //
-//     The lineJoin property sets or returns the type of corner created, when two lines meet.
-//     Note: The "miter" value is affected by the miterLimit property.
-//     Default value:	miter
-//     JavaScript syntax:	context.lineJoin = "bevel|round|miter";
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.beginPath();
-//     ctx.lineJoin = "round";
-//     ctx.moveTo(20, 20);
-//     ctx.lineTo(100, 50);
-//     ctx.lineTo(20, 100);
-//     ctx.stroke();
-func (el *TagCanvas) LineJoin(value CanvasJoinRule) (ref *TagCanvas) {
+//  Sets the type of corner created, when two lines meet
+//
+//   Input:
+//     PlatformBasicType: type of corner created
+//
+// The LineJoin() function sets the type of corner created, when two lines meet.
+//
+//   Note:
+//     * The KJoinRuleMiter value is affected by the MiterLimit() function.
+//     * Default value: miter
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       LineWidth(5).
+//       LineJoin(html.KJoinRuleRound).
+//       MoveTo(20, 20).
+//       LineTo(100, 50).
+//       LineTo(20, 100).
+//       Stroke().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Define o tipo de canto criado, quando duas linhas se encontram
+//
+//   Entrada:
+//     PlatformBasicType: tipo de canto criado
+//
+// A função LineJoin() define o tipo de canto criado, quando duas linhas se encontram.
+//
+//   Nota:
+//     * O valor KJoinRuleMiter é afetado pela função MiterLimit().
+//     * Valor padrão: miter
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       LineWidth(5).
+//       LineJoin(html.KJoinRuleRound).
+//       MoveTo(20, 20).
+//       LineTo(100, 50).
+//       LineTo(20, 100).
+//       Stroke().
+//       AppendById("stage")
+func (el *TagCanvas) LineJoin(value JoinRule) (ref *TagCanvas) {
 	el.context.Set("lineJoin", value.String())
 	return el
 }
 
 // Stroke
-// en: The stroke() method actually draws the path you have defined with all those moveTo() and lineTo() methods. The default color is black.
-//     Tip: Use the strokeStyle property to draw with another color/gradient.
 //
-// pt_br: O método stroke() desenha o caminho definido com os métodos moveTo() e lineTo() usando a cor padrão, preta.
-//     Dica: Use a propriedade strokeStyle para desenhar com outra cor ou usar um gradiente
+// English:
+//
+//  The Stroke() method actually draws the path you have defined with all those MoveTo() and
+//  LineTo() methods.
+//
+// The default color is black.
+//
+//   Note:
+//     * Use the StrokeStyle() function to draw with another color/gradient.
+//
+//   Example:
+//
+//   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//     BeginPath().
+//     Arc(100, 75, 50, 0, 2 * math.Pi, false).
+//     Stroke().
+//     AppendById("stage")
+//
+// Português:
+//
+//  A função Stroke() na verdade desenha o caminho que você definiu com todos os métodos MoveTo()
+//  e LineTo().
+//
+// A cor padrão é preto.
+//
+//   Nota:
+//     * Use a Função StrokeStyle() para desenhar com outra cor/gradiente
+//
+//   Exemplo:
+//
+//   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//     BeginPath().
+//     Arc(100, 75, 50, 0, 2 * math.Pi, false).
+//     Stroke().
+//     AppendById("stage")
 func (el *TagCanvas) Stroke() (ref *TagCanvas) {
 	el.context.Call("stroke")
 	return el
 }
 
-// en: Moves the path to the specified point in the canvas, without creating a line
+// MoveTo
+//
+// English:
+//
+//  Moves the path to the specified point in the canvas, without creating a line
+//
+//   Input:
 //     x: The x-coordinate of where to move the path to
 //     y: The y-coordinate of where to move the path to
-//     The moveTo() method moves the path to the specified point in the canvas, without creating a line.
-//     Tip: Use the stroke() method to actually draw the path on the canvas.
+//     The MoveTo() function moves the path to the specified point in the canvas, without creating a line.
+//
+//   Note:
+//     * Use the stroke() method to actually draw the path on the canvas.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       LineWidth(5).
+//       LineJoin(html.KJoinRuleRound).
+//       MoveTo(20, 20).
+//       LineTo(100, 50).
+//       LineTo(20, 100).
+//       Stroke().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Move o caminho para o ponto especificado na tela, sem criar uma linha
+//
+//   Entrada:
+//     x: A coordenada x de onde mover o caminho para
+//     y: A coordenada y de onde mover o caminho para
+//     A função MoveTo() move o caminho para o ponto especificado na tela, sem criar uma linha.
+//
+//   Nota:
+//     * Use o método Stroke() para realmente desenhar o caminho no canvas.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       LineWidth(5).
+//       LineJoin(html.KJoinRuleRound).
+//       MoveTo(20, 20).
+//       LineTo(100, 50).
+//       LineTo(20, 100).
+//       Stroke().
+//       AppendById("stage")
 func (el *TagCanvas) MoveTo(x, y int) (ref *TagCanvas) {
 	el.context.Call("moveTo", x, y)
 	return el
 }
 
-// en: Adds a new point and creates a line from that point to the last specified point in the canvas
+// LineTo
+//
+// English:
+//
+//  Adds a new point and creates a line from that point to the last specified point in the canvas
+//
+//   Input:
 //     x: The x-coordinate of where to create the line to
 //     y: The y-coordinate of where to create the line to
-//     The lineTo() method adds a new point and creates a line from that point to the last specified point in the canvas
-//     (this method does not draw the line).
-//     Tip: Use the stroke() method to actually draw the path on the canvas.
+//
+//   Note:
+//     * This method does not draw the line.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       LineWidth(5).
+//       LineJoin(html.KJoinRuleRound).
+//       MoveTo(20, 20).
+//       LineTo(100, 50).
+//       LineTo(20, 100).
+//       Stroke().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Adiciona um novo ponto e cria uma linha desse ponto até o último ponto especificado no canvas
+//
+//   Entrada:
+//     x: A coordenada x de onde criar a linha para
+//     y: A coordenada y de onde criar a linha para
+//
+//   Nota:
+//     * Este método não desenha a linha.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       LineWidth(5).
+//       LineJoin(html.KJoinRuleRound).
+//       MoveTo(20, 20).
+//       LineTo(100, 50).
+//       LineTo(20, 100).
+//       Stroke().
+//       AppendById("stage")
 func (el *TagCanvas) LineTo(x, y int) (ref *TagCanvas) {
 	el.context.Call("lineTo", x, y)
 	return el
 }
 
-// en: Sets or returns the current line width
-//     PlatformBasicType: The current line width, in pixels
+// LineWidth
 //
-//     The lineWidth property sets or returns the current line width, in pixels.
-//     Default value: 1
-//     JavaScript syntax: context.lineWidth = number;
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.lineWidth = 10;
-//     ctx.strokeRect(20, 20, 80, 100);
+//  Sets the current line width
+//     value: The current line width, in pixels
+//
+//   Note:
+//     * Default value: 1
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       LineWidth(5).
+//       LineJoin(html.KJoinRuleRound).
+//       MoveTo(20, 20).
+//       LineTo(100, 50).
+//       LineTo(20, 100).
+//       Stroke().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Define a largura da linha atual
+//     value: A largura da linha atual, em pixels
+//
+//   Nota:
+//     * Valor padrão: 1
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       LineWidth(5).
+//       LineJoin(html.KJoinRuleRound).
+//       MoveTo(20, 20).
+//       LineTo(100, 50).
+//       LineTo(20, 100).
+//       Stroke().
+//       AppendById("stage")
 func (el *TagCanvas) LineWidth(value int) (ref *TagCanvas) {
 	el.context.Set("lineWidth", value)
 	return el
 }
 
-// en: Returns an object that contains the width of the specified text
+// MeasureText
+//
+// English:
+//
+//  Returns an object that contains the width of the specified text
+//
+//   Input:
 //     text: The text to be measured
 //
-//     The measureText() method returns an object that contains the width of the specified text, in pixels.
-//     Tip: Use this method if you need to know the width of a text, before writing it on the canvas.
-//     JavaScript syntax: context.measureText(text).width;
+//   Example:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.font = "30px Arial";
-//     var txt = "Hello World"
-//     ctx.fillText("width:" + ctx.measureText(txt).width, 10, 50)
-//     ctx.fillText(txt, 10, 100);
-func (el *TagCanvas) MeasureText(text string) (ref *TagCanvas) {
-	el.context.Call("measureText", text)
-	return el
+//     canvas := factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(font)
+//       w := canvas.MeasureText("Hello Word!")
+//       wText := strconv.FormatInt(int64(w), 10)
+//       canvas.FillText("width:"+wText, 10, 50, 300).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Retorna um objeto que contém a largura do texto especificado
+//
+//   Entrada:
+//     text: O texto a ser medido
+//
+//   Exemplo:
+//
+//     canvas := factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(font)
+//       w := canvas.MeasureText("Hello Word!")
+//       wText := strconv.FormatInt(int64(w), 10)
+//       canvas.FillText("width:"+wText, 10, 50, 300).
+//       AppendById("stage")
+func (el *TagCanvas) MeasureText(text string) (width int) {
+	return el.context.Call("measureText", text).Get("width").Int()
 }
 
-// en: Sets or returns the maximum miter length
+// MiterLimit
+//
+// English:
+//
+//  Sets or returns the maximum miter length
 //     PlatformBasicType: A positive number that specifies the maximum miter length. If the current miter length exceeds the
 //            miterLimit, the corner will display as lineJoin "bevel"
 //

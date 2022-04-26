@@ -9,11 +9,7 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontStyle"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontVariant"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontWeight"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/factoryColor"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
 	"log"
@@ -39,26 +35,33 @@ func main() {
 		true,
 	)
 
-	var fontA html.Font
-	fontA.Family = factoryFontFamily.NewArial()
-	fontA.Variant = factoryFontVariant.NewSmallCaps()
-	fontA.Weight = factoryFontWeight.NewNotSet()
-	fontA.Style = factoryFontStyle.NewItalic()
-	fontA.Size = 20
+	var font html.Font
+	font.Family = factoryFontFamily.NewArial()
+	font.Size = 20
 
-	var fontB html.Font
-	fontB.Family = factoryFontFamily.NewVerdana()
-	fontB.Size = 35
+	//     ctx.font = "30px Arial";
+	//     var txt = "Hello World"
+	//     ctx.fillText("width:" + ctx.measureText(txt).width, 10, 50)
+	//     ctx.fillText(txt, 10, 100);
 
-	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-		FillStyle(factoryColor.NewRed()).
-		FillRect(20, 20, 75, 50).
-		GlobalAlpha(0.2).
-		FillStyle(factoryColor.NewBlue()).
-		FillRect(50, 50, 75, 50).
-		FillStyle(factoryColor.NewGreen()).
-		FillRect(80, 80, 75, 50).
+	canvas := factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+		Font(font)
+
+	w := canvas.MeasureText("Hello Word!")
+	wText := strconv.FormatInt(int64(w), 10)
+
+	canvas.FillText("width:"+wText, 10, 50, 300).
 		AppendById("stage")
+
+	//FillText("width: ").
+	//BeginPath().
+	//LineWidth(5).
+	//LineJoin(html.KJoinRuleRound).
+	//MoveTo(20, 20).
+	//LineTo(100, 50).
+	//LineTo(20, 100).
+	//Stroke().
+	//AppendById("stage")
 
 	factoryBrowser.NewTagDataList("test_A").
 		NewOption("test_A_a", "label a", "value_a", true, false).

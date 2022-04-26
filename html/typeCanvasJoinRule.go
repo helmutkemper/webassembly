@@ -1,8 +1,8 @@
 package html
 
-type CanvasJoinRule string
+type JoinRule string
 
-func (e CanvasJoinRule) String() string {
+func (e JoinRule) String() string {
 	return string(e)
 }
 
@@ -16,7 +16,7 @@ const (
 	// Português:
 	//
 	//  Creates a beveled corner.
-	KJoinRuleBevel CanvasJoinRule = "bevel"
+	KJoinRuleBevel JoinRule = "bevel"
 
 	// KJoinRuleRound
 	//
@@ -27,7 +27,7 @@ const (
 	// Português:
 	//
 	//  A Cria um canto arredondado.
-	KJoinRuleRound CanvasJoinRule = "round"
+	KJoinRuleRound JoinRule = "round"
 
 	// KJoinRuleMiter
 	//
@@ -38,5 +38,5 @@ const (
 	// Português:
 	//
 	//  (Default) Cria um canto afiado.
-	KJoinRuleMiter CanvasJoinRule = "miter"
+	KJoinRuleMiter JoinRule = "miter"
 )

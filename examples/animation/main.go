@@ -10,6 +10,7 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/factoryColor"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
 	"log"
@@ -39,29 +40,23 @@ func main() {
 	font.Family = factoryFontFamily.NewArial()
 	font.Size = 20
 
-	//     ctx.font = "30px Arial";
-	//     var txt = "Hello World"
-	//     ctx.fillText("width:" + ctx.measureText(txt).width, 10, 50)
-	//     ctx.fillText(txt, 10, 100);
-
-	canvas := factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-		Font(font)
-
-	w := canvas.MeasureText("Hello Word!")
-	wText := strconv.FormatInt(int64(w), 10)
-
-	canvas.FillText("width:"+wText, 10, 50, 300).
+	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+		StrokeStyle(factoryColor.NewRed()).
+		MoveTo(5, 100).
+		LineTo(395, 100).
+		Stroke().
+		Font(font).
+		TextBaseline(html.KTextBaseLineRuleTop).
+		FillText("Top", 5, 100, 300).
+		TextBaseline(html.KTextBaseLineRuleBottom).
+		FillText("Bottom", 50, 100, 300).
+		TextBaseline(html.KTextBaseLineRuleMiddle).
+		FillText("Middle", 120, 100, 300).
+		TextBaseline(html.KTextBaseLineRuleAlphabetic).
+		FillText("Alphabetic", 190, 100, 300).
+		TextBaseline(html.KTextBaseLineRuleHanging).
+		FillText("Hanging", 290, 100, 300).
 		AppendById("stage")
-
-	//FillText("width: ").
-	//BeginPath().
-	//LineWidth(5).
-	//LineJoin(html.KJoinRuleRound).
-	//MoveTo(20, 20).
-	//LineTo(100, 50).
-	//LineTo(20, 100).
-	//Stroke().
-	//AppendById("stage")
 
 	factoryBrowser.NewTagDataList("test_A").
 		NewOption("test_A_a", "label a", "value_a", true, false).

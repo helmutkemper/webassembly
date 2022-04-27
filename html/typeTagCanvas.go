@@ -17,8 +17,9 @@ type TagCanvas struct {
 	width   int
 	height  int
 
-	gradient js.Value
-	pattern  js.Value
+	gradient  js.Value
+	pattern   js.Value
+	transform js.Value
 }
 
 // Id
@@ -166,15 +167,15 @@ func (el *TagCanvas) AppendById(appendId string) (ref *TagCanvas) {
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
 func (el *TagCanvas) Append(append interface{}) (ref *TagCanvas) {
-	switch append.(type) {
+	switch converted := append.(type) {
 	case *TagCanvas:
-		el.selfElement.Call("appendChild", append.(*TagCanvas).selfElement)
+		el.selfElement.Call("appendChild", converted.selfElement)
 	case js.Value:
-		el.selfElement.Call("appendChild", append)
+		el.selfElement.Call("appendChild", converted)
 	case string:
-		toAppend := js.Global().Get("document").Call("getElementById", append.(string))
+		toAppend := js.Global().Get("document").Call("getElementById", converted)
 		if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
-			log.Print(KIdToAppendNotFound, append.(string))
+			log.Print(KIdToAppendNotFound, converted)
 			return el
 		}
 
@@ -205,6 +206,7 @@ func (el *TagCanvas) Append(append interface{}) (ref *TagCanvas) {
 //
 //   Saída:
 //     data: [x][y]transparente
+//todo: fazer exemplo
 func (el *TagCanvas) GetCollisionData() (data [][]bool) {
 
 	dataInterface := el.context.Call("getImageData", 0, 0, el.width, el.height)
@@ -271,6 +273,7 @@ func (el *TagCanvas) GetCollisionData() (data [][]bool) {
 //       [x][y][1]: valor da cor verde entre 0 e 255
 //       [x][y][2]: valor da cor azul entre 0 e 255
 //       [x][y][3]: valor da cor alpha entre 0 e 255
+//todo: fazer exemplo
 func (el *TagCanvas) GetImageData(x, y, width, height int) (data [][][]uint8) {
 
 	dataInterface := el.context.Call("getImageData", x, y, width, height)
@@ -333,6 +336,7 @@ func (el *TagCanvas) GetImageData(x, y, width, height int) (data [][][]uint8) {
 //       [x][y][3]: valor da cor alpha entre 0 e 255.
 //     width: comprimento da imagem;
 //     height: altura da imagem.
+//todo: fazer exemplo
 func (el *TagCanvas) PutImageData(imgData [][][]uint8, width, height int) (ref *TagCanvas) {
 
 	dataJs := el.context.Call("createImageData", width, height)
@@ -384,6 +388,16 @@ func (el *TagCanvas) PutImageData(imgData [][][]uint8, width, height int) (ref *
 //
 //   Example:
 //
+//     	var fontA html.Font
+//     	fontA.Family = factoryFontFamily.NewArial()
+//     	fontA.Variant = factoryFontVariant.NewSmallCaps()
+//     	fontA.Style = factoryFontStyle.NewItalic()
+//     	fontA.Size = 20
+//
+//     	var fontB html.Font
+//     	fontB.Family = factoryFontFamily.NewVerdana()
+//     	fontB.Size = 35
+//
 //     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
 //       Font(fontA).
 //       FillText("Hello World!", 10, 50, 300).
@@ -413,6 +427,16 @@ func (el *TagCanvas) PutImageData(imgData [][][]uint8, width, height int) (ref *
 //       de chamar o método pelo menos uma vez com uma cor para que o gradiente seja visível.
 //
 //   Exemplo:
+//
+//     	var fontA html.Font
+//     	fontA.Family = factoryFontFamily.NewArial()
+//     	fontA.Variant = factoryFontVariant.NewSmallCaps()
+//     	fontA.Style = factoryFontStyle.NewItalic()
+//     	fontA.Size = 20
+//
+//     	var fontB html.Font
+//     	fontB.Family = factoryFontFamily.NewVerdana()
+//     	fontB.Size = 35
 //
 //     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
 //       Font(fontA).
@@ -473,7 +497,7 @@ func (el *TagCanvas) AddColorStopPosition(stopPosition float64, color color.RGBA
 //         Arc(100, 75, 50, 0, 2 * math.Pi, false).
 //         Stroke().
 //         AppendById("stage")
-func (el *TagCanvas) Arc(x, y, radius, startAngle int, endAngle float64, anticlockwise bool) (ref *TagCanvas) {
+func (el *TagCanvas) Arc(x, y int, radius, startAngle, endAngle float64, anticlockwise bool) (ref *TagCanvas) {
 	el.context.Call("arc", x, y, radius, startAngle, endAngle, anticlockwise)
 	return el
 }
@@ -543,6 +567,7 @@ func (el *TagCanvas) ArcTo(x1, y1, x2, y2 int, radius int) (ref *TagCanvas) {
 //     * Dica: Use MoveTo(), LineTo(), QuadricCurveTo(), BezierCurveTo(), ArcTo(), e Arc(), para
 //       criar uma nova rota no desenho;
 //     * Use o método Stroke() para desenhar a rota no elemento canvas.
+//todo: fazer exemplo
 func (el *TagCanvas) BeginPath() (ref *TagCanvas) {
 	el.context.Call("beginPath")
 	return el
@@ -658,13 +683,14 @@ func (el *TagCanvas) ClearRect(x, y, width, height int) (ref *TagCanvas) {
 //
 //  Recorta uma região de qualquer forma e tamanho do canvas original.
 //
-// O método Clip() recorta uma região de qualquer forma e tamanho da tela original.
+// O método Clip() recorta uma região de qualquer forma e tamanho do canvas original.
 //
 //   Nota:
 //     * Uma vez recortada uma região, todos os desenhos futuros serão limitados à região recortada
 //       (sem acesso a outras regiões do canvas). No entanto, você pode salvar a região do canvas
 //       atual usando o método Save() antes de usar o método Clip() e restaurá-la, com o método
 //       Restore(), a qualquer momento no futuro.
+// todo: fazer exemplo
 func (el *TagCanvas) Clip(x, y int) (ref *TagCanvas) {
 	el.context.Call("clip", x, y)
 	return el
@@ -690,9 +716,10 @@ func (el *TagCanvas) Clip(x, y int) (ref *TagCanvas) {
 // O método ClosePath() cria um caminho do ponto atual de volta ao ponto inicial.
 //
 //   Nota:
-//     * Use o método Stroke() para realmente desenhar o caminho na tela;
+//     * Use o método Stroke() para realmente desenhar o caminho no canvas;
 //     * Use o método Fill() para preencher o desenho, preto é o padrão. Use a função
 //       FillStyle() para preencher com outra cor / gradiente.
+//todo: fazer exemplo
 func (el *TagCanvas) ClosePath(x, y int) (ref *TagCanvas) {
 	el.context.Call("closePath", x, y)
 	return el
@@ -715,7 +742,7 @@ func (el *TagCanvas) ClosePath(x, y int) (ref *TagCanvas) {
 // The gradient can be used to fill rectangles, circles, lines, text, etc.
 //
 //   Note:
-//     * Use this object as the value to the strokeStyle or fillStyle properties;
+//     * Use this object as the value to the strokeStyle or fillStyle properties; //todo: rever documentação
 //     * Use the AddColorStopPosition() method to specify different colors, and where to position the
 //       colors in the gradient object.
 //
@@ -744,7 +771,7 @@ func (el *TagCanvas) ClosePath(x, y int) (ref *TagCanvas) {
 // O gradiente pode ser usado para preencher retângulos, círculos, linhas, texto, etc.
 //
 //   Nota:
-//     * Use este objeto como o valor para as propriedades strokeStyle ou fillStyle;
+//     * Use esta objeto como o valor para as propriedades StrokeStyle() ou FillStyle(); //todo: rever documentação
 //     * Use o método AddColorStopPosition() para especificar cores diferentes e onde posicionar as
 //       cores no objeto gradiente.
 //
@@ -831,9 +858,8 @@ func (el *TagCanvas) CreateLinearGradient(x0, y0, x1, y1 int) (ref *TagCanvas) {
 //       Fill().
 //       AppendById("stage")
 func (el *TagCanvas) CreatePattern(image interface{}, repeatRule CanvasRepeatRule) (ref *TagCanvas) {
-	log.Print("createPattern", image.(*TagImage).GetJs(), repeatRule.String())
-	if _, ok := image.(*TagImage); ok {
-		el.pattern = el.context.Call("createPattern", image.(*TagImage).GetJs(), repeatRule.String())
+	if converted, ok := image.(*TagImage); ok {
+		el.pattern = el.context.Call("createPattern", converted.GetJs(), repeatRule.String())
 		return el
 	}
 
@@ -867,7 +893,7 @@ func (el *TagCanvas) CreatePattern(image interface{}, repeatRule CanvasRepeatRul
 //
 // Português:
 //
-//  Cria um gradiente radial/circular (para usar no conteúdo da tela)
+//  Cria um gradiente radial/circular (para usar no conteúdo do canvas)
 //
 //   Entrada:
 //     x0: A coordenada x do círculo inicial do gradiente;
@@ -953,17 +979,18 @@ func (el *TagCanvas) FillRect(x, y, width, height int) (ref *TagCanvas) {
 //     y: The y coordinate where to start painting the text (relative to the canvas);
 //     maxWidth: Optional. The maximum allowed width of the text, in pixels.
 //
-// The FillText() method draws filled text on the canvas. The default color of the text is black.
+// The FillText() method draws filled text on the canvas.
 //
 //   Note:
 //     * Use the Font() function to specify font and font size, and use the FillStyle() function to
-//       render the text in another color/gradient.
+//       render the text in another color/gradient;
+//     * The default color of the text is black.
 //
 //   Example:
 //     	var fontA html.Font
 //     	fontA.Family = factoryFontFamily.NewArial()
-//     	fontA.Size = 20
 //     	fontA.Style = factoryFontStyle.NewItalic()
+//     	fontA.Size = 20
 //
 //     	var fontB html.Font
 //     	fontB.Family = factoryFontFamily.NewVerdana()
@@ -983,19 +1010,20 @@ func (el *TagCanvas) FillRect(x, y, width, height int) (ref *TagCanvas) {
 //
 // Português:
 //
-//  Desenha o texto "preenchido" na tela.
+//  Desenha o texto "preenchido" no canvas.
 //
 //   Entrada:
-//     text: Especifica o texto que será escrito na tela;
+//     text: Especifica o texto que será escrito no canvas;
 //     x: A coordenada x onde começar a pintar o texto (em relação ao canvas)
 //     y: A coordenada y onde começar a pintar o texto (em relação ao canvas)
 //     maxWidth: A largura máxima permitida do texto, em pixels.
 //
-// O método FillText() desenha texto preenchido na tela. A cor padrão do texto é preto.
+// O método FillText() desenha texto preenchido no canvas.
 //
 //   Nota:
 //     * Use a função Font() para especificar a fonte e o tamanho da fonte e use a função FillStyle()
-//       para renderizar o texto em outra cor/gradiente.
+//       para renderizar o texto em outra cor/gradiente;
+//     * A cor padrão do texto é preto.
 //
 //   Exemplo:
 //     	var fontA html.Font
@@ -1049,8 +1077,8 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 //   Example:
 //     	var fontA html.Font
 //     	fontA.Family = factoryFontFamily.NewArial()
-//     	fontA.Size = 20
 //     	fontA.Style = factoryFontStyle.NewItalic()
+//     	fontA.Size = 20
 //
 //     	var fontB html.Font
 //     	fontB.Family = factoryFontFamily.NewVerdana()
@@ -1094,8 +1122,8 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 //   Exemplo:
 //     	var fontA html.Font
 //     	fontA.Family = factoryFontFamily.NewArial()
-//     	fontA.Size = 20
 //     	fontA.Style = factoryFontStyle.NewItalic()
+//     	fontA.Size = 20
 //
 //     	var fontB html.Font
 //     	fontB.Family = factoryFontFamily.NewVerdana()
@@ -1601,6 +1629,10 @@ func (el *TagCanvas) LineWidth(value int) (ref *TagCanvas) {
 //
 //   Example:
 //
+//     var font html.Font
+//       font.Family = factoryFontFamily.NewArial()
+//       font.Size = 20
+//
 //     canvas := factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
 //       Font(font)
 //       w := canvas.MeasureText("Hello Word!")
@@ -1617,6 +1649,10 @@ func (el *TagCanvas) LineWidth(value int) (ref *TagCanvas) {
 //
 //   Exemplo:
 //
+//     var font html.Font
+//       font.Family = factoryFontFamily.NewArial()
+//       font.Size = 20
+//
 //     canvas := factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
 //       Font(font)
 //       w := canvas.MeasureText("Hello Word!")
@@ -1631,275 +1667,763 @@ func (el *TagCanvas) MeasureText(text string) (width int) {
 //
 // English:
 //
-//  Sets or returns the maximum miter length
-//     PlatformBasicType: A positive number that specifies the maximum miter length. If the current miter length exceeds the
-//            miterLimit, the corner will display as lineJoin "bevel"
+//  Sets the maximum miter length
 //
-//     The miterLimit property sets or returns the maximum miter length.
-//     The miter length is the distance between the inner corner and the outer corner where two lines meet.
+//   Input:
+//     value: A positive number that specifies the maximum miter length.
 //
-//     Default value: 10
-//     JavaScript syntax: context.miterLimit = number;
+//   Note:
+//     * If the current miter length exceeds the MiterLimit(), the corner will display as
+//       LineJoin(KJoinRuleBevel);
+//     * The miter length is the distance between the inner corner and the outer corner where two
+//       lines meet;
+//     * Default value: 10
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.lineWidth = 10;
-//     ctx.lineJoin = "miter";
-//     ctx.miterLimit = 5;
-//     ctx.moveTo(20, 20);
-//     ctx.lineTo(50, 27);
-//     ctx.lineTo(20, 34);
-//     ctx.stroke();
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       LineWidth(10).
+//       LineJoin(html.KJoinRuleMiter).
+//       MiterLimit(5).
+//       MoveTo(20, 20).
+//       LineTo(50, 27).
+//       LineTo(20, 34).
+//       Stroke().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Define ou retorna o comprimento máximo da mitra
+//
+//   Entrada:
+//     value: Um número positivo que especifica o comprimento máximo da mitra.
+//
+//   Nota:
+//     * Se o comprimento da mitra atual exceder o MiterLimit(), o canto será exibido como
+//       LineJoin(KJoinRuleBevel);
+//     * O comprimento da mitra é a distância entre o canto interno e o canto externo onde duas
+//       linhas se encontram;
+//     * Valor padrão: 10.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       LineWidth(10).
+//       LineJoin(html.KJoinRuleMiter).
+//       MiterLimit(5).
+//       MoveTo(20, 20).
+//       LineTo(50, 27).
+//       LineTo(20, 34).
+//       Stroke().
+//       AppendById("stage")
 func (el *TagCanvas) MiterLimit(value int) (ref *TagCanvas) {
 	el.context.Set("miterLimit", value)
 	return el
 }
 
-// en: Creates a quadratic Bézier curve
-//     cpx: The x-axis coordinate of the control point.
-//     cpy: The y-axis coordinate of the control point.
-//     x:   The x-axis coordinate of the end point.
-//     y:   The y-axis coordinate of the end point.
+// QuadraticCurveTo
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.beginPath();
-//     ctx.moveTo(20, 20);
-//     ctx.quadraticCurveTo(20, 100, 200, 20);
-//     ctx.stroke();
+// English:
+//
+//  Creates a quadratic Bézier curve.
+//
+//   Input:
+//     cpx: The x-axis coordinate of the control point;
+//     cpy: The y-axis coordinate of the control point;
+//     x: The x-axis coordinate of the end point;
+//     y: The y-axis coordinate of the end point.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       MoveTo(20, 20).
+//       QuadraticCurveTo(20, 100, 200, 20).
+//       Stroke().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Cria uma curva Bézier quadrática.
+//
+//   Entrada:
+//     cpx: A coordenada do eixo x do ponto de controle;
+//     cpy: A coordenada do eixo y do ponto de controle;
+//     x: A coordenada do eixo x do ponto final;
+//     y: A coordenada do eixo y do ponto final.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       BeginPath().
+//       MoveTo(20, 20).
+//       QuadraticCurveTo(20, 100, 200, 20).
+//       Stroke().
+//       AppendById("stage")
 func (el *TagCanvas) QuadraticCurveTo(cpx, cpy, x, y int) (ref *TagCanvas) {
 	el.context.Call("quadraticCurveTo", cpx, cpy, x, y)
 	return el
 }
 
-// en: Creates a rectangle
-//     x:      The x-coordinate of the upper-left corner of the rectangle
-//     y:      The y-coordinate of the upper-left corner of the rectangle
-//     width:  The width of the rectangle, in pixels
-//     height: The height of the rectangle, in pixels
+// Rect
 //
-//     The rect() method creates a rectangle.
-//     Tip: Use the stroke() or the fill() method to actually draw the rectangle on the canvas.
-//     JavaScript syntax: context.rect(x, y, width, height);
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.rect(20, 20, 150, 100);
-//     ctx.stroke();
+//  Creates a rectangle.
+//
+//   Input:
+//     x: The x-coordinate of the upper-left corner of the rectangle;
+//     y: The y-coordinate of the upper-left corner of the rectangle;
+//     width: The width of the rectangle, in pixels;
+//     height: The height of the rectangle, in pixels.
+//
+//   Note:
+//     * Use the Stroke() or Fill() functions to actually draw the rectangle on the canvas.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Rect(20, 20, 150, 100).
+//       Stroke().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Cria um retângulo.
+//
+//   Entrada:
+//     x: A coordenada x do canto superior esquerdo do retângulo;
+//     y: A coordenada y do canto superior esquerdo do retângulo;
+//     width: A largura do retângulo, em pixels;
+//     height: A altura do retângulo, em pixels.
+//
+//   Nota:
+//     * Use as funções Stroke() ou Fill() para realmente desenhar o retângulo no canvas.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Rect(20, 20, 150, 100).
+//       Stroke().
+//       AppendById("stage")
 func (el *TagCanvas) Rect(x, y, width, height int) (ref *TagCanvas) {
 	el.context.Call("rect", x, y, width, height)
 	return el
 }
 
-// en: Returns previously saved path state and attributes
+// Restore
+//
+// English:
+//
+//  Returns previously saved path state and attributes.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(fontA).
+//       FillText("Hello World!", 10, 50, 300).
+//       Save().
+//       CreateLinearGradient(0, 0, 160, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//       AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//       AddColorStopPosition(1.0, factoryColor.NewRed()).
+//       FillStyleGradient().
+//       Font(fontB).
+//       FillText("Big smile!", 10, 90, 300).
+//       Restore().
+//       FillText("Same font used before save", 10, 120, 300).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Retorna o estado e os atributos do caminho salvos anteriormente.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(fontA).
+//       FillText("Hello World!", 10, 50, 300).
+//       Save().
+//       CreateLinearGradient(0, 0, 160, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//       AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//       AddColorStopPosition(1.0, factoryColor.NewRed()).
+//       FillStyleGradient().
+//       Font(fontB).
+//       FillText("Big smile!", 10, 90, 300).
+//       Restore().
+//       FillText("Same font used before save", 10, 120, 300).
+//       AppendById("stage")
 func (el *TagCanvas) Restore() (ref *TagCanvas) {
-	el.selfElement.Call("restore")
+	el.context.Call("restore")
 	return el
 }
 
-// en: Rotates the current drawing
+// Rotate
+//
+// English:
+//
+//  Rotates the current drawing
+//
+//   Input:
 //     angle: The rotation angle, in radians.
-//            To calculate from degrees to radians: degrees*Math.PI/180.
-//            Example: to rotate 5 degrees, specify the following: 5*Math.PI/180
 //
-//     The rotate() method rotates the current drawing.
-//     Note: The rotation will only affect drawings made AFTER the rotation is done.
-//     JavaScript syntax: context.rotate(angle);
+//   Note:
+//     * To calculate from degrees to radians: degrees*math.Pi/180.
+//       Example: to rotate 5 degrees, specify the following: 5*math.Pi/180.
+//     * The rotation will only affect drawings made AFTER the rotation is done.
 //
-//     Example:
-//     var c = document.getElementById("my Canvas");
-//     var ctx = c.getContext("2d");
-//     ctx.rotate(20 * Math.PI / 180);
-//     ctx.fillRect(50, 20, 100, 50);
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Rect(50, 20, 150, 100).
+//       Stroke().
+//       Rotate(20*math.Pi/180).
+//       Rect(50, 20, 150, 100).
+//       Stroke().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Gira o desenho atual.
+//
+//   Entrada:
+//     angle: O ângulo de rotação, em radianos.
+//
+//   Nota:
+//     * Para calcular de graus para radianos: graus*math.Pi/180.
+//       Exemplo: para girar 5 graus, especifique o seguinte: 5*math.Pi/180.
+//     * A rotação só afetará os desenhos feitos APÓS a rotação.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Rect(50, 20, 150, 100).
+//       Stroke().
+//       Rotate(20*math.Pi/180).
+//       Rect(50, 20, 150, 100).
+//       Stroke().
+//       AppendById("stage")
 func (el *TagCanvas) Rotate(angle float64) (ref *TagCanvas) {
 	el.context.Call("rotate", angle)
 	return el
 }
 
-// en: Saves the state of the current context
+// Save
+//
+// English:
+//
+//  Saves the state of the current context.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(fontA).
+//       FillText("Hello World!", 10, 50, 300).
+//       Save().
+//       CreateLinearGradient(0, 0, 160, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//       AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//       AddColorStopPosition(1.0, factoryColor.NewRed()).
+//       FillStyleGradient().
+//       Font(fontB).
+//       FillText("Big smile!", 10, 90, 300).
+//       Restore().
+//       FillText("Same font used before save", 10, 120, 300).
+//       AppendById("stage")
+//
+// Português:
+//
+//   Salva o estado do contexto atual.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(fontA).
+//       FillText("Hello World!", 10, 50, 300).
+//       Save().
+//       CreateLinearGradient(0, 0, 160, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//       AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//       AddColorStopPosition(1.0, factoryColor.NewRed()).
+//       FillStyleGradient().
+//       Font(fontB).
+//       FillText("Big smile!", 10, 90, 300).
+//       Restore().
+//       FillText("Same font used before save", 10, 120, 300).
+//       AppendById("stage")
 func (el *TagCanvas) Save() (ref *TagCanvas) {
-	el.selfElement.Call("save")
+	el.context.Call("save")
 	return el
 }
 
-// en: Scales the current drawing bigger or smaller
-//     scaleWidth:  Scales the width of the current drawing (1=100%, 0.5=50%, 2=200%, etc.)
-//     scaleHeight: Scales the height of the current drawing (1=100%, 0.5=50%, 2=200%, etc.)
+// Scale
 //
-//     The scale() method scales the current drawing, bigger or smaller.
-//     Note: If you scale a drawing, all future drawings will also be scaled. The positioning will also be scaled. If
-//     you scale(2,2); drawings will be positioned twice as far from the left and top of the canvas as you specify.
-//     JavaScript syntax: context.scale(scalewidth, scaleheight);
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.strokeRect(5, 5, 25, 15);
-//     ctx.scale(2, 2);
-//     ctx.strokeRect(5, 5, 25, 15);
-func (el *TagCanvas) Scale(scaleWidth, scaleHeight int) (ref *TagCanvas) {
+//  Scales the current drawing bigger or smaller.
+//
+//   Input:
+//     scaleWidth: Scales the width of the current drawing (1.0=100%, 0.5=50%, 2.0=200%, etc.)
+//     scaleHeight: Scales the height of the current drawing (1.0=100%, 0.5=50%, 2.0=200%, etc.)
+//
+//   Note:
+//     * If you scale a drawing, all future drawings will also be scaled;
+//     * The positioning will also be scaled. If you scale(2.0,2.0); drawings will be positioned
+//       twice as far from the left and top of the canvas as you specify.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       StrokeRect(5, 5, 25, 15).
+//       Scale(2.0, 6.0).
+//       StrokeRect(5, 5, 25, 15).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Dimensiona o desenho atual para maior ou menor.
+//
+//   Entrada:
+//     scaleWidth: Dimensiona a largura do desenho atual (1.0=100%, 0.5=50%, 2.0=200%, etc.)
+//     scaleHeight: Dimensiona a altura do desenho atual (1.0=100%, 0.5=50%, 2.0=200%, etc.)
+//
+//   Nota:
+//     * Se você dimensionar um desenho, todos os desenhos futuros também serão dimensionados;
+//     * O posicionamento também será dimensionado. Se você dimensionar (2.0, 2.0); os desenhos serão
+//       posicionados duas vezes mais distantes da esquerda e do topo do canvas conforme
+//       você especificar.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       StrokeRect(5, 5, 25, 15).
+//       Scale(2.0, 6.0).
+//       StrokeRect(5, 5, 25, 15).
+//       AppendById("stage")
+func (el *TagCanvas) Scale(scaleWidth, scaleHeight float64) (ref *TagCanvas) {
 	el.context.Call("scale", scaleWidth, scaleHeight)
-	return
+	return el
 }
 
-// en: Resets the current transform to the identity matrix. Then runs transform()
-//     a: Scales the drawings horizontally
-//     b: Skews the drawings horizontally
-//     c: Skews the drawings vertically
-//     d: Scales the drawings vertically
-//     e: Moves the the drawings horizontally
-//     f: Moves the the drawings vertically
+// SetTransform
 //
-//     Each object on the canvas has a current transformation matrix.
-//     The setTransform() method resets the current transform to the identity matrix, and then runs transform() with the
-//     same arguments.
-//     In other words, the setTransform() method lets you scale, rotate, move, and skew the current context.
-//     Note: The transformation will only affect drawings made after the setTransform method is called.
-//     JavaScript syntax: context.setTransform(a, b, c, d, e, f);
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.fillStyle = "yellow";
-//     ctx.fillRect(0, 0, 250, 100)
-//     ctx.setTransform(1, 0.5, -0.5, 1, 30, 10);
-//     ctx.fillStyle = "red";
-//     ctx.fillRect(0, 0, 250, 100);
-//     ctx.setTransform(1, 0.5, -0.5, 1, 30, 10);
-//     ctx.fillStyle = "blue";
-//     ctx.fillRect(0, 0, 250, 100);
+//  Resets the current transform to the identity matrix.
+//
+//   Input:
+//     a: Scales the drawings horizontally;
+//     b: Skews the drawings horizontally;
+//     c: Skews the drawings vertically;
+//     d: Scales the drawings vertically;
+//     e: Moves the the drawings horizontally;
+//     f: Moves the the drawings vertically.
+//
+//   Note:
+//     * Each object on the canvas has a current transformation matrix.
+//       The SetTransform() function resets the current transform to the identity matrix, and then put transform data on GetTransform() function with the same arguments.
+//       In other words, the setTransform() method lets you scale, rotate, move, and skew the current context.
+//     * The transformation will only affect drawings made after the SetTransform() function is called.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillStyle(factoryColor.NewYellow()).
+//       FillRect(50, 50, 250, 100).
+//       SetTransform(1.0, 0.5, -0.5, 1.0, 30.0, 10.0).
+//       FillStyle(factoryColor.NewRed()).
+//       FillRect(50, 50, 250, 100).
+//       SetTransform(1.0, 0.5, -0.5, 1.0, 30.0, 10.0).
+//       FillStyle(factoryColor.NewBlue()).
+//       FillRect(50, 50, 230, 70).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Redefine a transformação atual para a matriz de identidade.
+//
+//   Entrada:
+//     a: Dimensiona os desenhos horizontalmente;
+//     b: Inclina os desenhos horizontalmente;
+//     c: Inclina os desenhos verticalmente;
+//     d: Dimensiona os desenhos verticalmente;
+//     e: Move os desenhos horizontalmente;
+//     f: Move os desenhos verticalmente.
+//
+//   Nota:
+//     * Cada objeto na tela tem uma matriz de transformação atual.
+//       A função SetTransform() redefine a transformação atual para a matriz de identidade e, em seguida, coloca os dados de transformação na função GetTransform() com os mesmos argumentos.
+//       Em outras palavras, o método setTransform() permite dimensionar, girar, mover e inclinar o contexto atual.
+//     * A transformação só afetará os desenhos feitos após a chamada da função SetTransform().
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillStyle(factoryColor.NewYellow()).
+//       FillRect(50, 50, 250, 100).
+//       SetTransform(1.0, 0.5, -0.5, 1.0, 30.0, 10.0).
+//       FillStyle(factoryColor.NewRed()).
+//       FillRect(50, 50, 250, 100).
+//       SetTransform(1.0, 0.5, -0.5, 1.0, 30.0, 10.0).
+//       FillStyle(factoryColor.NewBlue()).
+//       FillRect(50, 50, 230, 70).
+//       AppendById("stage")
 func (el *TagCanvas) SetTransform(a, b, c, d, e, f float64) (ref *TagCanvas) {
 	el.context.Call("setTransform", a, b, c, d, e, f)
 	return el
 }
 
-// en: Draws a rectangle (no fill)
-//     x:      The x-coordinate of the upper-left corner of the rectangle
-//     y:      The y-coordinate of the upper-left corner of the rectangle
-//     width:  The width of the rectangle, in pixels
-//     height: The height of the rectangle, in pixels
+// StrokeRect
 //
-//     The strokeRect() method draws a rectangle (no fill). The default color of the stroke is black.
-//     Tip: Use the strokeStyle property to set a color, gradient, or pattern to style the stroke.
-//     JavaScript syntax: context.strokeRect(x, y, width, height);
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.strokeRect(20, 20, 150, 100);
+//  Draws a rectangle (no fill)
+//
+//   Input:
+//     x: The x-coordinate of the upper-left corner of the rectangle;
+//     y: The y-coordinate of the upper-left corner of the rectangle;
+//     width: The width of the rectangle, in pixels;
+//     height: The height of the rectangle, in pixels;
+//
+//   Note:
+//     * The default color of the stroke is black;
+//     * Use the StrokeStyle() function to set a color, CreateRadialGradient(), CreateLinearGradient()
+//       or CreatePattern() to style the stroke.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       StrokeRect(5, 5, 25, 15).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Desenha um retângulo (sem preencher)
+//
+//   entrada:
+//     x: A coordenada x do canto superior esquerdo do retângulo;
+//     y: A coordenada y do canto superior esquerdo do retângulo;
+//     width: A largura do retângulo, em pixels;
+//     height: A altura do retângulo, em pixels;
+//
+//   Nota:
+//     * A cor padrão do traço é preto;
+//     * Use a função StrokeStyle() para definir uma cor, CreateRadialGradient(),
+//       CreateLinearGradient() ou CreatePattern() para estilizar o traço.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       StrokeRect(5, 5, 25, 15).
+//       AppendById("stage")
 func (el *TagCanvas) StrokeRect(x, y, width, height int) (ref *TagCanvas) {
 	el.context.Call("strokeRect", x, y, width, height)
 	return el
 }
 
-// en: Sets or returns the color, gradient, or pattern used for strokes
-//     The strokeStyle property sets or returns the color, gradient, or pattern used for strokes.
-//     Default value: #000000
-//     JavaScript syntax: context.strokeStyle = color|gradient|pattern;
-func (el *TagCanvas) StrokeStyle(value string) (ref *TagCanvas) {
+// StrokeStyle
+//
+// English:
+//
+//  Sets the color, gradient, or pattern used for strokes.
+//
+//   Input:
+//     value: The style must be the color name in textual form, such as "red" or "green", or a color.RGBA value.
+//
+//   Note:
+//     * The default color is black.
+//
+//   Example:
+//
+//     var colorArc color.RGBA
+//     canvas := factoryBrowser.NewTagCanvas("canvas_0", 800, 600)
+//     for i := 0.0; i != 6.0; i += 1.0 {
+//       for j := 0.0; j != 6.0; j += 1.0 {
+//         colorArc.R = 0
+//         colorArc.G = uint8(255.0 - 42.5*i)
+//         colorArc.B = uint8(255.0 - 42.5*j)
+//         colorArc.A = 255
+//         canvas.StrokeStyle(colorArc).
+//           BeginPath().
+//           Arc(int(12.5+j*25.0), int(12.5+i*25.0), 10.0, 0.0, math.Pi*2.0, true).
+//           Stroke()
+//       }
+//     }
+//     canvas.AppendById("stage")
+//
+// Português:
+//
+//  Define a cor, gradiente ou padrão usado para traçados.
+//
+//   Entrada:
+//     value: O estilo deve ser o nome da cor na forma textual, como "red" ou "green", ou um valor color.RGBA.
+//
+//   Note:
+//     * A cor padrão é preta.
+//
+//   Exemplo:
+//
+//     var colorArc color.RGBA
+//     canvas := factoryBrowser.NewTagCanvas("canvas_0", 800, 600)
+//     for i := 0.0; i != 6.0; i += 1.0 {
+//       for j := 0.0; j != 6.0; j += 1.0 {
+//         colorArc.R = 0
+//         colorArc.G = uint8(255.0 - 42.5*i)
+//         colorArc.B = uint8(255.0 - 42.5*j)
+//         colorArc.A = 255
+//         canvas.StrokeStyle(colorArc).
+//           BeginPath().
+//           Arc(int(12.5+j*25.0), int(12.5+i*25.0), 10.0, 0.0, math.Pi*2.0, true).
+//           Stroke()
+//       }
+//     }
+//     canvas.AppendById("stage")
+func (el *TagCanvas) StrokeStyle(value interface{}) (ref *TagCanvas) {
+	if converted, ok := value.(color.RGBA); ok {
+		el.context.Set("strokeStyle", RGBAToJs(converted))
+		return el
+	}
+
 	el.context.Set("strokeStyle", value)
 	return el
 }
 
-// en: Draws text on the canvas (no fill)
-//     text:     Specifies the text that will be written on the canvas
-//     x:        The x coordinate where to start painting the text (relative to the canvas)
-//     y:        The y coordinate where to start painting the text (relative to the canvas)
-//     maxWidth: Optional. The maximum allowed width of the text, in pixels
+func (el *TagCanvas) StrokeStyleGradient() (ref *TagCanvas) {
+	el.context.Set("strokeStyle", el.gradient)
+	return el
+}
+
+// StrokeText
 //
-//     The strokeText() method draws text (with no fill) on the canvas. The default color of the text is black.
-//     Tip: Use the font property to specify font and font size, and use the strokeStyle property to render the text in another color/gradient.
-//     JavaScript syntax: context.strokeText(text, x, y, maxWidth);
+// English:
 //
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.font = "20px Georgia";
-//     ctx.strokeText("Hello World!", 10, 50);
-//     ctx.font = "30px Verdana";
-//     // Create gradient
-//     var gradient = ctx.createLinearGradient(0, 0, c.width, 0);
-//     gradient.addColorStop("0", "magenta");
-//     gradient.addColorStop("0.5", "blue");
-//     gradient.addColorStop("1.0", "red");
-//     // Fill with gradient
-//     ctx.strokeStyle = gradient;
-//     ctx.strokeText("Big smile!", 10, 90);
+//  Draws text on the canvas (no fill)
+//
+//   Input:
+//     text: Specifies the text that will be written on the canvas
+//     x: The x coordinate where to start painting the text (relative to the canvas)
+//     y: The y coordinate where to start painting the text (relative to the canvas)
+//     maxWidth: The maximum allowed width of the text, in pixels
+//
+//   Note:
+//     * The default color of the text is black.
+//     * Use the Font() function to specify font and font size, and use the StrokeStyle() function to render the text in another color/gradient.
+//
+//   Example:
+//
+//     var fontA html.Font
+//     fontA.Family = factoryFontFamily.NewArial()
+//     fontA.Style = factoryFontStyle.NewItalic()
+//     fontA.Size = 20
+//
+//     var fontB html.Font
+//     fontB.Family = factoryFontFamily.NewVerdana()
+//     fontB.Size = 35
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(fontA).
+//       StrokeText("Hello World!", 10, 50, 300).
+//       CreateLinearGradient(0, 0, 160, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//       AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//       AddColorStopPosition(1.0, factoryColor.NewRed()).
+//       StrokeStyleGradient().
+//       Font(fontB).
+//       StrokeText("Big smile!", 10, 90, 300).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Desenha o texto no canvas (sem preenchimento)
+//
+//   Entrada:
+//     text: Especifica o texto a ser desenhado no canvas;
+//     x: A coordenada X de onde iniciar a pintura do texto (relativa ao canvas)
+//     y: A coordenada Y de onde iniciar a pintura do texto (relativa ao canvas)
+//     maxWidth: A largura máxima permitida do texto, em pixels.
+//
+//   Nota:
+//     * A cor padrão é preto.
+//     * Use a função Font() para especificar a fonte e o tamanho do texto, e use a função StrokeStyle() para renderizar o texto em outra cor/gradiente.
+//
+//   Exemplo:
+//
+//     var fontA html.Font
+//     fontA.Family = factoryFontFamily.NewArial()
+//     fontA.Style = factoryFontStyle.NewItalic()
+//     fontA.Size = 20
+//
+//     var fontB html.Font
+//     fontB.Family = factoryFontFamily.NewVerdana()
+//     fontB.Size = 35
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(fontA).
+//       StrokeText("Hello World!", 10, 50, 300).
+//       CreateLinearGradient(0, 0, 160, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//       AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//       AddColorStopPosition(1.0, factoryColor.NewRed()).
+//       StrokeStyleGradient().
+//       Font(fontB).
+//       StrokeText("Big smile!", 10, 90, 300).
+//       AppendById("stage")
 func (el *TagCanvas) StrokeText(text string, x, y, maxWidth int) (ref *TagCanvas) {
 	el.context.Call("strokeText", text, x, y, maxWidth)
 	return el
 }
 
-// en: Sets or returns the current alignment for text content
+// TextAlign
 //
-//     The textAlign property sets or returns the current alignment for text content, according to the anchor point.
-//     Normally, the text will START in the position specified, however, if you set textAlign="right" and place the text in position 150, it means that the text should END in position 150.
-//     Tip: Use the fillText() or the strokeText() method to actually draw and position the text on the canvas.
-//     Default value: start
-//     JavaScript syntax: context.textAlign = "center | end | left | right | start";
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     // Create a red line in position 150
-//     ctx.strokeStyle = "red";
-//     ctx.moveTo(150, 20);
-//     ctx.lineTo(150, 170);
-//     ctx.stroke();
-//     ctx.font = "15px Arial";
-//     // Show the different textAlign values
-//     ctx.textAlign = "start";
-//     ctx.fillText("textAlign = start", 150, 60);
-//     ctx.textAlign = "end";
-//     ctx.fillText("textAlign = end", 150, 80);
-//     ctx.textAlign = "left";
-//     ctx.fillText("textAlign = left", 150, 100);
-//     ctx.textAlign = "center";
-//     ctx.fillText("textAlign = center", 150, 120);
-//     ctx.textAlign = "right";
-//     ctx.fillText("textAlign = right", 150, 140);
+//  Sets the current alignment for text content
+//
+//   Input:
+//     value: the anchor point.
+//
+// Normally, the text will START in the position specified, however, if you set TextAlign(html.KFontAlignRuleRight) and place the text in position 150, it means that the text should END in position 150.
+//
+//   Note:
+//     * Use the FillText() or the StrokeText() function to actually draw and position the text on the canvas.
+//     * Default value: html.KFontAlignRuleStart
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       StrokeStyle(factoryColor.NewRed()).
+//       MoveTo(150, 20).
+//       LineTo(150, 170).
+//       Stroke().
+//       Font(font).
+//       TextAlign(html.KFontAlignRuleStart).
+//       FillText("textAlign = start", 150, 60, 400).
+//       TextAlign(html.KFontAlignRuleEnd).
+//       FillText("textAlign = end", 150, 80, 400).
+//       TextAlign(html.KFontAlignRuleEnd).
+//       FillText("textAlign = end", 150, 80, 400).
+//       TextAlign(html.KFontAlignRuleLeft).
+//       FillText("textAlign = left", 150, 100, 400).
+//       TextAlign(html.KFontAlignRuleCenter).
+//       FillText("textAlign = center", 150, 120, 400).
+//       TextAlign(html.KFontAlignRuleRight).
+//       FillText("textAlign = right", 150, 140, 400).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Define o alinhamento atual do texto.
+//
+//   Entrada:
+//     value: o ponto da âncora.
+//
+// Normalmente, o texto COMEÇARÁ na posição especificada, no entanto, se você definir
+// TextAlign(html.KFontAlignRuleRight) e colocar o texto na posição 150, significa que o texto deve
+// TERMINAR na posição 150.
+//
+//   NotA:
+//     * Use a função FillText() ou StrokeText() para realmente desenhar e posicionar o texto no
+//       canvas;
+//     * Valor padrão: html.KFontAlignRuleStart
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       StrokeStyle(factoryColor.NewRed()).
+//       MoveTo(150, 20).
+//       LineTo(150, 170).
+//       Stroke().
+//       Font(font).
+//       TextAlign(html.KFontAlignRuleStart).
+//       FillText("textAlign = start", 150, 60, 400).
+//       TextAlign(html.KFontAlignRuleEnd).
+//       FillText("textAlign = end", 150, 80, 400).
+//       TextAlign(html.KFontAlignRuleEnd).
+//       FillText("textAlign = end", 150, 80, 400).
+//       TextAlign(html.KFontAlignRuleLeft).
+//       FillText("textAlign = left", 150, 100, 400).
+//       TextAlign(html.KFontAlignRuleCenter).
+//       FillText("textAlign = center", 150, 120, 400).
+//       TextAlign(html.KFontAlignRuleRight).
+//       FillText("textAlign = right", 150, 140, 400).
+//       AppendById("stage")
 func (el *TagCanvas) TextAlign(value FontAlignRule) (ref *TagCanvas) {
 	el.context.Set("textAlign", value.String())
 	return el
 }
 
-// en: Sets or returns the current text baseline used when drawing text
-//     PlatformBasicType:
-//          alphabetic:  Default. The text baseline is the normal alphabetic baseline
-//          top:         The text baseline is the top of the em square
-//          hanging:     The text baseline is the hanging baseline
-//          middle:      The text baseline is the middle of the em square
-//          ideographic: The text baseline is the ideographic baseline
-//          bottom:      The text baseline is the bottom of the bounding box
+// TextBaseline
 //
-//     The textBaseline property sets or returns the current text baseline used when drawing text.
-//     Note: The fillText() and strokeText() methods will use the specified textBaseline value when positioning the text
-//     on the canvas.
+// English:
+//
+//  Sets the current text baseline used when drawing text.
+//
+//   Input:
+//     PlatformBasicType: text baseline used when drawing text.
+//
+//   Note:
+//     * The FillText() and StrokeText() functions will use the specified TextBaseline() value when positioning the text on the canvas.
 //     Default value: alphabetic
-//     JavaScript syntax: context.textBaseline = "alphabetic|top|hanging|middle|ideographic|bottom";
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     //Draw a red line at y=100
-//     ctx.strokeStyle = "red";
-//     ctx.moveTo(5, 100);
-//     ctx.lineTo(395, 100);
-//     ctx.stroke();
-//     ctx.font = "20px Arial"
-//     //Place each word at y=100 with different textBaseline values
-//     ctx.textBaseline = "top";
-//     ctx.fillText("Top", 5, 100);
-//     ctx.textBaseline = "bottom";
-//     ctx.fillText("Bottom", 50, 100);
-//     ctx.textBaseline = "middle";
-//     ctx.fillText("Middle", 120, 100);
-//     ctx.textBaseline = "alphabetic";
-//     ctx.fillText("Alphabetic", 190, 100);
-//     ctx.textBaseline = "hanging";
-//     ctx.fillText("Hanging", 290, 100);
+//   Example:
+//
+//     var font html.Font
+//     font.Family = factoryFontFamily.NewArial()
+//     font.Size = 20
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       StrokeStyle(factoryColor.NewRed()).
+//       MoveTo(5, 100).
+//       LineTo(395, 100).
+//       Stroke().
+//       Font(font).
+//       TextBaseline(html.KTextBaseLineRuleTop).
+//       FillText("Top", 5, 100, 300).
+//       TextBaseline(html.KTextBaseLineRuleBottom).
+//       FillText("Bottom", 50, 100, 300).
+//       TextBaseline(html.KTextBaseLineRuleMiddle).
+//       FillText("Middle", 120, 100, 300).
+//       TextBaseline(html.KTextBaseLineRuleAlphabetic).
+//       FillText("Alphabetic", 190, 100, 300).
+//       TextBaseline(html.KTextBaseLineRuleHanging).
+//       FillText("Hanging", 290, 100, 300).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Define a linha de base usada para desenhar o texto.
+//
+//   Entrada:
+//     PlatformBasicType: linha de base usada para desenhar o texto.
+//
+//   Nota:
+//     * As funções FillText() e StrokeText() vão usar a linha de base especificada pela função TextBaseline() antes de posicionar o texto no canvas.
+//     * Valor padrão: html.KTextBaseLineRuleAlphabetic
+//
+//   Exemplo:
+//
+//     var font html.Font
+//     font.Family = factoryFontFamily.NewArial()
+//     font.Size = 20
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       StrokeStyle(factoryColor.NewRed()).
+//       MoveTo(5, 100).
+//       LineTo(395, 100).
+//       Stroke().
+//       Font(font).
+//       TextBaseline(html.KTextBaseLineRuleTop).
+//       FillText("Top", 5, 100, 300).
+//       TextBaseline(html.KTextBaseLineRuleBottom).
+//       FillText("Bottom", 50, 100, 300).
+//       TextBaseline(html.KTextBaseLineRuleMiddle).
+//       FillText("Middle", 120, 100, 300).
+//       TextBaseline(html.KTextBaseLineRuleAlphabetic).
+//       FillText("Alphabetic", 190, 100, 300).
+//       TextBaseline(html.KTextBaseLineRuleHanging).
+//       FillText("Hanging", 290, 100, 300).
+//       AppendById("stage")
 func (el *TagCanvas) TextBaseline(value TextBaseLineRule) (ref *TagCanvas) {
 	el.context.Set("textBaseline", value.String())
 	return el
@@ -1969,11 +2493,11 @@ func (el *TagCanvas) Translate(x, y int) (ref *TagCanvas) {
 
 // en: Sets or returns the color, gradient, or pattern used to fill the drawing
 //     The fillStyle property sets or returns the color, gradient, or pattern used to fill the drawing.
-//     Default value:	#000000
+//     The default color is black.
 //     JavaScript syntax:	context.fillStyle = color|gradient|pattern;
 func (el *TagCanvas) FillStyle(value interface{}) (ref *TagCanvas) {
-	if _, ok := value.(color.RGBA); ok {
-		el.context.Set("fillStyle", RGBAToJs(value.(color.RGBA)))
+	if converted, ok := value.(color.RGBA); ok {
+		el.context.Set("fillStyle", RGBAToJs(converted))
 		return el
 	}
 

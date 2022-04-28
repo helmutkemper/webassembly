@@ -1287,11 +1287,25 @@ func (e *TagDiv) prepareStageReference() {
 //
 // English:
 //
-//  Adiciona a função de arrastar com o mouse.
+//  Mouse drag function.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagDiv("div_0").
+//       Class("animate").
+//       DragStart().
+//       AppendById("stage")
 //
 // Português:
 //
-//  Adiciona a função de arrastar com o mouse.
+//  Função de arrastar com o mouse.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagDiv("div_0").
+//       Class("animate").
+//       DragStart().
+//       AppendById("stage")
 //todo: tem que haver outro tipo de drag
 func (e *TagDiv) DragStart() (ref *TagDiv) {
 	e.AddListener(mouse.KEventMouseDown, e.onStartDrag)

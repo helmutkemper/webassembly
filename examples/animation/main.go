@@ -6,14 +6,12 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/browserStage"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/mouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/factoryColor"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
-	"log"
 	"strconv"
 	"time"
 )
@@ -106,85 +104,7 @@ func main() {
 		factoryTween.NewSelectRandom(durationY, yStart, yEnd, onUpdateY, 0, rocketImg)
 	}
 
-	stage.AddListener(mouse.KEventMouseOver, onMouseEvent)
-	timer := time.NewTimer(10 * time.Second)
-	go func() {
-		select {
-		case <-timer.C:
-			stage.RemoveListener(mouse.KEventMouseOver)
-		}
-	}()
-
-	//stage.AddListener(mouse.KEventMouseUp, DragStop)
-	//stage.AddListener(mouse.KEventMouseMove, Drag)
-	//document.AddEventListener(browserMouse.KEventMouseEnter, browserMouse.SetMouseSimpleEventManager(stage.CursorShow))
 	<-done
-}
-
-func onMouseEvent(event mouse.MouseEvent) {
-	isNull, target := event.GetRelatedTarget()
-	if isNull == false {
-		log.Print("id: ", target.Get("id"))
-		log.Print("tagName: ", target.Get("tagName"))
-	}
-	log.Print(event.GetScreenX())
-	log.Print(event.GetScreenY())
-}
-
-var drag bool
-var difX, difY int
-
-func DragStart(event mouse.MouseEvent) {
-	log.Printf("start")
-	rocketImg.Mouse(mouse.KCursorCopy)
-	drag = true
-}
-func DragStop(event mouse.MouseEvent) {
-	log.Printf("false")
-	drag = false
-	rocketImg.Mouse(mouse.KCursorAuto)
-
-	difX = 0
-	difY = 0
-}
-func Drag(event mouse.MouseEvent) {
-	if drag == false {
-		return
-	}
-
-	if difX == 0 || difY == 0 {
-		var x = rocketImg.GetX()
-		var y = rocketImg.GetY()
-
-		var screenX = int(event.GetScreenX())
-		var screenY = int(event.GetScreenY())
-
-		difX = screenX - x
-		difY = screenY - y
-	}
-
-	//isNull, _ := event.GetRelatedTarget()
-	//if isNull == true {
-	//	return
-	//}
-
-	log.Printf("move")
-
-	var x = int(event.GetScreenX()) - difX
-	var y = int(event.GetScreenY()) - difY
-
-	rocketImg.SetXY(x, y)
-}
-
-func move(event mouse.MouseEvent) {
-	return
-	isNull, target := event.GetRelatedTarget()
-	if isNull == false {
-		log.Print("id: ", target.Get("id"))
-		log.Print("tagName: ", target.Get("tagName"))
-	}
-	log.Print(event.GetScreenX())
-	log.Print(event.GetScreenY())
 }
 
 func onUpdateX(x, p float64, args ...interface{}) {

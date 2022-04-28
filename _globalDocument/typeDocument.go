@@ -2,7 +2,6 @@ package globalDocument
 
 import (
 	"errors"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/event"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventAnimation"
@@ -68,7 +67,7 @@ func (el *Document) Get() js.Value {
 //
 //  Define o ponteiro do mouse como automático.
 func (el *Document) MousePointerAuto() {
-	el.selfDocument.Get("body").Set("style", browserMouse.KCursorAuto.String())
+	el.selfDocument.Get("body").Set("style", mouse.KCursorAuto.String())
 }
 
 // MousePointerHide
@@ -81,7 +80,7 @@ func (el *Document) MousePointerAuto() {
 //
 //  Define o ponteiro do mouse como oculto.
 func (el *Document) MousePointerHide() {
-	el.selfDocument.Get("body").Set("style", browserMouse.KCursorNone.String())
+	el.selfDocument.Get("body").Set("style", mouse.KCursorNone.String())
 }
 
 // SetMousePointer
@@ -103,7 +102,7 @@ func (el *Document) MousePointerHide() {
 //     V: formato do ponteiro do mouse.
 //       Exemplo: SetMousePointer(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
 //                o resto
-func (el *Document) SetMousePointer(value browserMouse.CursorType) {
+func (el *Document) SetMousePointer(value mouse.CursorType) {
 	el.selfDocument.Get("body").Set("style", value.String())
 }
 
@@ -391,7 +390,7 @@ func (el *Document) AddEventListener(eventType interface{}, mouseMoveEvt js.Func
 	case eventKeyboard.EventKeyboard:
 		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
-	case browserMouse.Event:
+	case mouse.Event:
 		el.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventPageTransition.EventPageTransition:

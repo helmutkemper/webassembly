@@ -3,7 +3,6 @@ package factoryBrowserStage
 import (
 	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/config"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserCanvas"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
@@ -84,10 +83,10 @@ func NewStage(
 	stage.Engine.CursorAddDrawFunction(imageCursor.Draw)
 
 	// pt_br: Mostra o cursor do mouse sempre que o mesmo entra no documento
-	document.AddEventListener(browserMouse.KEventMouseEnter, browserMouse.SetMouseSimpleEventManager(stage.CursorShow))
+	document.AddEventListener(mouse.KEventMouseEnter, mouse.SetMouseSimpleEventManager(stage.CursorShow))
 
 	// pt_br: Esconde de cursor do mouse sempre que o mesmo sai de cima do documento
-	document.AddEventListener(browserMouse.KEventMouseOut, browserMouse.SetMouseSimpleEventManager(stage.CursorHide))
+	document.AddEventListener(mouse.KEventMouseOut, mouse.SetMouseSimpleEventManager(stage.CursorHide))
 
 	//document.AddEventListener(browserMouse.KEventMouseMove, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseMove))
 	//document.AddEventListener(browserMouse.KEventMouseEnter, webBrowserMouse.SetMouseMoveManager(mouse.ManagerMouseEnter))

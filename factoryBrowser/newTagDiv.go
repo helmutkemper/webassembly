@@ -36,8 +36,7 @@ import (
 //  A tag <div> define uma divisão ou uma seção em um documento HTML.
 func NewTagDiv(id string) (ref *html.TagDiv) {
 	ref = &html.TagDiv{}
-	ref.CreateElement(html.KTagDiv)
-	ref.Id(id)
+	ref.Init(id)
 
 	return ref
 }

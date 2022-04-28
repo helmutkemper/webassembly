@@ -1,12 +1,9 @@
 package html
 
-type Translate int
+type Translate string
 
 func (e Translate) String() (element string) {
-	if e == 0 {
-		return
-	}
-	return translateString[e]
+	return string(e)
 }
 
 const (
@@ -19,7 +16,7 @@ const (
 	// Português:
 	//
 	//  O atributo translate especifica se o conteúdo de um elemento deve ser traduzido.
-	KTranslateYes Translate = iota + 1
+	KTranslateYes Translate = "yes"
 
 	// KTranslateNo
 	//
@@ -30,11 +27,5 @@ const (
 	// Português:
 	//
 	//  O atributo translate especifica se o conteúdo de um elemento não deve ser traduzido.
-	KTranslateNo
+	KTranslateNo Translate = "no"
 )
-
-var translateString = [...]string{
-	"",
-	"yes",
-	"no",
-}

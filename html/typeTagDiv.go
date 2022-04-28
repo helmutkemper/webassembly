@@ -1,10 +1,23 @@
 package html
 
 import (
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/mouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/event"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventAnimation"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventClipBoard"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventDrag"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventFocus"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventHashChange"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventInput"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventKeyboard"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventPageTransition"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventUi"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventWheel"
 	"log"
 	"strconv"
 	"strings"
+	"sync"
 	"syscall/js"
 )
 
@@ -37,6 +50,66 @@ type TagDiv struct {
 	id          string
 	selfElement js.Value
 	cssClass    *css.Class
+
+	x int
+	y int
+
+	// listener
+	//
+	// English:
+	//
+	//  The javascript function removeEventListener needs to receive the function passed in addEventListener
+	//
+	// Português:
+	//
+	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
+	listener *sync.Map
+
+	// drag
+
+	// stage
+	//
+	// English:
+	//
+	//  Browser main document reference captured at startup.
+	//
+	// Português:
+	//
+	//  Referencia do documento principal do navegador capturado na inicialização.
+	stage js.Value
+
+	// isDragging
+	//
+	// English:
+	//
+	//  Indicates the process of dragging the element.
+	//
+	// Português:
+	//
+	//  Indica o processo de arrasto do elemento.
+	isDragging bool
+
+	// dragDifX
+	//
+	// English:
+	//
+	//  Used in calculating element drag.
+	//
+	// Português:
+	//
+	//  Usado no cálculo do arrasto de elemento.
+	dragDifX int
+
+	// dragDifX
+	//
+	// English:
+	//
+	//  Used in calculating element drag.
+	//
+	// Português:
+	//
+	//  Usado no cálculo do arrasto de elemento.
+	dragDifY int
 }
 
 // AccessKey
@@ -805,6 +878,9 @@ func (e *TagDiv) Append(append interface{}) (ref *TagDiv) {
 //
 //  Define os eixos X e Y em pixels.
 func (e *TagDiv) SetXY(x, y int) (ref *TagDiv) {
+	e.x = x
+	e.y = y
+
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	py := strconv.FormatInt(int64(y), 10) + "px"
 
@@ -824,6 +900,8 @@ func (e *TagDiv) SetXY(x, y int) (ref *TagDiv) {
 //
 //  Define o eixo X em pixels.
 func (e *TagDiv) SetX(x int) (ref *TagDiv) {
+	e.x = x
+
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	e.selfElement.Get("style").Set("left", px)
 
@@ -840,6 +918,8 @@ func (e *TagDiv) SetX(x int) (ref *TagDiv) {
 //
 //  Define o eixo Y em pixels.
 func (e *TagDiv) SetY(y int) (ref *TagDiv) {
+	e.y = y
+
 	py := strconv.FormatInt(int64(y), 10) + "px"
 	e.selfElement.Get("style").Set("top", py)
 
@@ -856,8 +936,8 @@ func (e *TagDiv) SetY(y int) (ref *TagDiv) {
 //
 //  Retorna os eixos X e Y em pixels.
 func (e *TagDiv) GetXY() (x, y int) {
-	x = e.selfElement.Get("style").Get("left").Int()
-	y = e.selfElement.Get("style").Get("top").Int()
+	x = e.GetX()
+	y = e.GetY()
 
 	return
 }
@@ -872,7 +952,18 @@ func (e *TagDiv) GetXY() (x, y int) {
 //
 //  Retorna o eixo X em pixels.
 func (e *TagDiv) GetX() (x int) {
-	x = e.selfElement.Get("style").Get("left").Int()
+	var err error
+	x, err = strconv.Atoi(
+		strings.Replace(
+			e.selfElement.Get("style").Get("left").String(),
+			"px",
+			"",
+			1,
+		),
+	)
+	if err != nil {
+		log.Printf("x parser error. x is `%v`", x)
+	}
 
 	return
 }
@@ -887,7 +978,368 @@ func (e *TagDiv) GetX() (x int) {
 //
 //  Retorna o eixo Y em pixels.
 func (e *TagDiv) GetY() (y int) {
-	y = e.selfElement.Get("style").Get("top").Int()
+	var err error
+	y, err = strconv.Atoi(
+		strings.Replace(
+			e.selfElement.Get("style").Get("top").String(),
+			"px",
+			"",
+			1,
+		),
+	)
+	if err != nil {
+		log.Printf("x parser error. y is `%v`", y)
+	}
 
 	return
+}
+
+// AddListener
+//
+// English:
+//
+//  Associates a function with an event.
+//
+//   Example:
+//
+//     stage.AddListener(browserMouse.KEventMouseOver, onMouseEvent)
+//     timer := time.NewTimer(10 * time.Second)
+//     go func() {
+//       select {
+//         case <-timer.C:
+//         stage.RemoveListener(mouse.KEventMouseOver)
+//       }
+//     }()
+//
+//     func onMouseEvent(event browserMouse.MouseEvent) {
+//       isNull, target := event.GetRelatedTarget()
+//       if isNull == false {
+//         log.Print("id: ", target.Get("id"))
+//         log.Print("tagName: ", target.Get("tagName"))
+//       }
+//       log.Print(event.GetScreenX())
+//       log.Print(event.GetScreenY())
+//     }
+//
+// Português:
+//
+//  Associa uma função a um evento.
+//
+//   Exemplo:
+//
+//     stage.AddListener(browserMouse.KEventMouseOver, onMouseEvent)
+//     timer := time.NewTimer(10 * time.Second)
+//     go func() {
+//       select {
+//         case <-timer.C:
+//         stage.RemoveListener(mouse.KEventMouseOver)
+//       }
+//     }()
+//
+//     func onMouseEvent(event browserMouse.MouseEvent) {
+//       isNull, target := event.GetRelatedTarget()
+//       if isNull == false {
+//         log.Print("id: ", target.Get("id"))
+//         log.Print("tagName: ", target.Get("tagName"))
+//       }
+//       log.Print(event.GetScreenX())
+//       log.Print(event.GetScreenY())
+//     }
+func (e *TagDiv) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagDiv) {
+
+	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		var mouseEvent = mouse.MouseEvent{}
+
+		if len(args) > 0 {
+			mouseEvent.Object = args[0]
+		}
+
+		if manager != nil {
+			manager(mouseEvent)
+		}
+
+		return nil
+	})
+
+	switch converted := eventType.(type) {
+	case event.Event:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventAnimation.EventAnimation:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventClipBoard.EventClipBoard:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventDrag.EventDrag:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventFocus.EventFocus:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventHashChange.EventHashChange:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventInput.EventInput:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventKeyboard.EventKeyboard:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case mouse.Event:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventPageTransition.EventPageTransition:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventUi.EventUi:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	case eventWheel.EventWheel:
+		e.listener.Store(converted.String(), mouseMoveEvt)
+		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	default:
+		log.Fatalf("event must be a event type")
+	}
+
+	return e
+}
+
+// RemoveListener
+//
+// English:
+//
+//  Remove the function associated with the event
+//
+//   Example:
+//
+//     stage.AddListener(browserMouse.KEventMouseOver, onMouseEvent)
+//     timer := time.NewTimer(10 * time.Second)
+//     go func() {
+//       select {
+//         case <-timer.C:
+//         stage.RemoveListener(mouse.KEventMouseOver)
+//       }
+//     }()
+//
+//     func onMouseEvent(event browserMouse.MouseEvent) {
+//       isNull, target := event.GetRelatedTarget()
+//       if isNull == false {
+//         log.Print("id: ", target.Get("id"))
+//         log.Print("tagName: ", target.Get("tagName"))
+//       }
+//       log.Print(event.GetScreenX())
+//       log.Print(event.GetScreenY())
+//     }
+//
+// Português:
+//
+//  Remove a função associada com o evento.
+//
+//   Exemplo:
+//
+//     stage.AddListener(browserMouse.KEventMouseOver, onMouseEvent)
+//     timer := time.NewTimer(10 * time.Second)
+//     go func() {
+//       select {
+//         case <-timer.C:
+//         stage.RemoveListener(mouse.KEventMouseOver)
+//       }
+//     }()
+//
+//     func onMouseEvent(event browserMouse.MouseEvent) {
+//       isNull, target := event.GetRelatedTarget()
+//       if isNull == false {
+//         log.Print("id: ", target.Get("id"))
+//         log.Print("tagName: ", target.Get("tagName"))
+//       }
+//       log.Print(event.GetScreenX())
+//       log.Print(event.GetScreenY())
+//     }
+func (e *TagDiv) RemoveListener(eventType interface{}) (ref *TagDiv) {
+	switch converted := eventType.(type) {
+	case event.Event:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case eventAnimation.EventAnimation:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case eventClipBoard.EventClipBoard:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case eventDrag.EventDrag:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case eventFocus.EventFocus:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case eventHashChange.EventHashChange:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case eventInput.EventInput:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case eventKeyboard.EventKeyboard:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case mouse.Event:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case eventPageTransition.EventPageTransition:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case eventUi.EventUi:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	case eventWheel.EventWheel:
+		f, _ := e.listener.Load(converted.String())
+		e.selfElement.Call("removeEventListener", converted.String(), f)
+
+	default:
+		log.Fatalf("event must be a event type")
+	}
+
+	return e
+}
+
+// Mouse
+//
+// English:
+//
+//  Defines the shape of the mouse pointer.
+//
+//   Input:
+//     value: mouse pointer shape.
+//       Example: SetMouse(mouse.KCursorCell) // Use mouse.K... and let autocomplete do the
+//                rest
+//
+// Português:
+//
+//  Define o formato do ponteiro do mouse.
+//
+//   Entrada:
+//     value: formato do ponteiro do mouse.
+//       Exemplo: SetMouse(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
+//                o resto
+func (e *TagDiv) Mouse(value mouse.CursorType) (ref *TagDiv) {
+	e.selfElement.Get("style").Set("cursor", value.String())
+	return e
+}
+
+// Init
+//
+// English:
+//
+//  Initializes the object correctly.
+//
+// Português:
+//
+//  Inicializa o objeto corretamente.
+func (e *TagDiv) Init(id string) {
+	e.listener = new(sync.Map)
+
+	e.CreateElement(KTagDiv)
+	e.prepareStageReference()
+	e.Id(id)
+}
+
+// prepareStageReference
+//
+// English:
+//
+//  Prepares the stage reference at initialization.
+//
+// Português:
+//
+//  Prepara à referencia do stage na inicialização.
+func (e *TagDiv) prepareStageReference() {
+	e.stage = js.Global().Get("document").Call("getElementById", "stage")
+	if e.stage.IsUndefined() == true || e.stage.IsNull() == true {
+		log.Print("stage must be set") //todo: explicação para o que é stage
+		return
+	}
+}
+
+// DragStart
+//
+// English:
+//
+//  Adiciona a função de arrastar com o mouse.
+//
+// Português:
+//
+//  Adiciona a função de arrastar com o mouse.
+//todo: tem que haver outro tipo de drag
+func (e *TagDiv) DragStart() (ref *TagDiv) {
+	e.AddListener(mouse.KEventMouseDown, e.onStartDrag)
+	e.stage.Call("addEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDrag))
+	e.stage.Call("addEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseMoving))
+
+	return e
+}
+
+func (e *TagDiv) DragStop() (ref *TagDiv) {
+	e.RemoveListener(mouse.KEventMouseDown)
+	e.stage.Call("removeEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDrag))
+	e.stage.Call("removeEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseMoving))
+
+	e.isDragging = false
+
+	return e
+}
+
+func (e *TagDiv) onStopDrag(_ js.Value, _ []js.Value) any {
+	e.isDragging = false
+	return nil
+}
+
+func (e *TagDiv) onStartDrag(event mouse.MouseEvent) {
+	var screenX = int(event.GetScreenX())
+	var screenY = int(event.GetScreenY())
+
+	e.dragDifX = screenX - e.x
+	e.dragDifY = screenY - e.y
+
+	e.isDragging = true
+}
+
+func (e *TagDiv) onMouseMoving(_ js.Value, args []js.Value) interface{} {
+	if e.isDragging == false {
+		return nil
+	}
+
+	var mouseEvent = mouse.MouseEvent{}
+	if len(args) > 0 {
+		mouseEvent.Object = args[0]
+
+		var x = int(mouseEvent.GetScreenX()) - e.dragDifX
+		var y = int(mouseEvent.GetScreenY()) - e.dragDifY
+
+		e.SetXY(x, y)
+	}
+
+	return nil
 }

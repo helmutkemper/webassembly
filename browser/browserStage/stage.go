@@ -1,7 +1,7 @@
 package browserStage
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/mouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/event"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventAnimation"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventClipBoard"
@@ -14,11 +14,23 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventUi"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventWheel"
 	"log"
+	"sync"
 	"syscall/js"
 )
 
 type Stage struct {
 	selfDocument js.Value
+
+	// listener
+	//
+	// English:
+	//
+	//  The javascript function removeEventListener needs to receive the function passed in addEventListener
+	//
+	// Português:
+	//
+	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
+	listener *sync.Map
 }
 
 // Init
@@ -32,6 +44,7 @@ type Stage struct {
 //  Inicializa o documento com o documento principal do navegador.
 func (e *Stage) Init() {
 	e.selfDocument = js.Global().Get("document")
+	e.listener = new(sync.Map)
 }
 
 // Get
@@ -57,7 +70,7 @@ func (e *Stage) Get() js.Value {
 //
 //  Define o ponteiro do mouse como automático.
 func (e *Stage) MouseAuto() (ref *Stage) {
-	e.selfDocument.Get("body").Set("style", browserMouse.KCursorAuto.String())
+	e.selfDocument.Get("body").Set("style", mouse.KCursorAuto.String())
 	return e
 }
 
@@ -71,7 +84,7 @@ func (e *Stage) MouseAuto() (ref *Stage) {
 //
 //  Define o ponteiro do mouse como oculto.
 func (e *Stage) MouseHide() (ref *Stage) {
-	e.selfDocument.Get("body").Set("style", browserMouse.KCursorNone.String())
+	e.selfDocument.Get("body").Set("style", mouse.KCursorNone.String())
 	return e
 }
 
@@ -94,7 +107,7 @@ func (e *Stage) MouseHide() (ref *Stage) {
 //     value: formato do ponteiro do mouse.
 //       Exemplo: SetMouse(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
 //                o resto
-func (e *Stage) SetMouse(value browserMouse.CursorType) (ref *Stage) {
+func (e *Stage) SetMouse(value mouse.CursorType) (ref *Stage) {
 	e.selfDocument.Get("body").Set("style", value.String())
 	return e
 }
@@ -238,16 +251,13 @@ func (e Stage) GetById(id string) (element interface{}) {
 //
 //   Example:
 //     stage.AddListener(browserMouse.KEventMouseOver, onMouseEvent)
-//
-//     func onMouseEvent(event browserMouse.MouseEvent) {
-//       isNull, target := event.GetRelatedTarget()
-//       if isNull == false {
-//         log.Print("id: ", target.Get("id"))
-//         log.Print("tagName: ", target.Get("tagName"))
+//     timer := time.NewTimer(10 * time.Second)
+//     go func() {
+//       select {
+//         case <-timer.C:
+//         stage.RemoveListener(mouse.KEventMouseOver)
 //       }
-//       log.Print(event.GetScreenX())
-//       log.Print(event.GetScreenY())
-//     }
+//     }()
 //
 // Português:
 //
@@ -255,6 +265,13 @@ func (e Stage) GetById(id string) (element interface{}) {
 //
 //   Exemplo:
 //     stage.AddListener(browserMouse.KEventMouseOver, onMouseEvent)
+//     timer := time.NewTimer(10 * time.Second)
+//     go func() {
+//       select {
+//         case <-timer.C:
+//         stage.RemoveListener(mouse.KEventMouseOver)
+//       }
+//     }()
 //
 //     func onMouseEvent(event browserMouse.MouseEvent) {
 //       isNull, target := event.GetRelatedTarget()
@@ -265,10 +282,10 @@ func (e Stage) GetById(id string) (element interface{}) {
 //       log.Print(event.GetScreenX())
 //       log.Print(event.GetScreenY())
 //     }
-func (e *Stage) AddListener(eventType interface{}, manager browserMouse.SimpleManager) (ref *Stage) {
+func (e *Stage) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *Stage) {
 
 	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		var mouseEvent = browserMouse.MouseEvent{}
+		var mouseEvent = mouse.MouseEvent{}
 
 		if len(args) > 0 {
 			mouseEvent.Object = args[0]
@@ -283,40 +300,110 @@ func (e *Stage) AddListener(eventType interface{}, manager browserMouse.SimpleMa
 
 	switch converted := eventType.(type) {
 	case event.Event:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventAnimation.EventAnimation:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventClipBoard.EventClipBoard:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventDrag.EventDrag:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventFocus.EventFocus:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventHashChange.EventHashChange:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventInput.EventInput:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventKeyboard.EventKeyboard:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
-	case browserMouse.Event:
+	case mouse.Event:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventPageTransition.EventPageTransition:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventUi.EventUi:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventWheel.EventWheel:
+		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+
+	default:
+		log.Fatalf("event must be a event type")
+	}
+
+	return e
+}
+
+func (e *Stage) RemoveListener(eventType interface{}) (ref *Stage) {
+
+	switch converted := eventType.(type) {
+	case event.Event:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case eventAnimation.EventAnimation:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case eventClipBoard.EventClipBoard:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case eventDrag.EventDrag:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case eventFocus.EventFocus:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case eventHashChange.EventHashChange:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case eventInput.EventInput:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case eventKeyboard.EventKeyboard:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case mouse.Event:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case eventPageTransition.EventPageTransition:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case eventUi.EventUi:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
+
+	case eventWheel.EventWheel:
+		f, _ := e.listener.Load(converted.String())
+		e.selfDocument.Call("removeEventListener", converted.String(), f)
 
 	default:
 		log.Fatalf("event must be a event type")

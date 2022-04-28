@@ -9,14 +9,10 @@ package html
 // Português:
 //
 //  Especifica a direção do texto para o conteúdo em um elemento.
-type Dir int
+type Dir string
 
 func (e Dir) String() (element string) {
-	if e == 0 {
-		return
-	}
-
-	return dirString[e]
+	return string(e)
 }
 
 const (
@@ -29,7 +25,7 @@ const (
 	// Português:
 	//
 	//  Padrão. Direção do texto da esquerda para a direita.
-	KDirLeftToRight Dir = iota + 1
+	KDirLeftToRight Dir = "ltr"
 
 	// KDirRightToLeft
 	//
@@ -40,7 +36,7 @@ const (
 	// Português:
 	//
 	//  Direção do texto da direita para a esquerda.
-	KDirRightToLeft
+	KDirRightToLeft Dir = "rtl"
 
 	// KDirAuto
 	//
@@ -53,12 +49,5 @@ const (
 	//
 	//  Deixe o navegador descobrir a direção do texto, com base no conteúdo (recomendado apenas se a
 	//  direção do texto for desconhecida)
-	KDirAuto
+	KDirAuto Dir = "auto"
 )
-
-var dirString = [...]string{
-	"",
-	"ltr",
-	"rtl",
-	"auto",
-}

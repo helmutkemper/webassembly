@@ -1058,11 +1058,15 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 //  Sets the current font properties for text content.
 //
 //    Input:
-//      font-style: Specifies the font style. Use the factory factoryFontStyle. E.g.: factoryFontStyle.NewItalic()
-//      font-variant: Specifies the font variant. Use the factory factoryFontVariant. E.g.: factoryFontVariant.NewSmallCaps()
-//      font-weight: Specifies the font weight. Use the factory factoryFontWeight. E.g.: factoryFontWeight.NewBold()
+//      font-style: Specifies the font style. Use the factory factoryFontStyle.
+//        E.g.: factoryFontStyle.NewItalic()
+//      font-variant: Specifies the font variant. Use the factory factoryFontVariant.
+//        E.g.: factoryFontVariant.NewSmallCaps()
+//      font-weight: Specifies the font weight. Use the factory factoryFontWeight.
+//        E.g.: factoryFontWeight.NewBold()
 //      font-size/line-height: Specifies the font size and the line-height in pixels
-//      font-family: Specifies the font family. Use the factory factoryFontFamily. E.g.: factoryFontFamily.NewArial()
+//      font-family: Specifies the font family. Use the factory factoryFontFamily.
+//        E.g.: factoryFontFamily.NewArial()
 //      caption: Use the font captioned controls (like buttons, drop-downs, etc.)
 //      icon: Use the font used to label icons
 //      menu: Use the font used in menus (drop-down menus and menu lists)
@@ -1101,11 +1105,15 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 //  Define as propriedades de fonte atuais para conteúdo de texto.
 //
 //    Entrada:
-//      font-style: Especifica o estilo da fonte. Usar a fábrica factoryFontStyle. Ex.: factoryFontStyle.NewItalic()
-//      font-variant: Especifica a variante da fonte. Usar a fábrica factoryFontVariant. Ex.: factoryFontVariant.NewSmallCaps()
-//      font-weight: Especifica o peso da fonte. Usar a fábrica factoryFontWeight. Ex.: factoryFontWeight.NewBold()
+//      font-style: Especifica o estilo da fonte. Usar a fábrica factoryFontStyle.
+//        Ex.: factoryFontStyle.NewItalic()
+//      font-variant: Especifica a variante da fonte. Usar a fábrica factoryFontVariant.
+//        Ex.: factoryFontVariant.NewSmallCaps()
+//      font-weight: Especifica o peso da fonte. Usar a fábrica factoryFontWeight.
+//        Ex.: factoryFontWeight.NewBold()
 //      font-size/line-height: Especifica o tamanho da fonte e a altura da linha em pixels
-//      font-family: Especifica a família de fontes. Usar a fábrica factoryFontFamily. Ex.: factoryFontFamily.NewArial()
+//      font-family: Especifica a família de fontes. Usar a fábrica factoryFontFamily.
+//        Ex.: factoryFontFamily.NewArial()
 //      caption: Use os controles legendados de fonte (como botões, menus suspensos etc.)
 //      icon: Use a fonte usada para rotular os ícones
 //      menu: Use a fonte usada nos menus (menus suspensos e listas de menus)
@@ -1199,7 +1207,8 @@ func (el *TagCanvas) GlobalAlpha(value float64) (ref *TagCanvas) {
 //   Input:
 //     value: how a source (new) image are drawn onto a destination image.
 //
-// The GlobalCompositeOperation() function sets how a source (new) image are drawn onto a destination (existing) image.
+// The GlobalCompositeOperation() function sets how a source (new) image are drawn onto a destination
+// (existing) image.
 //
 //   Note:
 //     * source image = drawings you are about to place onto the canvas;
@@ -1228,11 +1237,12 @@ func (el *TagCanvas) GlobalAlpha(value float64) (ref *TagCanvas) {
 //   Entrada:
 //     value: como uma imagem de origem (nova) é desenhada em uma imagem de destino.
 //
-// A função GlobalCompositeOperation() define como uma imagem de origem (nova) é desenhada em uma imagem de destino (existente).
+// A função GlobalCompositeOperation() define como uma imagem de origem (nova) é desenhada em uma
+// imagem de destino (existente).
 //
 //   Nota:
-//     * imagem de origem = desenhos que você está prestes a colocar na tela;
-//     * imagem de destino = desenhos que já estão colocados na tela;
+//     * imagem de origem = desenhos que você está prestes a colocar no canvas;
+//     * imagem de destino = desenhos que já estão colocados no canvas;
 //     * Valor padrão: source-over.
 //
 //   Exemplo:
@@ -1475,7 +1485,8 @@ func (el *TagCanvas) Stroke() (ref *TagCanvas) {
 //   Input:
 //     x: The x-coordinate of where to move the path to
 //     y: The y-coordinate of where to move the path to
-//     The MoveTo() function moves the path to the specified point in the canvas, without creating a line.
+//
+// The MoveTo() function moves the path to the specified point in the canvas, without creating a line.
 //
 //   Note:
 //     * Use the stroke() method to actually draw the path on the canvas.
@@ -1494,12 +1505,13 @@ func (el *TagCanvas) Stroke() (ref *TagCanvas) {
 //
 // Português:
 //
-//  Move o caminho para o ponto especificado na tela, sem criar uma linha
+//  Move o caminho para o ponto especificado no canvas, sem criar uma linha
 //
 //   Entrada:
 //     x: A coordenada x de onde mover o caminho para
 //     y: A coordenada y de onde mover o caminho para
-//     A função MoveTo() move o caminho para o ponto especificado na tela, sem criar uma linha.
+//
+// A função MoveTo() move o caminho para o ponto especificado no canvas, sem criar uma linha.
 //
 //   Nota:
 //     * Use o método Stroke() para realmente desenhar o caminho no canvas.
@@ -2022,9 +2034,13 @@ func (el *TagCanvas) Scale(scaleWidth, scaleHeight float64) (ref *TagCanvas) {
 //
 //   Note:
 //     * Each object on the canvas has a current transformation matrix.
-//       The SetTransform() function resets the current transform to the identity matrix, and then put transform data on GetTransform() function with the same arguments.
-//       In other words, the setTransform() method lets you scale, rotate, move, and skew the current context.
-//     * The transformation will only affect drawings made after the SetTransform() function is called.
+//       The SetTransform() function resets the current transform to the identity matrix, and then
+//       put transform data on GetLastTransform() function.
+//       In other words, the SetTransform() function lets you scale, rotate, move, and skew the
+//       current context.
+//     * The transformation will only affect drawings made after the SetTransform() function is
+//       called.
+//     * You can use the Save() and Restore() functions to archive the original transform parameters.
 //
 //   Example:
 //
@@ -2052,10 +2068,14 @@ func (el *TagCanvas) Scale(scaleWidth, scaleHeight float64) (ref *TagCanvas) {
 //     f: Move os desenhos verticalmente.
 //
 //   Nota:
-//     * Cada objeto na tela tem uma matriz de transformação atual.
-//       A função SetTransform() redefine a transformação atual para a matriz de identidade e, em seguida, coloca os dados de transformação na função GetTransform() com os mesmos argumentos.
-//       Em outras palavras, o método setTransform() permite dimensionar, girar, mover e inclinar o contexto atual.
+//     * Cada objeto no canvas tem uma matriz de transformação atual.
+//       A função SetTransform() redefine a transformação atual para a matriz de identidade e, em
+//       seguida, coloca os dados de transformação na função GetLastTransform().
+//       Em outras palavras, o método SetTransform() permite dimensionar, girar, mover e inclinar o
+//       contexto atual.
 //     * A transformação só afetará os desenhos feitos após a chamada da função SetTransform().
+//     * Você pode usar as funções Save() e Restore() para arquivar os parâmetros de transform
+//       originais.
 //
 //   Exemplo:
 //
@@ -2070,7 +2090,7 @@ func (el *TagCanvas) Scale(scaleWidth, scaleHeight float64) (ref *TagCanvas) {
 //       FillRect(50, 50, 230, 70).
 //       AppendById("stage")
 func (el *TagCanvas) SetTransform(a, b, c, d, e, f float64) (ref *TagCanvas) {
-	el.context.Call("setTransform", a, b, c, d, e, f)
+	el.transform = el.context.Call("setTransform", a, b, c, d, e, f)
 	return el
 }
 
@@ -2189,6 +2209,61 @@ func (el *TagCanvas) StrokeStyle(value interface{}) (ref *TagCanvas) {
 	return el
 }
 
+// StrokeStyleGradient
+//
+//  Sets javascript's strokeStyle property after using CreateLinearGradient() or
+//  CreateRadialGradient() functions.
+//
+//   Example:
+//
+//     var fontA html.Font
+//     fontA.Family = factoryFontFamily.NewArial()
+//     fontA.Style = factoryFontStyle.NewItalic()
+//     fontA.Size = 20
+//
+//     var fontB html.Font
+//     fontB.Family = factoryFontFamily.NewVerdana()
+//     fontB.Size = 35
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(fontA).
+//       StrokeText("Hello World!", 10, 50, 300).
+//       CreateLinearGradient(0, 0, 160, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//       AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//       AddColorStopPosition(1.0, factoryColor.NewRed()).
+//       StrokeStyleGradient().
+//       Font(fontB).
+//       StrokeText("Big smile!", 10, 90, 300).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Define a propriedade strokeStyle do javascript depois de usar as funções CreateLinearGradient()
+//  ou CreateRadialGradient().
+//
+//   Exemplo:
+//
+//     var fontA html.Font
+//     fontA.Family = factoryFontFamily.NewArial()
+//     fontA.Style = factoryFontStyle.NewItalic()
+//     fontA.Size = 20
+//
+//     var fontB html.Font
+//     fontB.Family = factoryFontFamily.NewVerdana()
+//     fontB.Size = 35
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(fontA).
+//       StrokeText("Hello World!", 10, 50, 300).
+//       CreateLinearGradient(0, 0, 160, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//       AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//       AddColorStopPosition(1.0, factoryColor.NewRed()).
+//       StrokeStyleGradient().
+//       Font(fontB).
+//       StrokeText("Big smile!", 10, 90, 300).
+//       AppendById("stage")
 func (el *TagCanvas) StrokeStyleGradient() (ref *TagCanvas) {
 	el.context.Set("strokeStyle", el.gradient)
 	return el
@@ -2208,7 +2283,8 @@ func (el *TagCanvas) StrokeStyleGradient() (ref *TagCanvas) {
 //
 //   Note:
 //     * The default color of the text is black.
-//     * Use the Font() function to specify font and font size, and use the StrokeStyle() function to render the text in another color/gradient.
+//     * Use the Font() function to specify font and font size, and use the StrokeStyle() function to
+//       render the text in another color/gradient.
 //
 //   Example:
 //
@@ -2245,7 +2321,8 @@ func (el *TagCanvas) StrokeStyleGradient() (ref *TagCanvas) {
 //
 //   Nota:
 //     * A cor padrão é preto.
-//     * Use a função Font() para especificar a fonte e o tamanho do texto, e use a função StrokeStyle() para renderizar o texto em outra cor/gradiente.
+//     * Use a função Font() para especificar a fonte e o tamanho do texto, e use a função
+//       StrokeStyle() para renderizar o texto em outra cor/gradiente.
 //
 //   Exemplo:
 //
@@ -2429,72 +2506,174 @@ func (el *TagCanvas) TextBaseline(value TextBaseLineRule) (ref *TagCanvas) {
 	return el
 }
 
-// en: Replaces the current transformation matrix for the drawing
-//     a: Scales the drawing horizontally
-//     b: Skew the the drawing horizontally
-//     c: Skew the the drawing vertically
-//     d: Scales the drawing vertically
-//     e: Moves the the drawing horizontally
-//     f: Moves the the drawing vertically
+// Transform
 //
-//     Each object on the canvas has a current transformation matrix.
-//     The transform() method replaces the current transformation matrix. It multiplies the current transformation
-//     matrix with the matrix described by:
+// English:
+//
+//  Replaces the current transformation matrix for the drawing
+//
+//   Input:
+//     a: Scales the drawing horizontally;
+//     b: Skew the the drawing horizontally;
+//     c: Skew the the drawing vertically;
+//     d: Scales the drawing vertically;
+//     e: Moves the the drawing horizontally;
+//     f: Moves the the drawing vertically.
+//
+// Each object on the canvas has a current transformation matrix.
+// The Transform() method replaces the current transformation matrix. It multiplies the current
+// transformation matrix with the matrix described by:
 //
 //     a | c | e
-//    -----------
+//    ---+---+---
 //     b | d | f
-//    -----------
+//    ---+---+---
 //     0 | 0 | 1
 //
-//     In other words, the transform() method lets you scale, rotate, move, and skew the current context.
-//     Note: The transformation will only affect drawings made after the transform() method is called.
-//     Note: The transform() method behaves relatively to other transformations made by rotate(), scale(), translate(),
-//     or transform(). Example: If you already have set your drawing to scale by two, and the transform() method scales
-//     your drawings by two, your drawings will now scale by four.
-//     Tip: Check out the setTransform() method, which does not behave relatively to other transformations.
-//     JavaScript syntax: context.transform(a, b, c, d, e, f);
+// In other words, the Transform() method lets you scale, rotate, move, and skew the current context.
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.fillStyle = "yellow";
-//     ctx.fillRect(0, 0, 250, 100)
-//     ctx.transform(1, 0.5, -0.5, 1, 30, 10);
-//     ctx.fillStyle = "red";
-//     ctx.fillRect(0, 0, 250, 100);
-//     ctx.transform(1, 0.5, -0.5, 1, 30, 10);
-//     ctx.fillStyle = "blue";
-//     ctx.fillRect(0, 0, 250, 100);
+//   Note:
+//     * The transformation will only affect drawings made after the Transform() method is called;
+//     * The Transform() function behaves relatively to other transformations made by Rotate(),
+//       Scale(), Translate(), or Transform().
+//         Example: If you already have set your drawing to scale by two, and the Transform() method
+//         scales your drawings by two, your drawings will now scale by four.
+//     * Check out the SetTransform() method, which does not behave relatively to other
+//       transformations.
+//     * You can use the Save() and Restore() functions to archive the original transform parameters.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillStyle(factoryColor.NewYellow()).
+//       FillRect(50, 50, 250, 100).
+//       Transform(1.0, 0.5, -0.5, 1.0, 30.0, 10.0).
+//       FillStyle(factoryColor.NewRed()).
+//       FillRect(50, 50, 250, 100).
+//       Transform(1.0, 0.5, -0.5, 1.0, 30.0, 10.0).
+//       FillStyle(factoryColor.NewBlue()).
+//       FillRect(50, 50, 230, 70).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Substitui a matriz de transformação atual para o desenho
+//
+//   Entrada:
+//     a: Dimensiona o desenho horizontalmente;
+//     b: Inclinar o desenho horizontalmente;
+//     c: Inclinar o desenho verticalmente;
+//     d: Dimensiona o desenho verticalmente;
+//     e: Move o desenho horizontalmente;
+//     f: Move o desenho verticalmente.
+//
+// Cada objeto no canvas tem uma matriz de transformação atual.
+// O método Transform() substitui a matriz de transformação atual. Ele multiplica a matriz de
+// transformação atual com a matriz descrita por:
+//
+//     a | c | e
+//    ---+---+---
+//     b | d | f
+//    ---+---+---
+//     0 | 0 | 1
+//
+// Em outras palavras, o método Transform() permite dimensionar, girar, mover e inclinar o contexto
+// atual.
+//
+//   Nota:
+//     * A transformação só afetará os desenhos feitos depois que o método Transform() for chamado;
+//     * A função Transform() se comporta relativamente a outras transformações feitas por Rotate(),
+//       Scale(), Translate() ou Transform().
+//       Exemplo: Se você já configurou seu desenho para dimensionar em dois, e o método Transform()
+//         dimensiona seus desenhos em dois, seus desenhos agora serão dimensionados em quatro.
+//     * Confira o método SetTransform(), que não se comporta em relação a outras transformações.
+//     * Você pode usar as funções Save() e Restore() para arquivar os parâmetros de transform
+//       originais.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillStyle(factoryColor.NewYellow()).
+//       FillRect(50, 50, 250, 100).
+//       Transform(1.0, 0.5, -0.5, 1.0, 30.0, 10.0).
+//       FillStyle(factoryColor.NewRed()).
+//       FillRect(50, 50, 250, 100).
+//       Transform(1.0, 0.5, -0.5, 1.0, 30.0, 10.0).
+//       FillStyle(factoryColor.NewBlue()).
+//       FillRect(50, 50, 230, 70).
+//       AppendById("stage")
 func (el *TagCanvas) Transform(a, b, c, d, e, f float64) (ref *TagCanvas) {
 	el.context.Call("transform", a, b, c, d, e, f)
 	return el
 }
 
-// en: Remaps the (0,0) position on the canvas
-//     x: The value to add to horizontal (x) coordinates
-//     y: The value to add to vertical (y) coordinates
+// Translate
 //
-//     The translate() method remaps the (0,0) position on the canvas.
-//     Note: When you call a method such as fillRect() after translate(), the value is added to the x- and y-coordinate
-//     values.
-//     JavaScript syntax: context.translate(x, y);
+// English:
 //
-//     Example:
-//     var c = document.getElementById("myCanvas");
-//     var ctx = c.getContext("2d");
-//     ctx.fillRect(10, 10, 100, 50);
-//     ctx.translate(70, 70);
-//     ctx.fillRect(10, 10, 100, 50);
+//  Remaps the (0,0) position on the canvas
+//
+//   Input:
+//     x: The value to add to horizontal (x) coordinates;
+//     y: The value to add to vertical (y) coordinates.
+//
+//   Note:
+//     * When you call a method like FillRect() after Translate(), the value is added to the x and y
+//       coordinate values for all new canvas elements.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillRect(10, 10, 100, 50).
+//       Translate(70, 70).
+//       FillRect(10, 10, 100, 50).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Remapeia a posição (0,0) no canvas
+//
+//   Entrada:
+//     x: O valor a ser adicionado às coordenadas horizontais (x);
+//     y: O valor a ser adicionado às coordenadas verticais (y).
+//
+//   Nota:
+//     * Quando você chama um método como FillRect() após Translate(), o valor é adicionado aos
+//       valores das coordenadas x e y para todos os novos elementos do canvas.
+//
+//   Exemplo:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       FillRect(10, 10, 100, 50).
+//       Translate(70, 70).
+//       FillRect(10, 10, 100, 50).
+//       AppendById("stage")
 func (el *TagCanvas) Translate(x, y int) (ref *TagCanvas) {
 	el.context.Call("translate", x, y)
 	return el
 }
 
-// en: Sets or returns the color, gradient, or pattern used to fill the drawing
-//     The fillStyle property sets or returns the color, gradient, or pattern used to fill the drawing.
-//     The default color is black.
-//     JavaScript syntax:	context.fillStyle = color|gradient|pattern;
+// FillStyle
+//
+// English:
+//
+//  Sets the color, gradient, or pattern used to fill the drawing.
+//
+//   Input:
+//     value: the color color.RGBA. You can use factoryColor.NewColorName() to make it easier;
+//
+//   Note:
+//     * The default color is black.
+//
+// Português:
+//
+//  Define a cor, gradiente ou padrão usado para preencher o desenho.
+//
+//   Entrada:
+//     value: a cor color.RGBA. Você pode usar factoryColor.NewColorName() para facilitar;
+//
+//   Nota:
+//     * A cor padrão é preto.
 func (el *TagCanvas) FillStyle(value interface{}) (ref *TagCanvas) {
 	if converted, ok := value.(color.RGBA); ok {
 		el.context.Set("fillStyle", RGBAToJs(converted))
@@ -2505,21 +2684,156 @@ func (el *TagCanvas) FillStyle(value interface{}) (ref *TagCanvas) {
 	return el
 }
 
+// FillStyleGradient
+//
+// English:
+//
+//  Sets javascript's fillStyle property after using CreateLinearGradient() or CreateRadialGradient()
+//  functions.
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(fontA).
+//       FillText("Hello World!", 10, 50, 300).
+//       Save().
+//       CreateLinearGradient(0, 0, 160, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//       AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//       AddColorStopPosition(1.0, factoryColor.NewRed()).
+//       FillStyleGradient().
+//       Font(fontB).
+//       FillText("Big smile!", 10, 90, 300).
+//       Restore().
+//       FillText("Same font used before save", 10, 120, 300).
+//       AppendById("stage")
+//
+// Português:
+//
+//  Define a propriedade fillStyle do javascript depois de usar as funções CreateLinearGradient() ou
+//  CreateRadialGradient().
+//
+//   Example:
+//
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       Font(fontA).
+//       FillText("Hello World!", 10, 50, 300).
+//       Save().
+//       CreateLinearGradient(0, 0, 160, 0).
+//       AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//       AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//       AddColorStopPosition(1.0, factoryColor.NewRed()).
+//       FillStyleGradient().
+//       Font(fontB).
+//       FillText("Big smile!", 10, 90, 300).
+//       Restore().
+//       FillText("Same font used before save", 10, 120, 300).
+//       AppendById("stage")
 func (el *TagCanvas) FillStyleGradient() (ref *TagCanvas) {
 	el.context.Set("fillStyle", el.gradient)
 	return el
 }
 
+// FillStylePattern
+//
+// English:
+//
+//  Sets the javascript's fillStyle property after using the CreatePattern() function.
+//
+//   Example
+//
+//     var img = factoryBrowser.NewTagImage(
+//       "spacecraft",
+//       "./small.png",
+//       29,
+//       50,
+//       true,
+//     )
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       CreatePattern(img, html.KRepeatRuleRepeat).
+//       Rect(0, 0, 300, 300).
+//       FillStylePattern().
+//       Fill().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Define a propriedade fillStyle do javascript após o uso da função CreatePattern().
+//
+//   Exemplo:
+//
+//     var img = factoryBrowser.NewTagImage(
+//       "spacecraft",
+//       "./small.png",
+//       29,
+//       50,
+//       true,
+//     )
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       CreatePattern(img, html.KRepeatRuleRepeat).
+//       Rect(0, 0, 300, 300).
+//       FillStylePattern().
+//       Fill().
+//       AppendById("stage")
 func (el *TagCanvas) FillStylePattern() (ref *TagCanvas) {
 	el.context.Set("fillStyle", el.pattern)
 	return el
 }
 
-// en: Fills the current drawing (path)
-//     The fill() method fills the current drawing (path). The default color is black.
-//     Tip: Use the fillStyle property to fill with another color/gradient.
-//     Note: If the path is not closed, the fill() method will add a line from the last point to the startpoint of the
-//     path to close the path (like closePath()), and then fill the path.
+// Fill
+//
+// English:
+//
+//  Fills the current drawing (path)
+//
+//   Note:
+//     * The default color is black.
+//     * Use the FillStyle() function to fill with another color/gradient.
+//     * If the path is not closed, the Fill() method will add a line from the last point to the
+//       startpoint of the path to close the path (like ClosePath()), and then fill the path.
+//
+//   Example:
+//
+//     var img = factoryBrowser.NewTagImage(
+//       "spacecraft",
+//       "./small.png",
+//       29,
+//       50,
+//       true,
+//     )
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       CreatePattern(img, html.KRepeatRuleRepeat).
+//       Rect(0, 0, 300, 300).
+//       FillStylePattern().
+//       Fill().
+//       AppendById("stage")
+//
+// Português:
+//
+//  Preenche o desenho atual (caminho)
+//
+//   Nota:
+//     * A cor padrão é preto.
+//     * Use a função FillStyle() para preencher com outro gradiente de cor.
+//     * Se o caminho não estiver fechado, o método Fill() adicionará uma linha do último ponto ao
+//       ponto inicial do caminho para fechar o caminho (como ClosePath()) e, em seguida, preencherá
+//       o caminho.
+//
+//   Exemplo:
+//
+//     var img = factoryBrowser.NewTagImage(
+//       "spacecraft",
+//       "./small.png",
+//       29,
+//       50,
+//       true,
+//     )
+//     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
+//       CreatePattern(img, html.KRepeatRuleRepeat).
+//       Rect(0, 0, 300, 300).
+//       FillStylePattern().
+//       Fill().
+//       AppendById("stage")
 func (el *TagCanvas) Fill() (ref *TagCanvas) {
 	el.context.Call("fill")
 	return el

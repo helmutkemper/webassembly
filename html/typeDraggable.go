@@ -9,10 +9,10 @@ package html
 // Português:
 //
 //  Especifica se um elemento pode ser arrastado ou não
-type Draggable int
+type Draggable string
 
 func (e Draggable) String() (element string) {
-	return draggableString[e]
+	return string(e)
 }
 
 const (
@@ -25,7 +25,7 @@ const (
 	// Português:
 	//
 	//  Especifica que o elemento pode ser arrastado.
-	KDraggableYes = iota + 1
+	KDraggableYes Draggable = "true"
 
 	// KDraggableNo
 	//
@@ -36,7 +36,7 @@ const (
 	// Português:
 	//
 	//  Especifica que o elemento não pode ser arrastado.
-	KDraggableNo
+	KDraggableNo Draggable = "false"
 
 	// KDraggableAuto
 	//
@@ -47,12 +47,5 @@ const (
 	// Português:
 	//
 	//  Usa o comportamento padrão do navegador.
-	KDraggableAuto
+	KDraggableAuto Draggable = "auto"
 )
-
-var draggableString = [...]string{
-	"",
-	"true",
-	"false",
-	"auto",
-}

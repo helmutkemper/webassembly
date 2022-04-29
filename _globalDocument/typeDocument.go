@@ -2,7 +2,7 @@ package globalDocument
 
 import (
 	"errors"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/css"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/css"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/event"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventAnimation"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/eventClipBoard"

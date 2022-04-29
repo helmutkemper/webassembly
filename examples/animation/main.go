@@ -5,12 +5,12 @@
 package main
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/browserStage"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/factoryBrowser"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/factoryFontFamily"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/html"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/stage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/factoryColor"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
 	"strconv"
 	"time"
@@ -23,7 +23,7 @@ func main() {
 
 	done := make(chan struct{}, 0)
 
-	var stage = browserStage.Stage{}
+	var stage = stage.Stage{}
 	stage.Init()
 
 	// Carrega a imagem
@@ -98,10 +98,10 @@ func main() {
 		rocketImg = factoryBrowser.NewTagDiv(id).
 			Class("animate").
 			DragStart().
-			AppendById("stage")
+			AppendToStage()
 
-		factoryTween.NewSelectRandom(durationX, xStart, xEnd, onUpdateX, 0, rocketImg)
-		factoryTween.NewSelectRandom(durationY, yStart, yEnd, onUpdateY, 0, rocketImg)
+		factoryTween.NewSelectRandom(durationX, xStart, xEnd, onUpdateX, -1, rocketImg)
+		factoryTween.NewSelectRandom(durationY, yStart, yEnd, onUpdateY, -1, rocketImg)
 	}
 
 	<-done

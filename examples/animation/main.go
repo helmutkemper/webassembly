@@ -82,7 +82,7 @@ func main() {
 	var width = stage.GetWidth() - 29 - border
 	var height = stage.GetHeight() - 50 - border
 
-	for a := 0; a != 1; a += 1 {
+	for a := 0; a != 10; a += 1 {
 
 		var durationX = time.Duration(mathUtil.Int(1000, 3000)) * time.Millisecond
 		var durationY = time.Duration(mathUtil.Int(1000, 3000)) * time.Millisecond

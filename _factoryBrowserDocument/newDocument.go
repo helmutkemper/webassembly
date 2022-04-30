@@ -1,7 +1,7 @@
 package factoryBrowserDocument
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
+	"github.com/helmutkemper/iotmaker.webassembly/globalDocument"
 )
 
 func NewDocument() globalDocument.Document {

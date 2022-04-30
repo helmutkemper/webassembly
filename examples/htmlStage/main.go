@@ -3,11 +3,6 @@ package main
 import (
 	iotmakerPlatformIDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	coordinateManager "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserDocument"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserStage"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontStyle"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorGradient"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorNames"
@@ -17,6 +12,11 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryPoint"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryShadow"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryText"
+	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserDocument"
+	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserStage"
+	"github.com/helmutkemper/iotmaker.webassembly/factoryFontFamily"
+	"github.com/helmutkemper/iotmaker.webassembly/factoryFontStyle"
+	"github.com/helmutkemper/iotmaker.webassembly/html"
 )
 
 func main() {

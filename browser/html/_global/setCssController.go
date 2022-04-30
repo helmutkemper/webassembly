@@ -1,6 +1,6 @@
 package _global
 
-import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/css"
+import "github.com/helmutkemper/iotmaker.webassembly/browser/css"
 
 // SetCssController
 //

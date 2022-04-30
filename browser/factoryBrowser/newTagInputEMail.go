@@ -1,6 +1,6 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/html"
+import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 
 // NewTagInputEMail
 //

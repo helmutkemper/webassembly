@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="staic" type="GoApplicationRunConfiguration" factoryName="Go Application">
-    <module name="iotmaker.platform.webbrowser" />
+    <module name="iotmaker.webassembly" />
     <working_directory value="$PROJECT_DIR$/examples" />
     <EXTENSION ID="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />

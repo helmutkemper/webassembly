@@ -5,13 +5,13 @@
 package main
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/factoryFontFamily"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/html"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/stage"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/factoryColor"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontFamily"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryTween"
 	"strconv"
 	"time"
 )

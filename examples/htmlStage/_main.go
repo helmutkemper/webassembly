@@ -4,8 +4,8 @@ package main
 
 import (
   coordinateManager "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
-  "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserDocument"
-  "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserStage"
+	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserDocument"
+	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserStage"
   "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
   "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factorySimpleBox"
 )

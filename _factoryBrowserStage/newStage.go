@@ -3,11 +3,11 @@ package factoryBrowserStage
 import (
 	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/config"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserCanvas"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/javascript/canvas"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
+	"github.com/helmutkemper/iotmaker.webassembly/config"
+	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserCanvas"
+	"github.com/helmutkemper/iotmaker.webassembly/globalDocument"
+	"github.com/helmutkemper/iotmaker.webassembly/javascript/canvas"
 )
 
 // fixme: stage está estranho

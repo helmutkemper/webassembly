@@ -1,7 +1,7 @@
 package factoryBrowserCanvas
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/javascript/canvas"
+	"github.com/helmutkemper/iotmaker.webassembly/javascript/canvas"
 	"syscall/js"
 )
 

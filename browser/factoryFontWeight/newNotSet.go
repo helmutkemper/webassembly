@@ -1,7 +1,7 @@
 package factoryFontWeight
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/html"
 )
 
 func NewNotSet() html.FontWeightRule {

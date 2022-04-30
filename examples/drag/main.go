@@ -6,16 +6,16 @@ package main
 
 import (
 	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryBrowserImage"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontFamily"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/factoryFontStyle"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorNames"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryFont"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryInk"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryText"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
+	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserImage"
+	"github.com/helmutkemper/iotmaker.webassembly/factoryFontFamily"
+	"github.com/helmutkemper/iotmaker.webassembly/factoryFontStyle"
+	"github.com/helmutkemper/iotmaker.webassembly/html"
 	"time"
 )
 

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="build htmlImage" type="GoApplicationRunConfiguration" factoryName="Go Application">
-    <module name="iotmaker.platform.webbrowser" />
+    <module name="iotmaker.webassembly" />
     <working_directory value="$PROJECT_DIR$" />
     <go_parameters value="-o main.wasm" />
     <envs>

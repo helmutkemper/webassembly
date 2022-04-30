@@ -1,7 +1,7 @@
 package factoryBrowser
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 )
 
 // NewTagDiv

@@ -1,8 +1,8 @@
 package tween
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/engine"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/platform/globalEngine"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/globalEngine"
 	"time"
 )
 

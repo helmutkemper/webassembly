@@ -1,6 +1,6 @@
 package factoryFontWeight
 
-import "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/html"
+import "github.com/helmutkemper/iotmaker.webassembly/html"
 
 func New600() html.FontWeightRule {
 	return html.KFontWeightRule600

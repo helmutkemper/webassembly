@@ -1,8 +1,8 @@
 package _global
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browser/css"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/globalDocument"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/globalDocument"
 	"log"
 	"strings"
 	"syscall/js"

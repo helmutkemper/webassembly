@@ -15,8 +15,10 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/eventWheel"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/mouse"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/easingTween"
 	"log"
+	"math"
 	"strconv"
 	"strings"
 	"sync"
@@ -160,7 +162,29 @@ type TagDiv struct {
 	//  GetY(): (y = y - deltaMovieY).
 	deltaMovieY int
 
+	// tween
+	//
+	// English:
+	//
+	//  Easing tween.
+	//
+	// Receives an identifier and a pointer of the tween object to be used in case of multiple
+	// functions.
+	//
+	// Português:
+	//
+	//  Facilitador de interpolação.
+	//
+	// Recebe um identificador e um ponteiro do objeto tween para ser usado em caso de múltiplas
+	// funções.
 	tween map[string]interfaces.TweenInterface
+
+	points      *[]algorithm.Point
+	pointsLen   int
+	pointsFirst algorithm.Point
+	pointsLast  algorithm.Point
+
+	rotateDelta float64
 }
 
 // AccessKey
@@ -951,11 +975,11 @@ func (e *TagDiv) AppendToStage() (ref *TagDiv) {
 //
 //  Define os eixos X e Y em pixels.
 func (e *TagDiv) SetXY(x, y int) (ref *TagDiv) {
-	e.x = x
-	e.y = y
+	e.x = x + e.deltaMovieX
+	e.y = y + e.deltaMovieY
 
-	px := strconv.FormatInt(int64(x), 10) + "px"
-	py := strconv.FormatInt(int64(y), 10) + "px"
+	px := strconv.FormatInt(int64(e.x), 10) + "px"
+	py := strconv.FormatInt(int64(e.y), 10) + "px"
 
 	e.selfElement.Get("style").Set("left", px)
 	e.selfElement.Get("style").Set("top", py)
@@ -976,7 +1000,7 @@ func (e *TagDiv) SetXY(x, y int) (ref *TagDiv) {
 //  GetX(): (x = x - deltaMovieX).
 func (e *TagDiv) SetDeltaX(delta int) (ref *TagDiv) {
 	e.deltaMovieX = delta
-	return
+	return e
 }
 
 // SetDeltaY
@@ -992,7 +1016,7 @@ func (e *TagDiv) SetDeltaX(delta int) (ref *TagDiv) {
 //  GetX(): (y = y - deltaMovieY).
 func (e *TagDiv) SetDeltaY(delta int) (ref *TagDiv) {
 	e.deltaMovieY = delta
-	return
+	return e
 }
 
 // SetX
@@ -1005,8 +1029,8 @@ func (e *TagDiv) SetDeltaY(delta int) (ref *TagDiv) {
 //
 //  Define o eixo X em pixels.
 func (e *TagDiv) SetX(x int) (ref *TagDiv) {
-	e.x = x
-	px := strconv.FormatInt(int64(x), 10) + "px"
+	e.x = x + e.deltaMovieX
+	px := strconv.FormatInt(int64(e.x), 10) + "px"
 	e.selfElement.Get("style").Set("left", px)
 
 	return e
@@ -1022,12 +1046,32 @@ func (e *TagDiv) SetX(x int) (ref *TagDiv) {
 //
 //  Define o eixo Y em pixels.
 func (e *TagDiv) SetY(y int) (ref *TagDiv) {
-	e.y = y
+	e.y = y + e.deltaMovieY
 
-	py := strconv.FormatInt(int64(y), 10) + "px"
+	py := strconv.FormatInt(int64(e.y), 10) + "px"
 	e.selfElement.Get("style").Set("top", py)
 
 	return e
+}
+
+// Rotate
+// todo: documentar
+// https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/rotate
+func (e *TagDiv) Rotate(angle float64) (ref *TagDiv) {
+	angleAsString := strconv.FormatFloat(angle+e.rotateDelta, 'E', -1, 64)
+	e.selfElement.Get("style").Set("transform", "rotate("+angleAsString+"rad)")
+	return e
+}
+
+// todo: cometar
+func (e *TagDiv) RotateDelta(angle float64) (ref *TagDiv) {
+	e.rotateDelta = angle
+	return e
+}
+
+// todo: cometar
+func (e *TagDiv) GetRotateDelta() (delta float64) {
+	return e.rotateDelta
 }
 
 // GetXY
@@ -2286,12 +2330,12 @@ func (e *TagDiv) EasingTweenDuration(id string, value time.Duration) (ref *TagDi
 //     * SetOnEndFunc() só será chamada ao final de todas as interações.
 //     * Esta função impede a inversão de valores, mas, a função de evento SetOnInvertFunc() continua
 //       sendo chamada.
-func (e *TagDiv) EasingTweenDoNotReverseMotion(id string, value bool) (ref *TagDiv) {
+func (e *TagDiv) EasingTweenDoNotReverseMotion(id string) (ref *TagDiv) {
 	if e.tween[id] == nil {
 		e.tween[id] = new(easingTween.Tween)
 	}
 
-	e.tween[id].SetDoNotReverseMotion(value)
+	e.tween[id].SetDoNotReverseMotion()
 	return e
 }
 
@@ -11561,4 +11605,61 @@ func (e *TagDiv) NewEasingTweenInBack(
 		Start()
 
 	return e
+}
+
+func (e *TagDiv) AddPoints(points *[]algorithm.Point) (ref *TagDiv) {
+	e.points = points
+	e.pointsLen = len(*points) - 1
+
+	e.pointsFirst = (*points)[0]
+	e.pointsLast = (*points)[e.pointsLen]
+	return e
+}
+
+func (e *TagDiv) WalkingIntoPoints(percent, p float64, args interface{}) {
+
+	pCalc := e.pointsLen * int(percent) / 10000
+	if pCalc > e.pointsLen {
+		pCalc = e.pointsLen
+	} else if pCalc < 0 {
+		pCalc = 0
+	}
+
+	switch p {
+	case 0.0:
+		e.SetXY(int(e.pointsFirst.X), int(e.pointsFirst.Y))
+	case 1.0:
+		e.SetXY(int(e.pointsLast.X), int(e.pointsLast.Y))
+	default:
+		e.SetXY(int((*e.points)[pCalc].X), int((*e.points)[pCalc].Y))
+	}
+
+}
+
+func (e *TagDiv) WalkingAndRotateIntoPoints(percent, p float64, args interface{}) {
+
+	pCalc := e.pointsLen * int(percent) / 10000
+	if pCalc > e.pointsLen {
+		pCalc = e.pointsLen - 1
+	} else if pCalc <= 0 {
+		pCalc = 1
+	}
+
+	switch p {
+	case 0.0:
+		var angle = math.Atan2((*e.points)[1].Y-e.pointsFirst.Y, (*e.points)[1].X-e.pointsFirst.X)
+		e.Rotate(angle)
+		e.SetXY(int(e.pointsFirst.X), int(e.pointsFirst.Y))
+	case 1.0:
+		var angle = math.Atan2((*e.points)[e.pointsLen-1].Y-e.pointsLast.Y, (*e.points)[e.pointsLen-1].X-e.pointsLast.X)
+		e.Rotate(angle)
+		e.SetXY(int(e.pointsLast.X), int(e.pointsLast.Y))
+	default:
+
+		var angle = math.Atan2((*e.points)[pCalc-1].Y-(*e.points)[pCalc].Y, (*e.points)[pCalc-1].X-(*e.points)[pCalc].X)
+		e.Rotate(angle)
+
+		e.SetXY(int((*e.points)[pCalc].X), int((*e.points)[pCalc].Y))
+	}
+
 }

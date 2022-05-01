@@ -156,7 +156,7 @@ type TweenInterface interface {
 	//     * SetOnEndFunc() só será chamada ao final de todas as interações.
 	//     * Esta função impede a inversão de valores, mas, a função de evento SetOnInvertFunc() continua
 	//       sendo chamada.
-	SetDoNotReverseMotion(value bool) (object TweenInterface)
+	SetDoNotReverseMotion() (object TweenInterface)
 
 	// SetLoops
 	//

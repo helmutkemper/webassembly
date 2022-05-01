@@ -3,11 +3,14 @@ package base
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/mouse"
+	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/easingTween"
 	"log"
 	"strconv"
 	"strings"
 	"sync"
 	"syscall/js"
+	"time"
 )
 
 type TagBaseGlobal struct {
@@ -100,6 +103,23 @@ type TagBaseGlobal struct {
 	//  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
 	//  GetY(): (y = y - deltaMovieY).
 	deltaMovieY int
+
+	// tween
+	//
+	// English:
+	//
+	//  Easing tween.
+	//
+	// Receives an identifier and a pointer of the tween object to be used in case of multiple
+	// functions.
+	//
+	// Português:
+	//
+	//  Facilitador de interpolação.
+	//
+	// Recebe um identificador e um ponteiro do objeto tween para ser usado em caso de múltiplas
+	// funções.
+	tween map[string]interfaces.TweenInterface
 }
 
 // AccessKey
@@ -1438,4 +1458,10063 @@ func (e *TagBaseGlobal) onMouseDraggingNormal(_ js.Value, args []js.Value) inter
 	}
 
 	return nil
+}
+
+// EasingTweenFunc
+//
+// English:
+//
+//  Defines the tween math function to control the loop of interactions
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//     value: tween math function.
+//       currentTime:   current time, int64(time.Duration);
+//       duration:      total time, int64(time.Duration);
+//       startValue:    initial value;
+//       endValue:      final value;
+//       changeInValue: startValue - endValue
+//
+//   Output:
+//     object: reference to the current Tween object.
+//
+//   Note:
+//     * To create a new function, base it on the linear function, where:
+//         return changeInValue * currentTime / duration + startValue
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Define a função matemática tween para controle do ciclo de interações
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     value: função matemática tween.
+//       currentTime:   tempo atual, int64(time.Duration);
+//       duration:      tempo total, int64(time.Duration);
+//       startValue:    valor inicial;
+//       endValue:      valor final;
+//       changeInValue: startValue - endValue
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+//
+//   Nota:
+//     * Para criar uma nova função, tenha como base a função linear, onde:
+//         return changeInValue * currentTime / duration + startValue
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) EasingTweenFunc(id string, value func(currentTime, duration, currentPercentage, startValue, endValue, changeInValue float64) (percent float64)) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = &easingTween.Tween{}
+	}
+
+	e.tween[id].SetTweenFunc(value)
+	return e
+}
+
+// EasingTweenValues
+//
+// English:
+//
+//  Defines the initial and final values of the interactions cycle.
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//     start: initial value for the beginning of the cycle of interactions;
+//     end:   final value for the end of the iteration cycle.
+//
+//   Output:
+//     object: reference to the current Tween object.
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Defines os valores inicial e final do ciclo de interações.
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     start: valor inicial para o início do ciclo de interações;
+//     end:   valor final para o fim do ciclo de interações.
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) EasingTweenValues(id string, start, end float64) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = &easingTween.Tween{}
+	}
+
+	e.tween[id].SetValues(start, end)
+	return e
+}
+
+// EasingTweenDuration
+//
+// English:
+//
+//  Defines the total cycle time of interactions.
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//     value: time.Duration contendo o tempo do ciclo de interações.
+//
+//   Output:
+//     object: reference to the current Tween object.
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Define o tempo total do ciclo de interações.
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     value: time.Duration contendo o tempo do ciclo de interações.
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) EasingTweenDuration(id string, value time.Duration) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].SetDuration(value)
+	return e
+}
+
+// EasingTweenDoNotReverseMotion
+//
+// English:
+//
+//  Defines the option of reversing values at the end of each cycle.
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//     value: true to not revert the values at the end of each cycle.
+//
+//   Output:
+//     object: reference to the current Tween object.
+//
+//   Notas:
+//     * In case of loop, the order of event functions are: SetOnStartFunc(), SetOnCycleStartFunc(),
+//       SetOnCycleEndFunc(), SetOnInvertFunc(), SetOnCycleStartFunc(), SetOnCycleEndFunc(),
+//       SetOnInvertFunc() ...
+//     * SetOnEndFunc() will only be called at the end of all interactions;
+//     * This function prevents inversion of values, but the SetOnInvertFunc() event function
+//       continues to be called.
+//
+// Português:
+//
+//  Define a opção de reversão de valores ao final de cada ciclo.
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     value: true para não reverter os valores ao final de cada ciclo.
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+//
+//   Notas:
+//     * Em caso de laço, a ordem das funções de eventos são: SetOnStartFunc(), SetOnCycleStartFunc(),
+//       SetOnCycleEndFunc(), SetOnInvertFunc(), SetOnCycleStartFunc(), SetOnCycleEndFunc(),
+//       SetOnInvertFunc() ...
+//     * SetOnEndFunc() só será chamada ao final de todas as interações.
+//     * Esta função impede a inversão de valores, mas, a função de evento SetOnInvertFunc() continua
+//       sendo chamada.
+func (e *TagBaseGlobal) EasingTweenDoNotReverseMotion(id string, value bool) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].SetDoNotReverseMotion(value)
+	return e
+}
+
+// EasingTweenLoops
+//
+// English:
+//
+//  Defines the number of loops before the end of the function.
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//
+//   Notes:
+//     * At each new iteration of the loop, a movement inversion will occur, unless the
+//       SetDoNotReverseMotion(true) function is used;
+//     * For infinite loops, set the value to -1;
+//     * In case of loop, the order of event functions are: SetOnStartFunc(), SetOnCycleStartFunc(),
+//       SetOnCycleEndFunc(), SetOnInvertFunc(), SetOnCycleStartFunc(), SetOnCycleEndFunc(),
+//       SetOnInvertFunc() ...
+//     * SetOnEndFunc() will only be called at the end of all interactions.
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Define a quantidade de laços antes do fim da função.
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//
+//   Notas:
+//     * A cada nova interação do laço ocorrerá uma inversão de movimento, a não ser que seja usada a
+//       função SetDoNotReverseMotion(true);
+//     * Para laços infinitos, defina o valor como sendo -1;
+//     * Em caso de laço, a ordem das funções de eventos são: SetOnStartFunc(), SetOnCycleStartFunc(),
+//       SetOnCycleEndFunc(), SetOnInvertFunc(), SetOnCycleStartFunc(), SetOnCycleEndFunc(),
+//       SetOnInvertFunc() ...
+//     * SetOnEndFunc() só será chamada ao final de todas as interações.
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) EasingTweenLoops(id string, value int) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].SetLoops(value)
+	return e
+}
+
+// EasingTweenOnStartFunc
+//
+// English:
+//
+//  Add the function to be called when the animation starts.
+//
+//   Input:
+//     id: tween identifier for multiple tween functions;
+//     function: func(value float64, arguments ...interface{})
+//       value: initial value defined in startValue
+//       arguments: list of values passed to event functions, defined in SetArguments()
+//
+// Português:
+//
+//  Adiciona a função a ser chamada quando a animação inicia.
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     function: func(value float64, arguments ...interface{})
+//       value: valor inicial definido em startValue
+//       arguments: lista de valores passados para as funções de evento, definidos em SetArguments()
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+func (e *TagBaseGlobal) EasingTweenOnStartFunc(id string, function func(value float64, arguments interface{})) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].SetOnStartFunc(function)
+	return e
+}
+
+// EasingTweenOnEndFunc
+//
+// English:
+//
+//  Add the function to be called when the animation ends.
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//     function: func(value float64, arguments ...interface{})
+//       value: final value defined in endValue
+//       arguments: list of values passed to event functions, defined in SetArguments()
+//
+// Português:
+//
+//  Adiciona a função a ser chamada quando a animação inicia.
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     function: func(value float64, arguments ...interface{})
+//       value: valor final definido em endValue
+//       arguments: lista de valores passados para as funções de evento, definidos em SetArguments()
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+func (e *TagBaseGlobal) EasingTweenOnEndFunc(id string, function func(value float64, arguments interface{})) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].SetOnEndFunc(function)
+	return e
+}
+
+// EasingTweenOnCycleStartFunc
+//
+// English:
+//
+//  Adds the function to be called at the beginning of the interpolation cycle
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//     function: func(value float64, arguments ...interface{})
+//       value: initial value defined in startValue
+//       arguments: list of values passed to event functions, defined in SetArguments()
+//
+// Português:
+//
+//  Adiciona a função a ser chamada no início do ciclo de interpolação
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     function: func(value float64, arguments ...interface{})
+//       value: valor inicial definido em startValue
+//       arguments: lista de valores passados para as funções de evento, definidos em SetArguments()
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+func (e *TagBaseGlobal) EasingTweenOnCycleStartFunc(id string, function func(value float64, arguments interface{})) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].SetOnCycleStartFunc(function)
+	return e
+}
+
+// EasingTweenOnCycleEndFunc
+//
+// English:
+//
+//  Adds the function to be called at the ending of the interpolation cycle
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//     function: func(value float64, arguments ...interface{})
+//       value: final value defined in endValue
+//       arguments: list of values passed to event functions, defined in SetArguments()
+//
+// Português:
+//
+//  Adiciona a função a ser chamada no fim do ciclo de interpolação
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     function: func(value float64, arguments ...interface{})
+//       value: valor final definido em endValue
+//       arguments: lista de valores passados para as funções de evento, definidos em SetArguments()
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+func (e *TagBaseGlobal) EasingTweenOnCycleEndFunc(id string, function func(value float64, arguments interface{})) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].SetOnCycleEndFunc(function)
+	return e
+}
+
+// EasingTweenOnStepFunc
+//
+// English:
+//
+//  Adds the function to be called for each iteration.
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//     function: func(value float64, arguments ...interface{})
+//       value: current value
+//       percentToComplete: value between 0.0 and 1.0 indicating the percentage of the process
+//       arguments: list of values passed to event functions, defined in SetArguments()
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Adiciona a função a ser chamada a cada interação
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     function: func(value float64, arguments ...interface{})
+//       value: valor corrente
+//       percentToComplete: valor entre 0.0 e 1.0 indicando o percentual do processo
+//       arguments: lista de valores passados para as funções de evento, definidos em SetArguments()
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) EasingTweenOnStepFunc(id string, function func(value, percentToComplete float64, arguments interface{})) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].SetOnStepFunc(function)
+	return e
+}
+
+// EasingTweenOnInvertFunc
+//
+// English:
+//
+//  Adds the function to be called on inversion of the interpolation cycle
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//     function: func(value float64, arguments ...interface{})
+//       value: current value
+//       arguments: list of values passed to event functions, defined in SetArguments()
+//
+// Português:
+//
+//  Adiciona a função a ser chamada a cada interação
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     function: func(value, percentToComplete float64, arguments ...interface{})
+//       value: valor corrente
+//       arguments: lista de valores passados para as funções de evento, definidos em SetArguments()
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+func (e *TagBaseGlobal) EasingTweenOnInvertFunc(id string, function func(value float64, arguments interface{})) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].SetOnInvertFunc(function)
+	return e
+}
+
+// EasingTweenArgumentsFunc
+//
+// English:
+//
+//  Determines the arguments passed to event functions.
+//
+//   Input:
+//     id: tween identifier for multiple tween functions;
+//     arguments: list of interfaces{} passed to all event functions when they are invoked.
+//
+//   Output:
+//     object: reference to the current Tween object.
+//
+//   Note:
+//     * If you need complex functions, remember to use pointers to data in the arguments.
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Determina os argumentos passados para as funções de eventos.
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//     arguments: lista de interfaces{} passadas para todas as funções de eventos quando elas são invocadas.
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+//
+//   Nota:
+//     * Caso necessite de funções complexas, lembre-se de usar ponteiros para dados nos argumentos.
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) EasingTweenArgumentsFunc(id string, arguments interface{}) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].SetArgumentsFunc(arguments)
+	return e
+}
+
+// EasingTweenStart
+//
+// English:
+//
+//  Starts the interaction according to the chosen tween function.
+//
+//   Input:
+//     id: tween identifier for multiple tween functions.
+//
+//   Output:
+//     object: reference to the current Tween object.
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Inicia a interação conforme a função tween escolhida.
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) EasingTweenStart(id string) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].Start()
+	return e
+}
+
+// EasingTweenEnd
+//
+// English:
+//
+//  Terminates all interactions of the chosen Tween function, without invoking the onCycleEnd and
+//  onEnd functions.
+//
+//   Entrada:
+//     id: tween identifier for multiple tween functions.
+//
+//   Saída:
+//     object: reference to the current Tween object.
+//
+// Português:
+//
+// Termina todas as interações da função Tween escolhida, sem invocar as funções onCycleEnd e onEnd.
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween.
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+func (e *TagBaseGlobal) EasingTweenEnd(id string) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].End()
+	return e
+}
+
+// EasingTweenStop
+//
+// English:
+//
+//  Ends all interactions of the chosen Tween function, interacting with the onCycleEnd and onEnd
+//  functions, respectively, in that order, if they have been defined.
+//
+//  Input:
+//     id: tween identifier for multiple tween functions.
+//
+//   Output:
+//     object: reference to the current Tween object.
+//
+// Português:
+//
+//  Termina todas as interações da função Tween escolhida, interagindo com as funções onCycleEnd e
+//  onEnd, respectivamente nessa ordem, se elas tiverem sido definidas.
+//
+//   Entrada:
+//     id: identificador de tween para múltiplas funções tween;
+//
+//   Saída:
+//     object: referência para o objeto Tween corrente.
+func (e *TagBaseGlobal) EasingTweenStop(id string) (ref *TagBaseGlobal) {
+	if e.tween[id] == nil {
+		e.tween[id] = new(easingTween.Tween)
+	}
+
+	e.tween[id].Stop()
+	return e
+}
+
+// NewEasingTweenRandom
+//
+// English:
+//
+//  Ease tween random.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenRandom("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenRandom("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.SelectRandom()).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.SelectRandom()).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação random.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenRandom("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenRandom("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.SelectRandom()).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.SelectRandom()).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenRandom(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.SelectRandom()).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenLinear
+//
+// English:
+//
+//  Ease tween linear.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenLinear("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenLinear("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KLinear).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KLinear).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação linear.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenLinear("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenLinear("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KLinear).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KLinear).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenLinear(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KLinear).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenOutSine
+//
+// English:
+//
+//  Ease tween out sine.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutSine("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutSine("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutSine).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutSine).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação out sine.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutSine("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutSine("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutSine).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutSine).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenOutSine(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseOutSine).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenOutQuintic
+//
+// English:
+//
+//  Ease tween out quintic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutQuintic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutQuintic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutQuintic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutQuintic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação out quintic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutQuintic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutQuintic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutQuintic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutQuintic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenOutQuintic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseOutQuintic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenOutQuartic
+//
+// English:
+//
+//  Ease tween out quartic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutQuartic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutQuartic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutQuartic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutQuartic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação out quartic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutQuartic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutQuartic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutQuartic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutQuartic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenOutQuartic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseOutQuartic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenOutQuadratic
+//
+// English:
+//
+//  Ease tween out quadratic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutQuadratic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutQuadratic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutQuadratic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutQuadratic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação out quadratic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutQuadratic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutQuadratic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutQuadratic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutQuadratic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenOutQuadratic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseOutQuadratic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenOutExponential
+//
+// English:
+//
+//  Ease tween out exponential.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutExponential("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutExponential("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutExponential).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutExponential).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação out exponential.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutExponential("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutExponential("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutExponential).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutExponential).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenOutExponential(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseOutExponential).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenOutElastic
+//
+// English:
+//
+//  Ease tween out elastic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutElastic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutElastic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutElastic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutElastic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação out elastic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutElastic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutElastic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutElastic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutElastic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenOutElastic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseOutElastic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenOutCubic
+//
+// English:
+//
+//  Ease tween out cubic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutCubic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutCubic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutCubic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutCubic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação out cubic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutCubic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutCubic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutCubic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutCubic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenOutCubic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseOutCubic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenOutCircular
+//
+// English:
+//
+//  Ease tween out circular.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutCircular("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutCircular("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutCircular).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutCircular).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação out circular.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutCircular("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutCircular("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutCircular).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutCircular).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenOutCircular(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseOutCircular).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenOutBounce
+//
+// English:
+//
+//  Ease tween out bounce.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutBounce("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutBounce("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutBounce).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutBounce).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação out bounce.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutBounce("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutBounce("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutBounce).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutBounce).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenOutBounce(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseOutBounce).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenOutBack
+//
+// English:
+//
+//  Ease tween out back.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação out back.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenOutBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenOutBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseOutBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseOutBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenOutBack(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseOutBack).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInSine
+//
+// English:
+//
+//  Ease tween in sine.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInSine("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInSine("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInSine).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInSine).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in sine.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInSine("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInSine("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInSine).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInSine).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInSine(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInSine).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInQuintic
+//
+// English:
+//
+//  Ease tween in quintic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInQuintic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInQuintic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInQuintic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInQuintic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in quintic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInQuintic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInQuintic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInQuintic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInQuintic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInQuintic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInQuintic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInQuartic
+//
+// English:
+//
+//  Ease tween in quartic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInQuartic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInQuartic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInQuartic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInQuartic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in quartic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInQuartic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInQuartic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInQuartic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInQuartic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInQuartic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInQuartic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInQuadratic
+//
+// English:
+//
+//  Ease tween in quadratic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInQuadratic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInQuadratic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInQuadratic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInQuadratic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in quadratic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInQuadratic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInQuadratic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInQuadratic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInQuadratic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInQuadratic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInQuadratic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInOutSine
+//
+// English:
+//
+//  Ease tween in out sine.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutSine("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutSine("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutSine).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutSine).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in out sine.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutSine("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutSine("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutSine).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutSine).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInOutSine(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInOutSine).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInOutQuintic
+//
+// English:
+//
+//  Ease tween in out quintic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutQuintic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutQuintic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutQuintic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutQuintic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in out quintic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutQuintic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutQuintic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutQuintic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutQuintic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInOutQuintic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInOutQuintic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInOutQuartic
+//
+// English:
+//
+//  Ease tween in out quartic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutQuartic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutQuartic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutQuartic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutQuartic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in out quartic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutQuartic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutQuartic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutQuartic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutQuartic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInOutQuartic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInOutQuartic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInOutQuadratic
+//
+// English:
+//
+//  Ease tween in out quadratic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutQuadratic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutQuadratic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutQuadratic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutQuadratic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in out quadratic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutQuadratic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutQuadratic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutQuadratic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutQuadratic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInOutQuadratic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInOutQuadratic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInOutExponential
+//
+// English:
+//
+//  Ease tween in out exponential.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutExponential("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutExponential("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutExponential).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutExponential).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in out exponential.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutExponential("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutExponential("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutExponential).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutExponential).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInOutExponential(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInOutExponential).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInOutElastic
+//
+// English:
+//
+//  Ease tween in out elastic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutElastic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutElastic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutElastic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutElastic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in out elastic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutElastic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutElastic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutElastic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutElastic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInOutElastic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInOutElastic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInOutCubic
+//
+// English:
+//
+//  Ease tween in out cubic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutCubic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutCubic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutCubic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutCubic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in out cubic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutCubic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutCubic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutCubic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutCubic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInOutCubic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInOutCubic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInOutCircular
+//
+// English:
+//
+//  Ease tween in out circular.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutCircular("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutCircular("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutCircular).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutCircular).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in out circular.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutCircular("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutCircular("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutCircular).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutCircular).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInOutCircular(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInOutCircular).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInOutBounce
+//
+// English:
+//
+//  Ease tween in out bounce.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutBounce("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutBounce("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutBounce).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutBounce).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in out bounce.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutBounce("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutBounce("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutBounce).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutBounce).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInOutBounce(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInOutBounce).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInOutBack
+//
+// English:
+//
+//  Ease tween in out back.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in out back.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInOutBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInOutBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInOutBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInOutBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInOutBack(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInOutBack).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInExponential
+//
+// English:
+//
+//  Ease tween in exponential.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInExponential("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInExponential("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInExponential).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInExponential).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in exponential.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInExponential("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInExponential("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInExponential).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInExponential).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInExponential(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInExponential).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInElastic
+//
+// English:
+//
+//  Ease tween in elastic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInElastic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInElastic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInElastic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInElastic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in elastic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInElastic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInElastic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInElastic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInElastic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInElastic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInElastic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInCubic
+//
+// English:
+//
+//  Ease tween in cubic.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInCubic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInCubic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInCubic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInCubic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in cubic.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInCubic("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInCubic("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInCubic).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInCubic).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInCubic(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInCubic).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInCircular
+//
+// English:
+//
+//  Ease tween in circular.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInCircular("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInCircular("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInCircular).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInCircular).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in circular.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInCircular("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInCircular("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInCircular).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInCircular).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInCircular(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInCircular).
+		Start()
+
+	return e
+}
+
+// NewEasingTweenInBack
+//
+// English:
+//
+//  Ease tween in back.
+//
+//   Input:
+//     duration: animation duration
+//     startValue: initial value
+//     endValue: final value
+//     onStepFunc: on step function
+//     loop: number of loops or -1 for infinite loops
+//     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
+//        Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Example 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Example 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // Caution: the pointer has been populated in here. Hence a code break in two parts.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+// Português:
+//
+//  Facilitador de interpolação in back.
+//
+//   Entrada:
+//     duration: duração da animação
+//     startValue: valor inicial
+//     endValue: valor final
+//     onStepFunc: função para o evento passo
+//     loop: número de interações ou -1 para um número infinito de interações
+//     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
+//        Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: this; args[1]: x; args[2]: y}
+//
+//   Exemplo 1:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         NewEasingTweenInBack("x", 3*time.Second, 50, 300, onUpdateX, -1).
+//         NewEasingTweenInBack("y", 3*time.Second, 50, 300, onUpdateY, -1).
+//         AppendToStage()
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+//
+//   Exemplo 2:
+//
+//     //go:build js
+//     // +build js
+//     package main
+//
+//     import (
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+//       "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+//       "time"
+//     )
+//
+//     //.animate {
+//     //  width: 29px;
+//     //  height: 50px;
+//     //  position: absolute;
+//     //  background-image: url("./small.png");
+//     //}
+//
+//     func main() {
+//       done := make(chan struct{}, 0)
+//       var stage = stage.Stage{}
+//       stage.Init()
+//       var div *html.TagDiv
+//       div = factoryBrowser.NewTagDiv("div_0").
+//         Class("animate").
+//         AppendToStage()
+//
+//       // cuidado: o ponteiro foi preenchido aqui. Por isto, uma quebra do código em duas partes.
+//
+//       // easing tween for x
+//       div.EasingTweenDuration("x", durationX).
+//         EasingTweenValues("x", xStart, xEnd).
+//         EasingTweenFunc("x", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("x", onUpdateX).
+//         EasingTweenLoops("x", -1).
+//         EasingTweenArgumentsFunc("x", []interface{}{div}).
+//         EasingTweenStart("x").
+//
+//         // easing tween for y
+//         EasingTweenDuration("y", durationY).
+//         EasingTweenValues("y", yStart, yEnd).
+//         EasingTweenFunc("y", easingTween.KEaseInBack).
+//         EasingTweenOnStepFunc("y", onUpdateY).
+//         EasingTweenLoops("y", -1).
+//         EasingTweenStart("y").
+//         EasingTweenArgumentsFunc("y", []interface{}{div})
+//
+//       <-done
+//     }
+//
+//     func onUpdateX(x, _ float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetX(int(x))
+//     }
+//
+//     func onUpdateY(y, p float64, args interface{}) {
+//       this := args.([]interface{})[0].(*html.TagDiv)
+//       this.SetY(int(y))
+//     }
+func (e *TagBaseGlobal) NewEasingTweenInBack(
+	id string,
+	duration time.Duration,
+	startValue,
+	endValue float64,
+	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	loop int,
+	arguments ...interface{},
+) (ref *TagBaseGlobal) {
+
+	arguments = append([]interface{}{e}, arguments...)
+
+	e.tween[id] = new(easingTween.Tween)
+	e.tween[id].SetDuration(duration).
+		SetValues(startValue, endValue).
+		SetOnStepFunc(onStepFunc).
+		SetLoops(loop).
+		SetArgumentsFunc(arguments).
+		SetTweenFunc(easingTween.KEaseInBack).
+		Start()
+
+	return e
 }

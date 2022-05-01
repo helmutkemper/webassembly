@@ -108,7 +108,7 @@ func main() {
 	<-done
 }
 
-func onUpdateX(x, _ float64, args interface{}) {
+func onUpdateX(x, p float64, args interface{}) {
 	this := args.([]interface{})[0].(*html.TagDiv)
 	this.SetX(int(x))
 }

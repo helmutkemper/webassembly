@@ -192,8 +192,8 @@ func (el *Tween) SetDuration(value time.Duration) (object interfaces.TweenInterf
 //     * SetOnEndFunc() só será chamada ao final de todas as interações.
 //     * Esta função impede a inversão de valores, mas, a função de evento SetOnInvertFunc() continua
 //       sendo chamada.
-func (el *Tween) SetDoNotReverseMotion(value bool) (object interfaces.TweenInterface) {
-	el.doNotReverseMotion = value
+func (el *Tween) SetDoNotReverseMotion() (object interfaces.TweenInterface) {
+	el.doNotReverseMotion = true
 	return el
 }
 
@@ -496,7 +496,7 @@ func (el *Tween) tickerRunnerRun() {
 		if el.repeat != 0 {
 			el.startTime = time.Now()
 
-			if el.onInvert != nil {
+			if el.doNotReverseMotion == false && el.onInvert != nil {
 				el.onInvert(value, el.arguments)
 			}
 

@@ -1200,7 +1200,6 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 //     	  FillText("Big smile!", 10, 90, 300).
 //     	  AppendToStage()
 func (el *TagCanvas) Font(font Font) (ref *TagCanvas) {
-	log.Print(font.String())
 	el.context.Set("font", font.String())
 	return el
 }

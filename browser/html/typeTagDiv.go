@@ -2045,7 +2045,7 @@ func (e *TagDiv) EasingTweenStop(id string) (ref *TagDiv) {
 //
 // English:
 //
-//  Ease tween random
+//  Ease tween random.
 //
 //   Input:
 //     duration: animation duration
@@ -2162,7 +2162,7 @@ func (e *TagDiv) EasingTweenStop(id string) (ref *TagDiv) {
 //
 // Português:
 //
-//  Facilitador de interpolação random
+//  Facilitador de interpolação random.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -2304,7 +2304,7 @@ func (e *TagDiv) NewEasingTweenRandom(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween linear.
 //
 //   Input:
 //     duration: animation duration
@@ -2421,7 +2421,7 @@ func (e *TagDiv) NewEasingTweenRandom(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação linear.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -2564,7 +2564,7 @@ func (e *TagDiv) NewEasingTweenLinear(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween out sine.
 //
 //   Input:
 //     duration: animation duration
@@ -2681,7 +2681,7 @@ func (e *TagDiv) NewEasingTweenLinear(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação out sine.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -2824,7 +2824,7 @@ func (e *TagDiv) NewEasingTweenOutSine(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween out quintic.
 //
 //   Input:
 //     duration: animation duration
@@ -2941,7 +2941,7 @@ func (e *TagDiv) NewEasingTweenOutSine(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação out quintic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -3084,7 +3084,7 @@ func (e *TagDiv) NewEasingTweenOutQuintic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween out quartic.
 //
 //   Input:
 //     duration: animation duration
@@ -3201,7 +3201,7 @@ func (e *TagDiv) NewEasingTweenOutQuintic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação out quartic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -3344,7 +3344,7 @@ func (e *TagDiv) NewEasingTweenOutQuartic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween out quadratic.
 //
 //   Input:
 //     duration: animation duration
@@ -3461,7 +3461,7 @@ func (e *TagDiv) NewEasingTweenOutQuartic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação out quadratic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -3604,7 +3604,7 @@ func (e *TagDiv) NewEasingTweenOutQuadratic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween out exponential.
 //
 //   Input:
 //     duration: animation duration
@@ -3721,7 +3721,7 @@ func (e *TagDiv) NewEasingTweenOutQuadratic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação out exponential.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -3864,7 +3864,7 @@ func (e *TagDiv) NewEasingTweenOutExponential(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween out elastic.
 //
 //   Input:
 //     duration: animation duration
@@ -3981,7 +3981,7 @@ func (e *TagDiv) NewEasingTweenOutExponential(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação out elastic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -4124,7 +4124,7 @@ func (e *TagDiv) NewEasingTweenOutElastic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween out cubic.
 //
 //   Input:
 //     duration: animation duration
@@ -4241,7 +4241,7 @@ func (e *TagDiv) NewEasingTweenOutElastic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação out cubic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -4384,7 +4384,7 @@ func (e *TagDiv) NewEasingTweenOutCubic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween out circular.
 //
 //   Input:
 //     duration: animation duration
@@ -4501,7 +4501,7 @@ func (e *TagDiv) NewEasingTweenOutCubic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação out circular.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -4644,7 +4644,7 @@ func (e *TagDiv) NewEasingTweenOutCircular(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween out bounce.
 //
 //   Input:
 //     duration: animation duration
@@ -4761,7 +4761,7 @@ func (e *TagDiv) NewEasingTweenOutCircular(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação out bounce.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -4904,7 +4904,7 @@ func (e *TagDiv) NewEasingTweenOutBounce(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween out back.
 //
 //   Input:
 //     duration: animation duration
@@ -5021,7 +5021,7 @@ func (e *TagDiv) NewEasingTweenOutBounce(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação out back.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -5164,7 +5164,7 @@ func (e *TagDiv) NewEasingTweenOutBack(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in sine.
 //
 //   Input:
 //     duration: animation duration
@@ -5281,7 +5281,7 @@ func (e *TagDiv) NewEasingTweenOutBack(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in sine.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -5424,7 +5424,7 @@ func (e *TagDiv) NewEasingTweenInSine(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in quintic.
 //
 //   Input:
 //     duration: animation duration
@@ -5541,7 +5541,7 @@ func (e *TagDiv) NewEasingTweenInSine(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in quintic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -5684,7 +5684,7 @@ func (e *TagDiv) NewEasingTweenInQuintic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in quartic.
 //
 //   Input:
 //     duration: animation duration
@@ -5801,7 +5801,7 @@ func (e *TagDiv) NewEasingTweenInQuintic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in quartic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -5944,7 +5944,7 @@ func (e *TagDiv) NewEasingTweenInQuartic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in quadratic.
 //
 //   Input:
 //     duration: animation duration
@@ -6061,7 +6061,7 @@ func (e *TagDiv) NewEasingTweenInQuartic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in quadratic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -6204,7 +6204,7 @@ func (e *TagDiv) NewEasingTweenInQuadratic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in out sine.
 //
 //   Input:
 //     duration: animation duration
@@ -6321,7 +6321,7 @@ func (e *TagDiv) NewEasingTweenInQuadratic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in out sine.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -6464,7 +6464,7 @@ func (e *TagDiv) NewEasingTweenInOutSine(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in out quintic.
 //
 //   Input:
 //     duration: animation duration
@@ -6581,7 +6581,7 @@ func (e *TagDiv) NewEasingTweenInOutSine(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in out quintic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -6724,7 +6724,7 @@ func (e *TagDiv) NewEasingTweenInOutQuintic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in out quartic.
 //
 //   Input:
 //     duration: animation duration
@@ -6841,7 +6841,7 @@ func (e *TagDiv) NewEasingTweenInOutQuintic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in out quartic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -6984,7 +6984,7 @@ func (e *TagDiv) NewEasingTweenInOutQuartic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in out quadratic.
 //
 //   Input:
 //     duration: animation duration
@@ -7101,7 +7101,7 @@ func (e *TagDiv) NewEasingTweenInOutQuartic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in out quadratic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -7244,7 +7244,7 @@ func (e *TagDiv) NewEasingTweenInOutQuadratic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in out exponential.
 //
 //   Input:
 //     duration: animation duration
@@ -7361,7 +7361,7 @@ func (e *TagDiv) NewEasingTweenInOutQuadratic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in out exponential.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -7504,7 +7504,7 @@ func (e *TagDiv) NewEasingTweenInOutExponential(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in out elastic.
 //
 //   Input:
 //     duration: animation duration
@@ -7621,7 +7621,7 @@ func (e *TagDiv) NewEasingTweenInOutExponential(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in out elastic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -7764,7 +7764,7 @@ func (e *TagDiv) NewEasingTweenInOutElastic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in out cubic.
 //
 //   Input:
 //     duration: animation duration
@@ -7881,7 +7881,7 @@ func (e *TagDiv) NewEasingTweenInOutElastic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in out cubic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -8024,7 +8024,7 @@ func (e *TagDiv) NewEasingTweenInOutCubic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in out circular.
 //
 //   Input:
 //     duration: animation duration
@@ -8141,7 +8141,7 @@ func (e *TagDiv) NewEasingTweenInOutCubic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in out circular.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -8284,7 +8284,7 @@ func (e *TagDiv) NewEasingTweenInOutCircular(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in out bounce.
 //
 //   Input:
 //     duration: animation duration
@@ -8401,7 +8401,7 @@ func (e *TagDiv) NewEasingTweenInOutCircular(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in out bounce.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -8544,7 +8544,7 @@ func (e *TagDiv) NewEasingTweenInOutBounce(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in out back.
 //
 //   Input:
 //     duration: animation duration
@@ -8661,7 +8661,7 @@ func (e *TagDiv) NewEasingTweenInOutBounce(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in out back.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -8804,7 +8804,7 @@ func (e *TagDiv) NewEasingTweenInOutBack(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in exponential.
 //
 //   Input:
 //     duration: animation duration
@@ -8921,7 +8921,7 @@ func (e *TagDiv) NewEasingTweenInOutBack(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in exponential.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -9064,7 +9064,7 @@ func (e *TagDiv) NewEasingTweenInExponential(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in elastic.
 //
 //   Input:
 //     duration: animation duration
@@ -9181,7 +9181,7 @@ func (e *TagDiv) NewEasingTweenInExponential(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in elastic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -9324,7 +9324,7 @@ func (e *TagDiv) NewEasingTweenInElastic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in cubic.
 //
 //   Input:
 //     duration: animation duration
@@ -9441,7 +9441,7 @@ func (e *TagDiv) NewEasingTweenInElastic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in cubic.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -9584,7 +9584,7 @@ func (e *TagDiv) NewEasingTweenInCubic(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in circular.
 //
 //   Input:
 //     duration: animation duration
@@ -9701,7 +9701,7 @@ func (e *TagDiv) NewEasingTweenInCubic(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in circular.
 //
 //   Entrada:
 //     duration: duração da animação
@@ -9844,7 +9844,7 @@ func (e *TagDiv) NewEasingTweenInCircular(
 //
 // English:
 //
-//  Ease tween linear
+//  Ease tween in back.
 //
 //   Input:
 //     duration: animation duration
@@ -9961,7 +9961,7 @@ func (e *TagDiv) NewEasingTweenInCircular(
 //
 // Português:
 //
-//  Facilitador de interpolação linear
+//  Facilitador de interpolação in back.
 //
 //   Entrada:
 //     duration: duração da animação

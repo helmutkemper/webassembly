@@ -83,7 +83,7 @@ func main() {
 	var width = stage.GetWidth() - 29 - border
 	var height = stage.GetHeight() - 50 - border
 
-	for a := 0; a != 1; a += 1 {
+	for a := 0; a != 10; a += 1 {
 
 		var durationX = time.Duration(mathUtil.Int(1000, 3000)) * time.Millisecond
 		var durationY = time.Duration(mathUtil.Int(1000, 3000)) * time.Millisecond
@@ -100,8 +100,8 @@ func main() {
 			Class("animate").
 			DragStart().
 			SetXY(int(xStart), int(yStart)).
-			NewEasingTweenInBack("x", durationX, xStart, xEnd, onUpdateX, -1).
-			NewEasingTweenInBack("y", durationY, yStart, yEnd, onUpdateY, -1).
+			NewEasingTweenRandom("x", durationX, xStart, xEnd, onUpdateX, -1).
+			NewEasingTweenRandom("y", durationY, yStart, yEnd, onUpdateY, -1).
 			AppendToStage()
 	}
 

@@ -11,13 +11,14 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryTween"
 	"strconv"
 	"time"
 )
 
 var img *html.TagImage
-var rocketImg *html.TagDiv
+
+var yStart float64
+var yEnd float64
 
 func main() {
 
@@ -82,7 +83,7 @@ func main() {
 	var width = stage.GetWidth() - 29 - border
 	var height = stage.GetHeight() - 50 - border
 
-	for a := 0; a != 10; a += 1 {
+	for a := 0; a != 1; a += 1 {
 
 		var durationX = time.Duration(mathUtil.Int(1000, 3000)) * time.Millisecond
 		var durationY = time.Duration(mathUtil.Int(1000, 3000)) * time.Millisecond
@@ -90,27 +91,29 @@ func main() {
 		var xStart = mathUtil.Float64FomInt(border, width)
 		var xEnd = mathUtil.Float64FomInt(border, width)
 
-		var yStart = mathUtil.Float64FomInt(border, height)
-		var yEnd = mathUtil.Float64FomInt(border, height)
+		yStart = mathUtil.Float64FomInt(border, height)
+		yEnd = mathUtil.Float64FomInt(border, height)
 
 		var id = "div_" + strconv.FormatInt(int64(a), 10)
 
-		rocketImg = factoryBrowser.NewTagDiv(id).
+		factoryBrowser.NewTagDiv(id).
 			Class("animate").
 			DragStart().
+			SetXY(int(xStart), int(yStart)).
+			NewEasingTweenInBack("x", durationX, xStart, xEnd, onUpdateX, -1).
+			NewEasingTweenInBack("y", durationY, yStart, yEnd, onUpdateY, -1).
 			AppendToStage()
-
-		factoryTween.NewSelectRandom(durationX, xStart, xEnd, onUpdateX, -1, rocketImg)
-		factoryTween.NewSelectRandom(durationY, yStart, yEnd, onUpdateY, -1, rocketImg)
 	}
 
 	<-done
 }
 
-func onUpdateX(x, p float64, args ...interface{}) {
-	args[0].([]interface{})[0].(*html.TagDiv).SetX(int(x))
+func onUpdateX(x, _ float64, args interface{}) {
+	this := args.([]interface{})[0].(*html.TagDiv)
+	this.SetX(int(x))
 }
 
-func onUpdateY(y, p float64, args ...interface{}) {
-	args[0].([]interface{})[0].(*html.TagDiv).SetY(int(y))
+func onUpdateY(y, p float64, args interface{}) {
+	this := args.([]interface{})[0].(*html.TagDiv)
+	this.SetY(int(y))
 }

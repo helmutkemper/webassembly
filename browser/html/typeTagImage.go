@@ -10,10 +10,35 @@ import (
 )
 
 type TagImage struct {
-	tag         Tag
 	id          string
 	selfElement js.Value
 	cssClass    *css.Class
+
+	// deltaMovieX
+	//
+	// English:
+	//
+	//  Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
+	//  GetX() function: (x = x - deltaMovieX).
+	//
+	// Português:
+	//
+	//  Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
+	//  GetX(): (x = x - deltaMovieX).
+	deltaMovieX int
+
+	// deltaMovieY
+	//
+	// English:
+	//
+	//  Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
+	//  GetY() function: (y = y - deltaMovieY).
+	//
+	// Português:
+	//
+	//  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
+	//  GetY(): (y = y - deltaMovieY).
+	deltaMovieY int
 }
 
 func (e TagImage) GetJs() (element js.Value) {
@@ -685,7 +710,6 @@ func (e *TagImage) CreateElement(tag Tag, src string, width, height int, waitLoa
 		log.Print(KNewElementIsUndefined)
 		return
 	}
-	e.tag = tag
 
 	e.selfElement.Set("src", src)
 	e.selfElement.Set("width", width)
@@ -821,6 +845,9 @@ func (e *TagImage) Append(append interface{}) (ref *TagImage) {
 //
 //  Define os eixos X e Y em pixels.
 func (e *TagImage) SetXY(x, y int) (ref *TagImage) {
+	x = x + e.deltaMovieX
+	y = y + e.deltaMovieY
+
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	py := strconv.FormatInt(int64(y), 10) + "px"
 
@@ -828,6 +855,38 @@ func (e *TagImage) SetXY(x, y int) (ref *TagImage) {
 	e.selfElement.Get("style").Set("top", py)
 
 	return e
+}
+
+// SetDeltaX
+//
+// English:
+//
+//  Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
+//  GetX() function: (x = x - deltaMovieX).
+//
+// Português:
+//
+//  Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
+//  GetX(): (x = x - deltaMovieX).
+func (e *TagImage) SetDeltaX(delta int) (ref *TagImage) {
+	e.deltaMovieX = delta
+	return
+}
+
+// SetDeltaY
+//
+// English:
+//
+//  Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
+//  GetY() function: (y = y - deltaMovieY).
+//
+// Português:
+//
+//  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
+//  GetX(): (y = y - deltaMovieY).
+func (e *TagImage) SetDeltaY(delta int) (ref *TagImage) {
+	e.deltaMovieY = delta
+	return
 }
 
 // SetX
@@ -840,6 +899,8 @@ func (e *TagImage) SetXY(x, y int) (ref *TagImage) {
 //
 //  Define o eixo X em pixels.
 func (e *TagImage) SetX(x int) (ref *TagImage) {
+	x = x + e.deltaMovieX
+
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	e.selfElement.Get("style").Set("left", px)
 
@@ -856,6 +917,8 @@ func (e *TagImage) SetX(x int) (ref *TagImage) {
 //
 //  Define o eixo Y em pixels.
 func (e *TagImage) SetY(y int) (ref *TagImage) {
+	y = y + e.deltaMovieY
+
 	py := strconv.FormatInt(int64(y), 10) + "px"
 	e.selfElement.Get("style").Set("top", py)
 
@@ -875,6 +938,8 @@ func (e *TagImage) GetXY() (x, y int) {
 	x = e.selfElement.Get("style").Get("left").Int()
 	y = e.selfElement.Get("style").Get("top").Int()
 
+	x = x - e.deltaMovieX
+	y = y - e.deltaMovieY
 	return
 }
 
@@ -889,7 +954,7 @@ func (e *TagImage) GetXY() (x, y int) {
 //  Retorna o eixo X em pixels.
 func (e *TagImage) GetX() (x int) {
 	x = e.selfElement.Get("style").Get("left").Int()
-
+	x = x - e.deltaMovieX
 	return
 }
 
@@ -904,7 +969,7 @@ func (e *TagImage) GetX() (x int) {
 //  Retorna o eixo Y em pixels.
 func (e *TagImage) GetY() (y int) {
 	y = e.selfElement.Get("style").Get("top").Int()
-
+	y = y + e.deltaMovieX
 	return
 }
 
@@ -957,7 +1022,7 @@ func (e *TagImage) Alt(alt string) (ref *TagImage) {
 // Se o atributo crossorigin for especificado, uma solicitação CORS será enviada (com o cabeçalho da
 // solicitação Origem); mas se o servidor não permitir o acesso de origem cruzada aos dados da imagem
 // pelo site de origem (não enviando nenhum cabeçalho de resposta Access-Control-Allow-Origin ou não
-// incluindo a origem do site em qualquer Access-Control-Allow -Origin response header que ele envia),
+// incluindo a origem do site em qualquer Access-Control-Allow-Origin response header que ele envia),
 // o navegador bloqueia o carregamento da imagem e registra um erro CORS no console devtools.
 func (e *TagImage) CrossOrigin(cross CrossOrigin) (ref *TagImage) {
 	e.selfElement.Set("crossorigin", cross.String())

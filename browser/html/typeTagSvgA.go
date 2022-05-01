@@ -1,7 +1,18 @@
-package base
+package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/eventAnimation"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/eventClipBoard"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/eventDrag"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/eventFocus"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/eventHashChange"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/eventInput"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/eventKeyboard"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/eventPageTransition"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/eventUi"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/eventWheel"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/mouse"
 	"log"
 	"strconv"
@@ -10,7 +21,7 @@ import (
 	"syscall/js"
 )
 
-type TagBaseGlobal struct {
+type TagSvgA struct {
 	id          string
 	selfElement js.Value
 	cssClass    *css.Class
@@ -140,7 +151,7 @@ type TagBaseGlobal struct {
 //     importantes no navegador;
 //     Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
 //     pressionadas junto com a tecla Alt.
-func (e *TagBaseGlobal) AccessKey(key string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) AccessKey(key string) (ref *TagSvgA) {
 	e.selfElement.Set("accesskey", key)
 	return e
 }
@@ -156,7 +167,7 @@ func (e *TagBaseGlobal) AccessKey(key string) (ref *TagBaseGlobal) {
 //
 //  Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
 //  carregada. Apenas um elemento em um documento pode ter esse atributo.
-func (e *TagBaseGlobal) Autofocus(autofocus bool) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Autofocus(autofocus bool) (ref *TagSvgA) {
 	e.selfElement.Set("autofocus", autofocus)
 	return e
 }
@@ -198,7 +209,7 @@ func (e *TagBaseGlobal) Autofocus(autofocus bool) (ref *TagBaseGlobal) {
 // O atributo class é usado principalmente para apontar para uma classe em uma folha de estilo.
 // No entanto, também pode ser usado por um JavaScript (através do HTML DOM) para fazer alterações
 // em elementos HTML com uma classe especificada.
-func (e *TagBaseGlobal) Class(class ...string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Class(class ...string) (ref *TagSvgA) {
 	e.selfElement.Set("classList", strings.Join(class, " "))
 	return e
 }
@@ -226,7 +237,7 @@ func (e *TagBaseGlobal) Class(class ...string) (ref *TagBaseGlobal) {
 //   Nota:
 //     Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
 //     seu pai.
-func (e *TagBaseGlobal) ContentEditable(editable bool) (ref *TagBaseGlobal) {
+func (e *TagSvgA) ContentEditable(editable bool) (ref *TagSvgA) {
 	e.selfElement.Set("contenteditable", editable)
 	return e
 }
@@ -276,7 +287,7 @@ func (e *TagBaseGlobal) ContentEditable(editable bool) (ref *TagBaseGlobal) {
 //   Nota:
 //     * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
 //       usuário.
-func (e *TagBaseGlobal) Data(data map[string]string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Data(data map[string]string) (ref *TagSvgA) {
 	for k, v := range data {
 		e.selfElement.Set(" data-"+k, v)
 	}
@@ -299,7 +310,7 @@ func (e *TagBaseGlobal) Data(data map[string]string) (ref *TagBaseGlobal) {
 //   Entrada:
 //     dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
 //          KDirAuto ]
-func (e *TagBaseGlobal) Dir(dir Dir) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Dir(dir Dir) (ref *TagSvgA) {
 	e.selfElement.Set("dir", dir.String())
 	return e
 }
@@ -336,7 +347,7 @@ func (e *TagBaseGlobal) Dir(dir Dir) (ref *TagBaseGlobal) {
 //     * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
 //     * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
 //       https://www.w3schools.com/html/html5_draganddrop.asp
-func (e *TagBaseGlobal) Draggable(draggable Draggable) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Draggable(draggable Draggable) (ref *TagSvgA) {
 	e.selfElement.Set("draggable", draggable.String())
 	return e
 }
@@ -386,7 +397,7 @@ func (e *TagBaseGlobal) Draggable(draggable Draggable) (ref *TagBaseGlobal) {
 //
 // Se nenhum valor enterKeyHint foi especificado ou se foi definido com um valor diferente dos
 // permitidos, ele retornará uma string vazia.
-func (e *TagBaseGlobal) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagBaseGlobal) {
+func (e *TagSvgA) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagSvgA) {
 	e.selfElement.Set("enterKeyHint", enterKeyHint.String())
 	return e
 }
@@ -423,7 +434,7 @@ func (e *TagBaseGlobal) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagBaseGlo
 // O atributo oculto também pode ser usado para impedir que um usuário veja um elemento até que alguma
 // outra condição seja atendida (como marcar uma caixa de seleção etc.). Então, um JavaScript pode
 // remover o atributo oculto e tornar o elemento visível.
-func (e *TagBaseGlobal) Hidden() (ref *TagBaseGlobal) {
+func (e *TagSvgA) Hidden() (ref *TagSvgA) {
 	e.selfElement.Get("style").Set("visibility", "hidden")
 	return e
 }
@@ -449,7 +460,7 @@ func (e *TagBaseGlobal) Hidden() (ref *TagBaseGlobal) {
 //
 // O atributo id é mais usado para apontar para um estilo em uma folha de estilo, e por JavaScript
 // (através do HTML DOM) para manipular o elemento com o id específico.
-func (e *TagBaseGlobal) Id(id string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Id(id string) (ref *TagSvgA) {
 	e.id = id
 	e.selfElement.Set("id", id)
 	return e
@@ -483,7 +494,7 @@ func (e *TagBaseGlobal) Id(id string) (ref *TagBaseGlobal) {
 // imposto na entrada. Para exigir que a entrada esteja em conformidade com um tipo de dados
 // específico, escolha um tipo de elemento <input> apropriado. Para obter orientações específicas
 // sobre como escolher os tipos de <input>, consulte a seção Valores.
-func (e *TagBaseGlobal) InputMode(inputMode InputMode) (ref *TagBaseGlobal) {
+func (e *TagSvgA) InputMode(inputMode InputMode) (ref *TagSvgA) {
 	e.selfElement.Set("inputmode", inputMode.String())
 	return e
 }
@@ -499,7 +510,7 @@ func (e *TagBaseGlobal) InputMode(inputMode InputMode) (ref *TagBaseGlobal) {
 //
 //  Permite especificar que um elemento HTML padrão deve se comportar como um elemento interno
 //  personalizado registrado.
-func (e *TagBaseGlobal) Is(is string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Is(is string) (ref *TagSvgA) {
 	e.selfElement.Set("is", is)
 	return e
 }
@@ -513,7 +524,7 @@ func (e *TagBaseGlobal) Is(is string) (ref *TagBaseGlobal) {
 // Português:
 //
 //  O identificador global exclusivo de um item.
-func (e *TagBaseGlobal) ItemId(id string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) ItemId(id string) (ref *TagSvgA) {
 	e.selfElement.Set("itemid", id)
 	return e
 }
@@ -529,7 +540,7 @@ func (e *TagBaseGlobal) ItemId(id string) (ref *TagBaseGlobal) {
 //
 //  Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
 //  especificado, onde um itemprop consiste em um par de nome e valor.
-func (e *TagBaseGlobal) ItemDrop(itemprop string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) ItemDrop(itemprop string) (ref *TagSvgA) {
 	e.selfElement.Set("itemprop", itemprop)
 	return e
 }
@@ -547,7 +558,7 @@ func (e *TagBaseGlobal) ItemDrop(itemprop string) (ref *TagBaseGlobal) {
 //  Propriedades que não são descendentes de um elemento com o atributo itemscope podem ser
 //  associadas ao item usando um itemref. Ele fornece uma lista de IDs de elementos (não IDs de itens)
 //  com propriedades adicionais em outras partes do documento.
-func (e *TagBaseGlobal) ItemRef(itemref string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) ItemRef(itemref string) (ref *TagSvgA) {
 	e.selfElement.Set("itemref", itemref)
 	return e
 }
@@ -565,7 +576,7 @@ func (e *TagBaseGlobal) ItemRef(itemref string) (ref *TagBaseGlobal) {
 //  Especifica a URL do vocabulário que será usado para definir itemprops (propriedades do item) na
 //  estrutura de dados. itemscope é usado para definir o escopo de onde na estrutura de dados o
 //  vocabulário definido por tipo de item estará ativo.
-func (e *TagBaseGlobal) ItemType(itemType string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) ItemType(itemType string) (ref *TagSvgA) {
 	e.selfElement.Set("itemtype", itemType)
 	return e
 }
@@ -589,7 +600,7 @@ func (e *TagBaseGlobal) ItemType(itemType string) (ref *TagBaseGlobal) {
 //
 // Exemplos comuns são KLanguageEnglish para inglês, KLanguageSpanish para espanhol, KLanguageFrench
 // para francês e assim por diante.
-func (e *TagBaseGlobal) Lang(language Language) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Lang(language Language) (ref *TagSvgA) {
 	e.selfElement.Set("lang", language.String())
 	return e
 }
@@ -606,7 +617,7 @@ func (e *TagBaseGlobal) Lang(language Language) (ref *TagBaseGlobal) {
 //  Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
 //  o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
 //  pseudo-elemento ::part.
-func (e *TagBaseGlobal) Nonce(part ...string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Nonce(part ...string) (ref *TagSvgA) {
 	e.selfElement.Set("part", strings.Join(part, " "))
 	return e
 }
@@ -624,7 +635,7 @@ func (e *TagBaseGlobal) Nonce(part ...string) (ref *TagBaseGlobal) {
 //  Atribui um slot em uma shadow DOM shadow tree a um elemento: Um elemento com um atributo slot é
 //  atribuído ao slot criado pelo elemento <slot> cujo valor do atributo name corresponde ao valor
 //  desse atributo slot.
-func (e *TagBaseGlobal) Slot(slot string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Slot(slot string) (ref *TagSvgA) {
 	e.selfElement.Set("slot", slot)
 	return e
 }
@@ -652,7 +663,7 @@ func (e *TagBaseGlobal) Slot(slot string) (ref *TagBaseGlobal) {
 //         Valores de texto em elementos de entrada (não senha)
 //         Texto em elementos <textarea>
 //         Texto em elementos editáveis
-func (e *TagBaseGlobal) Spellcheck(spell bool) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Spellcheck(spell bool) (ref *TagSvgA) {
 	e.selfElement.Set("spellcheck", spell)
 
 	return e
@@ -679,7 +690,7 @@ func (e *TagBaseGlobal) Spellcheck(spell bool) (ref *TagBaseGlobal) {
 //
 // O atributo style pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagBaseGlobal) Style(style string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Style(style string) (ref *TagSvgA) {
 	e.selfElement.Set("style", style)
 	return e
 }
@@ -699,7 +710,7 @@ func (e *TagBaseGlobal) Style(style string) (ref *TagBaseGlobal) {
 //
 // O atributo tabindex pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento
 // HTML. No entanto, não é necessariamente útil).
-func (e *TagBaseGlobal) TabIndex(index int) (ref *TagBaseGlobal) {
+func (e *TagSvgA) TabIndex(index int) (ref *TagSvgA) {
 	e.selfElement.Set("tabindex", index)
 	return e
 }
@@ -724,7 +735,7 @@ func (e *TagBaseGlobal) TabIndex(index int) (ref *TagBaseGlobal) {
 //
 // O atributo title pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagBaseGlobal) Title(title string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Title(title string) (ref *TagSvgA) {
 	e.selfElement.Set("title", title)
 	return e
 }
@@ -744,7 +755,7 @@ func (e *TagBaseGlobal) Title(title string) (ref *TagBaseGlobal) {
 //
 //   Entrada:
 //     translate: elemento deve ser traduzido ou não. [ KTranslateYes | KTranslateNo ]
-func (e *TagBaseGlobal) Translate(translate Translate) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Translate(translate Translate) (ref *TagSvgA) {
 	e.selfElement.Set("translate", translate.String())
 	return e
 }
@@ -760,7 +771,7 @@ func (e *TagBaseGlobal) Translate(translate Translate) (ref *TagBaseGlobal) {
 //
 //  Em um documento HTML, o método Document.createElement() cria o elemento HTML especificado ou um
 //  HTMLUnknownElement se o nome do elemento dado não for conhecido.
-func (e *TagBaseGlobal) CreateElement(tag Tag) (ref *TagBaseGlobal) {
+func (e *TagSvgA) CreateElement(tag Tag) (ref *TagSvgA) {
 	e.selfElement = js.Global().Get("document").Call("createElement", tag.String())
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
@@ -798,7 +809,7 @@ func (e *TagBaseGlobal) CreateElement(tag Tag) (ref *TagBaseGlobal) {
 //     * Equivale a:
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
-func (e *TagBaseGlobal) AppendById(appendId string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) AppendById(appendId string) (ref *TagSvgA) {
 
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
@@ -838,10 +849,10 @@ func (e *TagBaseGlobal) AppendById(appendId string) (ref *TagBaseGlobal) {
 //     * Equivale a:
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
-func (e *TagBaseGlobal) Append(append interface{}) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Append(append interface{}) (ref *TagSvgA) {
 	switch append.(type) {
-	case *TagBaseGlobal:
-		e.selfElement.Call("appendChild", append.(*TagBaseGlobal).selfElement)
+	case *TagSvgA:
+		e.selfElement.Call("appendChild", append.(*TagSvgA).selfElement)
 	case js.Value:
 		e.selfElement.Call("appendChild", append)
 	case string:
@@ -873,7 +884,7 @@ func (e *TagBaseGlobal) Append(append interface{}) (ref *TagBaseGlobal) {
 //
 // todo:https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
 // todo: appendMany()
-func (e *TagBaseGlobal) AppendToStage() (ref *TagBaseGlobal) {
+func (e *TagSvgA) AppendToStage() (ref *TagSvgA) {
 	e.stage.Call("appendChild", e.selfElement)
 	return e
 }
@@ -887,7 +898,7 @@ func (e *TagBaseGlobal) AppendToStage() (ref *TagBaseGlobal) {
 // Português:
 //
 //  Define os eixos X e Y em pixels.
-func (e *TagBaseGlobal) SetXY(x, y int) (ref *TagBaseGlobal) {
+func (e *TagSvgA) SetXY(x, y int) (ref *TagSvgA) {
 	e.x = x
 	e.y = y
 
@@ -911,7 +922,7 @@ func (e *TagBaseGlobal) SetXY(x, y int) (ref *TagBaseGlobal) {
 //
 //  Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
 //  GetX(): (x = x - deltaMovieX).
-func (e *TagBaseGlobal) SetDeltaX(delta int) (ref *TagBaseGlobal) {
+func (e *TagSvgA) SetDeltaX(delta int) (ref *TagSvgA) {
 	e.deltaMovieX = delta
 	return
 }
@@ -927,7 +938,7 @@ func (e *TagBaseGlobal) SetDeltaX(delta int) (ref *TagBaseGlobal) {
 //
 //  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
 //  GetX(): (y = y - deltaMovieY).
-func (e *TagBaseGlobal) SetDeltaY(delta int) (ref *TagBaseGlobal) {
+func (e *TagSvgA) SetDeltaY(delta int) (ref *TagSvgA) {
 	e.deltaMovieY = delta
 	return
 }
@@ -941,7 +952,7 @@ func (e *TagBaseGlobal) SetDeltaY(delta int) (ref *TagBaseGlobal) {
 // Português:
 //
 //  Define o eixo X em pixels.
-func (e *TagBaseGlobal) SetX(x int) (ref *TagBaseGlobal) {
+func (e *TagSvgA) SetX(x int) (ref *TagSvgA) {
 	e.x = x
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	e.selfElement.Get("style").Set("left", px)
@@ -958,7 +969,7 @@ func (e *TagBaseGlobal) SetX(x int) (ref *TagBaseGlobal) {
 // Português:
 //
 //  Define o eixo Y em pixels.
-func (e *TagBaseGlobal) SetY(y int) (ref *TagBaseGlobal) {
+func (e *TagSvgA) SetY(y int) (ref *TagSvgA) {
 	e.y = y
 
 	py := strconv.FormatInt(int64(y), 10) + "px"
@@ -976,7 +987,7 @@ func (e *TagBaseGlobal) SetY(y int) (ref *TagBaseGlobal) {
 // Português:
 //
 //  Retorna os eixos X e Y em pixels.
-func (e *TagBaseGlobal) GetXY() (x, y int) {
+func (e *TagSvgA) GetXY() (x, y int) {
 	x = e.GetX()
 	y = e.GetY()
 
@@ -992,7 +1003,7 @@ func (e *TagBaseGlobal) GetXY() (x, y int) {
 // Português:
 //
 //  Retorna o eixo X em pixels.
-func (e *TagBaseGlobal) GetX() (x int) {
+func (e *TagSvgA) GetX() (x int) {
 	//rect.top, rect.right, rect.bottom, rect.left
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	x = coordinate.Get("left").Int()
@@ -1008,7 +1019,7 @@ func (e *TagBaseGlobal) GetX() (x int) {
 // Português:
 //
 //  Retorna o eixo Y em pixels.
-func (e *TagBaseGlobal) GetY() (y int) {
+func (e *TagSvgA) GetY() (y int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	y = coordinate.Get("top").Int()
 	return
@@ -1023,7 +1034,7 @@ func (e *TagBaseGlobal) GetY() (y int) {
 // Português:
 //
 //  O mesmo que a função GetX(), retorna a posição x do elemento.
-func (e *TagBaseGlobal) GetTop() (top int) {
+func (e *TagSvgA) GetTop() (top int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	top = coordinate.Get("top").Int()
 	return
@@ -1038,7 +1049,7 @@ func (e *TagBaseGlobal) GetTop() (top int) {
 // Português:
 //
 //  É o mesmo que x + width.
-func (e *TagBaseGlobal) GetRight() (right int) {
+func (e *TagSvgA) GetRight() (right int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	right = coordinate.Get("right").Int()
 	return
@@ -1053,7 +1064,7 @@ func (e *TagBaseGlobal) GetRight() (right int) {
 // Português:
 //
 //  É o mesmo que y + Heught.
-func (e *TagBaseGlobal) GetBottom() (bottom int) {
+func (e *TagSvgA) GetBottom() (bottom int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	bottom = coordinate.Get("bottom").Int()
 	return
@@ -1068,7 +1079,7 @@ func (e *TagBaseGlobal) GetBottom() (bottom int) {
 // Português:
 //
 //  O mesmo que a função GetY(), retorna a posição y do elemento.
-func (e *TagBaseGlobal) GetLeft() (left int) {
+func (e *TagSvgA) GetLeft() (left int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	left = coordinate.Get("left").Int()
 	return
@@ -1125,7 +1136,7 @@ func (e *TagBaseGlobal) GetLeft() (left int) {
 //       log.Print(event.GetScreenX())
 //       log.Print(event.GetScreenY())
 //     }
-func (e *TagBaseGlobal) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagBaseGlobal) {
+func (e *TagSvgA) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagSvgA) {
 
 	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		var mouseEvent = mouse.MouseEvent{}
@@ -1248,7 +1259,7 @@ func (e *TagBaseGlobal) AddListener(eventType interface{}, manager mouse.SimpleM
 //       log.Print(event.GetScreenX())
 //       log.Print(event.GetScreenY())
 //     }
-func (e *TagBaseGlobal) RemoveListener(eventType interface{}) (ref *TagBaseGlobal) {
+func (e *TagSvgA) RemoveListener(eventType interface{}) (ref *TagSvgA) {
 	switch converted := eventType.(type) {
 	case event.Event:
 		f, _ := e.listener.Load(converted.String())
@@ -1324,7 +1335,7 @@ func (e *TagBaseGlobal) RemoveListener(eventType interface{}) (ref *TagBaseGloba
 //     value: formato do ponteiro do mouse.
 //       Exemplo: SetMouse(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
 //                o resto
-func (e *TagBaseGlobal) Mouse(value mouse.CursorType) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Mouse(value mouse.CursorType) (ref *TagSvgA) {
 	e.selfElement.Get("style").Set("cursor", value.String())
 	return e
 }
@@ -1338,7 +1349,7 @@ func (e *TagBaseGlobal) Mouse(value mouse.CursorType) (ref *TagBaseGlobal) {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagBaseGlobal) Init(id string) (ref *TagBaseGlobal) {
+func (e *TagSvgA) Init(id string) (ref *TagSvgA) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement(KTagDiv)
@@ -1357,7 +1368,7 @@ func (e *TagBaseGlobal) Init(id string) (ref *TagBaseGlobal) {
 // Português:
 //
 //  Prepara à referencia do stage na inicialização.
-func (e *TagBaseGlobal) prepareStageReference() {
+func (e *TagSvgA) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
@@ -1384,35 +1395,35 @@ func (e *TagBaseGlobal) prepareStageReference() {
 //       Class("animate").
 //       DragStart().
 //       AppendById("stage")
-func (e *TagBaseGlobal) DragStart() (ref *TagBaseGlobal) {
+func (e *TagSvgA) DragStart() (ref *TagSvgA) {
 	e.dragNormalStart()
 	return e
 }
 
-func (e *TagBaseGlobal) DragStop() (ref *TagBaseGlobal) {
+func (e *TagSvgA) DragStop() (ref *TagSvgA) {
 	e.dragNormalStop()
 	return e
 }
 
-func (e *TagBaseGlobal) dragNormalStart() {
+func (e *TagSvgA) dragNormalStart() {
 	e.AddListener(mouse.KEventMouseDown, e.onStartDragNormal)
 	e.stage.Call("addEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
 	e.stage.Call("addEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
 }
 
-func (e *TagBaseGlobal) dragNormalStop() {
+func (e *TagSvgA) dragNormalStop() {
 	e.RemoveListener(mouse.KEventMouseDown)
 	e.stage.Call("removeEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
 	e.stage.Call("removeEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
 	e.isDragging = false
 }
 
-func (e *TagBaseGlobal) onStopDragNormal(_ js.Value, _ []js.Value) any {
+func (e *TagSvgA) onStopDragNormal(_ js.Value, _ []js.Value) any {
 	e.isDragging = false
 	return nil
 }
 
-func (e *TagBaseGlobal) onStartDragNormal(event mouse.MouseEvent) {
+func (e *TagSvgA) onStartDragNormal(event mouse.MouseEvent) {
 	var screenX = int(event.GetScreenX())
 	var screenY = int(event.GetScreenY())
 
@@ -1422,7 +1433,7 @@ func (e *TagBaseGlobal) onStartDragNormal(event mouse.MouseEvent) {
 	e.isDragging = true
 }
 
-func (e *TagBaseGlobal) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{} {
+func (e *TagSvgA) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{} {
 	if e.isDragging == false {
 		return nil
 	}

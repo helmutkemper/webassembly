@@ -40,3 +40,10 @@ func NewTagDiv(id string) (ref *html.TagDiv) {
 
 	return ref
 }
+
+func NewTagDivWithDelta(id string, deltaX, deltaY int) (ref *html.TagDiv) {
+	ref = &html.TagDiv{}
+	ref.Init(id)
+
+	return ref
+}

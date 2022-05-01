@@ -7,6 +7,9 @@ import (
 	"syscall/js"
 )
 
+// todo: transformar em exemplo
+// https://github.com/mdn/content/blob/main/files/en-us/web/api/canvas_api/tutorial/compositing/example/index.md?plain=1
+
 type TagCanvas struct {
 	tag         Tag
 	id          string

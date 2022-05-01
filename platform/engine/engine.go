@@ -480,9 +480,6 @@ func (el *Engine) MathAddToFunctions(runnerFunc func()) (string, int) {
 }
 
 func (el *Engine) MathDeleteFromFunctions(UId string) {
-	//todo: ela ia ser mais rápido se eu usase o int de MathAddToFunctions()
-	// exemplo em tween.tickerRunnerPrepare()
-
 	for k, runner := range el.funcListToMath {
 		if runner.id == UId {
 			el.funcListToMath = append(el.funcListToMath[:k], el.funcListToMath[k+1:]...)

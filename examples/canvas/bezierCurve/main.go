@@ -34,7 +34,7 @@ func main() {
 	border := 50.0
 	wight := 400.0
 	height := 400.0
-	adjust := -15.0
+	adjust := 15.0
 
 	//    0,0    1,0    2,0
 	//     7------0------1
@@ -100,18 +100,37 @@ func AddRedPointer(x, y int) {
 
 func AddIndex(x, y, i int) {
 
+	xStr := strconv.FormatInt(int64(x), 10)
+	yStr := strconv.FormatInt(int64(y), 10)
+	iStr := strconv.FormatInt(int64(i), 10)
+
+	if i == 8 {
+		y += 16
+	}
+
 	x += 5
 	y += 20
 	var font html.Font
 	font.Family = factoryFontFamily.NewArial()
-	font.Size = 15
+	font.Size = 17
 
 	canvas.BeginPath().
 		Font(font).
-		FillStyle(factoryColor.NewRedHalfTransparent()).
+		FillStyle(factoryColor.NewRed()).
 		FillText(
-			strconv.FormatInt(int64(i), 10),
+			"#"+iStr,
 			x,
+			y,
+			300,
+		)
+
+	font.Size = 12
+	canvas.BeginPath().
+		Font(font).
+		FillStyle(factoryColor.NewRed()).
+		FillText(
+			"("+xStr+", "+yStr+")",
+			x+20,
 			y,
 			300,
 		)

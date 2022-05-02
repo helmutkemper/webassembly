@@ -1,5 +1,10 @@
 package algorithm
 
+import (
+	"math"
+	"sort"
+)
+
 // BezierCurve
 //
 //  The Bézier curve is a polynomial curve expressed as the linear interpolation between some
@@ -86,4 +91,38 @@ func (e *BezierCurve) subProcess(p1 Point, p2 Point, p3 Point, step float64) {
 
 		e.processed = append(e.processed, Point{X: pX, Y: pY})
 	}
+}
+
+func (e *BezierCurve) AdjustDensity() {
+	toRemove := make([]int, 0)
+	dMax := (math.MaxFloat64 - 1) * -1
+	l := len(e.processed) - 1
+	for i := 0; i != l; i += 1 {
+		d := e.distance(e.processed[i], e.processed[i+1])
+		dMax = math.Max(d, dMax)
+	}
+
+	for pInitial := 0; pInitial < l; {
+		var pTest int
+		for pTest = pInitial + 1; pTest < l+1; pTest += 1 {
+			d := e.distance(e.processed[pInitial], e.processed[pTest])
+			if d >= dMax {
+				break
+			}
+			if pTest != l || d == 0.0 {
+				toRemove = append(toRemove, pTest)
+			}
+		}
+		pInitial = pTest
+	}
+
+	sort.Sort(sort.Reverse(sort.IntSlice(toRemove)))
+
+	for _, i := range toRemove {
+		e.processed = append(e.processed[:i], e.processed[i+1:]...)
+	}
+}
+
+func (e *BezierCurve) distance(p0, p1 Point) (d float64) {
+	return math.Sqrt(math.Abs(math.Pow(p1.X-p0.X, 2) + math.Pow(p1.Y-p0.Y, 2)))
 }

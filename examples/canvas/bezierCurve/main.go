@@ -28,110 +28,70 @@ func main() {
 	canvas = factoryBrowser.NewTagCanvas("canvas_0", stage.GetWidth(), stage.GetHeight()).
 		AppendById("stage")
 
-	var b algorithm.BezierCurve
-	b.Init()
+	var curve algorithm.BezierCurve
+	curve.Init()
 
-	//var y int
-	//var delta = 0
-	//var change bool
-	//for i := 0; i != 21; i += 1 {
-	//	if i%2 == 0 {
-	//		y = 300
-	//	} else if change == false {
-	//		y = 400
-	//		change = !change
-	//	} else {
-	//		y = 200
-	//		change = !change
-	//	}
-	//
-	//	y += delta
-	//	delta += 0
-	//
-	//	b.Add(algorithm.Point{X: float64(i * 50), Y: float64(y)})
-	//}
-	//
-	//// 1000, 300
-	//b.Add(algorithm.Point{X: 1050, Y: 500})
-	//b.Add(algorithm.Point{X: 700, Y: 600})
-	//b.Add(algorithm.Point{X: 400, Y: 700})
-	//b.Add(algorithm.Point{X: 300, Y: 400})
-	//b.Add(algorithm.Point{X: 300, Y: 300})
-	//b.Add(algorithm.Point{X: 400, Y: 200})
-	//b.Add(algorithm.Point{X: 600, Y: 100})
-	//b.Add(algorithm.Point{X: 700, Y: 200})
-	//b.Add(algorithm.Point{X: 800, Y: 300})
-	//b.Add(algorithm.Point{X: 700, Y: 400})
-	//b.Add(algorithm.Point{X: 600, Y: 500})
-	//b.Add(algorithm.Point{X: 500, Y: 400})
-	//b.Add(algorithm.Point{X: 400, Y: 300})
-	//b.Add(algorithm.Point{X: 500, Y: 200})
-	//b.Add(algorithm.Point{X: 600, Y: 100})
-	//b.Add(algorithm.Point{X: 700, Y: 200})
+	border := 50.0
+	wight := 400.0
+	height := 400.0
+	adjust := -15.0
 
-	b.Add(algorithm.Point{X: 50, Y: 400}) //0
-	b.Add(algorithm.Point{X: 50, Y: 50})
-	b.Add(algorithm.Point{X: 600, Y: 50})
-	b.Add(algorithm.Point{X: 1200, Y: 50})
-	b.Add(algorithm.Point{X: 1200, Y: 400})
-	b.Add(algorithm.Point{X: 1200, Y: 800}) //5
-	b.Add(algorithm.Point{X: 600, Y: 800})
-	b.Add(algorithm.Point{X: 150, Y: 800})
-	b.Add(algorithm.Point{X: 150, Y: 400})
-	b.Add(algorithm.Point{X: 150, Y: 150})
-	b.Add(algorithm.Point{X: 600, Y: 150}) //10
-	b.Add(algorithm.Point{X: 1100, Y: 150})
-	b.Add(algorithm.Point{X: 1100, Y: 400})
-	b.Add(algorithm.Point{X: 1100, Y: 700})
-	b.Add(algorithm.Point{X: 600, Y: 700})
-	b.Add(algorithm.Point{X: 250, Y: 700}) //15
-	b.Add(algorithm.Point{X: 250, Y: 400})
-	b.Add(algorithm.Point{X: 250, Y: 250})
-	b.Add(algorithm.Point{X: 600, Y: 250})
-	b.Add(algorithm.Point{X: 1000, Y: 250})
-	b.Add(algorithm.Point{X: 970, Y: 400}) //20
-	b.Add(algorithm.Point{X: 930, Y: 600})
-	b.Add(algorithm.Point{X: 800, Y: 350})
-	b.Add(algorithm.Point{X: 700, Y: 200})
-	b.Add(algorithm.Point{X: 600, Y: 400})
-	b.Add(algorithm.Point{X: 500, Y: 600})
-	b.Add(algorithm.Point{X: 400, Y: 400})
+	//    0,0    1,0    2,0
+	//     7------0------1
+	//     |             |
+	// 0,1 6             2 2,1
+	//     |             |
+	//     5------4------3
+	//    0,2    1,2    2,2
 
-	b.Process(0.005)
+	curve.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
+	curve.Add(algorithm.Point{X: 2*wight + border - adjust, Y: 0*height + border + adjust})
+	curve.Add(algorithm.Point{X: 2*wight + border, Y: 1*height + border})
+	curve.Add(algorithm.Point{X: 2*wight + border - adjust, Y: 2*height + border - adjust})
+	curve.Add(algorithm.Point{X: 1*wight + border, Y: 2*height + border})
+	curve.Add(algorithm.Point{X: 0*wight + border + adjust, Y: 2*height + border - adjust})
+	curve.Add(algorithm.Point{X: 0*wight + border, Y: 1*height + border})
+	curve.Add(algorithm.Point{X: 0*wight + border + adjust, Y: 0*height + border + adjust})
+	curve.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
 
-	for v, point := range *b.GetOriginal() {
+	curve.Process(0.001)
+	curve.AdjustDensity()
+
+	for v, point := range *curve.GetOriginal() {
 		AddRedPointer(int(point.X), int(point.Y))
 		AddIndex(int(point.X), int(point.Y), v)
 	}
 
-	for _, point := range *b.GetProcessed() {
+	for _, point := range *curve.GetProcessed() {
 		AddDot(int(point.X), int(point.Y))
 	}
 
 	var div *html.TagDiv
 	div = factoryBrowser.NewTagDiv("div_0")
 	div.Class("animate").
-		AddPoints(b.GetProcessed()).
+		AddPoints(curve.GetProcessed()).
 		SetDeltaX(-15).
 		SetDeltaY(-25).
 		RotateDelta(-math.Pi/2).
-		//NewEasingTweenRandom("line", 5*time.Second, 0, 10000, div.WalkingIntoPoints, -1).
-		NewEasingTweenLinear("line", 30*time.Second, 0, 10000, div.WalkingAndRotateIntoPoints, -1).
+		//NewEasingTweenLinear("line", 5*time.Second, 0, 10000, div.WalkingIntoPoints, -1).
+		NewEasingTweenLinear("line", 5*time.Second, 0, 10000, div.WalkingAndRotateIntoPoints, -1).
 		EasingTweenOnInvertFunc("line", onInvert).
-		//EasingTweenDoNotReverseMotion("line").
+		EasingTweenDoNotReverseMotion("line").
 		AppendToStage()
 
 	<-done
 }
 
 func AddDot(x, y int) {
+
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewBlueHalfTransparent()).
-		Arc(x, y, 0.3, 0, 2*math.Pi, false).
+		Arc(x, y, 0.4, 0, 2*math.Pi, false).
 		Fill()
 }
 
 func AddRedPointer(x, y int) {
+
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewRedHalfTransparent()).
 		Arc(x, y, 3, 0, 2*math.Pi, false).

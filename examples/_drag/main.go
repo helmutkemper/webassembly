@@ -12,10 +12,11 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryInk"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryText"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserImage"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryFontFamily"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryFontStyle"
-	"github.com/helmutkemper/iotmaker.webassembly/html"
+	factoryBrowserImage "github.com/helmutkemper/iotmaker.webassembly/_factoryBrowserImage"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontFamily"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontStyle"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+	"html"
 	"time"
 )
 
@@ -24,7 +25,8 @@ var imgSpace html.Image
 func main() {
 
 	done := make(chan struct{}, 0)
-	stage := global.Global.Stage
+	browserStage := stage.Stage{}
+	browserStage.Init()
 
 	fontText := factoryFont.NewFont(
 		14,
@@ -45,7 +47,7 @@ func main() {
 		40,
 	)
 	text.SetDraggableToDesktop()
-	stage.AddToDraw(text)
+	browserStage.AddToDraw(text)
 
 	imgSpace = factoryBrowserImage.NewImage(
 		29,

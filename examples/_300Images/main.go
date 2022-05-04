@@ -9,8 +9,9 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserImage"
-	"github.com/helmutkemper/iotmaker.webassembly/html"
+	factoryBrowserImage "github.com/helmutkemper/iotmaker.webassembly/_factoryBrowserImage"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+	"html"
 	"strconv"
 	"time"
 )
@@ -20,7 +21,8 @@ var imgSpace html.Image
 func main() {
 
 	done := make(chan struct{}, 0)
-	stage := global.Global.Stage
+	browserStage := stage.Stage{}
+	browserStage.Init()
 
 	imgSpace = factoryBrowserImage.NewImage(
 		29,
@@ -49,7 +51,7 @@ func main() {
 			global.Global.DensityManager,
 		)
 		i.SetDraggableToDesktop()
-		stage.AddToDraw(i)
+		browserStage.AddToDraw(i)
 
 		factoryTween.NewLinear(
 			time.Duration(mathUtil.Int(500, 3000))*time.Millisecond,

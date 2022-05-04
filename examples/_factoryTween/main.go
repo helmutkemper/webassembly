@@ -10,8 +10,8 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryTween"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserImage"
-	"github.com/helmutkemper/iotmaker.webassembly/html"
+	factoryBrowserImage "github.com/helmutkemper/iotmaker.webassembly/_factoryBrowserImage"
+	"html"
 	"strconv"
 	"time"
 )

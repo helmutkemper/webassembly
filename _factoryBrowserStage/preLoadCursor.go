@@ -6,8 +6,8 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/abstractType/image"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/basic"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
-	"github.com/helmutkemper/iotmaker.webassembly/html"
 	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.webassembly/platform/IDraw"
+	"html"
 )
 
 var KTemplarianList = map[string]string{

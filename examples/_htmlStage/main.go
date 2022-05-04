@@ -11,12 +11,12 @@ import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryPoint"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryShadow"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryText"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserDocument"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserStage"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryFontFamily"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryFontStyle"
-	"github.com/helmutkemper/iotmaker.webassembly/html"
+	factoryBrowserDocument "github.com/helmutkemper/iotmaker.webassembly/_factoryBrowserDocument"
+	factoryBrowserStage "github.com/helmutkemper/iotmaker.webassembly/_factoryBrowserStage"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontFamily"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontStyle"
 	iotmakerPlatformIDraw "github.com/helmutkemper/iotmaker.webassembly/platform/IDraw"
+	"html"
 )
 
 func main() {

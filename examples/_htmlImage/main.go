@@ -6,8 +6,9 @@ package main
 import (
 	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserImage"
-	"github.com/helmutkemper/iotmaker.webassembly/html"
+	factoryBrowserImage "github.com/helmutkemper/iotmaker.webassembly/_factoryBrowserImage"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+	"html"
 	"time"
 )
 
@@ -16,7 +17,8 @@ var imgPlayer html.Image
 func main() {
 
 	done := make(chan struct{})
-	stage := global.Global.Stage
+	browserStage := stage.Stage{}
+	browserStage.Init()
 
 	imgPlayer = factoryBrowserImage.NewImage(
 		480,

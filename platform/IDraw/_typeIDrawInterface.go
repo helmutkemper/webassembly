@@ -2,9 +2,9 @@ package iotmaker_platform_IDraw
 
 import (
 	iotmakerPlatformTextMetrics "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.textMetrics"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/browserMouse"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/font"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/javascript/canvas"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/mouse"
 	"image/color"
 	"time"
 )
@@ -721,7 +721,7 @@ type IDraw interface {
 	ResetStrokeStyle()
 	ResetShadow()
 	ResetLineWidth()
-	SetMouseCursor(cursor browserMouse.CursorType)
+	SetMouseCursor(cursor mouse.CursorType)
 	AddEventListener(eventType interface{}, mouseMoveEvt interface{})
 	SetPixel(x, y int, pixel interface{})
 	MakePixel(pixelColor color.RGBA) interface{}

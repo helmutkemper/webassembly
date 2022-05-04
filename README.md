@@ -1,40 +1,8 @@
-# iotmaker.webassembly.platform
+# iotmaker webassembly
 
-![uml](./canvas.uml.png)
+> In production phase. Use at your own risk.
 
-Experimental webassembly framework / Framework webassembly experimental
-
-``` golang
-
-// +build js
-
-package main
-
-import (
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryBrowserDocument"
-	"github.com/helmutkemper/iotmaker.platform.webbrowser/factoryBrowserHtml"
-)
-
-func main() {
-
-	done := make(chan struct{}, 0)
-
-	browserDocument := factoryBrowserDocument.NewDocument()
-
-	factoryBrowserHtml.NewImage(
-		browserDocument.SelfDocument,
-		map[string]interface{}{
-			"id":  "player",
-			"src": "./player_big.png",
-		},
-		true,
-		true,
-	)
-
-	<-done
-}
- 
-``` 
-
-
-https://github.com/mattn/go-generics-example
+```shell
+> cd examples/server
+> make build
+```

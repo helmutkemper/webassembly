@@ -2,8 +2,8 @@ package factoryBrowserImage
 
 import (
 	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
-	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	"github.com/helmutkemper/iotmaker.webassembly/html"
+	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.webassembly/platform/IDraw"
 )
 
 // fixme:

@@ -1,13 +1,13 @@
 package factoryBrowserStage
 
 import (
-	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 	"github.com/helmutkemper/iotmaker.webassembly/config"
 	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserCanvas"
 	"github.com/helmutkemper/iotmaker.webassembly/globalDocument"
 	"github.com/helmutkemper/iotmaker.webassembly/javascript/canvas"
+	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.webassembly/platform/IDraw"
 )
 
 // fixme: stage está estranho

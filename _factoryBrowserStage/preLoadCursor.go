@@ -2,12 +2,12 @@ package factoryBrowserStage
 
 import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.interfaces/iStage"
-	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.IDraw"
 	iotmaker_platform_coordinate "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/abstractType/image"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/basic"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
 	"github.com/helmutkemper/iotmaker.webassembly/html"
+	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.webassembly/platform/IDraw"
 )
 
 var KTemplarianList = map[string]string{

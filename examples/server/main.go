@@ -4,6 +4,9 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
+	"path"
+	"runtime"
 )
 
 func main() {
@@ -36,5 +39,14 @@ func main() {
 	err = http.ListenAndServe(":3000", nil)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func init() {
+	_, filename, _, _ := runtime.Caller(0)
+	dir := path.Join(path.Dir(filename), "..")
+	err := os.Chdir(dir)
+	if err != nil {
+		panic(err)
 	}
 }

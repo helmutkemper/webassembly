@@ -1,7 +1,7 @@
 package mouse
 
 import (
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go/mouse"
+	mouse "github.com/helmutkemper/iotmaker.webassembly/platform/channels"
 	"syscall/js"
 )
 

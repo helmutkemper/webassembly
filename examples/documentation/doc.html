@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="webassembly framework writing in golang">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Webassembly - a golang framework for webassembly</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="scribbler-global.css">
+    <link rel="stylesheet" href="scribbler-doc.css">
+    <link rel="author" href="humans.txt">
+    <link href="./prism/prism.css" rel="stylesheet" />
+    <script src="./prism/prism.js"></script>
+  </head>
+  <body>
+    <div class="doc__bg"></div>
+    <nav class="header">
+      <h1 class="logo">IoT Maker - Webassembly <span class="logo__thin">Doc</span></h1>
+      <ul class="menu">
+        <div class="menu__item toggle"><span></span></div>
+        <li class="menu__item"><a href="https://github.com/helmutkemper/iotmaker.webassembly" class="link link--dark"><i class="fa fa-github"></i> Github</a></li>
+        <li class="menu__item"><a href="index.html" class="link link--dark"><i class="fa fa-home"></i> Home</a></li>
+      </ul>
+    </nav>
+    <div class="wrapper">
+      <aside class="doc__nav">
+        <ul>
+          <li class="js-btn selected">Início rápido</li>
+          <li class="js-btn">Exemplos principais</li>
+          <li class="js-btn">Keybindings</li>
+          <li class="js-btn">Issues</li>
+        </ul>
+      </aside>
+      <article class="doc__content">
+        <section class="js-section">
+          <h3 class="section__title">Início rápido</h3>
+          <p>Para vê os exemplos funcionando, basta inicializar o servidor, na pasta<code>./examples/server</code>, com o comando <code>make build</code></p>
+          <hr />
+          <h3 class="section__title">Exemplo</h3>
+          <div class="code__block code__block--notabs">
+            <pre class="code code--block">
+              <code>
+                $ cd ./examples/server
+                $ make build
+              </code>
+            </pre>
+            <p>Depois abra o seu navegador no endereço <b><a href="http://localhost:3000" target="_blank">http://localhost:3000</a></b></p>
+          </div>
+          <hr />
+        </section>
+        <section class="js-section">
+          <h3 class="section__title">Exemplos principais</h3>
+          <p>Veja abaixo uma lista com os principais exemplos do códio.</p>
+          <p>Caso queira fazer alterações, em cada pasta há um arquivo <b>Makefile</b> com o comando <b>build</b>, ou seja, basta abrir o terminal na pasta do exemplo e digitar:</p>
+          <pre class="code code--block">
+              <code>
+                $ make build
+              </code>
+            </pre>
+          <p>Os exemplos são:</p>
+          <table id="customers">
+            <tr>
+              <th>Exemplo</th>
+              <th>Descrição</th>
+            </tr>
+            <tr>
+              <td><a href="/documentation/examples_doc/belsieCurve.html">Belzié Curve</a></td>
+              <td><a href="/documentation/examples_doc/belsieCurve.html">Mostra como usar o algoritmo de Belzié para gerar uma curva e em seguida movimentar uma div com o <b>easing tween</b>, ou, facilitador de interpolação.</a></td>
+            </tr>
+            <tr>
+              <td>highlighting</td>
+              <td>Show syntax highlight on markdown text.</td>
+            </tr>
+            <tr>
+              <td>prettyTable</td>
+              <td>Render table with Scribbler’s pretty table style.</td>
+            </tr>
+          </table>
+          <hr />
+        </section>
+        <section class="js-section">
+          <h3 class="section__title">Keybindings</h3>
+          <p>Lorem ipsum dolor sit amet, scripta tibique indoctum sit ei, mel inani aeterno ad. Facer oratio ex per. At eam movet verear, in sea brute patrioque disputando, usu nonumes torquatos an. Ex his quaerendum intellegebat, ut vel homero accusam. Eum at debet tibique, in vocibus temporibus adversarium sed. Porro verear eu vix, ne usu tation vituperata.</p>
+          <p>Malis percipitur an pro. Pro aperiam persequeris at, at sonet sensibus mei, id mea postulant definiebas concludaturque. Id qui malis abhorreant, mazim melius quo et. At eam altera dolorum, case dicant lobortis ius te, ad vel affert oportere reprehendunt. Quo no verterem deseruisse, mea brute postea te, ne per tacimates suavitate vituperatoribus.</p>
+          <p>Malis percipitur an pro. Pro aperiam persequeris at, at sonet sensibus mei, id mea postulant definiebas concludaturque. Id qui malis abhorreant, mazim melius quo et. At eam altera dolorum, case dicant lobortis ius te, ad vel affert oportere reprehendunt. Quo no verterem deseruisse, mea brute postea te, ne per tacimates suavitate vituperatoribus.</p>
+          <hr />
+        </section>
+        <section class="js-section">
+          <h3 class="section__title">Issues</h3>
+          <p>Lorem ipsum dolor sit amet, scripta tibique indoctum sit ei, mel inani aeterno ad. Facer oratio ex per. At eam movet verear, in sea brute patrioque disputando, usu nonumes torquatos an. Ex his quaerendum intellegebat, ut vel homero accusam. Eum at debet tibique, in vocibus temporibus adversarium sed. Porro verear eu vix, ne usu tation vituperata.</p>
+          <p>Malis percipitur an pro. Pro aperiam persequeris at, at sonet sensibus mei, id mea postulant definiebas concludaturque. Id qui malis abhorreant, mazim melius quo et. At eam altera dolorum, case dicant lobortis ius te, ad vel affert oportere reprehendunt. Quo no verterem deseruisse, mea brute postea te, ne per tacimates suavitate vituperatoribus.</p>
+        </section>
+      </article>
+    </div>
+
+    <footer class="footer">Webassembly framework foi criado por <b><a href="https://github.com/helmutkemper" target="_blank" class="link link--light">Helmut Kemper</a></b> e tem licença <b>Apache 2.</b></footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="scribbler.js"></script>
+  </body>
+</html>

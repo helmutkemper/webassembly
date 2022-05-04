@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="webassembly framework writing in golang">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Webassembly - a golang framework for webassembly</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="../scribbler-global.css">
+    <link rel="stylesheet" href="../scribbler-doc.css">
+    <link rel="author" href="../humans.txt">
+    <link href="../prism/prism.css" rel="stylesheet" />
+    <script src="../prism/prism.js"></script>
+</head>
+<body>
+<div class="doc__bg"></div>
+<nav class="header">
+    <h1 class="logo">IoT Maker - Webassembly <span class="logo__thin">Doc</span></h1>
+    <ul class="menu">
+        <div class="menu__item toggle"><span></span></div>
+        <li class="menu__item"><a href="https://github.com/helmutkemper/iotmaker.webassembly" class="link link--dark"><i class="fa fa-github"></i> Github</a></li>
+        <li class="menu__item"><a href="../index.html" class="link link--dark"><i class="fa fa-home"></i> Home</a></li>
+    </ul>
+</nav>
+<div class="wrapper">
+    <aside class="doc__nav">
+        <ul>
+            <li class="js-btn selected">Belzié Curve</li>
+            <li class="js-btn">Gerando</li>
+            <li class="js-btn">Exemplo</li>
+            <li class="js-btn">Código</li>
+        </ul>
+    </aside>
+    <article class="doc__content">
+        <section class="js-section">
+            <h3 class="section__title">Belzié Curve</h3>
+            <p>Este exemplo usa oito pontos para gerar uma linha com o algoritmo de curva de Belzié e em seguida prende uma tag <b>div</b> usando o <b>easing tween</b> para determinar a duração e o comportamento do movimento.</p>
+            <hr />
+        </section>
+        <section class="js-section">
+            <h3 class="section__title">Gerando um novo binário</h3>
+            <pre class="language-shell code code--block"><code>cd ./examples/canvas/belzieCurve
+make build</code></pre>
+            <hr />
+        </section>
+        <section class="js-section">
+            <h3 class="section__title">Exemplo</h3>
+            <iframe src="http://localhost:3000/canvas/bezierCurve/" width="1000" height="900"></iframe>
+            <hr />
+        </section>
+        <section class="js-section">
+            <h3 class="section__title">Código</h3>
+            <div class="code__block code__block--notabs">
+            <pre class="language-go code code--block"><code>//go:build js
+// +build js
+
+package main
+
+import (
+    "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+    "github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontFamily"
+    "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+    "github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+    "github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
+    "github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+    "math"
+    "strconv"
+    "time"
+)
+
+var canvas *html.TagCanvas
+
+func main() {
+
+    done := make(chan struct{}, 0)
+
+    var stage = stage.Stage{}
+    stage.Init()
+
+    canvas = factoryBrowser.NewTagCanvas("canvas_0", stage.GetWidth(), stage.GetHeight()).
+        AppendById("stage")
+
+    var curve algorithm.BezierCurve
+    curve.Init()
+
+    border := 50.0
+    wight := 400.0
+    height := 400.0
+    adjust := 15.0
+
+    //    0,0    1,0    2,0
+    //     7------0------1
+    //     |             |
+    // 0,1 6             2 2,1
+    //     |             |
+    //     5------4------3
+    //    0,2    1,2    2,2
+
+    curve.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
+    curve.Add(algorithm.Point{X: 2*wight + border - adjust, Y: 0*height + border + adjust})
+    curve.Add(algorithm.Point{X: 2*wight + border, Y: 1*height + border})
+    curve.Add(algorithm.Point{X: 2*wight + border - adjust, Y: 2*height + border - adjust})
+    curve.Add(algorithm.Point{X: 1*wight + border, Y: 2*height + border})
+    curve.Add(algorithm.Point{X: 0*wight + border + adjust, Y: 2*height + border - adjust})
+    curve.Add(algorithm.Point{X: 0*wight + border, Y: 1*height + border})
+    curve.Add(algorithm.Point{X: 0*wight + border + adjust, Y: 0*height + border + adjust})
+    curve.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
+
+    curve.Process(0.001)
+    curve.AdjustDensity()
+
+    for v, point := range *curve.GetOriginal() {
+        AddRedPointer(int(point.X), int(point.Y))
+        AddIndex(int(point.X), int(point.Y), v)
+    }
+
+    for _, point := range *curve.GetProcessed() {
+        AddDot(int(point.X), int(point.Y))
+    }
+
+    var div *html.TagDiv
+    div = factoryBrowser.NewTagDiv("div_0")
+    div.Class("animate").
+        AddPoints(curve.GetProcessed()).
+        SetDeltaX(-15).
+        SetDeltaY(-25).
+        RotateDelta(-math.Pi/2).
+        //NewEasingTweenLinear("line", 5*time.Second, 0, 10000, div.WalkingIntoPoints, -1).
+        NewEasingTweenLinear("line", 5*time.Second, 0, 10000, div.WalkingAndRotateIntoPoints, -1).
+        EasingTweenOnInvertFunc("line", onInvert).
+        EasingTweenDoNotReverseMotion("line").
+        AppendToStage()
+
+    <-done
+}
+
+func AddDot(x, y int) {
+    canvas.BeginPath().
+        FillStyle(factoryColor.NewBlueHalfTransparent()).
+        Arc(x, y, 0.4, 0, 2*math.Pi, false).
+        Fill()
+}
+
+func AddRedPointer(x, y int) {
+    canvas.BeginPath().
+        FillStyle(factoryColor.NewRedHalfTransparent()).
+        Arc(x, y, 3, 0, 2*math.Pi, false).
+        Fill()
+}
+
+func AddIndex(x, y, i int) {
+    xStr := strconv.FormatInt(int64(x), 10)
+    yStr := strconv.FormatInt(int64(y), 10)
+    iStr := strconv.FormatInt(int64(i), 10)
+
+    if i == 8 {
+        y += 16
+    }
+
+    x += 5
+    y += 20
+    var font html.Font
+    font.Family = factoryFontFamily.NewArial()
+    font.Size = 17
+
+    canvas.BeginPath().
+        Font(font).
+        FillStyle(factoryColor.NewRed()).
+        FillText(
+            "#"+iStr,
+            x,
+            y,
+            300,
+        )
+
+    font.Size = 12
+    canvas.BeginPath().
+        Font(font).
+        FillStyle(factoryColor.NewRed()).
+        FillText(
+            "("+xStr+", "+yStr+")",
+            x+20,
+            y,
+            300,
+        )
+}
+
+func onInvert(_ float64, args interface{}) {
+    this := args.([]interface{})[0].(*html.TagDiv)
+    delta := this.GetRotateDelta()
+    if delta > 0 {
+        this.RotateDelta(-math.Pi / 2)
+    } else {
+        this.RotateDelta(math.Pi / 2)
+    }
+}</code></pre>
+            </div>
+            <hr />
+        </section>
+    </article>
+</div>
+
+<footer class="footer">Webassembly framework foi criado por <b><a href="https://github.com/helmutkemper" target="_blank" class="link link--light">Helmut Kemper</a></b> e tem licença <b>Apache 2.</b></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="../scribbler.js"></script>
+</body>
+</html>

@@ -17,6 +17,6 @@ help:
 .PHONY: build
 ## Executa o teste TestLocalDevOps sem habilitar o teste de caos, sem log de dados na saída padrão
 build:
-	@$(GO) mod tidy
+	#@$(GO) mod tidy
 	@GOARCH=wasm GOOS=js $(GO) build -o main.wasm
 	@$(MAKE) -C ../../server build

@@ -11,6 +11,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryEasingTween"
 	"math"
 	"strconv"
 	"time"
@@ -22,10 +23,10 @@ func main() {
 
 	done := make(chan struct{}, 0)
 
-	var stage = stage.Stage{}
-	stage.Init()
+	var bs = stage.Stage{}
+	bs.Init()
 
-	canvas = factoryBrowser.NewTagCanvas("canvas_0", stage.GetWidth(), stage.GetHeight()).
+	canvas = factoryBrowser.NewTagCanvas("canvas_0", bs.GetWidth(), bs.GetHeight()).
 		AppendById("stage")
 
 	var curve algorithm.BezierCurve
@@ -36,13 +37,21 @@ func main() {
 	height := 400.0
 	adjust := 15.0
 
-	//    0,0    1,0    2,0
-	//     7------0------1
-	//     |             |
-	// 0,1 6             2 2,1
-	//     |             |
-	//     5------4------3
-	//    0,2    1,2    2,2
+	// E.g.: P0 (1,0) = (1*wight,0*height)
+	//
+	//     (0,0)            (1,0)            (2,0)
+	//       +----------------+----------------+
+	//       | P7            P0             P1 |
+	//       |                                 |
+	//       |                                 |
+	//       |                                 |
+	// (0,1) + P6                           P2 + (2,1)
+	//       |                                 |
+	//       |                                 |
+	//       |                                 |
+	//       | P5            P4             P3 |
+	//       +----------------+----------------+
+	//     (0,2)            (1,2)            (2,2)
 
 	curve.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
 	curve.Add(algorithm.Point{X: 2*wight + border - adjust, Y: 0*height + border + adjust})
@@ -67,17 +76,25 @@ func main() {
 	}
 
 	var div *html.TagDiv
-	div = factoryBrowser.NewTagDiv("div_0")
-	div.Class("animate").
-		AddPoints(curve.GetProcessed()).
+	div = factoryBrowser.NewTagDiv("div_0").
+		Class("animate").
+		DragStart().
+		AddPointsToEasingTween(curve.GetProcessed()).
 		SetDeltaX(-15).
 		SetDeltaY(-25).
-		RotateDelta(-math.Pi/2).
-		//NewEasingTweenLinear("line", 5*time.Second, 0, 10000, div.WalkingIntoPoints, -1).
-		NewEasingTweenLinear("line", 5*time.Second, 0, 10000, div.WalkingAndRotateIntoPoints, -1).
-		EasingTweenOnInvertFunc("line", onInvert).
-		EasingTweenDoNotReverseMotion("line").
+		RotateDelta(-math.Pi / 2).
 		AppendToStage()
+
+	factoryEasingTween.NewLinear(
+		5*time.Second,
+		0,
+		10000,
+		div.EasingTweenWalkingAndRotateIntoPoints(),
+		0,
+	).
+		SetOnInvertFunc(onInvert).
+		SetArgumentsFunc([]interface{}{div}).
+		SetDoNotReverseMotion()
 
 	<-done
 }

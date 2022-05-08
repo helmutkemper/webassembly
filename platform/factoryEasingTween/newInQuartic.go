@@ -5,11 +5,11 @@ import (
 	"time"
 )
 
-// NewEaseOutQuadratic
+// NewInQuartic
 //
 // English:
 //
-//  Ease tween out quadratic
+//  Ease tween in quartic
 //
 //   Input:
 //
@@ -23,7 +23,7 @@ import (
 //
 // Português:
 //
-//  Facilitador de interpolação out quadratic
+//  Facilitador de interpolação in quartic
 //
 //   Entrada:
 //
@@ -34,22 +34,30 @@ import (
 //     loop: número de interações ou -1 para um número infinito de interações
 //     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
 //                Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: x; args[1]: y}
-func NewEaseOutQuadratic(
+func NewInQuartic(
 	duration time.Duration,
 	startValue,
 	endValue float64,
-	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	onStepFunc interface{},
 	loop int,
 	arguments ...interface{},
 ) *easingTween.Tween {
 
+	var function func(value, percentToComplete float64, arguments interface{})
+	switch converted := onStepFunc.(type) {
+	case func(value, percentToComplete float64, arguments interface{}):
+		function = converted
+	case func() (f func(value, percentToComplete float64, arguments interface{})):
+		function = converted()
+	}
+
 	t := &easingTween.Tween{}
 	t.SetDuration(duration).
 		SetValues(startValue, endValue).
-		SetOnStepFunc(onStepFunc).
+		SetOnStepFunc(function).
 		SetLoops(loop).
 		SetArgumentsFunc(arguments).
-		SetTweenFunc(easingTween.KEaseOutQuadratic).
+		SetTweenFunc(easingTween.KEaseInQuartic).
 		Start()
 
 	return t

@@ -38,15 +38,23 @@ func NewLinear(
 	duration time.Duration,
 	startValue,
 	endValue float64,
-	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	onStepFunc interface{},
 	loop int,
 	arguments ...interface{},
 ) *easingTween.Tween {
 
+	var function func(value, percentToComplete float64, arguments interface{})
+	switch converted := onStepFunc.(type) {
+	case func(value, percentToComplete float64, arguments interface{}):
+		function = converted
+	case func() (f func(value, percentToComplete float64, arguments interface{})):
+		function = converted()
+	}
+
 	t := &easingTween.Tween{}
 	t.SetDuration(duration).
 		SetValues(startValue, endValue).
-		SetOnStepFunc(onStepFunc).
+		SetOnStepFunc(function).
 		SetLoops(loop).
 		SetArgumentsFunc(arguments).
 		SetTweenFunc(easingTween.KLinear).

@@ -5,9 +5,14 @@ import (
 	"time"
 )
 
-// NewEaseInOutExponential
+// NewOutExponential
 //
-// English: Ease tween in out exponential
+// English:
+//
+//  Ease tween out exponential
+//
+//   Input:
+//
 //     duration: animation duration
 //     startValue: initial value
 //     endValue: final value
@@ -16,7 +21,12 @@ import (
 //     arguments: array of arguments passed for functions onStart, onEnd, onInvert and onStep.
 //                Example: ..., [arguments] x, y) will be onStartFunc(value, args...) { args[0]: x; args[1]: y}
 //
-// Português: Facilitador de interpolação in out exponential
+// Português:
+//
+//  Facilitador de interpolação out exponential
+//
+//   Entrada:
+//
 //     duration: duração da animação
 //     startValue: valor inicial
 //     endValue: valor final
@@ -24,22 +34,30 @@ import (
 //     loop: número de interações ou -1 para um número infinito de interações
 //     arguments: array de argumentos passados para as funções onStart, onEnd, onInvert e onStep.
 //                Exemplo: ..., [argumentos] x, y) será onStartFunc(value, args...) { args[0]: x; args[1]: y}
-func NewEaseInOutExponential(
+func NewOutExponential(
 	duration time.Duration,
 	startValue,
 	endValue float64,
-	onStepFunc func(value, percentToComplete float64, arguments interface{}),
+	onStepFunc interface{},
 	loop int,
 	arguments ...interface{},
 ) *easingTween.Tween {
 
+	var function func(value, percentToComplete float64, arguments interface{})
+	switch converted := onStepFunc.(type) {
+	case func(value, percentToComplete float64, arguments interface{}):
+		function = converted
+	case func() (f func(value, percentToComplete float64, arguments interface{})):
+		function = converted()
+	}
+
 	t := &easingTween.Tween{}
 	t.SetDuration(duration).
 		SetValues(startValue, endValue).
-		SetOnStepFunc(onStepFunc).
+		SetOnStepFunc(function).
 		SetLoops(loop).
 		SetArgumentsFunc(arguments).
-		SetTweenFunc(easingTween.KEaseInOutExponential).
+		SetTweenFunc(easingTween.KEaseOutExponential).
 		Start()
 
 	return t

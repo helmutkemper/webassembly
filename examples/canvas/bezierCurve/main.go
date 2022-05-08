@@ -85,12 +85,12 @@ func main() {
 		RotateDelta(-math.Pi / 2).
 		AppendToStage()
 
-	factoryEasingTween.NewLinear(
+	factoryEasingTween.NewInOutElastic(
 		5*time.Second,
 		0,
 		10000,
-		div.EasingTweenWalkingAndRotateIntoPoints(),
-		0,
+		div.EasingTweenWalkingAndRotateIntoPoints,
+		-1,
 	).
 		SetOnInvertFunc(onInvert).
 		SetArgumentsFunc([]interface{}{div}).

@@ -1569,7 +1569,7 @@ func (e *TagDiv) dragNormalStop() {
 	e.isDragging = false
 }
 
-func (e *TagDiv) onStopDragNormal(_ js.Value, _ []js.Value) any {
+func (e *TagDiv) onStopDragNormal(_ js.Value, _ []js.Value) interface{} {
 	e.isDragging = false
 	return nil
 }

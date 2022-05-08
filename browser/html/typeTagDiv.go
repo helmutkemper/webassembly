@@ -1658,15 +1658,17 @@ func (e *TagDiv) AddPointsToEasingTween(points *[]algorithm.Point) (ref *TagDiv)
 //         factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
 func (e *TagDiv) EasingTweenWalkingIntoPoints() (function func(percent, p float64, args interface{})) {
 
-	function = func(percent, p float64, args interface{}) {
-		pCalc := e.pointsLen * int(percent) / 10000
-		if pCalc > e.pointsLen {
-			pCalc = e.pointsLen
-		} else if pCalc < 0 {
-			pCalc = 0
+	function = func(forTenThousand, percent float64, args interface{}) {
+
+		if forTenThousand > 10000.0 {
+			forTenThousand = forTenThousand - 10000.0
+		} else if forTenThousand < 0.0 {
+			forTenThousand = 10000.0 + forTenThousand
 		}
 
-		switch p {
+		pCalc := e.pointsLen * int(forTenThousand) / 10000.0
+
+		switch pCalc {
 		case 0.0:
 			e.SetXY(int(e.pointsFirst.X), int(e.pointsFirst.Y))
 		case 1.0:
@@ -1706,30 +1708,50 @@ func (e *TagDiv) EasingTweenWalkingIntoPoints() (function func(percent, p float6
 //     * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
 //       Exemplo:
 //         factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
-func (e *TagDiv) EasingTweenWalkingAndRotateIntoPoints() (function func(percent, p float64, args interface{})) {
+func (e *TagDiv) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenThousand, percent float64, args interface{})) {
 
-	function = func(percent, p float64, args interface{}) {
-		pCalc := e.pointsLen * int(percent) / 10000
-		if pCalc > e.pointsLen {
-			pCalc = e.pointsLen - 1
-		} else if pCalc <= 0 {
-			pCalc = 1
+	function = func(forTenThousand, percent float64, args interface{}) {
+
+		angleCorrection := false
+
+		if forTenThousand > 10000.0 {
+			forTenThousand = forTenThousand - 10000.0
+			angleCorrection = true
+		} else if forTenThousand < 0.0 {
+			forTenThousand = 10000.0 + forTenThousand
+			angleCorrection = true
 		}
 
-		switch p {
+		pCalc := e.pointsLen * int(forTenThousand) / 10000.0
+
+		var angle float64
+		switch pCalc {
 		case 0.0:
-			var angle = math.Atan2((*e.points)[1].Y-e.pointsFirst.Y, (*e.points)[1].X-e.pointsFirst.X)
+			if angleCorrection == true {
+				angle = math.Atan2(e.pointsFirst.Y-(*e.points)[1].Y, e.pointsFirst.X-(*e.points)[1].X)
+			} else {
+				angle = math.Atan2((*e.points)[1].Y-e.pointsFirst.Y, (*e.points)[1].X-e.pointsFirst.X)
+			}
+
 			e.Rotate(angle)
 			e.SetXY(int(e.pointsFirst.X), int(e.pointsFirst.Y))
 		case 1.0:
-			var angle = math.Atan2((*e.points)[e.pointsLen-1].Y-e.pointsLast.Y, (*e.points)[e.pointsLen-1].X-e.pointsLast.X)
+			if angleCorrection == true {
+				angle = math.Atan2(e.pointsLast.Y-(*e.points)[e.pointsLen-1].Y, e.pointsLast.X-(*e.points)[e.pointsLen-1].X)
+			} else {
+				angle = math.Atan2((*e.points)[e.pointsLen-1].Y-e.pointsLast.Y, (*e.points)[e.pointsLen-1].X-e.pointsLast.X)
+			}
+
 			e.Rotate(angle)
 			e.SetXY(int(e.pointsLast.X), int(e.pointsLast.Y))
 		default:
+			if angleCorrection == true {
+				angle = math.Atan2((*e.points)[pCalc].Y-(*e.points)[pCalc-1].Y, (*e.points)[pCalc].X-(*e.points)[pCalc-1].X)
+			} else {
+				angle = math.Atan2((*e.points)[pCalc-1].Y-(*e.points)[pCalc].Y, (*e.points)[pCalc-1].X-(*e.points)[pCalc].X)
+			}
 
-			var angle = math.Atan2((*e.points)[pCalc-1].Y-(*e.points)[pCalc].Y, (*e.points)[pCalc-1].X-(*e.points)[pCalc].X)
 			e.Rotate(angle)
-
 			e.SetXY(int((*e.points)[pCalc].X), int((*e.points)[pCalc].Y))
 		}
 	}

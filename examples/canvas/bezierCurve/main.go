@@ -23,6 +23,7 @@ func main() {
 
 	done := make(chan struct{}, 0)
 
+	// browser stage
 	var bs = stage.Stage{}
 	bs.Init()
 
@@ -78,7 +79,6 @@ func main() {
 	var div *html.TagDiv
 	div = factoryBrowser.NewTagDiv("div_0").
 		Class("animate").
-		DragStart().
 		AddPointsToEasingTween(curve.GetProcessed()).
 		SetDeltaX(-15).
 		SetDeltaY(-25).
@@ -86,7 +86,7 @@ func main() {
 		AppendToStage()
 
 	factoryEasingTween.NewInOutElastic(
-		5*time.Second,
+		15*time.Second,
 		0,
 		10000,
 		div.EasingTweenWalkingAndRotateIntoPoints,

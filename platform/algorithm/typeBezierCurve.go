@@ -33,33 +33,44 @@ func (e *BezierCurve) GetOriginal() (list *[]Point) {
 	return &e.original
 }
 
-func (e *BezierCurve) ClearProcessed() {
+func (e *BezierCurve) ClearProcessed() (ref *BezierCurve) {
 	e.processed = make([]Point, 0)
+
+	return e
 }
 
-func (e *BezierCurve) ClearOriginal() {
+func (e *BezierCurve) ClearOriginal() (ref *BezierCurve) {
 	e.original = make([]Point, 0)
+
+	return e
 }
 
-func (e *BezierCurve) Clear() {
+func (e *BezierCurve) Clear() (ref *BezierCurve) {
 	e.Init()
+
+	return e
 }
 
-func (e *BezierCurve) Init() {
+func (e *BezierCurve) Init() (ref *BezierCurve) {
 	e.processed = make([]Point, 0)
 	e.original = make([]Point, 0)
+
+	return e
 }
 
-func (e *BezierCurve) Add(p Point) {
+func (e *BezierCurve) Add(p Point) (ref *BezierCurve) {
 	e.original = append(e.original, p)
+
+	return e
 }
 
-func (e *BezierCurve) Process(step float64) {
+func (e *BezierCurve) Process(step float64) (ref *BezierCurve) {
 	e.step = step
 	if len(e.original) < 3 {
 		e.processed = make([]Point, len(e.original))
 		copy(e.processed, e.original)
-		return
+
+		return e
 	}
 
 	var p1, p2, p3 Point
@@ -75,6 +86,8 @@ func (e *BezierCurve) Process(step float64) {
 		p3 = e.original[i+2]
 		e.subProcess(p1, p2, p3, step)
 	}
+
+	return e
 }
 
 func (e *BezierCurve) subProcess(p1 Point, p2 Point, p3 Point, step float64) {
@@ -93,7 +106,7 @@ func (e *BezierCurve) subProcess(p1 Point, p2 Point, p3 Point, step float64) {
 	}
 }
 
-func (e *BezierCurve) AdjustDensity() {
+func (e *BezierCurve) _AdjustDensity() (ref *BezierCurve) {
 	toRemove := make([]int, 0)
 	dMax := (math.MaxFloat64 - 1) * -1
 	l := len(e.processed) - 1
@@ -121,6 +134,8 @@ func (e *BezierCurve) AdjustDensity() {
 	for _, i := range toRemove {
 		e.processed = append(e.processed[:i], e.processed[i+1:]...)
 	}
+
+	return e
 }
 
 func (e *BezierCurve) distance(p0, p1 Point) (d float64) {

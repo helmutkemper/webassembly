@@ -1623,7 +1623,13 @@ func (e *TagDiv) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{} 
 //     * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
 //       Exemplo:
 //         factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
-func (e *TagDiv) AddPointsToEasingTween(points *[]algorithm.Point) (ref *TagDiv) {
+func (e *TagDiv) AddPointsToEasingTween(algorithmRef algorithm.CurveInterface) (ref *TagDiv) {
+	if algorithmRef == nil {
+		return e
+	}
+
+	var points = algorithmRef.GetProcessed()
+
 	e.points = points
 	e.pointsLen = len(*points) - 1
 

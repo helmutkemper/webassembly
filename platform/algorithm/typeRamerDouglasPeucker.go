@@ -31,12 +31,12 @@ func (e *Rdp) Add(p Point) {
 	e.original = append(e.original, p)
 }
 
-func (e *Rdp) GetOriginal() (points []Point) {
-	return e.original
+func (e *Rdp) GetOriginal() (points *[]Point) {
+	return &e.original
 }
 
-func (e *Rdp) GetProcessed() (points []Point) {
-	return e.processed
+func (e *Rdp) GetProcessed() (points *[]Point) {
+	return &e.processed
 }
 
 func (e *Rdp) Clear() {

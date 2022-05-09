@@ -1,11 +1,12 @@
 package algorithm
 
 import (
+	"log"
 	"testing"
 )
 
 func TestBezierCurve_Density(t *testing.T) {
-	var curve BezierCurve
+	var curve = &Density{}
 	curve.Init()
 
 	b := 50.0
@@ -36,16 +37,10 @@ func TestBezierCurve_Density(t *testing.T) {
 	curve.processed = append(curve.processed, Point{X: 4, Y: 4})   //2
 	curve.processed = append(curve.processed, Point{X: 6, Y: 6})   //3
 	curve.processed = append(curve.processed, Point{X: 7, Y: 7})   //4*
-	curve.processed = append(curve.processed, Point{X: 8, Y: 8})   //5
-	curve.processed = append(curve.processed, Point{X: 9, Y: 9})   //6*
 	curve.processed = append(curve.processed, Point{X: 10, Y: 10}) //7
 	curve.processed = append(curve.processed, Point{X: 11, Y: 11}) //8*
 	curve.processed = append(curve.processed, Point{X: 11, Y: 11}) //9*
 	curve.processed = append(curve.processed, Point{X: 11, Y: 11}) //10*
-	curve.processed = append(curve.processed, Point{X: 11, Y: 11}) //11*
-	curve.processed = append(curve.processed, Point{X: 11, Y: 11}) //12*
-	curve.processed = append(curve.processed, Point{X: 12, Y: 12}) //13
-	curve.processed = append(curve.processed, Point{X: 12, Y: 12}) //14*
 	curve.processed = append(curve.processed, Point{X: 13, Y: 13}) //15*
 	curve.processed = append(curve.processed, Point{X: 14, Y: 14}) //16
 	curve.processed = append(curve.processed, Point{X: 15, Y: 15}) //17*
@@ -53,9 +48,21 @@ func TestBezierCurve_Density(t *testing.T) {
 	curve.processed = append(curve.processed, Point{X: 16, Y: 16}) //19
 	curve.processed = append(curve.processed, Point{X: 17, Y: 17}) //19
 
-	curve.AdjustDensity()
+	curve.AdjustDensity(KModeMinR)
 
-	okList := []Point{{0, 0}, {2, 2}, {4, 4}, {6, 6}, {8, 8}, {10, 10}, {12, 12}, {14, 14}, {15, 15}, {16, 16}, {17, 17}}
+	for k, p := range curve.processed {
+		if k == 0 {
+			log.Printf("(%v,%v)", p.X, p.Y)
+			continue
+		}
+		p1 := curve.processed[k-1]
+		p2 := curve.processed[k]
+		log.Printf("(%v,%v) :%v", p.X, p.Y, curve.Round(curve.Distance(p1, p2), 2))
+	}
+
+	okList := []Point{{0, 0}, {1.5, 1.5}, {3.0, 3.0}, {4.5, 4.5}, {6.0, 6.0},
+		{7.5, 7.5}, {9.0, 9.0}, {10.5, 10.5}, {12.0, 12.0}, {13.5, 13.5},
+		{15.0, 15.0}, {16.5, 16.5}, {17.0, 17.0}}
 	for _, p := range curve.processed {
 		pass := false
 		for _, pOk := range okList {

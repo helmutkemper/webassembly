@@ -1,7 +1,6 @@
 package algorithm
 
 import (
-	"log"
 	"math"
 )
 
@@ -53,7 +52,6 @@ func (e *Density) IncreaseDensityBetweenPoints(lineSegments int) {
 			)
 
 			for i := 0; i != lineSegments-1; i += 1 {
-				log.Printf("i: %v", i)
 				div := 1.0 / float64(lineSegments) * (1.0 + float64(i))
 				d := math.Sqrt(math.Pow(p1.X-p2.X, 2.0)+math.Pow(p1.Y-p2.Y, 2.0)) * div
 				a := math.Atan2(p1.Y-p2.Y, p1.X-p2.X)

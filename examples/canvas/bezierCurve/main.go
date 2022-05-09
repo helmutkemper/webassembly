@@ -30,8 +30,8 @@ func main() {
 	canvas = factoryBrowser.NewTagCanvas("canvas_0", bs.GetWidth(), bs.GetHeight()).
 		AppendById("stage")
 
-	var curve = &algorithm.BezierCurve{}
-	curve.Init()
+	var bezier = &algorithm.BezierCurve{}
+	bezier.Init()
 
 	border := 50.0
 	wight := 400.0
@@ -54,7 +54,7 @@ func main() {
 	//       +----------------+----------------+
 	//     (0,2)            (1,2)            (2,2)
 
-	curve.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border}).
+	bezier.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border}).
 		Add(algorithm.Point{X: 2*wight + border - adjust, Y: 0*height + border + adjust}).
 		Add(algorithm.Point{X: 2*wight + border, Y: 1*height + border}).
 		Add(algorithm.Point{X: 2*wight + border - adjust, Y: 2*height + border - adjust}).
@@ -68,7 +68,7 @@ func main() {
 	var decimatesCurve = &algorithm.Rdp{}
 	decimatesCurve.Init()
 
-	for _, point := range *curve.GetProcessed() {
+	for _, point := range *bezier.GetProcessed() {
 		decimatesCurve.Add(point)
 	}
 	decimatesCurve.Process(12.0)
@@ -86,43 +86,25 @@ func main() {
 		AddDotGreen(int(point.X), int(point.Y))
 	}
 
-	//log.Printf("len: %v", len(*decimatesCurve.GetProcessed()))
-	//l := len(*decimatesCurve.GetProcessed()) - 1
-	//for k, point := range *decimatesCurve.GetProcessed() {
-	//	if k != l {
-	//		p1 := (*decimatesCurve.GetProcessed())[k]
-	//		p2 := (*decimatesCurve.GetProcessed())[k+1]
-	//
-	//		d := math.Sqrt(math.Pow(p1.X-p2.X, 2.0)+math.Pow(p1.Y-p2.Y, 2.0)) / 2.0
-	//		a := math.Atan2(p1.Y-p2.Y, p1.X-p2.X)
-	//		x := p1.X - math.Cos(a)*d
-	//		y := p1.Y - math.Sin(a)*d
-	//		p3 := algorithm.Point{X: x, Y: y}
-	//		AddDotGreen(int(p3.X), int(p3.Y))
-	//	}
-	//
-	//	AddDotYellow(int(point.X), int(point.Y))
-	//}
-
-	for v, point := range *curve.GetOriginal() {
+	for v, point := range *bezier.GetOriginal() {
 		AddRedPointer(int(point.X), int(point.Y))
 		AddIndex(int(point.X), int(point.Y), v)
 	}
 
-	for _, point := range *curve.GetProcessed() {
+	for _, point := range *bezier.GetProcessed() {
 		AddDot(int(point.X), int(point.Y))
 	}
 
 	var div *html.TagDiv
 	div = factoryBrowser.NewTagDiv("div_0").
 		Class("animate").
-		AddPointsToEasingTween(density).
+		AddPointsToEasingTween(bezier).
 		SetDeltaX(-15).
 		SetDeltaY(-25).
 		RotateDelta(-math.Pi / 2).
 		AppendToStage()
 
-	factoryEasingTween.NewInOutBounce(
+	factoryEasingTween.NewLinear(
 		15*time.Second,
 		0,
 		10000,
@@ -137,7 +119,6 @@ func main() {
 }
 
 func AddDot(x, y int) {
-	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewBlueHalfTransparent()).
 		Arc(x, y, 0.4, 0, 2*math.Pi, false).
@@ -145,6 +126,7 @@ func AddDot(x, y int) {
 }
 
 func AddDotYellow(x, y int) {
+	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewYellow()).
 		Arc(x, y, 5.0, 0, 2*math.Pi, false).
@@ -152,14 +134,14 @@ func AddDotYellow(x, y int) {
 }
 
 func AddDotGreen(x, y int) {
+	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewGreen()).
-		Arc(x, y, 2.0, 0, 2*math.Pi, false).
+		Arc(x, y, 0.5, 0, 2*math.Pi, false).
 		Fill()
 }
 
 func AddRedPointer(x, y int) {
-	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewRedHalfTransparent()).
 		Arc(x, y, 3, 0, 2*math.Pi, false).
@@ -167,7 +149,6 @@ func AddRedPointer(x, y int) {
 }
 
 func AddIndex(x, y, i int) {
-	return
 	xStr := strconv.FormatInt(int64(x), 10)
 	yStr := strconv.FormatInt(int64(y), 10)
 	iStr := strconv.FormatInt(int64(i), 10)

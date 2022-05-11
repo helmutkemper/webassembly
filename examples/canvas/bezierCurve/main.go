@@ -65,13 +65,13 @@ func main() {
 		Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border}).
 		Process(0.001)
 
-	var decimatesCurve = &algorithm.Rdp{}
+	var decimatesCurve = &algorithm.Density{}
 	decimatesCurve.Init()
 
 	for _, point := range *bezier.GetProcessed() {
 		decimatesCurve.Add(point)
 	}
-	decimatesCurve.Process(12.0)
+	decimatesCurve.AdjustDensityByNSegments(4)
 
 	var density = &algorithm.Density{}
 	density.Init()
@@ -80,7 +80,7 @@ func main() {
 		density.Add(point)
 		AddDotYellow(int(point.X), int(point.Y))
 	}
-	density.IncreaseDensityBetweenPoints(60)
+	density.IncreaseDensityBetweenPoints(200)
 
 	for _, point := range *density.GetProcessed() {
 		AddDotGreen(int(point.X), int(point.Y))
@@ -98,7 +98,7 @@ func main() {
 	var div *html.TagDiv
 	div = factoryBrowser.NewTagDiv("div_0").
 		Class("animate").
-		AddPointsToEasingTween(bezier).
+		AddPointsToEasingTween(density).
 		SetDeltaX(-15).
 		SetDeltaY(-25).
 		RotateDelta(-math.Pi / 2).
@@ -126,15 +126,13 @@ func AddDot(x, y int) {
 }
 
 func AddDotYellow(x, y int) {
-	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewYellow()).
-		Arc(x, y, 5.0, 0, 2*math.Pi, false).
+		Arc(x, y, 10.0, 0, 2*math.Pi, false).
 		Fill()
 }
 
 func AddDotGreen(x, y int) {
-	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewGreen()).
 		Arc(x, y, 0.5, 0, 2*math.Pi, false).

@@ -48,7 +48,7 @@ func TestBezierCurve_Density(t *testing.T) {
 	curve.processed = append(curve.processed, Point{X: 16, Y: 16}) //19
 	curve.processed = append(curve.processed, Point{X: 17, Y: 17}) //19
 
-	curve.AdjustDensity(KModeMinR)
+	curve.AdjustDensityByNSegments(3)
 
 	for k, p := range curve.processed {
 		if k == 0 {

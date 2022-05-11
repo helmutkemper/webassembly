@@ -247,6 +247,51 @@ func (e *Density) AdjustDensity(mode Mode) (ref *Density) {
 	return e
 }
 
+func (e *Density) AdjustDensityByNSegments(n int) (ref *Density) {
+	e.processed = make([]Point, len(e.original))
+	copy(e.processed, e.original)
+
+	tmp := make([]Point, 0)
+	tmp = append(tmp, e.original[0])
+
+	d := 0.0
+	l := len(e.processed) - 1
+	for i := 0; i != l; i += 1 {
+		d += e.Distance(e.processed[i], e.processed[i+1])
+	}
+
+	dTarget := d * 2.0 / float64(n)
+	dActual := 0.0
+	lastPoint := e.original[0]
+	p3 := Point{}
+
+	for i := 0; i != l; i += 1 {
+		d = e.Distance(lastPoint, e.processed[i+1])
+		if dActual+d > dTarget {
+			dCalc := dActual + d - dTarget
+			p3 = e.PointBetweenTwoPoints(e.processed[i], e.processed[i+1], dCalc)
+			lastPoint = p3
+			dActual = 0.0
+			tmp = append(tmp, p3)
+		} else if dActual+d == dTarget {
+			p3 = e.processed[i+1]
+			lastPoint = p3
+			dActual = 0.0
+			tmp = append(tmp, p3)
+		} else {
+			lastPoint = e.processed[i]
+			dActual += d
+		}
+
+	}
+	tmp = append(tmp, e.processed[len(e.processed)-1])
+
+	e.processed = make([]Point, len(tmp))
+	copy(e.processed, tmp)
+
+	return e
+}
+
 func (e *Density) Add(p Point) (ref *Density) {
 	e.original = append(e.original, p)
 

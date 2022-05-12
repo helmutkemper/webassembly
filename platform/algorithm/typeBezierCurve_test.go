@@ -60,9 +60,9 @@ func TestBezierCurve_Density(t *testing.T) {
 		log.Printf("(%v,%v) :%v", p.X, p.Y, curve.Round(curve.Distance(p1, p2), 2))
 	}
 
-	okList := []Point{{0, 0}, {1.5, 1.5}, {3.0, 3.0}, {4.5, 4.5}, {6.0, 6.0},
-		{7.5, 7.5}, {9.0, 9.0}, {10.5, 10.5}, {12.0, 12.0}, {13.5, 13.5},
-		{15.0, 15.0}, {16.5, 16.5}, {17.0, 17.0}}
+	okList := []Point{{0, 0, 0}, {1.5, 1.5, 0}, {3.0, 3.0, 0}, {4.5, 4.5, 0}, {6.0, 6.0, 0},
+		{7.5, 7.5, 0}, {9.0, 9.0, 0}, {10.5, 10.5, 0}, {12.0, 12.0, 0}, {13.5, 13.5, 0},
+		{15.0, 15.0, 0}, {16.5, 16.5, 0}, {17.0, 17.0, 0}}
 	for _, p := range curve.processed {
 		pass := false
 		for _, pOk := range okList {
@@ -77,4 +77,44 @@ func TestBezierCurve_Density(t *testing.T) {
 		}
 	}
 
+}
+
+func TestAdjustDensityByNSegments(t *testing.T) {
+	var curve = &Density{}
+	curve.Init()
+
+	p1 := Point{
+		X: 0,
+		Y: 0,
+	}
+	p2 := Point{
+		X: 3,
+		Y: 4,
+	}
+
+	d := curve.Distance(
+		p1,
+		p2,
+	)
+
+	p3 := curve.PointBetweenTwoPoints(p1, p2, d/2)
+	if d != 5.0 {
+		t.FailNow()
+	}
+	if p3.X != 1.5 || p3.Y != 2.0 {
+		t.FailNow()
+	}
+	d = curve.Distance(
+		p1,
+		p3,
+	)
+	if d != 2.5 {
+		t.FailNow()
+	}
+
+	curve.Add(Point{X: 0, Y: 0})
+	curve.Add(Point{X: 3, Y: 4})
+	curve.Add(Point{X: 6, Y: 8})
+	curve.Add(Point{X: 9, Y: 12})
+	curve.AdjustDensityByNSegments(2)
 }

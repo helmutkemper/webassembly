@@ -247,6 +247,30 @@ func (e *Density) AdjustDensity(mode Mode) (ref *Density) {
 	return e
 }
 
+// 2,5
+//
+// 0,0                         3,4                         6,8
+//  +-------------+-------------+-------------+-------------+
+//
+// 0,0         1.5,2.0       3.0,4.0       4.5,6.0       6.0,8.0
+//  +-------------+-------------+-------------+-------------+
+//  |          dPoint           |
+//                |    dt-dp    |
+//
+//
+// 0,0         1.5,2.0
+//  +-------------*-----------------------------------------+
+//
+// d:5.0
+// t:2.5
+//
+//
+//
+//
+//
+//
+//
+
 func (e *Density) AdjustDensityByNSegments(n int) (ref *Density) {
 	e.processed = make([]Point, len(e.original))
 	copy(e.processed, e.original)
@@ -257,33 +281,51 @@ func (e *Density) AdjustDensityByNSegments(n int) (ref *Density) {
 	d := 0.0
 	l := len(e.processed) - 1
 	for i := 0; i != l; i += 1 {
-		d += e.Distance(e.processed[i], e.processed[i+1])
+		dCalc := e.Distance(e.processed[i], e.processed[i+1])
+		e.processed[i+1].d = dCalc
+		d += dCalc
 	}
 
-	dTarget := d * 2.0 / float64(n)
-	dActual := 0.0
-	lastPoint := e.original[0]
+	dTarget := d / float64(n)
+	//lastPoint := e.original[0]
 	p3 := Point{}
 
+	dActual := 0.0
+	dTargetTmp := dTarget
 	for i := 0; i != l; i += 1 {
-		d = e.Distance(lastPoint, e.processed[i+1])
-		if dActual+d > dTarget {
-			dCalc := dActual + d - dTarget
-			p3 = e.PointBetweenTwoPoints(e.processed[i], e.processed[i+1], dCalc)
-			lastPoint = p3
-			dActual = 0.0
+		dActual += e.processed[i+1].d
+		if dActual > dTargetTmp {
+			p3 = e.PointBetweenTwoPoints(e.processed[i], e.processed[i+1], dTarget)
+			dTargetTmp = dActual - dTargetTmp
 			tmp = append(tmp, p3)
-		} else if dActual+d == dTarget {
-			p3 = e.processed[i+1]
-			lastPoint = p3
-			dActual = 0.0
+		} else if dActual == dTargetTmp {
+			p3 = e.PointBetweenTwoPoints(e.processed[i], e.processed[i+1], dTarget)
+			dTargetTmp = dTarget
 			tmp = append(tmp, p3)
 		} else {
-			lastPoint = e.processed[i]
-			dActual += d
+			dTargetTmp -= dActual
 		}
-
 	}
+
+	//for i := 0; i != l; i += 1 {
+	//	d = e.Distance(lastPoint, e.processed[i+1])
+	//	if dActual+d > dTargetTmp {
+	//		dCalc := dActual + d - dTargetTmp
+	//		p3 = e.PointBetweenTwoPoints(e.processed[i], e.processed[i+1], dCalc)
+	//		lastPoint = p3
+	//		dActual = d - dTargetTmp + dActual
+	//		tmp = append(tmp, p3)
+	//	} else if dActual+d == dTarget {
+	//		p3 = e.processed[i+1]
+	//		lastPoint = p3
+	//		dActual = 0.0
+	//		tmp = append(tmp, p3)
+	//	} else {
+	//		lastPoint = e.processed[i]
+	//		dActual += d
+	//	}
+	//
+	//}
 	tmp = append(tmp, e.processed[len(e.processed)-1])
 
 	e.processed = make([]Point, len(tmp))

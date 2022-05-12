@@ -50,9 +50,9 @@ func (e *Bresenham) Add(pos1, pos2 Point) {
 
 	for x := x1; x < x2+1; x++ {
 		if isSteep {
-			points = append(points, Point{y, x})
+			points = append(points, Point{X: y, Y: x})
 		} else {
-			points = append(points, Point{x, y})
+			points = append(points, Point{X: x, Y: y})
 		}
 		err -= deltaY
 		if err < 0 {

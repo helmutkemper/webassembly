@@ -68,10 +68,21 @@ func main() {
 	var decimatesCurve = &algorithm.Density{}
 	decimatesCurve.Init()
 
-	for _, point := range *bezier.GetProcessed() {
-		decimatesCurve.Add(point)
-	}
-	decimatesCurve.AdjustDensityByNSegments(4)
+	decimatesCurve.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border}).
+		Add(algorithm.Point{X: 2*wight + border - adjust, Y: 0*height + border + adjust}).
+		Add(algorithm.Point{X: 2*wight + border, Y: 1*height + border}).
+		Add(algorithm.Point{X: 2*wight + border - adjust, Y: 2*height + border - adjust}).
+		Add(algorithm.Point{X: 1*wight + border, Y: 2*height + border}).
+		Add(algorithm.Point{X: 0*wight + border + adjust, Y: 2*height + border - adjust}).
+		Add(algorithm.Point{X: 0*wight + border, Y: 1*height + border}).
+		Add(algorithm.Point{X: 0*wight + border + adjust, Y: 0*height + border + adjust}).
+		Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border}).
+		AdjustDensityByNSegments(16)
+
+	//for _, point := range *bezier.GetProcessed() {
+	//	decimatesCurve.Add(point)
+	//}
+	//decimatesCurve.AdjustDensityByNSegments(4)
 
 	var density = &algorithm.Density{}
 	density.Init()

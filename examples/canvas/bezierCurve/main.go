@@ -75,8 +75,7 @@ func main() {
 
 	var density = &algorithm.BezierCurve{}
 	density.Copy(decimatesCurve)
-	density.IncreaseDensityBetweenPoints(200)
-
+	density.IncreaseDensityBetweenPoints(300)
 	for _, point := range *density.GetProcessed() {
 		AddDotGreen(int(point.X), int(point.Y))
 	}
@@ -90,22 +89,26 @@ func main() {
 		AddDotBlue(int(point.X), int(point.Y))
 	}
 
-	bezier.GenerateRipple(30.0, 30)
-	for _, point := range *bezier.GetProcessed() {
-		AddDotBlue(int(point.X), int(point.Y))
+	var ripple = &algorithm.BezierCurve{}
+	ripple.Init()
+	ripple.Copy(bezier)
+	ripple.GenerateRipple(30.0, 30)
+	for _, point := range *ripple.GetProcessed() {
+		AddDotPalegoldenrod(int(point.X), int(point.Y))
 	}
 
 	var div *html.TagDiv
 	div = factoryBrowser.NewTagDiv("div_0").
 		Class("animate").
-		AddPointsToEasingTween(bezier).
+		AddPointsToEasingTween(ripple).
 		SetDeltaX(-15).
 		SetDeltaY(-25).
 		RotateDelta(-math.Pi / 2).
 		AppendToStage()
 
+	// todo: AddPointsToEasingTween define de forma automática os valores start e end da interpolação.
 	factoryEasingTween.NewLinear(
-		30*time.Second,
+		15*time.Second,
 		0,
 		10000,
 		div.EasingTweenWalkingAndRotateIntoPoints,
@@ -119,15 +122,20 @@ func main() {
 }
 
 func AddDotBlue(x, y int) {
-	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewBlueHalfTransparent()).
 		Arc(x, y, 0.4, 0, 2*math.Pi, false).
 		Fill()
 }
 
+func AddDotPalegoldenrod(x, y int) {
+	canvas.BeginPath().
+		FillStyle(factoryColor.NewPalegoldenrod()).
+		Arc(x, y, 0.35, 0, 2*math.Pi, false).
+		Fill()
+}
+
 func AddDotYellow(x, y int) {
-	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewYellow()).
 		Arc(x, y, 10.0, 0, 2*math.Pi, false).
@@ -135,7 +143,6 @@ func AddDotYellow(x, y int) {
 }
 
 func AddDotGreen(x, y int) {
-	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewGreen()).
 		Arc(x, y, 0.5, 0, 2*math.Pi, false).
@@ -173,7 +180,7 @@ func AddIndex(x, y, i int) {
 			y,
 			300,
 		)
-
+	return
 	font.Size = 12
 	canvas.BeginPath().
 		Font(font).

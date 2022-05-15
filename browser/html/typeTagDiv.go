@@ -177,10 +177,8 @@ type TagDiv struct {
 	// funções.
 	tween map[string]interfaces.TweenInterface
 
-	points      *[]algorithm.Point
-	pointsLen   int
-	pointsFirst algorithm.Point
-	pointsLast  algorithm.Point
+	points    *[]algorithm.Point
+	pointsLen int
 
 	rotateDelta float64
 }
@@ -1631,10 +1629,8 @@ func (e *TagDiv) AddPointsToEasingTween(algorithmRef algorithm.CurveInterface) (
 	var points = algorithmRef.GetProcessed()
 
 	e.points = points
-	e.pointsLen = len(*points) - 1
+	e.pointsLen = len(*points)
 
-	e.pointsFirst = (*points)[0]
-	e.pointsLast = (*points)[e.pointsLen]
 	return e
 }
 
@@ -1672,16 +1668,8 @@ func (e *TagDiv) EasingTweenWalkingIntoPoints() (function func(percent, p float6
 			forTenThousand = 10000.0 + forTenThousand
 		}
 
-		pCalc := e.pointsLen * int(forTenThousand) / 10000.0
-
-		switch pCalc {
-		case 0.0:
-			e.SetXY(int(e.pointsFirst.X), int(e.pointsFirst.Y))
-		case 1.0:
-			e.SetXY(int(e.pointsLast.X), int(e.pointsLast.Y))
-		default:
-			e.SetXY(int((*e.points)[pCalc].X), int((*e.points)[pCalc].Y))
-		}
+		pCalc := int(float64(e.pointsLen) * forTenThousand / 10000.0)
+		e.SetXY(int((*e.points)[pCalc].X), int((*e.points)[pCalc].Y))
 	}
 
 	return
@@ -1728,38 +1716,34 @@ func (e *TagDiv) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenTh
 			angleCorrection = true
 		}
 
-		pCalc := e.pointsLen * int(forTenThousand) / 10000.0
+		pCalc := int(float64(e.pointsLen) * forTenThousand / 10000.0)
 
 		var angle float64
 		switch pCalc {
 		case 0.0:
-			if angleCorrection == true {
-				angle = math.Atan2(e.pointsFirst.Y-(*e.points)[1].Y, e.pointsFirst.X-(*e.points)[1].X)
+			if angleCorrection == false {
+				angle = math.Atan2((*e.points)[0].Y-(*e.points)[1].Y, (*e.points)[0].X-(*e.points)[1].X)
 			} else {
-				angle = math.Atan2((*e.points)[1].Y-e.pointsFirst.Y, (*e.points)[1].X-e.pointsFirst.X)
+				angle = math.Atan2((*e.points)[1].Y-(*e.points)[0].Y, (*e.points)[1].X-(*e.points)[0].X)
 			}
 
-			e.Rotate(angle)
-			e.SetXY(int(e.pointsFirst.X), int(e.pointsFirst.Y))
 		case 1.0:
-			if angleCorrection == true {
-				angle = math.Atan2(e.pointsLast.Y-(*e.points)[e.pointsLen-1].Y, e.pointsLast.X-(*e.points)[e.pointsLen-1].X)
-			} else {
-				angle = math.Atan2((*e.points)[e.pointsLen-1].Y-e.pointsLast.Y, (*e.points)[e.pointsLen-1].X-e.pointsLast.X)
-			}
-
-			e.Rotate(angle)
-			e.SetXY(int(e.pointsLast.X), int(e.pointsLast.Y))
-		default:
 			if angleCorrection == true {
 				angle = math.Atan2((*e.points)[pCalc].Y-(*e.points)[pCalc-1].Y, (*e.points)[pCalc].X-(*e.points)[pCalc-1].X)
 			} else {
 				angle = math.Atan2((*e.points)[pCalc-1].Y-(*e.points)[pCalc].Y, (*e.points)[pCalc-1].X-(*e.points)[pCalc].X)
 			}
 
-			e.Rotate(angle)
-			e.SetXY(int((*e.points)[pCalc].X), int((*e.points)[pCalc].Y))
+		default:
+			if angleCorrection == true {
+				angle = math.Atan2((*e.points)[pCalc].Y-(*e.points)[pCalc-1].Y, (*e.points)[pCalc].X-(*e.points)[pCalc-1].X)
+			} else {
+				angle = math.Atan2((*e.points)[pCalc-1].Y-(*e.points)[pCalc].Y, (*e.points)[pCalc-1].X-(*e.points)[pCalc].X)
+			}
 		}
+
+		e.Rotate(angle)
+		e.SetXY(int((*e.points)[pCalc].X), int((*e.points)[pCalc].Y))
 	}
 
 	return

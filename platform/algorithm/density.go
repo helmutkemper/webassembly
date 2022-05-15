@@ -40,40 +40,45 @@ func (e *density) increaseDensityBetweenPoints(lineSegments int, processed *[]Po
 	tmp := make([]Point, len(*processed))
 	copy(tmp, *processed)
 
-	e.processed = make([]Point, 0)
+	*processed = make([]Point, 0)
+	p1 := Point{}
+	p2 := Point{}
 
 	length := len(tmp) - 1
 	for k := range tmp {
 		if k != length {
-			p1 := (tmp)[k]
-			p2 := (tmp)[k+1]
+			p1 = (tmp)[k]
+			p2 = (tmp)[k+1]
 
-			e.processed = append(
-				e.processed,
+			distance := math.Sqrt(math.Pow(p1.X-p2.X, 2.0) + math.Pow(p1.Y-p2.Y, 2.0))
+			angle := math.Atan2(p1.Y-p2.Y, p1.X-p2.X)
+			cos := math.Cos(angle)
+			sin := math.Sin(angle)
+
+			*processed = append(
+				*processed,
 				p1,
 			)
 
 			for i := 0; i != lineSegments-1; i += 1 {
-				div := 1.0 / float64(lineSegments) * (1.0 + float64(i))
-				d := math.Sqrt(math.Pow(p1.X-p2.X, 2.0)+math.Pow(p1.Y-p2.Y, 2.0)) * div
-				a := math.Atan2(p1.Y-p2.Y, p1.X-p2.X)
-				x := p1.X - math.Cos(a)*d
-				y := p1.Y - math.Sin(a)*d
+
+				percent := 1.0 / float64(lineSegments) * (1.0 + float64(i))
+				x := p1.X - cos*distance*percent
+				y := p1.Y - sin*distance*percent
 				pNew := Point{X: x, Y: y}
 
 				*processed = append(
 					*processed,
 					pNew,
 				)
-
 			}
-
-			*processed = append(
-				*processed,
-				p2,
-			)
 		}
 	}
+
+	*processed = append(
+		*processed,
+		p2,
+	)
 }
 
 // setNumberOfSegments

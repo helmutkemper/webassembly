@@ -1,6 +1,8 @@
 package algorithm
 
-import "math"
+import (
+	"math"
+)
 
 type ripple struct {
 	Geometry
@@ -47,5 +49,7 @@ func (e *ripple) generateRipple(distance float64, ripples int, processed *[]Poin
 		tmp[i] = e.NewPointByDistance((*processed)[i], offset, angle)
 	}
 
+	// esta linha carrega o último ponto, ou ele fica com (x,y) = (0,0)
+	tmp[l] = e.NewPointByDistance((*processed)[l], 0, angle)
 	copy(*processed, tmp)
 }

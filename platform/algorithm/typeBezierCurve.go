@@ -25,6 +25,7 @@ func (e *BezierCurve) GetOriginal() (list *[]Point) {
 }
 
 func (e *BezierCurve) Copy(ref CopyInterface) {
+	e.Init()
 	e.original = make([]Point, len(*ref.GetOriginal()))
 	e.processed = make([]Point, len(*ref.GetProcessed()))
 

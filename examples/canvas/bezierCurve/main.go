@@ -34,11 +34,12 @@ func main() {
 	bezier.Init()
 
 	border := 50.0
-	wight := 400.0
-	height := 400.0
-	adjust := 15.0
+	wight := 350.0
+	height := 350.0
+	adjust := 0.0 //15.0
 
 	// E.g.: P0 (1,0) = (1*wight,0*height)
+	// E.g.: P2 (2,1) = (2*wight,1*height)
 	//
 	//     (0,0)            (1,0)            (2,0)
 	//       +----------------+----------------+
@@ -54,43 +55,26 @@ func main() {
 	//       +----------------+----------------+
 	//     (0,2)            (1,2)            (2,2)
 
-	bezier.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border}).
-		Add(algorithm.Point{X: 2*wight + border - adjust, Y: 0*height + border + adjust}).
-		Add(algorithm.Point{X: 2*wight + border, Y: 1*height + border}).
-		Add(algorithm.Point{X: 2*wight + border - adjust, Y: 2*height + border - adjust}).
-		Add(algorithm.Point{X: 1*wight + border, Y: 2*height + border}).
-		Add(algorithm.Point{X: 0*wight + border + adjust, Y: 2*height + border - adjust}).
-		Add(algorithm.Point{X: 0*wight + border, Y: 1*height + border}).
-		Add(algorithm.Point{X: 0*wight + border + adjust, Y: 0*height + border + adjust}).
-		Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border}).
-		Process(0.001)
+	bezier.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
+	bezier.Add(algorithm.Point{X: 2*wight + border - adjust, Y: 0*height + border + adjust})
+	bezier.Add(algorithm.Point{X: 2*wight + border, Y: 1*height + border})
+	bezier.Add(algorithm.Point{X: 2*wight + border - adjust, Y: 2*height + border - adjust})
+	bezier.Add(algorithm.Point{X: 1*wight + border, Y: 2*height + border})
+	bezier.Add(algorithm.Point{X: 0*wight + border + adjust, Y: 2*height + border - adjust})
+	bezier.Add(algorithm.Point{X: 0*wight + border, Y: 1*height + border})
+	bezier.Add(algorithm.Point{X: 0*wight + border + adjust, Y: 0*height + border + adjust})
+	bezier.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
+	bezier.Process(0.001)
 
-	var decimatesCurve = &algorithm.Density{}
-	decimatesCurve.Init()
-
-	decimatesCurve.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border}).
-		Add(algorithm.Point{X: 2*wight + border - adjust, Y: 0*height + border + adjust}).
-		Add(algorithm.Point{X: 2*wight + border, Y: 1*height + border}).
-		Add(algorithm.Point{X: 2*wight + border - adjust, Y: 2*height + border - adjust}).
-		Add(algorithm.Point{X: 1*wight + border, Y: 2*height + border}).
-		Add(algorithm.Point{X: 0*wight + border + adjust, Y: 2*height + border - adjust}).
-		Add(algorithm.Point{X: 0*wight + border, Y: 1*height + border}).
-		Add(algorithm.Point{X: 0*wight + border + adjust, Y: 0*height + border + adjust}).
-		Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border}).
-		AdjustDensityByNSegments(16)
-
-	//for _, point := range *bezier.GetProcessed() {
-	//	decimatesCurve.Add(point)
-	//}
-	//decimatesCurve.AdjustDensityByNSegments(4)
-
-	var density = &algorithm.Density{}
-	density.Init()
-
+	var decimatesCurve = &algorithm.BezierCurve{}
+	decimatesCurve.Copy(bezier)
+	decimatesCurve.SetNumberOfSegments(5)
 	for _, point := range *decimatesCurve.GetProcessed() {
-		density.Add(point)
 		AddDotYellow(int(point.X), int(point.Y))
 	}
+
+	var density = &algorithm.BezierCurve{}
+	density.Copy(decimatesCurve)
 	density.IncreaseDensityBetweenPoints(200)
 
 	for _, point := range *density.GetProcessed() {
@@ -103,20 +87,25 @@ func main() {
 	}
 
 	for _, point := range *bezier.GetProcessed() {
-		AddDot(int(point.X), int(point.Y))
+		AddDotBlue(int(point.X), int(point.Y))
+	}
+
+	bezier.GenerateRipple(30.0, 30)
+	for _, point := range *bezier.GetProcessed() {
+		AddDotBlue(int(point.X), int(point.Y))
 	}
 
 	var div *html.TagDiv
 	div = factoryBrowser.NewTagDiv("div_0").
 		Class("animate").
-		AddPointsToEasingTween(density).
+		AddPointsToEasingTween(bezier).
 		SetDeltaX(-15).
 		SetDeltaY(-25).
 		RotateDelta(-math.Pi / 2).
 		AppendToStage()
 
 	factoryEasingTween.NewLinear(
-		15*time.Second,
+		30*time.Second,
 		0,
 		10000,
 		div.EasingTweenWalkingAndRotateIntoPoints,
@@ -129,7 +118,8 @@ func main() {
 	<-done
 }
 
-func AddDot(x, y int) {
+func AddDotBlue(x, y int) {
+	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewBlueHalfTransparent()).
 		Arc(x, y, 0.4, 0, 2*math.Pi, false).
@@ -137,6 +127,7 @@ func AddDot(x, y int) {
 }
 
 func AddDotYellow(x, y int) {
+	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewYellow()).
 		Arc(x, y, 10.0, 0, 2*math.Pi, false).
@@ -144,6 +135,7 @@ func AddDotYellow(x, y int) {
 }
 
 func AddDotGreen(x, y int) {
+	return
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewGreen()).
 		Arc(x, y, 0.5, 0, 2*math.Pi, false).

@@ -1645,7 +1645,7 @@ func (e *TagSvgA) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{}
 //           atributo e o tratarão como um download. Versões antigas do Firefox (antes de 82)
 //           priorizam o cabeçalho e exibirão o conteúdo inline.
 func (e *TagSvgA) Download(download string) (ref *TagSvgA) {
-	e.selfElement.Set("download", download)
+	e.selfElement.Call("setAttribute", "download", download)
 	return e
 }
 
@@ -1659,7 +1659,7 @@ func (e *TagSvgA) Download(download string) (ref *TagSvgA) {
 //
 //  O URL ou fragmento de URL para o qual o hiperlink aponta. Tipo de valor: <URL> ; Valor padrão: nenhum;
 func (e *TagSvgA) HRef(href string) (ref *TagSvgA) {
-	e.selfElement.Set("href", href)
+	e.selfElement.Call("setAttribute", "href", href)
 	return e
 }
 
@@ -1673,7 +1673,7 @@ func (e *TagSvgA) HRef(href string) (ref *TagSvgA) {
 //
 //  O formato humano do URL ou fragmento de URL para o qual o hiperlink aponta.
 func (e *TagSvgA) HRefLang(hreflang string) (ref *TagSvgA) {
-	e.selfElement.Set("hreflang", hreflang)
+	e.selfElement.Call("setAttribute", "hreflang", hreflang)
 	return e
 }
 
@@ -1689,7 +1689,7 @@ func (e *TagSvgA) HRefLang(hreflang string) (ref *TagSvgA) {
 //  Uma lista de URLs separados por espaços. Quando o link for seguido, o navegador enviará
 //  solicitações POST com o corpo PING para as URLs. Normalmente para rastreamento.
 func (e *TagSvgA) Ping(ping ...string) (ref *TagSvgA) {
-	e.selfElement.Set("hreflang", strings.Join(ping, " "))
+	e.selfElement.Call("setAttribute", "hreflang", strings.Join(ping, " "))
 	return e
 }
 
@@ -1748,7 +1748,7 @@ func (e *TagSvgA) Ping(ping ...string) (ref *TagSvgA) {
 //   Note:
 //     * Experimental. Expect behavior to change in the future. (04/2022)
 func (e *TagSvgA) ReferrerPolicy(referrerPolicy ReferrerPolicy) (ref *TagSvgA) {
-	e.selfElement.Set("referrerpolicy", referrerPolicy)
+	e.selfElement.Call("setAttribute", "referrerpolicy", referrerPolicy)
 	return e
 }
 
@@ -1787,7 +1787,7 @@ func (e *TagSvgA) ReferrerPolicy(referrerPolicy ReferrerPolicy) (ref *TagSvgA) {
 //       que definir rel="noopener" que não define window.opener. Consulte a compatibilidade do
 //       navegador para obter o status do suporte.
 func (e *TagSvgA) Target(target Target) (ref *TagSvgA) {
-	e.selfElement.Set("target", target.String())
+	e.selfElement.Call("setAttribute", "target", target.String())
 	return e
 }
 
@@ -1801,6 +1801,6 @@ func (e *TagSvgA) Target(target Target) (ref *TagSvgA) {
 //
 //  Dicas no formato do URL vinculado com um tipo MIME. Nenhuma funcionalidade embutida.
 func (e *TagSvgA) SetMimeType(typeProperty Mime) (ref *TagSvgA) {
-	e.selfElement.Set("type", typeProperty)
+	e.selfElement.Call("setAttribute", "type", typeProperty)
 	return e
 }

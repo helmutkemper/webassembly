@@ -16,6 +16,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/mouse"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
+	"image/color"
 	"log"
 	"strconv"
 	"strings"
@@ -1584,6 +1585,464 @@ func (e *TagSvgAnimate) onMouseDraggingNormal(_ js.Value, args []js.Value) inter
 //
 //  O atributo begin define quando uma animação deve começar ou quando um elemento deve ser descartado.
 func (e *TagSvgAnimate) Begin(begin time.Duration) (ref *TagSvgAnimate) {
-	e.selfElement.Set("begin", begin.String())
+	e.selfElement.Call("setAttribute", "begin", begin.String())
+	return e
+}
+
+// Dur
+//
+// English:
+//
+//  The dur attribute indicates the simple duration of an animation.
+//
+// Português:
+//
+//  O atributo dur indica a duração simples de uma animação.
+func (e *TagSvgAnimate) Dur(dur time.Duration) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "dur", dur.String())
+	return e
+}
+
+// End
+//
+// English:
+//
+//  The end attribute defines an end value for the animation that can constrain the active duration.
+//
+// Português:
+//
+//  O atributo final define um valor final para a animação que pode restringir a duração ativa.
+func (e *TagSvgAnimate) End(end interface{}) (ref *TagSvgAnimate) {
+	if converted, ok := end.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "end", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "end", end)
+	return e
+}
+
+// Min
+//
+// English:
+//
+//  The min attribute specifies the minimum value of the active animation duration.
+//
+// Português:
+//
+//  O atributo min especifica o valor mínimo da duração da animação ativa.
+func (e *TagSvgAnimate) Min(min time.Duration) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "min", min.String())
+	return e
+}
+
+// Max
+//
+// English:
+//
+//  The max attribute specifies the maximum value of the active animation duration.
+//
+// Português:
+//
+//  O atributo max especifica o valor máximo da duração da animação ativa.
+func (e *TagSvgAnimate) Max(max time.Duration) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "max", max.String())
+	return e
+}
+
+// Restart
+//
+// English:
+//
+//  The restart attribute specifies whether or not an animation can restart.
+//
+//   Input:
+//     restart: specifies whether or not an animation can restart
+//       KSvgAnimationRestartAlways:This value indicates that the animation can be restarted at any time.
+//       KSvgAnimationRestartWhenNotActive: This value indicates that the animation can only be restarted when it is not
+//         active (i.e. after the active end).
+//       KSvgAnimationRestartNever: This value indicates that the animation cannot be restarted for the time the
+//         document is loaded.
+//
+// Português:
+//
+//  O atributo restart especifica se uma animação pode ou não reiniciar.
+//
+//   Entrada:
+//     restart: especifica se uma animação pode ou não reiniciar.
+//       KSvgAnimationRestartAlways: Este valor indica que a animação pode ser reiniciada a qualquer momento.
+//       KSvgAnimationRestartWhenNotActive: Este valor indica que a animação só pode ser reiniciada quando não estiver
+//         ativa (ou seja, após o término ativo).
+//       KSvgAnimationRestartNever: Esse valor indica que a animação não pode ser reiniciada durante o carregamento do
+//         documento.
+func (e *TagSvgAnimate) Restart(restart SvgAnimationRestart) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "restart", restart.String())
+	return e
+}
+
+// RepeatCount
+//
+// English:
+//
+//  The repeatCount attribute indicates the number of times an animation will take place.
+//
+//   Input:
+//     repeatCount: indicates the number of times an animation will occur. (-1 for infinity)
+//
+// Português:
+//
+//  O atributo repeatCount indica o número de vezes que uma animação ocorrerá.
+//
+//   Entrada:
+//     repeatCount: indica o número de vezes que uma animação ocorrerá. (-1 para infinito)
+func (e *TagSvgAnimate) RepeatCount(repeatCount int) (ref *TagSvgAnimate) {
+	if repeatCount >= 0 {
+		e.selfElement.Call("setAttribute", "end", repeatCount)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "repeatCount", "indefinite")
+	return e
+}
+
+// RepeatDur
+//
+// English:
+//
+//  The repeatDur attribute specifies the total duration for repeating an animation.
+//
+//   Input:
+//     repeatDur: specifies the total duration for repeating an animation, (-1 for undefined)
+//
+// Português:
+//
+//  O atributo repeatDur especifica a duração total para repetir uma animação.
+//
+//   Entrada:
+//     repeatDur: especifica a duração total para repetir uma animação. (-1 para indefinido)
+func (e *TagSvgAnimate) RepeatDur(repeatDur interface{}) (ref *TagSvgAnimate) {
+	if converted, ok := repeatDur.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "repeatDur", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "repeatDur", "indefinite")
+	return e
+}
+
+// Fill
+//
+// English:
+//
+//  The fill attribute has two different meanings. For shapes and text it's a presentation attribute that defines the
+//  color (or any SVG paint servers like gradients or patterns) used to paint the element;
+//
+// for animation it defines the final state of the animation.
+//
+// Português:
+//
+//  O atributo fill tem dois significados diferentes. Para formas e texto, é um atributo de apresentação que define a
+//  cor (ou qualquer servidor de pintura SVG, como gradientes ou padrões) usado para pintar o elemento;
+//
+// para animação, define o estado final da animação.
+func (e *TagSvgAnimate) Fill(value interface{}) (ref *TagSvgAnimate) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "fill", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "fill", value)
+	return e
+}
+
+// HRef
+//
+// English:
+//
+//  The href attribute defines a link to a resource as a reference URL. The exact meaning of that link depends on the
+//  context of each element using it.
+//
+//   Notes:
+//     * Specifications before SVG 2 defined an xlink:href attribute, which is now rendered obsolete by the href
+//       attribute.
+//       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
+//       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
+//
+// Português
+//
+//  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
+//  contexto de cada elemento que o utiliza.
+//
+//   Notas:
+//     * As especificações anteriores ao SVG 2 definiam um atributo xlink:href, que agora se torna obsoleto pelo
+//       atributo href.
+//       Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
+//       usado como um substituto além do atributo href, por exemplo,
+//       <use href="some-id" xlink:href="some-id x="5" y="5" />.
+func (e *TagSvgAnimate) HRef(href string) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "href", href)
+	return e
+}
+
+// AttributeName
+//
+// English:
+//
+//  The attributeName attribute indicates the name of the CSS property or attribute of the target element that is going
+//  to be changed during an animation.
+//
+// Português
+//
+//  O atributo attributeName indica o nome da propriedade CSS ou atributo do elemento de destino que será alterado
+//  durante uma animação.
+func (e *TagSvgAnimate) AttributeName(attributeName string) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "attributeName", attributeName)
+	return e
+}
+
+// CalcMode
+//
+// English:
+//
+//  The calcMode attribute specifies the interpolation mode for the animation.
+//
+//   Input:
+//     KSvgCalcModeDiscrete: This specifies that the animation function will jump from one value to the next without
+//       any interpolation.
+//     KSvgCalcModeLinear: Simple linear interpolation between values is used to calculate the animation function.
+//       Except for <animateMotion>, this is the default value.
+//     KSvgCalcModePaced: Defines interpolation to produce an even pace of change across the animation.
+//     KSvgCalcModeSpline: Interpolates from one value in the values list to the next according to a time function
+//       defined by a cubic Bézier spline. The points of the spline are defined in the keyTimes attribute, and the
+//       control points for each interval are defined in the keySplines attribute.
+//
+// The default mode is linear, however if the attribute does not support linear interpolation (e.g. for strings), the
+// calcMode attribute is ignored and discrete interpolation is used.
+//
+//   Notes:
+//     Default value: KSvgCalcModePaced
+//
+// Português
+//
+//  O atributo calcMode especifica o modo de interpolação para a animação.
+//
+//   Entrada:
+//     KSvgCalcModeDiscrete: Isso especifica que a função de animação saltará de um valor para o próximo sem qualquer
+//       interpolação.
+//     KSvgCalcModeLinear: A interpolação linear simples entre valores é usada para calcular a função de animação.
+//       Exceto para <animateMotion>, este é o valor padrão.
+//     KSvgCalcModePaced: Define a interpolação para produzir um ritmo uniforme de mudança na animação.
+//     KSvgCalcModeSpline: Interpola de um valor na lista de valores para o próximo de acordo com uma função de tempo
+//       definida por uma spline de Bézier cúbica. Os pontos do spline são definidos no atributo keyTimes e os pontos
+//       de controle para cada intervalo são definidos no atributo keySplines.
+//
+// O modo padrão é linear, no entanto, se o atributo não suportar interpolação linear (por exemplo, para strings), o
+// atributo calcMode será ignorado e a interpolação discreta será usada.
+//
+//   Notas:
+//     * Valor padrão: KSvgCalcModePaced
+func (e *TagSvgAnimate) CalcMode(calcMode SvgCalcMode) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "calcMode", calcMode)
+	return e
+}
+
+// Values
+//
+// English:
+//
+//  The values attribute has different meanings, depending upon the context where it's used, either it defines a
+//  sequence of values used over the course of an animation, or it's a list of numbers for a color matrix, which is
+//  interpreted differently depending on the type of color change to be performed.
+//
+// Português
+//
+//  O atributo values tem significados diferentes, dependendo do contexto em que é usado, ou define uma sequência de
+//  valores usados ao longo de uma animação, ou é uma lista de números para uma matriz de cores, que é interpretada de
+//  forma diferente dependendo da mudança de cor a ser executada.
+func (e *TagSvgAnimate) Values(values string) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "values", values)
+	return e
+}
+
+// KeyTimes
+//
+// English:
+//
+//  The keyTimes attribute represents a list of time values used to control the pacing of the animation.
+//
+// Each time in the list corresponds to a value in the values attribute list, and defines when the value is used in the
+// animation. Each time value in the keyTimes list is specified as a floating point value between 0 and 1 (inclusive),
+// representing a proportional offset into the duration of the animation element.
+//
+// Português
+//
+//  O atributo keyTimes representa uma lista de valores de tempo usados para controlar o ritmo da animação.
+//
+// Cada vez na lista corresponde a um valor na lista de atributos de valores e define quando o valor é usado na
+// animação. Cada valor de tempo na lista keyTimes é especificado como um valor de ponto flutuante entre 0 e 1
+// (inclusive), representando um deslocamento proporcional à duração do elemento de animação.
+func (e *TagSvgAnimate) KeyTimes(keyTimes string) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "keyTimes", keyTimes)
+	return e
+}
+
+// KeySplines
+//
+// English:
+//
+//  The keySplines attribute defines a set of Bézier curve control points associated with the keyTimes list, defining a
+//  cubic Bézier function that controls interval pacing.
+//
+// This attribute is ignored unless the calcMode attribute is set to spline.
+//
+// If there are any errors in the keySplines specification (bad values, too many or too few values), the animation will
+// not occur.
+//
+// Português
+//
+//  O atributo keySplines define um conjunto de pontos de controle da curva Bézier associados à lista keyTimes,
+//  definindo uma função Bézier cúbica que controla o ritmo do intervalo.
+//
+// Esse atributo é ignorado, a menos que o atributo calcMode seja definido como spline.
+//
+// Se houver algum erro na especificação de keySplines (valores incorretos, muitos ou poucos valores), a animação não
+// ocorrerá.
+func (e *TagSvgAnimate) KeySplines(keySplines string) (ref *TagSvgAnimate) {
+	e.CalcMode(KSvgCalcModeSpline)
+
+	e.selfElement.Call("setAttribute", "keySplines", keySplines)
+	return e
+}
+
+// From
+//
+// English:
+//
+//  The from attribute indicates the initial value of the attribute that will be modified during the animation.
+//
+// When used with the to attribute, the animation will change the modified attribute from the from value to the to
+// value. When used with the by attribute, the animation will change the attribute relatively from the from value by
+// the value specified in by.
+//
+// Português
+//
+//  O atributo from indica o valor inicial do atributo que será modificado durante a animação.
+//
+// Quando usado com o atributo to, a animação mudará o atributo modificado do valor from para o valor to. Quando usado
+// com o atributo by, a animação mudará o atributo relativamente do valor from pelo valor especificado em by.
+func (e *TagSvgAnimate) From(from float64) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "from", from)
+	return e
+}
+
+// To
+//
+// English:
+//
+//  The to attribute indicates the final value of the attribute that will be modified during the animation.
+//
+// The value of the attribute will change between the from attribute value and this value.
+//
+// Português
+//
+//  O atributo to indica o valor final do atributo que será modificado durante a animação.
+//
+// O valor do atributo mudará entre o valor do atributo from e este valor.
+func (e *TagSvgAnimate) To(to float64) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "to", to)
+	return e
+}
+
+// By
+//
+// English:
+//
+//  The by attribute specifies a relative offset value for an attribute that will be modified during an animation.
+//
+// The starting value for the attribute is either indicated by specifying it as value for the attribute given in the
+// attributeName or the from attribute.
+//
+// Português
+//
+//  O atributo by especifica um valor de deslocamento relativo para um atributo que será modificado durante uma
+//  animação.
+//
+// O valor inicial para o atributo é indicado especificando-o como valor para o atributo fornecido no attributeName ou
+// no atributo from.
+func (e *TagSvgAnimate) By(by float64) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "by", by)
+	return e
+}
+
+// Additive
+//
+// English:
+//
+//  The additive attribute controls whether or not an animation is additive.
+//
+//   Input:
+//     KSvgAdditiveSum: Specifies that the animation will add to the underlying value of the attribute and other
+//       lower priority animations.
+//     KSvgAdditiveReplace: (default) Specifies that the animation will override the underlying value of the attribute
+//       and other lower priority animations.
+//
+// It is frequently useful to define animation as an offset or delta to an attribute's value, rather than as
+// absolute values.
+//
+// Português
+//
+//  O atributo aditivo controla se uma animação é ou não aditiva.
+//
+//   Input:
+//     KSvgAdditiveSum: Especifica que a animação será adicionada ao valor subjacente do atributo e outras animações de
+//       prioridade mais baixa.
+//     KSvgAdditiveReplace: (default) Especifica que a animação substituirá o valor subjacente do atributo e outras
+//       animações de prioridade mais baixa.
+//
+// É frequentemente útil definir a animação como um deslocamento ou delta para o valor de um atributo, em vez de
+// valores absolutos.
+func (e *TagSvgAnimate) Additive(additive SvgAdditive) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "additive", additive.String())
+	return e
+}
+
+// Accumulate
+//
+// English:
+//
+//  The accumulate attribute controls whether or not an animation is cumulative.
+//
+//   Input:
+//     KSvgAccumulateSum: Specifies that each repeat iteration after the first builds upon the last value of the
+//       previous iteration;
+//     KSvgAccumulateNone: Specifies that repeat iterations are not cumulative.
+//
+// It is frequently useful for repeated animations to build upon the previous results, accumulating with each iteration.
+// This attribute said to the animation if the value is added to the previous animated attribute's value on each
+// iteration.
+//
+//   Notes:
+//     * This attribute is ignored if the target attribute value does not support addition, or if the animation element
+//       does not repeat;
+//     * This attribute will be ignored if the animation function is specified with only the to attribute.
+//
+// Português
+//
+//  O atributo acumular controla se uma animação é cumulativa ou não.
+//
+//   Input:
+//     KSvgAccumulateSum: Especifica que cada iteração repetida após a primeira se baseia no último valor da iteração
+//       anterior;
+//     KSvgAccumulateNone: Especifica que as iterações repetidas não são cumulativas.
+//
+// Frequentemente, é útil que as animações repetidas se baseiem nos resultados anteriores, acumulando a cada iteração.
+// Este atributo é dito à animação se o valor for adicionado ao valor do atributo animado anterior em cada iteração.
+//
+//   Notas:
+//     * Esse atributo será ignorado se o valor do atributo de destino não suportar adição ou se o elemento de animação
+//       não se repetir;
+//     * Este atributo será ignorado se a função de animação for especificada apenas com o atributo to.
+func (e *TagSvgAnimate) Accumulate(accumulate SvgAccumulate) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "accumulate", accumulate)
 	return e
 }

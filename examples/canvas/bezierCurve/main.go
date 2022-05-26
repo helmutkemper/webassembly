@@ -34,9 +34,9 @@ func main() {
 	bezier.Init()
 
 	border := 50.0
-	wight := 350.0
-	height := 350.0
-	adjust := 0.0 //15.0
+	wight := 400.0
+	height := 400.0
+	adjust := 15.0
 
 	// E.g.: P0 (1,0) = (1*wight,0*height)
 	// E.g.: P2 (2,1) = (2*wight,1*height)
@@ -68,7 +68,7 @@ func main() {
 
 	var decimatesCurve = &algorithm.BezierCurve{}
 	decimatesCurve.Copy(bezier)
-	decimatesCurve.SetNumberOfSegments(5)
+	decimatesCurve.SetNumberOfSegments(3)
 	for _, point := range *decimatesCurve.GetProcessed() {
 		AddDotYellow(int(point.X), int(point.Y))
 	}
@@ -90,9 +90,8 @@ func main() {
 	}
 
 	var ripple = &algorithm.BezierCurve{}
-	ripple.Init()
 	ripple.Copy(bezier)
-	ripple.GenerateRipple(30.0, 30)
+	ripple.GenerateRipple(30, 20)
 	for _, point := range *ripple.GetProcessed() {
 		AddDotPalegoldenrod(int(point.X), int(point.Y))
 	}
@@ -108,7 +107,7 @@ func main() {
 
 	// todo: AddPointsToEasingTween define de forma automática os valores start e end da interpolação.
 	factoryEasingTween.NewLinear(
-		15*time.Second,
+		30*time.Second,
 		0,
 		10000,
 		div.EasingTweenWalkingAndRotateIntoPoints,
@@ -180,7 +179,7 @@ func AddIndex(x, y, i int) {
 			y,
 			300,
 		)
-	return
+
 	font.Size = 12
 	canvas.BeginPath().
 		Font(font).

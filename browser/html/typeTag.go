@@ -980,6 +980,10 @@ const (
 	//  O elemento HTML <select> representa um controle que fornece um menu de opções.
 	KTagSelect Tag = "select"
 
+	//todo: documentar
+	KTagSvg     Tag = "svg"
+	KTagSvgRect Tag = "rect"
+
 	// KTagSlot
 	//
 	// English:

@@ -1073,26 +1073,6 @@ func (e *TagDiv) SetY(y int) (ref *TagDiv) {
 	return e
 }
 
-// Rotate
-// todo: documentar
-// https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/rotate
-func (e *TagDiv) Rotate(angle float64) (ref *TagDiv) {
-	angleAsString := strconv.FormatFloat(angle+e.rotateDelta, 'E', -1, 64)
-	e.selfElement.Get("style").Set("transform", "rotate("+angleAsString+"rad)")
-	return e
-}
-
-// todo: cometar
-func (e *TagDiv) RotateDelta(angle float64) (ref *TagDiv) {
-	e.rotateDelta = angle
-	return e
-}
-
-// todo: cometar
-func (e *TagDiv) GetRotateDelta() (delta float64) {
-	return e.rotateDelta
-}
-
 // GetXY
 //
 // English:
@@ -1178,7 +1158,7 @@ func (e *TagDiv) GetRight() (right int) {
 //
 // Português:
 //
-//  É o mesmo que y + Heught.
+//  É o mesmo que y + Height.
 func (e *TagDiv) GetBottom() (bottom int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	bottom = coordinate.Get("bottom").Int()
@@ -1198,6 +1178,74 @@ func (e *TagDiv) GetLeft() (left int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	left = coordinate.Get("left").Int()
 	return
+}
+
+// Rotate
+//
+// English:
+//
+//  Defines a transformation that rotates an element around a fixed point on the 2D plane, without deforming it.
+//
+//   Input:
+//     angle: representing the angle of the rotation. The direction of rotation depends on the writing direction.
+//     In a left-to-right context, a positive angle denotes a clockwise rotation, a negative angle a counter-clockwise
+//     one.
+//     In a right-to-left context, a positive angle denotes a counter-clockwise rotation, a negative angle a clockwise
+//     one.
+//
+// Português:
+//
+//  Define uma transformação que gira um elemento em torno de um ponto fixo no plano 2D, sem deformá-lo.
+//
+//   Entrada:
+//     angle: representando o ângulo de rotação. O sentido de rotação depende do sentido de escrita.
+//     Em um contexto da esquerda para a direita, um ângulo positivo denota uma rotação no sentido horário, um ângulo
+//     negativo no sentido anti-horário.
+//     Em um contexto da direita para a esquerda, um ângulo positivo denota uma rotação no sentido anti-horário, um
+//     ângulo negativo denota uma rotação no sentido horário.
+func (e *TagDiv) Rotate(angle float64) (ref *TagDiv) {
+	angleAsString := strconv.FormatFloat(angle+e.rotateDelta, 'E', -1, 64)
+	e.selfElement.Get("style").Set("transform", "rotate("+angleAsString+"rad)")
+	return e
+}
+
+// RotateDelta
+//
+// English:
+//
+//  Used in conjunction with the Rotate() function, sets the rotation adjustment angle, ie Rotate() = angle + delta.
+//
+//   Input:
+//     angle: delta, object rotation adjustment angle.
+//
+// Português:
+//
+//  Usada em conjunto com a função Rotate(), define o ângulo de ajuste da rotação, ou seja, Rotate() = angle + delta.
+//
+//   Entrada:
+//     angle: delta, ângulo de ajuste da rotação do objeto.
+func (e *TagDiv) RotateDelta(delta float64) (ref *TagDiv) {
+	e.rotateDelta = delta
+	return e
+}
+
+// GetRotateDelta
+//
+// English:
+//
+//  Returns the rotation adjustment angle, i.e. Rotate() = angle + delta.
+//
+//   Output:
+//     angle: delta, object rotation adjustment angle.
+//
+// Português:
+//
+//  Retorna o ângulo de ajuste da rotação, ou seja, Rotate() = angle + delta.
+//
+//   Saída:
+//     angle: delta, ângulo de ajuste da rotação do objeto.
+func (e *TagDiv) GetRotateDelta() (delta float64) {
+	return e.rotateDelta
 }
 
 // AddListener

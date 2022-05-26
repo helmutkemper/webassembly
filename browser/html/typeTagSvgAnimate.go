@@ -21,35 +21,19 @@ import (
 	"strings"
 	"sync"
 	"syscall/js"
+	"time"
 )
 
-// TagSvgA
+// TagSvgAnimate
 //
 // English:
 //
-//  The <a> SVG element creates a hyperlink to other web pages, files, locations in the same page, email addresses, or
-//  any other URL. It is very similar to HTML's <a> element.
-//
-// SVG's <a> element is a container, which means you can create a link around text (like in HTML) but also around any
-// shape.
-//
-//   Notes:
-//     * Since this element shares its tag name with HTML's <a> element, selecting a with CSS or querySelector may apply
-//       to the wrong kind of element. Try the @namespace rule to distinguish the two.
+//  The SVG <animate> element provides a way to animate an attribute of an element over time.
 //
 // Português:
 //
-//  O elemento SVG <a> cria um hiperlink para outras páginas da web, arquivos, locais na mesma página, endereços de
-//  e-mail ou qualquer outro URL. É muito semelhante ao elemento <a> do HTML.
-//
-// O elemento SVGs <a> é um contêiner, o que significa que você pode criar um link em torno do texto (como em HTML),
-// mas também em torno de qualquer forma.
-//
-//   Notes:
-//     * Como esse elemento compartilha seu nome de tag com o elemento <a> do HTML, selecionar a com CSS ou
-//       querySelector pode se aplicar ao tipo errado de elemento. Experimente a regra @namespace para distinguir os
-//       dois.
-type TagSvgA struct {
+//  O elemento SVG <animate> fornece uma maneira de animar um atributo de um elemento ao longo do tempo.
+type TagSvgAnimate struct {
 
 	// id
 	//
@@ -222,7 +206,7 @@ type TagSvgA struct {
 //     importantes no navegador;
 //     Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
 //     pressionadas junto com a tecla Alt.
-func (e *TagSvgA) AccessKey(key string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) AccessKey(key string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("accesskey", key)
 	return e
 }
@@ -238,7 +222,7 @@ func (e *TagSvgA) AccessKey(key string) (ref *TagSvgA) {
 //
 //  Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
 //  carregada. Apenas um elemento em um documento pode ter esse atributo.
-func (e *TagSvgA) Autofocus(autofocus bool) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Autofocus(autofocus bool) (ref *TagSvgAnimate) {
 	e.selfElement.Set("autofocus", autofocus)
 	return e
 }
@@ -280,7 +264,7 @@ func (e *TagSvgA) Autofocus(autofocus bool) (ref *TagSvgA) {
 // O atributo class é usado principalmente para apontar para uma classe em uma folha de estilo.
 // No entanto, também pode ser usado por um JavaScript (através do HTML DOM) para fazer alterações
 // em elementos HTML com uma classe especificada.
-func (e *TagSvgA) Class(class ...string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Class(class ...string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("classList", strings.Join(class, " "))
 	return e
 }
@@ -308,7 +292,7 @@ func (e *TagSvgA) Class(class ...string) (ref *TagSvgA) {
 //   Nota:
 //     Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
 //     seu pai.
-func (e *TagSvgA) ContentEditable(editable bool) (ref *TagSvgA) {
+func (e *TagSvgAnimate) ContentEditable(editable bool) (ref *TagSvgAnimate) {
 	e.selfElement.Set("contenteditable", editable)
 	return e
 }
@@ -358,7 +342,7 @@ func (e *TagSvgA) ContentEditable(editable bool) (ref *TagSvgA) {
 //   Nota:
 //     * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
 //       usuário.
-func (e *TagSvgA) Data(data map[string]string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Data(data map[string]string) (ref *TagSvgAnimate) {
 	for k, v := range data {
 		e.selfElement.Set(" data-"+k, v)
 	}
@@ -381,7 +365,7 @@ func (e *TagSvgA) Data(data map[string]string) (ref *TagSvgA) {
 //   Entrada:
 //     dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
 //          KDirAuto ]
-func (e *TagSvgA) Dir(dir Dir) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Dir(dir Dir) (ref *TagSvgAnimate) {
 	e.selfElement.Set("dir", dir.String())
 	return e
 }
@@ -418,7 +402,7 @@ func (e *TagSvgA) Dir(dir Dir) (ref *TagSvgA) {
 //     * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
 //     * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
 //       https://www.w3schools.com/html/html5_draganddrop.asp
-func (e *TagSvgA) Draggable(draggable Draggable) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Draggable(draggable Draggable) (ref *TagSvgAnimate) {
 	e.selfElement.Set("draggable", draggable.String())
 	return e
 }
@@ -468,7 +452,7 @@ func (e *TagSvgA) Draggable(draggable Draggable) (ref *TagSvgA) {
 //
 // Se nenhum valor enterKeyHint foi especificado ou se foi definido com um valor diferente dos
 // permitidos, ele retornará uma string vazia.
-func (e *TagSvgA) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagSvgA) {
+func (e *TagSvgAnimate) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagSvgAnimate) {
 	e.selfElement.Set("enterKeyHint", enterKeyHint.String())
 	return e
 }
@@ -505,7 +489,7 @@ func (e *TagSvgA) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagSvgA) {
 // O atributo oculto também pode ser usado para impedir que um usuário veja um elemento até que alguma
 // outra condição seja atendida (como marcar uma caixa de seleção etc.). Então, um JavaScript pode
 // remover o atributo oculto e tornar o elemento visível.
-func (e *TagSvgA) Hidden() (ref *TagSvgA) {
+func (e *TagSvgAnimate) Hidden() (ref *TagSvgAnimate) {
 	e.selfElement.Get("style").Set("visibility", "hidden")
 	return e
 }
@@ -531,7 +515,7 @@ func (e *TagSvgA) Hidden() (ref *TagSvgA) {
 //
 // O atributo id é mais usado para apontar para um estilo em uma folha de estilo, e por JavaScript
 // (através do HTML DOM) para manipular o elemento com o id específico.
-func (e *TagSvgA) Id(id string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Id(id string) (ref *TagSvgAnimate) {
 	e.id = id
 	e.selfElement.Set("id", id)
 	return e
@@ -565,7 +549,7 @@ func (e *TagSvgA) Id(id string) (ref *TagSvgA) {
 // imposto na entrada. Para exigir que a entrada esteja em conformidade com um tipo de dados
 // específico, escolha um tipo de elemento <input> apropriado. Para obter orientações específicas
 // sobre como escolher os tipos de <input>, consulte a seção Valores.
-func (e *TagSvgA) InputMode(inputMode InputMode) (ref *TagSvgA) {
+func (e *TagSvgAnimate) InputMode(inputMode InputMode) (ref *TagSvgAnimate) {
 	e.selfElement.Set("inputmode", inputMode.String())
 	return e
 }
@@ -581,7 +565,7 @@ func (e *TagSvgA) InputMode(inputMode InputMode) (ref *TagSvgA) {
 //
 //  Permite especificar que um elemento HTML padrão deve se comportar como um elemento interno
 //  personalizado registrado.
-func (e *TagSvgA) Is(is string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Is(is string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("is", is)
 	return e
 }
@@ -595,7 +579,7 @@ func (e *TagSvgA) Is(is string) (ref *TagSvgA) {
 // Português:
 //
 //  O identificador global exclusivo de um item.
-func (e *TagSvgA) ItemId(id string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) ItemId(id string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("itemid", id)
 	return e
 }
@@ -611,7 +595,7 @@ func (e *TagSvgA) ItemId(id string) (ref *TagSvgA) {
 //
 //  Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
 //  especificado, onde um itemprop consiste em um par de nome e valor.
-func (e *TagSvgA) ItemDrop(itemprop string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) ItemDrop(itemprop string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("itemprop", itemprop)
 	return e
 }
@@ -629,7 +613,7 @@ func (e *TagSvgA) ItemDrop(itemprop string) (ref *TagSvgA) {
 //  Propriedades que não são descendentes de um elemento com o atributo itemscope podem ser
 //  associadas ao item usando um itemref. Ele fornece uma lista de IDs de elementos (não IDs de itens)
 //  com propriedades adicionais em outras partes do documento.
-func (e *TagSvgA) ItemRef(itemref string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) ItemRef(itemref string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("itemref", itemref)
 	return e
 }
@@ -647,7 +631,7 @@ func (e *TagSvgA) ItemRef(itemref string) (ref *TagSvgA) {
 //  Especifica a URL do vocabulário que será usado para definir itemprops (propriedades do item) na
 //  estrutura de dados. itemscope é usado para definir o escopo de onde na estrutura de dados o
 //  vocabulário definido por tipo de item estará ativo.
-func (e *TagSvgA) ItemType(itemType string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) ItemType(itemType string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("itemtype", itemType)
 	return e
 }
@@ -671,7 +655,7 @@ func (e *TagSvgA) ItemType(itemType string) (ref *TagSvgA) {
 //
 // Exemplos comuns são KLanguageEnglish para inglês, KLanguageSpanish para espanhol, KLanguageFrench
 // para francês e assim por diante.
-func (e *TagSvgA) Lang(language Language) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Lang(language Language) (ref *TagSvgAnimate) {
 	e.selfElement.Set("lang", language.String())
 	return e
 }
@@ -688,7 +672,7 @@ func (e *TagSvgA) Lang(language Language) (ref *TagSvgA) {
 //  Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
 //  o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
 //  pseudo-elemento ::part.
-func (e *TagSvgA) Nonce(part ...string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Nonce(part ...string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("part", strings.Join(part, " "))
 	return e
 }
@@ -706,7 +690,7 @@ func (e *TagSvgA) Nonce(part ...string) (ref *TagSvgA) {
 //  Atribui um slot em uma shadow DOM shadow tree a um elemento: Um elemento com um atributo slot é
 //  atribuído ao slot criado pelo elemento <slot> cujo valor do atributo name corresponde ao valor
 //  desse atributo slot.
-func (e *TagSvgA) Slot(slot string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Slot(slot string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("slot", slot)
 	return e
 }
@@ -734,7 +718,7 @@ func (e *TagSvgA) Slot(slot string) (ref *TagSvgA) {
 //         Valores de texto em elementos de entrada (não senha)
 //         Texto em elementos <textarea>
 //         Texto em elementos editáveis
-func (e *TagSvgA) Spellcheck(spell bool) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Spellcheck(spell bool) (ref *TagSvgAnimate) {
 	e.selfElement.Set("spellcheck", spell)
 
 	return e
@@ -761,7 +745,7 @@ func (e *TagSvgA) Spellcheck(spell bool) (ref *TagSvgA) {
 //
 // O atributo style pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagSvgA) Style(style string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Style(style string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("style", style)
 	return e
 }
@@ -781,7 +765,7 @@ func (e *TagSvgA) Style(style string) (ref *TagSvgA) {
 //
 // O atributo tabindex pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento
 // HTML. No entanto, não é necessariamente útil).
-func (e *TagSvgA) TabIndex(index int) (ref *TagSvgA) {
+func (e *TagSvgAnimate) TabIndex(index int) (ref *TagSvgAnimate) {
 	e.selfElement.Set("tabindex", index)
 	return e
 }
@@ -806,7 +790,7 @@ func (e *TagSvgA) TabIndex(index int) (ref *TagSvgA) {
 //
 // O atributo title pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagSvgA) Title(title string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Title(title string) (ref *TagSvgAnimate) {
 	e.selfElement.Set("title", title)
 	return e
 }
@@ -826,7 +810,7 @@ func (e *TagSvgA) Title(title string) (ref *TagSvgA) {
 //
 //   Entrada:
 //     translate: elemento deve ser traduzido ou não. [ KTranslateYes | KTranslateNo ]
-func (e *TagSvgA) Translate(translate Translate) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Translate(translate Translate) (ref *TagSvgAnimate) {
 	e.selfElement.Set("translate", translate.String())
 	return e
 }
@@ -842,7 +826,7 @@ func (e *TagSvgA) Translate(translate Translate) (ref *TagSvgA) {
 //
 //  Em um documento HTML, o método Document.createElement() cria o elemento HTML especificado ou um
 //  HTMLUnknownElement se o nome do elemento dado não for conhecido.
-func (e *TagSvgA) CreateElement(tag Tag) (ref *TagSvgA) {
+func (e *TagSvgAnimate) CreateElement(tag Tag) (ref *TagSvgAnimate) {
 	e.selfElement = js.Global().Get("document").Call("createElement", tag.String())
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
@@ -880,7 +864,7 @@ func (e *TagSvgA) CreateElement(tag Tag) (ref *TagSvgA) {
 //     * Equivale a:
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
-func (e *TagSvgA) AppendById(appendId string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) AppendById(appendId string) (ref *TagSvgAnimate) {
 
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
@@ -920,10 +904,10 @@ func (e *TagSvgA) AppendById(appendId string) (ref *TagSvgA) {
 //     * Equivale a:
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
-func (e *TagSvgA) Append(append interface{}) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Append(append interface{}) (ref *TagSvgAnimate) {
 	switch append.(type) {
-	case *TagSvgA:
-		e.selfElement.Call("appendChild", append.(*TagSvgA).selfElement)
+	case *TagSvgAnimate:
+		e.selfElement.Call("appendChild", append.(*TagSvgAnimate).selfElement)
 	case js.Value:
 		e.selfElement.Call("appendChild", append)
 	case string:
@@ -955,7 +939,7 @@ func (e *TagSvgA) Append(append interface{}) (ref *TagSvgA) {
 //
 // todo:https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
 // todo: appendMany()
-func (e *TagSvgA) AppendToStage() (ref *TagSvgA) {
+func (e *TagSvgAnimate) AppendToStage() (ref *TagSvgAnimate) {
 	e.stage.Call("appendChild", e.selfElement)
 	return e
 }
@@ -969,7 +953,7 @@ func (e *TagSvgA) AppendToStage() (ref *TagSvgA) {
 // Português:
 //
 //  Define os eixos X e Y em pixels.
-func (e *TagSvgA) SetXY(x, y int) (ref *TagSvgA) {
+func (e *TagSvgAnimate) SetXY(x, y int) (ref *TagSvgAnimate) {
 	e.x = x
 	e.y = y
 
@@ -993,7 +977,7 @@ func (e *TagSvgA) SetXY(x, y int) (ref *TagSvgA) {
 //
 //  Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
 //  GetX(): (x = x - deltaMovieX).
-func (e *TagSvgA) SetDeltaX(delta int) (ref *TagSvgA) {
+func (e *TagSvgAnimate) SetDeltaX(delta int) (ref *TagSvgAnimate) {
 	e.deltaMovieX = delta
 	return
 }
@@ -1009,7 +993,7 @@ func (e *TagSvgA) SetDeltaX(delta int) (ref *TagSvgA) {
 //
 //  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
 //  GetX(): (y = y - deltaMovieY).
-func (e *TagSvgA) SetDeltaY(delta int) (ref *TagSvgA) {
+func (e *TagSvgAnimate) SetDeltaY(delta int) (ref *TagSvgAnimate) {
 	e.deltaMovieY = delta
 	return
 }
@@ -1023,7 +1007,7 @@ func (e *TagSvgA) SetDeltaY(delta int) (ref *TagSvgA) {
 // Português:
 //
 //  Define o eixo X em pixels.
-func (e *TagSvgA) SetX(x int) (ref *TagSvgA) {
+func (e *TagSvgAnimate) SetX(x int) (ref *TagSvgAnimate) {
 	e.x = x
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	e.selfElement.Get("style").Set("left", px)
@@ -1040,7 +1024,7 @@ func (e *TagSvgA) SetX(x int) (ref *TagSvgA) {
 // Português:
 //
 //  Define o eixo Y em pixels.
-func (e *TagSvgA) SetY(y int) (ref *TagSvgA) {
+func (e *TagSvgAnimate) SetY(y int) (ref *TagSvgAnimate) {
 	e.y = y
 
 	py := strconv.FormatInt(int64(y), 10) + "px"
@@ -1058,7 +1042,7 @@ func (e *TagSvgA) SetY(y int) (ref *TagSvgA) {
 // Português:
 //
 //  Retorna os eixos X e Y em pixels.
-func (e *TagSvgA) GetXY() (x, y int) {
+func (e *TagSvgAnimate) GetXY() (x, y int) {
 	x = e.GetX()
 	y = e.GetY()
 
@@ -1074,7 +1058,7 @@ func (e *TagSvgA) GetXY() (x, y int) {
 // Português:
 //
 //  Retorna o eixo X em pixels.
-func (e *TagSvgA) GetX() (x int) {
+func (e *TagSvgAnimate) GetX() (x int) {
 	//rect.top, rect.right, rect.bottom, rect.left
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	x = coordinate.Get("left").Int()
@@ -1090,7 +1074,7 @@ func (e *TagSvgA) GetX() (x int) {
 // Português:
 //
 //  Retorna o eixo Y em pixels.
-func (e *TagSvgA) GetY() (y int) {
+func (e *TagSvgAnimate) GetY() (y int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	y = coordinate.Get("top").Int()
 	return
@@ -1105,7 +1089,7 @@ func (e *TagSvgA) GetY() (y int) {
 // Português:
 //
 //  O mesmo que a função GetX(), retorna a posição x do elemento.
-func (e *TagSvgA) GetTop() (top int) {
+func (e *TagSvgAnimate) GetTop() (top int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	top = coordinate.Get("top").Int()
 	return
@@ -1120,7 +1104,7 @@ func (e *TagSvgA) GetTop() (top int) {
 // Português:
 //
 //  É o mesmo que x + width.
-func (e *TagSvgA) GetRight() (right int) {
+func (e *TagSvgAnimate) GetRight() (right int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	right = coordinate.Get("right").Int()
 	return
@@ -1135,7 +1119,7 @@ func (e *TagSvgA) GetRight() (right int) {
 // Português:
 //
 //  É o mesmo que y + Height.
-func (e *TagSvgA) GetBottom() (bottom int) {
+func (e *TagSvgAnimate) GetBottom() (bottom int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	bottom = coordinate.Get("bottom").Int()
 	return
@@ -1150,7 +1134,7 @@ func (e *TagSvgA) GetBottom() (bottom int) {
 // Português:
 //
 //  O mesmo que a função GetY(), retorna a posição y do elemento.
-func (e *TagSvgA) GetLeft() (left int) {
+func (e *TagSvgAnimate) GetLeft() (left int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	left = coordinate.Get("left").Int()
 	return
@@ -1179,7 +1163,7 @@ func (e *TagSvgA) GetLeft() (left int) {
 //     negativo no sentido anti-horário.
 //     Em um contexto da direita para a esquerda, um ângulo positivo denota uma rotação no sentido anti-horário, um
 //     ângulo negativo denota uma rotação no sentido horário.
-func (e *TagSvgA) Rotate(angle float64) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Rotate(angle float64) (ref *TagSvgAnimate) {
 	angleAsString := strconv.FormatFloat(angle+e.rotateDelta, 'E', -1, 64)
 	e.selfElement.Get("style").Set("transform", "rotate("+angleAsString+"rad)")
 	return e
@@ -1200,7 +1184,7 @@ func (e *TagSvgA) Rotate(angle float64) (ref *TagSvgA) {
 //
 //   Entrada:
 //     angle: delta, ângulo de ajuste da rotação do objeto.
-func (e *TagSvgA) RotateDelta(delta float64) (ref *TagSvgA) {
+func (e *TagSvgAnimate) RotateDelta(delta float64) (ref *TagSvgAnimate) {
 	e.rotateDelta = delta
 	return e
 }
@@ -1220,7 +1204,7 @@ func (e *TagSvgA) RotateDelta(delta float64) (ref *TagSvgA) {
 //
 //   Saída:
 //     angle: delta, ângulo de ajuste da rotação do objeto.
-func (e *TagSvgA) GetRotateDelta() (delta float64) {
+func (e *TagSvgAnimate) GetRotateDelta() (delta float64) {
 	return e.rotateDelta
 }
 
@@ -1275,7 +1259,7 @@ func (e *TagSvgA) GetRotateDelta() (delta float64) {
 //       log.Print(event.GetScreenX())
 //       log.Print(event.GetScreenY())
 //     }
-func (e *TagSvgA) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagSvgA) {
+func (e *TagSvgAnimate) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagSvgAnimate) {
 
 	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		var mouseEvent = mouse.MouseEvent{}
@@ -1398,7 +1382,7 @@ func (e *TagSvgA) AddListener(eventType interface{}, manager mouse.SimpleManager
 //       log.Print(event.GetScreenX())
 //       log.Print(event.GetScreenY())
 //     }
-func (e *TagSvgA) RemoveListener(eventType interface{}) (ref *TagSvgA) {
+func (e *TagSvgAnimate) RemoveListener(eventType interface{}) (ref *TagSvgAnimate) {
 	switch converted := eventType.(type) {
 	case event.Event:
 		f, _ := e.listener.Load(converted.String())
@@ -1474,7 +1458,7 @@ func (e *TagSvgA) RemoveListener(eventType interface{}) (ref *TagSvgA) {
 //     value: formato do ponteiro do mouse.
 //       Exemplo: SetMouse(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
 //                o resto
-func (e *TagSvgA) Mouse(value mouse.CursorType) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Mouse(value mouse.CursorType) (ref *TagSvgAnimate) {
 	e.selfElement.Get("style").Set("cursor", value.String())
 	return e
 }
@@ -1488,7 +1472,7 @@ func (e *TagSvgA) Mouse(value mouse.CursorType) (ref *TagSvgA) {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgA) Init(id string) (ref *TagSvgA) {
+func (e *TagSvgAnimate) Init(id string) (ref *TagSvgAnimate) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement(KTagDiv)
@@ -1507,7 +1491,7 @@ func (e *TagSvgA) Init(id string) (ref *TagSvgA) {
 // Português:
 //
 //  Prepara à referencia do stage na inicialização.
-func (e *TagSvgA) prepareStageReference() {
+func (e *TagSvgAnimate) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
@@ -1534,35 +1518,35 @@ func (e *TagSvgA) prepareStageReference() {
 //       Class("animate").
 //       DragStart().
 //       AppendById("stage")
-func (e *TagSvgA) DragStart() (ref *TagSvgA) {
+func (e *TagSvgAnimate) DragStart() (ref *TagSvgAnimate) {
 	e.dragNormalStart()
 	return e
 }
 
-func (e *TagSvgA) DragStop() (ref *TagSvgA) {
+func (e *TagSvgAnimate) DragStop() (ref *TagSvgAnimate) {
 	e.dragNormalStop()
 	return e
 }
 
-func (e *TagSvgA) dragNormalStart() {
+func (e *TagSvgAnimate) dragNormalStart() {
 	e.AddListener(mouse.KEventMouseDown, e.onStartDragNormal)
 	e.stage.Call("addEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
 	e.stage.Call("addEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
 }
 
-func (e *TagSvgA) dragNormalStop() {
+func (e *TagSvgAnimate) dragNormalStop() {
 	e.RemoveListener(mouse.KEventMouseDown)
 	e.stage.Call("removeEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
 	e.stage.Call("removeEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
 	e.isDragging = false
 }
 
-func (e *TagSvgA) onStopDragNormal(_ js.Value, _ []js.Value) any {
+func (e *TagSvgAnimate) onStopDragNormal(_ js.Value, _ []js.Value) any {
 	e.isDragging = false
 	return nil
 }
 
-func (e *TagSvgA) onStartDragNormal(event mouse.MouseEvent) {
+func (e *TagSvgAnimate) onStartDragNormal(event mouse.MouseEvent) {
 	var screenX = int(event.GetScreenX())
 	var screenY = int(event.GetScreenY())
 
@@ -1572,7 +1556,7 @@ func (e *TagSvgA) onStartDragNormal(event mouse.MouseEvent) {
 	e.isDragging = true
 }
 
-func (e *TagSvgA) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{} {
+func (e *TagSvgAnimate) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{} {
 	if e.isDragging == false {
 		return nil
 	}
@@ -1590,217 +1574,16 @@ func (e *TagSvgA) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{}
 	return nil
 }
 
-// Download
+// Begin
 //
 // English:
 //
-//  Causes the browser to treat the linked URL as a download. Can be used with or without a value
-//
-//   Note:
-//     * Without a value, the browser will suggest a filename/extension, generated from various
-//       sources:
-//         The Content-Disposition HTTP header;
-//         The final segment in the URL path;
-//         The media type (from the Content-Type header, the start of a data: URL, or Blob.type for a
-//         blob: URL).
-//     * Defining a value suggests it as the filename. / and \ characters are converted to
-//       underscores (_). Filesystems may forbid other characters in filenames, so browsers will
-//       adjust the suggested name if necessary;
-//     * Download only works for same-origin URLs, or the blob: and data: schemes;
-//     * How browsers treat downloads varies by browser, user settings, and other factors. The user
-//       may be prompted before a download starts, or the file may be saved automatically, or it may
-//       open automatically, either in an external application or in the browser itself;
-//     * If the Content-Disposition header has different information from the download attribute,
-//       resulting behavior may differ:
-//         * If the header specifies a filename, it takes priority over a filename specified in the
-//           download attribute;
-//         * If the header specifies a disposition of inline, Chrome and Firefox prioritize the
-//           attribute and treat it as a download. Old Firefox versions (before 82) prioritize the
-//           header and will display the content inline.
+//  The begin attribute defines when an animation should begin or when an element should be discarded.
 //
 // Português:
 //
-//  Faz com que o navegador trate a URL vinculada como um download. Pode ser usado com ou sem valor
-//
-//   Nota:
-//     * Sem um valor, o navegador sugerirá uma extensão de nome de arquivo, gerada a partir de várias
-//       fontes:
-//         O cabeçalho HTTP Content-Disposition;
-//         O segmento final no caminho do URL;
-//         O tipo de mídia (do cabeçalho Content-Type, o início de um data: URL ou Blob.type para um
-//         blob: URL).
-//     * Definir um valor sugere-o como o nome do arquivo. / e \ caracteres são convertidos em
-//       sublinhados (_). Os sistemas de arquivos podem proibir outros caracteres em nomes de
-//       arquivos, portanto, os navegadores ajustarão o nome sugerido, se necessário;
-//     * O download funciona apenas para URLs de mesma origem, ou os esquemas blob: e data: schemes;
-//     * A forma como os navegadores tratam os downloads varia de acordo com o navegador, as
-//       configurações do usuário e outros fatores. O usuário pode ser avisado antes do início de um
-//       download, ou o arquivo pode ser salvo automaticamente, ou pode ser aberto automaticamente,
-//       seja em um aplicativo externo ou no próprio navegador;
-//     * Se o cabeçalho Content-Disposition tiver informações diferentes do atributo download, o
-//       comportamento resultante pode ser diferente:
-//         * Se o cabeçalho especificar um nome de arquivo, ele terá prioridade sobre um nome de
-//           arquivo especificado no atributo download;
-//         * Se o cabeçalho especificar uma disposição de inline, o Chrome e o Firefox priorizarão o
-//           atributo e o tratarão como um download. Versões antigas do Firefox (antes de 82)
-//           priorizam o cabeçalho e exibirão o conteúdo inline.
-func (e *TagSvgA) Download(download string) (ref *TagSvgA) {
-	e.selfElement.Set("download", download)
-	return e
-}
-
-// HRef
-//
-// English:
-//
-//  The URL or URL fragment the hyperlink points to. Value type: <URL> ; Default value: none;
-//
-// Português:
-//
-//  O URL ou fragmento de URL para o qual o hiperlink aponta. Tipo de valor: <URL> ; Valor padrão: nenhum;
-func (e *TagSvgA) HRef(href string) (ref *TagSvgA) {
-	e.selfElement.Set("href", href)
-	return e
-}
-
-// HRefLang
-//
-// English:
-//
-//  The human language of the URL or URL fragment that the hyperlink points to.
-//
-// Português:
-//
-//  O formato humano do URL ou fragmento de URL para o qual o hiperlink aponta.
-func (e *TagSvgA) HRefLang(hreflang string) (ref *TagSvgA) {
-	e.selfElement.Set("hreflang", hreflang)
-	return e
-}
-
-// Ping
-//
-// English:
-//
-//  A space-separated list of URLs. When the link is followed, the browser will send POST requests
-//  with the body PING to the URLs. Typically for tracking.
-//
-// Português:
-//
-//  Uma lista de URLs separados por espaços. Quando o link for seguido, o navegador enviará
-//  solicitações POST com o corpo PING para as URLs. Normalmente para rastreamento.
-func (e *TagSvgA) Ping(ping ...string) (ref *TagSvgA) {
-	e.selfElement.Set("hreflang", strings.Join(ping, " "))
-	return e
-}
-
-// ReferrerPolicy
-//
-// English:
-//
-//  How much of the referrer to send when following the link.
-//
-//   KRefPolicyNoReferrer: The Referer header will not be sent.
-//   KRefPolicyNoReferrerWhenDowngrade: The Referer header will not be sent to origins without TLS
-//     (HTTPS).
-//   KRefPolicyOrigin: The sent referrer will be limited to the origin of the referring page: its
-//     scheme, host, and port.
-//   KRefPolicyOriginWhenCrossOrigin: The referrer sent to other origins will be limited to the
-//     scheme, the host, and the port. Navigations on the same origin will still include the path.
-//   KRefPolicySameOrigin: A referrer will be sent for same origin, but cross-origin requests will
-//     contain no referrer information.
-//   KRefPolicyStrictOrigin: Only send the origin of the document as the referrer when the protocol
-//     security level stays the same (HTTPS→HTTPS), but don't send it to a less secure destination
-//     (HTTPS→HTTP).
-//   KRefPolicyStrictOriginWhenCrossOrigin (default): Send a full URL when performing a same-origin
-//     request, only send the origin when the protocol security level stays the same (HTTPS→HTTPS),
-//     and send no header to a less secure destination (HTTPS→HTTP).
-//   KRefPolicyUnsafeUrl: The referrer will include the origin and the path (but not the fragment,
-//     password, or username). This value is unsafe, because it leaks origins and paths from
-//     TLS-protected resources to insecure origins.
-//
-//   Note:
-//     * Experimental. Expect behavior to change in the future. (04/2022)
-//
-// Português:
-//
-//  Quanto do referenciador enviar ao seguir o link.
-//
-//   KRefPolicyNoReferrer: O cabeçalho Referer não será enviado.
-//   KRefPolicyNoReferrerWhenDowngrade: O cabeçalho Referer não será enviado para origens sem TLS
-//     (HTTPS).
-//   KRefPolicyOrigin: O referenciador enviado será limitado à origem da página de referência: seu
-//     esquema, host e porta.
-//   KRefPolicyOriginWhenCrossOrigin: O referenciador enviado para outras origens será limitado ao
-//     esquema, ao host e à porta. As navegações na mesma origem ainda incluirão o caminho.
-//   KRefPolicySameOrigin: Um referenciador será enviado para a mesma origem, mas as solicitações de
-//     origem cruzada não conterão informações de referenciador.
-//   KRefPolicyStrictOrigin: Só envie a origem do documento como referenciador quando o nível de
-//     segurança do protocolo permanecer o mesmo (HTTPS→HTTPS), mas não envie para um destino menos
-//     seguro (HTTPS→HTTP).
-//   KRefPolicyStrictOriginWhenCrossOrigin (padrão): Envie uma URL completa ao realizar uma
-//     solicitação de mesma origem, envie a origem apenas quando o nível de segurança do protocolo
-//     permanecer o mesmo (HTTPS→HTTPS) e não envie nenhum cabeçalho para um destino menos seguro
-//     (HTTPS→HTTP).
-//   KRefPolicyUnsafeUrl: O referenciador incluirá a origem e o caminho (mas não o fragmento, a senha
-//     ou o nome de usuário). Esse valor não é seguro porque vaza origens e caminhos de recursos
-//     protegidos por TLS para origens inseguras.
-//
-//   Note:
-//     * Experimental. Expect behavior to change in the future. (04/2022)
-func (e *TagSvgA) ReferrerPolicy(referrerPolicy ReferrerPolicy) (ref *TagSvgA) {
-	e.selfElement.Set("referrerpolicy", referrerPolicy)
-	return e
-}
-
-// Target
-//
-// English:
-//
-// Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
-// The following keywords have special meanings for where to load the URL:
-//
-//   KTargetSelf: the current browsing context; (Default)
-//   KTargetBlank: usually a new tab, but users can configure browsers to open a new window instead;
-//   KTargetParent: the parent browsing context of the current one. If no parent, behaves as _self;
-//   KTargetTop: the topmost browsing context (the "highest" context that's an ancestor of the current
-//     one). If no ancestors, behaves as _self.
-//
-//   Note:
-//     * Setting KTargetBlank on <a> elements implicitly provides the same rel behavior as setting
-//       rel="noopener" which does not set window.opener. See browser compatibility for support
-//       status.
-//
-// Português:
-//
-// Onde exibir a URL vinculada, como o nome de um contexto de navegação (uma guia, janela ou
-// <iframe>). As seguintes palavras-chave têm significados especiais para onde carregar o URL:
-//
-//   KTargetSelf: o contexto de navegação atual; (padrão)
-//   KTargetBlank: geralmente uma nova guia, mas os usuários podem configurar os navegadores para
-//     abrir uma nova janela;
-//   KTargetParent: o contexto de navegação pai do atual. Se nenhum pai, se comporta como _self;
-//   KTargetTop: o contexto de navegação mais alto (o contexto "mais alto" que é um ancestral do
-//     atual). Se não houver ancestrais, se comporta como _self.
-//
-//   Nota:
-//     * Definir KTargetBlank em elementos <a> fornece implicitamente o mesmo comportamento rel
-//       que definir rel="noopener" que não define window.opener. Consulte a compatibilidade do
-//       navegador para obter o status do suporte.
-func (e *TagSvgA) Target(target Target) (ref *TagSvgA) {
-	e.selfElement.Set("target", target.String())
-	return e
-}
-
-// SetMimeType
-//
-// English:
-//
-//  Hints at the linked URL's format with a MIME type. No built-in functionality.
-//
-// Português:
-//
-//  Dicas no formato do URL vinculado com um tipo MIME. Nenhuma funcionalidade embutida.
-func (e *TagSvgA) SetMimeType(typeProperty Mime) (ref *TagSvgA) {
-	e.selfElement.Set("type", typeProperty)
+//  O atributo begin define quando uma animação deve começar ou quando um elemento deve ser descartado.
+func (e *TagSvgAnimate) Begin(begin time.Duration) (ref *TagSvgAnimate) {
+	e.selfElement.Set("begin", begin.String())
 	return e
 }

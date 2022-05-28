@@ -1072,6 +1072,135 @@ func (e *TagSvgGlobal) Divisor(divisor float64) (ref *TagSvgGlobal) {
 	return e
 }
 
+// DominantBaseline
+//
+// English:
+//
+//  The dominant-baseline attribute specifies the dominant baseline, which is the baseline used to align the box's text and inline-level contents. It also indicates the default alignment baseline of any boxes participating in baseline alignment in the box's alignment context.
+//
+// It is used to determine or re-determine a scaled-baseline-table. A scaled-baseline-table is a compound value with three components:
+//
+//   1. a baseline-identifier for the dominant-baseline,
+//   2. a baseline-table, and
+//   3. a baseline-table font-size.
+//
+// Some values of the property re-determine all three values. Others only re-establish the baseline-table font-size. When the initial value, auto, would give an undesired result, this property can be used to explicitly set the desired scaled-baseline-table.
+//
+// If there is no baseline table in the nominal font, or if the baseline table lacks an entry for the desired baseline, then the browser may use heuristics to determine the position of the desired baseline.
+//
+//   Notes:
+//     * As a presentation attribute, dominant-baseline can be used as a CSS property.
+//
+// Português:
+//
+//
+func (e *TagSvgGlobal) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "dominant-baseline", dominantBaseline.String())
+	return e
+}
+
+// Dur
+//
+// English:
+//
+//  The dur attribute indicates the simple duration of an animation.
+//
+//   Input:
+//     dur: indicates the simple duration of an animation.
+//       KSvgDur... (e.g. KSvgDurIndefinite)
+//       time.Duration (e.g. time.Second * 5)
+//
+//   Notes:
+//     * The interpolation will not work if the simple duration is indefinite (although this may still be useful for
+//       <set> elements).
+//
+// Português:
+//
+//  O atributo dur indica a duração simples de uma animação.
+//
+//   Entrada:
+//     dur: indica a duração simples de uma animação.
+//       KSvgDur... (ex. KSvgDurIndefinite)
+//       time.Duration (ex. time.Second * 5)
+//
+//   Notas:
+//     * A interpolação não funcionará se a duração simples for indefinida (embora isso ainda possa ser útil para
+//       elementos <set>).
+func (e *TagSvgGlobal) Dur(dur interface{}) (ref *TagSvgGlobal) {
+	switch converted := dur.(type) {
+	case time.Duration:
+		e.selfElement.Call("setAttribute", "dur", converted.String())
+	case SvgDur:
+		e.selfElement.Call("setAttribute", "dur", converted.String())
+	default:
+		e.selfElement.Call("setAttribute", "dur", dur)
+	}
+
+	return e
+}
+
+// Dx
+//
+// English:
+//
+//  The dx attribute indicates a shift along the x-axis on the position of an element or its content.
+//
+//   Input:
+//     dx: indicates a shift along the x-axis on the position of an element or its content.
+//       (e.g. "20%", "0 10%" or "0 10% 20%")
+//
+// Portuguese
+//
+//  O atributo dx indica um deslocamento ao longo do eixo x na posição de um elemento ou seu conteúdo.
+//
+//   Entrada:
+//     dx: indica um deslocamento ao longo do eixo x na posição de um elemento ou seu conteúdo.
+//       (ex. "20%", "0 10%" ou "0 10% 20%")
+func (e *TagSvgGlobal) Dx(dx string) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "dx", dx)
+	return e
+}
+
+// Dy
+//
+// English:
+//
+//  The dy attribute indicates a shift along the y-axis on the position of an element or its content.
+//
+//   Input:
+//     dy: indicates a shift along the y-axis on the position of an element or its content.
+//       (e.g. "50%", "20", "0 10" or "0 10 20")
+//
+// Portuguese
+//
+//  O atributo dy indica um deslocamento ao longo do eixo y na posição de um elemento ou seu conteúdo.
+//
+//   Entrada:
+//     dy: indica um deslocamento ao longo do eixo y na posição de um elemento ou seu conteúdo.
+//       (ex. "50%", "20", "0 10" ou "0 10 20")
+func (e *TagSvgGlobal) Dy(dy string) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "dy", dy)
+	return e
+}
+
+// EdgeMode
+//
+// English:
+//
+//  The edgeMode attribute determines how to extend the input image as necessary with color values so that the matrix
+//  operations can be applied when the kernel is positioned at or near the edge of the input image.
+//
+// Portuguese
+//
+//  O atributo edgeMode determina como estender a imagem de entrada conforme necessário com valores de cor para que as
+//  operações de matriz possam ser aplicadas quando o kernel estiver posicionado na borda da imagem de entrada ou
+//  próximo a ela.
+//
+func (e *TagSvgGlobal) EdgeMode(edgeMode SvgEdgeMode) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "edgeMode", edgeMode.String())
+	return e
+}
+
 //
 //
 //

@@ -1612,6 +1612,112 @@ func (e *TagSvgGlobal) Y1(y1 interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
+// Y2
+//
+// English:
+//
+//	The y2 attribute is used to specify the second y-coordinate for drawing an SVG element that requires more than
+//	one coordinate. Elements that only need one coordinate use the y attribute instead.
+//
+//	You can use this attribute with the following SVG elements:
+//
+// <line>
+// <linearGradient>
+//
+//	Input:
+//	    y2: defines the y2 attribute for the first y-coordinate for drawing an SVG element that requires more than one coordinate
+//		  line: For <line>, y2 defines the y coordinate of the ending point of the line.
+//		  linearGradient: For <linearGradient>, y2 defines the y coordinate of the ending point of the gradient vector
+//		    used to map the gradient stop values. The exact behavior of this attribute is influenced by the gradientUnits attributes
+//
+//
+// Portuguese
+//
+//	O atributo y2 é usado para especificar a primeira coordenada y para desenhar um elemento SVG que requer mais de uma
+//	coordenada. Elementos que precisam apenas de uma coordenada usam o atributo y.
+//
+//	Você pode usar este atributo com os seguintes elementos SVG:
+//
+// <line>
+// <linearGradient>
+//
+//	Entrada:
+//	   y2: define o atributo y2 para a primeira coordenada y para desenhar um elemento SVG que requer mais de uma coordenada
+//	     line: Para <line>, y2 define a coordenada y do ponto inicial da linha.
+//	     linearGradient: Para <linearGradient>, y2 define a coordenada y do ponto inicial do vetor gradiente
+//	       usado para mapear os valores de parada de gradiente. O comportamento exato deste atributo é influenciado pelos atributos gradientUnits
+//
+func (e *TagSvgGlobal) Y2(y2 interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := y2.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "y2", converted.String())
+		return e
+	}
+
+	if converted, ok := y2.(time.Time); ok {
+		e.selfElement.Call("setAttribute", "y2", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "y2", y2)
+	return e
+}
+
+// yChannelSelector
+//
+// English:
+//
+//	The yChannelSelector attribute indicates which color channel from in2 to use to displace the pixels in in
+//	along the y-axis.
+//
+//	You can use this attribute with the following SVG elements:
+//
+// <line>
+// <linearGradient>
+//
+//	Input:
+//	    yChannelSelector: attribute indicates which color channel from in2 to use to displace the pixels in in along the y-axis.
+//		  R: This keyword specifies that the red color channel of the input image defined in in2 will be used to displace
+//		    the pixels of the input image defined in in along the y-axis.
+//		  G: This keyword specifies that the green color channel of the input image defined in in2 will be used to
+//		    displace the pixels of the input image defined in in along the y-axis.
+//		  A: This keyword specifies that the alpha channel of the input image defined in in2 will be used to displace
+//		    the pixels of the input image defined in in along the y-axis.
+//
+//
+// Portuguese
+//
+//	O atributo yChannelSelector indica qual canal de cor de in2 usar para deslocar os pixels em
+//	ao longo do eixo y.
+//
+//	Você pode usar este atributo com os seguintes elementos SVG:
+//
+//	<linha>
+//	<linearGradiente>
+//
+//	Entrada:
+//	    yChannelSelector: atributo indica qual canal de cor de in2 usar para deslocar os pixels ao longo do eixo y.
+//	      R: Esta palavra-chave especifica que o canal de cor vermelha da imagem de entrada definida em in2 será usado para deslocar
+//	        os pixels da imagem de entrada definidos ao longo do eixo y.
+//	      G: Esta palavra-chave especifica que o canal de cor verde da imagem de entrada definida em in2 será usado para
+//	        desloca os pixels da imagem de entrada definida ao longo do eixo y.
+//	      R: Esta palavra-chave especifica que o canal alfa da imagem de entrada definida em in2 será usado para deslocar
+//	        os pixels da imagem de entrada definidos ao longo do eixo y.
+//
+func (e *TagSvgGlobal) YchannelSelector(yChannelSelector interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := yChannelSelector.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "yChannelSelector", converted.String())
+		return e
+	}
+
+	if converted, ok := yChannelSelector.(time.Time); ok {
+		e.selfElement.Call("setAttribute", "yChannelSelector", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "yChannelSelector", yChannelSelector)
+	return e
+}
+
 // ================================================================================================================ Z
 // Z
 //

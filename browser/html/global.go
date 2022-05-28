@@ -1349,48 +1349,6 @@ func (e *TagSvgGlobal) Exponent(exponent float64) (ref *TagSvgGlobal) {
 //
 //	The y attribute defines a y-axis coordinate in the user coordinate system.
 //
-//	You can use this attribute with the following SVG elements:
-//
-//	<altGlyph>
-//	<cursor>
-//	<feBlend>
-//	<feColorMatrix>
-//	<feComponentTransfer>
-//	<feComposite>
-//	<feConvolveMatrix>
-//	<feDiffuseLighting>
-//	<feDisplacementMap>
-//	<feDropShadow>
-//	<feFlood>
-//	<feFuncA>
-//	<feFuncB>
-//	<feFuncG>
-//	<feFuncR>
-//	<feGaussianBlur>
-//	<feImage>
-//	<feMerge>
-//	<feMergeNode>
-//	<feMorphology>
-//	<feOffset>
-//	<fePointLight>
-//	<feSpecularLighting>
-//	<feSpotLight>
-//	<feTile>
-//	<feTurbulence>
-//	<filter>
-//	<foreignObject>
-//	<glyphRef>
-//	<image>
-//	<mask>
-//	<pattern>
-//	<rect>
-//	<svg>
-//	<symbol>
-//	<text>
-//	<tref>
-//	<tspan>
-//	<use>
-//
 //	Input:
 //	   y: defines a y-axis coordinate in the user coordinate system.
 //		 feBlend: For <feBlend>, y defines the minimum y coordinate for the rendering area of the primitive.
@@ -1448,48 +1406,6 @@ func (e *TagSvgGlobal) Exponent(exponent float64) (ref *TagSvgGlobal) {
 
 // Portuguese
 //	O atributo y define uma coordenada do eixo y no sistema de coordenadas do usuário.
-//
-//	Você pode usar este atributo com os seguintes elementos SVG:
-//
-//	<altGlyph>
-//	<cursor>
-//	<feBlend>
-//	<feColorMatrix>
-//	<feComponentTransfer>
-//	<feComposite>
-//	<feConvolveMatrix>
-//	<feDiffuseLighting>
-//	<feDisplacementMap>
-//	<feDropShadow>
-//	<feFlood>
-//	<feFuncA>
-//	<feFuncB>
-//	<feFuncG>
-//	<feFuncR>
-//	<feGaussianBlur>
-//	<feImage>
-//	<feMerge>
-//	<feMergeNode>
-//	<feMorfologia>
-//	<feOffset>
-//	<fePointLight>
-//	<feSpecularLighting>
-//	<feSpotLight>
-//	<feTile>
-//	<feTurbulence>
-//	<filtro>
-//	<objeto estrangeiro>
-//	<glyphRef>
-//	<imagem>
-//	<máscara>
-//	<padrão>
-//	<correto>
-//	<svg>
-//	<símbolo>
-//	<texto>
-//	<tref>
-//	<tspan>
-//	<usar>
 //
 //	Entrada:
 //	   y: define uma coordenada do eixo y no sistema de coordenadas do usuário.
@@ -1568,28 +1484,16 @@ func (e *TagSvgGlobal) Y(y interface{}) (ref *TagSvgGlobal) {
 //	The y1 attribute is used to specify the first y-coordinate for drawing an SVG element that requires more than one
 //	coordinate. Elements that only need one coordinate use the y attribute instead.
 //
-//	You can use this attribute with the following SVG elements:
-//
-// <line>
-// <linearGradient>
-//
 //	Input:
 //	    y1: defines the y1 attribute for the first y-coordinate for drawing an SVG element that requires more than one coordinate
 //		  line: For <line>, y1 defines the y coordinate of the starting point of the line.
 //		  linearGradient: For <linearGradient>, y1 defines the y coordinate of the starting point of the gradient vector
 //		    used to map the gradient stop values. The exact behavior of this attribute is influenced by the gradientUnits attributes
-
-//
 //
 // Portuguese
 //
 //	O atributo y1 é usado para especificar a primeira coordenada y para desenhar um elemento SVG que requer mais de uma
 //	coordenada. Elementos que precisam apenas de uma coordenada usam o atributo y.
-//
-//	Você pode usar este atributo com os seguintes elementos SVG:
-//
-// <line>
-// <linearGradient>
 //
 //	Entrada:
 //	   y1: define o atributo y1 para a primeira coordenada y para desenhar um elemento SVG que requer mais de uma coordenada
@@ -1619,27 +1523,16 @@ func (e *TagSvgGlobal) Y1(y1 interface{}) (ref *TagSvgGlobal) {
 //	The y2 attribute is used to specify the second y-coordinate for drawing an SVG element that requires more than
 //	one coordinate. Elements that only need one coordinate use the y attribute instead.
 //
-//	You can use this attribute with the following SVG elements:
-//
-// <line>
-// <linearGradient>
-//
 //	Input:
 //	    y2: defines the y2 attribute for the first y-coordinate for drawing an SVG element that requires more than one coordinate
 //		  line: For <line>, y2 defines the y coordinate of the ending point of the line.
 //		  linearGradient: For <linearGradient>, y2 defines the y coordinate of the ending point of the gradient vector
 //		    used to map the gradient stop values. The exact behavior of this attribute is influenced by the gradientUnits attributes
 //
-//
 // Portuguese
 //
 //	O atributo y2 é usado para especificar a primeira coordenada y para desenhar um elemento SVG que requer mais de uma
 //	coordenada. Elementos que precisam apenas de uma coordenada usam o atributo y.
-//
-//	Você pode usar este atributo com os seguintes elementos SVG:
-//
-// <line>
-// <linearGradient>
 //
 //	Entrada:
 //	   y2: define o atributo y2 para a primeira coordenada y para desenhar um elemento SVG que requer mais de uma coordenada
@@ -1669,11 +1562,6 @@ func (e *TagSvgGlobal) Y2(y2 interface{}) (ref *TagSvgGlobal) {
 //	The yChannelSelector attribute indicates which color channel from in2 to use to displace the pixels in in
 //	along the y-axis.
 //
-//	You can use this attribute with the following SVG elements:
-//
-// <line>
-// <linearGradient>
-//
 //	Input:
 //	    yChannelSelector: attribute indicates which color channel from in2 to use to displace the pixels in in along the y-axis.
 //		  R: This keyword specifies that the red color channel of the input image defined in in2 will be used to displace
@@ -1683,16 +1571,10 @@ func (e *TagSvgGlobal) Y2(y2 interface{}) (ref *TagSvgGlobal) {
 //		  A: This keyword specifies that the alpha channel of the input image defined in in2 will be used to displace
 //		    the pixels of the input image defined in in along the y-axis.
 //
-//
 // Portuguese
 //
 //	O atributo yChannelSelector indica qual canal de cor de in2 usar para deslocar os pixels em
 //	ao longo do eixo y.
-//
-//	Você pode usar este atributo com os seguintes elementos SVG:
-//
-//	<linha>
-//	<linearGradiente>
 //
 //	Entrada:
 //	    yChannelSelector: atributo indica qual canal de cor de in2 usar para deslocar os pixels ao longo do eixo y.
@@ -1728,18 +1610,12 @@ func (e *TagSvgGlobal) YchannelSelector(yChannelSelector interface{}) (ref *TagS
 //	z-axis comes out towards the person viewing the content and assuming that one unit along the z-axis equals one unit
 //	in x and y.
 //
-//	You can use this attribute with the following SVG elements:
-//
-//	<fePointLight>
-//	<feSpotLight>
-//
 //	Input:
 //	   z: defines the location along the z-axis for a light source in the coordinate system.
 //		 fePointLight: For <fePointLight>, z defines the location along the z-axis for the light source in the
 //		   coordinate system established by the primitiveUnits attribute on the <filter> element.
 //		 feSpotLight: For <feSpotLight>, z defines the location along the z-axis for the light source in the coordinate
 //		   system established by the primitiveUnits attribute on the <filter> element.
-//
 //
 // Portuguese
 //
@@ -1748,8 +1624,6 @@ func (e *TagSvgGlobal) YchannelSelector(yChannelSelector interface{}) (ref *TagS
 //	O eixo z sai em direção à pessoa visualizando o conteúdo e assumindo que uma unidade ao longo do eixo z é igual a uma unidade
 //	em x e y.
 //
-//	Você pode usar este atributo com os seguintes elementos SVG:
-
 //	Entrada:
 //
 //		z: define a localização ao longo do eixo z para uma fonte de luz no sistema de coordenadas.

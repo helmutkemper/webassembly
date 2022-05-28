@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"image/color"
+	"strconv"
 	"sync"
 	"syscall/js"
 	"time"
@@ -1339,6 +1340,389 @@ func (e *TagSvgGlobal) End(end interface{}) (ref *TagSvgGlobal) {
 //  O atributo expoente define o expoente da função gama.
 func (e *TagSvgGlobal) Exponent(exponent float64) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "exponent", exponent)
+	return e
+}
+
+// Fill
+//
+// English:
+//
+//  The fill attribute has two different meanings. For shapes and text it's a presentation attribute that defines the
+//  color (or any SVG paint servers like gradients or patterns) used to paint the element;
+//
+// for animation it defines the final state of the animation.
+//
+// Português:
+//
+//  O atributo fill tem dois significados diferentes. Para formas e texto, é um atributo de apresentação que define a
+//  cor (ou qualquer servidor de pintura SVG, como gradientes ou padrões) usado para pintar o elemento;
+//
+// para animação, define o estado final da animação.
+func (e *TagSvgGlobal) Fill(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "fill", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "fill", value)
+	return e
+}
+
+// FillOpacity
+//
+// English:
+//
+//  The fill-opacity attribute is a presentation attribute defining the opacity of the paint server (color, gradient,
+//  pattern, etc) applied to a shape.
+//
+//   Notes:
+//     *As a presentation attribute fill-opacity can be used as a CSS property.
+//
+// Portuguese
+//
+//  O atributo fill-opacity é um atributo de apresentação que define a opacidade do servidor de pintura (cor, gradiente,
+//  padrão etc.) aplicado a uma forma.
+//
+//   Notes:
+//     *As a presentation attribute fill-opacity can be used as a CSS property.
+func (e *TagSvgGlobal) FillOpacity(fillOpacity float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "fill-opacity", fillOpacity)
+	return e
+}
+
+// FillRule
+//
+// English:
+//
+//  The fill-rule attribute is a presentation attribute defining the algorithm to use to determine the inside part of
+//  a shape.
+//
+//   Notes:
+//     * As a presentation attribute, fill-rule can be used as a CSS property.
+//
+// Portuguese
+//
+//  O atributo fill-rule é um atributo de apresentação que define o algoritmo a ser usado para determinar a parte
+//  interna de uma forma.
+//
+//   Notas:
+//     * Como atributo de apresentação, fill-rule pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) FillRule(fillRule SvgFillRule) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "fill-rule", fillRule.String())
+	return e
+}
+
+// Filter
+//
+// English:
+//
+//  The filter attribute specifies the filter effects defined by the <filter> element that shall be applied to its
+//  element.
+//
+//   Notes:
+//     * As a presentation attribute, filter can be used as a CSS property. See css filter for further information.
+//
+// Portuguese
+//
+//  O atributo filter especifica os efeitos de filtro definidos pelo elemento <filter> que devem ser aplicados ao seu
+//  elemento.
+//
+//   Notas:
+//     * Como atributo de apresentação, o filtro pode ser usado como propriedade CSS. Veja filtro css para mais
+//       informações.
+func (e *TagSvgGlobal) Filter(filter string) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "filter", filter)
+	return e
+}
+
+// FilterUnits
+//
+// English:
+//
+//  The filterUnits attribute defines the coordinate system for the attributes x, y, width and height.
+//
+// Portuguese
+//
+//   O atributo filterUnits define o sistema de coordenadas para os atributos x, y, largura e altura.
+func (e *TagSvgGlobal) FilterUnits(filterUnits SvgFilterUnits) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "filterUnits", filterUnits.String())
+	return e
+}
+
+// FloodColor
+//
+// English:
+//
+//  The flood-color attribute indicates what color to use to flood the current filter primitive subregion.
+//
+//   Notes:
+//     * As a presentation attribute, flood-color can be used as a CSS property.
+//
+// Portuguese
+//
+//  The flood-color attribute indicates what color to use to flood the current filter primitive subregion.
+//
+//   Notes:
+//     * As a presentation attribute, flood-color can be used as a CSS property.
+func (e *TagSvgGlobal) FloodColor(floodColor interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := floodColor.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "flood-color", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "flood-color", floodColor)
+	return e
+}
+
+// FloodOpacity
+//
+// English:
+//
+//  The flood-opacity attribute indicates the opacity value to use across the current filter primitive subregion.
+//
+//   Notes:
+//     * As a presentation attribute, flood-opacity can be used as a CSS property.
+//
+// Portuguese
+//
+//  O atributo flood-opacity indica o valor de opacidade a ser usado na sub-região primitiva de filtro atual.
+//
+//   Notas:
+//     * Como atributo de apresentação, a opacidade de inundação pode ser usada como uma propriedade CSS.
+func (e *TagSvgGlobal) FloodOpacity(floodOpacity float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "flood-opacity", floodOpacity)
+	return e
+}
+
+//todo: normalizar fonte com html padrão
+
+// FontFamily
+//
+// English:
+//
+//  The font-family attribute indicates which font family will be used to render the text, specified as a prioritized
+//  list of font family names and/or generic family names.
+//
+//   Notes:
+//     * As a presentation attribute, font-family can be used as a CSS property. See the css font-family property for
+//       more information.
+//
+// Portuguese
+//
+//  O atributo font-family indica qual família de fontes será usada para renderizar o texto, especificada como uma lista
+//  priorizada de nomes de famílias de fontes e ou nomes de famílias genéricos.
+//
+//   Notas:
+//     * Como atributo de apresentação, font-family pode ser usada como propriedade CSS. Consulte a propriedade CSS
+//       font-family para obter mais informações.
+func (e *TagSvgGlobal) FontFamily(fontFamily string) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "font-family", fontFamily)
+	return e
+}
+
+// FontSize
+//
+// English:
+//
+//  The font-size attribute refers to the size of the font from baseline to baseline when multiple lines of text are set
+//  solid in a multiline layout environment.
+//
+//   Notes:
+//     * As a presentation attribute, font-size can be used as a CSS property. See the css font-size property for more
+//       information.
+//
+// Portuguese
+//
+//  O atributo font-size refere-se ao tamanho da fonte da linha de base a linha de base quando várias linhas de texto
+//  são definidas como sólidas em um ambiente de layout de várias linhas.
+//
+//   Notas:
+//     * Como atributo de apresentação, font-size pode ser usado como uma propriedade CSS. Consulte a propriedade CSS
+//       font-size para obter mais informações.
+func (e *TagSvgGlobal) FontSize(fontSize float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "font-size", fontSize)
+	return e
+}
+
+// FontSizeAdjust
+//
+// English:
+//
+//  The font-size-adjust attribute allows authors to specify an aspect value for an element that will preserve the
+//  x-height of the first choice font in a substitute font.
+//
+//   Notes:
+//     * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
+//       property for more information.
+//
+// Portuguese
+//
+//  O atributo font-size-adjust permite que os autores especifiquem um valor de aspecto para um elemento que preservará
+//  a altura x da fonte de primeira escolha em uma fonte substituta.
+//
+//   Notes:
+//     * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
+//       property for more information.
+func (e *TagSvgGlobal) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "font-size-adjust", fontSizeAdjust)
+	return e
+}
+
+// FontStretch
+//
+// English:
+//
+//  The font-stretch attribute indicates the desired amount of condensing or expansion in the glyphs used to render
+//  the text.
+//
+//   Input:
+//     fontStretch: indicates the desired amount of condensing or expansion
+//       KSvgFontStretch... (e.g. KSvgFontStretchUltraCondensed)
+//       percentage (e.g. "50%")
+//
+//   Notes:
+//     * As a presentation attribute, font-stretch can be used as a CSS property. See the css font-stretch property for
+//       more information.
+//
+// Portuguese
+//
+//  O atributo font-stretch indica a quantidade desejada de condensação ou expansão nos glifos usados para renderizar
+//  o texto.
+//
+//   Entrada:
+//     fontStretch: indica a quantidade desejada de condensação ou expansão
+//       KSvgFontStretch... (e.g. KSvgFontStretchUltraCondensed)
+//       percentage (e.g. "50%")
+//
+//   Notas:
+//     * Como atributo de apresentação, font-stretch pode ser usado como uma propriedade CSS. Consulte a propriedade
+//       CSS font-stretch para obter mais informações.
+func (e *TagSvgGlobal) FontStretch(fontStretch interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := fontStretch.(SvgFontStretch); ok {
+		e.selfElement.Call("setAttribute", "font-stretch", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "font-stretch", fontStretch)
+	return e
+}
+
+// FontStyle
+//
+// English:
+//
+//  The font-style attribute specifies whether the text is to be rendered using a normal, italic, or oblique face.
+//
+//   Notes:
+//     * As a presentation attribute, font-style can be used as a CSS property. See the css font-style property for
+//       more information.
+//
+// Portuguese
+//
+//  O atributo font-style especifica se o texto deve ser renderizado usando uma face normal, itálica ou oblíqua.
+//
+//   Notas:
+//     * Como atributo de apresentação, font-style pode ser usado como propriedade CSS. Consulte a propriedade CSS
+//       font-style para obter mais informações.
+func (e *TagSvgGlobal) FontStyle(fontStyle FontStyleRule) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "font-style", fontStyle.String())
+	return e
+}
+
+// FontVariant
+//
+// English:
+//
+//  The font-variant attribute indicates whether the text is to be rendered using variations of the font's glyphs.
+//
+//   Notes:
+//     * As a presentation attribute, font-variant can be used as a CSS property. See the css font-variant property
+//       for more information.
+//
+// Portuguese
+//
+//  O atributo font-variant indica se o texto deve ser renderizado usando variações dos glifos da fonte.
+//
+//   Notas:
+//     * Como atributo de apresentação, font-variant pode ser usado como uma propriedade CSS. Consulte a propriedade
+//       CSS font-variant para obter mais informações.
+func (e *TagSvgGlobal) FontVariant(fontVariant FontVariantRule) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "font-variant", fontVariant.String())
+	return e
+}
+
+// FontWeight
+//
+// English:
+//
+//  The font-weight attribute refers to the boldness or lightness of the glyphs used to render the text, relative to
+//  other fonts in the same font family.
+//
+//   Notes:
+//     * As a presentation attribute, font-weight can be used as a CSS property. See the css font-weight property for
+//       more information.
+//
+// Portuguese
+//
+//  O atributo font-weight refere-se ao negrito ou leveza dos glifos usados para renderizar o texto, em relação a
+//  outras fontes na mesma família de fontes.
+//
+//   Notas:
+//     * Como atributo de apresentação, o peso da fonte pode ser usado como uma propriedade CSS. Consulte a propriedade
+//       CSS font-weight para obter mais informações.
+func (e *TagSvgGlobal) FontWeight(fontWeight FontWeightRule) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "font-weight", fontWeight.String())
+	return e
+}
+
+// From
+//
+// English:
+//
+//  The from attribute indicates the initial value of the attribute that will be modified during the animation.
+//
+// When used with the to attribute, the animation will change the modified attribute from the from value to the to
+// value. When used with the by attribute, the animation will change the attribute relatively from the from value by
+// the value specified in by.
+//
+// Português
+//
+//  O atributo from indica o valor inicial do atributo que será modificado durante a animação.
+//
+// Quando usado com o atributo to, a animação mudará o atributo modificado do valor from para o valor to. Quando usado
+// com o atributo by, a animação mudará o atributo relativamente do valor from pelo valor especificado em by.
+func (e *TagSvgGlobal) From(from float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "from", from)
+	return e
+}
+
+// Fr
+//
+// English:
+//
+//  The fr attribute defines the radius of the focal point for the radial gradient.
+//
+//   Input:
+//     fr: defines the radius of the focal point for the radial gradient
+//       float64: (e.g. 0.4 = 40%)
+//       string: "40%"
+//
+// Portuguese
+//
+//  O atributo fr define o raio do ponto focal para o gradiente radial.
+//
+//   Entrada:
+//     fr: define o raio do ponto focal para o gradiente radial.
+//       float64: (ex. 0.4 = 40%)
+//       string: "40%"
+func (e *TagSvgGlobal) Fr(fr interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := fr.(float64); ok {
+		p := strconv.FormatFloat(100*converted, 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "fr", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "fr", fr)
 	return e
 }
 

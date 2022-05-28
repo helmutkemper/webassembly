@@ -143,15 +143,15 @@ type TagSvgCircle struct {
 	rotateDelta float64
 }
 
-// AlignmentBaseline
+// Cx
 //
 // English:
 //
-//
+//  The cx attribute define the x-axis coordinate of a center point.
 //
 // Português:
 //
-//
+//  O atributo cx define a coordenada do eixo x de um ponto central.
 func (e *TagSvgCircle) Cx(cx float64) (ref *TagSvgCircle) {
 	e.selfElement.Call("setAttribute", "cx", cx)
 	return e

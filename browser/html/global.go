@@ -1201,6 +1201,147 @@ func (e *TagSvgGlobal) EdgeMode(edgeMode SvgEdgeMode) (ref *TagSvgGlobal) {
 	return e
 }
 
+// Elevation
+//
+// English:
+//
+//  The elevation attribute specifies the direction angle for the light source from the XY plane towards the Z-axis, in
+//  degrees. Note that the positive Z-axis points towards the viewer of the content.
+//
+// Portuguese
+//
+//  O atributo de elevação especifica o ângulo de direção da fonte de luz do plano XY em direção ao eixo Z, em graus.
+//  Observe que o eixo Z positivo aponta para o visualizador do conteúdo.
+func (e *TagSvgGlobal) Elevation(elevation float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "elevation", elevation)
+	return e
+}
+
+// End
+//
+// English:
+//
+//  The end attribute defines an end value for the animation that can constrain the active duration.
+//
+//   Input:
+//     end: defines an end value for the animation
+//       offset-value: This value defines a clock-value that represents a point in time relative to the beginning of the
+//         SVG document (usually the load or DOMContentLoaded event). Negative values are valid.
+//         (e.g. time.Second*5 or "5s")
+//       syncbase-value: This value defines a syncbase and an optional offset from that syncbase. The element's
+//         animation start time is defined relative to the begin or active end of another animation.
+//         A valid syncbase-value consists of an ID reference to another animation element followed by a dot and either
+//         begin or end to identify whether to synchronize with the beginning or active end of the referenced animation
+//         element. An optional offset value as defined in <offset-value> can be appended.
+//         (e.g. "0s;third.end", "first.end" or "second.end")
+//       event-value: This value defines an event and an optional offset that determines the time at which the element's
+//         animation should begin. The animation start time is defined relative to the time that the specified event is
+//         fired.
+//         A valid event-value consists of an element ID followed by a dot and one of the supported events for that
+//         element. All valid events (not necessarily supported by all elements) are defined by the DOM and HTML
+//         specifications. Those are: 'focus', 'blur', 'focusin', 'focusout', 'activate', 'auxclick', 'click',
+//         'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
+//         'wheel', 'beforeinput', 'input', 'keydown', 'keyup', 'compositionstart', 'compositionupdate',
+//         'compositionend', 'load', 'unload', 'abort', 'error', 'select', 'resize', 'scroll', 'beginEvent', 'endEvent',
+//         and 'repeatEvent'. An optional offset value as defined in <offset-value> can be appended.
+//         (e.g. "startButton.click")
+//       repeat-value: This value defines a qualified repeat event. The element animation start time is defined relative
+//         to the time that the repeat event is raised with the specified iteration value.
+//         A valid repeat value consists of an element ID followed by a dot and the function repeat() with an integer
+//         value specifying the number of repetitions as parameter. An optional offset value as defined in
+//         <offset-value> can be appended.
+//         (e.g. "0s;myLoop.end", "myLoop.begin", "myLoop.repeat(1)" or "myLoop.repeat(2)")
+//       accessKey-value: This value defines an access key that should trigger the animation. The element animation will
+//         begin when the user presses the specified key.
+//         A valid accessKey-value consists of the function accessKey() with the character to be input as parameter. An
+//         optional offset value as defined in <offset-value> can be appended.
+//         (e.g. "accessKey(s)")
+//       wallclock-sync-value: This value defines the animation start time as a real-world clock time.
+//         A valid wallclock-sync-value consists of the function wallclock() with a time value as parameter. The time
+//         syntax is based upon the syntax defined in ISO 8601.
+//         (e.g. time.Now() )
+//       indefinite: The begin of the animation will be determined by a beginElement() method call or a hyperlink
+//         targeted to the element.
+//         (e.g. "infinite")
+//
+// Portuguese
+//
+//  O atributo final define um valor final para a animação que pode restringir a duração ativa.
+//
+//   Entrada:
+//     end: define um valor final para a animação
+//       offset-value: Esse valor define um valor de relógio que representa um ponto no tempo relativo ao início do
+//         documento SVG (geralmente o evento load ou DOMContentLoaded). Valores negativos são válidos.
+//         (e.g. time.Second*5 or "5s")
+//       syncbase-value: Esse valor define uma base de sincronização e um deslocamento opcional dessa base de
+//         sincronização. A hora de início da animação do elemento é definida em relação ao início ou fim ativo de outra
+//         animação.
+//         Um valor syncbase válido consiste em uma referência de ID para outro elemento de animação seguido por um
+//         ponto e um início ou fim para identificar se deve ser sincronizado com o início ou o final ativo do elemento
+//         de animação referenciado. Um valor de deslocamento opcional conforme definido em <offset-value> pode ser
+//         anexado.
+//         (e.g. "0s;third.end", "first.end" or "second.end")
+//       event-value: Esse valor define um evento e um deslocamento opcional que determina a hora em que a animação do
+//         elemento deve começar. A hora de início da animação é definida em relação à hora em que o evento especificado
+//         é acionado.
+//         Um valor de evento válido consiste em um ID de elemento seguido por um ponto e um dos eventos com suporte
+//         para esse elemento. Todos os eventos válidos (não necessariamente suportados por todos os elementos) são
+//         definidos pelas especificações DOM e HTML. Esses valores são: 'focus', 'blur', 'focusin', 'focusout',
+//         'activate', 'auxclick', 'click', 'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove',
+//         'mouseout', 'mouseover', 'mouseup', 'wheel', 'beforeinput', 'input', 'keydown', 'keyup', 'compositionstart',
+//         'compositionupdate', 'compositionend', 'load', 'unload', 'abort', 'error', 'select', 'resize', 'scroll',
+//         'beginEvent', 'endEvent', e 'repeatEvent'. Um valor de deslocamento opcional conforme definido em
+//         <offset-value> pode ser anexado.
+//         (e.g. "startButton.click")
+//       repeat-value: Esse valor define um evento de repetição qualificado. A hora de início da animação do elemento é
+//         definida em relação à hora em que o evento de repetição é gerado com o valor de iteração especificado.
+//         Um valor de repetição válido consiste em um ID de elemento seguido por um ponto e a função repeat() com um
+//         valor inteiro especificando o número de repetições como parâmetro. Um valor de deslocamento opcional conforme
+//         definido em <offset-value> pode ser anexado.
+//         (e.g. "0s;myLoop.end", "myLoop.begin", "myLoop.repeat(1)" or "myLoop.repeat(2)")
+//       accessKey-value: Este valor define uma chave de acesso que deve acionar a animação. A animação do elemento
+//         começará quando o usuário pressionar a tecla especificada.
+//         Um valor válido de accessKey consiste na função accessKey() com o caractere a ser inserido como parâmetro.
+//         Um valor de deslocamento opcional conforme definido em <valor de deslocamento> pode ser anexado.
+//         (e.g. "accessKey(s)")
+//       wallclock-sync-value: Esse valor define a hora de início da animação como uma hora do relógio do mundo real.
+//         Um valor wallclock-sync válido consiste na função wallclock() com um valor de tempo como parâmetro. A sintaxe
+//         de tempo é baseada na sintaxe definida na ISO 8601.
+//         (e.g. time.Now() )
+//       indefinite: O início da animação será determinado por uma chamada de método beginElement() ou um hiperlink
+//         direcionado ao elemento.
+//         (e.g. "infinite")
+//
+//
+func (e *TagSvgGlobal) End(end interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := end.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "end", converted.String())
+		return e
+	}
+
+	if converted, ok := end.(time.Time); ok {
+		e.selfElement.Call("setAttribute", "end", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "end", end)
+	return e
+}
+
+// Exponent
+//
+// English:
+//
+//  The exponent attribute defines the exponent of the gamma function.
+//
+// Portuguese
+//
+//  O atributo expoente define o expoente da função gama.
+func (e *TagSvgGlobal) Exponent(exponent float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "exponent", exponent)
+	return e
+}
+
 //
 //
 //

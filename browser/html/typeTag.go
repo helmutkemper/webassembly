@@ -981,8 +981,11 @@ const (
 	KTagSelect Tag = "select"
 
 	//todo: documentar
-	KTagSvg     Tag = "svg"
-	KTagSvgRect Tag = "rect"
+	KTagSvg                 Tag = "svg"
+	KTagSvgRect             Tag = "rect"
+	KTagSvgFilter           Tag = "filter"
+	KTagSvgFeConvolveMatrix Tag = "feConvolveMatrix"
+	KTagSvgImage            Tag = "image"
 
 	// KTagSlot
 	//

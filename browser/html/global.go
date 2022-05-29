@@ -2067,6 +2067,178 @@ func (e *TagSvgGlobal) K4(k4 float64) (ref *TagSvgGlobal) {
 	return e
 }
 
+// KernelMatrix
+//
+// English:
+//
+// The kernelMatrix attribute defines the list of numbers that make up the kernel matrix for the <feConvolveMatrix>
+// element.
+//
+//   Input:
+//     kernelMatrix: list of numbers
+//       The list of <number>s that make up the kernel matrix for the convolution. The number of entries in the list
+//       must equal <orderX> times <orderY>.
+//       If the result of orderX * orderY is not equal to the number of entries in the value list, the filter primitive
+//       acts as a pass through filter.
+//
+// Values are separated by space characters and/or a comma. The number of entries in the list must equal to <orderX>
+// by <orderY> as defined in the order attribute.
+//
+// Português:
+//
+// O atributo kernelMatrix define a lista de números que compõem a matriz do kernel para o elemento <feConvolveMatrix>.
+//
+//   Entrada:
+//     kernelMatrix: lista de números
+//       A lista de números que compõem a matriz do kernel para a convolução. O número de entradas na lista deve ser
+//       igual a <orderX> * <orderY>.
+//       Se o resultado da ordem do pedido não for igual ao número de entradas na lista de valores, a primitiva de
+//       filtro atua como um filtro de passagem.
+//
+// Os valores são separados por caracteres de espaço e ou por vírgula. O número de entradas na lista deve ser igual a
+// <orderX> por <orderY> conforme definido no atributo order.
+func (e *TagSvgGlobal) KernelMatrix(kernelMatrix []float64) (ref *TagSvgGlobal) {
+	kernelMatrixString := ""
+
+	for _, v := range kernelMatrix {
+		kernelMatrixString += strconv.FormatFloat(v, 'g', -1, 64)
+		kernelMatrixString += " "
+	}
+
+	l := len(kernelMatrixString) - 1
+
+	e.selfElement.Call("setAttribute", "kernelMatrix", kernelMatrixString[:l])
+	return e
+}
+
+// KeyPoints
+//
+// English:
+//
+// The keyPoints attribute indicates the simple duration of an animation.
+//
+//   Input:
+//     keyPoints: This value defines a semicolon-separated list of floating point values between 0 and 1 and indicates
+//     how far along the motion path the object shall move at the moment in time specified by corresponding keyTimes
+//     value. The distance is calculated along the path specified by the path attribute. Each progress value in the list
+//     corresponds to a value in the keyTimes attribute list.
+//     If a list of key points is specified, there must be exactly as many values in the keyPoints list as in the
+//     keyTimes list.
+//     If there's a semicolon at the end of the value, optionally followed by white space, both the semicolon and the
+//     trailing white space are ignored.
+//     If there are any errors in the value specification (i.e. bad values, too many or too few values), then that's
+//     an error.
+//
+// Português:
+//
+// O atributo keyPoints indica a duração simples de uma animação.
+//
+//   Entrada:
+//     keyPoints: Este valor define uma lista separada por ponto e vírgula de valores de ponto flutuante entre 0 e 1 e
+//     indica a distância ao longo do caminho de movimento o objeto deve se mover no momento especificado pelo valor
+//     keyTimes correspondente. A distância é calculada ao longo do caminho especificado pelo atributo path. Cada valor
+//     de progresso na lista corresponde a um valor na lista de atributos keyTimes.
+//     Se uma lista de pontos-chave for especificada, deve haver exatamente tantos valores na lista keyPoints quanto na
+//     lista keyTimes.
+//     Se houver um ponto e vírgula no final do valor, opcionalmente seguido por espaço em branco, o ponto e vírgula e
+//     o espaço em branco à direita serão ignorados.
+//     Se houver algum erro na especificação do valor (ou seja, valores incorretos, muitos ou poucos valores), isso é
+//     um erro.
+func (e *TagSvgGlobal) KeyPoints(keyPoints []float64) (ref *TagSvgGlobal) {
+	kernelMatrixString := ""
+
+	for _, v := range keyPoints {
+		kernelMatrixString += strconv.FormatFloat(v, 'g', -1, 64)
+		kernelMatrixString += ";"
+	}
+
+	l := len(kernelMatrixString) - 1
+
+	e.selfElement.Call("setAttribute", "keyPoints", kernelMatrixString[:l])
+	return e
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 // ================================================================================================================ Y
 // Y
 //
@@ -2372,40 +2544,3 @@ func (e *TagSvgGlobal) Z(z interface{}) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "z", z)
 	return e
 }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//

@@ -331,6 +331,8 @@ func (e *TagSvg) CreateElement(tag Tag) (ref *TagSvg) {
 		return
 	}
 
+	e.selfElement.Call("setAttribute", "xmlns", "http://www.w3.org/2000/svg")
+
 	return e
 }
 
@@ -360,6 +362,15 @@ func (e *TagSvg) ViewBox(minX, minY, width, height float64) (ref *TagSvg) {
 func (e *TagSvg) AppendToStage() (ref *TagSvg) {
 	e.stage.Call("appendChild", e.selfElement)
 	return e
+}
+
+func (e *TagSvg) AppendToElement(el js.Value) (ref *TagSvg) {
+	e.selfElement.Call("appendChild", el)
+	return e
+}
+
+func (e *TagSvg) Get() (el js.Value) {
+	return e.selfElement
 }
 
 func (e *TagSvg) AppendById(appendId string) (ref *TagSvg) {

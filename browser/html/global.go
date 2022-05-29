@@ -1975,6 +1975,98 @@ func (e *TagSvgGlobal) Intercept(intercept float64) (ref *TagSvgGlobal) {
 	return e
 }
 
+// K1
+//
+// English:
+//
+//  The k1 attribute defines one of the values to be used within the arithmetic operation of the <feComposite>
+//  filter primitive.
+//
+// The pixel composition is computed using the following formula:
+//
+//   result = k1*i1*i2 + k2*i1 + k3*i2 + k4
+//
+// Portuguese
+//
+//  O atributo k1 define um dos valores a serem usados na operação aritmética da primitiva de filtro <feComposite>.
+//
+// A composição de pixels é calculada usando a seguinte fórmula:
+//
+//   result = k1*i1*i2 + k2*i1 + k3*i2 + k4
+func (e *TagSvgGlobal) K1(k1 float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "k1", k1)
+	return e
+}
+
+// K2
+//
+// English:
+//
+//  The k2 attribute defines one of the values to be used within the arithmetic operation of the <feComposite> filter
+//  primitive.
+//
+// The pixel composition is computed using the following formula:
+//
+//   result = k1*i1*i2 + k2*i1 + k3*i2 + k4
+//
+// Portuguese
+//
+//  O atributo k2 define um dos valores a serem usados na operação aritmética da primitiva de filtro <feComposite>.
+//
+// A composição de pixels é calculada usando a seguinte fórmula:
+//
+//   result = k1*i1*i2 + k2*i1 + k3*i2 + k4
+func (e *TagSvgGlobal) K2(k2 float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "k2", k2)
+	return e
+}
+
+// K3
+//
+// English:
+//
+//  The k3 attribute defines one of the values to be used within the arithmetic operation of the <feComposite>
+//  filter primitive.
+//
+// The pixel composition is computed using the following formula:
+//
+//   result = k1*i1*i2 + k2*i1 + k3*i2 + k4
+//
+// Portuguese
+//
+//  O atributo k3 define um dos valores a serem usados na operação aritmética da primitiva de filtro <feComposite>.
+//
+// A composição de pixels é calculada usando a seguinte fórmula:
+//
+//   result = k1*i1*i2 + k2*i1 + k3*i2 + k4
+func (e *TagSvgGlobal) K3(k3 float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "k3", k3)
+	return e
+}
+
+// K4
+//
+// English:
+//
+//  The k4 attribute defines one of the values to be used within the arithmetic operation of the <feComposite>
+//  filter primitive.
+//
+// The pixel composition is computed using the following formula:
+//
+//   result = k1*i1*i2 + k2*i1 + k3*i2 + k4
+//
+// Portuguese
+//
+//  O atributo k4 define um dos valores a serem usados na operação aritmética da primitiva de filtro <feComposite>.
+//
+// A composição de pixels é calculada usando a seguinte fórmula:
+//
+//   result = k1*i1*i2 + k2*i1 + k3*i2 + k4
+func (e *TagSvgGlobal) K4(k4 float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "k4", k4)
+	return e
+}
+
 //
 //
 //

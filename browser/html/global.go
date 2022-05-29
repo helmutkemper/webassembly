@@ -1726,6 +1726,255 @@ func (e *TagSvgGlobal) Fr(fr interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
+// Fx
+//
+// English:
+//
+//  The fx attribute defines the x-axis coordinate of the focal point for a radial gradient.
+//
+// Portuguese
+//
+//  O atributo fx define a coordenada do eixo x do ponto focal para um gradiente radial.
+func (e *TagSvgGlobal) Fx(fx float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "fx", fx)
+	return e
+}
+
+// Fy
+//
+// English:
+//
+//  The fy attribute defines the y-axis coordinate of the focal point for a radial gradient.
+//
+// Portuguese
+//
+//  O atributo fy define a coordenada do eixo y do ponto focal para um gradiente radial.
+func (e *TagSvgGlobal) Fy(fy float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "fy", fy)
+	return e
+}
+
+// GradientTransform
+//
+// English:
+//
+//  The gradientTransform attribute contains the definition of an optional additional transformation from the gradient
+//  coordinate system onto the target coordinate system (i.e., userSpaceOnUse or objectBoundingBox).
+//  This allows for things such as skewing the gradient. This additional transformation matrix is post-multiplied to
+//  (i.e., inserted to the right of) any previously defined transformations, including the implicit transformation
+//  necessary to convert from object bounding box units to user space.
+//
+// Portuguese
+//
+//  O atributo gradientTransform contém a definição de uma transformação adicional opcional do sistema de coordenadas
+//  de gradiente para o sistema de coordenadas de destino (ou seja, userSpaceOnUse ou objectBoundingBox).
+//  Isso permite coisas como distorcer o gradiente. Essa matriz de transformação adicional é pós-multiplicada para
+//  (ou seja, inserida à direita de) quaisquer transformações definidas anteriormente, incluindo a transformação
+//  implícita necessária para converter de unidades de caixa delimitadora de objeto para espaço do usuário.
+func (e *TagSvgGlobal) GradientTransform(gradientTransform float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "gradientTransform", gradientTransform)
+	return e
+}
+
+// GradientUnits
+//
+// English:
+//
+//  The gradientUnits attribute defines the coordinate system used for attributes specified on the gradient elements.
+//
+// Portuguese
+//
+//  O atributo gradientUnits define o sistema de coordenadas usado para atributos especificados nos elementos
+//  gradientes.
+func (e *TagSvgGlobal) GradientUnits(gradientUnits SvgGradientUnits) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "gradientUnits", gradientUnits)
+	return e
+}
+
+// Height
+//
+// English:
+//
+//  The height attribute defines the vertical length of an element in the user coordinate system.
+//
+// Português:
+//
+//  O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
+func (e *TagSvgGlobal) Height(height interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := height.(float64); ok {
+		p := strconv.FormatFloat(100*converted, 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "height", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "height", height)
+	return e
+}
+
+// HRef
+//
+// English:
+//
+//  The href attribute defines a link to a resource as a reference URL. The exact meaning of that link depends on the
+//  context of each element using it.
+//
+//   Notes:
+//     * Specifications before SVG 2 defined an xlink:href attribute, which is now rendered obsolete by the href
+//       attribute.
+//       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
+//       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
+//
+// Português
+//
+//  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
+//  contexto de cada elemento que o utiliza.
+//
+//   Notas:
+//     * As especificações anteriores ao SVG 2 definiam um atributo xlink:href, que agora se torna obsoleto pelo
+//       atributo href.
+//       Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
+//       usado como um substituto além do atributo href, por exemplo,
+//       <use href="some-id" xlink:href="some-id x="5" y="5" />.
+func (e *TagSvgGlobal) HRef(href string) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "href", href)
+	return e
+}
+
+// Id
+//
+// English:
+//
+//  The id attribute assigns a unique name to an element.
+//
+// Portuguese
+//
+//  O atributo id atribui um nome exclusivo a um elemento.
+func (e *TagSvgGlobal) Id(id string) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "id", id)
+	return e
+}
+
+// ImageRendering
+//
+// English:
+//
+//  The image-rendering attribute provides a hint to the browser about how to make speed vs. quality tradeoffs as it
+//  performs image processing.
+//
+// The resampling is always done in a truecolor (e.g., 24-bit) color space even if the original data and/or the target
+// device is indexed color.
+//
+//   Notes:
+//     * As a presentation attribute, image-rendering can be used as a CSS property. See the css image-rendering
+//       property for more information.
+//
+// Portuguese
+//
+//  O atributo de renderização de imagem fornece uma dica ao navegador sobre como fazer compensações de velocidade
+//  versus qualidade enquanto executa o processamento de imagem.
+//
+// A reamostragem é sempre feita em um espaço de cores truecolor (por exemplo, 24 bits), mesmo que os dados originais e
+// ou o dispositivo de destino sejam cores indexadas.
+//
+//   Notas:
+//     * Como um atributo de apresentação, a renderização de imagem pode ser usada como uma propriedade CSS. Consulte
+//       a propriedade de renderização de imagem css para obter mais informações.
+func (e *TagSvgGlobal) ImageRendering(imageRendering string) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "image-rendering", imageRendering)
+	return e
+}
+
+// In
+//
+// English:
+//
+//  The in attribute identifies input for the given filter primitive.
+//
+//   Input:
+//     in: identifies input for the given filter primitive.
+//       KSvgIn... (e.g. KSvgInSourceAlpha)
+//
+// The value can be either one of the six keywords defined below, or a string which matches a previous result attribute
+// value within the same <filter> element. If no value is provided and this is the first filter primitive, then this
+// filter primitive will use SourceGraphic as its input. If no value is provided and this is a subsequent filter
+// primitive, then this filter primitive will use the result from the previous filter primitive as its input.
+//
+// If the value for result appears multiple times within a given <filter> element, then a reference to that result will
+// use the closest preceding filter primitive with the given value for attribute result.
+//
+// Portuguese
+//
+//  O atributo in identifica à entrada para a primitiva de filtro fornecida.
+//
+//   Entrada:
+//     in: identifica à entrada para a primitiva de filtro fornecida.
+//       KSvgIn... (e.g. KSvgInSourceAlpha)
+//
+// O valor pode ser uma das seis palavras-chave definidas abaixo ou uma string que corresponda a um valor de atributo
+// de resultado anterior dentro do mesmo elemento <filter>. Se nenhum valor for fornecido e esta for a primeira
+// primitiva de filtro, essa primitiva de filtro usará SourceGraphic como sua entrada. Se nenhum valor for fornecido e
+// esta for uma primitiva de filtro subsequente, essa primitiva de filtro usará o resultado da primitiva de filtro
+// anterior como sua entrada.
+//
+// Se o valor do resultado aparecer várias vezes em um determinado elemento <filter>, uma referência à esse resultado
+// usará a primitiva de filtro anterior mais próxima com o valor fornecido para o resultado do atributo.
+func (e *TagSvgGlobal) In(in interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := in.(SvgIn); ok {
+		e.selfElement.Call("setAttribute", "in", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "in", in)
+	return e
+}
+
+// In2
+//
+// English:
+//
+//  The in2 attribute identifies the second input for the given filter primitive. It works exactly like the in
+//  attribute.
+//
+//   Input:
+//     in2: identifies the second input for the given filter primitive.
+//       KSvgIn2... (e.g. KSvgIn2SourceAlpha)
+//       string: url(#myClip)
+//
+// Portuguese
+//
+//  O atributo in2 identifica a segunda entrada para a primitiva de filtro fornecida. Funciona exatamente como o
+//  atributo in.
+//
+//   Entrada:
+//     in2: identifica a segunda entrada para a primitiva de filtro fornecida.
+//       KSvgIn2... (ex. KSvgIn2SourceAlpha)
+//       string: url(#myClip)
+func (e *TagSvgGlobal) In2(in2 interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := in2.(SvgIn2); ok {
+		e.selfElement.Call("setAttribute", "in2", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "in2", in2)
+	return e
+}
+
+// Intercept
+//
+// English:
+//
+//  The intercept attribute defines the intercept of the linear function of color component transfers when the type
+//  attribute is set to linear.
+//
+// Portuguese
+//
+//  O atributo de interceptação define a interceptação da função linear de transferências de componentes de cor quando
+//  o atributo de tipo é definido como linear.
+func (e *TagSvgGlobal) Intercept(intercept float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "intercept", intercept)
+	return e
+}
+
 //
 //
 //

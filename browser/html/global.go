@@ -2067,6 +2067,312 @@ func (e *TagSvgGlobal) K4(k4 float64) (ref *TagSvgGlobal) {
 	return e
 }
 
+// ================================================================================================================ Y
+// Y
+//
+// English:
+//
+//	The y attribute defines a y-axis coordinate in the user coordinate system.
+//
+//	Input:
+//	   y: defines a y-axis coordinate in the user coordinate system.
+//		 feBlend: For <feBlend>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		   feColorMatrix: For <feColorMatrix>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feColorMatrix: For <feColorMatrix>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feBlend: For <feBlend>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feColorMatrix: For <feColorMatrix>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feComponentTransfer: For <feComponentTransfer>, y defines the minimum y coordinate for the rendering
+//	   	   area of the primitive.
+//		 feComposite: For <feComposite>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feConvolveMatrix: For <feConvolveMatrix>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feDiffuseLighting: For <feDiffuseLighting>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feDisplacementMap: For <feDisplacementMap>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feDropShadow: For <feDropShadow>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feFlood: For <feFlood>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feFuncA: For <feFuncA>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feFuncB: For <feFuncB>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feFuncG: For <feFuncG>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feFuncR: For <feFuncR>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feGaussianBlur: For <feGaussianBlur>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feImage: For <feImage>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feMerge: For <feMerge>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feMergeNode: For <feMergeNode>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feMorphology: For <feMorphology>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feOffset: For <feOffset>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 fePointLight: For <fePointLight>, y defines the y location for the light source in the coordinate system
+//	  	   defined by the primitiveUnits attribute on the <filter> element.
+//		 feSpecularLighting: For <feSpecularLighting>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feSpotLight: For <feSpotLight>, y defines the y location for the light source in the coordinate system defined
+//		   by the primitiveUnits attribute on the <filter> element.
+//		 feTile: For <feMerge>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 feTurbulence: For <feTurbulence>, y defines the minimum y coordinate for the rendering area of the primitive.
+//		 filter: For <filter>, y defines the y coordinate of the upper left corner for the rendering area of the filter.
+//		 foreignObject: For <foreignObject>, y defines the y coordinate of the upper left corner of its viewport.
+//		 image: For <image>, y defines the y coordinate of the upper left corner of the image.
+//		 mask: For <mask>, y defines the y coordinate of the upper left corner of its area of effect. The exact effect
+//		   of this attribute is influenced by the maskUnits attribute.
+//		 pattern: For <pattern>, y defines the y coordinate of the upper left corner of the tile pattern. The exact
+//		   effect of this attribute is influenced by the patternUnits and patternTransform attributes.
+//		 rect: For <rect>, y defines the y coordinate of the upper left corner of the shape.
+//		 svg: For <svg>, y defines the y coordinate of the upper left corner of its viewport.
+//		 text: For <text>, if it contain a single value, y defines the y coordinate on where the content text position
+//		   must be placed. The content text position is usually a point on the baseline of the first line of text.
+//		   The exact content text position is influenced by some properties like text-anchor, or direction.
+//		   If there are multiple values, y defines the y coordinate of each individual glyph from the text.
+//		   If there are less values than glyphs, the remaining glyphs are placed in the continuity of the last
+//		   positioned glyph. If there are more values than glyphs, extra values are ignored.
+//		 tspan: For <tspan>, if it contain a single value, y defines the y coordinate on where the content text position
+//		   must be placed. The content text position is usually a point on the baseline of the first line of text.
+//		   The exact content text position is influenced by some properties like text-anchor, or direction.
+//		   If there are multiple values, y defines the y coordinate of each individual glyph from the text.
+//		   If there are less values than glyphs, the remaining glyphs are placed in the continuity of the last positioned
+//		   glyph. If there are more values than glyphs, extra values are ignored.
+//		 use: For <use>, y defines the y coordinate of the upper left corner of the referenced element.
+
+// Portuguese
+//	O atributo y define uma coordenada do eixo y no sistema de coordenadas do usuário.
+//
+//	Entrada:
+//	   y: define uma coordenada do eixo y no sistema de coordenadas do usuário.
+//	     feBlend: Para <feBlend>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feColorMatrix: Para <feColorMatrix>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feColorMatrix: Para <feColorMatrix>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feBlend: Para <feBlend>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feColorMatrix: Para <feColorMatrix>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feComponentTransfer: Para <feComponentTransfer>, y define a coordenada y mínima para a renderização
+//	       área do primitivo.
+//	     feComposite: Para <feComposite>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feConvolveMatrix: Para <feConvolveMatrix>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feDiffuseLighting: Para <feDiffuseLighting>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feDisplacementMap: Para <feDisplacementMap>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feDropShadow: Para <feDropShadow>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feFlood: Para <feFlood>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feFuncA: Para <feFuncA>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feFuncB: Para <feFuncB>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feFuncG: Para <feFuncG>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feFuncR: Para <feFuncR>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feGaussianBlur: Para <feGaussianBlur>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feImage: Para <feImage>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feMerge: Para <feMerge>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feMergeNode: Para <feMergeNode>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feMorphology: Para <feMorphology>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feOffset: Para <feOffset>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     fePointLight: Para <fePointLight>, y define a localização y para a fonte de luz no sistema de coordenadas
+//	       definido pelo atributo primitivaUnits no elemento <filter>.
+//	     feSpecularLighting: Para <feSpecularLighting>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feSpotLight: Para <feSpotLight>, y define a localização y para a fonte de luz no sistema de coordenadas definido
+//	       pelo atributo primitivoUnits no elemento <filter>.
+//	     feTile: Para <feMerge>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     feTurbulence: Para <feTurbulence>, y define a coordenada y mínima para a área de renderização da primitiva.
+//	     filter: Para <filter>, y define a coordenada y do canto superior esquerdo para a área de renderização do filtro.
+//	     ForeignObject: Para <foreignObject>, y define a coordenada y do canto superior esquerdo de sua viewport.
+//	     image: Para <image>, y define a coordenada y do canto superior esquerdo da imagem.
+//	     mask: Para <mask>, y define a coordenada y do canto superior esquerdo de sua área de efeito. O efeito exato
+//	     deste atributo é influenciado pelo atributo maskUnits.
+//	     pattern: Para <pattern>, y define a coordenada y do canto superior esquerdo do padrão de ladrilhos. O exato
+//	       o efeito desse atributo é influenciado pelos atributos patternUnits e patternTransform.
+//	     rect: Para <rect>, y define a coordenada y do canto superior esquerdo da forma.
+//	     svg: Para <svg>, y define a coordenada y do canto superior esquerdo de sua viewport.
+//	     text: Para <text>, se contiver um único valor, y define a coordenada y em que a posição do texto do conteúdo
+//	       deve ser colocado. A posição do texto do conteúdo geralmente é um ponto na linha de base da primeira linha do texto.
+//	       A posição exata do texto do conteúdo é influenciada por algumas propriedades, como âncora de texto ou direção.
+//	       Se houver vários valores, y define a coordenada y de cada glifo individual do texto.
+//	       Se houver menos valores que glifos, os glifos restantes são colocados na continuidade do último
+//	       glifo posicionado. Se houver mais valores do que glifos, os valores extras serão ignorados.
+//	     tspan: Para <tspan>, se contiver um único valor, y define a coordenada y em que a posição do texto do conteúdo
+//	       deve ser colocado. A posição do texto do conteúdo geralmente é um ponto na linha de base da primeira linha do texto.
+//	       A posição exata do texto do conteúdo é influenciada por algumas propriedades, como âncora de texto ou direção.
+//	       Se houver vários valores, y define a coordenada y de cada glifo individual do texto.
+//	       Se houver menos valores que glifos, os glifos restantes são colocados na continuidade do último posicionado
+//	     glifo. Se houver mais valores do que glifos, os valores extras serão ignorados.
+//	     use: Para <use>, y define a coordenada y do canto superior esquerdo do elemento referenciado.
+//
+func (e *TagSvgGlobal) Y(y interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := y.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "y", converted.String())
+		return e
+	}
+
+	if converted, ok := y.(time.Time); ok {
+		e.selfElement.Call("setAttribute", "y", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "y", y)
+	return e
+}
+
+// Y1
+//
+// English:
+//
+//	The y1 attribute is used to specify the first y-coordinate for drawing an SVG element that requires more than one
+//	coordinate. Elements that only need one coordinate use the y attribute instead.
+//
+//	Input:
+//	    y1: defines the y1 attribute for the first y-coordinate for drawing an SVG element that requires more than one coordinate
+//		  line: For <line>, y1 defines the y coordinate of the starting point of the line.
+//		  linearGradient: For <linearGradient>, y1 defines the y coordinate of the starting point of the gradient vector
+//		    used to map the gradient stop values. The exact behavior of this attribute is influenced by the gradientUnits attributes
+//
+// Portuguese
+//
+//	O atributo y1 é usado para especificar a primeira coordenada y para desenhar um elemento SVG que requer mais de uma
+//	coordenada. Elementos que precisam apenas de uma coordenada usam o atributo y.
+//
+//	Entrada:
+//	   y1: define o atributo y1 para a primeira coordenada y para desenhar um elemento SVG que requer mais de uma coordenada
+//	     line: Para <line>, y1 define a coordenada y do ponto inicial da linha.
+//	     linearGradient: Para <linearGradient>, y1 define a coordenada y do ponto inicial do vetor gradiente
+//	       usado para mapear os valores de parada de gradiente. O comportamento exato deste atributo é influenciado pelos atributos gradientUnits
+//
+func (e *TagSvgGlobal) Y1(y1 interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := y1.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "y1", converted.String())
+		return e
+	}
+
+	if converted, ok := y1.(time.Time); ok {
+		e.selfElement.Call("setAttribute", "y1", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "y1", y1)
+	return e
+}
+
+// Y2
+//
+// English:
+//
+//	The y2 attribute is used to specify the second y-coordinate for drawing an SVG element that requires more than
+//	one coordinate. Elements that only need one coordinate use the y attribute instead.
+//
+//	Input:
+//	    y2: defines the y2 attribute for the first y-coordinate for drawing an SVG element that requires more than one coordinate
+//		  line: For <line>, y2 defines the y coordinate of the ending point of the line.
+//		  linearGradient: For <linearGradient>, y2 defines the y coordinate of the ending point of the gradient vector
+//		    used to map the gradient stop values. The exact behavior of this attribute is influenced by the gradientUnits attributes
+//
+// Portuguese
+//
+//	O atributo y2 é usado para especificar a primeira coordenada y para desenhar um elemento SVG que requer mais de uma
+//	coordenada. Elementos que precisam apenas de uma coordenada usam o atributo y.
+//
+//	Entrada:
+//	   y2: define o atributo y2 para a primeira coordenada y para desenhar um elemento SVG que requer mais de uma coordenada
+//	     line: Para <line>, y2 define a coordenada y do ponto inicial da linha.
+//	     linearGradient: Para <linearGradient>, y2 define a coordenada y do ponto inicial do vetor gradiente
+//	       usado para mapear os valores de parada de gradiente. O comportamento exato deste atributo é influenciado pelos atributos gradientUnits
+//
+func (e *TagSvgGlobal) Y2(y2 interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := y2.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "y2", converted.String())
+		return e
+	}
+
+	if converted, ok := y2.(time.Time); ok {
+		e.selfElement.Call("setAttribute", "y2", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "y2", y2)
+	return e
+}
+
+// yChannelSelector
+//
+// English:
+//
+//	The yChannelSelector attribute indicates which color channel from in2 to use to displace the pixels in in
+//	along the y-axis.
+//
+//	Input:
+//	    yChannelSelector: attribute indicates which color channel from in2 to use to displace the pixels in in along the y-axis.
+//		  R: This keyword specifies that the red color channel of the input image defined in in2 will be used to displace
+//		    the pixels of the input image defined in in along the y-axis.
+//		  G: This keyword specifies that the green color channel of the input image defined in in2 will be used to
+//		    displace the pixels of the input image defined in in along the y-axis.
+//		  A: This keyword specifies that the alpha channel of the input image defined in in2 will be used to displace
+//		    the pixels of the input image defined in in along the y-axis.
+//
+// Portuguese
+//
+//	O atributo yChannelSelector indica qual canal de cor de in2 usar para deslocar os pixels em
+//	ao longo do eixo y.
+//
+//	Entrada:
+//	    yChannelSelector: atributo indica qual canal de cor de in2 usar para deslocar os pixels ao longo do eixo y.
+//	      R: Esta palavra-chave especifica que o canal de cor vermelha da imagem de entrada definida em in2 será usado para deslocar
+//	        os pixels da imagem de entrada definidos ao longo do eixo y.
+//	      G: Esta palavra-chave especifica que o canal de cor verde da imagem de entrada definida em in2 será usado para
+//	        desloca os pixels da imagem de entrada definida ao longo do eixo y.
+//	      R: Esta palavra-chave especifica que o canal alfa da imagem de entrada definida em in2 será usado para deslocar
+//	        os pixels da imagem de entrada definidos ao longo do eixo y.
+//
+func (e *TagSvgGlobal) YchannelSelector(yChannelSelector interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := yChannelSelector.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "yChannelSelector", converted.String())
+		return e
+	}
+
+	if converted, ok := yChannelSelector.(time.Time); ok {
+		e.selfElement.Call("setAttribute", "yChannelSelector", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "yChannelSelector", yChannelSelector)
+	return e
+}
+
+// ================================================================================================================ Z
+// Z
+//
+// English:
+//
+//	The z attribute defines the location along the z-axis for a light source in the coordinate system established by
+//	the primitiveUnits attribute on the <filter> element, assuming that, in the initial coordinate system, the positive
+//	z-axis comes out towards the person viewing the content and assuming that one unit along the z-axis equals one unit
+//	in x and y.
+//
+//	Input:
+//	   z: defines the location along the z-axis for a light source in the coordinate system.
+//		 fePointLight: For <fePointLight>, z defines the location along the z-axis for the light source in the
+//		   coordinate system established by the primitiveUnits attribute on the <filter> element.
+//		 feSpotLight: For <feSpotLight>, z defines the location along the z-axis for the light source in the coordinate
+//		   system established by the primitiveUnits attribute on the <filter> element.
+//
+// Portuguese
+//
+//	O atributo z define a localização ao longo do eixo z para uma fonte de luz no sistema de coordenadas estabelecido por
+//	o atributo primitivoUnits no elemento <filter>, assumindo que, no sistema de coordenadas inicial, o valor positivo
+//	O eixo z sai em direção à pessoa visualizando o conteúdo e assumindo que uma unidade ao longo do eixo z é igual a uma unidade
+//	em x e y.
+//
+//	Entrada:
+//
+//		z: define a localização ao longo do eixo z para uma fonte de luz no sistema de coordenadas.
+//		  fePointLight: Para <fePointLight>, z define a localização ao longo do eixo z para a fonte de luz no
+//			sistema de coordenadas estabelecido pelo atributo primitivaUnits no elemento <filter>.
+//		  feSpotLight: Para <feSpotLight>, z define a localização ao longo do eixo z para a fonte de luz na coordenada
+//		    sistema estabelecido pelo atributo primitivaUnits no elemento <filter>.
+//
+//
+func (e *TagSvgGlobal) Z(z interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := z.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "z", converted.String())
+		return e
+	}
+
+	if converted, ok := z.(time.Time); ok {
+		e.selfElement.Call("setAttribute", "z", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "z", z)
+	return e
+}
+
 //
 //
 //

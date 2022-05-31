@@ -264,6 +264,8 @@ func (e *TagSvgGlobal) AlignmentBaseline(alignmentBaseline interface{}) (ref *Ta
 //
 //   Input:
 //     amplitude: controls the amplitude of the gamma function
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
 //
 // Português:
 //
@@ -272,7 +274,15 @@ func (e *TagSvgGlobal) AlignmentBaseline(alignmentBaseline interface{}) (ref *Ta
 //
 //   Entrada:
 //     amplitude: controla a amplitude da função de gama
-func (e *TagSvgGlobal) Amplitude(amplitude float64) (ref *TagSvgGlobal) {
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Amplitude(amplitude interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := amplitude.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "amplitude", p)
+		return e
+	}
+
 	e.selfElement.Call("setAttribute", "amplitude", amplitude)
 	return e
 }
@@ -343,8 +353,8 @@ func (e *TagSvgGlobal) BaseFrequency(baseFrequency float64) (ref *TagSvgGlobal) 
 //
 //   Input:
 //     baselineShift: allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text content element.
-//       string: url(#myClip)
-//       length-percentage: "5%"
+//       float32: 0.05 = "5%"
+//       string: "5%"
 //       consts KSvgBaselineShift... (e.g. KSvgBaselineShiftAuto)
 //
 //   Notes:
@@ -357,8 +367,8 @@ func (e *TagSvgGlobal) BaseFrequency(baseFrequency float64) (ref *TagSvgGlobal) 
 //
 //   Input:
 //     baselineShift: permite o reposicionamento da linha de base dominante em relação à linha de base dominante do elemento de conteúdo de texto pai.
-//       string: url(#myClip)
-//       length-percentage: "5%"
+//       float32: 0.05 = "5%"
+//       string: "5%"
 //       consts KSvgBaselineShift... (ex. KSvgBaselineShiftAuto)
 //
 //   Notas:
@@ -367,6 +377,12 @@ func (e *TagSvgGlobal) BaseFrequency(baseFrequency float64) (ref *TagSvgGlobal) 
 func (e *TagSvgGlobal) BaselineShift(baselineShift interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := baselineShift.(SvgBaselineShift); ok {
 		e.selfElement.Call("setAttribute", "baseline-shift", converted.String())
+		return e
+	}
+
+	if converted, ok := baselineShift.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "baseline-shift", p)
 		return e
 	}
 
@@ -489,6 +505,12 @@ func (e *TagSvgGlobal) Begin(begin interface{}) (ref *TagSvgGlobal) {
 		return e
 	}
 
+	if converted, ok := begin.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "baseline-shift", p)
+		return e
+	}
+
 	e.selfElement.Call("setAttribute", "begin", begin)
 	return e
 }
@@ -590,7 +612,7 @@ func (e *TagSvgGlobal) CalcMode(calcMode SvgCalcMode) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Class
+// Class #global
 //
 // English:
 //

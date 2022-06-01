@@ -4,43 +4,33 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
+	"image/color"
 	"sync"
 	"syscall/js"
 )
 
-// TagSvgImage
+// TagSvgFeDiffuseLighting
 //
 // English:
 //
-// The <image> SVG element includes images inside SVG documents. It can display raster image files or other SVG files.
+// The <feDiffuseLighting> SVG filter primitive lights an image using the alpha channel as a bump map. The resulting
+// image, which is an RGBA opaque image, depends on the light color, light position and surface geometry of the input
+// bump map.
 //
-// The only image formats SVG software must support are JPEG, PNG, and other SVG files. Animated GIF behavior is
-// undefined.
-//
-// SVG files displayed with <image> are treated as an image: external resources aren't loaded, :visited styles aren't
-// applied, and they cannot be interactive. To include dynamic SVG elements, try <use> with an external URL. To include
-// SVG files and run scripts inside them, try <object> inside of <foreignObject>.
-//
-//   Notes:
-//     * The HTML spec defines <image> as a synonym for <img> while parsing HTML. This specific element and its
-//       behavior only apply inside SVG documents or inline SVG.
+// The light map produced by this filter primitive can be combined with a texture image using the multiply term of the
+// arithmetic operator of the <feComposite> filter primitive. Multiple light sources can be simulated by adding several
+// of these light maps together before applying it to the texture image.
 //
 // Português:
 //
-// O elemento SVG <image> inclui imagens dentro de documentos SVG. Ele pode exibir arquivos de imagem raster ou outros
-// arquivos SVG.
+// A primitiva de filtro SVG <feDiffuseLighting> ilumina uma imagem usando o canal alfa como um mapa de relevo.
+// A imagem resultante, que é uma imagem opaca RGBA, depende da cor da luz, posição da luz e geometria da superfície do
+// mapa de relevo de entrada.
 //
-// Os únicos formatos de imagem que o software SVG deve suportar são JPEG, PNG e outros arquivos SVG. O comportamento
-// do GIF animado é indefinido.
-//
-// Arquivos SVG exibidos com <image> são tratados como uma imagem: recursos externos não são carregados, estilos
-// :visited não são aplicados e não podem ser interativos. Para incluir elementos SVG dinâmicos, tente <use> com uma
-// URL externa. Para incluir arquivos SVG e executar scripts dentro deles, tente <object> dentro de <foreignObject>.
-//
-//   Notes:
-//     * The HTML spec defines <image> as a synonym for <img> while parsing HTML. This specific element and its
-//       behavior only apply inside SVG documents or inline SVG.
-type TagSvgImage struct {
+// O mapa de luz produzido por esta primitiva de filtro pode ser combinado com uma imagem de textura usando o termo
+// multiplicar do operador aritmético da primitiva de filtro <feComposite>. Várias fontes de luz podem ser simuladas
+// adicionando vários desses mapas de luz antes de aplicá-los à imagem de textura.
+type TagSvgFeDiffuseLighting struct {
 
 	// id
 	//
@@ -175,40 +165,29 @@ type TagSvgImage struct {
 	rotateDelta float64
 }
 
-// ClipPath
+// Color
 //
 // English:
 //
-//  It binds the element it is applied to with a given <clipPath> element.
+//  It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
+//  lighting-color presentation attributes.
 //
-//   Input:
-//     clipPath: the element it is applied
-//       (e.g. "url(#myClip)", "circle() fill-box", "circle() stroke-box" or "circle() view-box")
+//   Notes:
+//     * As a presentation attribute, color can be used as a CSS property. See CSS color for further information.
 //
 // Português:
 //
-//  Ele associa o elemento ao qual é aplicado a um determinado elemento <clipPath>.
+//  Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
+//  cor de parada, cor de inundação e cor de iluminação.
 //
-//   Entrada:
-//     clipPath: elemento ao qual é aplicado
-//       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
-func (e *TagSvgImage) ClipPath(clipPath string) (ref *TagSvgImage) {
-	e.selfElement.Call("setAttribute", "clip-path", clipPath)
-	return e
-}
+//   Notas:
+//     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
+func (e *TagSvgFeDiffuseLighting) Color(value interface{}) (ref *TagSvgFeDiffuseLighting) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
+		return e
+	}
 
-// ClipRule
-//
-// English:
-//
-//  It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
-//  its target.
-//
-// Português:
-//
-//  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
-//  recortar seu destino.
-func (e *TagSvgImage) ClipRule(clipRule SvgClipRule) (ref *TagSvgImage) {
-	e.selfElement.Call("setAttribute", "clip-rule", clipRule.String())
+	e.selfElement.Call("setAttribute", "color", value)
 	return e
 }

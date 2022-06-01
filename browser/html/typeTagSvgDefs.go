@@ -9,22 +9,28 @@ import (
 	"syscall/js"
 )
 
-// TagSvgClipPath
+// TagSvgDefs
 //
 // English:
 //
-// The <clipPath> SVG element defines a clipping path, to be used by the clip-path property.
+// The <defs> element is used to store graphical objects that will be used at a later time.
 //
-// A clipping path restricts the region to which paint can be applied. Conceptually, parts of the drawing that lie
-// outside of the region bounded by the clipping path are not drawn.
+// Objects created inside a <defs> element are not rendered directly. To display them you have to reference them
+// (with a <use> element for example).
+//
+// Graphical objects can be referenced from anywhere, however, defining these objects inside of a <defs> element
+// promotes understandability of the SVG content and is beneficial to the overall accessibility of the document.
 //
 // Português
 //
-// O elemento SVG <clipPath> define um caminho de recorte, a ser usado pela propriedade clip-path.
+// O elemento <defs> é usado para armazenar objetos gráficos que serão usados posteriormente.
 //
-// Um traçado de recorte restringe a região na qual a tinta pode ser aplicada. Conceitualmente, as partes do desenho
-// que estão fora da região delimitada pelo caminho de recorte não são desenhadas.
-type TagSvgClipPath struct {
+// Objetos criados dentro de um elemento <defs> não são renderizados diretamente. Para exibi-los, você deve
+// referenciá-los (com um elemento <use>, por exemplo).
+//
+// Graphical objects can be referenced from anywhere, however, defining these objects inside of a <defs> element
+// promotes understandability of the SVG content and is beneficial to the overall accessibility of the document.
+type TagSvgDefs struct {
 
 	// id
 	//
@@ -159,66 +165,6 @@ type TagSvgClipPath struct {
 	rotateDelta float64
 }
 
-// ClipPathUnits
-//
-// English:
-//
-//  The clipPathUnits attribute indicates which coordinate system to use for the contents of the <clipPath> element.
-//
-//   Input:
-//     clipPathUnits: indicates which coordinate system to used
-//       KSvgClipPathUnits... (e.g. KSvgClipPathUnitsUserSpaceOnUse)
-//
-// Português:
-//
-//  O atributo clipPathUnits indica qual sistema de coordenadas deve ser usado para o conteúdo do elemento <clipPath>.
-//
-//   Input:
-//     clipPathUnits: indica qual sistema de coordenadas deve ser usado
-//       KSvgClipPathUnits... (ex. KSvgClipPathUnitsUserSpaceOnUse)
-func (e *TagSvgClipPath) ClipPathUnits(clipPathUnits SvgClipPathUnits) (ref *TagSvgClipPath) {
-	e.selfElement.Call("setAttribute", "clipPathUnits", clipPathUnits.String())
-	return e
-}
-
-// ClipPath
-//
-// English:
-//
-//  It binds the element it is applied to with a given <clipPath> element.
-//
-//   Input:
-//     clipPath: the element it is applied
-//       (e.g. "url(#myClip)", "circle() fill-box", "circle() stroke-box" or "circle() view-box")
-//
-// Português:
-//
-//  Ele associa o elemento ao qual é aplicado a um determinado elemento <clipPath>.
-//
-//   Entrada:
-//     clipPath: elemento ao qual é aplicado
-//       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
-func (e *TagSvgClipPath) ClipPath(clipPath string) (ref *TagSvgClipPath) {
-	e.selfElement.Call("setAttribute", "clip-path", clipPath)
-	return e
-}
-
-// ClipRule
-//
-// English:
-//
-//  It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
-//  its target.
-//
-// Português:
-//
-//  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
-//  recortar seu destino.
-func (e *TagSvgClipPath) ClipRule(clipRule SvgClipRule) (ref *TagSvgClipPath) {
-	e.selfElement.Call("setAttribute", "clip-rule", clipRule.String())
-	return e
-}
-
 // Color
 //
 // English:
@@ -236,7 +182,7 @@ func (e *TagSvgClipPath) ClipRule(clipRule SvgClipRule) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
-func (e *TagSvgClipPath) Color(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgDefs) Color(value interface{}) (ref *TagSvgDefs) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
 		return e
@@ -287,7 +233,7 @@ func (e *TagSvgClipPath) Color(value interface{}) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Para efeitos de filtro, a propriedade color-interpolation-filters controla qual espaço de cor é usado.
 //     * Como atributo de apresentação, a interpolação de cores pode ser usada como uma propriedade CSS.
-func (e *TagSvgClipPath) ColorInterpolation(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgDefs) ColorInterpolation(value interface{}) (ref *TagSvgDefs) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation", RGBAToJs(converted))
 		return e

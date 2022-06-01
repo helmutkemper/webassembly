@@ -9,22 +9,24 @@ import (
 	"syscall/js"
 )
 
-// TagSvgClipPath
+// TagSvgText
 //
 // English:
 //
-// The <clipPath> SVG element defines a clipping path, to be used by the clip-path property.
+// The SVG <text> element draws a graphics element consisting of text. It's possible to apply a gradient, pattern,
+// clipping path, mask, or filter to <text>, like any other SVG graphics element.
 //
-// A clipping path restricts the region to which paint can be applied. Conceptually, parts of the drawing that lie
-// outside of the region bounded by the clipping path are not drawn.
+// If text is included in SVG not inside of a <text> element, it is not rendered. This is different than being hidden
+// by default, as setting the display property won't show the text.
 //
-// Português
+// Português:
 //
-// O elemento SVG <clipPath> define um caminho de recorte, a ser usado pela propriedade clip-path.
+// O elemento SVG <text> desenha um elemento gráfico que consiste em texto. É possível aplicar um gradiente, padrão,
+// caminho de recorte, máscara ou filtro a <text>, como qualquer outro elemento gráfico SVG.
 //
-// Um traçado de recorte restringe a região na qual a tinta pode ser aplicada. Conceitualmente, as partes do desenho
-// que estão fora da região delimitada pelo caminho de recorte não são desenhadas.
-type TagSvgClipPath struct {
+// Se o texto for incluído no SVG fora de um elemento <text>, ele não será renderizado. Isso é diferente de estar
+// oculto por padrão, pois definir a propriedade de exibição não mostrará o texto.
+type TagSvgText struct {
 
 	// id
 	//
@@ -159,28 +161,6 @@ type TagSvgClipPath struct {
 	rotateDelta float64
 }
 
-// ClipPathUnits
-//
-// English:
-//
-//  The clipPathUnits attribute indicates which coordinate system to use for the contents of the <clipPath> element.
-//
-//   Input:
-//     clipPathUnits: indicates which coordinate system to used
-//       KSvgClipPathUnits... (e.g. KSvgClipPathUnitsUserSpaceOnUse)
-//
-// Português:
-//
-//  O atributo clipPathUnits indica qual sistema de coordenadas deve ser usado para o conteúdo do elemento <clipPath>.
-//
-//   Input:
-//     clipPathUnits: indica qual sistema de coordenadas deve ser usado
-//       KSvgClipPathUnits... (ex. KSvgClipPathUnitsUserSpaceOnUse)
-func (e *TagSvgClipPath) ClipPathUnits(clipPathUnits SvgClipPathUnits) (ref *TagSvgClipPath) {
-	e.selfElement.Call("setAttribute", "clipPathUnits", clipPathUnits.String())
-	return e
-}
-
 // ClipPath
 //
 // English:
@@ -198,7 +178,7 @@ func (e *TagSvgClipPath) ClipPathUnits(clipPathUnits SvgClipPathUnits) (ref *Tag
 //   Entrada:
 //     clipPath: elemento ao qual é aplicado
 //       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
-func (e *TagSvgClipPath) ClipPath(clipPath string) (ref *TagSvgClipPath) {
+func (e *TagSvgText) ClipPath(clipPath string) (ref *TagSvgText) {
 	e.selfElement.Call("setAttribute", "clip-path", clipPath)
 	return e
 }
@@ -214,7 +194,7 @@ func (e *TagSvgClipPath) ClipPath(clipPath string) (ref *TagSvgClipPath) {
 //
 //  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
 //  recortar seu destino.
-func (e *TagSvgClipPath) ClipRule(clipRule SvgClipRule) (ref *TagSvgClipPath) {
+func (e *TagSvgText) ClipRule(clipRule SvgClipRule) (ref *TagSvgText) {
 	e.selfElement.Call("setAttribute", "clip-rule", clipRule.String())
 	return e
 }
@@ -236,63 +216,12 @@ func (e *TagSvgClipPath) ClipRule(clipRule SvgClipRule) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
-func (e *TagSvgClipPath) Color(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgText) Color(value interface{}) (ref *TagSvgText) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
 		return e
 	}
 
 	e.selfElement.Call("setAttribute", "color", value)
-	return e
-}
-
-// ColorInterpolation
-//
-// English:
-//
-//  The color-interpolation attribute specifies the color space for gradient interpolations, color animations, and alpha
-//  compositing.
-//
-// The color-interpolation property chooses between color operations occurring in the sRGB color space or in a (light
-// energy linear) linearized RGB color space. Having chosen the appropriate color space, component-wise linear
-// interpolation is used.
-//
-// When a child element is blended into a background, the value of the color-interpolation property on the child
-// determines the type of blending, not the value of the color-interpolation on the parent.
-// For gradients which make use of the href or the deprecated xlink:href attribute to reference another gradient, the
-// gradient uses the property's value from the gradient element which is directly referenced by the fill or stroke
-// property. When animating colors, color interpolation is performed according to the value of the color-interpolation
-// property on the element being animated.
-//
-//   Notes:
-//     * For filter effects, the color-interpolation-filters property controls which color space is used.
-//     * As a presentation attribute, color-interpolation can be used as a CSS property.
-//
-// Português:
-//
-//  O atributo color-interpolation especifica o espaço de cores para interpolações de gradiente, animações de cores e
-//  composição alfa.
-//
-// A propriedade de interpolação de cores escolhe entre operações de cores que ocorrem no espaço de cores sRGB ou em um
-// espaço de cores RGB linearizado (energia de luz linear). Tendo escolhido o espaço de cor apropriado, a interpolação
-// linear de componentes é usada.
-//
-// Quando um elemento filho é mesclado em um plano de fundo, o valor da propriedade color-interpolation no filho
-// determina o tipo de mesclagem, não o valor da interpolação de cores no pai.
-// Para gradientes que usam o href ou o atributo obsoleto xlink:href para referenciar outro gradiente, o gradiente usa
-// o valor da propriedade do elemento gradiente que é diretamente referenciado pela propriedade fill ou stroke.
-// Ao animar cores, à interpolação de cores é executada de acordo com o valor da propriedade color-interpolation no
-// elemento que está sendo animado.
-//
-//   Notas:
-//     * Para efeitos de filtro, a propriedade color-interpolation-filters controla qual espaço de cor é usado.
-//     * Como atributo de apresentação, a interpolação de cores pode ser usada como uma propriedade CSS.
-func (e *TagSvgClipPath) ColorInterpolation(value interface{}) (ref *TagSvgClipPath) {
-	if converted, ok := value.(color.RGBA); ok {
-		e.selfElement.Call("setAttribute", "color-interpolation", RGBAToJs(converted))
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "color-interpolation", value)
 	return e
 }

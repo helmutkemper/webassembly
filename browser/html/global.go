@@ -2180,6 +2180,43 @@ func (e *TagSvgGlobal) KeyPoints(keyPoints []float64) (ref *TagSvgGlobal) {
 	return e
 }
 
+// KeySplines
+//
+// English:
+//
+// The keySplines attribute defines a set of Bézier curve control points associated with the keyTimes list, defining a
+// cubic Bézier function that controls interval pacing.
+//
+// This attribute is ignored unless the calcMode attribute is set to spline.
+//
+// If there are any errors in the keySplines specification (bad values, too many or too few values), the animation will
+// not occur.
+//
+// Português:
+//
+// O atributo keySplines define um conjunto de pontos de controle da curva Bézier associados à lista keyTimes,
+// definindo uma função Bézier cúbica que controla o ritmo do intervalo.
+//
+// Esse atributo é ignorado, a menos que o atributo calcMode seja definido como spline.
+//
+// Se houver algum erro na especificação de keySplines (valores incorretos, muitos ou poucos valores), a animação não
+// ocorrerá.
+func (e *TagSvgGlobal) KeySplines(value interface{}) (ref *TagSvgGlobal) {
+
+	if converted, ok := value.(*ControlPoint); ok {
+		e.selfElement.Call("setAttribute", "keySplines", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(*KeyTimes); ok {
+		e.selfElement.Call("setAttribute", "keySplines", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "keySplines", value)
+	return e
+}
+
 //
 //
 //

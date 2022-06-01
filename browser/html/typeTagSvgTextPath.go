@@ -4,6 +4,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
+	"image/color"
 	"strconv"
 	"sync"
 	"syscall/js"
@@ -233,5 +234,32 @@ func (e *TagSvgTextPath) BaselineShift(baselineShift interface{}) (ref *TagSvgTe
 	}
 
 	e.selfElement.Call("setAttribute", "baseline-shift", baselineShift)
+	return e
+}
+
+// Color
+//
+// English:
+//
+//  It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
+//  lighting-color presentation attributes.
+//
+//   Notes:
+//     * As a presentation attribute, color can be used as a CSS property. See CSS color for further information.
+//
+// Português:
+//
+//  Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
+//  cor de parada, cor de inundação e cor de iluminação.
+//
+//   Notas:
+//     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
+func (e *TagSvgTextPath) Color(value interface{}) (ref *TagSvgTextPath) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "color", value)
 	return e
 }

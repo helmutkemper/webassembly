@@ -4,43 +4,23 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
+	"image/color"
 	"sync"
 	"syscall/js"
 )
 
-// TagSvgImage
+// TagSvgFeFlood
 //
 // English:
 //
-// The <image> SVG element includes images inside SVG documents. It can display raster image files or other SVG files.
-//
-// The only image formats SVG software must support are JPEG, PNG, and other SVG files. Animated GIF behavior is
-// undefined.
-//
-// SVG files displayed with <image> are treated as an image: external resources aren't loaded, :visited styles aren't
-// applied, and they cannot be interactive. To include dynamic SVG elements, try <use> with an external URL. To include
-// SVG files and run scripts inside them, try <object> inside of <foreignObject>.
-//
-//   Notes:
-//     * The HTML spec defines <image> as a synonym for <img> while parsing HTML. This specific element and its
-//       behavior only apply inside SVG documents or inline SVG.
+// The <feFlood> SVG filter primitive fills the filter subregion with the color and opacity defined by flood-color and
+// flood-opacity.
 //
 // Português:
 //
-// O elemento SVG <image> inclui imagens dentro de documentos SVG. Ele pode exibir arquivos de imagem raster ou outros
-// arquivos SVG.
-//
-// Os únicos formatos de imagem que o software SVG deve suportar são JPEG, PNG e outros arquivos SVG. O comportamento
-// do GIF animado é indefinido.
-//
-// Arquivos SVG exibidos com <image> são tratados como uma imagem: recursos externos não são carregados, estilos
-// :visited não são aplicados e não podem ser interativos. Para incluir elementos SVG dinâmicos, tente <use> com uma
-// URL externa. Para incluir arquivos SVG e executar scripts dentro deles, tente <object> dentro de <foreignObject>.
-//
-//   Notes:
-//     * The HTML spec defines <image> as a synonym for <img> while parsing HTML. This specific element and its
-//       behavior only apply inside SVG documents or inline SVG.
-type TagSvgImage struct {
+// A primitiva de filtro SVG <feFlood> preenche a sub-região do filtro com a cor e a opacidade definidas por flood-color
+// e flood-opacity.
+type TagSvgFeFlood struct {
 
 	// id
 	//
@@ -175,40 +155,29 @@ type TagSvgImage struct {
 	rotateDelta float64
 }
 
-// ClipPath
+// Color
 //
 // English:
 //
-//  It binds the element it is applied to with a given <clipPath> element.
+//  It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
+//  lighting-color presentation attributes.
 //
-//   Input:
-//     clipPath: the element it is applied
-//       (e.g. "url(#myClip)", "circle() fill-box", "circle() stroke-box" or "circle() view-box")
+//   Notes:
+//     * As a presentation attribute, color can be used as a CSS property. See CSS color for further information.
 //
 // Português:
 //
-//  Ele associa o elemento ao qual é aplicado a um determinado elemento <clipPath>.
+//  Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
+//  cor de parada, cor de inundação e cor de iluminação.
 //
-//   Entrada:
-//     clipPath: elemento ao qual é aplicado
-//       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
-func (e *TagSvgImage) ClipPath(clipPath string) (ref *TagSvgImage) {
-	e.selfElement.Call("setAttribute", "clip-path", clipPath)
-	return e
-}
+//   Notas:
+//     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
+func (e *TagSvgFeFlood) Color(value interface{}) (ref *TagSvgFeFlood) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
+		return e
+	}
 
-// ClipRule
-//
-// English:
-//
-//  It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
-//  its target.
-//
-// Português:
-//
-//  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
-//  recortar seu destino.
-func (e *TagSvgImage) ClipRule(clipRule SvgClipRule) (ref *TagSvgImage) {
-	e.selfElement.Call("setAttribute", "clip-rule", clipRule.String())
+	e.selfElement.Call("setAttribute", "color", value)
 	return e
 }

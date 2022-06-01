@@ -145,6 +145,67 @@ type TagSvg struct {
 	rotateDelta float64
 }
 
+// ClipPath
+//
+// English:
+//
+//  It binds the element it is applied to with a given <clipPath> element.
+//
+//   Input:
+//     clipPath: the element it is applied
+//       (e.g. "url(#myClip)", "circle() fill-box", "circle() stroke-box" or "circle() view-box")
+//
+// Português:
+//
+//  Ele associa o elemento ao qual é aplicado a um determinado elemento <clipPath>.
+//
+//   Entrada:
+//     clipPath: elemento ao qual é aplicado
+//       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
+func (e *TagSvg) ClipPath(clipPath string) (ref *TagSvg) {
+	e.selfElement.Call("setAttribute", "clip-path", clipPath)
+	return e
+}
+
+// ClipRule
+//
+// English:
+//
+//  It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
+//  its target.
+//
+// Português:
+//
+//  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
+//  recortar seu destino.
+func (e *TagSvg) ClipRule(clipRule SvgClipRule) (ref *TagSvg) {
+	e.selfElement.Call("setAttribute", "clip-rule", clipRule.String())
+	return e
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 // Init
 //
 // English:

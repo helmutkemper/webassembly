@@ -4,6 +4,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
+	"image/color"
 	"log"
 	"sync"
 	"syscall/js"
@@ -217,6 +218,28 @@ func (e *TagSvgPath) D(d *SvgPath) (ref *TagSvgPath) {
 	return e
 }
 
+// ClipPath
+//
+// English:
+//
+//  It binds the element it is applied to with a given <clipPath> element.
+//
+//   Input:
+//     clipPath: the element it is applied
+//       (e.g. "url(#myClip)", "circle() fill-box", "circle() stroke-box" or "circle() view-box")
+//
+// Português:
+//
+//  Ele associa o elemento ao qual é aplicado a um determinado elemento <clipPath>.
+//
+//   Entrada:
+//     clipPath: elemento ao qual é aplicado
+//       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
+func (e *TagSvgPath) ClipPath(clipPath string) (ref *TagSvgPath) {
+	e.selfElement.Call("setAttribute", "clip-path", clipPath)
+	return e
+}
+
 func (e *TagSvgPath) AppendById(appendId string) (ref *TagSvgPath) {
 
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
@@ -226,5 +249,48 @@ func (e *TagSvgPath) AppendById(appendId string) (ref *TagSvgPath) {
 	}
 
 	toAppend.Call("appendChild", e.selfElement)
+	return e
+}
+
+// ClipRule
+//
+// English:
+//
+//  It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
+//  its target.
+//
+// Português:
+//
+//  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
+//  recortar seu destino.
+func (e *TagSvgPath) ClipRule(clipRule SvgClipRule) (ref *TagSvgPath) {
+	e.selfElement.Call("setAttribute", "clip-rule", clipRule.String())
+	return e
+}
+
+// Color
+//
+// English:
+//
+//  It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
+//  lighting-color presentation attributes.
+//
+//   Notes:
+//     * As a presentation attribute, color can be used as a CSS property. See CSS color for further information.
+//
+// Português:
+//
+//  Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
+//  cor de parada, cor de inundação e cor de iluminação.
+//
+//   Notas:
+//     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
+func (e *TagSvgPath) Color(value interface{}) (ref *TagSvgPath) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "color", value)
 	return e
 }

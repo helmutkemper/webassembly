@@ -9,22 +9,26 @@ import (
 	"syscall/js"
 )
 
-// TagSvgClipPath
+// TagSvgEllipse
 //
 // English:
 //
-// The <clipPath> SVG element defines a clipping path, to be used by the clip-path property.
+// The <ellipse> element is an SVG basic shape, used to create ellipses based on a center coordinate, and both their x
+// and y radius.
 //
-// A clipping path restricts the region to which paint can be applied. Conceptually, parts of the drawing that lie
-// outside of the region bounded by the clipping path are not drawn.
+//   Notes:
+//     * Ellipses are unable to specify the exact orientation of the ellipse (if, for example, you wanted to draw an
+//       ellipse tilted at a 45 degree angle), but it can be rotated by using the transform attribute.
 //
-// Português
+// Português:
 //
-// O elemento SVG <clipPath> define um caminho de recorte, a ser usado pela propriedade clip-path.
+// O elemento <ellipse> é uma forma básica SVG, usada para criar elipses com base em uma coordenada central e em seus
+// raios x e y.
 //
-// Um traçado de recorte restringe a região na qual a tinta pode ser aplicada. Conceitualmente, as partes do desenho
-// que estão fora da região delimitada pelo caminho de recorte não são desenhadas.
-type TagSvgClipPath struct {
+//   Note:
+//     * As elipses não podem especificar a orientação exata da elipse (se, por exemplo, você quiser desenhar uma
+//       elipse inclinada em um ângulo de 45 graus), mas ela pode ser girada usando o atributo transform.
+type TagSvgEllipse struct {
 
 	// id
 	//
@@ -159,28 +163,6 @@ type TagSvgClipPath struct {
 	rotateDelta float64
 }
 
-// ClipPathUnits
-//
-// English:
-//
-//  The clipPathUnits attribute indicates which coordinate system to use for the contents of the <clipPath> element.
-//
-//   Input:
-//     clipPathUnits: indicates which coordinate system to used
-//       KSvgClipPathUnits... (e.g. KSvgClipPathUnitsUserSpaceOnUse)
-//
-// Português:
-//
-//  O atributo clipPathUnits indica qual sistema de coordenadas deve ser usado para o conteúdo do elemento <clipPath>.
-//
-//   Input:
-//     clipPathUnits: indica qual sistema de coordenadas deve ser usado
-//       KSvgClipPathUnits... (ex. KSvgClipPathUnitsUserSpaceOnUse)
-func (e *TagSvgClipPath) ClipPathUnits(clipPathUnits SvgClipPathUnits) (ref *TagSvgClipPath) {
-	e.selfElement.Call("setAttribute", "clipPathUnits", clipPathUnits.String())
-	return e
-}
-
 // ClipPath
 //
 // English:
@@ -198,7 +180,7 @@ func (e *TagSvgClipPath) ClipPathUnits(clipPathUnits SvgClipPathUnits) (ref *Tag
 //   Entrada:
 //     clipPath: elemento ao qual é aplicado
 //       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
-func (e *TagSvgClipPath) ClipPath(clipPath string) (ref *TagSvgClipPath) {
+func (e *TagSvgEllipse) ClipPath(clipPath string) (ref *TagSvgEllipse) {
 	e.selfElement.Call("setAttribute", "clip-path", clipPath)
 	return e
 }
@@ -214,7 +196,7 @@ func (e *TagSvgClipPath) ClipPath(clipPath string) (ref *TagSvgClipPath) {
 //
 //  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
 //  recortar seu destino.
-func (e *TagSvgClipPath) ClipRule(clipRule SvgClipRule) (ref *TagSvgClipPath) {
+func (e *TagSvgEllipse) ClipRule(clipRule SvgClipRule) (ref *TagSvgEllipse) {
 	e.selfElement.Call("setAttribute", "clip-rule", clipRule.String())
 	return e
 }
@@ -236,7 +218,7 @@ func (e *TagSvgClipPath) ClipRule(clipRule SvgClipRule) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
-func (e *TagSvgClipPath) Color(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgEllipse) Color(value interface{}) (ref *TagSvgEllipse) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
 		return e
@@ -287,7 +269,7 @@ func (e *TagSvgClipPath) Color(value interface{}) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Para efeitos de filtro, a propriedade color-interpolation-filters controla qual espaço de cor é usado.
 //     * Como atributo de apresentação, a interpolação de cores pode ser usada como uma propriedade CSS.
-func (e *TagSvgClipPath) ColorInterpolation(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgEllipse) ColorInterpolation(value interface{}) (ref *TagSvgEllipse) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation", RGBAToJs(converted))
 		return e

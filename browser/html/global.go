@@ -2217,6 +2217,522 @@ func (e *TagSvgGlobal) KeySplines(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
+// KeyTimes
+//
+// English:
+//
+// The keyTimes attribute represents a list of time values used to control the pacing of the animation.
+//
+//   Input:
+//     value: list of time values used to control
+//       []float64{0.0, 0.5, 1.0}: values="0; 0.5; 1"
+//
+// Each time in the list corresponds to a value in the values attribute list, and defines when the value is used in the
+// animation.
+//
+// Each time value in the keyTimes list is specified as a floating point value between 0 and 1 (inclusive), representing
+// a proportional offset into the duration of the animation element.
+//
+// Português:
+//
+// O atributo keyTimes representa uma lista de valores de tempo usados para controlar o ritmo da animação.
+//
+//   Entrada:
+//     value: lista de valores de tempo usados para controle
+//       []float64{0.0, 0.5, 1.0}: values="0; 0.5; 1"
+//
+// Cada vez na lista corresponde a um valor na lista de atributos de valores e define quando o valor é usado na
+// animação.
+//
+// Cada valor de tempo na lista keyTimes é especificado como um valor de ponto flutuante entre 0 e 1 (inclusive),
+// representando um deslocamento proporcional à duração do elemento de animação.
+func (e *TagSvgGlobal) KeyTimes(value interface{}) (ref *TagSvgGlobal) {
+
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + "; "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "keyTimes", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]time.Duration); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += v.String() + "; "
+		}
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "keyTimes", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "keyTimes", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "keyTimes", value)
+	return e
+}
+
+// Lang
+//
+// English:
+//
+// The lang attribute specifies the primary language used in contents and attributes containing text content of
+// particular elements.
+//
+//   Input:
+//     value: specifies the primary language used in contents
+//       const KLanguage... (e.g. KLanguageEnglish)
+//
+// There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
+// the one without is ignored.
+//
+// In SVG 1.1 there was a lang attribute defined with a different meaning and only applying to <glyph> elements.
+// That attribute specified a list of languages according to RFC 5646: Tags for Identifying Languages
+// (also known as BCP 47). The glyph was meant to be used if the xml:lang attribute exactly matched one of the languages
+// given in the value of this parameter, or if the xml:lang attribute exactly equaled a prefix of one of the languages
+// given in the value of this parameter such that the first tag character following the prefix was "-".
+//
+// Português:
+//
+// O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
+// elementos específicos.
+//
+//   Entrada:
+//     value: especifica o idioma principal usado no conteúdo
+//       const KLanguage... (ex. KLanguagePortuguese)
+//
+// Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
+// sem namespace será ignorado.
+//
+// No SVG 1.1 havia um atributo lang definido com um significado diferente e aplicando-se apenas aos elementos <glyph>.
+// Esse atributo especificou uma lista de idiomas de acordo com a RFC 5646: Tags for Identification Languages
+// (também conhecido como BCP 47). O glifo deveria ser usado se o atributo xml:lang correspondesse exatamente a um dos
+// idiomas fornecidos no valor desse parâmetro, ou se o atributo xml:lang fosse exatamente igual a um prefixo de um dos
+// idiomas fornecidos no valor desse parâmetro de modo que o primeiro caractere de tag após o prefixo fosse "-".
+func (e *TagSvgGlobal) Lang(value interface{}) (ref *TagSvgGlobal) {
+
+	if converted, ok := value.(Language); ok {
+		e.selfElement.Call("setAttribute", "lang", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "lang", value)
+	return e
+}
+
+// LengthAdjust
+//
+// English:
+//
+// The lengthAdjust attribute controls how the text is stretched into the length defined by the textLength attribute.
+//
+//   Input:
+//     value: controls how the text is stretched
+//       KSvgLengthAdjust... (e.g. KSvgLengthAdjustSpacing)
+//
+// Português:
+//
+// O atributo lengthAdjust controla como o texto é esticado no comprimento definido pelo atributo textLength.
+//
+//   Input:
+//     value: controla como o texto é esticado
+//       KSvgLengthAdjust... (e.g. KSvgLengthAdjustSpacing)
+func (e *TagSvgGlobal) LengthAdjust(value interface{}) (ref *TagSvgGlobal) {
+
+	if converted, ok := value.(SvgLengthAdjust); ok {
+		e.selfElement.Call("setAttribute", "lengthAdjust", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "lengthAdjust", value)
+	return e
+}
+
+// LetterSpacing
+//
+// English:
+//
+// The letter-spacing attribute controls spacing between text characters, in addition to any spacing from the kerning
+// attribute.
+//
+//   Input:
+//     value: controls spacing between text characters
+//
+// If the attribute value is a unitless number (like 128), the browser processes it as a <length> in the current user
+// coordinate system.
+//
+// If the attribute value has a unit identifier, such as .25em or 1%, then the browser converts the <length> into its
+// corresponding value in the current user coordinate system.
+//
+// Notes:
+//   * As a presentation attribute, letter-spacing can be used as a CSS property.
+//     See the css letter-spacing property for more information.
+//
+// Português:
+//
+// O atributo letter-spacing controla o espaçamento entre caracteres de texto, além de qualquer espaçamento do atributo
+// kerning.
+//
+//   Input:
+//     value: controla o espaçamento entre caracteres de texto
+//
+// Se o valor do atributo for um número sem unidade (como 128), o navegador o processará como um <comprimento> no
+// sistema de coordenadas do usuário atual.
+//
+// Se o valor do atributo tiver um identificador de unidade, como .25em ou 1%, o navegador converterá o <comprimento>
+// em seu valor correspondente no sistema de coordenadas do usuário atual.
+//
+// Notas:
+//   * Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
+//     Consulte a propriedade de espaçamento entre letras do CSS para obter mais informações.
+func (e *TagSvgGlobal) LetterSpacing(value float64) (ref *TagSvgGlobal) {
+
+	e.selfElement.Call("setAttribute", "letter-spacing", strconv.FormatFloat(value, 'g', -1, 64))
+	return e
+}
+
+// LightingColor
+//
+// English:
+//
+// The lighting-color attribute defines the color of the light source for lighting filter primitives.
+//
+// Português:
+//
+// O atributo lighting-color define a cor da fonte de luz para as primitivas do filtro de iluminação.
+func (e *TagSvgGlobal) LightingColor(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "lighting-color", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "lighting-color", value)
+	return e
+}
+
+// LimitingConeAngle
+//
+// English:
+//
+// The limitingConeAngle attribute represents the angle in degrees between the spot light axis (i.e. the axis between
+// the light source and the point to which it is pointing at) and the spot light cone. So it defines a limiting cone
+// which restricts the region where the light is projected. No light is projected outside the cone.
+//
+//   Input:
+//     value: represents the angle in degrees between the spot light axis
+//
+// Português:
+//
+// O atributo limitConeAngle representa o ângulo em graus entre o eixo de luz spot (ou seja, o eixo entre a fonte de
+// luz e o ponto para o qual está apontando) e o cone de luz spot. Assim, define um cone limitador que restringe a
+// região onde a luz é projetada. Nenhuma luz é projetada fora do cone.
+//
+//   Input:
+//     value: representa o ângulo em graus entre o eixo da luz spot
+func (e *TagSvgGlobal) LimitingConeAngle(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "limitingConeAngle", value)
+	return e
+}
+
+// MarkerEnd
+//
+// English:
+//
+// The marker-end attribute defines the arrowhead or polymarker that will be drawn at the final vertex of the given
+// shape.
+//
+//   Input:
+//     value: the arrowhead or polymarker that will be drawn
+//       string: (e.g. "url(#triangle)")
+//
+// For all shape elements, except <polyline> and <path>, the last vertex is the same as the first vertex. In this case,
+// if the value of marker-start and marker-end are both not none, then two markers will be rendered on that final
+// vertex.
+// For <path> elements, for each closed subpath, the last vertex is the same as the first vertex. marker-end is only
+// rendered on the final vertex of the path data.
+//
+// Notes:
+//   * As a presentation attribute, marker-end can be used as a CSS property.
+//
+// Português:
+//
+// O atributo marker-end define a ponta de seta ou polimarcador que será desenhado no vértice final da forma dada.
+//
+//   Entrada:
+//     value: a ponta de seta ou polimarcador que será desenhado
+//       string: (e.g. "url(#triangle)")
+//
+// Para todos os elementos de forma, exceto <polyline> e <path>, o último vértice é o mesmo que o primeiro vértice.
+// Nesse caso, se o valor de marker-start e marker-end não for nenhum, então dois marcadores serão renderizados nesse
+// vértice final.
+// Para elementos <path>, para cada subcaminho fechado, o último vértice é igual ao primeiro vértice.
+// O final do marcador é renderizado apenas no vértice final dos dados do caminho.
+//
+// Notas:
+//   * Como atributo de apresentação, o marker-end pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) MarkerEnd(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "marker-end", value)
+	return e
+}
+
+// MarkerMid
+//
+// English:
+//
+// The marker-mid attribute defines the arrowhead or polymarker that will be drawn at all interior vertices of the
+// given shape.
+//
+//   Input:
+//     value: defines the arrowhead or polymarker that will be drawn
+//       string: e.g. "url(#circle)"
+//
+// The marker is rendered on every vertex other than the first and last vertices of the path data.
+//
+// Notes:
+//   * As a presentation attribute, marker-mid can be used as a CSS property.
+//
+// Português:
+//
+// O atributo marker-mid define a ponta de seta ou polimarcador que será desenhado em todos os vértices internos da
+// forma dada.
+//
+//   Input:
+//     value: define a ponta de seta ou polimarcador que será desenhado
+//       string: ex. "url(#circle)"
+//
+// O marcador é renderizado em todos os vértices, exceto no primeiro e no último vértice dos dados do caminho.
+//
+// Notas:
+//   * Como atributo de apresentação, o marker-mid pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) MarkerMid(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "marker-mid", value)
+	return e
+}
+
+// MarkerStart
+//
+// English:
+//
+// The marker-start attribute defines the arrowhead or polymarker that will be drawn at the first vertex of the given
+// shape.
+//
+//   Input:
+//     value: defines the arrowhead or polymarker that will be drawn
+//       string: e.g. "url(#triangle)"
+//
+// For all shape elements, except <polyline> and <path>, the last vertex is the same as the first vertex. In this case,
+// if the value of marker-start and marker-end are both not none, then two markers will be rendered on that final
+// vertex.
+// For <path> elements, for each closed subpath, the last vertex is the same as the first vertex. marker-start is only
+// rendered on the first vertex of the path data.
+//
+// Notes:
+//   * As a presentation attribute, marker-start can be used as a CSS property.
+//
+// Português:
+//
+// O atributo marker-start define a ponta de seta ou polimarcador que será desenhado no primeiro vértice da forma dada.
+//
+//   Entrada:
+//     value: define a ponta de seta ou polimarcador que será desenhado
+//       string: e.g. "url(#triangle)"
+//
+// Para todos os elementos de forma, exceto <polyline> e <path>, o último vértice é o mesmo que o primeiro vértice.
+// Nesse caso, se o valor de marker-start e marker-end não for nenhum, então dois marcadores serão renderizados nesse
+// vértice final.
+// Para elementos <path>, para cada subcaminho fechado, o último vértice é igual ao primeiro vértice. O início do
+// marcador é renderizado apenas no primeiro vértice dos dados do caminho.
+//
+// Notas:
+//   * Como atributo de apresentação, o início do marcador pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) MarkerStart(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "marker-start", value)
+	return e
+}
+
+// MarkerHeight
+//
+// English:
+//
+// The markerHeight attribute represents the height of the viewport into which the <marker> is to be fitted when it is
+// rendered according to the viewBox and preserveAspectRatio attributes.
+//
+//   Input:
+//     value: represents the height of the viewport
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo markerHeight representa a altura da viewport na qual o <marker> deve ser ajustado quando for renderizado
+// de acordo com os atributos viewBox e preserveAspectRatio.
+//
+//   Entrada:
+//     value: representa a altura da janela de visualização
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) MarkerHeight(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "markerHeight", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "markerHeight", value)
+	return e
+}
+
+// MarkerUnits
+//
+// English:
+//
+// The markerUnits attribute defines the coordinate system for the markerWidth and markerHeight attributes and the
+// contents of the <marker>.
+//
+//   Input:
+//     value: defines the coordinate system
+//       const KSvgMarkerUnits... (e.g. KSvgMarkerUnitsUserSpaceOnUse)
+//
+// Português:
+//
+// O atributo markerUnits define o sistema de coordenadas para os atributos markerWidth e markerHeight e o conteúdo
+// do <marker>.
+//
+//   Entrada:
+//     value: define o sistema de coordenadas
+//       const KSvgMarkerUnits... (ex. KSvgMarkerUnitsUserSpaceOnUse)
+func (e *TagSvgGlobal) MarkerUnits(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgMarkerUnits); ok {
+		e.selfElement.Call("setAttribute", "markerUnits", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "markerUnits", value)
+	return e
+}
+
+// MarkerWidth
+//
+// English:
+//
+// The markerWidth attribute represents the width of the viewport into which the <marker> is to be fitted when it is
+// rendered according to the viewBox and preserveAspectRatio attributes.
+//
+//   Input:
+//     value: represents the width of the viewport
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo markerWidth representa a largura da viewport na qual o <marker> deve ser ajustado quando for renderizado
+// de acordo com os atributos viewBox e preserveAspectRatio.
+//
+//   Input:
+//     value: representa a largura da janela de visualização
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) MarkerWidth(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "markerWidth", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "markerWidth", value)
+	return e
+}
+
+// Mask
+//
+// English:
+//
+// The mask attribute is a presentation attribute mainly used to bind a given <mask> element with the element the
+// attribute belongs to.
+//
+//   Input:
+//     value: attribute mainly used to bind a given <mask> element
+//       string: "url(#myMask)"
+//
+// Notes:
+//   * As a presentation attribute mask can be used as a CSS property.
+//
+// Português:
+//
+// O atributo mask é um atributo de apresentação usado principalmente para vincular um determinado elemento <mask> ao
+// elemento ao qual o atributo pertence.
+//
+//   Entrada:
+//     value: atributo usado principalmente para vincular um determinado elemento <mask>
+//       string: "url(#myMask)"
+//
+// Notas:
+//   * Como uma máscara de atributo de apresentação pode ser usada como uma propriedade CSS.
+func (e *TagSvgGlobal) Mask(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "mask", value)
+	return e
+}
+
+// MaskContentUnits
+//
+// English:
+//
+// The maskContentUnits attribute indicates which coordinate system to use for the contents of the <mask> element.
+//
+//   Input:
+//     value: indicates which coordinate system
+//       const KSvgMaskUnits... (e.g. KSvgMaskUnitsUserSpaceOnUse)
+//
+// Português:
+//
+// O atributo maskContentUnits indica qual sistema de coordenadas usar para o conteúdo do elemento <mask>.
+//
+//   Entrada:
+//     value: indica qual sistema de coordenadas
+//       const KSvgMaskUnits... (ex. KSvgMaskUnitsUserSpaceOnUse)
+func (e *TagSvgGlobal) MaskContentUnits(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgMaskUnits); ok {
+		e.selfElement.Call("setAttribute", "maskContentUnits", converted.String())
+		return e
+	}
+	e.selfElement.Call("setAttribute", "maskContentUnits", value)
+	return e
+}
+
+// maskUnits
+//
+// English:
+//
+// The maskUnits attribute indicates which coordinate system to use for the geometry properties of the <mask> element.
+//
+//   Input:
+//     value: indicates which coordinate system
+//       const KSvgMaskUnits... (e.g. KSvgMaskUnitsUserSpaceOnUse)
+//
+// Português:
+//
+// O atributo maskUnits indica qual sistema de coordenadas usar para as propriedades geométricas do elemento <mask>.
+//
+//   Entrada:
+//     value: indica qual sistema de coordenadas
+//       const KSvgMaskUnits... (ex. KSvgMaskUnitsUserSpaceOnUse)
+func (e *TagSvgGlobal) maskUnits(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgMaskUnits); ok {
+		e.selfElement.Call("setAttribute", "maskUnits", converted.String())
+		return e
+	}
+	e.selfElement.Call("setAttribute", "maskUnits", value)
+	return e
+}
+
 //
 //
 //

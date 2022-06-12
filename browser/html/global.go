@@ -1099,24 +1099,50 @@ func (e *TagSvgGlobal) Divisor(divisor float64) (ref *TagSvgGlobal) {
 //
 // English:
 //
-//  The dominant-baseline attribute specifies the dominant baseline, which is the baseline used to align the box's text and inline-level contents. It also indicates the default alignment baseline of any boxes participating in baseline alignment in the box's alignment context.
+// The dominant-baseline attribute specifies the dominant baseline, which is the baseline used to align the box's text
+// and inline-level contents. It also indicates the default alignment baseline of any boxes participating in baseline
+// alignment in the box's alignment context.
 //
-// It is used to determine or re-determine a scaled-baseline-table. A scaled-baseline-table is a compound value with three components:
+// It is used to determine or re-determine a scaled-baseline-table. A scaled-baseline-table is a compound value with
+// three components:
 //
 //   1. a baseline-identifier for the dominant-baseline,
 //   2. a baseline-table, and
 //   3. a baseline-table font-size.
 //
-// Some values of the property re-determine all three values. Others only re-establish the baseline-table font-size. When the initial value, auto, would give an undesired result, this property can be used to explicitly set the desired scaled-baseline-table.
+// Some values of the property re-determine all three values. Others only re-establish the baseline-table font-size.
+// When the initial value, auto, would give an undesired result, this property can be used to explicitly set the desired
+// scaled-baseline-table.
 //
-// If there is no baseline table in the nominal font, or if the baseline table lacks an entry for the desired baseline, then the browser may use heuristics to determine the position of the desired baseline.
+// If there is no baseline table in the nominal font, or if the baseline table lacks an entry for the desired baseline,
+// then the browser may use heuristics to determine the position of the desired baseline.
 //
 //   Notes:
 //     * As a presentation attribute, dominant-baseline can be used as a CSS property.
 //
 // Português:
 //
+// O atributo linha de base dominante especifica a linha de base dominante, que é a linha de base usada para alinhar o
+// texto da caixa e o conteúdo do nível embutido. Também indica a linha de base de alinhamento padrão de todas as caixas
+// que participam do alinhamento da linha de base no contexto de alinhamento da caixa.
 //
+// Ele é usado para determinar ou re-determinar uma tabela de linha de base dimensionada. Uma tabela de linha de base
+// dimensionada é um valor composto com três componentes:
+//
+//   1. um identificador de linha de base para a linha de base dominante,
+//   2. uma tabela de linha de base, e
+//   3. um tamanho de fonte da tabela de linha de base.
+//
+// Alguns valores da propriedade redeterminam todos os três valores. Outros apenas restabelecem o tamanho da fonte da
+// tabela de linha de base. Quando o valor inicial, auto, daria um resultado indesejado, essa propriedade pode ser usada
+// para definir explicitamente a tabela de linha de base dimensionada desejada.
+//
+// Se não houver nenhuma tabela de linha de base na fonte nominal, ou se a tabela de linha de base não tiver uma entrada
+// para a linha de base desejada, o navegador poderá usar heurística para determinar a posição da linha de base
+// desejada.
+//
+//   Notas:
+//     * Como atributo de apresentação, a linha de base dominante pode ser usada como uma propriedade CSS.
 func (e *TagSvgGlobal) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "dominant-baseline", dominantBaseline.String())
 	return e
@@ -1726,7 +1752,7 @@ func (e *TagSvgGlobal) From(from float64) (ref *TagSvgGlobal) {
 //
 //   Input:
 //     fr: defines the radius of the focal point for the radial gradient
-//       float64: (e.g. 0.4 = 40%)
+//       float32: (e.g. 0.4 = 40%)
 //       string: "40%"
 //
 // Portuguese
@@ -1735,11 +1761,11 @@ func (e *TagSvgGlobal) From(from float64) (ref *TagSvgGlobal) {
 //
 //   Entrada:
 //     fr: define o raio do ponto focal para o gradiente radial.
-//       float64: (ex. 0.4 = 40%)
+//       float32: (ex. 0.4 = 40%)
 //       string: "40%"
 func (e *TagSvgGlobal) Fr(fr interface{}) (ref *TagSvgGlobal) {
-	if converted, ok := fr.(float64); ok {
-		p := strconv.FormatFloat(100*converted, 'g', -1, 64) + "%"
+	if converted, ok := fr.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "fr", p)
 		return e
 	}
@@ -1823,8 +1849,8 @@ func (e *TagSvgGlobal) GradientUnits(gradientUnits SvgGradientUnits) (ref *TagSv
 //
 //  O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
 func (e *TagSvgGlobal) Height(height interface{}) (ref *TagSvgGlobal) {
-	if converted, ok := height.(float64); ok {
-		p := strconv.FormatFloat(100*converted, 'g', -1, 64) + "%"
+	if converted, ok := height.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "height", p)
 		return e
 	}
@@ -2688,18 +2714,20 @@ func (e *TagSvgGlobal) Mask(value interface{}) (ref *TagSvgGlobal) {
 // The maskContentUnits attribute indicates which coordinate system to use for the contents of the <mask> element.
 //
 //   Input:
-//     value: indicates which coordinate system
-//       const KSvgMaskUnits... (e.g. KSvgMaskUnitsUserSpaceOnUse)
+//     value: specifies the coordinate system
+//       const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
+//       any other type: interface{}
 //
 // Português:
 //
 // O atributo maskContentUnits indica qual sistema de coordenadas usar para o conteúdo do elemento <mask>.
 //
 //   Entrada:
-//     value: indica qual sistema de coordenadas
-//       const KSvgMaskUnits... (ex. KSvgMaskUnitsUserSpaceOnUse)
+//     value: especifica o sistema de coordenadas
+//       const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
+//       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) MaskContentUnits(value interface{}) (ref *TagSvgGlobal) {
-	if converted, ok := value.(SvgMaskUnits); ok {
+	if converted, ok := value.(SvgUnits); ok {
 		e.selfElement.Call("setAttribute", "maskContentUnits", converted.String())
 		return e
 	}
@@ -2707,29 +2735,776 @@ func (e *TagSvgGlobal) MaskContentUnits(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// maskUnits
+// MaskUnits
 //
 // English:
 //
 // The maskUnits attribute indicates which coordinate system to use for the geometry properties of the <mask> element.
 //
 //   Input:
-//     value: indicates which coordinate system
-//       const KSvgMaskUnits... (e.g. KSvgMaskUnitsUserSpaceOnUse)
+//     value: specifies the coordinate system
+//       const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
+//       any other type: interface{}
 //
 // Português:
 //
 // O atributo maskUnits indica qual sistema de coordenadas usar para as propriedades geométricas do elemento <mask>.
 //
 //   Entrada:
-//     value: indica qual sistema de coordenadas
-//       const KSvgMaskUnits... (ex. KSvgMaskUnitsUserSpaceOnUse)
-func (e *TagSvgGlobal) maskUnits(value interface{}) (ref *TagSvgGlobal) {
-	if converted, ok := value.(SvgMaskUnits); ok {
+//     value: especifica o sistema de coordenadas
+//       const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) MaskUnits(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgUnits); ok {
 		e.selfElement.Call("setAttribute", "maskUnits", converted.String())
 		return e
 	}
+
 	e.selfElement.Call("setAttribute", "maskUnits", value)
+	return e
+}
+
+// Max
+//
+// English:
+//
+// The max attribute specifies the maximum value of the active animation duration.
+//
+//   Input:
+//     value: specifies the maximum value
+//       float32: 1.0 = "100%"
+//       time.Duration: 5*time.Second = "5s"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo max especifica o valor máximo da duração da animação ativa.
+//
+//   Entrada:
+//     value: especifica o valor máximo
+//       float32: 1.0 = "100%"
+//       time.Duration: 5*time.Second = "5s"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Max(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "max", RGBAToJs(converted))
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "max", p)
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "max", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "max", value)
+	return e
+}
+
+// Media
+//
+// English:
+//
+// The media attribute specifies a media query that must be matched for a style sheet to apply.
+//
+// Português:
+//
+// O atributo de mídia especifica uma consulta de mídia que deve ser correspondida para que uma folha de estilo seja
+// aplicada.
+func (e *TagSvgGlobal) Media(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "media", value)
+	return e
+}
+
+// Min
+//
+// English:
+//
+// The min attribute specifies the minimum value of the active animation duration.
+//
+//   Input:
+//     value: specifies the minimum value
+//       float32: 1.0 = "100%"
+//       time.Duration: 5*time.Second = "5s"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo min especifica o valor mínimo da duração da animação ativa.
+//
+//   Input:
+//     value: especifica o valor mínimo
+//       float32: 1.0 = "100%"
+//       time.Duration: 5*time.Second = "5s"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Min(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "min", RGBAToJs(converted))
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "min", p)
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "min", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "min", value)
+	return e
+}
+
+// Mode
+//
+// English:
+//
+// The mode attribute defines the blending mode on the <feBlend> filter primitive.
+//
+//   Input:
+//     value: defines the blending mode
+//       const KSvgMode... (e.g. KSvgModeNormal)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo mode define o modo de mesclagem na primitiva de filtro <feBlend>.
+//
+//   Entrada:
+//     value: define o modo de mesclagem
+//       const KSvgMode... (ex. KSvgModeNormal)
+//       qualquer outro tipo: interface{}
+//
+// todo: exemplos: https://developer.mozilla.org/en-US/docs/Web/CSS/blend-mode
+func (e *TagSvgGlobal) Mode(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgMode); ok {
+		e.selfElement.Call("setAttribute", "mode", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "mode", value)
+	return e
+}
+
+// NumOctaves
+//
+// English:
+//
+// The numOctaves attribute defines the number of octaves for the noise function of the <feTurbulence> primitive.
+//
+//   Input:
+//     value: defines the number of octaves for the noise function
+//
+// An octave is a noise function defined by its frequency and amplitude. A turbulence is built by accumulating several
+// octaves with increasing frequencies and decreasing amplitudes. The higher the number of octaves, the more natural
+// the noise looks. Though more octaves also require more calculations, resulting in a negative impact on performance.
+//
+// Português:
+//
+// O atributo numOctaves define o número de oitavas para a função de ruído da primitiva <feTurbulence>.
+//
+//   Input:
+//     value: define o número de oitavas para a função de ruído
+//
+// Uma oitava é uma função de ruído definida por sua frequência e amplitude. Uma turbulência é construída acumulando
+// várias oitavas com frequências crescentes e amplitudes decrescentes. Quanto maior o número de oitavas, mais natural
+// o ruído parece. Embora mais oitavas também exijam mais cálculos, resultando em um impacto negativo no desempenho.
+func (e *TagSvgGlobal) NumOctaves(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "numOctaves", value)
+	return e
+}
+
+// Opacity
+//
+// English:
+//
+// The opacity attribute specifies the transparency of an object or of a group of objects, that is, the degree to which
+// the background behind the element is overlaid.
+//
+//   Input:
+//     value: specifies the transparency of an object
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute, opacity can be used as a CSS property. See the css opacity property for more
+//       information.
+//
+//
+// Português:
+//
+// O atributo opacity especifica a transparência de um objeto ou de um grupo de objetos, ou seja, o grau em que o fundo
+// atrás do elemento é sobreposto.
+//
+//   Entrada:
+//     value: especifica a transparência de um objeto
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+//
+//   Notes:
+//     * Como atributo de apresentação, a opacidade pode ser usada como uma propriedade CSS. Consulte a propriedade de
+//       opacidade do CSS para obter mais informações.
+func (e *TagSvgGlobal) Opacity(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "opacity", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "opacity", value)
+	return e
+}
+
+// Operator
+//
+// English:
+//
+// The operator attribute has two meanings based on the context it's used in. Either it defines the compositing or
+// morphing operation to be performed.
+//
+//   Input:
+//     value: defines the compositing or morphing
+//       const: KSvgOperatorFeComposite... (e.g. KSvgOperatorFeCompositeOver)
+//       const: KSvgOperatorFeMorphology... (e.g. KKSvgOperatorFeCompositeErode)
+//
+// Português:
+//
+// O atributo operador tem dois significados com base no contexto em que é usado. Ele define a operação de composição
+// ou transformação a ser executada.
+//
+//   Entrada:
+//     value: define a composição ou morphing
+//       const: KSvgOperatorFeComposite... (e.g. KSvgOperatorFeCompositeOver)
+//       const: KSvgOperatorFeMorphology... (e.g. KKSvgOperatorFeCompositeErode)
+//
+// fixme: separar quando colocar em <feComposite> e <feMorphology>
+func (e *TagSvgGlobal) Operator(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgOperatorFeComposite); ok {
+		e.selfElement.Call("setAttribute", "operator", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(SvgOperatorFeMorphology); ok {
+		e.selfElement.Call("setAttribute", "operator", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "operator", value)
+	return e
+}
+
+// Order
+//
+// English:
+//
+// The order attribute indicates the size of the matrix to be used by a <feConvolveMatrix> element.
+//
+//   Input:
+//     value: indicates the size of the matrix.
+//       []float64: []float64{1.0, 1.0, 1.0} = "1 1 1"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo order indica o tamanho da matriz a ser usada por um elemento <feConvolveMatrix>.
+//
+//   Entrada:
+//     value: indica o tamanho da matriz.
+//       []float64: []float64{1.0, 1.0, 1.0} = "1 1 1"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Order(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.([]float64); ok {
+		var order = ""
+		for _, v := range converted {
+			order += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+
+		length := len(order) - 1
+		e.selfElement.Call("setAttribute", "order", order[:length])
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "order", value)
+	return e
+}
+
+// Orient
+//
+// English:
+//
+// The orient attribute indicates how a marker is rotated when it is placed at its position on the shape.
+//
+//   Input:
+//     value: indicates how a marker is rotated
+//       Degrees: Degrees(-65) = "-65deg"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo orient indica como um marcador é girado quando é colocado em sua posição na forma.
+//
+//   Entrada:
+//     value: indica como um marcador é girado
+//       Degrees: Degrees(-65) = "-65deg"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Orient(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(Degrees); ok {
+		e.selfElement.Call("setAttribute", "orient", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "orient", value)
+	return e
+}
+
+// Origin
+//
+// English:
+//
+// The origin attribute specifies the origin of motion for an animation. It has no effect in SVG.
+//
+// Português:
+//
+// O atributo origin especifica a origem do movimento de uma animação. Não tem efeito em SVG.
+func (e *TagSvgGlobal) Origin(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "origin", value)
+	return e
+}
+
+// Overflow
+//
+// English:
+//
+// The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context.
+//
+// This attribute has the same parameter values and meaning as the css overflow property, however, the following
+// additional points apply:
+//   * If it has a value of visible, the attribute has no effect (i.e., a clipping rectangle is not created).
+//   * If the overflow property has the value hidden or scroll, a clip of the exact size of the SVG viewport is applied.
+//   * When scroll is specified on an <svg> element, a scrollbar or panner is normally shown for the SVG viewport
+//     whether or not any of its content is clipped.
+//   * Within SVG content, the value auto implies that all rendered content for child elements must be visible, either
+//     through a scrolling mechanism, or by rendering with no clip.
+//
+//   Notes:
+//     * Although the initial value for overflow is auto, it is overwritten in the User Agent style sheet for the <svg>
+//       element when it is not the root element of a stand-alone document, the <pattern> element, and the <marker>
+//       element to be hidden by default.
+//     * As a presentation attribute, overflow can be used as a CSS property. See the CSS overflow property for more
+//       information.
+//
+// Português:
+//
+// O atributo overflow define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto
+// de formatação de bloco.
+//
+// Este atributo tem os mesmos valores de parâmetro e significado que a propriedade CSS overflow, no entanto, os
+// seguintes pontos adicionais se aplicam:
+//   * Se tiver um valor de visible, o atributo não terá efeito (ou seja, um retângulo de recorte não será criado).
+//   * Se a propriedade overflow tiver o valor oculto ou rolar, um clipe do tamanho exato da janela de visualização SVG
+//     será aplicado.
+//   * Quando a rolagem é especificada em um elemento <svg>, uma barra de rolagem ou panner normalmente é mostrado para
+//     a janela de visualização SVG, independentemente de seu conteúdo estar ou não recortado.
+//   * No conteúdo SVG, o valor auto implica que o conteúdo renderizado para elementos filho deve ser visível por
+//     completo, seja por meio de um mecanismo de rolagem ou renderizando sem clipe.
+//
+//   Notas:
+//     * Embora o valor inicial para estouro seja auto, ele é substituído na folha de estilo do User Agent para o
+//       elemento <svg> quando não é o elemento raiz de um documento autônomo, o elemento <pattern> e o elemento
+//       <marker> para ser ocultado por padrão.
+//     * Como atributo de apresentação, overflow pode ser usado como propriedade CSS. Consulte a propriedade CSS
+//       overflow para obter mais informações.
+func (e *TagSvgGlobal) Overflow(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(Overflow); ok {
+		e.selfElement.Call("setAttribute", "overflow", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "overflow", value)
+	return e
+}
+
+// OverlinePosition
+//
+// English:
+//
+// The overline-position attribute represents the ideal vertical position of the overline. The overline position is
+// expressed in the font's coordinate system.
+//
+// Português:
+//
+// O atributo overline-position representa a posição vertical ideal da overline. A posição sobreposta é expressa no
+// sistema de coordenadas da fonte.
+func (e *TagSvgGlobal) OverlinePosition(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "overline-position", value)
+	return e
+}
+
+// OverlineThickness
+//
+// English:
+//
+// The overline-thickness attribute represents the ideal thickness of the overline. The overline thickness is expressed
+// in the font's coordinate system.
+//
+// Português:
+//
+// O atributo overline-thickness representa a espessura ideal da overline. A espessura do overline é expressa no sistema
+// de coordenadas da fonte.
+func (e *TagSvgGlobal) OverlineThickness(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "overline-thickness", value)
+	return e
+}
+
+// PaintOrder
+//
+// English:
+//
+// The paint-order attribute specifies the order that the fill, stroke, and markers of a given shape or text element
+// are painted.
+//
+//   Input:
+//     value: specifies the order that the fill, stroke, and markers
+//       const: SvgPaintOrder... (e.g. KSvgPaintOrderStroke)
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute, paint-order can be used as a CSS property.
+//
+// Português:
+//
+// O atributo paint-order especifica a ordem em que o preenchimento, o traçado e os marcadores de uma determinada forma
+// ou elemento de texto são pintados.
+//
+//   Entrada:
+//     value: especifica a ordem em que o preenchimento, o traçado e os marcadores
+//       const: SvgPaintOrder... (e.g. KSvgPaintOrderStroke)
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como atributo de apresentação, paint-order pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) PaintOrder(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgPaintOrder); ok {
+		e.selfElement.Call("setAttribute", "paint-order", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "paint-order", value)
+	return e
+}
+
+// Path
+//
+// English:
+//
+// The path attribute has two different meanings, either it defines a text path along which the characters of a text
+// are rendered, or a motion path along which a referenced element is animated.
+//
+// Português:
+//
+// O atributo path tem dois significados diferentes: define um caminho de texto ao longo do qual os caracteres de um
+// texto são renderizados ou um caminho de movimento ao longo do qual um elemento referenciado é animado.
+func (e *TagSvgGlobal) Path(value *SvgPath) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "path", value.String())
+	return e
+}
+
+// PathLength
+//
+// English:
+//
+// The pathLength attribute lets authors specify a total length for the path, in user units. This value is then used to
+// calibrate the browser's distance calculations with those of the author, by scaling all distance computations using
+// the ratio pathLength/(computed value of path length).
+//
+// This can affect the actual rendered lengths of paths; including text paths, animation paths, and various stroke
+// operations. Basically, all computations that require the length of the path. stroke-dasharray, for example, will
+// assume the start of the path being 0 and the end point the value defined in the pathLength attribute.
+//
+// Português:
+//
+// O atributo pathLength permite que os autores especifiquem um comprimento total para o caminho, em unidades de
+// usuário. Este valor é então usado para calibrar os cálculos de distância do navegador com os do autor, escalando
+// todos os cálculos de distância usando a razão pathLength (valor calculado do comprimento do caminho).
+//
+// Isso pode afetar os comprimentos reais dos caminhos renderizados; incluindo caminhos de texto, caminhos de animação
+// e várias operações de traçado. Basicamente, todos os cálculos que exigem o comprimento do caminho. stroke-dasharray,
+// por exemplo, assumirá o início do caminho sendo 0 e o ponto final o valor definido no atributo pathLength.
+func (e *TagSvgGlobal) PathLength(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "pathLength", value)
+	return e
+}
+
+// PatternContentUnits
+//
+// English:
+//
+// The patternContentUnits attribute indicates which coordinate system to use for the contents of the <pattern> element.
+//
+//   Input:
+//     value: specifies the coordinate system
+//       const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
+//       any other type: interface{}
+//
+//   Notes:
+//     * That this attribute has no effect if attribute viewBox is specified on the <pattern> element.
+//
+// Português:
+//
+// O atributo patternContentUnits indica qual sistema de coordenadas deve ser usado para o conteúdo do elemento
+// <pattern>.
+//
+//   Entrada:
+//     value: especifica o sistema de coordenadas
+//       const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Que este atributo não tem efeito se o atributo viewBox for especificado no elemento <pattern>.
+func (e *TagSvgGlobal) PatternContentUnits(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgUnits); ok {
+		e.selfElement.Call("setAttribute", "patternContentUnits", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "patternContentUnits", value)
+	return e
+}
+
+// PatternTransform
+//
+// English:
+//
+// The patternTransform attribute defines a list of transform definitions that are applied to a pattern tile.
+//
+// Português:
+//
+// O atributo patternTransform define uma lista de definições de transformação que são aplicadas a um bloco de padrão.
+func (e *TagSvgGlobal) PatternTransform(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(*TransformFunctions); ok {
+		e.selfElement.Call("setAttribute", "patternTransform", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(TransformFunctions); ok {
+		e.selfElement.Call("setAttribute", "patternTransform", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "patternTransform", value)
+	return e
+}
+
+// PatternUnits
+//
+// English:
+//
+// The patternUnits attribute indicates which coordinate system to use for the geometry properties of the <pattern>
+// element.
+//
+//   Input:
+//     value: specifies the coordinate system
+//       const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo patternUnits indica qual sistema de coordenadas deve ser usado para as propriedades geométricas do
+// elemento <pattern>.
+//
+//   Entrada:
+//     value: especifica o sistema de coordenadas
+//       const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) PatternUnits(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgUnits); ok {
+		e.selfElement.Call("setAttribute", "patternUnits", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "patternUnits", value)
+	return e
+}
+
+// PointerEvents
+//
+// English:
+//
+// The pointer-events attribute is a presentation attribute that allows defining whether or when an element may be the
+// target of a mouse event.
+//
+//   Notes:
+//     * As a presentation attribute pointer-events can be used as a CSS property.
+//
+// Português:
+//
+// O atributo pointer-events é um atributo de apresentação que permite definir se ou quando um elemento pode ser alvo
+// de um evento de mouse.
+//
+//   Notas:
+//     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
+func (e *TagSvgGlobal) PointerEvents(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgPointerEvents); ok {
+		e.selfElement.Call("setAttribute", "pointer-events", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "pointer-events", value)
+	return e
+}
+
+// Points
+//
+// English:
+//
+// The points attribute defines a list of points. Each point is defined by a pair of number representing a X and a Y
+// coordinate in the user coordinate system. If the attribute contains an odd number of coordinates, the last one will
+// be ignored.
+//
+// Português:
+//
+// O atributo points define uma lista de pontos. Cada ponto é definido por um par de números representando uma
+// coordenada X e Y no sistema de coordenadas do usuário. Se o atributo contiver um número ímpar de coordenadas, a
+// última será ignorada.
+func (e *TagSvgGlobal) Points(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(Points); ok {
+		e.selfElement.Call("setAttribute", "points", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(*Points); ok {
+		e.selfElement.Call("setAttribute", "points", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "points", value)
+	return e
+}
+
+// PointsAtX
+//
+// English:
+//
+// The pointsAtX attribute represents the x location in the coordinate system established by attribute primitiveUnits
+// on the <filter> element of the point at which the light source is pointing.
+//
+// Português:
+//
+// O atributo pointsAtX representa a localização x no sistema de coordenadas estabelecido pelo atributo primitivaUnits
+// no elemento <filter> do ponto para o qual a fonte de luz está apontando.
+func (e *TagSvgGlobal) PointsAtX(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "pointsAtX", value)
+	return e
+}
+
+// PointsAtY
+//
+// English:
+//
+// The pointsAtY attribute represents the y location in the coordinate system established by attribute primitiveUnits
+// on the <filter> element of the point at which the light source is pointing.
+//
+// Português:
+//
+// O atributo pointsAtY representa a localização y no sistema de coordenadas estabelecido pelo atributo primitivaUnits
+// no elemento <filter> do ponto para o qual a fonte de luz está apontando.
+func (e *TagSvgGlobal) PointsAtY(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "pointsAtY", value)
+	return e
+}
+
+// PointsAtZ
+//
+// English:
+//
+// The pointsAtZ attribute represents the y location in the coordinate system established by attribute primitiveUnits
+// on the <filter> element of the point at which the light source is pointing, assuming that, in the initial local
+// coordinate system, the positive z-axis comes out towards the person viewing the content and assuming that one unit
+// along the z-axis equals one unit in x and y.
+//
+//   Input:
+//     value: represents the y location in the coordinate system
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo pointsAtZ representa a localização y no sistema de coordenadas estabelecido pelo atributo primitivaUnits
+// no elemento <filter> do ponto em que a fonte de luz está apontando, assumindo que, no sistema de coordenadas local
+// inicial, o eixo z positivo sai em direção a pessoa visualizando o conteúdo e assumindo que uma unidade ao longo do
+// eixo z é igual a uma unidade em x e y.
+//
+//   Input:
+//     value: representa a localização y no sistema de coordenadas
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) PointsAtZ(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "pointsAtZ", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "pointsAtZ", value)
+	return e
+}
+
+// PreserveAlpha
+//
+// English:
+//
+// The preserveAlpha attribute indicates how a <feConvolveMatrix> element handled alpha transparency.
+//
+//   Input:
+//     value: indicates how handled alpha transparency.
+//
+// Português:
+//
+// O atributo preserveAlpha indica como um elemento <feConvolveMatrix> trata a transparência alfa.
+//
+//   Input:
+//     value: indica como a transparência alfa é tratada.
+func (e *TagSvgGlobal) PreserveAlpha(value bool) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "preserveAlpha", value)
+	return e
+}
+
+// PrimitiveUnits
+//
+// English:
+//
+// The primitiveUnits attribute specifies the coordinate system for the various length values within the filter
+// primitives and for the attributes that define the filter primitive subregion.
+//
+//   Input:
+//     value: specifies the coordinate system
+//       const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo primitivaUnits especifica o sistema de coordenadas para os vários valores de comprimento dentro das
+// primitivas de filtro e para os atributos que definem a sub-região da primitiva de filtro.
+//
+//   Entrada:
+//     value: especifica o sistema de coordenadas
+//       const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) PrimitiveUnits(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgUnits); ok {
+		e.selfElement.Call("setAttribute", "primitiveUnits", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "primitiveUnits", value)
 	return e
 }
 

@@ -204,11 +204,26 @@ func (e *TagSvgImage) ClipPath(clipPath string) (ref *TagSvgImage) {
 //  It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
 //  its target.
 //
+//   Input:
+//     value: side of a path
+//       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
+//       any other type: interface{}
+//
 // Português:
 //
 //  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
 //  recortar seu destino.
-func (e *TagSvgImage) ClipRule(clipRule SvgClipRule) (ref *TagSvgImage) {
-	e.selfElement.Call("setAttribute", "clip-rule", clipRule.String())
+//
+//   Input:
+//     value: lado de um caminho
+//       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgImage) ClipRule(value interface{}) (ref *TagSvgImage) {
+	if converted, ok := value.(SvgClipRule); ok {
+		e.selfElement.Call("setAttribute", "clip-rule", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "clip-rule", value)
 	return e
 }

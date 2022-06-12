@@ -244,6 +244,12 @@ func (e *TagSvgTSpan) BaselineShift(baselineShift interface{}) (ref *TagSvgTSpan
 //  It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
 //  lighting-color presentation attributes.
 //
+//   Input:
+//     value: potential indirect value of color
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//
 //   Notes:
 //     * As a presentation attribute, color can be used as a CSS property. See CSS color for further information.
 //
@@ -251,6 +257,12 @@ func (e *TagSvgTSpan) BaselineShift(baselineShift interface{}) (ref *TagSvgTSpan
 //
 //  Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
 //  cor de parada, cor de inundação e cor de iluminação.
+//
+//   Entrada:
+//     value: valor indireto potencial da cor
+//       string: ex. "black"
+//       factory: ex. factoryColor.NewYellow()
+//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.

@@ -176,8 +176,13 @@ type TagSvgClipPath struct {
 //   Input:
 //     clipPathUnits: indica qual sistema de coordenadas deve ser usado
 //       KSvgClipPathUnits... (ex. KSvgClipPathUnitsUserSpaceOnUse)
-func (e *TagSvgClipPath) ClipPathUnits(clipPathUnits SvgClipPathUnits) (ref *TagSvgClipPath) {
-	e.selfElement.Call("setAttribute", "clipPathUnits", clipPathUnits.String())
+func (e *TagSvgClipPath) ClipPathUnits(value interface{}) (ref *TagSvgClipPath) {
+	if converted, ok := value.(SvgClipPathUnits); ok {
+		e.selfElement.Call("setAttribute", "clipPathUnits", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "clipPathUnits", value)
 	return e
 }
 
@@ -210,12 +215,27 @@ func (e *TagSvgClipPath) ClipPath(clipPath string) (ref *TagSvgClipPath) {
 //  It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
 //  its target.
 //
+//   Input:
+//     value: side of a path
+//       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
+//       any other type: interface{}
+//
 // Português:
 //
 //  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
 //  recortar seu destino.
-func (e *TagSvgClipPath) ClipRule(clipRule SvgClipRule) (ref *TagSvgClipPath) {
-	e.selfElement.Call("setAttribute", "clip-rule", clipRule.String())
+//
+//   Input:
+//     value: lado de um caminho
+//       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgClipPath) ClipRule(value interface{}) (ref *TagSvgClipPath) {
+	if converted, ok := value.(SvgClipRule); ok {
+		e.selfElement.Call("setAttribute", "clip-rule", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "clip-rule", value)
 	return e
 }
 
@@ -226,6 +246,12 @@ func (e *TagSvgClipPath) ClipRule(clipRule SvgClipRule) (ref *TagSvgClipPath) {
 //  It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
 //  lighting-color presentation attributes.
 //
+//   Input:
+//     value: potential indirect value of color
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//
 //   Notes:
 //     * As a presentation attribute, color can be used as a CSS property. See CSS color for further information.
 //
@@ -233,6 +259,12 @@ func (e *TagSvgClipPath) ClipRule(clipRule SvgClipRule) (ref *TagSvgClipPath) {
 //
 //  Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
 //  cor de parada, cor de inundação e cor de iluminação.
+//
+//   Entrada:
+//     value: valor indireto potencial da cor
+//       string: ex. "black"
+//       factory: ex. factoryColor.NewYellow()
+//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.

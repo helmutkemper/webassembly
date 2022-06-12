@@ -639,6 +639,8 @@ func (e *TagSvgGlobal) CalcMode(calcMode SvgCalcMode) (ref *TagSvgGlobal) {
 //   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
 //     elementos.
 //   * Para uso geral pelo navegador.
+//
+//todo: #global
 func (e *TagSvgGlobal) Class(class string) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
@@ -661,8 +663,13 @@ func (e *TagSvgGlobal) Class(class string) (ref *TagSvgGlobal) {
 //   Input:
 //     clipPathUnits: indica qual sistema de coordenadas deve ser usado
 //       KSvgClipPathUnits... (ex. KSvgClipPathUnitsUserSpaceOnUse)
-func (e *TagSvgGlobal) ClipPathUnits(clipPathUnits SvgClipPathUnits) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "clipPathUnits", clipPathUnits.String())
+func (e *TagSvgGlobal) ClipPathUnits(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgClipPathUnits); ok {
+		e.selfElement.Call("setAttribute", "clipPathUnits", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "clipPathUnits", value)
 	return e
 }
 
@@ -695,12 +702,27 @@ func (e *TagSvgGlobal) ClipPath(clipPath string) (ref *TagSvgGlobal) {
 //  It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
 //  its target.
 //
+//   Input:
+//     value: side of a path
+//       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
+//       any other type: interface{}
+//
 // Português:
 //
 //  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
 //  recortar seu destino.
-func (e *TagSvgGlobal) ClipRule(clipRule SvgClipRule) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "clip-rule", clipRule.String())
+//
+//   Input:
+//     value: lado de um caminho
+//       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) ClipRule(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgClipRule); ok {
+		e.selfElement.Call("setAttribute", "clip-rule", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "clip-rule", value)
 	return e
 }
 
@@ -711,6 +733,12 @@ func (e *TagSvgGlobal) ClipRule(clipRule SvgClipRule) (ref *TagSvgGlobal) {
 //  It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
 //  lighting-color presentation attributes.
 //
+//   Input:
+//     value: potential indirect value of color
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//
 //   Notes:
 //     * As a presentation attribute, color can be used as a CSS property. See CSS color for further information.
 //
@@ -718,6 +746,12 @@ func (e *TagSvgGlobal) ClipRule(clipRule SvgClipRule) (ref *TagSvgGlobal) {
 //
 //  Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
 //  cor de parada, cor de inundação e cor de iluminação.
+//
+//   Entrada:
+//     value: valor indireto potencial da cor
+//       string: ex. "black"
+//       factory: ex. factoryColor.NewYellow()
+//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
@@ -3505,6 +3539,312 @@ func (e *TagSvgGlobal) PrimitiveUnits(value interface{}) (ref *TagSvgGlobal) {
 	}
 
 	e.selfElement.Call("setAttribute", "primitiveUnits", value)
+	return e
+}
+
+// R
+//
+// English:
+//
+// The r attribute defines the radius of a circle.
+//
+//   Input:
+//     value: radius of a circle
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo r define o raio de um círculo.
+//
+//   Input:
+//     value: raio de um círculo
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) R(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "r", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "r", value)
+	return e
+}
+
+// Radius
+//
+// English:
+//
+// The radius attribute represents the radius (or radii) for the operation on a given <feMorphology> filter primitive.
+//
+// If two numbers are provided, the first number represents the x-radius and the second one the y-radius. If one number
+// is provided, then that value is used for both x and y. The values are in the coordinate system established by the
+// primitiveUnits attribute on the <filter> element.
+//
+// A negative or zero value disables the effect of the given filter primitive (i.e., the result is the filter input
+// image).
+//
+// Português:
+//
+// O atributo radius representa o raio (ou raios) para a operação em uma determinada primitiva de filtro <feMorphology>.
+//
+// Se dois números forem fornecidos, o primeiro número representa o raio x e o segundo o raio y. Se um número for
+// fornecido, esse valor será usado para x e y. Os valores estão no sistema de coordenadas estabelecido pelo atributo
+// primitivaUnits no elemento <filter>.
+//
+// Um valor negativo ou zero desativa o efeito da primitiva de filtro fornecida (ou seja, o resultado é a imagem de
+// entrada do filtro).
+func (e *TagSvgGlobal) Radius(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "radius", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "radius", value)
+	return e
+}
+
+// RefX
+//
+// English:
+//
+// The refX attribute defines the x coordinate of an element's reference point.
+//
+//   Input:
+//     value: defines the x coordinate of an element's reference point
+//       float32: 1.0 = "100%"
+//       const: KPositionHorizontal... (e.g. KPositionHorizontalLeft)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo refX define a coordenada x do ponto de referência de um elemento.
+//
+//   Entrada:
+//     value: define a coordenada x do ponto de referência de um elemento
+//       float32: 1.0 = "100%"
+//       const: KPositionHorizontal... (ex. KPositionHorizontalLeft)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) RefX(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "refX", p)
+		return e
+	}
+
+	if converted, ok := value.(PositionHorizontal); ok {
+		e.selfElement.Call("setAttribute", "refX", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "refX", value)
+	return e
+}
+
+// RefY
+//
+// English:
+//
+// The refX attribute defines the y coordinate of an element's reference point.
+//
+//   Input:
+//     value: defines the y coordinate of an element's reference point
+//       float32: 1.0 = "100%"
+//       const: KPositionVertical... (e.g. KPositionVerticalTop)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo refX define a coordenada y do ponto de referência de um elemento.
+//
+//   Entrada:
+//     value: define a coordenada y do ponto de referência de um elemento
+//       float32: 1.0 = "100%"
+//       const: KPositionVertical... (ex. KPositionVerticalTop)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) RefY(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "refY", p)
+		return e
+	}
+
+	if converted, ok := value.(PositionVertical); ok {
+		e.selfElement.Call("setAttribute", "refY", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "refY", value)
+	return e
+}
+
+// RepeatCount
+//
+// English:
+//
+// The repeatCount attribute indicates the number of times an animation will take place.
+//
+//   Input:
+//     value: indicates the number of times an animation will take place
+//       int: number of times
+//       const: KSvgDurIndefinite
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo repeatCount indica o número de vezes que uma animação ocorrerá.
+//
+//   Input:
+//     value: indica o número de vezes que uma animação ocorrerá
+//       int: número de vezes
+//       const: KSvgDurIndefinite
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) RepeatCount(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "repeatCount", value)
+	return e
+}
+
+// RepeatDur
+//
+// English:
+//
+// The repeatDur attribute specifies the total duration for repeating an animation.
+//
+//   Input:
+//     value: specifies the total duration for repeating an animation
+//       string: "5s"
+//       time.Duration: 5*time.Second = "5s"
+//       const: KSvgDurIndefinite
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo repeatDur especifica a duração total para repetir uma animação.
+//
+//   Entrada:
+//     value: especifica a duração total para repetir uma animação
+//       string: "5s"
+//       time.Duration: 5*time.Second = "5s"
+//       const: KSvgDurIndefinite
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) RepeatDur(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "repeatDur", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "repeatDur", value)
+	return e
+}
+
+// Restart
+//
+// English:
+//
+// The restart attribute specifies whether or not an animation can restart.
+//
+//   Input:
+//     value: especifica se uma animação pode ou não reiniciar
+//       const: KSvgAnimationRestart... (e.g. KSvgAnimationRestartAlways)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo restart especifica se uma animação pode ou não reiniciar.
+//
+//   Entrada:
+//     value: especifica se uma animação pode ou não reiniciar
+//       const: KSvgAnimationRestart... (ex. KSvgAnimationRestartAlways)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Restart(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgAnimationRestart); ok {
+		e.selfElement.Call("setAttribute", "restart", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "restart", value)
+	return e
+}
+
+// Result
+//
+// English:
+//
+// The result attribute defines the assigned name for this filter primitive. If supplied, then graphics that result from
+// processing this filter primitive can be referenced by an in attribute on a subsequent filter primitive within the
+// same <filter> element. If no value is provided, the output will only be available for re-use as the implicit input
+// into the next filter primitive if that filter primitive provides no value for its in attribute.
+//
+// Português:
+//
+// O atributo result define o nome atribuído para esta primitiva de filtro. Se fornecido, os gráficos resultantes do
+// processamento dessa primitiva de filtro podem ser referenciados por um atributo in em uma primitiva de filtro
+// subsequente dentro do mesmo elemento <filter>. Se nenhum valor for fornecido, a saída só estará disponível para
+// reutilização como entrada implícita na próxima primitiva de filtro se essa primitiva de filtro não fornecer valor
+// para seu atributo in.
+func (e *TagSvgGlobal) Result(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "result", value)
+	return e
+}
+
+// Rotate
+//
+// English:
+//
+// The rotate attribute specifies how the animated element rotates as it travels along a path specified in an
+// <animateMotion> element.
+//
+//   Input:
+//     value: specifies how the animated element rotates
+//       const: KSvgRotate... (e.g. KSvgRotateAutoReverse)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo de rotação especifica como o elemento animado gira enquanto percorre um caminho especificado em um
+// elemento <animateMotion>.
+//
+//   Entrada:
+//     value: especifica como o elemento animado gira
+//       const: KSvgRotate... (e.g. KSvgRotateAutoReverse)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Rotate(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgRotate); ok {
+		e.selfElement.Call("setAttribute", "rotate", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "rotate", value)
+	return e
+}
+
+// Rx
+//
+// English:
+//
+// The rx attribute defines a radius on the x-axis.
+//
+// Português:
+//
+// O atributo rx define um raio no eixo x.
+func (e *TagSvgGlobal) Rx(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "rx", value)
+	return e
+}
+
+// Ry
+//
+// English:
+//
+// The ry attribute defines a radius on the y-axis.
+//
+// Português:
+//
+// O atributo ry define um raio no eixo y.
+func (e *TagSvgGlobal) Ry(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "ry", value)
 	return e
 }
 

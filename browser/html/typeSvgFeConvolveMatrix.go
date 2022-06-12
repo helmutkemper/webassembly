@@ -368,6 +368,30 @@ func (e *TagSvgFeConvolveMatrix) Begin(begin interface{}) (ref *TagSvgFeConvolve
 	return e
 }
 
+// Bias
+//
+// English:
+//
+//  The bias attribute shifts the range of the filter. After applying the kernelMatrix of the <feConvolveMatrix> element
+//  to the input image to yield a number and applied the divisor attribute, the bias attribute is added to each
+//  component. This allows representation of values that would otherwise be clamped to 0 or 1.
+//
+//   Input:
+//     bias: shifts the range of the filter
+//
+// Português:
+//
+//  O atributo bias muda o intervalo do filtro. Depois de aplicar o kernelMatrix do elemento <feConvolveMatrix> à imagem
+//  de entrada para gerar um número e aplicar o atributo divisor, o atributo bias é adicionado a cada componente. Isso
+//  permite a representação de valores que de outra forma seriam fixados em 0 ou 1.
+//
+//   Entrada:
+//     bias: muda o intervalo do filtro
+func (e *TagSvgFeConvolveMatrix) Bias(bias float64) (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement.Call("setAttribute", "bias", bias)
+	return e
+}
+
 // Init
 //
 // English:

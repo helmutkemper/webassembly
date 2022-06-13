@@ -3848,6 +3848,643 @@ func (e *TagSvgGlobal) Ry(value float64) (ref *TagSvgGlobal) {
 	return e
 }
 
+// Scale
+//
+// English:
+//
+// The scale attribute defines the displacement scale factor to be used on a <feDisplacementMap> filter primitive.
+// The amount is expressed in the coordinate system established by the primitiveUnits attribute on the <filter> element.
+//
+// Português:
+//
+// O atributo scale define o fator de escala de deslocamento a ser usado em uma primitiva de filtro <feDisplacementMap>.
+// A quantidade é expressa no sistema de coordenadas estabelecido pelo atributo primitivaUnits no elemento <filter>.
+func (e *TagSvgGlobal) Scale(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "scale", value)
+	return e
+}
+
+// Seed
+//
+// English:
+//
+// The seed attribute represents the starting number for the pseudo random number generator of the <feTurbulence> filter
+// primitive.
+//
+// Português:
+//
+// O atributo seed representa o número inicial para o gerador de números pseudo aleatórios da primitiva de filtro
+// <feTurbulence>.
+func (e *TagSvgGlobal) Seed(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "seed", value)
+	return e
+}
+
+// ShapeRendering
+//
+// English:
+//
+// The shape-rendering attribute provides hints to the renderer about what tradeoffs to make when rendering shapes like
+// paths, circles, or rectangles.
+//
+//   Input:
+//     value: provides hints to the renderer
+//       const: KSvgShapeRendering... (e.g. KShapeRenderingAuto)
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute, shape-rendering can be used as a CSS property.
+//
+// Português:
+//
+// O atributo shape-rendering fornece dicas ao renderizador sobre quais compensações fazer ao renderizar formas como
+// caminhos, círculos ou retângulos.
+//
+//   Entrada:
+//     value: fornece dicas para o renderizador
+//       const: KSvgShapeRendering... (ex. KShapeRenderingAuto)
+//       any other type: interface{}
+//
+//   Notas:
+//     * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.
+func (e *TagSvgGlobal) ShapeRendering(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgShapeRendering); ok {
+		e.selfElement.Call("setAttribute", "shape-rendering", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "shape-rendering", value)
+	return e
+}
+
+// Spacing
+//
+// English:
+//
+// The spacing attribute indicates how the user agent should determine the spacing between typographic characters that
+// are to be rendered along a path.
+//
+//   Input:
+//     value: indicates how the user agent should determine the spacing
+//       const: KSvgSpacing... (e.g. KSvgSpacingExact)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo spacing indica como o agente do usuário deve determinar o espaçamento entre os caracteres tipográficos que
+// devem ser renderizados ao longo de um caminho.
+//
+//   Entrada:
+//     value: indica como o agente do usuário deve determinar o espaçamento
+//       const: KSvgSpacing... (ex. KSvgSpacingExact)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Spacing(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgSpacing); ok {
+		e.selfElement.Call("setAttribute", "spacing", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "spacing", value)
+	return e
+}
+
+// SpecularConstant
+//
+// English:
+//
+// The specularConstant attribute controls the ratio of reflection of the specular lighting. It represents the ks value
+// in the Phong lighting model. The bigger the value the stronger the reflection.
+//
+// Português:
+//
+// O atributo specularConstant controla a proporção de reflexão da iluminação especular. Ele representa o valor ks no
+// modelo de iluminação Phong. Quanto maior o valor, mais forte a reflexão.
+func (e *TagSvgGlobal) SpecularConstant(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "specularConstant", value)
+	return e
+}
+
+// SpecularExponent
+//
+// English:
+//
+// The specularExponent attribute controls the focus for the light source. The bigger the value the brighter the light.
+//
+// Português:
+//
+// O atributo specularExponent controla o foco da fonte de luz. Quanto maior o valor, mais brilhante é a luz.
+func (e *TagSvgGlobal) SpecularExponent(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "specularExponent", value)
+	return e
+}
+
+// SpreadMethod
+//
+// English:
+//
+// The spreadMethod attribute determines how a shape is filled beyond the defined edges of a gradient.
+//
+//   Input:
+//     value: determines how a shape is filled
+//       const: KSvgSpreadMethod... (e.g. KSvgSpreadMethodReflect)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo spreadMethod determina como uma forma é preenchida além das bordas definidas de um gradiente.
+//
+//   Entrada:
+//     value: determina como uma forma é preenchida
+//       const: KSvgSpreadMethod... (e.g. KSvgSpreadMethodReflect)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) SpreadMethod(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgSpreadMethod); ok {
+		e.selfElement.Call("setAttribute", "spreadMethod", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "spreadMethod", value)
+	return e
+}
+
+// StartOffset
+//
+// English:
+//
+// The startOffset attribute defines an offset from the start of the path for the initial current text position along
+// the path after converting the path to the <textPath> element's coordinate system.
+//
+//   Input:
+//     value: defines an offset from the start
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo startOffset define um deslocamento do início do caminho para a posição inicial do texto atual ao longo do
+// caminho após a conversão do caminho para o sistema de coordenadas do elemento <textPath>.
+//
+//   Entrada:
+//     value: define um deslocamento desde o início
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) StartOffset(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "startOffset", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "startOffset", value)
+	return e
+}
+
+// StdDeviation
+//
+// English:
+//
+// The stdDeviation attribute defines the standard deviation for the blur operation.
+//
+//   Input:
+//     value: defines the standard deviation
+//       const: KSvgStitchTiles... (e.g. KSvgStitchTilesNoStitch)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo stdDeviation define o desvio padrão para a operação de desfoque.
+//
+//   Input:
+//     value: define o desvio padrão
+//       const: KSvgStitchTiles... (e.g. KSvgStitchTilesNoStitch)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) StdDeviation(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgStitchTiles); ok {
+		e.selfElement.Call("setAttribute", "stdDeviation", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stdDeviation", value)
+	return e
+}
+
+// StopColor
+//
+// English:
+//
+//  The stop-color attribute indicates what color to use at a gradient stop.
+//
+//   Input:
+//     value: indicates what color to use at a gradient stop
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//
+//   Notes:
+//     * With respect to gradients, SVG treats the transparent keyword differently than CSS. SVG does not calculate
+//       gradients in pre-multiplied space, so transparent really means transparent black. So, specifying a stop-color
+//       with the value transparent is equivalent to specifying a stop-color with the value black and a stop-opacity
+//       with the value 0.
+//     * As a presentation attribute, stop-color can be used as a CSS property.
+//
+// Português:
+//
+//  O atributo stop-color indica qual cor usar em uma parada de gradiente.
+//
+//   Entrada:
+//     value: indica qual cor usar em um fim de gradiente
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//
+//   Notss:
+//     * Com relação aos gradientes, o SVG trata a palavra-chave transparente de maneira diferente do CSS. O SVG não
+//       calcula gradientes no espaço pré-multiplicado, portanto, transparente realmente significa preto transparente.
+//       Assim, especificar uma stop-color com o valor transparente é equivalente a especificar uma stop-color com o
+//       valor black e uma stop-opacity com o valor 0.
+//     * Como atributo de apresentação, stop-color pode ser usado como propriedade CSS.
+func (e *TagSvgGlobal) StopColor(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "stop-color", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stop-color", value)
+	return e
+}
+
+// StopOpacity
+//
+// English:
+//
+// The stop-opacity attribute defines the opacity of a given color gradient stop.
+//
+//   Input:
+//     value: defines the opacity of a given color gradient stop
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// The opacity value used for the gradient calculation is the product of the value of stop-opacity and the opacity of
+// the value of the stop-color attribute. For stop-color values that don't include explicit opacity information, the
+// opacity is treated as 1.
+//
+//   Notes:
+//     * As a presentation attribute, stop-opacity can be used as a CSS property.
+//
+// Português:
+//
+// O atributo stop-opacity define a opacidade de uma determinada parada de gradiente de cor.
+//
+//   Entrada:
+//     value: define a opacidade de uma determinada parada de gradiente de cor
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+//
+// O valor de opacidade usado para o cálculo do gradiente é o produto do valor de stop-opacity e a opacidade do valor
+// do atributo stop-color. Para valores de stop-color que não incluem informações explícitas de opacidade, a opacidade
+// é tratada como 1.
+//
+//   Notas:
+//     * Como atributo de apresentação, stop-opacity pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) StopOpacity(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "stop-opacity", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stop-opacity", value)
+	return e
+}
+
+// StrikethroughPosition
+//
+// English:
+//
+// The strikethrough-position attribute represents the ideal vertical position of the strikethrough.
+// The strikethrough position is expressed in the font's coordinate system.
+//
+// Português:
+//
+// O atributo posição tachada representa a posição vertical ideal do tachado.
+// A posição tachada é expressa no sistema de coordenadas da fonte.
+func (e *TagSvgGlobal) StrikethroughPosition(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "strikethrough-position", value)
+	return e
+}
+
+// StrikethroughThickness
+//
+// English:
+//
+// The strikethrough-thickness attribute represents the ideal thickness of the strikethrough.
+// The strikethrough thickness is expressed in the font's coordinate system.
+//
+// Português:
+//
+// O atributo tachado-espessura representa a espessura ideal do tachado.
+// A espessura tachada é expressa no sistema de coordenadas da fonte.
+func (e *TagSvgGlobal) StrikethroughThickness(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "strikethrough-thickness", value)
+	return e
+}
+
+// Stroke
+//
+// English:
+//
+// The stroke attribute is a presentation attribute defining the color (or any SVG paint servers like gradients or
+// patterns) used to paint the outline of the shape
+//
+//   Input:
+//     value: presentation attribute defining the color
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute stroke can be used as a CSS property.
+//
+// Português:
+//
+// O atributo de traço é um atributo de apresentação que define a cor (ou qualquer servidor de pintura SVG, como
+// gradientes ou padrões) usado para pintar o contorno da forma
+//
+//   Entrada:
+//     value: atributo de apresentação que define a cor
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como um traço de atributo de apresentação pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) Stroke(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "stroke", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stroke", value)
+	return e
+}
+
+// StrokeDasharray
+//
+// English:
+//
+// The stroke-dasharray attribute is a presentation attribute defining the pattern of dashes and gaps used to paint the
+// outline of the shape
+//
+//   Input:
+//     value: presentation attribute defining the pattern of dashes
+//       []float64: (e.g. []float64{4, 1, 2}) = "4 1 2"
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute, stroke-dasharray can be used as a CSS property.
+//
+// Português:
+//
+// O atributo stroke-dasharray é um atributo de apresentação que define o padrão de traços e lacunas usados para pintar
+// o contorno da forma
+//
+//   Entrada:
+//     value: atributo de apresentação que define o padrão de traços
+//       []float64: (e.g. []float64{4, 1, 2}) = "4 1 2"
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) StrokeDasharray(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.([]float64); ok {
+		str := ""
+		for _, v := range converted {
+			str += strconv.FormatFloat(v, 'g', -1, 64) + ""
+		}
+		length := len(str) - 1
+
+		e.selfElement.Call("setAttribute", "stroke-dasharray", str[:length])
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stroke-dasharray", value)
+	return e
+}
+
+// StrokeLinecap
+//
+// English:
+//
+// The stroke-linecap attribute is a presentation attribute defining the shape to be used at the end of open subpaths
+// when they are stroked.
+//
+//   Input:
+//     value: presentation attribute defining the shape to be used at the end of open subpaths
+//       const: KSvgStrokeLinecap... (e.g. KSvgStrokeLinecapRound)
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute stroke-linecap can be used as a CSS property.
+//
+// Português:
+//
+// O atributo stroke-linecap é um atributo de apresentação que define a forma a ser usada no final de subcaminhos
+// abertos quando eles são traçados.
+//
+//   Input:
+//     value: atributo de apresentação que define a forma a ser usada no final de subcaminhos
+//       const: KSvgStrokeLinecap... (e.g. KSvgStrokeLinecapRound)
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) StrokeLinecap(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgStrokeLinecap); ok {
+		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stroke-linecap", value)
+	return e
+}
+
+// StrokeLinejoin
+//
+// English:
+//
+// The stroke-linejoin attribute is a presentation attribute defining the shape to be used at the corners of paths when
+// they are stroked.
+//
+//   Notes:
+//     * As a presentation attribute stroke-linejoin can be used as a CSS property.
+//
+// Português:
+//
+// O atributo stroke-linejoin é um atributo de apresentação que define a forma a ser usada nos cantos dos caminhos
+// quando eles são traçados.
+//
+//   Notas:
+//     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
+func (e *TagSvgGlobal) StrokeLinejoin(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgStrokeLinejoin); ok {
+		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stroke-linejoin", value)
+	return e
+}
+
+// StrokeMiterlimit
+//
+// English:
+//
+// The stroke-miterlimit attribute is a presentation attribute defining a limit on the ratio of the miter length to the
+// stroke-width used to draw a miter join. When the limit is exceeded, the join is converted from a miter to a bevel.
+//
+//   Notes:
+//     * As a presentation attribute stroke-miterlimit can be used as a CSS property.
+//
+// Português:
+//
+// O atributo stroke-miterlimit é um atributo de apresentação que define um limite na proporção do comprimento da mitra
+// para a largura do traço usado para desenhar uma junção de mitra. Quando o limite é excedido, a junção é convertida
+// de uma mitra para um chanfro.
+//
+//   Notas:
+//     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
+func (e *TagSvgGlobal) StrokeMiterlimit(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
+	return e
+}
+
+// StrokeOpacity
+//
+// English:
+//
+// The stroke-opacity attribute is a presentation attribute defining the opacity of the paint server (color, gradient,
+// pattern, etc) applied to the stroke of a shape.
+//
+//   Input:
+//     value: defining the opacity of the paint
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute stroke-opacity can be used as a CSS property.
+//
+// Português:
+//
+// O atributo de opacidade do traçado é um atributo de apresentação que define a opacidade do servidor de pintura (cor,
+// gradiente, padrão etc.) aplicado ao traçado de uma forma.
+//
+//   Entrada:
+//     value: definindo a opacidade da tinta
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como atributo de apresentação, a opacidade do traço pode ser usada como uma propriedade CSS.
+func (e *TagSvgGlobal) StrokeOpacity(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "stroke-opacity", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stroke-opacity", value)
+	return e
+}
+
+// StrokeWidth
+//
+// English:
+//
+// The stroke-width attribute is a presentation attribute defining the width of the stroke to be applied to the shape.
+//
+//   Input:
+//     value: defining the width of the stroke
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo stroke-width é um atributo de apresentação que define a largura do traço a ser aplicado à forma.
+//
+//   Entrada:
+//     value: definindo a largura do traço
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) StrokeWidth(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "stroke-width", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stroke-width", value)
+	return e
+}
+
+// Style
+//
+// English:
+//
+// The style attribute allows to style an element using CSS declarations. It functions identically to the style
+// attribute in HTML.
+//
+// Português:
+//
+// O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
+// em HTML.
+func (e *TagSvgGlobal) Style(value string) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "style", value)
+	return e
+}
+
+// SurfaceScale
+//
+// English:
+//
+// The surfaceScale attribute represents the height of the surface for a light filter primitive.
+//
+// Português:
+//
+// O atributo surfaceScale representa a altura da superfície para uma primitiva de filtro de luz.
+func (e *TagSvgGlobal) SurfaceScale(value float64) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "surfaceScale", value)
+	return e
+}
+
+// SystemLanguage
+//
+// English:
+//
+// The systemLanguage attribute represents a list of supported language tags. This list is matched against the language
+// defined in the user preferences.
+//
+// Português:
+//
+// O atributo systemLanguage representa uma lista de tags de idioma com suporte. Esta lista é comparada com o idioma
+// definido nas preferências do usuário.
+func (e *TagSvgGlobal) SystemLanguage(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.([]Language); ok {
+		tags := ""
+		for _, v := range converted {
+			tags += v.String() + ", "
+		}
+		length := len(tags) - 2
+
+		e.selfElement.Call("setAttribute", "systemLanguage", tags[:length])
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "systemLanguage", value)
+	return e
+}
+
 //
 //
 //

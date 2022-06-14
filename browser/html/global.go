@@ -738,6 +738,7 @@ func (e *TagSvgGlobal) ClipRule(value interface{}) (ref *TagSvgGlobal) {
 //       string: e.g. "black"
 //       factory: e.g. factoryColor.NewYellow()
 //       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
 //
 //   Notes:
 //     * As a presentation attribute, color can be used as a CSS property. See CSS color for further information.
@@ -752,6 +753,7 @@ func (e *TagSvgGlobal) ClipRule(value interface{}) (ref *TagSvgGlobal) {
 //       string: ex. "black"
 //       factory: ex. factoryColor.NewYellow()
 //       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
@@ -4482,6 +4484,296 @@ func (e *TagSvgGlobal) SystemLanguage(value interface{}) (ref *TagSvgGlobal) {
 	}
 
 	e.selfElement.Call("setAttribute", "systemLanguage", value)
+	return e
+}
+
+// Tabindex #global
+//
+// English:
+//
+// The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
+// element for the purposes of sequential focus navigation.
+//
+// Português:
+//
+// O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
+// de navegação de foco sequencial.
+func (e *TagSvgGlobal) Tabindex(value int) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "tabindex", value)
+	return e
+}
+
+// TableValues
+//
+// English:
+//
+// The tableValues attribute defines a list of numbers defining a lookup table of values for a color component transfer
+// function.
+//
+//   Input:
+//     value: defines a list of numbers
+//       []float64: e.g. []float64{0.0, 1.0} = "0 1"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo tableValues define uma lista de números que definem uma tabela de consulta de valores para uma função de
+// transferência de componente de cor.
+//
+//   Entrada:
+//     value: define uma lista de números
+//       []float64: ex. []float64{0.0, 1.0} = "0 1"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) TableValues(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.([]float64); ok {
+		tags := ""
+		for _, v := range converted {
+			tags += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+		length := len(tags) - 1
+
+		e.selfElement.Call("setAttribute", "tableValues", tags[:length])
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "tableValues", value)
+	return e
+}
+
+// Target
+//
+// English:
+//
+// This attribute specifies the name of the browsing context (e.g., a browser tab or an (X)HTML iframe or object
+// element) into which a document is to be opened when the link is activated
+//
+//   Input:
+//     value: specifies the name of the browsing context
+//       const: KTarget... (e.g. KTargetSelf)
+//      any other type: interface{}
+//
+// The target attribute should be used when there are multiple possible targets for the ending resource, such as when
+// the parent document is embedded within an HTML or XHTML document, or is viewed with a tabbed browser.
+//
+// Português:
+//
+// Este atributo especifica o nome do contexto de navegação (por exemplo, uma guia do navegador ou um iframe ou elemento
+// de objeto (X)HTML) no qual um documento deve ser aberto quando o link é ativado
+//
+//   Entrada:
+//     value: especifica o nome do contexto de navegação
+//       const: KTarget... (e.g. KTargetSelf)
+//       qualquer outro tipo: interface{}
+//
+// O atributo target deve ser usado quando houver vários destinos possíveis para o recurso final, como quando o
+// documento pai estiver incorporado em um documento HTML ou XHTML ou for visualizado em um navegador com guias.
+func (e *TagSvgGlobal) Target(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(Target); ok {
+		e.selfElement.Call("setAttribute", "target", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "target", value)
+	return e
+}
+
+// TargetX
+//
+// English:
+//
+// The targetX attribute determines the positioning in horizontal direction of the convolution matrix relative to a
+// given target pixel in the input image. The leftmost column of the matrix is column number zero.
+// The value must be such that: 0 <= targetX < orderX.
+//
+//   Input:
+//     value: determines the positioning in horizontal direction
+//
+// Português:
+//
+// O atributo targetX determina o posicionamento na direção horizontal da matriz de convolução em relação a um
+// determinado pixel alvo na imagem de entrada. A coluna mais à esquerda da matriz é a coluna número zero.
+// O valor deve ser tal que: 0 <= targetX < orderX.
+//
+//   Entrada:
+//     value: determina o posicionamento na direção horizontal
+func (e *TagSvgGlobal) TargetX(value int) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "targetX", value)
+	return e
+}
+
+// TargetY
+//
+// English:
+//
+// The targetY attribute determines the positioning in vertical direction of the convolution matrix relative to a given
+// target pixel in the input image. The topmost row of the matrix is row number zero.
+// The value must be such that: 0 <= targetY < orderY.
+//
+//   Input:
+//     value: determines the positioning in vertical direction
+//
+// Português:
+//
+// O atributo targetY determina o posicionamento na direção vertical da matriz de convolução em relação a um determinado
+// pixel alvo na imagem de entrada. A linha superior da matriz é a linha número zero.
+// O valor deve ser tal que: 0 <= targetY < orderY.
+//
+//   Entrada:
+//     value: determines the positioning in vertical direction
+func (e *TagSvgGlobal) TargetY(value int) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "targetY", value)
+	return e
+}
+
+// TextAnchor
+//
+// English:
+//
+// The text-anchor attribute is used to align (start-, middle- or end-alignment) a string of pre-formatted text or
+// auto-wrapped text where the wrapping area is determined from the inline-size property relative to a given point.
+//
+//   Input:
+//     value: used to align a string
+//       const: KSvgTextAnchor... (e.g. KSvgTextAnchorStart)
+//       any other type: interface{}
+//
+// This attribute is not applicable to other types of auto-wrapped text. For those cases you should use text-align.
+// For multi-line text, the alignment takes place for each line.
+//
+// The text-anchor attribute is applied to each individual text chunk within a given <text> element. Each text chunk
+// has an initial current text position, which represents the point in the user coordinate system resulting from
+// (depending on context) application of the x and y attributes on the <text> element, any x or y attribute values on a
+// <tspan>, <tref> or <altGlyph> element assigned explicitly to the first rendered character in a text chunk, or
+// determination of the initial current text position for a <textPath> element.
+//
+//   Notes:
+//     * As a presentation attribute, text-anchor can be used as a CSS property.
+//
+// Português:
+//
+// O atributo text-anchor é usado para alinhar (alinhamento inicial, intermediário ou final) uma string de texto
+// pré-formatado ou texto com quebra automática onde a área de quebra é determinada a partir da propriedade inline-size
+// relativa a um determinado ponto.
+//
+//   Entrada:
+//     value: usado para alinhar uma string
+//       const: KSvgTextAnchor... (e.g. KSvgTextAnchorStart)
+//       qualquer outro tipo: interface{}
+//
+// Este atributo não se aplica a outros tipos de texto com quebra automática. Para esses casos, você deve usar
+// text-align. Para texto de várias linhas, o alinhamento ocorre para cada linha.
+//
+// O atributo text-anchor é aplicado a cada fragmento de texto individual dentro de um determinado elemento <text>.
+// Cada pedaço de texto tem uma posição inicial de texto atual, que representa o ponto no sistema de coordenadas do
+// usuário resultante (dependendo do contexto) da aplicação dos atributos x e y no elemento <text>, quaisquer valores
+// de atributo x ou y em um <tspan >, elemento <tref> ou <altGlyph> atribuído explicitamente ao primeiro caractere
+// renderizado em um pedaço de texto, ou determinação da posição inicial do texto atual para um elemento <textPath>.
+//
+//   Notes:
+//     * As a presentation attribute, text-anchor can be used as a CSS property.
+func (e *TagSvgGlobal) TextAnchor(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgTextAnchor); ok {
+		e.selfElement.Call("setAttribute", "text-anchor", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "text-anchor", value)
+	return e
+}
+
+// TextDecoration
+//
+// English:
+//
+// The text-decoration attribute defines whether text is decorated with an underline, overline and/or strike-through.
+// It is a shorthand for the text-decoration-line and text-decoration-style properties.
+//
+//   Input:
+//     value: defines whether text is decorated
+//       const: KSvgTextDecorationLine... (e.g. KSvgTextDecorationLineUnderline)
+//       const: KSvgTextDecorationStyle... (e.g. KSvgTextDecorationStyleDouble)
+//       string: e.g. "black", "line-through"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
+//
+// The fill and stroke of the text decoration are given by the fill and stroke of the text at the point where the text
+// decoration is declared.
+//
+// The paint order of the text decoration, i.e. the fill and stroke, is determined by the value of the paint-order
+// attribute at the point where the text decoration is declared.
+//
+//   Notes:
+//     * As a presentation attribute, text-decoration can be used as a CSS property. See the css text-decoration
+//       property for more information.
+//
+// Português:
+//
+// O atributo text-decoration define se o texto é decorado com sublinhado, overline e ou tachado.
+// É um atalho para as propriedades text-decoration-line e text-decoration-style.
+//
+//   Entrada:
+//     value: define se o texto é decorado
+//       const: KSvgTextDecorationLine... (ex. KSvgTextDecorationLineUnderline)
+//       const: KSvgTextDecorationStyle... (ex. KSvgTextDecorationStyleDouble)
+//       string: e.g. "black", "line-through"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
+//
+// O preenchimento e o traçado da decoração de texto são dados pelo preenchimento e traçado do texto no ponto em que a
+// decoração de texto é declarada.
+//
+// A ordem de pintura da decoração do texto, ou seja, o preenchimento e o traço, é determinada pelo valor do atributo
+// paint-order no ponto em que a decoração do texto é declarada.
+//
+//   Notas:
+//     * Como atributo de apresentação, a decoração de texto pode ser usada como uma propriedade CSS. Consulte a
+//       propriedade CSS text-decoration para obter mais informações.
+func (e *TagSvgGlobal) TextDecoration(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "text-decoration", RGBAToJs(converted))
+		return e
+	}
+
+	if converted, ok := value.(SvgTextDecorationLine); ok {
+		e.selfElement.Call("setAttribute", "text-decoration", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(SvgTextDecorationStyle); ok {
+		e.selfElement.Call("setAttribute", "text-decoration", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "text-decoration", value)
+	return e
+}
+
+// TextRendering
+//
+// English:
+//
+// The text-rendering attribute provides hints to the renderer about what tradeoffs to make when rendering text.
+//
+//   Notes:
+//     * As a presentation attribute, text-rendering can be used as a CSS property.
+//       See the css text-rendering property for more information.
+//
+// Português:
+//
+// O atributo text-rendering fornece dicas ao renderizador sobre quais compensações fazer ao renderizar o texto.
+//
+//   Notas:
+//     * Como um atributo de apresentação, a renderização de texto pode ser usada como uma propriedade CSS.
+//       Consulte a propriedade de renderização de texto css para obter mais informações.
+func (e *TagSvgGlobal) TextRendering(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgTextRendering); ok {
+		e.selfElement.Call("setAttribute", "text-rendering", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "text-rendering", value)
 	return e
 }
 

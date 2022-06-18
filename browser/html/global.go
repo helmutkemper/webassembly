@@ -1763,7 +1763,15 @@ func (e *TagSvgGlobal) FontWeight(fontWeight FontWeightRule) (ref *TagSvgGlobal)
 //
 // English:
 //
-//  The from attribute indicates the initial value of the attribute that will be modified during the animation.
+// The from attribute indicates the initial value of the attribute that will be modified during the animation.
+//
+//   Input:
+//     value: initial value of the attribute
+//       float32: 1.0 = "100%"
+//       time.Duration: 5*time.Second = "5s"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
 //
 // When used with the to attribute, the animation will change the modified attribute from the from value to the to
 // value. When used with the by attribute, the animation will change the attribute relatively from the from value by
@@ -1771,12 +1779,36 @@ func (e *TagSvgGlobal) FontWeight(fontWeight FontWeightRule) (ref *TagSvgGlobal)
 //
 // Português
 //
-//  O atributo from indica o valor inicial do atributo que será modificado durante a animação.
+// O atributo from indica o valor inicial do atributo que será modificado durante a animação.
+//
+//   Entrada:
+//     value: valor inicial do atributo
+//       float32: 1.0 = "100%"
+//       time.Duration: 5*time.Second = "5s"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
 //
 // Quando usado com o atributo to, a animação mudará o atributo modificado do valor from para o valor to. Quando usado
 // com o atributo by, a animação mudará o atributo relativamente do valor from pelo valor especificado em by.
-func (e *TagSvgGlobal) From(from float64) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "from", from)
+func (e *TagSvgGlobal) From(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "to", p)
+		return e
+	}
+
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "to", RGBAToJs(converted))
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "to", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "from", value)
 	return e
 }
 
@@ -2810,6 +2842,8 @@ func (e *TagSvgGlobal) MaskUnits(value interface{}) (ref *TagSvgGlobal) {
 //     value: specifies the maximum value
 //       float32: 1.0 = "100%"
 //       time.Duration: 5*time.Second = "5s"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //       any other type: interface{}
 //
 // Português:
@@ -2820,6 +2854,8 @@ func (e *TagSvgGlobal) MaskUnits(value interface{}) (ref *TagSvgGlobal) {
 //     value: especifica o valor máximo
 //       float32: 1.0 = "100%"
 //       time.Duration: 5*time.Second = "5s"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) Max(value interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := value.(color.RGBA); ok {
@@ -2867,6 +2903,8 @@ func (e *TagSvgGlobal) Media(value interface{}) (ref *TagSvgGlobal) {
 //     value: specifies the minimum value
 //       float32: 1.0 = "100%"
 //       time.Duration: 5*time.Second = "5s"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //       any other type: interface{}
 //
 // Português:
@@ -2877,6 +2915,8 @@ func (e *TagSvgGlobal) Media(value interface{}) (ref *TagSvgGlobal) {
 //     value: especifica o valor mínimo
 //       float32: 1.0 = "100%"
 //       time.Duration: 5*time.Second = "5s"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) Min(value interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := value.(color.RGBA); ok {
@@ -4774,6 +4814,147 @@ func (e *TagSvgGlobal) TextRendering(value interface{}) (ref *TagSvgGlobal) {
 	}
 
 	e.selfElement.Call("setAttribute", "text-rendering", value)
+	return e
+}
+
+// TextLength
+//
+// English:
+//
+// The textLength attribute, available on SVG <text> and <tspan> elements, lets you specify the width of the space into
+// which the text will draw. The user agent will ensure that the text does not extend farther than that distance, using
+// the method or methods specified by the lengthAdjust attribute. By default, only the spacing between characters is
+// adjusted, but the glyph size can also be adjusted if you change lengthAdjust.
+//
+//   Input:
+//     value: specify the width of the space into which the text will draw
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// By using textLength, you can ensure that your SVG text displays at the same width regardless of conditions including
+// web fonts failing to load (or not having loaded yet).
+//
+// Português:
+//
+// O atributo textLength, disponível nos elementos SVG <text> e <tspan>, permite especificar a largura do espaço no qual
+// o texto será desenhado. O agente do usuário garantirá que o texto não se estenda além dessa distância, usando o
+// método ou métodos especificados pelo atributo lengthAdjust. Por padrão, apenas o espaçamento entre os caracteres é
+// ajustado, mas o tamanho do glifo também pode ser ajustado se você alterar o lengthAdjust.
+//
+//   Input:
+//     value: especifique a largura do espaço no qual o texto será desenhado
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+//
+// Ao usar textLength, você pode garantir que seu texto SVG seja exibido na mesma largura, independentemente das
+// condições, incluindo fontes da Web que não carregam (ou ainda não foram carregadas).
+func (e *TagSvgGlobal) TextLength(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "textLength", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "textLength", value)
+	return e
+}
+
+// To
+//
+// English:
+//
+// The to attribute indicates the final value of the attribute that will be modified during the animation.
+//
+//   Input:
+//     value: final value of the attribute
+//       float32: 1.0 = "100%"
+//       time.Duration: 5*time.Second = "5s"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
+//
+// The value of the attribute will change between the from attribute value and this value.
+//
+// Português:
+//
+// O atributo to indica o valor final do atributo que será modificado durante a animação.
+//
+//   Entrada:
+//     value: valor final do atributo
+//       float32: 1.0 = "100%"
+//       time.Duration: 5*time.Second = "5s"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
+//
+// O valor do atributo mudará entre o valor do atributo from e este valor.
+func (e *TagSvgGlobal) To(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "to", p)
+		return e
+	}
+
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "to", RGBAToJs(converted))
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "to", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "to", value)
+	return e
+}
+
+// Transform #global
+//
+// English:
+//
+// The transform attribute defines a list of transform definitions that are applied to an element and the element's
+// children.
+//
+//   Input:
+//     value: defines a list of transform definitions
+//       *TransformFunctions: todo: documentar
+//       TransformFunctions:
+//       any other type: interface{}
+//
+//   Notes:
+//     * As of SVG2, transform is a presentation attribute, meaning it can be used as a CSS property. However, be aware
+//       that there are some differences in syntax between the CSS property and the attribute. See the documentation for
+//       the CSS property transform for the specific syntax to use in that case.
+//
+// Português:
+//
+// O atributo transform define uma lista de definições de transformação que são aplicadas a um elemento e aos filhos do
+// elemento.
+//
+//   Entrada:
+//     value: define uma lista de definições de transformação
+//       *TransformFunctions: todo: documentar
+//       TransformFunctions:
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * A partir do SVG2, transform é um atributo de apresentação, o que significa que pode ser usado como uma
+//       propriedade CSS. No entanto, esteja ciente de que existem algumas diferenças na sintaxe entre a propriedade CSS
+//       e o atributo. Consulte a documentação da transformação da propriedade CSS para obter a sintaxe específica a ser
+//       usada nesse caso.
+func (e *TagSvgGlobal) Transform(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(*TransformFunctions); ok {
+		e.selfElement.Call("setAttribute", "transform", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(TransformFunctions); ok {
+		e.selfElement.Call("setAttribute", "transform", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "transform", value)
 	return e
 }
 

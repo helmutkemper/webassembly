@@ -154,9 +154,9 @@ type TagSvgGlobal struct {
 //  The accumulate attribute controls whether or not an animation is cumulative.
 //
 //   Input:
-//     KSvgAccumulateSum: Specifies that each repeat iteration after the first builds upon the last value of the
-//       previous iteration;
-//     KSvgAccumulateNone: Specifies that repeat iterations are not cumulative.
+//     value: controls whether or not an animation is cumulative
+//       const: KSvgAccumulate... (e.g. KSvgAccumulateSum)
+//       any other type: interface{}
 //
 // It is frequently useful for repeated animations to build upon the previous results, accumulating with each iteration.
 // This attribute said to the animation if the value is added to the previous animated attribute's value on each
@@ -171,10 +171,10 @@ type TagSvgGlobal struct {
 //
 //  O atributo acumular controla se uma animação é cumulativa ou não.
 //
-//   Input:
-//     KSvgAccumulateSum: Especifica que cada iteração repetida após a primeira se baseia no último valor da iteração
-//       anterior;
-//     KSvgAccumulateNone: Especifica que as iterações repetidas não são cumulativas.
+//   Entrada:
+//     value: controla se uma animação é cumulativa ou não
+//       const: KSvgAccumulate... (ex. KSvgAccumulateSum)
+//       qualquer outro tipo: interface{}
 //
 // Frequentemente, é útil que as animações repetidas se baseiem nos resultados anteriores, acumulando a cada iteração.
 // Este atributo é dito à animação se o valor for adicionado ao valor do atributo animado anterior em cada iteração.
@@ -183,8 +183,13 @@ type TagSvgGlobal struct {
 //     * Esse atributo será ignorado se o valor do atributo de destino não suportar adição ou se o elemento de animação
 //       não se repetir;
 //     * Este atributo será ignorado se a função de animação for especificada apenas com o atributo to.
-func (e *TagSvgGlobal) Accumulate(accumulate SvgAccumulate) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "accumulate", accumulate.String())
+func (e *TagSvgGlobal) Accumulate(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgAccumulate); ok {
+		e.selfElement.Call("setAttribute", "accumulate", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "accumulate", value)
 	return e
 }
 
@@ -195,10 +200,9 @@ func (e *TagSvgGlobal) Accumulate(accumulate SvgAccumulate) (ref *TagSvgGlobal) 
 //  The additive attribute controls whether or not an animation is additive.
 //
 //   Input:
-//     KSvgAdditiveSum: Specifies that the animation will add to the underlying value of the attribute and other
-//       lower priority animations.
-//     KSvgAdditiveReplace: (default) Specifies that the animation will override the underlying value of the attribute
-//       and other lower priority animations.
+//     value: controls whether or not an animation is additive
+//       const: KSvgAdditive... (e.g. KSvgAdditiveSum)
+//       any other type: interface{}
 //
 // It is frequently useful to define animation as an offset or delta to an attribute's value, rather than as
 // absolute values.
@@ -207,16 +211,20 @@ func (e *TagSvgGlobal) Accumulate(accumulate SvgAccumulate) (ref *TagSvgGlobal) 
 //
 //  O atributo aditivo controla se uma animação é ou não aditiva.
 //
-//   Input:
-//     KSvgAdditiveSum: Especifica que a animação será adicionada ao valor subjacente do atributo e outras animações de
-//       prioridade mais baixa.
-//     KSvgAdditiveReplace: (default) Especifica que a animação substituirá o valor subjacente do atributo e outras
-//       animações de prioridade mais baixa.
+//   Entrada:
+//     value: controla se uma animação é aditiva ou não
+//       const: KSvgAdditive... (ex. KSvgAdditiveSum)
+//       qualquer outro tipo: interface{}
 //
 // É frequentemente útil definir a animação como um deslocamento ou delta para o valor de um atributo, em vez de
 // valores absolutos.
-func (e *TagSvgGlobal) Additive(additive SvgAdditive) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "additive", additive.String())
+func (e *TagSvgGlobal) Additive(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgAdditive); ok {
+		e.selfElement.Call("setAttribute", "additive", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "additive", value)
 	return e
 }
 
@@ -3563,6 +3571,52 @@ func (e *TagSvgGlobal) PointsAtZ(value interface{}) (ref *TagSvgGlobal) {
 //     value: indica como a transparência alfa é tratada.
 func (e *TagSvgGlobal) PreserveAlpha(value bool) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "preserveAlpha", value)
+	return e
+}
+
+// PreserveAspectRatio
+//
+// English:
+//
+//  The preserveAspectRatio attribute indicates how an element with a viewBox providing a given aspect ratio must fit
+//  into a viewport with a different aspect ratio.
+//
+//   Input:
+//     ratio: Indicates how an element with a viewBox providing a given aspect ratio.
+//       const: KRatio... (e.g. KRatioXMinYMin)
+//       any other type: interface{}
+//     meet: The meet or slice reference
+//       const: KMeetOrSliceReference... (e.g. KMeetOrSliceReferenceSlice)
+//       any other type: interface{}
+//
+// Because the aspect ratio of an SVG image is defined by the viewBox attribute, if this attribute isn't set, the
+// preserveAspectRatio attribute has no effect (with one exception, the <image> element, as described below).
+//
+// Português:
+//
+//  O atributo preserveAspectRatio indica como um elemento com uma viewBox fornecendo uma determinada proporção deve
+//  caber em uma viewport com uma proporção diferente.
+//
+//   Input:
+//     ratio: Indica como um elemento com uma viewBox fornece uma determinada proporção.
+//       const: KRatio... (ex. KRatioXMinYMin)
+//       qualquer outro tipo: interface{}
+//     meet: A referência de encontro ou fatia
+//       const: KMeetOrSliceReference... (ex. KMeetOrSliceReferenceSlice)
+//       qualquer outro tipo: interface{}
+//
+// Como a proporção de uma imagem SVG é definida pelo atributo viewBox, se esse atributo não estiver definido, o
+// atributo preserveAspectRatio não terá efeito (com uma exceção, o elemento <image>, conforme descrito abaixo).
+func (e *TagSvgGlobal) PreserveAspectRatio(ratio, meet interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := ratio.(Ratio); ok {
+		ratio = converted.String()
+	}
+
+	if converted, ok := meet.(MeetOrSliceReference); ok {
+		meet = converted.String()
+	}
+
+	e.selfElement.Call("setAttribute", "preserveAspectRatio", fmt.Sprintf("%v %v", ratio, meet))
 	return e
 }
 

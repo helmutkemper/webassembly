@@ -235,12 +235,7 @@ func (e *TagSvg) Init(id string) (ref *TagSvg) {
 
 	e.CreateElement(KTagSvg)
 	e.prepareStageReference()
-	//e.selfElement.Set("version", "1.1")
-	//e.ViewBox(minX, minY, width, height)
 	e.Id(id)
-
-	//e.Width(width)
-	//e.Height(height)
 
 	return e
 }

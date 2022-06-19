@@ -224,7 +224,10 @@ func (e *TagSvgGlobal) Additive(additive SvgAdditive) (ref *TagSvgGlobal) {
 //
 // English:
 //
-//  The alignment-baseline attribute specifies how an object is aligned with respect to its parent. This property specifies which baseline of this element is to be aligned with the corresponding baseline of the parent. For example, this allows alphabetic baselines in Roman text to stay aligned across font size changes. It defaults to the baseline with the same name as the computed value of the alignment-baseline property.
+//  The alignment-baseline attribute specifies how an object is aligned with respect to its parent. This property
+//  specifies which baseline of this element is to be aligned with the corresponding baseline of the parent.
+//  For example, this allows alphabetic baselines in Roman text to stay aligned across font size changes.
+//  It defaults to the baseline with the same name as the computed value of the alignment-baseline property.
 //
 //   Input:
 //     alignmentBaseline: specifies how an object is aligned with respect to its parent.
@@ -233,11 +236,17 @@ func (e *TagSvgGlobal) Additive(additive SvgAdditive) (ref *TagSvgGlobal) {
 //
 //   Notes:
 //     * As a presentation attribute alignment-baseline can be used as a CSS property.
-//     * SVG 2 introduces some changes to the definition of this property. In particular: the values auto, before-edge, and after-edge have been removed. For backwards compatibility, text-before-edge may be mapped to text-top and text-after-edge to text-bottom. Neither text-before-edge nor text-after-edge should be used with the vertical-align property.
+//     * SVG 2 introduces some changes to the definition of this property. In particular: the values auto, before-edge,
+//       and after-edge have been removed. For backwards compatibility, text-before-edge may be mapped to text-top and
+//       text-after-edge to text-bottom. Neither text-before-edge nor text-after-edge should be used with the
+//       vertical-align property.
 //
 // Português:
 //
-//  O atributo alinhamento-base especifica como um objeto é alinhado em relação ao seu pai. Esta propriedade especifica qual linha de base deste elemento deve ser alinhada com a linha de base correspondente do pai. Por exemplo, isso permite que as linhas de base alfabéticas em texto romano permaneçam alinhadas nas alterações de tamanho da fonte. O padrão é a linha de base com o mesmo nome que o valor calculado da propriedade de linha de base de alinhamento.
+//  O atributo alinhamento-base especifica como um objeto é alinhado em relação ao seu pai. Esta propriedade especifica
+//  qual linha de base deste elemento deve ser alinhada com a linha de base correspondente do pai. Por exemplo, isso
+//  permite que as linhas de base alfabéticas em texto romano permaneçam alinhadas nas alterações de tamanho da fonte.
+//  O padrão é a linha de base com o mesmo nome que o valor calculado da propriedade de linha de base de alinhamento.
 //
 //   Input:
 //     alignmentBaseline: especifica como um objeto é alinhado em relação ao seu pai.
@@ -246,7 +255,10 @@ func (e *TagSvgGlobal) Additive(additive SvgAdditive) (ref *TagSvgGlobal) {
 //
 //   Notas:
 //     * Como um atributo de apresentação, a linha de base de alinhamento pode ser usada como uma propriedade CSS.
-//     * O SVG 2 introduz algumas mudanças na definição desta propriedade. Em particular: os valores auto, before-edge e after-edge foram removidos. Para compatibilidade com versões anteriores, text-before-edge pode ser mapeado para text-top e text-after-edge para text-bottom. Nem text-before-edge nem text-after-edge devem ser usados com a propriedade vertical-align.
+//     * O SVG 2 introduz algumas mudanças na definição desta propriedade. Em particular: os valores auto, before-edge e
+//       after-edge foram removidos. Para compatibilidade com versões anteriores, text-before-edge pode ser mapeado para
+//       text-top e text-after-edge para text-bottom. Nem text-before-edge nem text-after-edge devem ser usados com a
+//       propriedade vertical-align.
 func (e *TagSvgGlobal) AlignmentBaseline(alignmentBaseline interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := alignmentBaseline.(SvgAlignmentBaseline); ok {
 		e.selfElement.Call("setAttribute", "alignment-baseline", converted.String())
@@ -5138,219 +5150,481 @@ func (e *TagSvgGlobal) VectorEffect(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+// ViewBox
+//
+// English:
+//
+// The viewBox attribute defines the position and dimension, in user space, of an SVG viewport.
+//
+//   Input:
+//     value: defines the position and dimension, in user space, of an SVG viewport
+//       []float64: ex. []float64{0.0, 0.0, 10.0, 10.0} = "0 0 10 10"
+//       any other type: interface{}
+//
+// The value of the viewBox attribute is a list of four numbers: min-x, min-y, width and height.
+// The numbers, which are separated by whitespace and/or a comma, specify a rectangle in user space which is mapped to
+// the bounds of the viewport established for the associated SVG element (not the browser viewport).
+//
+// Português:
+//
+// O atributo viewBox define a posição e a dimensão, no espaço do usuário, de uma viewport SVG.
+//
+//   Input:
+//     value: define a posição e dimensão, no espaço do usuário, de uma viewport SVG
+//       []float64: ex. []float64{0.0, 0.0, 10.0, 10.0} = "0 0 10 10"
+//       qualquer outro tipo: interface{}
+//
+// O valor do atributo viewBox é uma lista de quatro números: min-x, min-y, largura e altura.
+// Os números, que são separados por espaço em branco e ou vírgula, especificam um retângulo no espaço do usuário que é
+// mapeado para os limites da janela de visualização estabelecida para o elemento SVG associado (não a janela de
+// visualização do navegador).
+func (e *TagSvgGlobal) ViewBox(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
 
-// ================================================================================================================ Y
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "viewBox", valueStr[:length])
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "viewBox", value)
+	return e
+}
+
+// Visibility
+//
+// English:
+//
+// The visibility attribute lets you control the visibility of graphical elements.
+//
+//   Input:
+//     value: lets you control the visibility
+//       const: KSvgVisibility... (e.g. KSvgVisibilityHidden)
+//       any other type: interface{}
+//
+// With a value of hidden or collapse the current graphics element is invisible.
+//
+// Depending on the value of attribute pointer-events, graphics elements which have their visibility attribute set to
+// hidden still might receive events.
+//
+//   Notes:
+//     * If the visibility attribute is set to hidden on a text element, then the text is invisible but still takes up
+//       space in text layout calculations;
+//     * As a presentation attribute, visibility can be used as a CSS property. See the css visibility property for
+//       more information.
+//
+// Português:
+//
+// O atributo de visibilidade permite controlar a visibilidade dos elementos gráficos.
+//
+//   Entrada:
+//     value: permite controlar a visibilidade
+//       const: KSvgVisibility... (e.g. KSvgVisibilityHidden)
+//       qualquer outro tipo: interface{}
+//
+// Com um valor oculto ou recolhido, o elemento gráfico atual fica invisível.
+//
+// Dependendo do valor do atributo pointer-events, os elementos gráficos que têm seu atributo de visibilidade definido
+// como oculto ainda podem receber eventos.
+//
+//   Notas:
+//     * Se o atributo de visibilidade estiver definido como oculto em um elemento de texto, o texto ficará invisível,
+//       mas ainda ocupará espaço nos cálculos de layout de texto;
+//     * Como atributo de apresentação, a visibilidade pode ser usada como propriedade CSS. Consulte a propriedade de
+//       visibilidade do CSS para obter mais informações.
+func (e *TagSvgGlobal) Visibility(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgVisibility); ok {
+		e.selfElement.Call("setAttribute", "visibility", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "visibility", value)
+	return e
+}
+
+// Width
+//
+// English:
+//
+// The width attribute defines the horizontal length of an element in the user coordinate system.
+//
+//   Input:
+//     value: the horizontal length of an element
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo largura define o comprimento horizontal de um elemento no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: o comprimento horizontal de um elemento
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Width(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "width", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "width", value)
+	return e
+}
+
+// WordSpacing
+//
+// English:
+//
+// The word-spacing attribute specifies spacing behavior between words.
+//
+//   Input:
+//     value: specifies spacing behavior between words
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// If a <length> is provided without a unit identifier (e.g. an unqualified number such as 128), the browser processes
+// the <length> as a width value in the current user coordinate system.
+//
+// If a <length> is provided with one of the unit identifiers (e.g. .25em or 1%), then the browser converts the <length>
+// into a corresponding value in the current user coordinate system.
+//
+//   Notes:
+//     * As a presentation attribute, word-spacing can be used as a CSS property. See the css word-spacing property for
+//       more information.
+//
+// Português:
+//
+// O atributo word-spacing especifica o comportamento do espaçamento entre as palavras.
+//
+//   Entrada:
+//     value: especifica o comportamento de espaçamento entre palavras
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+//
+// Se um <comprimento> for fornecido sem um identificador de unidade (por exemplo, um número não qualificado como 128),
+// o navegador processará o <comprimento> como um valor de largura no sistema de coordenadas do usuário atual.
+//
+// Se um <comprimento> for fornecido com um dos identificadores de unidade (por exemplo, .25em ou 1%), o navegador
+// converterá o <comprimento> em um valor correspondente no sistema de coordenadas do usuário atual.
+//
+//   Notas:
+//     * Como atributo de apresentação, o espaçamento entre palavras pode ser usado como uma propriedade CSS.
+//       Consulte a propriedade de espaçamento entre palavras do CSS para obter mais informações.
+func (e *TagSvgGlobal) WordSpacing(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "word-spacing", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "word-spacing", value)
+	return e
+}
+
+// WritingMode
+//
+// English:
+//
+// The writing-mode attribute specifies whether the initial inline-progression-direction for a <text> element shall be
+// left-to-right, right-to-left, or top-to-bottom. The writing-mode attribute applies only to <text> elements;
+// the attribute is ignored for <tspan>, <tref>, <altGlyph> and <textPath> sub-elements. (Note that the
+// inline-progression-direction can change within a <text> element due to the Unicode bidirectional algorithm and
+// properties direction and unicode-bidi.)
+//
+//   Input:
+//     value: specifies whether the initial inline-progression-direction
+//       const: KSvgWritingMode... (e.g. KSvgWritingModeHorizontalTb)
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute, writing-mode can be used as a CSS property. See the CSS writing-mode property for
+//       more information.
+//
+// Português:
+//
+// O atributo write-mode especifica se a direção de progressão inline inicial para um elemento <text> deve ser da
+// esquerda para a direita, da direita para a esquerda ou de cima para baixo. O atributo write-mode aplica-se apenas a
+// elementos <text>; o atributo é ignorado para os subelementos <tspan>, <tref>, <altGlyph> e <textPath>.
+// (Observe que a direção de progressão em linha pode mudar dentro de um elemento <text> devido ao algoritmo
+// bidirecional Unicode e direção de propriedades e unicode-bidi.)
+//
+//   Entrada:
+//     value: especifica se a direção de progressão em linha inicial
+//       const: KSvgWritingMode... (ex. KSvgWritingModeHorizontalTb)
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como atributo de apresentação, o modo de escrita pode ser usado como uma propriedade CSS. Consulte a
+//       propriedade do modo de gravação CSS para obter mais informações.
+func (e *TagSvgGlobal) WritingMode(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgWritingMode); ok {
+		e.selfElement.Call("setAttribute", "writing-mode", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "writing-mode", value)
+	return e
+}
+
+// X
+//
+// English:
+//
+// The x attribute defines an x-axis coordinate in the user coordinate system.
+//
+//   Input:
+//     value: defines an x-axis coordinate
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo x define uma coordenada do eixo x no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: define uma coordenada do eixo x
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) X(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "x", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 3
+
+		e.selfElement.Call("setAttribute", "x", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "x", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "x", value)
+	return e
+}
+
+// X1
+//
+// English:
+//
+// The x1 attribute is used to specify the first x-coordinate for drawing an SVG element that requires more than one
+// coordinate.
+//
+//   Input:
+//     value: specify the first x-coordinate
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Elements that only need one coordinate use the x attribute instead.
+//
+// Português:
+//
+// O atributo x1 é usado para especificar a primeira coordenada x para desenhar um elemento SVG que requer mais de uma
+// coordenada.
+//
+//   Input:
+//     value: especifique a primeira coordenada x
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+//
+// Elementos que precisam apenas de uma coordenada usam o atributo x.
+func (e *TagSvgGlobal) X1(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "x1", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "x1", value)
+	return e
+}
+
+// X2
+//
+// English:
+//
+// The x2 attribute is used to specify the second x-coordinate for drawing an SVG element that requires more than one
+// coordinate. Elements that only need one coordinate use the x attribute instead.
+//
+//   Input:
+//     value: specify the second x-coordinate
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo x2 é usado para especificar a segunda coordenada x para desenhar um elemento SVG que requer mais de uma
+// coordenada. Elementos que precisam apenas de uma coordenada usam o atributo x.
+//
+//   Entrada:
+//     value: especifique a segunda coordenada x
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) X2(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "x2", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "x2", value)
+	return e
+}
+
+// XChannelSelector
+//
+// English:
+//
+// The xChannelSelector attribute indicates which color channel from in2 to use to displace the pixels in in along the
+// x-axis.
+//
+//   Input:
+//     value: indicates which color channel from in2
+//       const: KSvgChannelSelector... (e.g. KSvgChannelSelectorR)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo xChannelSelector indica qual canal de cor de in2 usar para deslocar os pixels ao longo do eixo x.
+//
+//   Entrada:
+//     value: indica qual canal de cor da in2
+//       const: KSvgChannelSelector... (ex. KSvgChannelSelectorR)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) XChannelSelector(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgChannelSelector); ok {
+		e.selfElement.Call("setAttribute", "xChannelSelector", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "xChannelSelector", value)
+	return e
+}
+
+// XmlLang
+//
+// English:
+//
+// The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
+// particular elements.
+//
+//   Input:
+//     value: specifies the primary language
+//       const: KLanguage... (e.g. KLanguageEnglish)
+//       any other type: interface{}
+//
+// It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
+// contains.
+//
+// There is also a lang attribute (without namespace). If both of them are defined, the one with namespace is used and
+// the one without is ignored.
+//
+// Português:
+//
+// O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
+// elementos específicos.
+//
+//   Entrada:
+//     value: especifica o idioma principal
+//       const: KLanguage... (e.g. KLanguagePortuguese)
+//       qualquer outro tipo: interface{}
+//
+// É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
+// contém.
+//
+// Há também um atributo lang (sem namespace). Se ambos estiverem definidos, aquele com namespace será usado e o sem
+// namespace será ignorado.
+func (e *TagSvgGlobal) XmlLang(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(Language); ok {
+		e.selfElement.Call("setAttribute", "xml:lang", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "xml:lang", value)
+	return e
+}
+
 // Y
 //
 // English:
 //
-//	The y attribute defines a y-axis coordinate in the user coordinate system.
+// The y attribute defines an y-axis coordinate in the user coordinate system.
 //
-//	Input:
-//	   y: defines a y-axis coordinate in the user coordinate system.
-//		 feBlend: For <feBlend>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		   feColorMatrix: For <feColorMatrix>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feColorMatrix: For <feColorMatrix>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feBlend: For <feBlend>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feColorMatrix: For <feColorMatrix>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feComponentTransfer: For <feComponentTransfer>, y defines the minimum y coordinate for the rendering
-//	   	   area of the primitive.
-//		 feComposite: For <feComposite>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feConvolveMatrix: For <feConvolveMatrix>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feDiffuseLighting: For <feDiffuseLighting>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feDisplacementMap: For <feDisplacementMap>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feDropShadow: For <feDropShadow>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feFlood: For <feFlood>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feFuncA: For <feFuncA>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feFuncB: For <feFuncB>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feFuncG: For <feFuncG>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feFuncR: For <feFuncR>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feGaussianBlur: For <feGaussianBlur>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feImage: For <feImage>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feMerge: For <feMerge>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feMergeNode: For <feMergeNode>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feMorphology: For <feMorphology>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feOffset: For <feOffset>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 fePointLight: For <fePointLight>, y defines the y location for the light source in the coordinate system
-//	  	   defined by the primitiveUnits attribute on the <filter> element.
-//		 feSpecularLighting: For <feSpecularLighting>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feSpotLight: For <feSpotLight>, y defines the y location for the light source in the coordinate system defined
-//		   by the primitiveUnits attribute on the <filter> element.
-//		 feTile: For <feMerge>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 feTurbulence: For <feTurbulence>, y defines the minimum y coordinate for the rendering area of the primitive.
-//		 filter: For <filter>, y defines the y coordinate of the upper left corner for the rendering area of the filter.
-//		 foreignObject: For <foreignObject>, y defines the y coordinate of the upper left corner of its viewport.
-//		 image: For <image>, y defines the y coordinate of the upper left corner of the image.
-//		 mask: For <mask>, y defines the y coordinate of the upper left corner of its area of effect. The exact effect
-//		   of this attribute is influenced by the maskUnits attribute.
-//		 pattern: For <pattern>, y defines the y coordinate of the upper left corner of the tile pattern. The exact
-//		   effect of this attribute is influenced by the patternUnits and patternTransform attributes.
-//		 rect: For <rect>, y defines the y coordinate of the upper left corner of the shape.
-//		 svg: For <svg>, y defines the y coordinate of the upper left corner of its viewport.
-//		 text: For <text>, if it contain a single value, y defines the y coordinate on where the content text position
-//		   must be placed. The content text position is usually a point on the baseline of the first line of text.
-//		   The exact content text position is influenced by some properties like text-anchor, or direction.
-//		   If there are multiple values, y defines the y coordinate of each individual glyph from the text.
-//		   If there are less values than glyphs, the remaining glyphs are placed in the continuity of the last
-//		   positioned glyph. If there are more values than glyphs, extra values are ignored.
-//		 tspan: For <tspan>, if it contain a single value, y defines the y coordinate on where the content text position
-//		   must be placed. The content text position is usually a point on the baseline of the first line of text.
-//		   The exact content text position is influenced by some properties like text-anchor, or direction.
-//		   If there are multiple values, y defines the y coordinate of each individual glyph from the text.
-//		   If there are less values than glyphs, the remaining glyphs are placed in the continuity of the last positioned
-//		   glyph. If there are more values than glyphs, extra values are ignored.
-//		 use: For <use>, y defines the y coordinate of the upper left corner of the referenced element.
+//   Input:
+//     value: defines an y-axis coordinate
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo y define uma coordenada do eixo y no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: define uma coordenada do eixo y
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Y(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
+		}
 
-// Portuguese
-//	O atributo y define uma coordenada do eixo y no sistema de coordenadas do usuário.
-//
-//	Entrada:
-//	   y: define uma coordenada do eixo y no sistema de coordenadas do usuário.
-//	     feBlend: Para <feBlend>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feColorMatrix: Para <feColorMatrix>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feColorMatrix: Para <feColorMatrix>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feBlend: Para <feBlend>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feColorMatrix: Para <feColorMatrix>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feComponentTransfer: Para <feComponentTransfer>, y define a coordenada y mínima para a renderização
-//	       área do primitivo.
-//	     feComposite: Para <feComposite>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feConvolveMatrix: Para <feConvolveMatrix>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feDiffuseLighting: Para <feDiffuseLighting>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feDisplacementMap: Para <feDisplacementMap>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feDropShadow: Para <feDropShadow>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feFlood: Para <feFlood>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feFuncA: Para <feFuncA>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feFuncB: Para <feFuncB>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feFuncG: Para <feFuncG>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feFuncR: Para <feFuncR>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feGaussianBlur: Para <feGaussianBlur>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feImage: Para <feImage>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feMerge: Para <feMerge>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feMergeNode: Para <feMergeNode>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feMorphology: Para <feMorphology>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feOffset: Para <feOffset>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     fePointLight: Para <fePointLight>, y define a localização y para a fonte de luz no sistema de coordenadas
-//	       definido pelo atributo primitivaUnits no elemento <filter>.
-//	     feSpecularLighting: Para <feSpecularLighting>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feSpotLight: Para <feSpotLight>, y define a localização y para a fonte de luz no sistema de coordenadas definido
-//	       pelo atributo primitivoUnits no elemento <filter>.
-//	     feTile: Para <feMerge>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     feTurbulence: Para <feTurbulence>, y define a coordenada y mínima para a área de renderização da primitiva.
-//	     filter: Para <filter>, y define a coordenada y do canto superior esquerdo para a área de renderização do filtro.
-//	     ForeignObject: Para <foreignObject>, y define a coordenada y do canto superior esquerdo de sua viewport.
-//	     image: Para <image>, y define a coordenada y do canto superior esquerdo da imagem.
-//	     mask: Para <mask>, y define a coordenada y do canto superior esquerdo de sua área de efeito. O efeito exato
-//	     deste atributo é influenciado pelo atributo maskUnits.
-//	     pattern: Para <pattern>, y define a coordenada y do canto superior esquerdo do padrão de ladrilhos. O exato
-//	       o efeito desse atributo é influenciado pelos atributos patternUnits e patternTransform.
-//	     rect: Para <rect>, y define a coordenada y do canto superior esquerdo da forma.
-//	     svg: Para <svg>, y define a coordenada y do canto superior esquerdo de sua viewport.
-//	     text: Para <text>, se contiver um único valor, y define a coordenada y em que a posição do texto do conteúdo
-//	       deve ser colocado. A posição do texto do conteúdo geralmente é um ponto na linha de base da primeira linha do texto.
-//	       A posição exata do texto do conteúdo é influenciada por algumas propriedades, como âncora de texto ou direção.
-//	       Se houver vários valores, y define a coordenada y de cada glifo individual do texto.
-//	       Se houver menos valores que glifos, os glifos restantes são colocados na continuidade do último
-//	       glifo posicionado. Se houver mais valores do que glifos, os valores extras serão ignorados.
-//	     tspan: Para <tspan>, se contiver um único valor, y define a coordenada y em que a posição do texto do conteúdo
-//	       deve ser colocado. A posição do texto do conteúdo geralmente é um ponto na linha de base da primeira linha do texto.
-//	       A posição exata do texto do conteúdo é influenciada por algumas propriedades, como âncora de texto ou direção.
-//	       Se houver vários valores, y define a coordenada y de cada glifo individual do texto.
-//	       Se houver menos valores que glifos, os glifos restantes são colocados na continuidade do último posicionado
-//	     glifo. Se houver mais valores do que glifos, os valores extras serão ignorados.
-//	     use: Para <use>, y define a coordenada y do canto superior esquerdo do elemento referenciado.
-//
-func (e *TagSvgGlobal) Y(y interface{}) (ref *TagSvgGlobal) {
-	if converted, ok := y.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "y", converted.String())
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "y", valueStr[:length])
 		return e
 	}
 
-	if converted, ok := y.(time.Time); ok {
-		e.selfElement.Call("setAttribute", "y", converted.String())
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 3
+
+		e.selfElement.Call("setAttribute", "y", valueStr[:length])
 		return e
 	}
 
-	e.selfElement.Call("setAttribute", "y", y)
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "y", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "y", value)
 	return e
 }
 
@@ -5358,38 +5632,35 @@ func (e *TagSvgGlobal) Y(y interface{}) (ref *TagSvgGlobal) {
 //
 // English:
 //
-//	The y1 attribute is used to specify the first y-coordinate for drawing an SVG element that requires more than one
-//	coordinate. Elements that only need one coordinate use the y attribute instead.
+// The y1 attribute is used to specify the first y-coordinate for drawing an SVG element that requires more than one
+// coordinate.
 //
-//	Input:
-//	    y1: defines the y1 attribute for the first y-coordinate for drawing an SVG element that requires more than one coordinate
-//		  line: For <line>, y1 defines the y coordinate of the starting point of the line.
-//		  linearGradient: For <linearGradient>, y1 defines the y coordinate of the starting point of the gradient vector
-//		    used to map the gradient stop values. The exact behavior of this attribute is influenced by the gradientUnits attributes
+//   Input:
+//     value: specify the first y-coordinate
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
 //
-// Portuguese
+// Elements that only need one coordinate use the y attribute instead.
 //
-//	O atributo y1 é usado para especificar a primeira coordenada y para desenhar um elemento SVG que requer mais de uma
-//	coordenada. Elementos que precisam apenas de uma coordenada usam o atributo y.
+// Português:
 //
-//	Entrada:
-//	   y1: define o atributo y1 para a primeira coordenada y para desenhar um elemento SVG que requer mais de uma coordenada
-//	     line: Para <line>, y1 define a coordenada y do ponto inicial da linha.
-//	     linearGradient: Para <linearGradient>, y1 define a coordenada y do ponto inicial do vetor gradiente
-//	       usado para mapear os valores de parada de gradiente. O comportamento exato deste atributo é influenciado pelos atributos gradientUnits
+// O atributo y1 é usado para especificar a primeira coordenada y para desenhar um elemento SVG que requer mais de uma
+// coordenada.
 //
-func (e *TagSvgGlobal) Y1(y1 interface{}) (ref *TagSvgGlobal) {
-	if converted, ok := y1.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "y1", converted.String())
+//   Input:
+//     value: especifique a primeira coordenada y
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+//
+// Elementos que precisam apenas de uma coordenada usam o atributo y.
+func (e *TagSvgGlobal) Y1(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "y1", p)
 		return e
 	}
 
-	if converted, ok := y1.(time.Time); ok {
-		e.selfElement.Call("setAttribute", "y1", converted.String())
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "y1", y1)
+	e.selfElement.Call("setAttribute", "y1", value)
 	return e
 }
 
@@ -5397,130 +5668,84 @@ func (e *TagSvgGlobal) Y1(y1 interface{}) (ref *TagSvgGlobal) {
 //
 // English:
 //
-//	The y2 attribute is used to specify the second y-coordinate for drawing an SVG element that requires more than
-//	one coordinate. Elements that only need one coordinate use the y attribute instead.
+// The y2 attribute is used to specify the second y-coordinate for drawing an SVG element that requires more than one
+// coordinate.
 //
-//	Input:
-//	    y2: defines the y2 attribute for the first y-coordinate for drawing an SVG element that requires more than one coordinate
-//		  line: For <line>, y2 defines the y coordinate of the ending point of the line.
-//		  linearGradient: For <linearGradient>, y2 defines the y coordinate of the ending point of the gradient vector
-//		    used to map the gradient stop values. The exact behavior of this attribute is influenced by the gradientUnits attributes
+//   Input:
+//     value: specify the second x-coordinate
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
 //
-// Portuguese
+// Elements that only need one coordinate use the x attribute instead.
 //
-//	O atributo y2 é usado para especificar a primeira coordenada y para desenhar um elemento SVG que requer mais de uma
-//	coordenada. Elementos que precisam apenas de uma coordenada usam o atributo y.
+// Português:
 //
-//	Entrada:
-//	   y2: define o atributo y2 para a primeira coordenada y para desenhar um elemento SVG que requer mais de uma coordenada
-//	     line: Para <line>, y2 define a coordenada y do ponto inicial da linha.
-//	     linearGradient: Para <linearGradient>, y2 define a coordenada y do ponto inicial do vetor gradiente
-//	       usado para mapear os valores de parada de gradiente. O comportamento exato deste atributo é influenciado pelos atributos gradientUnits
+// O atributo y2 é usado para especificar a segunda coordenada y para desenhar um elemento SVG que requer mais de uma
+// coordenada.
 //
-func (e *TagSvgGlobal) Y2(y2 interface{}) (ref *TagSvgGlobal) {
-	if converted, ok := y2.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "y2", converted.String())
+//   Entrada:
+//     value: especifique a segunda coordenada x
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+//
+// Elementos que precisam apenas de uma coordenada usam o atributo y.
+func (e *TagSvgGlobal) Y2(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "y2", p)
 		return e
 	}
 
-	if converted, ok := y2.(time.Time); ok {
-		e.selfElement.Call("setAttribute", "y2", converted.String())
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "y2", y2)
+	e.selfElement.Call("setAttribute", "y2", value)
 	return e
 }
 
-// yChannelSelector
+// YChannelSelector
 //
 // English:
 //
-//	The yChannelSelector attribute indicates which color channel from in2 to use to displace the pixels in in
-//	along the y-axis.
+// The yChannelSelector attribute indicates which color channel from in2 to use to displace the pixels in along the
+// y-axis.
 //
-//	Input:
-//	    yChannelSelector: attribute indicates which color channel from in2 to use to displace the pixels in in along the y-axis.
-//		  R: This keyword specifies that the red color channel of the input image defined in in2 will be used to displace
-//		    the pixels of the input image defined in in along the y-axis.
-//		  G: This keyword specifies that the green color channel of the input image defined in in2 will be used to
-//		    displace the pixels of the input image defined in in along the y-axis.
-//		  A: This keyword specifies that the alpha channel of the input image defined in in2 will be used to displace
-//		    the pixels of the input image defined in in along the y-axis.
+//   Input:
+//     value: indicates which color channel from in2
+//       const: KSvgChannelSelector... (e.g. KSvgChannelSelectorR)
+//       any other type: interface{}
 //
-// Portuguese
+// Português:
 //
-//	O atributo yChannelSelector indica qual canal de cor de in2 usar para deslocar os pixels em
-//	ao longo do eixo y.
+// O atributo yChannelSelector indica qual canal de cor de in2 usar para deslocar os pixels ao longo do eixo y.
 //
-//	Entrada:
-//	    yChannelSelector: atributo indica qual canal de cor de in2 usar para deslocar os pixels ao longo do eixo y.
-//	      R: Esta palavra-chave especifica que o canal de cor vermelha da imagem de entrada definida em in2 será usado para deslocar
-//	        os pixels da imagem de entrada definidos ao longo do eixo y.
-//	      G: Esta palavra-chave especifica que o canal de cor verde da imagem de entrada definida em in2 será usado para
-//	        desloca os pixels da imagem de entrada definida ao longo do eixo y.
-//	      R: Esta palavra-chave especifica que o canal alfa da imagem de entrada definida em in2 será usado para deslocar
-//	        os pixels da imagem de entrada definidos ao longo do eixo y.
-//
-func (e *TagSvgGlobal) YchannelSelector(yChannelSelector interface{}) (ref *TagSvgGlobal) {
-	if converted, ok := yChannelSelector.(time.Duration); ok {
+//   Entrada:
+//     value: indica qual canal de cor da in2
+//       const: KSvgChannelSelector... (ex. KSvgChannelSelectorR)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) YChannelSelector(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgChannelSelector); ok {
 		e.selfElement.Call("setAttribute", "yChannelSelector", converted.String())
 		return e
 	}
 
-	if converted, ok := yChannelSelector.(time.Time); ok {
-		e.selfElement.Call("setAttribute", "yChannelSelector", converted.String())
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "yChannelSelector", yChannelSelector)
+	e.selfElement.Call("setAttribute", "yChannelSelector", value)
 	return e
 }
 
-// ================================================================================================================ Z
 // Z
 //
 // English:
 //
-//	The z attribute defines the location along the z-axis for a light source in the coordinate system established by
-//	the primitiveUnits attribute on the <filter> element, assuming that, in the initial coordinate system, the positive
-//	z-axis comes out towards the person viewing the content and assuming that one unit along the z-axis equals one unit
-//	in x and y.
+// The z attribute defines the location along the z-axis for a light source in the coordinate system established by the
+// primitiveUnits attribute on the <filter> element, assuming that, in the initial coordinate system, the positive
+// z-axis comes out towards the person viewing the content and assuming that one unit along the z-axis equals one unit
+// in x and y.
 //
-//	Input:
-//	   z: defines the location along the z-axis for a light source in the coordinate system.
-//		 fePointLight: For <fePointLight>, z defines the location along the z-axis for the light source in the
-//		   coordinate system established by the primitiveUnits attribute on the <filter> element.
-//		 feSpotLight: For <feSpotLight>, z defines the location along the z-axis for the light source in the coordinate
-//		   system established by the primitiveUnits attribute on the <filter> element.
+// Português:
 //
-// Portuguese
-//
-//	O atributo z define a localização ao longo do eixo z para uma fonte de luz no sistema de coordenadas estabelecido por
-//	o atributo primitivoUnits no elemento <filter>, assumindo que, no sistema de coordenadas inicial, o valor positivo
-//	O eixo z sai em direção à pessoa visualizando o conteúdo e assumindo que uma unidade ao longo do eixo z é igual a uma unidade
-//	em x e y.
-//
-//	Entrada:
-//
-//		z: define a localização ao longo do eixo z para uma fonte de luz no sistema de coordenadas.
-//		  fePointLight: Para <fePointLight>, z define a localização ao longo do eixo z para a fonte de luz no
-//			sistema de coordenadas estabelecido pelo atributo primitivaUnits no elemento <filter>.
-//		  feSpotLight: Para <feSpotLight>, z define a localização ao longo do eixo z para a fonte de luz na coordenada
-//		    sistema estabelecido pelo atributo primitivaUnits no elemento <filter>.
-//
-//
-func (e *TagSvgGlobal) Z(z interface{}) (ref *TagSvgGlobal) {
-	if converted, ok := z.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "z", converted.String())
-		return e
-	}
-
-	if converted, ok := z.(time.Time); ok {
-		e.selfElement.Call("setAttribute", "z", converted.String())
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "z", z)
+// O atributo z define a localização ao longo do eixo z para uma fonte de luz no sistema de coordenadas estabelecido
+// pelo atributo primitivoUnits no elemento <filter>, assumindo que, no sistema de coordenadas inicial, o eixo z
+// positivo sai em direção à pessoa visualizar o conteúdo e assumir que uma unidade ao longo do eixo z é igual a uma
+// unidade em x e y.
+func (e *TagSvgGlobal) Z(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "z", value)
 	return e
 }

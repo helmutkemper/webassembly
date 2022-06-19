@@ -11,4 +11,4 @@
 
 https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute#animation_attributes
 
-clip-path
+https://github.com/tetratelabs/wazero

@@ -1,6 +1,7 @@
 package html
 
 import (
+	"fmt"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
@@ -4955,6 +4956,185 @@ func (e *TagSvgGlobal) Transform(value interface{}) (ref *TagSvgGlobal) {
 	}
 
 	e.selfElement.Call("setAttribute", "transform", value)
+	return e
+}
+
+// TransformOrigin #global
+//
+// English:
+//
+// The transform-origin SVG attribute sets the origin for an item's transformations.
+//
+//   Input:
+//     valueA, valueB: the origin for an item's transformations
+//       const: KSvgTransformOrigin... (e.g. KSvgTransformOriginLeft)
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute in SVG, transform-origin corresponds in syntax and behavior to the transform-origin
+//       property in CSS, and can be used as CSS property to style SVG. See the CSS transform-origin property for more
+//       information.
+//
+// Português:
+//
+// O atributo SVG transform-origin define a origem das transformações de um item.
+//
+//   Entrada:
+//     valueA, valueB: a origem das transformações de um item
+//       const: KSvgTransformOrigin... (ex. KSvgTransformOriginLeft)
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como um atributo de apresentação em SVG, transform-origin corresponde em sintaxe e comportamento à propriedade
+//       transform-origin em CSS e pode ser usado como propriedade CSS para estilizar SVG. Consulte a propriedade
+//       transform-origin do CSS para obter mais informações.
+func (e *TagSvgGlobal) TransformOrigin(valueA, valueB interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := valueA.(float32); ok {
+		valueA = strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+	}
+
+	if converted, ok := valueB.(float32); ok {
+		valueB = strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+	}
+
+	if converted, ok := valueA.(SvgTransformOrigin); ok {
+		valueA = converted.String()
+	}
+
+	if converted, ok := valueB.(SvgTransformOrigin); ok {
+		valueB = converted.String()
+	}
+
+	e.selfElement.Call("setAttribute", "transform-origin", fmt.Sprintf("%v %v", valueA, valueB))
+	return e
+}
+
+// fixme: type tem que ser feito para cada elemento
+
+// UnderlinePosition
+//
+// English:
+//
+// The underline-position attribute represents the ideal vertical position of the underline. The underline position is
+// expressed in the font's coordinate system.
+//
+// Português:
+//
+// O atributo underline-position representa a posição vertical ideal do sublinhado. A posição do sublinhado é expressa
+// no sistema de coordenadas da fonte.
+func (e *TagSvgGlobal) UnderlinePosition(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "underline-position", value)
+	return e
+}
+
+// UnderlineThickness
+//
+// English:
+//
+// The underline-thickness attribute represents the ideal thickness of the underline. The underline thickness is
+// expressed in the font's coordinate system.
+//
+// Português:
+//
+// O atributo underline-thickness representa a espessura ideal do sublinhado. A espessura do sublinhado é expressa no
+// sistema de coordenadas da fonte.
+func (e *TagSvgGlobal) UnderlineThickness(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "underline-thickness", value)
+	return e
+}
+
+// UnicodeBidi
+//
+// English:
+//
+// The unicode-bidi attribute specifies how the accumulation of the background image is managed.
+//
+//   Input:
+//     value: specifies how the accumulation of the background image is managed
+//       const: KSvgTransformOrigin... (e.g. KSvgTransformOriginLeft)
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute, unicode-bidi can be used as a CSS property. See the CSS unicode-bidi property for
+//       more information.
+//
+// Português:
+//
+// O atributo unicode-bidi especifica como o acúmulo da imagem de fundo é gerenciado.
+//
+//   Entrada:
+//     value: especifica como o acúmulo da imagem de fundo é gerenciado
+//       const: KSvgTransformOrigin... (e.g. KSvgTransformOriginLeft)
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como atributo de apresentação, o unicode-bidi pode ser usado como uma propriedade CSS. Consulte a propriedade
+//       CSS unicode-bidi para obter mais informações.
+func (e *TagSvgGlobal) UnicodeBidi(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgTransformOrigin); ok {
+		e.selfElement.Call("setAttribute", "unicode-bidi", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "unicode-bidi", value)
+	return e
+}
+
+// Values
+//
+// English:
+//
+// The values attribute has different meanings, depending upon the context where it's used, either it defines a sequence
+// of values used over the course of an animation, or it's a list of numbers for a color matrix, which is interpreted
+// differently depending on the type of color change to be performed.
+//
+// Português:
+//
+// O atributo values tem significados diferentes, dependendo do contexto em que é usado, ou define uma sequência de
+// valores usados ao longo de uma animação, ou é uma lista de números para uma matriz de cores, que é interpretada de
+// forma diferente dependendo do tipo de mudança de cor a ser executada.
+func (e *TagSvgGlobal) Values(value interface{}) (ref *TagSvgGlobal) {
+	e.selfElement.Call("setAttribute", "values", value)
+	return e
+}
+
+// VectorEffect
+//
+// English:
+//
+// The vector-effect property specifies the vector effect to use when drawing an object.
+//
+//   Input:
+//     value: specifies the vector effect
+//       const: KSvgVectorEffect... (e.g. KSvgVectorEffectNonScalingStroke)
+//
+// Vector effects are applied before any of the other compositing operations, i.e. filters, masks and clips.
+//
+//   Notes:
+//     * As a presentation attribute, vector-effect can be used as a CSS property.
+//
+// Português:
+//
+// A propriedade vector-effect especifica o efeito vetorial a ser usado ao desenhar um objeto.
+//
+//   Entrada:
+//     value: especifica o efeito vetorial
+//       const: KSvgVectorEffect... (ex. KSvgVectorEffectNonScalingStroke)
+//
+// Os efeitos vetoriais são aplicados antes de qualquer outra operação de composição, ou seja, filtros, máscaras e
+// clipes.
+//
+//   Notas:
+//     * Como atributo de apresentação, o efeito vetorial pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) VectorEffect(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgVectorEffect); ok {
+		e.selfElement.Call("setAttribute", "vector-effect", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "vector-effect", value)
 	return e
 }
 

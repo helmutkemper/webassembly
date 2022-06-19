@@ -228,7 +228,7 @@ func (e *TagSvgGlobal) Additive(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// AlignmentBaseline
+// AlignmentBaseline #presentation
 //
 // English:
 //
@@ -366,7 +366,7 @@ func (e *TagSvgGlobal) BaseFrequency(baseFrequency float64) (ref *TagSvgGlobal) 
 	return e
 }
 
-// BaselineShift
+// BaselineShift #presentation
 //
 // English:
 //
@@ -633,7 +633,7 @@ func (e *TagSvgGlobal) CalcMode(calcMode SvgCalcMode) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Class #global
+// Class #styling
 //
 // English:
 //
@@ -660,8 +660,6 @@ func (e *TagSvgGlobal) CalcMode(calcMode SvgCalcMode) (ref *TagSvgGlobal) {
 //   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
 //     elementos.
 //   * Para uso geral pelo navegador.
-//
-//todo: #global
 func (e *TagSvgGlobal) Class(class string) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
@@ -694,7 +692,7 @@ func (e *TagSvgGlobal) ClipPathUnits(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// ClipPath
+// ClipPath #presentation
 //
 // English:
 //
@@ -716,7 +714,7 @@ func (e *TagSvgGlobal) ClipPath(clipPath string) (ref *TagSvgGlobal) {
 	return e
 }
 
-// ClipRule
+// ClipRule #presentation
 //
 // English:
 //
@@ -747,7 +745,7 @@ func (e *TagSvgGlobal) ClipRule(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Color
+// Color #presentation
 //
 // English:
 //
@@ -788,7 +786,7 @@ func (e *TagSvgGlobal) Color(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// ColorInterpolation
+// ColorInterpolation #presentation
 //
 // English:
 //
@@ -839,7 +837,7 @@ func (e *TagSvgGlobal) ColorInterpolation(value interface{}) (ref *TagSvgGlobal)
 	return e
 }
 
-// ColorInterpolationFilters
+// ColorInterpolationFilters #presentation
 //
 // English:
 //
@@ -898,7 +896,7 @@ func (e *TagSvgGlobal) CrossOrigin(crossOrigin SvgCrossOrigin) (ref *TagSvgGloba
 	return e
 }
 
-// Cursor
+// Cursor #presentation
 //
 // English:
 //
@@ -952,7 +950,7 @@ func (e *TagSvgGlobal) Cy(cy float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// D
+// D #presentation
 //
 // English:
 //
@@ -1002,7 +1000,7 @@ func (e *TagSvgGlobal) DiffuseConstant(diffuseConstant float64) (ref *TagSvgGlob
 	return e
 }
 
-// Direction
+// Direction #presentation
 //
 // English:
 //
@@ -1047,7 +1045,7 @@ func (e *TagSvgGlobal) Direction(direction SvgDirection) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Display
+// Display #presentation
 //
 // English:
 //
@@ -1152,7 +1150,7 @@ func (e *TagSvgGlobal) Divisor(divisor float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// DominantBaseline
+// DominantBaseline #presentation
 //
 // English:
 //
@@ -1448,7 +1446,7 @@ func (e *TagSvgGlobal) Exponent(exponent float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Fill
+// Fill #presentation
 //
 // English:
 //
@@ -1473,7 +1471,7 @@ func (e *TagSvgGlobal) Fill(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// FillOpacity
+// FillOpacity #presentation
 //
 // English:
 //
@@ -1495,7 +1493,7 @@ func (e *TagSvgGlobal) FillOpacity(fillOpacity float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// FillRule
+// FillRule #presentation
 //
 // English:
 //
@@ -1517,7 +1515,7 @@ func (e *TagSvgGlobal) FillRule(fillRule SvgFillRule) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Filter
+// Filter #presentation
 //
 // English:
 //
@@ -1554,7 +1552,7 @@ func (e *TagSvgGlobal) FilterUnits(filterUnits SvgFilterUnits) (ref *TagSvgGloba
 	return e
 }
 
-// FloodColor
+// FloodColor #presentation
 //
 // English:
 //
@@ -1579,7 +1577,7 @@ func (e *TagSvgGlobal) FloodColor(floodColor interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// FloodOpacity
+// FloodOpacity #presentation
 //
 // English:
 //
@@ -1601,7 +1599,7 @@ func (e *TagSvgGlobal) FloodOpacity(floodOpacity float64) (ref *TagSvgGlobal) {
 
 //todo: normalizar fonte com html padrão
 
-// FontFamily
+// FontFamily #presentation
 //
 // English:
 //
@@ -1625,7 +1623,7 @@ func (e *TagSvgGlobal) FontFamily(fontFamily string) (ref *TagSvgGlobal) {
 	return e
 }
 
-// FontSize
+// FontSize #presentation
 //
 // English:
 //
@@ -1649,7 +1647,7 @@ func (e *TagSvgGlobal) FontSize(fontSize float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// FontSizeAdjust
+// FontSizeAdjust #presentation
 //
 // English:
 //
@@ -1673,7 +1671,7 @@ func (e *TagSvgGlobal) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgGlobal
 	return e
 }
 
-// FontStretch
+// FontStretch #presentation
 //
 // English:
 //
@@ -1712,7 +1710,7 @@ func (e *TagSvgGlobal) FontStretch(fontStretch interface{}) (ref *TagSvgGlobal) 
 	return e
 }
 
-// FontStyle
+// FontStyle #presentation
 //
 // English:
 //
@@ -1734,7 +1732,7 @@ func (e *TagSvgGlobal) FontStyle(fontStyle FontStyleRule) (ref *TagSvgGlobal) {
 	return e
 }
 
-// FontVariant
+// FontVariant #presentation
 //
 // English:
 //
@@ -1756,7 +1754,7 @@ func (e *TagSvgGlobal) FontVariant(fontVariant FontVariantRule) (ref *TagSvgGlob
 	return e
 }
 
-// FontWeight
+// FontWeight #presentation
 //
 // English:
 //
@@ -1977,7 +1975,7 @@ func (e *TagSvgGlobal) HRef(href string) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Id
+// Id #core
 //
 // English:
 //
@@ -1991,7 +1989,7 @@ func (e *TagSvgGlobal) Id(id string) (ref *TagSvgGlobal) {
 	return e
 }
 
-// ImageRendering
+// ImageRendering #presentation
 //
 // English:
 //
@@ -2395,7 +2393,7 @@ func (e *TagSvgGlobal) KeyTimes(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Lang
+// Lang #core
 //
 // English:
 //
@@ -2471,7 +2469,7 @@ func (e *TagSvgGlobal) LengthAdjust(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// LetterSpacing
+// LetterSpacing #presentation
 //
 // English:
 //
@@ -2514,7 +2512,7 @@ func (e *TagSvgGlobal) LetterSpacing(value float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// LightingColor
+// LightingColor #presentation
 //
 // English:
 //
@@ -2557,7 +2555,7 @@ func (e *TagSvgGlobal) LimitingConeAngle(value float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// MarkerEnd
+// MarkerEnd #presentation
 //
 // English:
 //
@@ -2598,7 +2596,7 @@ func (e *TagSvgGlobal) MarkerEnd(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// MarkerMid
+// MarkerMid #presentation
 //
 // English:
 //
@@ -2632,7 +2630,7 @@ func (e *TagSvgGlobal) MarkerMid(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// MarkerStart
+// MarkerStart #presentation
 //
 // English:
 //
@@ -2766,7 +2764,7 @@ func (e *TagSvgGlobal) MarkerWidth(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Mask
+// Mask #presentation
 //
 // English:
 //
@@ -3019,7 +3017,7 @@ func (e *TagSvgGlobal) NumOctaves(value float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Opacity
+// Opacity #presentation
 //
 // English:
 //
@@ -3176,7 +3174,7 @@ func (e *TagSvgGlobal) Origin(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Overflow
+// Overflow #presentation
 //
 // English:
 //
@@ -3431,7 +3429,7 @@ func (e *TagSvgGlobal) PatternUnits(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// PointerEvents
+// PointerEvents #presentation
 //
 // English:
 //
@@ -3989,7 +3987,7 @@ func (e *TagSvgGlobal) Seed(value float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// ShapeRendering
+// ShapeRendering #presentation
 //
 // English:
 //
@@ -4177,7 +4175,7 @@ func (e *TagSvgGlobal) StdDeviation(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// StopColor
+// StopColor #presentation
 //
 // English:
 //
@@ -4222,7 +4220,7 @@ func (e *TagSvgGlobal) StopColor(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// StopOpacity
+// StopOpacity #presentation
 //
 // English:
 //
@@ -4298,7 +4296,7 @@ func (e *TagSvgGlobal) StrikethroughThickness(value float64) (ref *TagSvgGlobal)
 	return e
 }
 
-// Stroke
+// Stroke #presentation
 //
 // English:
 //
@@ -4339,7 +4337,7 @@ func (e *TagSvgGlobal) Stroke(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// StrokeDasharray
+// StrokeDasharray #presentation
 //
 // English:
 //
@@ -4382,7 +4380,7 @@ func (e *TagSvgGlobal) StrokeDasharray(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// StrokeLinecap
+// StrokeLinecap #presentation
 //
 // English:
 //
@@ -4419,7 +4417,7 @@ func (e *TagSvgGlobal) StrokeLinecap(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// StrokeLinejoin
+// StrokeLinejoin #presentation
 //
 // English:
 //
@@ -4446,7 +4444,7 @@ func (e *TagSvgGlobal) StrokeLinejoin(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// StrokeMiterlimit
+// StrokeMiterlimit #presentation
 //
 // English:
 //
@@ -4469,7 +4467,7 @@ func (e *TagSvgGlobal) StrokeMiterlimit(value float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// StrokeOpacity
+// StrokeOpacity #presentation
 //
 // English:
 //
@@ -4507,7 +4505,7 @@ func (e *TagSvgGlobal) StrokeOpacity(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// StrokeWidth
+// StrokeWidth #presentation
 //
 // English:
 //
@@ -4537,7 +4535,7 @@ func (e *TagSvgGlobal) StrokeWidth(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Style
+// Style #styling
 //
 // English:
 //
@@ -4567,7 +4565,7 @@ func (e *TagSvgGlobal) SurfaceScale(value float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// SystemLanguage
+// SystemLanguage #conditionalProcessingAttributes
 //
 // English:
 //
@@ -4594,7 +4592,7 @@ func (e *TagSvgGlobal) SystemLanguage(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Tabindex #global
+// Tabindex #core
 //
 // English:
 //
@@ -4732,7 +4730,7 @@ func (e *TagSvgGlobal) TargetY(value int) (ref *TagSvgGlobal) {
 	return e
 }
 
-// TextAnchor
+// TextAnchor #presentation
 //
 // English:
 //
@@ -4788,7 +4786,7 @@ func (e *TagSvgGlobal) TextAnchor(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// TextDecoration
+// TextDecoration #presentation
 //
 // English:
 //
@@ -4857,7 +4855,7 @@ func (e *TagSvgGlobal) TextDecoration(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// TextRendering
+// TextRendering #presentation
 //
 // English:
 //
@@ -4976,7 +4974,7 @@ func (e *TagSvgGlobal) To(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Transform #global
+// Transform #presentation
 //
 // English:
 //
@@ -5025,7 +5023,7 @@ func (e *TagSvgGlobal) Transform(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// TransformOrigin #global
+// TransformOrigin
 //
 // English:
 //
@@ -5111,7 +5109,7 @@ func (e *TagSvgGlobal) UnderlineThickness(value interface{}) (ref *TagSvgGlobal)
 	return e
 }
 
-// UnicodeBidi
+// UnicodeBidi #presentation
 //
 // English:
 //
@@ -5166,7 +5164,7 @@ func (e *TagSvgGlobal) Values(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// VectorEffect
+// VectorEffect #presentation
 //
 // English:
 //
@@ -5249,7 +5247,7 @@ func (e *TagSvgGlobal) ViewBox(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Visibility
+// Visibility #presentation
 //
 // English:
 //
@@ -5330,7 +5328,7 @@ func (e *TagSvgGlobal) Width(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// WordSpacing
+// WordSpacing #presentation
 //
 // English:
 //
@@ -5380,7 +5378,7 @@ func (e *TagSvgGlobal) WordSpacing(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// WritingMode
+// WritingMode #presentation
 //
 // English:
 //
@@ -5581,7 +5579,7 @@ func (e *TagSvgGlobal) XChannelSelector(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// XmlLang
+// XmlLang #core
 //
 // English:
 //

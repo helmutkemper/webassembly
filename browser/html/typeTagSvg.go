@@ -249,38 +249,11 @@ func (e *TagSvg) Init(id string) (ref *TagSvg) {
 //
 //   Input:
 //     ratio: Indicates how an element with a viewBox providing a given aspect ratio.
-//       KRatioNone: Do not force uniform scaling. Scale the graphic content of the given element non-uniformly if
-//         necessary such that the element's bounding box exactly matches the viewport rectangle. Note that if <align>
-//         is none, then the optional <meetOrSlice> value is ignored.
-//       KRatioXMinYMin: Force uniform scaling. Align the <min-x> of the element's viewBox with the smallest X value of
-//         the viewport. Align the <min-y> of the element's viewBox with the smallest Y value of the viewport.
-//       KRatioXMidYMin: Force uniform scaling. Align the midpoint X value of the element's viewBox with the midpoint X
-//         value of the viewport. Align the <min-y> of the element's viewBox with the smallest Y value of the viewport.
-//       KRatioXMaxYMin: Force uniform scaling. Align the <min-x>+<width> of the element's viewBox with the maximum X
-//         value of the viewport. Align the <min-y> of the element's viewBox with the smallest Y value of the viewport.
-//       KRatioXMinYMid: Force uniform scaling. Align the <min-x> of the element's viewBox with the smallest X value of
-//         the viewport. Align the midpoint Y value of the element's viewBox with the midpoint Y value of the viewport.
-//       KRatioXMidYMid: (default) - Force uniform scaling. Align the midpoint X value of the element's viewBox with the
-//         midpoint X value of the viewport. Align the midpoint Y value of the element's viewBox with the midpoint Y
-//         value of the viewport.
-//       KRatioXMaxYMid: Force uniform scaling. Align the <min-x>+<width> of the element's viewBox with the maximum X
-//         value of the viewport. Align the midpoint Y value of the element's viewBox with the midpoint Y value of the
-//         viewport.
-//       KRatioXMinYMax: Force uniform scaling. Align the <min-x> of the element's viewBox with the smallest X value of
-//         the viewport. Align the <min-y>+<height> of the element's viewBox with the maximum Y value of the viewport.
-//       KRatioXMidYMax: Force uniform scaling. Align the midpoint X value of the element's viewBox with the midpoint X
-//         value of the viewport. Align the <min-y>+<height> of the element's viewBox with the maximum Y value of the
-//         viewport.
-//       KRatioXMaxYMax: Force uniform scaling. Align the <min-x>+<width> of the element's viewBox with the maximum X
-//         value of the viewport. Align the <min-y>+<height> of the element's viewBox with the maximum Y value of the
-//         viewport.
+//       const: KRatio... (e.g. KRatioXMinYMin)
+//       any other type: interface{}
 //     meet: The meet or slice reference
-//       KMeetOrSliceReferenceMeet: Scale the graphic such that: Aspect ratio is preserved; The entire viewBox is
-//         visible within the viewport; The viewBox is scaled up as much as possible, while still meeting the other
-//         criteria.
-//       KMeetOrSliceReferenceSlice: Scale the graphic such that: Aspect ratio is preserved; The entire viewport is
-//         covered by the viewBox; The viewBox is scaled down as much as possible, while still meeting the other
-//         criteria.
+//       const: KMeetOrSliceReference... (e.g. KMeetOrSliceReferenceSlice)
+//       any other type: interface{}
 //
 // Because the aspect ratio of an SVG image is defined by the viewBox attribute, if this attribute isn't set, the
 // preserveAspectRatio attribute has no effect (with one exception, the <image> element, as described below).
@@ -292,39 +265,24 @@ func (e *TagSvg) Init(id string) (ref *TagSvg) {
 //
 //   Input:
 //     ratio: Indica como um elemento com uma viewBox fornece uma determinada proporção.
-//       KRatioNone: Não force a escala uniforme. Dimensione o conteúdo gráfico do elemento fornecido de forma não
-//         uniforme, se necessário, de modo que a caixa delimitadora do elemento corresponda exatamente ao retângulo da
-//         janela de visualização. Observe que se <align> for none, o valor opcional <meetOrSlice> será ignorado.
-//       KRatioXMinYMin: Forçar escala uniforme. Alinhe o <min-x> da viewBox do elemento com o menor valor X da
-//         viewport. Alinhe o <min-y> da viewBox do elemento com o menor valor Y da viewport.
-//       KRatioXMidYMin: Forçar escala uniforme. Alinhe o valor X do ponto médio da viewBox do elemento com o valor X do
-//         ponto médio da viewport. Alinhe o <min-y> da viewBox do elemento com o menor valor Y da viewport.
-//       KRatioXMaxYMin: Forçar escala uniforme. Alinhe o <min-x>+<width> da viewBox do elemento com o valor X máximo da
-//         viewport. Alinhe o <min-y> da viewBox do elemento com o menor valor Y da viewport.
-//       KRatioXMinYMid: Forçar escala uniforme. Alinhe o <min-x> da viewBox do elemento com o menor valor X da
-//         viewport. Alinhe o valor Y do ponto médio da viewBox do elemento com o valor Y do ponto médio da viewport.
-//       KRatioXMidYMid: (default) - Força o dimensionamento uniforme. Alinhe o valor X do ponto médio da viewBox do
-//         elemento com o valor X do ponto médio da viewport. Alinhe o valor Y do ponto médio da viewBox do elemento com
-//         o valor Y do ponto médio da viewport.
-//       KRatioXMaxYMid: Forçar escala uniforme. Alinhe o <min-x>+<width> da viewBox do elemento com o valor X máximo da
-//         viewport. Alinhe o valor Y do ponto médio da viewBox do elemento com o valor Y do ponto médio da viewport.
-//       KRatioXMinYMax: Forçar escala uniforme. Alinhe o <min-x> da viewBox do elemento com o menor valor X da
-//         viewport. Alinhe o <min-y>+<height> da viewBox do elemento com o valor Y máximo da viewport.
-//       KRatioXMidYMax: Forçar escala uniforme. Alinhe o valor X do ponto médio da viewBox do elemento com o valor X do
-//         ponto médio da viewport. Alinhe o <min-y>+<height> da viewBox do elemento com o valor Y máximo da viewport.
-//       KRatioXMaxYMax: Forçar escala uniforme. Alinhe o <min-x>+<width> da viewBox do elemento com o valor X máximo da
-//         viewport. Alinhe o <min-y>+<height> da viewBox do elemento com o valor Y máximo da viewport.
+//       const: KRatio... (ex. KRatioXMinYMin)
+//       qualquer outro tipo: interface{}
 //     meet: A referência de encontro ou fatia
-//       KMeetOrSliceReferenceMeet: Dimensione o gráfico de forma que: A proporção seja preservada; A viewBox inteira é
-//         visível dentro da viewport; A viewBox é ampliada o máximo possível, enquanto ainda atende aos outros
-//         critérios.
-//       KMeetOrSliceReferenceSlice: Dimensione o gráfico de forma que: A proporção seja preservada; A viewport inteira
-//         é coberta pela viewBox; A viewBox é reduzida o máximo possível, enquanto ainda atende aos outros critérios.
+//       const: KMeetOrSliceReference... (ex. KMeetOrSliceReferenceSlice)
+//       qualquer outro tipo: interface{}
 //
 // Como a proporção de uma imagem SVG é definida pelo atributo viewBox, se esse atributo não estiver definido, o
 // atributo preserveAspectRatio não terá efeito (com uma exceção, o elemento <image>, conforme descrito abaixo).
-func (e *TagSvg) PreserveAspectRatio(ratio Ratio, meet MeetOrSliceReference) (ref *TagSvg) {
-	e.selfElement.Call("setAttribute", "preserveAspectRatio", ratio.String()+" "+meet.String())
+func (e *TagSvg) PreserveAspectRatio(ratio, meet interface{}) (ref *TagSvg) {
+	if converted, ok := ratio.(Ratio); ok {
+		ratio = converted.String()
+	}
+
+	if converted, ok := meet.(MeetOrSliceReference); ok {
+		meet = converted.String()
+	}
+
+	e.selfElement.Call("setAttribute", "preserveAspectRatio", fmt.Sprintf("%v %v", ratio, meet))
 	return e
 }
 

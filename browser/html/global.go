@@ -1813,17 +1813,17 @@ func (e *TagSvgGlobal) FontWeight(fontWeight FontWeightRule) (ref *TagSvgGlobal)
 func (e *TagSvgGlobal) From(value interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
-		e.selfElement.Call("setAttribute", "to", p)
+		e.selfElement.Call("setAttribute", "from", p)
 		return e
 	}
 
 	if converted, ok := value.(color.RGBA); ok {
-		e.selfElement.Call("setAttribute", "to", RGBAToJs(converted))
+		e.selfElement.Call("setAttribute", "from", RGBAToJs(converted))
 		return e
 	}
 
 	if converted, ok := value.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "to", converted.String())
+		e.selfElement.Call("setAttribute", "from", converted.String())
 		return e
 	}
 
@@ -5075,7 +5075,7 @@ func (e *TagSvgGlobal) TransformOrigin(valueA, valueB interface{}) (ref *TagSvgG
 	return e
 }
 
-// fixme: type tem que ser feito para cada elemento
+// fixme: type tem que ser feito para cada elemento. type mime esta em tagA
 
 // UnderlinePosition
 //

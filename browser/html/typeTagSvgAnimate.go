@@ -368,6 +368,37 @@ func (e *TagSvgAnimate) Style(value string) (ref *TagSvgAnimate) {
 
 // #styling end -------------------------------------------------------------------------------------------------------
 
+// #animate start -----------------------------------------------------------------------------------------------------
+
+// HRef
+//
+// English:
+//
+//  The href attribute defines a link to a resource as a reference URL. The exact meaning of that link depends on the
+//  context of each element using it.
+//
+//   Notes:
+//     * Specifications before SVG 2 defined an xlink:href attribute, which is now rendered obsolete by the href
+//       attribute.
+//       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
+//       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
+//
+// Português
+//
+//  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
+//  contexto de cada elemento que o utiliza.
+//
+//   Notas:
+//     * As especificações anteriores ao SVG 2 definiam um atributo xlink:href, que agora se torna obsoleto pelo
+//       atributo href.
+//       Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
+//       usado como um substituto além do atributo href, por exemplo,
+//       <use href="some-id" xlink:href="some-id x="5" y="5" />.
+func (e *TagSvgAnimate) HRef(href string) (ref *TagSvgAnimate) {
+	e.selfElement.Call("setAttribute", "href", href)
+	return e
+}
+
 // Begin
 //
 // English:
@@ -1142,6 +1173,8 @@ func (e *TagSvgAnimate) By(by float64) (ref *TagSvgAnimate) {
 	e.selfElement.Call("setAttribute", "by", by)
 	return e
 }
+
+// #animate end -------------------------------------------------------------------------------------------------------
 
 // AttributeName
 //

@@ -5075,7 +5075,46 @@ func (e *TagSvgGlobal) TransformOrigin(valueA, valueB interface{}) (ref *TagSvgG
 	return e
 }
 
-// fixme: type tem que ser feito para cada elemento. type mime esta em tagA
+// Type
+//
+// English:
+//
+// fixme: comentar
+//
+//   Input:
+//     value:
+//       fixme: comentar
+//       any other type: interface{}
+//
+// For the <animateTransform> element, it defines the type of transformation, whose values change over time.
+// For the <feColorMatrix> element, it indicates the type of matrix operation. The keyword matrix indicates that a full 5x4 matrix of values will be provided. The other keywords represent convenience shortcuts to allow commonly used color operations to be performed without specifying a complete matrix.
+// For the <feFuncR>, <feFuncG>, <feFuncB>, and <feFuncA> elements, it Indicates the type of component transfer function.
+// For the <feTurbulence> element, it indicates whether the filter primitive should perform a noise or turbulence function.
+// For the <style> and <script> elements, it defines the content type of the element.
+//
+// Português:
+//
+// fixme: comentar
+//
+//   Input:
+//     value:
+//       fixme: comentar
+//       any other type: interface{}
+//
+// Para o elemento <animateTransform>, define o tipo de transformação, cujos valores mudam ao longo do tempo.
+// Para o elemento <feColorMatrix>, indica o tipo de operação da matriz. A matriz de palavras-chave indica que uma matriz de valores 5x4 completa será fornecida. As outras palavras-chave representam atalhos de conveniência para permitir que as operações de cores comumente usadas sejam executadas sem especificar uma matriz completa.
+// Para os elementos <feFuncR>, <feFuncG>, <feFuncB> e <feFuncA>, indica o tipo de função de transferência do componente.
+// Para o elemento <feTurbulence>, indica se a primitiva do filtro deve executar uma função de ruído ou turbulência.
+// Para os elementos <style> e <script>, define o tipo de conteúdo do elemento.
+func (e *TagSvgGlobal) Type(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgTypeTransform); ok { //fixme: fazer
+		e.selfElement.Call("setAttribute", "type", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "type", value)
+	return e
+}
 
 // UnderlinePosition
 //

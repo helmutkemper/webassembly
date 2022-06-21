@@ -2322,7 +2322,7 @@ func (e *TagSvgA) Style(value string) (ref *TagSvgA) {
 //       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
 //       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
 //
-// Português
+// Português:
 //
 //  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
 //  contexto de cada elemento que o utiliza.

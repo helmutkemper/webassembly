@@ -23,7 +23,7 @@ import (
 // Graphical objects can be referenced from anywhere, however, defining these objects inside of a <defs> element
 // promotes understandability of the SVG content and is beneficial to the overall accessibility of the document.
 //
-// Português
+// Português:
 //
 // O elemento <defs> é usado para armazenar objetos gráficos que serão usados posteriormente.
 //
@@ -2303,3 +2303,4 @@ func (e *TagSvgDefs) Style(value string) (ref *TagSvgDefs) {
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------
+//

@@ -22,7 +22,7 @@ import (
 //     * To reuse an existing path, it will be necessary to use an <mpath> element inside the <animateMotion> element
 //       instead of the path attribute.
 //
-// Português
+// Português:
 //
 // O elemento SVG <animateMotion> fornece uma maneira de definir como um elemento se move ao longo de um caminho
 // de movimento.
@@ -2780,7 +2780,7 @@ func (e *TagSvgAnimateMotion) Fill(value interface{}) (ref *TagSvgAnimateMotion)
 //   Notes:
 //     Default value: KSvgCalcModePaced
 //
-// Português
+// Português:
 //
 //  O atributo calcMode especifica o modo de interpolação para a animação.
 //
@@ -2940,7 +2940,7 @@ func (e *TagSvgAnimateMotion) KeySplines(value interface{}) (ref *TagSvgAnimateM
 // value. When used with the by attribute, the animation will change the attribute relatively from the from value by
 // the value specified in by.
 //
-// Português
+// Português:
 //
 // O atributo from indica o valor inicial do atributo que será modificado durante a animação.
 //
@@ -3059,7 +3059,7 @@ func (e *TagSvgAnimateMotion) By(by float64) (ref *TagSvgAnimateMotion) {
 //  The attributeName attribute indicates the name of the CSS property or attribute of the target element that is going
 //  to be changed during an animation.
 //
-// Português
+// Português:
 //
 //  O atributo attributeName indica o nome da propriedade CSS ou atributo do elemento de destino que será alterado
 //  durante uma animação.
@@ -3082,7 +3082,7 @@ func (e *TagSvgAnimateMotion) AttributeName(attributeName string) (ref *TagSvgAn
 // It is frequently useful to define animation as an offset or delta to an attribute's value, rather than as
 // absolute values.
 //
-// Português
+// Português:
 //
 //  O atributo aditivo controla se uma animação é ou não aditiva.
 //
@@ -3123,7 +3123,7 @@ func (e *TagSvgAnimateMotion) Additive(value interface{}) (ref *TagSvgAnimateMot
 //       does not repeat;
 //     * This attribute will be ignored if the animation function is specified with only the to attribute.
 //
-// Português
+// Português:
 //
 //  O atributo acumular controla se uma animação é cumulativa ou não.
 //

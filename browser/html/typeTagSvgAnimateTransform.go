@@ -18,7 +18,7 @@ import (
 // The animateTransform element animates a transformation attribute on its target element, thereby allowing animations
 // to control translation, scaling, rotation, and/or skewing.
 //
-// Português
+// Português:
 //
 // O elemento animateTransform anima um atributo de transformação em seu elemento de destino, permitindo assim que as
 // animações controlem a tradução, dimensionamento, rotação e ou inclinação.
@@ -297,7 +297,7 @@ func (e *TagSvgAnimateTransform) XmlLang(value interface{}) (ref *TagSvgAnimateT
 //       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
 //       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
 //
-// Português
+// Português:
 //
 //  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
 //  contexto de cada elemento que o utiliza.
@@ -816,7 +816,7 @@ func (e *TagSvgAnimateTransform) Fill(value interface{}) (ref *TagSvgAnimateTran
 //   Notes:
 //     Default value: KSvgCalcModePaced
 //
-// Português
+// Português:
 //
 //  O atributo calcMode especifica o modo de interpolação para a animação.
 //
@@ -976,7 +976,7 @@ func (e *TagSvgAnimateTransform) KeySplines(value interface{}) (ref *TagSvgAnima
 // value. When used with the by attribute, the animation will change the attribute relatively from the from value by
 // the value specified in by.
 //
-// Português
+// Português:
 //
 // O atributo from indica o valor inicial do atributo que será modificado durante a animação.
 //

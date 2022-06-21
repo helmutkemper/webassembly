@@ -19,7 +19,7 @@ import (
 // By default, HTML buttons are presented in a style resembling the platform the user agent runs on,
 // but you can change buttons' appearance with CSS.
 //
-// Português
+// Português:
 //
 //  O elemento HTML <button> é um elemento interativo ativado por um usuário com mouse, teclado,
 //  dedo, comando de voz ou outra tecnologia assistiva. Uma vez ativado, ele executa uma ação

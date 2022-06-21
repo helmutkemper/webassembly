@@ -14,7 +14,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // Content within each <a> should indicate the link's destination. If the href attribute is present,
 // pressing the enter key while focused on the <a> element will activate it.
 //
-// Português
+// Português:
 //
 //  Cria o elemento Âncora.
 //

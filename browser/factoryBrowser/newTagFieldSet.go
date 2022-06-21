@@ -11,7 +11,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // The <fieldset> HTML element is used to group several controls as well as labels (<label>)
 // within a web form.
 //
-// Português
+// Português:
 //
 //  Cria o elemento fieldset.
 //

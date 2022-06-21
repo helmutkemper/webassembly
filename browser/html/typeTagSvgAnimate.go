@@ -383,7 +383,7 @@ func (e *TagSvgAnimate) Style(value string) (ref *TagSvgAnimate) {
 //       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
 //       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
 //
-// Português
+// Português:
 //
 //  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
 //  contexto de cada elemento que o utiliza.
@@ -902,7 +902,7 @@ func (e *TagSvgAnimate) Fill(value interface{}) (ref *TagSvgAnimate) {
 //   Notes:
 //     Default value: KSvgCalcModePaced
 //
-// Português
+// Português:
 //
 //  O atributo calcMode especifica o modo de interpolação para a animação.
 //
@@ -1062,7 +1062,7 @@ func (e *TagSvgAnimate) KeySplines(value interface{}) (ref *TagSvgAnimate) {
 // value. When used with the by attribute, the animation will change the attribute relatively from the from value by
 // the value specified in by.
 //
-// Português
+// Português:
 //
 // O atributo from indica o valor inicial do atributo que será modificado durante a animação.
 //
@@ -1183,7 +1183,7 @@ func (e *TagSvgAnimate) By(by float64) (ref *TagSvgAnimate) {
 //  The attributeName attribute indicates the name of the CSS property or attribute of the target element that is going
 //  to be changed during an animation.
 //
-// Português
+// Português:
 //
 //  O atributo attributeName indica o nome da propriedade CSS ou atributo do elemento de destino que será alterado
 //  durante uma animação.
@@ -1206,7 +1206,7 @@ func (e *TagSvgAnimate) AttributeName(attributeName string) (ref *TagSvgAnimate)
 // It is frequently useful to define animation as an offset or delta to an attribute's value, rather than as
 // absolute values.
 //
-// Português
+// Português:
 //
 //  O atributo aditivo controla se uma animação é ou não aditiva.
 //
@@ -1247,7 +1247,7 @@ func (e *TagSvgAnimate) Additive(value interface{}) (ref *TagSvgAnimate) {
 //       does not repeat;
 //     * This attribute will be ignored if the animation function is specified with only the to attribute.
 //
-// Português
+// Português:
 //
 //  O atributo acumular controla se uma animação é cumulativa ou não.
 //

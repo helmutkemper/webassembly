@@ -167,7 +167,7 @@ type TagSvgGlobal struct {
 //       does not repeat;
 //     * This attribute will be ignored if the animation function is specified with only the to attribute.
 //
-// Português
+// Português:
 //
 //  O atributo acumular controla se uma animação é cumulativa ou não.
 //
@@ -207,7 +207,7 @@ func (e *TagSvgGlobal) Accumulate(value interface{}) (ref *TagSvgGlobal) {
 // It is frequently useful to define animation as an offset or delta to an attribute's value, rather than as
 // absolute values.
 //
-// Português
+// Português:
 //
 //  O atributo aditivo controla se uma animação é ou não aditiva.
 //
@@ -241,6 +241,7 @@ func (e *TagSvgGlobal) Additive(value interface{}) (ref *TagSvgGlobal) {
 //     alignmentBaseline: specifies how an object is aligned with respect to its parent.
 //       string: url(#myClip)
 //       consts KSvgAlignmentBaseline... (e.g. KSvgAlignmentBaselineTextBeforeEdge)
+//       any other type: interface{}
 //
 //   Notes:
 //     * As a presentation attribute alignment-baseline can be used as a CSS property.
@@ -260,6 +261,7 @@ func (e *TagSvgGlobal) Additive(value interface{}) (ref *TagSvgGlobal) {
 //     alignmentBaseline: especifica como um objeto é alinhado em relação ao seu pai.
 //       string: url(#myClip)
 //       consts KSvgAlignmentBaseline...  (ex. KSvgAlignmentBaselineTextBeforeEdge)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como um atributo de apresentação, a linha de base de alinhamento pode ser usada como uma propriedade CSS.
@@ -315,7 +317,7 @@ func (e *TagSvgGlobal) Amplitude(amplitude interface{}) (ref *TagSvgGlobal) {
 //  The attributeName attribute indicates the name of the CSS property or attribute of the target element that is going
 //  to be changed during an animation.
 //
-// Português
+// Português:
 //
 //  O atributo attributeName indica o nome da propriedade CSS ou atributo do elemento de destino que será alterado
 //  durante uma animação.
@@ -377,6 +379,7 @@ func (e *TagSvgGlobal) BaseFrequency(baseFrequency float64) (ref *TagSvgGlobal) 
 //       float32: 0.05 = "5%"
 //       string: "5%"
 //       consts KSvgBaselineShift... (e.g. KSvgBaselineShiftAuto)
+//       any other type: interface{}
 //
 //   Notes:
 //     * As a presentation attribute baseline-shift can be used as a CSS property.
@@ -391,6 +394,7 @@ func (e *TagSvgGlobal) BaseFrequency(baseFrequency float64) (ref *TagSvgGlobal) 
 //       float32: 0.05 = "5%"
 //       string: "5%"
 //       consts KSvgBaselineShift... (ex. KSvgBaselineShiftAuto)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como atributo de apresentação, baseline-shift pode ser usado como propriedade CSS.
@@ -609,7 +613,7 @@ func (e *TagSvgGlobal) By(by float64) (ref *TagSvgGlobal) {
 //   Notes:
 //     Default value: KSvgCalcModePaced
 //
-// Português
+// Português:
 //
 //  O atributo calcMode especifica o modo de interpolação para a animação.
 //
@@ -1796,7 +1800,7 @@ func (e *TagSvgGlobal) FontWeight(fontWeight FontWeightRule) (ref *TagSvgGlobal)
 // value. When used with the by attribute, the animation will change the attribute relatively from the from value by
 // the value specified in by.
 //
-// Português
+// Português:
 //
 // O atributo from indica o valor inicial do atributo que será modificado durante a animação.
 //
@@ -1959,7 +1963,7 @@ func (e *TagSvgGlobal) Height(height interface{}) (ref *TagSvgGlobal) {
 //       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
 //       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
 //
-// Português
+// Português:
 //
 //  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
 //  contexto de cada elemento que o utiliza.
@@ -2028,6 +2032,7 @@ func (e *TagSvgGlobal) ImageRendering(imageRendering string) (ref *TagSvgGlobal)
 //   Input:
 //     in: identifies input for the given filter primitive.
 //       KSvgIn... (e.g. KSvgInSourceAlpha)
+//       any other type: interface{}
 //
 // The value can be either one of the six keywords defined below, or a string which matches a previous result attribute
 // value within the same <filter> element. If no value is provided and this is the first filter primitive, then this
@@ -2044,6 +2049,7 @@ func (e *TagSvgGlobal) ImageRendering(imageRendering string) (ref *TagSvgGlobal)
 //   Entrada:
 //     in: identifica à entrada para a primitiva de filtro fornecida.
 //       KSvgIn... (e.g. KSvgInSourceAlpha)
+//       qualquer outro tipo: interface{}
 //
 // O valor pode ser uma das seis palavras-chave definidas abaixo ou uma string que corresponda a um valor de atributo
 // de resultado anterior dentro do mesmo elemento <filter>. Se nenhum valor for fornecido e esta for a primeira
@@ -2074,6 +2080,7 @@ func (e *TagSvgGlobal) In(in interface{}) (ref *TagSvgGlobal) {
 //     in2: identifies the second input for the given filter primitive.
 //       KSvgIn2... (e.g. KSvgIn2SourceAlpha)
 //       string: url(#myClip)
+//       any other type: interface{}
 //
 // Portuguese
 //
@@ -2084,6 +2091,7 @@ func (e *TagSvgGlobal) In(in interface{}) (ref *TagSvgGlobal) {
 //     in2: identifica a segunda entrada para a primitiva de filtro fornecida.
 //       KSvgIn2... (ex. KSvgIn2SourceAlpha)
 //       string: url(#myClip)
+//       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) In2(in2 interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := in2.(SvgIn2); ok {
 		e.selfElement.Call("setAttribute", "in2", converted.String())

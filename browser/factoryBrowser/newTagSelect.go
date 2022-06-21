@@ -10,7 +10,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // The <select> HTML element represents a control that provides a menu of options.
 //
-// Português
+// Português:
 //
 //  Cria um novo elemento select.
 //

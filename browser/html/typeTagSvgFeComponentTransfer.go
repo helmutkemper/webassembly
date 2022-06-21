@@ -11,22 +11,27 @@ import (
 	"syscall/js"
 )
 
-// TagSvgClipPath
+// TagSvgFeComponentTransfer
 //
 // English:
 //
-// The <clipPath> SVG element defines a clipping path, to be used by the clip-path property.
+// The <feComponentTransfer> SVG filter primitive performs color-component-wise remapping of data for each pixel.
 //
-// A clipping path restricts the region to which paint can be applied. Conceptually, parts of the drawing that lie
-// outside of the region bounded by the clipping path are not drawn.
+// It allows operations like brightness adjustment, contrast adjustment, color balance or thresholding.
+//
+// The calculations are performed on non-premultiplied color values. The colors are modified by changing each channel
+// (R, G, B, and A) to the result of what the children <feFuncR>, <feFuncB>, <feFuncG>, and <feFuncA> return.
 //
 // Português:
 //
-// O elemento SVG <clipPath> define um caminho de recorte, a ser usado pela propriedade clip-path.
+// A primitiva de filtro SVG <feComponentTransfer> executa o remapeamento de dados por componente de cor para cada
+// pixel.
 //
-// Um traçado de recorte restringe a região na qual a tinta pode ser aplicada. Conceitualmente, as partes do desenho
-// que estão fora da região delimitada pelo caminho de recorte não são desenhadas.
-type TagSvgClipPath struct {
+// Permite operações como ajuste de brilho, ajuste de contraste, equilíbrio de cores ou limiar.
+//
+// Os cálculos são executados em valores de cores não pré-multiplicados. As cores são modificadas alterando cada canal
+// (R, G, B e A) para o resultado do que os filhos <feFuncR>, <feFuncB>, <feFuncG> e <feFuncA> retornam.
+type TagSvgFeComponentTransfer struct {
 
 	// id
 	//
@@ -170,7 +175,7 @@ type TagSvgClipPath struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgClipPath) Init(id string) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Init(id string) (ref *TagSvgFeComponentTransfer) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement(KTagSvg)
@@ -180,11 +185,11 @@ func (e *TagSvgClipPath) Init(id string) (ref *TagSvgClipPath) {
 	return e
 }
 
-func (e *TagSvgClipPath) prepareStageReference() {
+func (e *TagSvgFeComponentTransfer) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgClipPath) CreateElement(tag Tag) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) CreateElement(tag Tag) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
@@ -207,7 +212,7 @@ func (e *TagSvgClipPath) CreateElement(tag Tag) (ref *TagSvgClipPath) {
 // Portuguese
 //
 //  O atributo id atribui um nome exclusivo a um elemento.
-func (e *TagSvgClipPath) Id(id string) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Id(id string) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "id", id)
 	return e
 }
@@ -249,7 +254,7 @@ func (e *TagSvgClipPath) Id(id string) (ref *TagSvgClipPath) {
 // (também conhecido como BCP 47). O glifo deveria ser usado se o atributo xml:lang correspondesse exatamente a um dos
 // idiomas fornecidos no valor desse parâmetro, ou se o atributo xml:lang fosse exatamente igual a um prefixo de um dos
 // idiomas fornecidos no valor desse parâmetro de modo que o primeiro caractere de tag após o prefixo fosse "-".
-func (e *TagSvgClipPath) Lang(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Lang(value interface{}) (ref *TagSvgFeComponentTransfer) {
 
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "lang", converted.String())
@@ -271,7 +276,7 @@ func (e *TagSvgClipPath) Lang(value interface{}) (ref *TagSvgClipPath) {
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
 // de navegação de foco sequencial.
-func (e *TagSvgClipPath) Tabindex(value int) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Tabindex(value int) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }
@@ -309,7 +314,7 @@ func (e *TagSvgClipPath) Tabindex(value int) (ref *TagSvgClipPath) {
 //
 // Há também um atributo lang (sem namespace). Se ambos estiverem definidos, aquele com namespace será usado e o sem
 // namespace será ignorado.
-func (e *TagSvgClipPath) XmlLang(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) XmlLang(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "xml:lang", converted.String())
 		return e
@@ -352,7 +357,7 @@ func (e *TagSvgClipPath) XmlLang(value interface{}) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Como atributo de apresentação, baseline-shift pode ser usado como propriedade CSS.
 //     * Essa propriedade será preterida e os autores são aconselhados a usar alinhamento vertical.
-func (e *TagSvgClipPath) BaselineShift(baselineShift interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) BaselineShift(baselineShift interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := baselineShift.(SvgBaselineShift); ok {
 		e.selfElement.Call("setAttribute", "baseline-shift", converted.String())
 		return e
@@ -385,7 +390,7 @@ func (e *TagSvgClipPath) BaselineShift(baselineShift interface{}) (ref *TagSvgCl
 //   Entrada:
 //     clipPath: elemento ao qual é aplicado
 //       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
-func (e *TagSvgClipPath) ClipPath(clipPath string) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) ClipPath(clipPath string) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "clip-path", clipPath)
 	return e
 }
@@ -411,7 +416,7 @@ func (e *TagSvgClipPath) ClipPath(clipPath string) (ref *TagSvgClipPath) {
 //     value: lado de um caminho
 //       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
 //       qualquer outro tipo: interface{}
-func (e *TagSvgClipPath) ClipRule(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) ClipRule(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgClipRule); ok {
 		e.selfElement.Call("setAttribute", "clip-rule", converted.String())
 		return e
@@ -452,7 +457,7 @@ func (e *TagSvgClipPath) ClipRule(value interface{}) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
-func (e *TagSvgClipPath) Color(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Color(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
 		return e
@@ -503,7 +508,7 @@ func (e *TagSvgClipPath) Color(value interface{}) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Para efeitos de filtro, a propriedade color-interpolation-filters controla qual espaço de cor é usado.
 //     * Como atributo de apresentação, a interpolação de cores pode ser usada como uma propriedade CSS.
-func (e *TagSvgClipPath) ColorInterpolation(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) ColorInterpolation(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation", RGBAToJs(converted))
 		return e
@@ -544,7 +549,7 @@ func (e *TagSvgClipPath) ColorInterpolation(value interface{}) (ref *TagSvgClipP
 //       interpolações de cores ocorrem por padrão no espaço de cores sRGB.
 //     * Não afeta as funções de filtro, que operam no espaço de cores sRGB.
 //     * Como atributo de apresentação, os filtros de interpolação de cores podem ser usados como uma propriedade CSS.
-func (e *TagSvgClipPath) ColorInterpolationFilters(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) ColorInterpolationFilters(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation-filters", RGBAToJs(converted))
 		return e
@@ -575,7 +580,7 @@ func (e *TagSvgClipPath) ColorInterpolationFilters(value interface{}) (ref *TagS
 //
 // Como atributo de apresentação, também pode ser usado como propriedade diretamente dentro de uma folha de estilo CSS,
 // veja cursor css para mais informações.
-func (e *TagSvgClipPath) Cursor(cursor SvgCursor) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Cursor(cursor SvgCursor) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "cursor", cursor.String())
 	return e
 }
@@ -603,7 +608,7 @@ func (e *TagSvgClipPath) Cursor(cursor SvgCursor) (ref *TagSvgClipPath) {
 // Você pode usar este atributo com os seguintes elementos SVG: <path>, <glyph>, <missing-glyph>.
 //
 // d é um atributo de apresentação e, portanto, também pode ser usado como uma propriedade CSS.
-func (e *TagSvgClipPath) D(d *SvgPath) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) D(d *SvgPath) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "d", d.String())
 	return e
 }
@@ -648,7 +653,7 @@ func (e *TagSvgClipPath) D(d *SvgPath) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Como atributo de apresentação, a direção pode ser usada como uma propriedade CSS. Veja a direção do CSS para
 //       mais informações.
-func (e *TagSvgClipPath) Direction(direction SvgDirection) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Direction(direction SvgDirection) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "direction", direction.String())
 	return e
 }
@@ -724,7 +729,7 @@ func (e *TagSvgClipPath) Direction(direction SvgDirection) (ref *TagSvgClipPath)
 //  Notas:
 //    * Como atributo de apresentação, display pode ser usado como propriedade CSS. Consulte a exibição css para obter
 //      mais informações.
-func (e *TagSvgClipPath) Display(display SvgDisplay) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Display(display SvgDisplay) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "display", display.String())
 	return e
 }
@@ -777,7 +782,7 @@ func (e *TagSvgClipPath) Display(display SvgDisplay) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a linha de base dominante pode ser usada como uma propriedade CSS.
-func (e *TagSvgClipPath) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "dominant-baseline", dominantBaseline.String())
 	return e
 }
@@ -797,7 +802,7 @@ func (e *TagSvgClipPath) DominantBaseline(dominantBaseline SvgDominantBaseline) 
 //  cor (ou qualquer servidor de pintura SVG, como gradientes ou padrões) usado para pintar o elemento;
 //
 // para animação, define o estado final da animação.
-func (e *TagSvgClipPath) Fill(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Fill(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "fill", RGBAToJs(converted))
 		return e
@@ -824,7 +829,7 @@ func (e *TagSvgClipPath) Fill(value interface{}) (ref *TagSvgClipPath) {
 //
 //   Notes:
 //     *As a presentation attribute fill-opacity can be used as a CSS property.
-func (e *TagSvgClipPath) FillOpacity(fillOpacity float64) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FillOpacity(fillOpacity float64) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "fill-opacity", fillOpacity)
 	return e
 }
@@ -846,7 +851,7 @@ func (e *TagSvgClipPath) FillOpacity(fillOpacity float64) (ref *TagSvgClipPath) 
 //
 //   Notas:
 //     * Como atributo de apresentação, fill-rule pode ser usado como uma propriedade CSS.
-func (e *TagSvgClipPath) FillRule(fillRule SvgFillRule) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FillRule(fillRule SvgFillRule) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "fill-rule", fillRule.String())
 	return e
 }
@@ -869,7 +874,7 @@ func (e *TagSvgClipPath) FillRule(fillRule SvgFillRule) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Como atributo de apresentação, o filtro pode ser usado como propriedade CSS. Veja filtro css para mais
 //       informações.
-func (e *TagSvgClipPath) Filter(filter string) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Filter(filter string) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "filter", filter)
 	return e
 }
@@ -889,7 +894,7 @@ func (e *TagSvgClipPath) Filter(filter string) (ref *TagSvgClipPath) {
 //
 //   Notes:
 //     * As a presentation attribute, flood-color can be used as a CSS property.
-func (e *TagSvgClipPath) FloodColor(floodColor interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FloodColor(floodColor interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := floodColor.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "flood-color", RGBAToJs(converted))
 		return e
@@ -914,7 +919,7 @@ func (e *TagSvgClipPath) FloodColor(floodColor interface{}) (ref *TagSvgClipPath
 //
 //   Notas:
 //     * Como atributo de apresentação, a opacidade de inundação pode ser usada como uma propriedade CSS.
-func (e *TagSvgClipPath) FloodOpacity(floodOpacity float64) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FloodOpacity(floodOpacity float64) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "flood-opacity", floodOpacity)
 	return e
 }
@@ -938,7 +943,7 @@ func (e *TagSvgClipPath) FloodOpacity(floodOpacity float64) (ref *TagSvgClipPath
 //   Notas:
 //     * Como atributo de apresentação, font-family pode ser usada como propriedade CSS. Consulte a propriedade CSS
 //       font-family para obter mais informações.
-func (e *TagSvgClipPath) FontFamily(fontFamily string) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FontFamily(fontFamily string) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "font-family", fontFamily)
 	return e
 }
@@ -962,7 +967,7 @@ func (e *TagSvgClipPath) FontFamily(fontFamily string) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Como atributo de apresentação, font-size pode ser usado como uma propriedade CSS. Consulte a propriedade CSS
 //       font-size para obter mais informações.
-func (e *TagSvgClipPath) FontSize(fontSize float64) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FontSize(fontSize float64) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "font-size", fontSize)
 	return e
 }
@@ -986,7 +991,7 @@ func (e *TagSvgClipPath) FontSize(fontSize float64) (ref *TagSvgClipPath) {
 //   Notes:
 //     * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
 //       property for more information.
-func (e *TagSvgClipPath) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "font-size-adjust", fontSizeAdjust)
 	return e
 }
@@ -1020,7 +1025,7 @@ func (e *TagSvgClipPath) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgClip
 //   Notas:
 //     * Como atributo de apresentação, font-stretch pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-stretch para obter mais informações.
-func (e *TagSvgClipPath) FontStretch(fontStretch interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FontStretch(fontStretch interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := fontStretch.(SvgFontStretch); ok {
 		e.selfElement.Call("setAttribute", "font-stretch", converted.String())
 		return e
@@ -1047,7 +1052,7 @@ func (e *TagSvgClipPath) FontStretch(fontStretch interface{}) (ref *TagSvgClipPa
 //   Notas:
 //     * Como atributo de apresentação, font-style pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //       font-style para obter mais informações.
-func (e *TagSvgClipPath) FontStyle(fontStyle FontStyleRule) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FontStyle(fontStyle FontStyleRule) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "font-style", fontStyle.String())
 	return e
 }
@@ -1069,7 +1074,7 @@ func (e *TagSvgClipPath) FontStyle(fontStyle FontStyleRule) (ref *TagSvgClipPath
 //   Notas:
 //     * Como atributo de apresentação, font-variant pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-variant para obter mais informações.
-func (e *TagSvgClipPath) FontVariant(fontVariant FontVariantRule) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FontVariant(fontVariant FontVariantRule) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "font-variant", fontVariant.String())
 	return e
 }
@@ -1093,7 +1098,7 @@ func (e *TagSvgClipPath) FontVariant(fontVariant FontVariantRule) (ref *TagSvgCl
 //   Notas:
 //     * Como atributo de apresentação, o peso da fonte pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-weight para obter mais informações.
-func (e *TagSvgClipPath) FontWeight(fontWeight FontWeightRule) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) FontWeight(fontWeight FontWeightRule) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "font-weight", fontWeight.String())
 	return e
 }
@@ -1123,7 +1128,7 @@ func (e *TagSvgClipPath) FontWeight(fontWeight FontWeightRule) (ref *TagSvgClipP
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de imagem pode ser usada como uma propriedade CSS. Consulte
 //       a propriedade de renderização de imagem css para obter mais informações.
-func (e *TagSvgClipPath) ImageRendering(imageRendering string) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) ImageRendering(imageRendering string) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "image-rendering", imageRendering)
 	return e
 }
@@ -1165,7 +1170,7 @@ func (e *TagSvgClipPath) ImageRendering(imageRendering string) (ref *TagSvgClipP
 // Notas:
 //   * Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
 //     Consulte a propriedade de espaçamento entre letras do CSS para obter mais informações.
-func (e *TagSvgClipPath) LetterSpacing(value float64) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) LetterSpacing(value float64) (ref *TagSvgFeComponentTransfer) {
 
 	e.selfElement.Call("setAttribute", "letter-spacing", strconv.FormatFloat(value, 'g', -1, 64))
 	return e
@@ -1180,7 +1185,7 @@ func (e *TagSvgClipPath) LetterSpacing(value float64) (ref *TagSvgClipPath) {
 // Português:
 //
 // O atributo lighting-color define a cor da fonte de luz para as primitivas do filtro de iluminação.
-func (e *TagSvgClipPath) LightingColor(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) LightingColor(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "lighting-color", RGBAToJs(converted))
 		return e
@@ -1226,7 +1231,7 @@ func (e *TagSvgClipPath) LightingColor(value interface{}) (ref *TagSvgClipPath) 
 //
 // Notas:
 //   * Como atributo de apresentação, o marker-end pode ser usado como uma propriedade CSS.
-func (e *TagSvgClipPath) MarkerEnd(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) MarkerEnd(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "marker-end", value)
 	return e
 }
@@ -1260,7 +1265,7 @@ func (e *TagSvgClipPath) MarkerEnd(value interface{}) (ref *TagSvgClipPath) {
 //
 // Notas:
 //   * Como atributo de apresentação, o marker-mid pode ser usado como uma propriedade CSS.
-func (e *TagSvgClipPath) MarkerMid(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) MarkerMid(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "marker-mid", value)
 	return e
 }
@@ -1301,7 +1306,7 @@ func (e *TagSvgClipPath) MarkerMid(value interface{}) (ref *TagSvgClipPath) {
 //
 // Notas:
 //   * Como atributo de apresentação, o início do marcador pode ser usado como uma propriedade CSS.
-func (e *TagSvgClipPath) MarkerStart(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) MarkerStart(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "marker-start", value)
 	return e
 }
@@ -1331,7 +1336,7 @@ func (e *TagSvgClipPath) MarkerStart(value interface{}) (ref *TagSvgClipPath) {
 //
 // Notas:
 //   * Como uma máscara de atributo de apresentação pode ser usada como uma propriedade CSS.
-func (e *TagSvgClipPath) Mask(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Mask(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "mask", value)
 	return e
 }
@@ -1366,7 +1371,7 @@ func (e *TagSvgClipPath) Mask(value interface{}) (ref *TagSvgClipPath) {
 //   Notes:
 //     * Como atributo de apresentação, a opacidade pode ser usada como uma propriedade CSS. Consulte a propriedade de
 //       opacidade do CSS para obter mais informações.
-func (e *TagSvgClipPath) Opacity(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Opacity(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "opacity", p)
@@ -1420,7 +1425,7 @@ func (e *TagSvgClipPath) Opacity(value interface{}) (ref *TagSvgClipPath) {
 //       <marker> para ser ocultado por padrão.
 //     * Como atributo de apresentação, overflow pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //       overflow para obter mais informações.
-func (e *TagSvgClipPath) Overflow(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Overflow(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(Overflow); ok {
 		e.selfElement.Call("setAttribute", "overflow", converted.String())
 		return e
@@ -1447,7 +1452,7 @@ func (e *TagSvgClipPath) Overflow(value interface{}) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
-func (e *TagSvgClipPath) PointerEvents(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) PointerEvents(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgPointerEvents); ok {
 		e.selfElement.Call("setAttribute", "pointer-events", converted.String())
 		return e
@@ -1484,7 +1489,7 @@ func (e *TagSvgClipPath) PointerEvents(value interface{}) (ref *TagSvgClipPath) 
 //
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.
-func (e *TagSvgClipPath) ShapeRendering(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) ShapeRendering(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgShapeRendering); ok {
 		e.selfElement.Call("setAttribute", "shape-rendering", converted.String())
 		return e
@@ -1529,7 +1534,7 @@ func (e *TagSvgClipPath) ShapeRendering(value interface{}) (ref *TagSvgClipPath)
 //       Assim, especificar uma stop-color com o valor transparente é equivalente a especificar uma stop-color com o
 //       valor black e uma stop-opacity com o valor 0.
 //     * Como atributo de apresentação, stop-color pode ser usado como propriedade CSS.
-func (e *TagSvgClipPath) StopColor(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) StopColor(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stop-color", RGBAToJs(converted))
 		return e
@@ -1572,7 +1577,7 @@ func (e *TagSvgClipPath) StopColor(value interface{}) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stop-opacity pode ser usado como uma propriedade CSS.
-func (e *TagSvgClipPath) StopOpacity(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) StopOpacity(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stop-opacity", p)
@@ -1614,7 +1619,7 @@ func (e *TagSvgClipPath) StopOpacity(value interface{}) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como um traço de atributo de apresentação pode ser usado como uma propriedade CSS.
-func (e *TagSvgClipPath) Stroke(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Stroke(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stroke", RGBAToJs(converted))
 		return e
@@ -1651,7 +1656,7 @@ func (e *TagSvgClipPath) Stroke(value interface{}) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
-func (e *TagSvgClipPath) StrokeDasharray(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) StrokeDasharray(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.([]float64); ok {
 		str := ""
 		for _, v := range converted {
@@ -1694,7 +1699,7 @@ func (e *TagSvgClipPath) StrokeDasharray(value interface{}) (ref *TagSvgClipPath
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgClipPath) StrokeLinecap(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) StrokeLinecap(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1721,7 +1726,7 @@ func (e *TagSvgClipPath) StrokeLinecap(value interface{}) (ref *TagSvgClipPath) 
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgClipPath) StrokeLinejoin(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) StrokeLinejoin(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1749,7 +1754,7 @@ func (e *TagSvgClipPath) StrokeLinejoin(value interface{}) (ref *TagSvgClipPath)
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgClipPath) StrokeMiterlimit(value float64) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) StrokeMiterlimit(value float64) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }
@@ -1781,7 +1786,7 @@ func (e *TagSvgClipPath) StrokeMiterlimit(value float64) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a opacidade do traço pode ser usada como uma propriedade CSS.
-func (e *TagSvgClipPath) StrokeOpacity(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) StrokeOpacity(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stroke-opacity", p)
@@ -1811,7 +1816,7 @@ func (e *TagSvgClipPath) StrokeOpacity(value interface{}) (ref *TagSvgClipPath) 
 //     value: definindo a largura do traço
 //       float32: 1.0 = "100%"
 //       qualquer outro tipo: interface{}
-func (e *TagSvgClipPath) StrokeWidth(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) StrokeWidth(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stroke-width", p)
@@ -1868,7 +1873,7 @@ func (e *TagSvgClipPath) StrokeWidth(value interface{}) (ref *TagSvgClipPath) {
 //
 //   Notes:
 //     * As a presentation attribute, text-anchor can be used as a CSS property.
-func (e *TagSvgClipPath) TextAnchor(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) TextAnchor(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgTextAnchor); ok {
 		e.selfElement.Call("setAttribute", "text-anchor", converted.String())
 		return e
@@ -1927,7 +1932,7 @@ func (e *TagSvgClipPath) TextAnchor(value interface{}) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Como atributo de apresentação, a decoração de texto pode ser usada como uma propriedade CSS. Consulte a
 //       propriedade CSS text-decoration para obter mais informações.
-func (e *TagSvgClipPath) TextDecoration(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) TextDecoration(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "text-decoration", RGBAToJs(converted))
 		return e
@@ -1964,7 +1969,7 @@ func (e *TagSvgClipPath) TextDecoration(value interface{}) (ref *TagSvgClipPath)
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de texto pode ser usada como uma propriedade CSS.
 //       Consulte a propriedade de renderização de texto css para obter mais informações.
-func (e *TagSvgClipPath) TextRendering(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) TextRendering(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgTextRendering); ok {
 		e.selfElement.Call("setAttribute", "text-rendering", converted.String())
 		return e
@@ -2008,7 +2013,7 @@ func (e *TagSvgClipPath) TextRendering(value interface{}) (ref *TagSvgClipPath) 
 //       propriedade CSS. No entanto, esteja ciente de que existem algumas diferenças na sintaxe entre a propriedade CSS
 //       e o atributo. Consulte a documentação da transformação da propriedade CSS para obter a sintaxe específica a ser
 //       usada nesse caso.
-func (e *TagSvgClipPath) Transform(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Transform(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(*TransformFunctions); ok {
 		e.selfElement.Call("setAttribute", "transform", converted.String())
 		return e
@@ -2050,7 +2055,7 @@ func (e *TagSvgClipPath) Transform(value interface{}) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Como atributo de apresentação, o unicode-bidi pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS unicode-bidi para obter mais informações.
-func (e *TagSvgClipPath) UnicodeBidi(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) UnicodeBidi(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgTransformOrigin); ok {
 		e.selfElement.Call("setAttribute", "unicode-bidi", converted.String())
 		return e
@@ -2088,7 +2093,7 @@ func (e *TagSvgClipPath) UnicodeBidi(value interface{}) (ref *TagSvgClipPath) {
 //
 //   Notas:
 //     * Como atributo de apresentação, o efeito vetorial pode ser usado como uma propriedade CSS.
-func (e *TagSvgClipPath) VectorEffect(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) VectorEffect(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgVectorEffect); ok {
 		e.selfElement.Call("setAttribute", "vector-effect", converted.String())
 		return e
@@ -2139,7 +2144,7 @@ func (e *TagSvgClipPath) VectorEffect(value interface{}) (ref *TagSvgClipPath) {
 //       mas ainda ocupará espaço nos cálculos de layout de texto;
 //     * Como atributo de apresentação, a visibilidade pode ser usada como propriedade CSS. Consulte a propriedade de
 //       visibilidade do CSS para obter mais informações.
-func (e *TagSvgClipPath) Visibility(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Visibility(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgVisibility); ok {
 		e.selfElement.Call("setAttribute", "visibility", converted.String())
 		return e
@@ -2188,7 +2193,7 @@ func (e *TagSvgClipPath) Visibility(value interface{}) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Como atributo de apresentação, o espaçamento entre palavras pode ser usado como uma propriedade CSS.
 //       Consulte a propriedade de espaçamento entre palavras do CSS para obter mais informações.
-func (e *TagSvgClipPath) WordSpacing(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) WordSpacing(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "word-spacing", p)
@@ -2234,7 +2239,7 @@ func (e *TagSvgClipPath) WordSpacing(value interface{}) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Como atributo de apresentação, o modo de escrita pode ser usado como uma propriedade CSS. Consulte a
 //       propriedade do modo de gravação CSS para obter mais informações.
-func (e *TagSvgClipPath) WritingMode(value interface{}) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) WritingMode(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.(SvgWritingMode); ok {
 		e.selfElement.Call("setAttribute", "writing-mode", converted.String())
 		return e
@@ -2275,7 +2280,7 @@ func (e *TagSvgClipPath) WritingMode(value interface{}) (ref *TagSvgClipPath) {
 //   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
 //     elementos.
 //   * Para uso geral pelo navegador.
-func (e *TagSvgClipPath) Class(class string) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Class(class string) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
 }
@@ -2291,36 +2296,55 @@ func (e *TagSvgClipPath) Class(class string) (ref *TagSvgClipPath) {
 //
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
-func (e *TagSvgClipPath) Style(value string) (ref *TagSvgClipPath) {
+func (e *TagSvgFeComponentTransfer) Style(value string) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------
 
-// ClipPathUnits
+// In
 //
 // English:
 //
-//  The clipPathUnits attribute indicates which coordinate system to use for the contents of the <clipPath> element.
+//  The in attribute identifies input for the given filter primitive.
 //
 //   Input:
-//     clipPathUnits: indicates which coordinate system to used
-//       KSvgClipPathUnits... (e.g. KSvgClipPathUnitsUserSpaceOnUse)
+//     in: identifies input for the given filter primitive.
+//       KSvgIn... (e.g. KSvgInSourceAlpha)
+//       any other type: interface{}
 //
-// Português:
+// The value can be either one of the six keywords defined below, or a string which matches a previous result attribute
+// value within the same <filter> element. If no value is provided and this is the first filter primitive, then this
+// filter primitive will use SourceGraphic as its input. If no value is provided and this is a subsequent filter
+// primitive, then this filter primitive will use the result from the previous filter primitive as its input.
 //
-//  O atributo clipPathUnits indica qual sistema de coordenadas deve ser usado para o conteúdo do elemento <clipPath>.
+// If the value for result appears multiple times within a given <filter> element, then a reference to that result will
+// use the closest preceding filter primitive with the given value for attribute result.
 //
-//   Input:
-//     clipPathUnits: indica qual sistema de coordenadas deve ser usado
-//       KSvgClipPathUnits... (ex. KSvgClipPathUnitsUserSpaceOnUse)
-func (e *TagSvgClipPath) ClipPathUnits(value interface{}) (ref *TagSvgClipPath) {
-	if converted, ok := value.(SvgClipPathUnits); ok {
-		e.selfElement.Call("setAttribute", "clipPathUnits", converted.String())
+// Portuguese
+//
+//  O atributo in identifica à entrada para a primitiva de filtro fornecida.
+//
+//   Entrada:
+//     in: identifica à entrada para a primitiva de filtro fornecida.
+//       KSvgIn... (e.g. KSvgInSourceAlpha)
+//       qualquer outro tipo: interface{}
+//
+// O valor pode ser uma das seis palavras-chave definidas abaixo ou uma string que corresponda a um valor de atributo
+// de resultado anterior dentro do mesmo elemento <filter>. Se nenhum valor for fornecido e esta for a primeira
+// primitiva de filtro, essa primitiva de filtro usará SourceGraphic como sua entrada. Se nenhum valor for fornecido e
+// esta for uma primitiva de filtro subsequente, essa primitiva de filtro usará o resultado da primitiva de filtro
+// anterior como sua entrada.
+//
+// Se o valor do resultado aparecer várias vezes em um determinado elemento <filter>, uma referência à esse resultado
+// usará a primitiva de filtro anterior mais próxima com o valor fornecido para o resultado do atributo.
+func (e *TagSvgFeComponentTransfer) In(in interface{}) (ref *TagSvgFeComponentTransfer) {
+	if converted, ok := in.(SvgIn); ok {
+		e.selfElement.Call("setAttribute", "in", converted.String())
 		return e
 	}
 
-	e.selfElement.Call("setAttribute", "clipPathUnits", value)
+	e.selfElement.Call("setAttribute", "in", in)
 	return e
 }

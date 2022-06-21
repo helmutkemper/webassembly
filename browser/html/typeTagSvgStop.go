@@ -16,7 +16,7 @@ import (
 // The SVG <stop> element defines a color and its position to use on a gradient. This element is always a child of a
 // <linearGradient> or <radialGradient> element.
 //
-// Português
+// Português:
 //
 // O elemento SVG <stop> define uma cor e sua posição para usar em um gradiente. Este elemento é sempre um filho de um
 // elemento <linearGradient> ou <radialGradient>.

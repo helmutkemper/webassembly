@@ -16,7 +16,7 @@ import (
 // The <feFuncB> SVG filter primitive defines the transfer function for the blue component of the input graphic of its
 // parent <feComponentTransfer> element.
 //
-// Português
+// Português:
 //
 // The <feFuncB> SVG filter primitive defines the transfer function for the blue component of the input graphic of its
 // parent <feComponentTransfer> element.

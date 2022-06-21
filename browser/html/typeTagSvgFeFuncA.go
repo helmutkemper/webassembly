@@ -16,7 +16,7 @@ import (
 // The <feFuncA> SVG filter primitive defines the transfer function for the alpha component of the input graphic of its
 // parent <feComponentTransfer> element.
 //
-// Português
+// Português:
 //
 // A primitiva de filtro SVG <feFuncA> define a função de transferência para o componente alfa do gráfico de entrada
 // de seu elemento pai <feComponentTransfer>.

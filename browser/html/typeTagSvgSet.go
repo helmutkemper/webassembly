@@ -23,7 +23,7 @@ import (
 //     * The <set> element is non-additive. The additive and accumulate attributes are not allowed, and will be
 //       ignored if specified.
 //
-// Português
+// Português:
 //
 // O elemento SVG <set> fornece um meio simples de apenas definir o valor de um atributo para uma duração especificada.
 //
@@ -176,7 +176,7 @@ type TagSvgSet struct {
 //  The attributeName attribute indicates the name of the CSS property or attribute of the target element that is going
 //  to be changed during an animation.
 //
-// Português
+// Português:
 //
 //  O atributo attributeName indica o nome da propriedade CSS ou atributo do elemento de destino que será alterado
 //  durante uma animação.

@@ -15,7 +15,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // The <input> element is one of the most powerful and complex in all of HTML due to the sheer
 // number of combinations of input types and attributes.
 //
-// Português
+// Português:
 //
 //  Cria o elemento input.
 //

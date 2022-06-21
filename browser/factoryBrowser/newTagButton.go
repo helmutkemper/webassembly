@@ -15,7 +15,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // By default, HTML buttons are presented in a style resembling the platform the user agent runs on,
 // but you can change buttons' appearance with CSS.
 //
-// Português
+// Português:
 //
 //  Cria uma nova tag html button
 //

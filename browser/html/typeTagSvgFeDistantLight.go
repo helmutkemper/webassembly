@@ -15,7 +15,7 @@ import (
 // The azimuth attribute specifies the direction angle for the light source on the XY plane (clockwise), in degrees
 // from the x axis.
 //
-// Português
+// Português:
 //
 // O atributo azimute especifica o ângulo de direção da fonte de luz no plano XY (sentido horário), em graus a partir
 // do eixo x.

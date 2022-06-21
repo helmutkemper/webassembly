@@ -20,7 +20,7 @@ import (
 // Content within each <a> should indicate the link's destination. If the href attribute is present,
 // pressing the enter key while focused on the <a> element will activate it.
 //
-// Português
+// Português:
 //
 //  O elemento Âncora.
 //

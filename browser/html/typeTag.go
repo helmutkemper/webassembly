@@ -19,7 +19,7 @@ const (
 	// Content within each <a> should indicate the link's destination. If the href attribute is present,
 	// pressing the enter key while focused on the <a> element will activate it.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento Âncora.
 	//
@@ -37,7 +37,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagAbbr Tag = "abbr"
@@ -48,7 +48,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagAddress Tag = "address"
@@ -59,7 +59,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagArea Tag = "area"
@@ -70,7 +70,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagArticle Tag = "article"
@@ -81,7 +81,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagAside Tag = "aside"
@@ -92,7 +92,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagAudio Tag = "audio"
@@ -103,7 +103,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagB Tag = "b"
@@ -114,7 +114,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagBase Tag = "base"
@@ -125,7 +125,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagBdi Tag = "bdi"
@@ -136,7 +136,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagBdo Tag = "bdo"
@@ -147,7 +147,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagBlockquote Tag = "blockquote"
@@ -158,7 +158,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagBody Tag = "body"
@@ -169,7 +169,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagBr Tag = "br"
@@ -182,7 +182,7 @@ const (
 	//
 	// By default, HTML buttons are presented in a style resembling the platform the user agent runs on, but you can change buttons' appearance with CSS.
 	//
-	// Português
+	// Português::
 	//
 	//  O elemento HTML <button> é um elemento interativo ativado por um usuário com mouse, teclado,
 	//  dedo, comando de voz ou outra tecnologia assistiva. Uma vez ativado, ele executa uma ação
@@ -198,7 +198,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagCanvas Tag = "canvas"
@@ -209,7 +209,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagCaption Tag = "caption"
@@ -220,7 +220,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagCite Tag = "cite"
@@ -231,7 +231,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagCode Tag = "code"
@@ -242,7 +242,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagCol Tag = "col"
@@ -253,7 +253,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagColgroup Tag = "colgroup"
@@ -264,7 +264,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagData Tag = "data"
@@ -276,7 +276,7 @@ const (
 	//  The <datalist> HTML element contains a set of <option> elements that represent the permissible
 	//  or recommended options available to choose from within other controls.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <datalist> contém um conjunto de elementos <option> que representam as opções
 	//  permitidas ou recomendadas disponíveis para escolha em outros controles.
@@ -288,7 +288,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagDd Tag = "dd"
@@ -299,7 +299,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagDel Tag = "del"
@@ -310,7 +310,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagDetails Tag = "details"
@@ -321,7 +321,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagDfn Tag = "dfn"
@@ -332,7 +332,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagDialog Tag = "dialog"
@@ -370,7 +370,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagDl Tag = "dl"
@@ -381,7 +381,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagDt Tag = "dt"
@@ -392,7 +392,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagEm Tag = "em"
@@ -403,7 +403,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagEmbed Tag = "embed"
@@ -415,7 +415,7 @@ const (
 	//  The <fieldset> HTML element is used to group several controls as well as labels (<label>)
 	//  within a web form.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <fieldset> é usado para agrupar vários controles, bem como rótulos (<label>)
 	//  dentro de um formulário web.
@@ -427,7 +427,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagFigcaption Tag = "figcaption"
@@ -438,7 +438,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagFigure Tag = "figure"
@@ -449,7 +449,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagFooter Tag = "footer"
@@ -461,7 +461,7 @@ const (
 	//  The <form> HTML element represents a document section containing interactive controls for
 	//  submitting information.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <form> representa uma seção do documento contendo controles interativos para o
 	//  envio de informações.
@@ -473,7 +473,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagHead Tag = "head"
@@ -484,7 +484,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagHeader Tag = "header"
@@ -495,7 +495,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagH1 Tag = "h1"
@@ -506,7 +506,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagHr Tag = "hr"
@@ -517,7 +517,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagHtml Tag = "html"
@@ -528,7 +528,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagI Tag = "i"
@@ -539,7 +539,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagIframe Tag = "iframe"
@@ -550,7 +550,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagImg Tag = "img"
@@ -566,7 +566,7 @@ const (
 	// The <input> element is one of the most powerful and complex in all of HTML due to the sheer
 	// number of combinations of input types and attributes.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <input> é usado para criar controles interativos para formulários baseados na
 	//  web para aceitar dados do usuário; uma ampla variedade de tipos de dados de entrada e widgets
@@ -582,7 +582,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagIns Tag = "ins"
@@ -593,7 +593,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagKbd Tag = "kbd"
@@ -604,7 +604,7 @@ const (
 	//
 	//  The <label> HTML element represents a caption for an item in a user interface.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <label> representa uma legenda para um item em uma interface do usuário.
 	KTagLabel Tag = "label"
@@ -615,7 +615,7 @@ const (
 	//
 	//  The <legend> HTML element represents a caption for the content of its parent <fieldset>.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <legend> representa uma legenda para o conteúdo de seu <fieldset> pai.
 	KTagLegend Tag = "legend"
@@ -626,7 +626,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagLi Tag = "li"
@@ -637,7 +637,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagLink Tag = "link"
@@ -648,7 +648,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagMain Tag = "main"
@@ -659,7 +659,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagMap Tag = "map"
@@ -670,7 +670,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagMark Tag = "mark"
@@ -681,7 +681,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagExperimental Tag = "Experimental"
@@ -692,7 +692,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagMenu Tag = "menu"
@@ -703,7 +703,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagMeta Tag = "meta"
@@ -715,7 +715,7 @@ const (
 	//  The <meter> HTML element represents either a scalar value within a known range or a fractional
 	//  value.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <meter> representa um valor escalar dentro de um intervalo conhecido ou um
 	//  valor fracionário.
@@ -727,7 +727,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagNav Tag = "nav"
@@ -738,7 +738,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagNoscript Tag = "noscript"
@@ -749,7 +749,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagObject Tag = "object"
@@ -760,7 +760,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagOl Tag = "ol"
@@ -771,7 +771,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagOptgroup Tag = "optgroup"
@@ -784,7 +784,7 @@ const (
 	//  <datalist> element. As such, <option> can represent menu items in popups and other lists of
 	//  items in an HTML document.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <option> é usado para definir um item contido em um elemento <select>,
 	//  <optgroup> ou <datalist>. Como tal, <option> pode representar itens de menu em pop-ups e outras
@@ -797,7 +797,7 @@ const (
 	//
 	//  The <optgroup> HTML element creates a grouping of options within a <select> element.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <optgroup> cria um agrupamento de opções dentro de um elemento <select>.
 	KTagOptionGroup Tag = "optgroup"
@@ -809,7 +809,7 @@ const (
 	//  The <output> HTML element is a container element into which a site or app can inject the results
 	//  of a calculation or the outcome of a user action.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <output> é um elemento de contêiner no qual um site ou aplicativo pode injetar
 	//  os resultados de um cálculo ou o resultado de uma ação do usuário.
@@ -821,7 +821,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagP Tag = "p"
@@ -832,7 +832,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagParam Tag = "param"
@@ -843,7 +843,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagPicture Tag = "picture"
@@ -854,7 +854,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagPortal Tag = "portal"
@@ -865,7 +865,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagPre Tag = "pre"
@@ -876,7 +876,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagProgress Tag = "progress"
@@ -887,7 +887,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagQ Tag = "q"
@@ -898,7 +898,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagRp Tag = "rp"
@@ -909,7 +909,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagRt Tag = "rt"
@@ -920,7 +920,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagRuby Tag = "ruby"
@@ -931,7 +931,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagS Tag = "s"
@@ -942,7 +942,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagSamp Tag = "samp"
@@ -953,7 +953,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagScript Tag = "script"
@@ -964,7 +964,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagSection Tag = "section"
@@ -975,7 +975,7 @@ const (
 	//
 	//  The <select> HTML element represents a control that provides a menu of options.
 	//
-	// Português
+	// Português:
 	//
 	//  O elemento HTML <select> representa um controle que fornece um menu de opções.
 	KTagSelect Tag = "select"
@@ -993,7 +993,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagSlot Tag = "slot"
@@ -1004,7 +1004,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagSmall Tag = "small"
@@ -1015,7 +1015,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagSource Tag = "source"
@@ -1026,7 +1026,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagSpan Tag = "span"
@@ -1037,7 +1037,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagStrong Tag = "strong"
@@ -1048,7 +1048,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagStyle Tag = "style"
@@ -1059,7 +1059,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagSub Tag = "sub"
@@ -1070,7 +1070,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagSummary Tag = "summary"
@@ -1081,7 +1081,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagSup Tag = "sup"
@@ -1092,7 +1092,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTable Tag = "table"
@@ -1103,7 +1103,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTbody Tag = "tbody"
@@ -1114,7 +1114,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTd Tag = "td"
@@ -1125,7 +1125,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTemplate Tag = "template"
@@ -1136,7 +1136,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTextarea Tag = "textarea"
@@ -1147,7 +1147,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTfoot Tag = "tfoot"
@@ -1158,7 +1158,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTh Tag = "th"
@@ -1169,7 +1169,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagThead Tag = "thead"
@@ -1180,7 +1180,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTime Tag = "time"
@@ -1191,7 +1191,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTitle Tag = "title"
@@ -1202,7 +1202,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTr Tag = "tr"
@@ -1213,7 +1213,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagTrack Tag = "track"
@@ -1224,7 +1224,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagU Tag = "u"
@@ -1235,7 +1235,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagUl Tag = "ul"
@@ -1246,7 +1246,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagVar Tag = "var"
@@ -1257,7 +1257,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagVideo Tag = "video"
@@ -1268,7 +1268,7 @@ const (
 	//
 	//
 	//
-	// Português
+	// Português:
 	//
 	//
 	KTagWbr Tag = "wbr"

@@ -196,6 +196,31 @@ func (e *TagSvgClipPath) CreateElement(tag Tag) (ref *TagSvgClipPath) {
 	return e
 }
 
+func (e *TagSvgClipPath) AppendToStage() (ref *TagSvgClipPath) {
+	e.stage.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgClipPath) AppendById(appendId string) (ref *TagSvgClipPath) {
+	toAppend := js.Global().Get("document").Call("getElementById", appendId)
+	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+		log.Print(KIdToAppendNotFound, appendId)
+		return e
+	}
+
+	toAppend.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgClipPath) AppendToElement(el js.Value) (ref *TagSvgClipPath) {
+	e.selfElement.Call("appendChild", el)
+	return e
+}
+
+func (e *TagSvgClipPath) Get() (el js.Value) {
+	return e.selfElement
+}
+
 // #core start --------------------------------------------------------------------------------------------------------
 
 // Id

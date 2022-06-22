@@ -202,6 +202,31 @@ func (e *TagSvgDefs) CreateElement(tag Tag) (ref *TagSvgDefs) {
 	return e
 }
 
+func (e *TagSvgDefs) AppendToStage() (ref *TagSvgDefs) {
+	e.stage.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgDefs) AppendById(appendId string) (ref *TagSvgDefs) {
+	toAppend := js.Global().Get("document").Call("getElementById", appendId)
+	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+		log.Print(KIdToAppendNotFound, appendId)
+		return e
+	}
+
+	toAppend.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgDefs) AppendToElement(el js.Value) (ref *TagSvgDefs) {
+	e.selfElement.Call("appendChild", el)
+	return e
+}
+
+func (e *TagSvgDefs) Get() (el js.Value) {
+	return e.selfElement
+}
+
 // #core start --------------------------------------------------------------------------------------------------------
 
 // Id
@@ -2303,4 +2328,3 @@ func (e *TagSvgDefs) Style(value string) (ref *TagSvgDefs) {
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------
-//

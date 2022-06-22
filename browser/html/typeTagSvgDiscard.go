@@ -199,6 +199,31 @@ func (e *TagSvgDiscard) CreateElement(tag Tag) (ref *TagSvgDiscard) {
 	return e
 }
 
+func (e *TagSvgDiscard) AppendToStage() (ref *TagSvgDiscard) {
+	e.stage.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgDiscard) AppendById(appendId string) (ref *TagSvgDiscard) {
+	toAppend := js.Global().Get("document").Call("getElementById", appendId)
+	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+		log.Print(KIdToAppendNotFound, appendId)
+		return e
+	}
+
+	toAppend.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgDiscard) AppendToElement(el js.Value) (ref *TagSvgDiscard) {
+	e.selfElement.Call("appendChild", el)
+	return e
+}
+
+func (e *TagSvgDiscard) Get() (el js.Value) {
+	return e.selfElement
+}
+
 // #core start --------------------------------------------------------------------------------------------------------
 
 // Id

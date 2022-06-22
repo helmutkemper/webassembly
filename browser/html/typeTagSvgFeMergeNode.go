@@ -5,23 +5,22 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"log"
-	"strconv"
 	"sync"
 	"syscall/js"
 )
 
-// TagSvgFeFuncG
+// TagSvgFeMergeNode
 //
 // English:
 //
-// The <feFuncG> SVG filter primitive defines the transfer function for the green component of the input graphic of
-// its parent <feComponentTransfer> element.
+// The <feFlood> SVG filter primitive fills the filter subregion with the color and opacity defined by flood-color and
+// flood-opacity.
 //
 // Português:
 //
-// A primitiva de filtro SVG <feFuncG> define a função de transferência para o componente verde do gráfico de entrada
-// de seu elemento pai <feComponentTransfer>.
-type TagSvgFeFuncG struct {
+// A primitiva de filtro SVG <feFlood> preenche a sub-região do filtro com a cor e a opacidade definidas por flood-color
+// e flood-opacity.
+type TagSvgFeMergeNode struct {
 
 	// id
 	//
@@ -165,7 +164,7 @@ type TagSvgFeFuncG struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeFuncG) Init(id string) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFeMergeNode) Init(id string) (ref *TagSvgFeMergeNode) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement(KTagSvg)
@@ -175,11 +174,11 @@ func (e *TagSvgFeFuncG) Init(id string) (ref *TagSvgFeFuncG) {
 	return e
 }
 
-func (e *TagSvgFeFuncG) prepareStageReference() {
+func (e *TagSvgFeMergeNode) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgFeFuncG) CreateElement(tag Tag) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFeMergeNode) CreateElement(tag Tag) (ref *TagSvgFeMergeNode) {
 	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
@@ -191,12 +190,12 @@ func (e *TagSvgFeFuncG) CreateElement(tag Tag) (ref *TagSvgFeFuncG) {
 	return e
 }
 
-func (e *TagSvgFeFuncG) AppendToStage() (ref *TagSvgFeFuncG) {
+func (e *TagSvgFeMergeNode) AppendToStage() (ref *TagSvgFeMergeNode) {
 	e.stage.Call("appendChild", e.selfElement)
 	return e
 }
 
-func (e *TagSvgFeFuncG) AppendById(appendId string) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFeMergeNode) AppendById(appendId string) (ref *TagSvgFeMergeNode) {
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
 		log.Print(KIdToAppendNotFound, appendId)
@@ -207,12 +206,12 @@ func (e *TagSvgFeFuncG) AppendById(appendId string) (ref *TagSvgFeFuncG) {
 	return e
 }
 
-func (e *TagSvgFeFuncG) AppendToElement(el js.Value) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFeMergeNode) AppendToElement(el js.Value) (ref *TagSvgFeMergeNode) {
 	e.selfElement.Call("appendChild", el)
 	return e
 }
 
-func (e *TagSvgFeFuncG) Get() (el js.Value) {
+func (e *TagSvgFeMergeNode) Get() (el js.Value) {
 	return e.selfElement
 }
 
@@ -227,7 +226,7 @@ func (e *TagSvgFeFuncG) Get() (el js.Value) {
 // Portuguese
 //
 //  O atributo id atribui um nome exclusivo a um elemento.
-func (e *TagSvgFeFuncG) Id(id string) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFeMergeNode) Id(id string) (ref *TagSvgFeMergeNode) {
 	e.selfElement.Call("setAttribute", "id", id)
 	return e
 }
@@ -269,7 +268,7 @@ func (e *TagSvgFeFuncG) Id(id string) (ref *TagSvgFeFuncG) {
 // (também conhecido como BCP 47). O glifo deveria ser usado se o atributo xml:lang correspondesse exatamente a um dos
 // idiomas fornecidos no valor desse parâmetro, ou se o atributo xml:lang fosse exatamente igual a um prefixo de um dos
 // idiomas fornecidos no valor desse parâmetro de modo que o primeiro caractere de tag após o prefixo fosse "-".
-func (e *TagSvgFeFuncG) Lang(value interface{}) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFeMergeNode) Lang(value interface{}) (ref *TagSvgFeMergeNode) {
 
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "lang", converted.String())
@@ -291,7 +290,7 @@ func (e *TagSvgFeFuncG) Lang(value interface{}) (ref *TagSvgFeFuncG) {
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
 // de navegação de foco sequencial.
-func (e *TagSvgFeFuncG) Tabindex(value int) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFeMergeNode) Tabindex(value int) (ref *TagSvgFeMergeNode) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }
@@ -329,7 +328,7 @@ func (e *TagSvgFeFuncG) Tabindex(value int) (ref *TagSvgFeFuncG) {
 //
 // Há também um atributo lang (sem namespace). Se ambos estiverem definidos, aquele com namespace será usado e o sem
 // namespace será ignorado.
-func (e *TagSvgFeFuncG) XmlLang(value interface{}) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFeMergeNode) XmlLang(value interface{}) (ref *TagSvgFeMergeNode) {
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "xml:lang", converted.String())
 		return e
@@ -341,130 +340,48 @@ func (e *TagSvgFeFuncG) XmlLang(value interface{}) (ref *TagSvgFeFuncG) {
 
 // #core end ----------------------------------------------------------------------------------------------------------
 
-// Type
+// In
 //
 // English:
 //
-// Indicates the type of component transfer function.
+//  The in attribute identifies input for the given filter primitive.
 //
 //   Input:
-//     value: type of component transfer function
-//       const: KSvgTypeFeFunc... (e.g. KSvgTypeFeFuncIdentity)
+//     in: identifies input for the given filter primitive.
+//       KSvgIn... (e.g. KSvgInSourceAlpha)
 //       any other type: interface{}
 //
-// Português:
+// The value can be either one of the six keywords defined below, or a string which matches a previous result attribute
+// value within the same <filter> element. If no value is provided and this is the first filter primitive, then this
+// filter primitive will use SourceGraphic as its input. If no value is provided and this is a subsequent filter
+// primitive, then this filter primitive will use the result from the previous filter primitive as its input.
 //
-// Indica o tipo de função de transferência de componentes.
-//
-//   Input:
-//     value: tipo de função de transferência de componente
-//       const: KSvgTypeFeFunc... (ex. KSvgTypeFeFuncIdentity)
-//       any other type: interface{}
-func (e *TagSvgFeFuncG) Type(value interface{}) (ref *TagSvgFeFuncG) {
-	if converted, ok := value.(SvgTypeFeFunc); ok {
-		e.selfElement.Call("setAttribute", "type", converted.String())
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "type", value)
-	return e
-}
-
-// TableValues
-//
-// English:
-//
-// The tableValues attribute defines a list of numbers defining a lookup table of values for a color component transfer
-// function.
-//
-//   Input:
-//     value: defines a list of numbers
-//       []float64: e.g. []float64{0.0, 1.0} = "0 1"
-//       any other type: interface{}
-//
-// Português:
-//
-// O atributo tableValues define uma lista de números que definem uma tabela de consulta de valores para uma função de
-// transferência de componente de cor.
-//
-//   Entrada:
-//     value: define uma lista de números
-//       []float64: ex. []float64{0.0, 1.0} = "0 1"
-//       qualquer outro tipo: interface{}
-func (e *TagSvgFeFuncG) TableValues(value interface{}) (ref *TagSvgFeFuncG) {
-	if converted, ok := value.([]float64); ok {
-		tags := ""
-		for _, v := range converted {
-			tags += strconv.FormatFloat(v, 'g', -1, 64) + " "
-		}
-		length := len(tags) - 1
-
-		e.selfElement.Call("setAttribute", "tableValues", tags[:length])
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "tableValues", value)
-	return e
-}
-
-// Intercept
-//
-// English:
-//
-//  The intercept attribute defines the intercept of the linear function of color component transfers when the type
-//  attribute is set to linear.
+// If the value for result appears multiple times within a given <filter> element, then a reference to that result will
+// use the closest preceding filter primitive with the given value for attribute result.
 //
 // Portuguese
 //
-//  O atributo de interceptação define a interceptação da função linear de transferências de componentes de cor quando
-//  o atributo de tipo é definido como linear.
-func (e *TagSvgFeFuncG) Intercept(intercept float64) (ref *TagSvgFeFuncG) {
-	e.selfElement.Call("setAttribute", "intercept", intercept)
-	return e
-}
-
-// Amplitude
-//
-// English:
-//
-//  The amplitude attribute controls the amplitude of the gamma function of a component transfer element when its type
-//  attribute is gamma.
-//
-//   Input:
-//     amplitude: controls the amplitude of the gamma function
-//       float32: 1.0 = "100%"
-//       any other type: interface{}
-//
-// Português:
-//
-//  O atributo amplitude controla à amplitude da função gama de um elemento de transferência de componente quando seu
-//  atributo de tipo é gama.
+//  O atributo in identifica à entrada para a primitiva de filtro fornecida.
 //
 //   Entrada:
-//     amplitude: controla a amplitude da função de gama
-//       float32: 1.0 = "100%"
+//     in: identifica à entrada para a primitiva de filtro fornecida.
+//       KSvgIn... (e.g. KSvgInSourceAlpha)
 //       qualquer outro tipo: interface{}
-func (e *TagSvgFeFuncG) Amplitude(amplitude interface{}) (ref *TagSvgFeFuncG) {
-	if converted, ok := amplitude.(float32); ok {
-		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
-		e.selfElement.Call("setAttribute", "amplitude", p)
+//
+// O valor pode ser uma das seis palavras-chave definidas abaixo ou uma string que corresponda a um valor de atributo
+// de resultado anterior dentro do mesmo elemento <filter>. Se nenhum valor for fornecido e esta for a primeira
+// primitiva de filtro, essa primitiva de filtro usará SourceGraphic como sua entrada. Se nenhum valor for fornecido e
+// esta for uma primitiva de filtro subsequente, essa primitiva de filtro usará o resultado da primitiva de filtro
+// anterior como sua entrada.
+//
+// Se o valor do resultado aparecer várias vezes em um determinado elemento <filter>, uma referência à esse resultado
+// usará a primitiva de filtro anterior mais próxima com o valor fornecido para o resultado do atributo.
+func (e *TagSvgFeMergeNode) In(in interface{}) (ref *TagSvgFeMergeNode) {
+	if converted, ok := in.(SvgIn); ok {
+		e.selfElement.Call("setAttribute", "in", converted.String())
 		return e
 	}
 
-	e.selfElement.Call("setAttribute", "amplitude", amplitude)
-	return e
-}
-
-// Exponent
-//
-// English:
-//
-//  The exponent attribute defines the exponent of the gamma function.
-//
-// Portuguese
-//
-//  O atributo expoente define o expoente da função gama.
-func (e *TagSvgFeFuncG) Exponent(exponent float64) (ref *TagSvgFeFuncG) {
-	e.selfElement.Call("setAttribute", "exponent", exponent)
+	e.selfElement.Call("setAttribute", "in", in)
 	return e
 }

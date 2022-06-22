@@ -285,6 +285,31 @@ func (e *TagSvgFeColorMatrix) CreateElement(tag Tag) (ref *TagSvgFeColorMatrix) 
 	return e
 }
 
+func (e *TagSvgFeColorMatrix) AppendToStage() (ref *TagSvgFeColorMatrix) {
+	e.stage.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgFeColorMatrix) AppendById(appendId string) (ref *TagSvgFeColorMatrix) {
+	toAppend := js.Global().Get("document").Call("getElementById", appendId)
+	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+		log.Print(KIdToAppendNotFound, appendId)
+		return e
+	}
+
+	toAppend.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgFeColorMatrix) AppendToElement(el js.Value) (ref *TagSvgFeColorMatrix) {
+	e.selfElement.Call("appendChild", el)
+	return e
+}
+
+func (e *TagSvgFeColorMatrix) Get() (el js.Value) {
+	return e.selfElement
+}
+
 // #core start --------------------------------------------------------------------------------------------------------
 
 // Id
@@ -2386,6 +2411,197 @@ func (e *TagSvgFeColorMatrix) Style(value string) (ref *TagSvgFeColorMatrix) {
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------
+
+// #filter start ------------------------------------------------------------------------------------------------------
+
+// Height
+//
+// English:
+//
+//  The height attribute defines the vertical length of an element in the user coordinate system.
+//
+// Português:
+//
+//  O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
+func (e *TagSvgFeColorMatrix) Height(height interface{}) (ref *TagSvgFeColorMatrix) {
+	if converted, ok := height.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "height", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "height", height)
+	return e
+}
+
+// Result
+//
+// English:
+//
+// The result attribute defines the assigned name for this filter primitive. If supplied, then graphics that result from
+// processing this filter primitive can be referenced by an in attribute on a subsequent filter primitive within the
+// same <filter> element. If no value is provided, the output will only be available for re-use as the implicit input
+// into the next filter primitive if that filter primitive provides no value for its in attribute.
+//
+// Português:
+//
+// O atributo result define o nome atribuído para esta primitiva de filtro. Se fornecido, os gráficos resultantes do
+// processamento dessa primitiva de filtro podem ser referenciados por um atributo in em uma primitiva de filtro
+// subsequente dentro do mesmo elemento <filter>. Se nenhum valor for fornecido, a saída só estará disponível para
+// reutilização como entrada implícita na próxima primitiva de filtro se essa primitiva de filtro não fornecer valor
+// para seu atributo in.
+func (e *TagSvgFeColorMatrix) Result(value interface{}) (ref *TagSvgFeColorMatrix) {
+	e.selfElement.Call("setAttribute", "result", value)
+	return e
+}
+
+// Width
+//
+// English:
+//
+// The width attribute defines the horizontal length of an element in the user coordinate system.
+//
+//   Input:
+//     value: the horizontal length of an element
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo largura define o comprimento horizontal de um elemento no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: o comprimento horizontal de um elemento
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFeColorMatrix) Width(value interface{}) (ref *TagSvgFeColorMatrix) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "width", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "width", value)
+	return e
+}
+
+// X
+//
+// English:
+//
+// The x attribute defines an x-axis coordinate in the user coordinate system.
+//
+//   Input:
+//     value: defines an x-axis coordinate
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo x define uma coordenada do eixo x no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: define uma coordenada do eixo x
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFeColorMatrix) X(value interface{}) (ref *TagSvgFeColorMatrix) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "x", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 3
+
+		e.selfElement.Call("setAttribute", "x", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "x", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "x", value)
+	return e
+}
+
+// Y
+//
+// English:
+//
+// The y attribute defines an y-axis coordinate in the user coordinate system.
+//
+//   Input:
+//     value: defines an y-axis coordinate
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo y define uma coordenada do eixo y no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: define uma coordenada do eixo y
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFeColorMatrix) Y(value interface{}) (ref *TagSvgFeColorMatrix) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "y", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 3
+
+		e.selfElement.Call("setAttribute", "y", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "y", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "y", value)
+	return e
+}
+
+// #filter end --------------------------------------------------------------------------------------------------------
 
 // In
 //

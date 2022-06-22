@@ -12,13 +12,13 @@ import (
 //
 // English:
 //
-// The azimuth attribute specifies the direction angle for the light source on the XY plane (clockwise), in degrees
-// from the x axis.
+// The <feDistantLight> filter primitive defines a distant light source that can be used within a lighting filter
+// primitive: <feDiffuseLighting> or <feSpecularLighting>.
 //
 // Português:
 //
-// O atributo azimute especifica o ângulo de direção da fonte de luz no plano XY (sentido horário), em graus a partir
-// do eixo x.
+// A primitiva de filtro <feDistantLight> define uma fonte de luz distante que pode ser usada em uma primitiva de filtro
+// de iluminação: <feDiffuseLighting> ou <feSpecularLighting>.
 type TagSvgFeDistantLight struct {
 
 	// id
@@ -154,6 +154,131 @@ type TagSvgFeDistantLight struct {
 	rotateDelta float64
 }
 
+// #core start --------------------------------------------------------------------------------------------------------
+
+// Id
+//
+// English:
+//
+//  The id attribute assigns a unique name to an element.
+//
+// Portuguese
+//
+//  O atributo id atribui um nome exclusivo a um elemento.
+func (e *TagSvgFeDistantLight) Id(id string) (ref *TagSvgFeDistantLight) {
+	e.selfElement.Call("setAttribute", "id", id)
+	return e
+}
+
+// Lang
+//
+// English:
+//
+// The lang attribute specifies the primary language used in contents and attributes containing text content of
+// particular elements.
+//
+//   Input:
+//     value: specifies the primary language used in contents
+//       const KLanguage... (e.g. KLanguageEnglish)
+//
+// There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
+// the one without is ignored.
+//
+// In SVG 1.1 there was a lang attribute defined with a different meaning and only applying to <glyph> elements.
+// That attribute specified a list of languages according to RFC 5646: Tags for Identifying Languages
+// (also known as BCP 47). The glyph was meant to be used if the xml:lang attribute exactly matched one of the languages
+// given in the value of this parameter, or if the xml:lang attribute exactly equaled a prefix of one of the languages
+// given in the value of this parameter such that the first tag character following the prefix was "-".
+//
+// Português:
+//
+// O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
+// elementos específicos.
+//
+//   Entrada:
+//     value: especifica o idioma principal usado no conteúdo
+//       const KLanguage... (ex. KLanguagePortuguese)
+//
+// Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
+// sem namespace será ignorado.
+//
+// No SVG 1.1 havia um atributo lang definido com um significado diferente e aplicando-se apenas aos elementos <glyph>.
+// Esse atributo especificou uma lista de idiomas de acordo com a RFC 5646: Tags for Identification Languages
+// (também conhecido como BCP 47). O glifo deveria ser usado se o atributo xml:lang correspondesse exatamente a um dos
+// idiomas fornecidos no valor desse parâmetro, ou se o atributo xml:lang fosse exatamente igual a um prefixo de um dos
+// idiomas fornecidos no valor desse parâmetro de modo que o primeiro caractere de tag após o prefixo fosse "-".
+func (e *TagSvgFeDistantLight) Lang(value interface{}) (ref *TagSvgFeDistantLight) {
+
+	if converted, ok := value.(Language); ok {
+		e.selfElement.Call("setAttribute", "lang", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "lang", value)
+	return e
+}
+
+// Tabindex
+//
+// English:
+//
+// The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
+// element for the purposes of sequential focus navigation.
+//
+// Português:
+//
+// O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
+// de navegação de foco sequencial.
+func (e *TagSvgFeDistantLight) Tabindex(value int) (ref *TagSvgFeDistantLight) {
+	e.selfElement.Call("setAttribute", "tabindex", value)
+	return e
+}
+
+// XmlLang
+//
+// English:
+//
+// The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
+// particular elements.
+//
+//   Input:
+//     value: specifies the primary language
+//       const: KLanguage... (e.g. KLanguageEnglish)
+//       any other type: interface{}
+//
+// It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
+// contains.
+//
+// There is also a lang attribute (without namespace). If both of them are defined, the one with namespace is used and
+// the one without is ignored.
+//
+// Português:
+//
+// O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
+// elementos específicos.
+//
+//   Entrada:
+//     value: especifica o idioma principal
+//       const: KLanguage... (e.g. KLanguagePortuguese)
+//       qualquer outro tipo: interface{}
+//
+// É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
+// contém.
+//
+// Há também um atributo lang (sem namespace). Se ambos estiverem definidos, aquele com namespace será usado e o sem
+// namespace será ignorado.
+func (e *TagSvgFeDistantLight) XmlLang(value interface{}) (ref *TagSvgFeDistantLight) {
+	if converted, ok := value.(Language); ok {
+		e.selfElement.Call("setAttribute", "xml:lang", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "xml:lang", value)
+	return e
+}
+
+// #core end ----------------------------------------------------------------------------------------------------------
+
 // Azimuth
 //
 // English:
@@ -173,5 +298,21 @@ type TagSvgFeDistantLight struct {
 //     azimuth: especifica o ângulo de direção para a fonte de luz no plano XY
 func (e *TagSvgFeDistantLight) Azimuth(azimuth float64) (ref *TagSvgFeDistantLight) {
 	e.selfElement.Call("setAttribute", "azimuth", azimuth)
+	return e
+}
+
+// Elevation
+//
+// English:
+//
+//  The elevation attribute specifies the direction angle for the light source from the XY plane towards the Z-axis, in
+//  degrees. Note that the positive Z-axis points towards the viewer of the content.
+//
+// Portuguese
+//
+//  O atributo de elevação especifica o ângulo de direção da fonte de luz do plano XY em direção ao eixo Z, em graus.
+//  Observe que o eixo Z positivo aponta para o visualizador do conteúdo.
+func (e *TagSvgFeDistantLight) Elevation(elevation float64) (ref *TagSvgFeDistantLight) {
+	e.selfElement.Call("setAttribute", "elevation", elevation)
 	return e
 }

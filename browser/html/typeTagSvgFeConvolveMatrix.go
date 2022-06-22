@@ -11,26 +11,104 @@ import (
 	"syscall/js"
 )
 
-// TagSvgEllipse
+// TagSvgFeConvolveMatrix
 //
 // English:
 //
-// The <ellipse> element is an SVG basic shape, used to create ellipses based on a center coordinate, and both their x
-// and y radius.
+// The <feConvolveMatrix> SVG filter primitive applies a matrix convolution filter effect. A convolution combines pixels
+// in the input image with neighboring pixels to produce a resulting image. A wide variety of imaging operations can be
+// achieved through convolutions, including blurring, edge detection, sharpening, embossing and beveling.
 //
-//   Notes:
-//     * Ellipses are unable to specify the exact orientation of the ellipse (if, for example, you wanted to draw an
-//       ellipse tilted at a 45 degree angle), but it can be rotated by using the transform attribute.
+// A matrix convolution is based on an n-by-m matrix (the convolution kernel) which describes how a given pixel value
+// in the input image is combined with its neighboring pixel values to produce a resulting pixel value. Each result
+// pixel is determined by applying the kernel matrix to the corresponding source pixel and its neighboring pixels.
+//
+// The basic convolution formula which is applied to each color value for a given pixel is:
+//
+//   COLORX,Y = ( SUM I=0 to [orderY-1] { SUM J=0 to [orderX-1] { SOURCE X-targetX+J, Y-targetY+I *
+//                kernelMatrixorderX-J-1, orderY-I-1 } } ) / divisor + bias * ALPHAX,Y
+//
+// where "orderX" and "orderY" represent the X and Y values for the 'order' attribute, "targetX" represents the value of
+// the 'targetX' attribute, "targetY" represents the value of the 'targetY' attribute, "kernelMatrix" represents the
+// value of the 'kernelMatrix' attribute, "divisor" represents the value of the 'divisor' attribute, and "bias"
+// represents the value of the 'bias' attribute.
+//
+// Note in the above formulas that the values in the kernel matrix are applied such that the kernel matrix is rotated
+// 180 degrees relative to the source and destination images in order to match convolution theory as described in many
+// computer graphics textbooks.
+//
+// To illustrate, suppose you have a input image which is 5 pixels by 5 pixels, whose color values for one of the color
+// channels are as follows:
+//
+//   0    20  40 235 235
+//   100 120 140 235 235
+//   200 220 240 235 235
+//   225 225 255 255 255
+//   225 225 255 255 255
+//
+// and you define a 3-by-3 convolution kernel as follows:
+//
+//   1 2 3
+//   4 5 6
+//   7 8 9
+//
+// Let's focus on the color value at the second row and second column of the image (source pixel value is 120). Assuming
+// the simplest case (where the input image's pixel grid aligns perfectly with the kernel's pixel grid) and assuming
+// default values for attributes 'divisor', 'targetX' and 'targetY', then resulting color value will be:
+//
+//   (9*  0 + 8* 20 + 7* 40 +
+//    6*100 + 5*120 + 4*140 +
+//    3*200 + 2*220 + 1*240) /
+//   (9+8+7+6+5+4+3+2+1)
 //
 // Português:
 //
-// O elemento <ellipse> é uma forma básica SVG, usada para criar elipses com base em uma coordenada central e em seus
-// raios x e y.
+// A primitiva de filtro SVG <feConvolveMatrix> aplica um efeito de filtro de convolução de matriz. Uma convolução
+// combina pixels na imagem de entrada com pixels vizinhos para produzir uma imagem resultante. Uma ampla variedade de
+// operações de imagem pode ser alcançada por meio de convoluções, incluindo desfoque, detecção de bordas, nitidez,
+// relevo e chanfro.
 //
-//   Note:
-//     * As elipses não podem especificar a orientação exata da elipse (se, por exemplo, você quiser desenhar uma
-//       elipse inclinada em um ângulo de 45 graus), mas ela pode ser girada usando o atributo transform.
-type TagSvgEllipse struct {
+// Uma convolução de matriz é baseada em uma matriz n por m (o kernel de convolução) que descreve como um determinado
+// valor de pixel na imagem de entrada é combinado com seus valores de pixel vizinhos para produzir um valor de pixel
+// resultante. Cada pixel resultante é determinado pela aplicação da matriz kernel ao pixel de origem correspondente e
+// seus pixels vizinhos. A fórmula de convolução básica que é aplicada a cada valor de cor para um determinado pixel é:
+//
+//   COLORX,Y = ( SUM I=0 to [orderY-1] { SUM J=0 to [orderX-1] { SOURCE X-targetX+J, Y-targetY+I *
+//                kernelMatrixorderX-J-1, orderY-I-1 } } ) / divisor + bias * ALPHAX,Y
+//
+// onde "orderX" e "orderY" representam os valores X e Y para o atributo 'order', "targetX" representa o valor do
+// atributo 'targetX', "targetY" representa o valor do atributo 'targetY', "kernelMatrix" representa o valor do atributo
+// 'kernelMatrix', "divisor" representa o valor do atributo 'divisor' e "bias" representa o valor do atributo 'bias'.
+//
+// Observe nas fórmulas acima que os valores na matriz do kernel são aplicados de tal forma que a matriz do kernel é
+// girada 180 graus em relação às imagens de origem e destino para corresponder à teoria de convolução conforme descrito
+// em muitos livros de computação gráfica.
+//
+// Para ilustrar, suponha que você tenha uma imagem de entrada com 5 pixels por 5 pixels, cujos valores de cor para um
+// dos canais de cores sejam os seguintes:
+//
+//   0    20  40 235 235
+//   100 120 140 235 235
+//   200 220 240 235 235
+//   225 225 255 255 255
+//   225 225 255 255 255
+//
+// e você define um kernel de convolução 3 por 3 da seguinte forma:
+//
+//   1 2 3
+//   4 5 6
+//   7 8 9
+//
+// Vamos nos concentrar no valor da cor na segunda linha e na segunda coluna da imagem (o valor do pixel de origem é
+// 120). Assumindo o caso mais simples (onde a grade de pixels da imagem de entrada se alinha perfeitamente com a grade
+// de pixels do kernel) e assumindo valores padrão para os atributos 'divisor', 'targetX' e 'targetY', o valor da cor
+// resultante será:
+//
+//   (9*  0 + 8* 20 + 7* 40 +
+//    6*100 + 5*120 + 4*140 +
+//    3*200 + 2*220 + 1*240) /
+//   (9+8+7+6+5+4+3+2+1)
+type TagSvgFeConvolveMatrix struct {
 
 	// id
 	//
@@ -174,7 +252,7 @@ type TagSvgEllipse struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgEllipse) Init(id string) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Init(id string) (ref *TagSvgFeConvolveMatrix) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement(KTagSvg)
@@ -184,11 +262,11 @@ func (e *TagSvgEllipse) Init(id string) (ref *TagSvgEllipse) {
 	return e
 }
 
-func (e *TagSvgEllipse) prepareStageReference() {
+func (e *TagSvgFeConvolveMatrix) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgEllipse) CreateElement(tag Tag) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) CreateElement(tag Tag) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
@@ -200,12 +278,12 @@ func (e *TagSvgEllipse) CreateElement(tag Tag) (ref *TagSvgEllipse) {
 	return e
 }
 
-func (e *TagSvgEllipse) AppendToStage() (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) AppendToStage() (ref *TagSvgFeConvolveMatrix) {
 	e.stage.Call("appendChild", e.selfElement)
 	return e
 }
 
-func (e *TagSvgEllipse) AppendById(appendId string) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) AppendById(appendId string) (ref *TagSvgFeConvolveMatrix) {
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
 		log.Print(KIdToAppendNotFound, appendId)
@@ -216,12 +294,12 @@ func (e *TagSvgEllipse) AppendById(appendId string) (ref *TagSvgEllipse) {
 	return e
 }
 
-func (e *TagSvgEllipse) AppendToElement(el js.Value) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) AppendToElement(el js.Value) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("appendChild", el)
 	return e
 }
 
-func (e *TagSvgEllipse) Get() (el js.Value) {
+func (e *TagSvgFeConvolveMatrix) Get() (el js.Value) {
 	return e.selfElement
 }
 
@@ -236,7 +314,7 @@ func (e *TagSvgEllipse) Get() (el js.Value) {
 // Portuguese
 //
 //  O atributo id atribui um nome exclusivo a um elemento.
-func (e *TagSvgEllipse) Id(id string) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Id(id string) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "id", id)
 	return e
 }
@@ -278,7 +356,7 @@ func (e *TagSvgEllipse) Id(id string) (ref *TagSvgEllipse) {
 // (também conhecido como BCP 47). O glifo deveria ser usado se o atributo xml:lang correspondesse exatamente a um dos
 // idiomas fornecidos no valor desse parâmetro, ou se o atributo xml:lang fosse exatamente igual a um prefixo de um dos
 // idiomas fornecidos no valor desse parâmetro de modo que o primeiro caractere de tag após o prefixo fosse "-".
-func (e *TagSvgEllipse) Lang(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Lang(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "lang", converted.String())
@@ -300,7 +378,7 @@ func (e *TagSvgEllipse) Lang(value interface{}) (ref *TagSvgEllipse) {
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
 // de navegação de foco sequencial.
-func (e *TagSvgEllipse) Tabindex(value int) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Tabindex(value int) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }
@@ -338,7 +416,7 @@ func (e *TagSvgEllipse) Tabindex(value int) (ref *TagSvgEllipse) {
 //
 // Há também um atributo lang (sem namespace). Se ambos estiverem definidos, aquele com namespace será usado e o sem
 // namespace será ignorado.
-func (e *TagSvgEllipse) XmlLang(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) XmlLang(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "xml:lang", converted.String())
 		return e
@@ -381,7 +459,7 @@ func (e *TagSvgEllipse) XmlLang(value interface{}) (ref *TagSvgEllipse) {
 //   Notas:
 //     * Como atributo de apresentação, baseline-shift pode ser usado como propriedade CSS.
 //     * Essa propriedade será preterida e os autores são aconselhados a usar alinhamento vertical.
-func (e *TagSvgEllipse) BaselineShift(baselineShift interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) BaselineShift(baselineShift interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := baselineShift.(SvgBaselineShift); ok {
 		e.selfElement.Call("setAttribute", "baseline-shift", converted.String())
 		return e
@@ -414,7 +492,7 @@ func (e *TagSvgEllipse) BaselineShift(baselineShift interface{}) (ref *TagSvgEll
 //   Entrada:
 //     clipPath: elemento ao qual é aplicado
 //       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
-func (e *TagSvgEllipse) ClipPath(clipPath string) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) ClipPath(clipPath string) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "clip-path", clipPath)
 	return e
 }
@@ -440,7 +518,7 @@ func (e *TagSvgEllipse) ClipPath(clipPath string) (ref *TagSvgEllipse) {
 //     value: lado de um caminho
 //       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
 //       qualquer outro tipo: interface{}
-func (e *TagSvgEllipse) ClipRule(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) ClipRule(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgClipRule); ok {
 		e.selfElement.Call("setAttribute", "clip-rule", converted.String())
 		return e
@@ -481,7 +559,7 @@ func (e *TagSvgEllipse) ClipRule(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
-func (e *TagSvgEllipse) Color(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Color(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
 		return e
@@ -532,7 +610,7 @@ func (e *TagSvgEllipse) Color(value interface{}) (ref *TagSvgEllipse) {
 //   Notas:
 //     * Para efeitos de filtro, a propriedade color-interpolation-filters controla qual espaço de cor é usado.
 //     * Como atributo de apresentação, a interpolação de cores pode ser usada como uma propriedade CSS.
-func (e *TagSvgEllipse) ColorInterpolation(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) ColorInterpolation(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation", RGBAToJs(converted))
 		return e
@@ -573,7 +651,7 @@ func (e *TagSvgEllipse) ColorInterpolation(value interface{}) (ref *TagSvgEllips
 //       interpolações de cores ocorrem por padrão no espaço de cores sRGB.
 //     * Não afeta as funções de filtro, que operam no espaço de cores sRGB.
 //     * Como atributo de apresentação, os filtros de interpolação de cores podem ser usados como uma propriedade CSS.
-func (e *TagSvgEllipse) ColorInterpolationFilters(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) ColorInterpolationFilters(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation-filters", RGBAToJs(converted))
 		return e
@@ -604,7 +682,7 @@ func (e *TagSvgEllipse) ColorInterpolationFilters(value interface{}) (ref *TagSv
 //
 // Como atributo de apresentação, também pode ser usado como propriedade diretamente dentro de uma folha de estilo CSS,
 // veja cursor css para mais informações.
-func (e *TagSvgEllipse) Cursor(cursor SvgCursor) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Cursor(cursor SvgCursor) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "cursor", cursor.String())
 	return e
 }
@@ -632,7 +710,7 @@ func (e *TagSvgEllipse) Cursor(cursor SvgCursor) (ref *TagSvgEllipse) {
 // Você pode usar este atributo com os seguintes elementos SVG: <path>, <glyph>, <missing-glyph>.
 //
 // d é um atributo de apresentação e, portanto, também pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) D(d *SvgPath) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) D(d *SvgPath) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "d", d.String())
 	return e
 }
@@ -677,7 +755,7 @@ func (e *TagSvgEllipse) D(d *SvgPath) (ref *TagSvgEllipse) {
 //   Notas:
 //     * Como atributo de apresentação, a direção pode ser usada como uma propriedade CSS. Veja a direção do CSS para
 //       mais informações.
-func (e *TagSvgEllipse) Direction(direction SvgDirection) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Direction(direction SvgDirection) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "direction", direction.String())
 	return e
 }
@@ -753,7 +831,7 @@ func (e *TagSvgEllipse) Direction(direction SvgDirection) (ref *TagSvgEllipse) {
 //  Notas:
 //    * Como atributo de apresentação, display pode ser usado como propriedade CSS. Consulte a exibição css para obter
 //      mais informações.
-func (e *TagSvgEllipse) Display(display SvgDisplay) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Display(display SvgDisplay) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "display", display.String())
 	return e
 }
@@ -806,7 +884,7 @@ func (e *TagSvgEllipse) Display(display SvgDisplay) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a linha de base dominante pode ser usada como uma propriedade CSS.
-func (e *TagSvgEllipse) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "dominant-baseline", dominantBaseline.String())
 	return e
 }
@@ -826,7 +904,7 @@ func (e *TagSvgEllipse) DominantBaseline(dominantBaseline SvgDominantBaseline) (
 //  cor (ou qualquer servidor de pintura SVG, como gradientes ou padrões) usado para pintar o elemento;
 //
 // para animação, define o estado final da animação.
-func (e *TagSvgEllipse) Fill(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Fill(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "fill", RGBAToJs(converted))
 		return e
@@ -853,7 +931,7 @@ func (e *TagSvgEllipse) Fill(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notes:
 //     *As a presentation attribute fill-opacity can be used as a CSS property.
-func (e *TagSvgEllipse) FillOpacity(fillOpacity float64) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FillOpacity(fillOpacity float64) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "fill-opacity", fillOpacity)
 	return e
 }
@@ -875,7 +953,7 @@ func (e *TagSvgEllipse) FillOpacity(fillOpacity float64) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, fill-rule pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) FillRule(fillRule SvgFillRule) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FillRule(fillRule SvgFillRule) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "fill-rule", fillRule.String())
 	return e
 }
@@ -898,7 +976,7 @@ func (e *TagSvgEllipse) FillRule(fillRule SvgFillRule) (ref *TagSvgEllipse) {
 //   Notas:
 //     * Como atributo de apresentação, o filtro pode ser usado como propriedade CSS. Veja filtro css para mais
 //       informações.
-func (e *TagSvgEllipse) Filter(filter string) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Filter(filter string) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "filter", filter)
 	return e
 }
@@ -918,7 +996,7 @@ func (e *TagSvgEllipse) Filter(filter string) (ref *TagSvgEllipse) {
 //
 //   Notes:
 //     * As a presentation attribute, flood-color can be used as a CSS property.
-func (e *TagSvgEllipse) FloodColor(floodColor interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FloodColor(floodColor interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := floodColor.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "flood-color", RGBAToJs(converted))
 		return e
@@ -943,7 +1021,7 @@ func (e *TagSvgEllipse) FloodColor(floodColor interface{}) (ref *TagSvgEllipse) 
 //
 //   Notas:
 //     * Como atributo de apresentação, a opacidade de inundação pode ser usada como uma propriedade CSS.
-func (e *TagSvgEllipse) FloodOpacity(floodOpacity float64) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FloodOpacity(floodOpacity float64) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "flood-opacity", floodOpacity)
 	return e
 }
@@ -967,7 +1045,7 @@ func (e *TagSvgEllipse) FloodOpacity(floodOpacity float64) (ref *TagSvgEllipse) 
 //   Notas:
 //     * Como atributo de apresentação, font-family pode ser usada como propriedade CSS. Consulte a propriedade CSS
 //       font-family para obter mais informações.
-func (e *TagSvgEllipse) FontFamily(fontFamily string) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FontFamily(fontFamily string) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "font-family", fontFamily)
 	return e
 }
@@ -991,7 +1069,7 @@ func (e *TagSvgEllipse) FontFamily(fontFamily string) (ref *TagSvgEllipse) {
 //   Notas:
 //     * Como atributo de apresentação, font-size pode ser usado como uma propriedade CSS. Consulte a propriedade CSS
 //       font-size para obter mais informações.
-func (e *TagSvgEllipse) FontSize(fontSize float64) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FontSize(fontSize float64) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "font-size", fontSize)
 	return e
 }
@@ -1015,7 +1093,7 @@ func (e *TagSvgEllipse) FontSize(fontSize float64) (ref *TagSvgEllipse) {
 //   Notes:
 //     * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
 //       property for more information.
-func (e *TagSvgEllipse) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "font-size-adjust", fontSizeAdjust)
 	return e
 }
@@ -1049,7 +1127,7 @@ func (e *TagSvgEllipse) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgEllip
 //   Notas:
 //     * Como atributo de apresentação, font-stretch pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-stretch para obter mais informações.
-func (e *TagSvgEllipse) FontStretch(fontStretch interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FontStretch(fontStretch interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := fontStretch.(SvgFontStretch); ok {
 		e.selfElement.Call("setAttribute", "font-stretch", converted.String())
 		return e
@@ -1076,7 +1154,7 @@ func (e *TagSvgEllipse) FontStretch(fontStretch interface{}) (ref *TagSvgEllipse
 //   Notas:
 //     * Como atributo de apresentação, font-style pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //       font-style para obter mais informações.
-func (e *TagSvgEllipse) FontStyle(fontStyle FontStyleRule) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FontStyle(fontStyle FontStyleRule) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "font-style", fontStyle.String())
 	return e
 }
@@ -1098,7 +1176,7 @@ func (e *TagSvgEllipse) FontStyle(fontStyle FontStyleRule) (ref *TagSvgEllipse) 
 //   Notas:
 //     * Como atributo de apresentação, font-variant pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-variant para obter mais informações.
-func (e *TagSvgEllipse) FontVariant(fontVariant FontVariantRule) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FontVariant(fontVariant FontVariantRule) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "font-variant", fontVariant.String())
 	return e
 }
@@ -1122,7 +1200,7 @@ func (e *TagSvgEllipse) FontVariant(fontVariant FontVariantRule) (ref *TagSvgEll
 //   Notas:
 //     * Como atributo de apresentação, o peso da fonte pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-weight para obter mais informações.
-func (e *TagSvgEllipse) FontWeight(fontWeight FontWeightRule) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) FontWeight(fontWeight FontWeightRule) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "font-weight", fontWeight.String())
 	return e
 }
@@ -1152,7 +1230,7 @@ func (e *TagSvgEllipse) FontWeight(fontWeight FontWeightRule) (ref *TagSvgEllips
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de imagem pode ser usada como uma propriedade CSS. Consulte
 //       a propriedade de renderização de imagem css para obter mais informações.
-func (e *TagSvgEllipse) ImageRendering(imageRendering string) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) ImageRendering(imageRendering string) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "image-rendering", imageRendering)
 	return e
 }
@@ -1194,7 +1272,7 @@ func (e *TagSvgEllipse) ImageRendering(imageRendering string) (ref *TagSvgEllips
 // Notas:
 //   * Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
 //     Consulte a propriedade de espaçamento entre letras do CSS para obter mais informações.
-func (e *TagSvgEllipse) LetterSpacing(value float64) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) LetterSpacing(value float64) (ref *TagSvgFeConvolveMatrix) {
 
 	e.selfElement.Call("setAttribute", "letter-spacing", strconv.FormatFloat(value, 'g', -1, 64))
 	return e
@@ -1209,7 +1287,7 @@ func (e *TagSvgEllipse) LetterSpacing(value float64) (ref *TagSvgEllipse) {
 // Português:
 //
 // O atributo lighting-color define a cor da fonte de luz para as primitivas do filtro de iluminação.
-func (e *TagSvgEllipse) LightingColor(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) LightingColor(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "lighting-color", RGBAToJs(converted))
 		return e
@@ -1255,7 +1333,7 @@ func (e *TagSvgEllipse) LightingColor(value interface{}) (ref *TagSvgEllipse) {
 //
 // Notas:
 //   * Como atributo de apresentação, o marker-end pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) MarkerEnd(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) MarkerEnd(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "marker-end", value)
 	return e
 }
@@ -1289,7 +1367,7 @@ func (e *TagSvgEllipse) MarkerEnd(value interface{}) (ref *TagSvgEllipse) {
 //
 // Notas:
 //   * Como atributo de apresentação, o marker-mid pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) MarkerMid(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) MarkerMid(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "marker-mid", value)
 	return e
 }
@@ -1330,7 +1408,7 @@ func (e *TagSvgEllipse) MarkerMid(value interface{}) (ref *TagSvgEllipse) {
 //
 // Notas:
 //   * Como atributo de apresentação, o início do marcador pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) MarkerStart(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) MarkerStart(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "marker-start", value)
 	return e
 }
@@ -1360,7 +1438,7 @@ func (e *TagSvgEllipse) MarkerStart(value interface{}) (ref *TagSvgEllipse) {
 //
 // Notas:
 //   * Como uma máscara de atributo de apresentação pode ser usada como uma propriedade CSS.
-func (e *TagSvgEllipse) Mask(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Mask(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "mask", value)
 	return e
 }
@@ -1395,7 +1473,7 @@ func (e *TagSvgEllipse) Mask(value interface{}) (ref *TagSvgEllipse) {
 //   Notes:
 //     * Como atributo de apresentação, a opacidade pode ser usada como uma propriedade CSS. Consulte a propriedade de
 //       opacidade do CSS para obter mais informações.
-func (e *TagSvgEllipse) Opacity(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Opacity(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "opacity", p)
@@ -1449,7 +1527,7 @@ func (e *TagSvgEllipse) Opacity(value interface{}) (ref *TagSvgEllipse) {
 //       <marker> para ser ocultado por padrão.
 //     * Como atributo de apresentação, overflow pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //       overflow para obter mais informações.
-func (e *TagSvgEllipse) Overflow(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Overflow(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(Overflow); ok {
 		e.selfElement.Call("setAttribute", "overflow", converted.String())
 		return e
@@ -1476,7 +1554,7 @@ func (e *TagSvgEllipse) Overflow(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
-func (e *TagSvgEllipse) PointerEvents(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) PointerEvents(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgPointerEvents); ok {
 		e.selfElement.Call("setAttribute", "pointer-events", converted.String())
 		return e
@@ -1513,7 +1591,7 @@ func (e *TagSvgEllipse) PointerEvents(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.
-func (e *TagSvgEllipse) ShapeRendering(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) ShapeRendering(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgShapeRendering); ok {
 		e.selfElement.Call("setAttribute", "shape-rendering", converted.String())
 		return e
@@ -1558,7 +1636,7 @@ func (e *TagSvgEllipse) ShapeRendering(value interface{}) (ref *TagSvgEllipse) {
 //       Assim, especificar uma stop-color com o valor transparente é equivalente a especificar uma stop-color com o
 //       valor black e uma stop-opacity com o valor 0.
 //     * Como atributo de apresentação, stop-color pode ser usado como propriedade CSS.
-func (e *TagSvgEllipse) StopColor(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) StopColor(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stop-color", RGBAToJs(converted))
 		return e
@@ -1601,7 +1679,7 @@ func (e *TagSvgEllipse) StopColor(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stop-opacity pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) StopOpacity(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) StopOpacity(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stop-opacity", p)
@@ -1643,7 +1721,7 @@ func (e *TagSvgEllipse) StopOpacity(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como um traço de atributo de apresentação pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) Stroke(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Stroke(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stroke", RGBAToJs(converted))
 		return e
@@ -1680,7 +1758,7 @@ func (e *TagSvgEllipse) Stroke(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) StrokeDasharray(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) StrokeDasharray(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.([]float64); ok {
 		str := ""
 		for _, v := range converted {
@@ -1723,7 +1801,7 @@ func (e *TagSvgEllipse) StrokeDasharray(value interface{}) (ref *TagSvgEllipse) 
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) StrokeLinecap(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) StrokeLinecap(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1750,7 +1828,7 @@ func (e *TagSvgEllipse) StrokeLinecap(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgEllipse) StrokeLinejoin(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) StrokeLinejoin(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1778,7 +1856,7 @@ func (e *TagSvgEllipse) StrokeLinejoin(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgEllipse) StrokeMiterlimit(value float64) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) StrokeMiterlimit(value float64) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }
@@ -1810,7 +1888,7 @@ func (e *TagSvgEllipse) StrokeMiterlimit(value float64) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a opacidade do traço pode ser usada como uma propriedade CSS.
-func (e *TagSvgEllipse) StrokeOpacity(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) StrokeOpacity(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stroke-opacity", p)
@@ -1840,7 +1918,7 @@ func (e *TagSvgEllipse) StrokeOpacity(value interface{}) (ref *TagSvgEllipse) {
 //     value: definindo a largura do traço
 //       float32: 1.0 = "100%"
 //       qualquer outro tipo: interface{}
-func (e *TagSvgEllipse) StrokeWidth(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) StrokeWidth(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stroke-width", p)
@@ -1897,7 +1975,7 @@ func (e *TagSvgEllipse) StrokeWidth(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notes:
 //     * As a presentation attribute, text-anchor can be used as a CSS property.
-func (e *TagSvgEllipse) TextAnchor(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) TextAnchor(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgTextAnchor); ok {
 		e.selfElement.Call("setAttribute", "text-anchor", converted.String())
 		return e
@@ -1956,7 +2034,7 @@ func (e *TagSvgEllipse) TextAnchor(value interface{}) (ref *TagSvgEllipse) {
 //   Notas:
 //     * Como atributo de apresentação, a decoração de texto pode ser usada como uma propriedade CSS. Consulte a
 //       propriedade CSS text-decoration para obter mais informações.
-func (e *TagSvgEllipse) TextDecoration(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) TextDecoration(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "text-decoration", RGBAToJs(converted))
 		return e
@@ -1993,7 +2071,7 @@ func (e *TagSvgEllipse) TextDecoration(value interface{}) (ref *TagSvgEllipse) {
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de texto pode ser usada como uma propriedade CSS.
 //       Consulte a propriedade de renderização de texto css para obter mais informações.
-func (e *TagSvgEllipse) TextRendering(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) TextRendering(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgTextRendering); ok {
 		e.selfElement.Call("setAttribute", "text-rendering", converted.String())
 		return e
@@ -2037,7 +2115,7 @@ func (e *TagSvgEllipse) TextRendering(value interface{}) (ref *TagSvgEllipse) {
 //       propriedade CSS. No entanto, esteja ciente de que existem algumas diferenças na sintaxe entre a propriedade CSS
 //       e o atributo. Consulte a documentação da transformação da propriedade CSS para obter a sintaxe específica a ser
 //       usada nesse caso.
-func (e *TagSvgEllipse) Transform(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Transform(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(*TransformFunctions); ok {
 		e.selfElement.Call("setAttribute", "transform", converted.String())
 		return e
@@ -2079,7 +2157,7 @@ func (e *TagSvgEllipse) Transform(value interface{}) (ref *TagSvgEllipse) {
 //   Notas:
 //     * Como atributo de apresentação, o unicode-bidi pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS unicode-bidi para obter mais informações.
-func (e *TagSvgEllipse) UnicodeBidi(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) UnicodeBidi(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgTransformOrigin); ok {
 		e.selfElement.Call("setAttribute", "unicode-bidi", converted.String())
 		return e
@@ -2117,7 +2195,7 @@ func (e *TagSvgEllipse) UnicodeBidi(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, o efeito vetorial pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) VectorEffect(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) VectorEffect(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgVectorEffect); ok {
 		e.selfElement.Call("setAttribute", "vector-effect", converted.String())
 		return e
@@ -2168,7 +2246,7 @@ func (e *TagSvgEllipse) VectorEffect(value interface{}) (ref *TagSvgEllipse) {
 //       mas ainda ocupará espaço nos cálculos de layout de texto;
 //     * Como atributo de apresentação, a visibilidade pode ser usada como propriedade CSS. Consulte a propriedade de
 //       visibilidade do CSS para obter mais informações.
-func (e *TagSvgEllipse) Visibility(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Visibility(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgVisibility); ok {
 		e.selfElement.Call("setAttribute", "visibility", converted.String())
 		return e
@@ -2217,7 +2295,7 @@ func (e *TagSvgEllipse) Visibility(value interface{}) (ref *TagSvgEllipse) {
 //   Notas:
 //     * Como atributo de apresentação, o espaçamento entre palavras pode ser usado como uma propriedade CSS.
 //       Consulte a propriedade de espaçamento entre palavras do CSS para obter mais informações.
-func (e *TagSvgEllipse) WordSpacing(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) WordSpacing(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "word-spacing", p)
@@ -2263,7 +2341,7 @@ func (e *TagSvgEllipse) WordSpacing(value interface{}) (ref *TagSvgEllipse) {
 //   Notas:
 //     * Como atributo de apresentação, o modo de escrita pode ser usado como uma propriedade CSS. Consulte a
 //       propriedade do modo de gravação CSS para obter mais informações.
-func (e *TagSvgEllipse) WritingMode(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) WritingMode(value interface{}) (ref *TagSvgFeConvolveMatrix) {
 	if converted, ok := value.(SvgWritingMode); ok {
 		e.selfElement.Call("setAttribute", "writing-mode", converted.String())
 		return e
@@ -2304,7 +2382,7 @@ func (e *TagSvgEllipse) WritingMode(value interface{}) (ref *TagSvgEllipse) {
 //   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
 //     elementos.
 //   * Para uso geral pelo navegador.
-func (e *TagSvgEllipse) Class(class string) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Class(class string) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
 }
@@ -2320,91 +2398,464 @@ func (e *TagSvgEllipse) Class(class string) (ref *TagSvgEllipse) {
 //
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
-func (e *TagSvgEllipse) Style(value string) (ref *TagSvgEllipse) {
+func (e *TagSvgFeConvolveMatrix) Style(value string) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------
 
-// Cx
+// #filter start ------------------------------------------------------------------------------------------------------
+
+// Height
 //
 // English:
 //
-//  The cx attribute define the x-axis coordinate of a center point.
+//  The height attribute defines the vertical length of an element in the user coordinate system.
 //
 // Português:
 //
-//  O atributo cx define a coordenada do eixo x de um ponto central.
-func (e *TagSvgEllipse) Cx(cx float64) (ref *TagSvgEllipse) {
-	e.selfElement.Call("setAttribute", "cx", cx)
+//  O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
+func (e *TagSvgFeConvolveMatrix) Height(height interface{}) (ref *TagSvgFeConvolveMatrix) {
+	if converted, ok := height.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "height", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "height", height)
 	return e
 }
 
-// Cy
+// Result
 //
 // English:
 //
-// The cy attribute define the y-axis coordinate of a center point.
+// The result attribute defines the assigned name for this filter primitive. If supplied, then graphics that result from
+// processing this filter primitive can be referenced by an in attribute on a subsequent filter primitive within the
+// same <filter> element. If no value is provided, the output will only be available for re-use as the implicit input
+// into the next filter primitive if that filter primitive provides no value for its in attribute.
 //
 // Português:
 //
-//  O atributo cy define a coordenada do eixo y de um ponto central.
-func (e *TagSvgEllipse) Cy(cy float64) (ref *TagSvgEllipse) {
-	e.selfElement.Call("setAttribute", "cy", cy)
+// O atributo result define o nome atribuído para esta primitiva de filtro. Se fornecido, os gráficos resultantes do
+// processamento dessa primitiva de filtro podem ser referenciados por um atributo in em uma primitiva de filtro
+// subsequente dentro do mesmo elemento <filter>. Se nenhum valor for fornecido, a saída só estará disponível para
+// reutilização como entrada implícita na próxima primitiva de filtro se essa primitiva de filtro não fornecer valor
+// para seu atributo in.
+func (e *TagSvgFeConvolveMatrix) Result(value interface{}) (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement.Call("setAttribute", "result", value)
 	return e
 }
 
-// Rx
+// Width
 //
 // English:
 //
-// The rx attribute defines a radius on the x-axis.
+// The width attribute defines the horizontal length of an element in the user coordinate system.
+//
+//   Input:
+//     value: the horizontal length of an element
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
 //
 // Português:
 //
-// O atributo rx define um raio no eixo x.
-func (e *TagSvgEllipse) Rx(value float64) (ref *TagSvgEllipse) {
-	e.selfElement.Call("setAttribute", "rx", value)
+// O atributo largura define o comprimento horizontal de um elemento no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: o comprimento horizontal de um elemento
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFeConvolveMatrix) Width(value interface{}) (ref *TagSvgFeConvolveMatrix) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "width", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "width", value)
 	return e
 }
 
-// Ry
+// X
 //
 // English:
 //
-// The ry attribute defines a radius on the y-axis.
+// The x attribute defines an x-axis coordinate in the user coordinate system.
+//
+//   Input:
+//     value: defines an x-axis coordinate
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       any other type: interface{}
 //
 // Português:
 //
-// O atributo ry define um raio no eixo y.
-func (e *TagSvgEllipse) Ry(value float64) (ref *TagSvgEllipse) {
-	e.selfElement.Call("setAttribute", "ry", value)
+// O atributo x define uma coordenada do eixo x no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: define uma coordenada do eixo x
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFeConvolveMatrix) X(value interface{}) (ref *TagSvgFeConvolveMatrix) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "x", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 3
+
+		e.selfElement.Call("setAttribute", "x", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "x", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "x", value)
 	return e
 }
 
-// PathLength
+// Y
 //
 // English:
 //
-// The pathLength attribute lets authors specify a total length for the path, in user units. This value is then used to
-// calibrate the browser's distance calculations with those of the author, by scaling all distance computations using
-// the ratio pathLength/(computed value of path length).
+// The y attribute defines an y-axis coordinate in the user coordinate system.
 //
-// This can affect the actual rendered lengths of paths; including text paths, animation paths, and various stroke
-// operations. Basically, all computations that require the length of the path. stroke-dasharray, for example, will
-// assume the start of the path being 0 and the end point the value defined in the pathLength attribute.
+//   Input:
+//     value: defines an y-axis coordinate
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       any other type: interface{}
 //
 // Português:
 //
-// O atributo pathLength permite que os autores especifiquem um comprimento total para o caminho, em unidades de
-// usuário. Este valor é então usado para calibrar os cálculos de distância do navegador com os do autor, escalando
-// todos os cálculos de distância usando a razão pathLength (valor calculado do comprimento do caminho).
+// O atributo y define uma coordenada do eixo y no sistema de coordenadas do usuário.
 //
-// Isso pode afetar os comprimentos reais dos caminhos renderizados; incluindo caminhos de texto, caminhos de animação
-// e várias operações de traçado. Basicamente, todos os cálculos que exigem o comprimento do caminho. stroke-dasharray,
-// por exemplo, assumirá o início do caminho sendo 0 e o ponto final o valor definido no atributo pathLength.
-func (e *TagSvgEllipse) PathLength(value interface{}) (ref *TagSvgEllipse) {
-	e.selfElement.Call("setAttribute", "pathLength", value)
+//   Entrada:
+//     value: define uma coordenada do eixo y
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFeConvolveMatrix) Y(value interface{}) (ref *TagSvgFeConvolveMatrix) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "y", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 3
+
+		e.selfElement.Call("setAttribute", "y", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "y", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "y", value)
+	return e
+}
+
+// #filter end --------------------------------------------------------------------------------------------------------
+
+// In
+//
+// English:
+//
+//  The in attribute identifies input for the given filter primitive.
+//
+//   Input:
+//     in: identifies input for the given filter primitive.
+//       KSvgIn... (e.g. KSvgInSourceAlpha)
+//       any other type: interface{}
+//
+// The value can be either one of the six keywords defined below, or a string which matches a previous result attribute
+// value within the same <filter> element. If no value is provided and this is the first filter primitive, then this
+// filter primitive will use SourceGraphic as its input. If no value is provided and this is a subsequent filter
+// primitive, then this filter primitive will use the result from the previous filter primitive as its input.
+//
+// If the value for result appears multiple times within a given <filter> element, then a reference to that result will
+// use the closest preceding filter primitive with the given value for attribute result.
+//
+// Portuguese
+//
+//  O atributo in identifica à entrada para a primitiva de filtro fornecida.
+//
+//   Entrada:
+//     in: identifica à entrada para a primitiva de filtro fornecida.
+//       KSvgIn... (e.g. KSvgInSourceAlpha)
+//       qualquer outro tipo: interface{}
+//
+// O valor pode ser uma das seis palavras-chave definidas abaixo ou uma string que corresponda a um valor de atributo
+// de resultado anterior dentro do mesmo elemento <filter>. Se nenhum valor for fornecido e esta for a primeira
+// primitiva de filtro, essa primitiva de filtro usará SourceGraphic como sua entrada. Se nenhum valor for fornecido e
+// esta for uma primitiva de filtro subsequente, essa primitiva de filtro usará o resultado da primitiva de filtro
+// anterior como sua entrada.
+//
+// Se o valor do resultado aparecer várias vezes em um determinado elemento <filter>, uma referência à esse resultado
+// usará a primitiva de filtro anterior mais próxima com o valor fornecido para o resultado do atributo.
+func (e *TagSvgFeConvolveMatrix) In(in interface{}) (ref *TagSvgFeConvolveMatrix) {
+	if converted, ok := in.(SvgIn); ok {
+		e.selfElement.Call("setAttribute", "in", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "in", in)
+	return e
+}
+
+// Order
+//
+// English:
+//
+// The order attribute indicates the size of the matrix to be used by a <feConvolveMatrix> element.
+//
+//   Input:
+//     value: indicates the size of the matrix.
+//       []float64: []float64{1.0, 1.0, 1.0} = "1 1 1"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo order indica o tamanho da matriz a ser usada por um elemento <feConvolveMatrix>.
+//
+//   Entrada:
+//     value: indica o tamanho da matriz.
+//       []float64: []float64{1.0, 1.0, 1.0} = "1 1 1"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFeConvolveMatrix) Order(value interface{}) (ref *TagSvgFeConvolveMatrix) {
+	if converted, ok := value.([]float64); ok {
+		var order = ""
+		for _, v := range converted {
+			order += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+
+		length := len(order) - 1
+		e.selfElement.Call("setAttribute", "order", order[:length])
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "order", value)
+	return e
+}
+
+// KernelMatrix
+//
+// English:
+//
+// The kernelMatrix attribute defines the list of numbers that make up the kernel matrix for the <feConvolveMatrix>
+// element.
+//
+//   Input:
+//     kernelMatrix: list of numbers
+//       The list of <number>s that make up the kernel matrix for the convolution. The number of entries in the list
+//       must equal <orderX> times <orderY>.
+//       If the result of orderX * orderY is not equal to the number of entries in the value list, the filter primitive
+//       acts as a pass through filter.
+//
+// Values are separated by space characters and/or a comma. The number of entries in the list must equal to <orderX>
+// by <orderY> as defined in the order attribute.
+//
+// Português:
+//
+// O atributo kernelMatrix define a lista de números que compõem a matriz do kernel para o elemento <feConvolveMatrix>.
+//
+//   Entrada:
+//     kernelMatrix: lista de números
+//       A lista de números que compõem a matriz do kernel para a convolução. O número de entradas na lista deve ser
+//       igual a <orderX> * <orderY>.
+//       Se o resultado da ordem do pedido não for igual ao número de entradas na lista de valores, a primitiva de
+//       filtro atua como um filtro de passagem.
+//
+// Os valores são separados por caracteres de espaço e ou por vírgula. O número de entradas na lista deve ser igual a
+// <orderX> por <orderY> conforme definido no atributo order.
+func (e *TagSvgFeConvolveMatrix) KernelMatrix(kernelMatrix []float64) (ref *TagSvgFeConvolveMatrix) {
+	kernelMatrixString := ""
+
+	for _, v := range kernelMatrix {
+		kernelMatrixString += strconv.FormatFloat(v, 'g', -1, 64)
+		kernelMatrixString += " "
+	}
+
+	l := len(kernelMatrixString) - 1
+
+	e.selfElement.Call("setAttribute", "kernelMatrix", kernelMatrixString[:l])
+	return e
+}
+
+// Divisor
+//
+// English:
+//
+//  The divisor attribute specifies the value by which the resulting number of applying the kernelMatrix of a
+//  <feConvolveMatrix> element to the input image color value is divided to yield the destination color value.
+//
+//   Input:
+//     divisor: specifies the divisor value to apply to the original color
+//
+// A divisor that is the sum of all the matrix values tends to have an evening effect on the overall color intensity of
+// the result.
+//
+// Português:
+//
+//  O atributo divisor especifica o valor pelo qual o número resultante da aplicação do kernelMatrix de um elemento
+//  <feConvolveMatrix> ao valor da cor da imagem de entrada é dividido para gerar o valor da cor de destino.
+//
+//   Entrada:
+//     divisor: especifica o valor do divisor a ser aplicado na cor original
+//
+//
+// A divisor that is the sum of all the matrix values tends to have an evening effect on the overall color intensity of
+// the result.
+func (e *TagSvgFeConvolveMatrix) Divisor(divisor float64) (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement.Call("setAttribute", "divisor", divisor)
+	return e
+}
+
+// Bias
+//
+// English:
+//
+//  The bias attribute shifts the range of the filter. After applying the kernelMatrix of the <feConvolveMatrix> element
+//  to the input image to yield a number and applied the divisor attribute, the bias attribute is added to each
+//  component. This allows representation of values that would otherwise be clamped to 0 or 1.
+//
+//   Input:
+//     bias: shifts the range of the filter
+//
+// Português:
+//
+//  O atributo bias muda o intervalo do filtro. Depois de aplicar o kernelMatrix do elemento <feConvolveMatrix> à imagem
+//  de entrada para gerar um número e aplicar o atributo divisor, o atributo bias é adicionado a cada componente. Isso
+//  permite a representação de valores que de outra forma seriam fixados em 0 ou 1.
+//
+//   Entrada:
+//     bias: muda o intervalo do filtro
+func (e *TagSvgFeConvolveMatrix) Bias(bias float64) (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement.Call("setAttribute", "bias", bias)
+	return e
+}
+
+// TargetX
+//
+// English:
+//
+// The targetX attribute determines the positioning in horizontal direction of the convolution matrix relative to a
+// given target pixel in the input image. The leftmost column of the matrix is column number zero.
+// The value must be such that: 0 <= targetX < orderX.
+//
+//   Input:
+//     value: determines the positioning in horizontal direction
+//
+// Português:
+//
+// O atributo targetX determina o posicionamento na direção horizontal da matriz de convolução em relação a um
+// determinado pixel alvo na imagem de entrada. A coluna mais à esquerda da matriz é a coluna número zero.
+// O valor deve ser tal que: 0 <= targetX < orderX.
+//
+//   Entrada:
+//     value: determina o posicionamento na direção horizontal
+func (e *TagSvgFeConvolveMatrix) TargetX(value int) (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement.Call("setAttribute", "targetX", value)
+	return e
+}
+
+// TargetY
+//
+// English:
+//
+// The targetY attribute determines the positioning in vertical direction of the convolution matrix relative to a given
+// target pixel in the input image. The topmost row of the matrix is row number zero.
+// The value must be such that: 0 <= targetY < orderY.
+//
+//   Input:
+//     value: determines the positioning in vertical direction
+//
+// Português:
+//
+// O atributo targetY determina o posicionamento na direção vertical da matriz de convolução em relação a um determinado
+// pixel alvo na imagem de entrada. A linha superior da matriz é a linha número zero.
+// O valor deve ser tal que: 0 <= targetY < orderY.
+//
+//   Entrada:
+//     value: determines the positioning in vertical direction
+func (e *TagSvgFeConvolveMatrix) TargetY(value int) (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement.Call("setAttribute", "targetY", value)
+	return e
+}
+
+// EdgeMode
+//
+// English:
+//
+//  The edgeMode attribute determines how to extend the input image as necessary with color values so that the matrix
+//  operations can be applied when the kernel is positioned at or near the edge of the input image.
+//
+// Portuguese
+//
+//  O atributo edgeMode determina como estender a imagem de entrada conforme necessário com valores de cor para que as
+//  operações de matriz possam ser aplicadas quando o kernel estiver posicionado na borda da imagem de entrada ou
+//  próximo a ela.
+//
+func (e *TagSvgFeConvolveMatrix) EdgeMode(edgeMode SvgEdgeMode) (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement.Call("setAttribute", "edgeMode", edgeMode.String())
+	return e
+}
+
+// PreserveAlpha
+//
+// English:
+//
+// The preserveAlpha attribute indicates how a <feConvolveMatrix> element handled alpha transparency.
+//
+//   Input:
+//     value: indicates how handled alpha transparency.
+//
+// Português:
+//
+// O atributo preserveAlpha indica como um elemento <feConvolveMatrix> trata a transparência alfa.
+//
+//   Input:
+//     value: indica como a transparência alfa é tratada.
+func (e *TagSvgFeConvolveMatrix) PreserveAlpha(value bool) (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement.Call("setAttribute", "preserveAlpha", value)
 	return e
 }

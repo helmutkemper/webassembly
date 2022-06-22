@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"image/color"
+	"log"
 	"strconv"
 	"sync"
 	"syscall/js"
@@ -155,6 +156,66 @@ type TagSvgAnimateTransform struct {
 	pointsLen int
 
 	rotateDelta float64
+}
+
+// Init
+//
+// English:
+//
+//  Initializes the object correctly.
+//
+// Português:
+//
+//  Inicializa o objeto corretamente.
+func (e *TagSvgAnimateTransform) Init(id string) (ref *TagSvgAnimateTransform) {
+	e.listener = new(sync.Map)
+
+	e.CreateElement(KTagSvg)
+	e.prepareStageReference()
+	e.Id(id)
+
+	return e
+}
+
+func (e *TagSvgAnimateTransform) prepareStageReference() {
+	e.stage = js.Global().Get("document").Get("body")
+}
+
+func (e *TagSvgAnimateTransform) CreateElement(tag Tag) (ref *TagSvgAnimateTransform) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
+		log.Print(KNewElementIsUndefined)
+		return
+	}
+
+	e.selfElement.Call("setAttribute", "xmlns", "http://www.w3.org/2000/svg")
+
+	return e
+}
+
+func (e *TagSvgAnimateTransform) AppendToStage() (ref *TagSvgAnimateTransform) {
+	e.stage.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgAnimateTransform) AppendById(appendId string) (ref *TagSvgAnimateTransform) {
+	toAppend := js.Global().Get("document").Call("getElementById", appendId)
+	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+		log.Print(KIdToAppendNotFound, appendId)
+		return e
+	}
+
+	toAppend.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgAnimateTransform) AppendToElement(el js.Value) (ref *TagSvgAnimateTransform) {
+	e.selfElement.Call("appendChild", el)
+	return e
+}
+
+func (e *TagSvgAnimateTransform) Get() (el js.Value) {
+	return e.selfElement
 }
 
 // #core start --------------------------------------------------------------------------------------------------------

@@ -190,6 +190,31 @@ func (e *TagSvgCircle) CreateElement(tag Tag) (ref *TagSvgCircle) {
 	return e
 }
 
+func (e *TagSvgCircle) AppendToStage() (ref *TagSvgCircle) {
+	e.stage.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgCircle) AppendById(appendId string) (ref *TagSvgCircle) {
+	toAppend := js.Global().Get("document").Call("getElementById", appendId)
+	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+		log.Print(KIdToAppendNotFound, appendId)
+		return e
+	}
+
+	toAppend.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgCircle) AppendToElement(el js.Value) (ref *TagSvgCircle) {
+	e.selfElement.Call("appendChild", el)
+	return e
+}
+
+func (e *TagSvgCircle) Get() (el js.Value) {
+	return e.selfElement
+}
+
 // #core start --------------------------------------------------------------------------------------------------------
 
 // Id

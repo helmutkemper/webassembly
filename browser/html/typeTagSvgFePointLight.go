@@ -10,18 +10,18 @@ import (
 	"syscall/js"
 )
 
-// TagSvgFeFuncG
+// TagSvgFePointLight
 //
 // English:
 //
-// The <feFuncG> SVG filter primitive defines the transfer function for the green component of the input graphic of
-// its parent <feComponentTransfer> element.
+// The <feFlood> SVG filter primitive fills the filter subregion with the color and opacity defined by flood-color and
+// flood-opacity.
 //
 // Português:
 //
-// A primitiva de filtro SVG <feFuncG> define a função de transferência para o componente verde do gráfico de entrada
-// de seu elemento pai <feComponentTransfer>.
-type TagSvgFeFuncG struct {
+// A primitiva de filtro SVG <feFlood> preenche a sub-região do filtro com a cor e a opacidade definidas por flood-color
+// e flood-opacity.
+type TagSvgFePointLight struct {
 
 	// id
 	//
@@ -165,7 +165,7 @@ type TagSvgFeFuncG struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeFuncG) Init(id string) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFePointLight) Init(id string) (ref *TagSvgFePointLight) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement(KTagSvg)
@@ -175,11 +175,11 @@ func (e *TagSvgFeFuncG) Init(id string) (ref *TagSvgFeFuncG) {
 	return e
 }
 
-func (e *TagSvgFeFuncG) prepareStageReference() {
+func (e *TagSvgFePointLight) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgFeFuncG) CreateElement(tag Tag) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFePointLight) CreateElement(tag Tag) (ref *TagSvgFePointLight) {
 	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
@@ -191,12 +191,12 @@ func (e *TagSvgFeFuncG) CreateElement(tag Tag) (ref *TagSvgFeFuncG) {
 	return e
 }
 
-func (e *TagSvgFeFuncG) AppendToStage() (ref *TagSvgFeFuncG) {
+func (e *TagSvgFePointLight) AppendToStage() (ref *TagSvgFePointLight) {
 	e.stage.Call("appendChild", e.selfElement)
 	return e
 }
 
-func (e *TagSvgFeFuncG) AppendById(appendId string) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFePointLight) AppendById(appendId string) (ref *TagSvgFePointLight) {
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
 		log.Print(KIdToAppendNotFound, appendId)
@@ -207,12 +207,12 @@ func (e *TagSvgFeFuncG) AppendById(appendId string) (ref *TagSvgFeFuncG) {
 	return e
 }
 
-func (e *TagSvgFeFuncG) AppendToElement(el js.Value) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFePointLight) AppendToElement(el js.Value) (ref *TagSvgFePointLight) {
 	e.selfElement.Call("appendChild", el)
 	return e
 }
 
-func (e *TagSvgFeFuncG) Get() (el js.Value) {
+func (e *TagSvgFePointLight) Get() (el js.Value) {
 	return e.selfElement
 }
 
@@ -227,7 +227,7 @@ func (e *TagSvgFeFuncG) Get() (el js.Value) {
 // Portuguese
 //
 //  O atributo id atribui um nome exclusivo a um elemento.
-func (e *TagSvgFeFuncG) Id(id string) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFePointLight) Id(id string) (ref *TagSvgFePointLight) {
 	e.selfElement.Call("setAttribute", "id", id)
 	return e
 }
@@ -269,7 +269,7 @@ func (e *TagSvgFeFuncG) Id(id string) (ref *TagSvgFeFuncG) {
 // (também conhecido como BCP 47). O glifo deveria ser usado se o atributo xml:lang correspondesse exatamente a um dos
 // idiomas fornecidos no valor desse parâmetro, ou se o atributo xml:lang fosse exatamente igual a um prefixo de um dos
 // idiomas fornecidos no valor desse parâmetro de modo que o primeiro caractere de tag após o prefixo fosse "-".
-func (e *TagSvgFeFuncG) Lang(value interface{}) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFePointLight) Lang(value interface{}) (ref *TagSvgFePointLight) {
 
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "lang", converted.String())
@@ -291,7 +291,7 @@ func (e *TagSvgFeFuncG) Lang(value interface{}) (ref *TagSvgFeFuncG) {
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
 // de navegação de foco sequencial.
-func (e *TagSvgFeFuncG) Tabindex(value int) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFePointLight) Tabindex(value int) (ref *TagSvgFePointLight) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }
@@ -329,7 +329,7 @@ func (e *TagSvgFeFuncG) Tabindex(value int) (ref *TagSvgFeFuncG) {
 //
 // Há também um atributo lang (sem namespace). Se ambos estiverem definidos, aquele com namespace será usado e o sem
 // namespace será ignorado.
-func (e *TagSvgFeFuncG) XmlLang(value interface{}) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFePointLight) XmlLang(value interface{}) (ref *TagSvgFePointLight) {
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "xml:lang", converted.String())
 		return e
@@ -341,130 +341,138 @@ func (e *TagSvgFeFuncG) XmlLang(value interface{}) (ref *TagSvgFeFuncG) {
 
 // #core end ----------------------------------------------------------------------------------------------------------
 
-// Type
+// X
 //
 // English:
 //
-// Indicates the type of component transfer function.
+// The x attribute defines an x-axis coordinate in the user coordinate system.
 //
 //   Input:
-//     value: type of component transfer function
-//       const: KSvgTypeFeFunc... (e.g. KSvgTypeFeFuncIdentity)
+//     value: defines an x-axis coordinate
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
 //       any other type: interface{}
 //
 // Português:
 //
-// Indica o tipo de função de transferência de componentes.
-//
-//   Input:
-//     value: tipo de função de transferência de componente
-//       const: KSvgTypeFeFunc... (ex. KSvgTypeFeFuncIdentity)
-//       any other type: interface{}
-func (e *TagSvgFeFuncG) Type(value interface{}) (ref *TagSvgFeFuncG) {
-	if converted, ok := value.(SvgTypeFeFunc); ok {
-		e.selfElement.Call("setAttribute", "type", converted.String())
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "type", value)
-	return e
-}
-
-// TableValues
-//
-// English:
-//
-// The tableValues attribute defines a list of numbers defining a lookup table of values for a color component transfer
-// function.
-//
-//   Input:
-//     value: defines a list of numbers
-//       []float64: e.g. []float64{0.0, 1.0} = "0 1"
-//       any other type: interface{}
-//
-// Português:
-//
-// O atributo tableValues define uma lista de números que definem uma tabela de consulta de valores para uma função de
-// transferência de componente de cor.
+// O atributo x define uma coordenada do eixo x no sistema de coordenadas do usuário.
 //
 //   Entrada:
-//     value: define uma lista de números
-//       []float64: ex. []float64{0.0, 1.0} = "0 1"
+//     value: define uma coordenada do eixo x
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
 //       qualquer outro tipo: interface{}
-func (e *TagSvgFeFuncG) TableValues(value interface{}) (ref *TagSvgFeFuncG) {
+func (e *TagSvgFePointLight) X(value interface{}) (ref *TagSvgFePointLight) {
 	if converted, ok := value.([]float64); ok {
-		tags := ""
+		var valueStr = ""
 		for _, v := range converted {
-			tags += strconv.FormatFloat(v, 'g', -1, 64) + " "
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
 		}
-		length := len(tags) - 1
 
-		e.selfElement.Call("setAttribute", "tableValues", tags[:length])
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "x", valueStr[:length])
 		return e
 	}
 
-	e.selfElement.Call("setAttribute", "tableValues", value)
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 3
+
+		e.selfElement.Call("setAttribute", "x", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "x", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "x", value)
 	return e
 }
 
-// Intercept
+// Y
 //
 // English:
 //
-//  The intercept attribute defines the intercept of the linear function of color component transfers when the type
-//  attribute is set to linear.
-//
-// Portuguese
-//
-//  O atributo de interceptação define a interceptação da função linear de transferências de componentes de cor quando
-//  o atributo de tipo é definido como linear.
-func (e *TagSvgFeFuncG) Intercept(intercept float64) (ref *TagSvgFeFuncG) {
-	e.selfElement.Call("setAttribute", "intercept", intercept)
-	return e
-}
-
-// Amplitude
-//
-// English:
-//
-//  The amplitude attribute controls the amplitude of the gamma function of a component transfer element when its type
-//  attribute is gamma.
+// The y attribute defines an y-axis coordinate in the user coordinate system.
 //
 //   Input:
-//     amplitude: controls the amplitude of the gamma function
-//       float32: 1.0 = "100%"
+//     value: defines an y-axis coordinate
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
 //       any other type: interface{}
 //
 // Português:
 //
-//  O atributo amplitude controla à amplitude da função gama de um elemento de transferência de componente quando seu
-//  atributo de tipo é gama.
+// O atributo y define uma coordenada do eixo y no sistema de coordenadas do usuário.
 //
 //   Entrada:
-//     amplitude: controla a amplitude da função de gama
-//       float32: 1.0 = "100%"
+//     value: define uma coordenada do eixo y
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
 //       qualquer outro tipo: interface{}
-func (e *TagSvgFeFuncG) Amplitude(amplitude interface{}) (ref *TagSvgFeFuncG) {
-	if converted, ok := amplitude.(float32); ok {
-		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
-		e.selfElement.Call("setAttribute", "amplitude", p)
+func (e *TagSvgFePointLight) Y(value interface{}) (ref *TagSvgFePointLight) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "y", valueStr[:length])
 		return e
 	}
 
-	e.selfElement.Call("setAttribute", "amplitude", amplitude)
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 3
+
+		e.selfElement.Call("setAttribute", "y", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "y", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "y", value)
 	return e
 }
 
-// Exponent
+// Z
 //
 // English:
 //
-//  The exponent attribute defines the exponent of the gamma function.
+// The z attribute defines the location along the z-axis for a light source in the coordinate system established by the
+// primitiveUnits attribute on the <filter> element, assuming that, in the initial coordinate system, the positive
+// z-axis comes out towards the person viewing the content and assuming that one unit along the z-axis equals one unit
+// in x and y.
 //
-// Portuguese
+// Português:
 //
-//  O atributo expoente define o expoente da função gama.
-func (e *TagSvgFeFuncG) Exponent(exponent float64) (ref *TagSvgFeFuncG) {
-	e.selfElement.Call("setAttribute", "exponent", exponent)
+// O atributo z define a localização ao longo do eixo z para uma fonte de luz no sistema de coordenadas estabelecido
+// pelo atributo primitivoUnits no elemento <filter>, assumindo que, no sistema de coordenadas inicial, o eixo z
+// positivo sai em direção à pessoa visualizar o conteúdo e assumir que uma unidade ao longo do eixo z é igual a uma
+// unidade em x e y.
+func (e *TagSvgFePointLight) Z(value interface{}) (ref *TagSvgFePointLight) {
+	e.selfElement.Call("setAttribute", "z", value)
 	return e
 }

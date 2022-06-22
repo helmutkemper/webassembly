@@ -191,6 +191,31 @@ func (e *TagSvgAnimate) CreateElement(tag Tag) (ref *TagSvgAnimate) {
 	return e
 }
 
+func (e *TagSvgAnimate) AppendToStage() (ref *TagSvgAnimate) {
+	e.stage.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgAnimate) AppendById(appendId string) (ref *TagSvgAnimate) {
+	toAppend := js.Global().Get("document").Call("getElementById", appendId)
+	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
+		log.Print(KIdToAppendNotFound, appendId)
+		return e
+	}
+
+	toAppend.Call("appendChild", e.selfElement)
+	return e
+}
+
+func (e *TagSvgAnimate) AppendToElement(el js.Value) (ref *TagSvgAnimate) {
+	e.selfElement.Call("appendChild", el)
+	return e
+}
+
+func (e *TagSvgAnimate) Get() (el js.Value) {
+	return e.selfElement
+}
+
 // #core start --------------------------------------------------------------------------------------------------------
 
 // Id

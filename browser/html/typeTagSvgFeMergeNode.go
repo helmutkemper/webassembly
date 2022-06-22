@@ -13,13 +13,11 @@ import (
 //
 // English:
 //
-// The <feFlood> SVG filter primitive fills the filter subregion with the color and opacity defined by flood-color and
-// flood-opacity.
+// The feMergeNode takes the result of another filter to be processed by its parent <feMerge>.
 //
 // Português:
 //
-// A primitiva de filtro SVG <feFlood> preenche a sub-região do filtro com a cor e a opacidade definidas por flood-color
-// e flood-opacity.
+// O feMergeNode recebe o resultado de outro filtro para ser processado por seu pai <feMerge>.
 type TagSvgFeMergeNode struct {
 
 	// id

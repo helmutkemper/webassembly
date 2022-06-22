@@ -4175,11 +4175,11 @@ func (e *TagSvgGlobal) StartOffset(value interface{}) (ref *TagSvgGlobal) {
 //       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) StdDeviation(value interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := value.(SvgStitchTiles); ok {
-		e.selfElement.Call("setAttribute", "stdDeviation", converted.String())
+		e.selfElement.Call("setAttribute", "stitchTiles", converted.String())
 		return e
 	}
 
-	e.selfElement.Call("setAttribute", "stdDeviation", value)
+	e.selfElement.Call("setAttribute", "stitchTiles", value)
 	return e
 }
 

@@ -11,19 +11,19 @@ import (
 	"syscall/js"
 )
 
-// TagSvgFeTurbulence
+// TagSvgFeTile
 //
 // English:
 //
-// The <feTurbulence> SVG filter primitive creates an image using the Perlin turbulence function. It allows the
-// synthesis of artificial textures like clouds or marble. The resulting image will fill the entire filter primitive
-// subregion.
+// The <feTile> SVG filter primitive allows to fill a target rectangle with a repeated, tiled pattern of an input image.
+// The effect is similar to the one of a <pattern>.
 //
 // Português:
 //
-// A primitiva de filtro SVG <feTurbulence> cria uma imagem usando a função de turbulência Perlin. Permite a síntese
-// de texturas artificiais como nuvens ou mármore. A imagem resultante preencherá toda a sub-região primitiva do filtro.
-type TagSvgFeTurbulence struct {
+// A primitiva de filtro SVG <feTile> permite preencher um retângulo de destino com um padrão repetido e lado a lado de
+// uma imagem de entrada.
+// O efeito é semelhante ao de um <pattern>.
+type TagSvgFeTile struct {
 
 	// id
 	//
@@ -167,7 +167,7 @@ type TagSvgFeTurbulence struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeTurbulence) Init(id string) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Init(id string) (ref *TagSvgFeTile) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement(KTagSvg)
@@ -177,11 +177,11 @@ func (e *TagSvgFeTurbulence) Init(id string) (ref *TagSvgFeTurbulence) {
 	return e
 }
 
-func (e *TagSvgFeTurbulence) prepareStageReference() {
+func (e *TagSvgFeTile) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgFeTurbulence) CreateElement(tag Tag) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) CreateElement(tag Tag) (ref *TagSvgFeTile) {
 	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
@@ -193,12 +193,12 @@ func (e *TagSvgFeTurbulence) CreateElement(tag Tag) (ref *TagSvgFeTurbulence) {
 	return e
 }
 
-func (e *TagSvgFeTurbulence) AppendToStage() (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) AppendToStage() (ref *TagSvgFeTile) {
 	e.stage.Call("appendChild", e.selfElement)
 	return e
 }
 
-func (e *TagSvgFeTurbulence) AppendById(appendId string) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) AppendById(appendId string) (ref *TagSvgFeTile) {
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
 		log.Print(KIdToAppendNotFound, appendId)
@@ -209,12 +209,12 @@ func (e *TagSvgFeTurbulence) AppendById(appendId string) (ref *TagSvgFeTurbulenc
 	return e
 }
 
-func (e *TagSvgFeTurbulence) AppendToElement(el js.Value) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) AppendToElement(el js.Value) (ref *TagSvgFeTile) {
 	e.selfElement.Call("appendChild", el)
 	return e
 }
 
-func (e *TagSvgFeTurbulence) Get() (el js.Value) {
+func (e *TagSvgFeTile) Get() (el js.Value) {
 	return e.selfElement
 }
 
@@ -229,7 +229,7 @@ func (e *TagSvgFeTurbulence) Get() (el js.Value) {
 // Portuguese
 //
 //  O atributo id atribui um nome exclusivo a um elemento.
-func (e *TagSvgFeTurbulence) Id(id string) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Id(id string) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "id", id)
 	return e
 }
@@ -271,7 +271,7 @@ func (e *TagSvgFeTurbulence) Id(id string) (ref *TagSvgFeTurbulence) {
 // (também conhecido como BCP 47). O glifo deveria ser usado se o atributo xml:lang correspondesse exatamente a um dos
 // idiomas fornecidos no valor desse parâmetro, ou se o atributo xml:lang fosse exatamente igual a um prefixo de um dos
 // idiomas fornecidos no valor desse parâmetro de modo que o primeiro caractere de tag após o prefixo fosse "-".
-func (e *TagSvgFeTurbulence) Lang(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Lang(value interface{}) (ref *TagSvgFeTile) {
 
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "lang", converted.String())
@@ -293,7 +293,7 @@ func (e *TagSvgFeTurbulence) Lang(value interface{}) (ref *TagSvgFeTurbulence) {
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
 // de navegação de foco sequencial.
-func (e *TagSvgFeTurbulence) Tabindex(value int) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Tabindex(value int) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }
@@ -331,7 +331,7 @@ func (e *TagSvgFeTurbulence) Tabindex(value int) (ref *TagSvgFeTurbulence) {
 //
 // Há também um atributo lang (sem namespace). Se ambos estiverem definidos, aquele com namespace será usado e o sem
 // namespace será ignorado.
-func (e *TagSvgFeTurbulence) XmlLang(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) XmlLang(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "xml:lang", converted.String())
 		return e
@@ -374,7 +374,7 @@ func (e *TagSvgFeTurbulence) XmlLang(value interface{}) (ref *TagSvgFeTurbulence
 //   Notas:
 //     * Como atributo de apresentação, baseline-shift pode ser usado como propriedade CSS.
 //     * Essa propriedade será preterida e os autores são aconselhados a usar alinhamento vertical.
-func (e *TagSvgFeTurbulence) BaselineShift(baselineShift interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) BaselineShift(baselineShift interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := baselineShift.(SvgBaselineShift); ok {
 		e.selfElement.Call("setAttribute", "baseline-shift", converted.String())
 		return e
@@ -407,7 +407,7 @@ func (e *TagSvgFeTurbulence) BaselineShift(baselineShift interface{}) (ref *TagS
 //   Entrada:
 //     clipPath: elemento ao qual é aplicado
 //       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
-func (e *TagSvgFeTurbulence) ClipPath(clipPath string) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) ClipPath(clipPath string) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "clip-path", clipPath)
 	return e
 }
@@ -433,7 +433,7 @@ func (e *TagSvgFeTurbulence) ClipPath(clipPath string) (ref *TagSvgFeTurbulence)
 //     value: lado de um caminho
 //       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
 //       qualquer outro tipo: interface{}
-func (e *TagSvgFeTurbulence) ClipRule(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) ClipRule(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgClipRule); ok {
 		e.selfElement.Call("setAttribute", "clip-rule", converted.String())
 		return e
@@ -474,7 +474,7 @@ func (e *TagSvgFeTurbulence) ClipRule(value interface{}) (ref *TagSvgFeTurbulenc
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
-func (e *TagSvgFeTurbulence) Color(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Color(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
 		return e
@@ -525,7 +525,7 @@ func (e *TagSvgFeTurbulence) Color(value interface{}) (ref *TagSvgFeTurbulence) 
 //   Notas:
 //     * Para efeitos de filtro, a propriedade color-interpolation-filters controla qual espaço de cor é usado.
 //     * Como atributo de apresentação, a interpolação de cores pode ser usada como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) ColorInterpolation(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) ColorInterpolation(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation", RGBAToJs(converted))
 		return e
@@ -566,7 +566,7 @@ func (e *TagSvgFeTurbulence) ColorInterpolation(value interface{}) (ref *TagSvgF
 //       interpolações de cores ocorrem por padrão no espaço de cores sRGB.
 //     * Não afeta as funções de filtro, que operam no espaço de cores sRGB.
 //     * Como atributo de apresentação, os filtros de interpolação de cores podem ser usados como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) ColorInterpolationFilters(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) ColorInterpolationFilters(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation-filters", RGBAToJs(converted))
 		return e
@@ -597,7 +597,7 @@ func (e *TagSvgFeTurbulence) ColorInterpolationFilters(value interface{}) (ref *
 //
 // Como atributo de apresentação, também pode ser usado como propriedade diretamente dentro de uma folha de estilo CSS,
 // veja cursor css para mais informações.
-func (e *TagSvgFeTurbulence) Cursor(cursor SvgCursor) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Cursor(cursor SvgCursor) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "cursor", cursor.String())
 	return e
 }
@@ -625,7 +625,7 @@ func (e *TagSvgFeTurbulence) Cursor(cursor SvgCursor) (ref *TagSvgFeTurbulence) 
 // Você pode usar este atributo com os seguintes elementos SVG: <path>, <glyph>, <missing-glyph>.
 //
 // d é um atributo de apresentação e, portanto, também pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) D(d *SvgPath) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) D(d *SvgPath) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "d", d.String())
 	return e
 }
@@ -670,7 +670,7 @@ func (e *TagSvgFeTurbulence) D(d *SvgPath) (ref *TagSvgFeTurbulence) {
 //   Notas:
 //     * Como atributo de apresentação, a direção pode ser usada como uma propriedade CSS. Veja a direção do CSS para
 //       mais informações.
-func (e *TagSvgFeTurbulence) Direction(direction SvgDirection) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Direction(direction SvgDirection) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "direction", direction.String())
 	return e
 }
@@ -746,7 +746,7 @@ func (e *TagSvgFeTurbulence) Direction(direction SvgDirection) (ref *TagSvgFeTur
 //  Notas:
 //    * Como atributo de apresentação, display pode ser usado como propriedade CSS. Consulte a exibição css para obter
 //      mais informações.
-func (e *TagSvgFeTurbulence) Display(display SvgDisplay) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Display(display SvgDisplay) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "display", display.String())
 	return e
 }
@@ -799,7 +799,7 @@ func (e *TagSvgFeTurbulence) Display(display SvgDisplay) (ref *TagSvgFeTurbulenc
 //
 //   Notas:
 //     * Como atributo de apresentação, a linha de base dominante pode ser usada como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "dominant-baseline", dominantBaseline.String())
 	return e
 }
@@ -819,7 +819,7 @@ func (e *TagSvgFeTurbulence) DominantBaseline(dominantBaseline SvgDominantBaseli
 //  cor (ou qualquer servidor de pintura SVG, como gradientes ou padrões) usado para pintar o elemento;
 //
 // para animação, define o estado final da animação.
-func (e *TagSvgFeTurbulence) Fill(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Fill(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "fill", RGBAToJs(converted))
 		return e
@@ -846,7 +846,7 @@ func (e *TagSvgFeTurbulence) Fill(value interface{}) (ref *TagSvgFeTurbulence) {
 //
 //   Notes:
 //     *As a presentation attribute fill-opacity can be used as a CSS property.
-func (e *TagSvgFeTurbulence) FillOpacity(fillOpacity float64) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FillOpacity(fillOpacity float64) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "fill-opacity", fillOpacity)
 	return e
 }
@@ -868,7 +868,7 @@ func (e *TagSvgFeTurbulence) FillOpacity(fillOpacity float64) (ref *TagSvgFeTurb
 //
 //   Notas:
 //     * Como atributo de apresentação, fill-rule pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) FillRule(fillRule SvgFillRule) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FillRule(fillRule SvgFillRule) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "fill-rule", fillRule.String())
 	return e
 }
@@ -891,7 +891,7 @@ func (e *TagSvgFeTurbulence) FillRule(fillRule SvgFillRule) (ref *TagSvgFeTurbul
 //   Notas:
 //     * Como atributo de apresentação, o filtro pode ser usado como propriedade CSS. Veja filtro css para mais
 //       informações.
-func (e *TagSvgFeTurbulence) Filter(filter string) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Filter(filter string) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "filter", filter)
 	return e
 }
@@ -911,7 +911,7 @@ func (e *TagSvgFeTurbulence) Filter(filter string) (ref *TagSvgFeTurbulence) {
 //
 //   Notes:
 //     * As a presentation attribute, flood-color can be used as a CSS property.
-func (e *TagSvgFeTurbulence) FloodColor(floodColor interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FloodColor(floodColor interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := floodColor.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "flood-color", RGBAToJs(converted))
 		return e
@@ -936,7 +936,7 @@ func (e *TagSvgFeTurbulence) FloodColor(floodColor interface{}) (ref *TagSvgFeTu
 //
 //   Notas:
 //     * Como atributo de apresentação, a opacidade de inundação pode ser usada como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) FloodOpacity(floodOpacity float64) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FloodOpacity(floodOpacity float64) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "flood-opacity", floodOpacity)
 	return e
 }
@@ -960,7 +960,7 @@ func (e *TagSvgFeTurbulence) FloodOpacity(floodOpacity float64) (ref *TagSvgFeTu
 //   Notas:
 //     * Como atributo de apresentação, font-family pode ser usada como propriedade CSS. Consulte a propriedade CSS
 //       font-family para obter mais informações.
-func (e *TagSvgFeTurbulence) FontFamily(fontFamily string) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FontFamily(fontFamily string) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "font-family", fontFamily)
 	return e
 }
@@ -984,7 +984,7 @@ func (e *TagSvgFeTurbulence) FontFamily(fontFamily string) (ref *TagSvgFeTurbule
 //   Notas:
 //     * Como atributo de apresentação, font-size pode ser usado como uma propriedade CSS. Consulte a propriedade CSS
 //       font-size para obter mais informações.
-func (e *TagSvgFeTurbulence) FontSize(fontSize float64) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FontSize(fontSize float64) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "font-size", fontSize)
 	return e
 }
@@ -1008,7 +1008,7 @@ func (e *TagSvgFeTurbulence) FontSize(fontSize float64) (ref *TagSvgFeTurbulence
 //   Notes:
 //     * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
 //       property for more information.
-func (e *TagSvgFeTurbulence) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "font-size-adjust", fontSizeAdjust)
 	return e
 }
@@ -1042,7 +1042,7 @@ func (e *TagSvgFeTurbulence) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvg
 //   Notas:
 //     * Como atributo de apresentação, font-stretch pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-stretch para obter mais informações.
-func (e *TagSvgFeTurbulence) FontStretch(fontStretch interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FontStretch(fontStretch interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := fontStretch.(SvgFontStretch); ok {
 		e.selfElement.Call("setAttribute", "font-stretch", converted.String())
 		return e
@@ -1069,7 +1069,7 @@ func (e *TagSvgFeTurbulence) FontStretch(fontStretch interface{}) (ref *TagSvgFe
 //   Notas:
 //     * Como atributo de apresentação, font-style pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //       font-style para obter mais informações.
-func (e *TagSvgFeTurbulence) FontStyle(fontStyle FontStyleRule) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FontStyle(fontStyle FontStyleRule) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "font-style", fontStyle.String())
 	return e
 }
@@ -1091,7 +1091,7 @@ func (e *TagSvgFeTurbulence) FontStyle(fontStyle FontStyleRule) (ref *TagSvgFeTu
 //   Notas:
 //     * Como atributo de apresentação, font-variant pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-variant para obter mais informações.
-func (e *TagSvgFeTurbulence) FontVariant(fontVariant FontVariantRule) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FontVariant(fontVariant FontVariantRule) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "font-variant", fontVariant.String())
 	return e
 }
@@ -1115,7 +1115,7 @@ func (e *TagSvgFeTurbulence) FontVariant(fontVariant FontVariantRule) (ref *TagS
 //   Notas:
 //     * Como atributo de apresentação, o peso da fonte pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-weight para obter mais informações.
-func (e *TagSvgFeTurbulence) FontWeight(fontWeight FontWeightRule) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) FontWeight(fontWeight FontWeightRule) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "font-weight", fontWeight.String())
 	return e
 }
@@ -1145,7 +1145,7 @@ func (e *TagSvgFeTurbulence) FontWeight(fontWeight FontWeightRule) (ref *TagSvgF
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de imagem pode ser usada como uma propriedade CSS. Consulte
 //       a propriedade de renderização de imagem css para obter mais informações.
-func (e *TagSvgFeTurbulence) ImageRendering(imageRendering string) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) ImageRendering(imageRendering string) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "image-rendering", imageRendering)
 	return e
 }
@@ -1187,7 +1187,7 @@ func (e *TagSvgFeTurbulence) ImageRendering(imageRendering string) (ref *TagSvgF
 // Notas:
 //   * Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
 //     Consulte a propriedade de espaçamento entre letras do CSS para obter mais informações.
-func (e *TagSvgFeTurbulence) LetterSpacing(value float64) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) LetterSpacing(value float64) (ref *TagSvgFeTile) {
 
 	e.selfElement.Call("setAttribute", "letter-spacing", strconv.FormatFloat(value, 'g', -1, 64))
 	return e
@@ -1202,7 +1202,7 @@ func (e *TagSvgFeTurbulence) LetterSpacing(value float64) (ref *TagSvgFeTurbulen
 // Português:
 //
 // O atributo lighting-color define a cor da fonte de luz para as primitivas do filtro de iluminação.
-func (e *TagSvgFeTurbulence) LightingColor(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) LightingColor(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "lighting-color", RGBAToJs(converted))
 		return e
@@ -1248,7 +1248,7 @@ func (e *TagSvgFeTurbulence) LightingColor(value interface{}) (ref *TagSvgFeTurb
 //
 // Notas:
 //   * Como atributo de apresentação, o marker-end pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) MarkerEnd(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) MarkerEnd(value interface{}) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "marker-end", value)
 	return e
 }
@@ -1282,7 +1282,7 @@ func (e *TagSvgFeTurbulence) MarkerEnd(value interface{}) (ref *TagSvgFeTurbulen
 //
 // Notas:
 //   * Como atributo de apresentação, o marker-mid pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) MarkerMid(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) MarkerMid(value interface{}) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "marker-mid", value)
 	return e
 }
@@ -1323,7 +1323,7 @@ func (e *TagSvgFeTurbulence) MarkerMid(value interface{}) (ref *TagSvgFeTurbulen
 //
 // Notas:
 //   * Como atributo de apresentação, o início do marcador pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) MarkerStart(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) MarkerStart(value interface{}) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "marker-start", value)
 	return e
 }
@@ -1353,7 +1353,7 @@ func (e *TagSvgFeTurbulence) MarkerStart(value interface{}) (ref *TagSvgFeTurbul
 //
 // Notas:
 //   * Como uma máscara de atributo de apresentação pode ser usada como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) Mask(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Mask(value interface{}) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "mask", value)
 	return e
 }
@@ -1388,7 +1388,7 @@ func (e *TagSvgFeTurbulence) Mask(value interface{}) (ref *TagSvgFeTurbulence) {
 //   Notes:
 //     * Como atributo de apresentação, a opacidade pode ser usada como uma propriedade CSS. Consulte a propriedade de
 //       opacidade do CSS para obter mais informações.
-func (e *TagSvgFeTurbulence) Opacity(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Opacity(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "opacity", p)
@@ -1442,7 +1442,7 @@ func (e *TagSvgFeTurbulence) Opacity(value interface{}) (ref *TagSvgFeTurbulence
 //       <marker> para ser ocultado por padrão.
 //     * Como atributo de apresentação, overflow pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //       overflow para obter mais informações.
-func (e *TagSvgFeTurbulence) Overflow(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Overflow(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(Overflow); ok {
 		e.selfElement.Call("setAttribute", "overflow", converted.String())
 		return e
@@ -1469,7 +1469,7 @@ func (e *TagSvgFeTurbulence) Overflow(value interface{}) (ref *TagSvgFeTurbulenc
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) PointerEvents(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) PointerEvents(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgPointerEvents); ok {
 		e.selfElement.Call("setAttribute", "pointer-events", converted.String())
 		return e
@@ -1506,7 +1506,7 @@ func (e *TagSvgFeTurbulence) PointerEvents(value interface{}) (ref *TagSvgFeTurb
 //
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) ShapeRendering(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) ShapeRendering(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgShapeRendering); ok {
 		e.selfElement.Call("setAttribute", "shape-rendering", converted.String())
 		return e
@@ -1551,7 +1551,7 @@ func (e *TagSvgFeTurbulence) ShapeRendering(value interface{}) (ref *TagSvgFeTur
 //       Assim, especificar uma stop-color com o valor transparente é equivalente a especificar uma stop-color com o
 //       valor black e uma stop-opacity com o valor 0.
 //     * Como atributo de apresentação, stop-color pode ser usado como propriedade CSS.
-func (e *TagSvgFeTurbulence) StopColor(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) StopColor(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stop-color", RGBAToJs(converted))
 		return e
@@ -1594,7 +1594,7 @@ func (e *TagSvgFeTurbulence) StopColor(value interface{}) (ref *TagSvgFeTurbulen
 //
 //   Notas:
 //     * Como atributo de apresentação, stop-opacity pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) StopOpacity(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) StopOpacity(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stop-opacity", p)
@@ -1636,7 +1636,7 @@ func (e *TagSvgFeTurbulence) StopOpacity(value interface{}) (ref *TagSvgFeTurbul
 //
 //   Notas:
 //     * Como um traço de atributo de apresentação pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) Stroke(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Stroke(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stroke", RGBAToJs(converted))
 		return e
@@ -1673,7 +1673,7 @@ func (e *TagSvgFeTurbulence) Stroke(value interface{}) (ref *TagSvgFeTurbulence)
 //
 //   Notas:
 //     * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) StrokeDasharray(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) StrokeDasharray(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.([]float64); ok {
 		str := ""
 		for _, v := range converted {
@@ -1716,7 +1716,7 @@ func (e *TagSvgFeTurbulence) StrokeDasharray(value interface{}) (ref *TagSvgFeTu
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) StrokeLinecap(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) StrokeLinecap(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1743,7 +1743,7 @@ func (e *TagSvgFeTurbulence) StrokeLinecap(value interface{}) (ref *TagSvgFeTurb
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgFeTurbulence) StrokeLinejoin(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) StrokeLinejoin(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1771,7 +1771,7 @@ func (e *TagSvgFeTurbulence) StrokeLinejoin(value interface{}) (ref *TagSvgFeTur
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgFeTurbulence) StrokeMiterlimit(value float64) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) StrokeMiterlimit(value float64) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }
@@ -1803,7 +1803,7 @@ func (e *TagSvgFeTurbulence) StrokeMiterlimit(value float64) (ref *TagSvgFeTurbu
 //
 //   Notas:
 //     * Como atributo de apresentação, a opacidade do traço pode ser usada como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) StrokeOpacity(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) StrokeOpacity(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stroke-opacity", p)
@@ -1833,7 +1833,7 @@ func (e *TagSvgFeTurbulence) StrokeOpacity(value interface{}) (ref *TagSvgFeTurb
 //     value: definindo a largura do traço
 //       float32: 1.0 = "100%"
 //       qualquer outro tipo: interface{}
-func (e *TagSvgFeTurbulence) StrokeWidth(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) StrokeWidth(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stroke-width", p)
@@ -1890,7 +1890,7 @@ func (e *TagSvgFeTurbulence) StrokeWidth(value interface{}) (ref *TagSvgFeTurbul
 //
 //   Notes:
 //     * As a presentation attribute, text-anchor can be used as a CSS property.
-func (e *TagSvgFeTurbulence) TextAnchor(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) TextAnchor(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgTextAnchor); ok {
 		e.selfElement.Call("setAttribute", "text-anchor", converted.String())
 		return e
@@ -1949,7 +1949,7 @@ func (e *TagSvgFeTurbulence) TextAnchor(value interface{}) (ref *TagSvgFeTurbule
 //   Notas:
 //     * Como atributo de apresentação, a decoração de texto pode ser usada como uma propriedade CSS. Consulte a
 //       propriedade CSS text-decoration para obter mais informações.
-func (e *TagSvgFeTurbulence) TextDecoration(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) TextDecoration(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "text-decoration", RGBAToJs(converted))
 		return e
@@ -1986,7 +1986,7 @@ func (e *TagSvgFeTurbulence) TextDecoration(value interface{}) (ref *TagSvgFeTur
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de texto pode ser usada como uma propriedade CSS.
 //       Consulte a propriedade de renderização de texto css para obter mais informações.
-func (e *TagSvgFeTurbulence) TextRendering(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) TextRendering(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgTextRendering); ok {
 		e.selfElement.Call("setAttribute", "text-rendering", converted.String())
 		return e
@@ -2030,7 +2030,7 @@ func (e *TagSvgFeTurbulence) TextRendering(value interface{}) (ref *TagSvgFeTurb
 //       propriedade CSS. No entanto, esteja ciente de que existem algumas diferenças na sintaxe entre a propriedade CSS
 //       e o atributo. Consulte a documentação da transformação da propriedade CSS para obter a sintaxe específica a ser
 //       usada nesse caso.
-func (e *TagSvgFeTurbulence) Transform(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Transform(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(*TransformFunctions); ok {
 		e.selfElement.Call("setAttribute", "transform", converted.String())
 		return e
@@ -2072,7 +2072,7 @@ func (e *TagSvgFeTurbulence) Transform(value interface{}) (ref *TagSvgFeTurbulen
 //   Notas:
 //     * Como atributo de apresentação, o unicode-bidi pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS unicode-bidi para obter mais informações.
-func (e *TagSvgFeTurbulence) UnicodeBidi(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) UnicodeBidi(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgTransformOrigin); ok {
 		e.selfElement.Call("setAttribute", "unicode-bidi", converted.String())
 		return e
@@ -2110,7 +2110,7 @@ func (e *TagSvgFeTurbulence) UnicodeBidi(value interface{}) (ref *TagSvgFeTurbul
 //
 //   Notas:
 //     * Como atributo de apresentação, o efeito vetorial pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTurbulence) VectorEffect(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) VectorEffect(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgVectorEffect); ok {
 		e.selfElement.Call("setAttribute", "vector-effect", converted.String())
 		return e
@@ -2161,7 +2161,7 @@ func (e *TagSvgFeTurbulence) VectorEffect(value interface{}) (ref *TagSvgFeTurbu
 //       mas ainda ocupará espaço nos cálculos de layout de texto;
 //     * Como atributo de apresentação, a visibilidade pode ser usada como propriedade CSS. Consulte a propriedade de
 //       visibilidade do CSS para obter mais informações.
-func (e *TagSvgFeTurbulence) Visibility(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Visibility(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgVisibility); ok {
 		e.selfElement.Call("setAttribute", "visibility", converted.String())
 		return e
@@ -2210,7 +2210,7 @@ func (e *TagSvgFeTurbulence) Visibility(value interface{}) (ref *TagSvgFeTurbule
 //   Notas:
 //     * Como atributo de apresentação, o espaçamento entre palavras pode ser usado como uma propriedade CSS.
 //       Consulte a propriedade de espaçamento entre palavras do CSS para obter mais informações.
-func (e *TagSvgFeTurbulence) WordSpacing(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) WordSpacing(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "word-spacing", p)
@@ -2256,7 +2256,7 @@ func (e *TagSvgFeTurbulence) WordSpacing(value interface{}) (ref *TagSvgFeTurbul
 //   Notas:
 //     * Como atributo de apresentação, o modo de escrita pode ser usado como uma propriedade CSS. Consulte a
 //       propriedade do modo de gravação CSS para obter mais informações.
-func (e *TagSvgFeTurbulence) WritingMode(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) WritingMode(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgWritingMode); ok {
 		e.selfElement.Call("setAttribute", "writing-mode", converted.String())
 		return e
@@ -2297,7 +2297,7 @@ func (e *TagSvgFeTurbulence) WritingMode(value interface{}) (ref *TagSvgFeTurbul
 //   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
 //     elementos.
 //   * Para uso geral pelo navegador.
-func (e *TagSvgFeTurbulence) Class(class string) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Class(class string) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
 }
@@ -2313,7 +2313,7 @@ func (e *TagSvgFeTurbulence) Class(class string) (ref *TagSvgFeTurbulence) {
 //
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
-func (e *TagSvgFeTurbulence) Style(value string) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Style(value string) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
@@ -2331,7 +2331,7 @@ func (e *TagSvgFeTurbulence) Style(value string) (ref *TagSvgFeTurbulence) {
 // Português:
 //
 //  O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
-func (e *TagSvgFeTurbulence) Height(height interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Height(height interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := height.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "height", p)
@@ -2358,7 +2358,7 @@ func (e *TagSvgFeTurbulence) Height(height interface{}) (ref *TagSvgFeTurbulence
 // subsequente dentro do mesmo elemento <filter>. Se nenhum valor for fornecido, a saída só estará disponível para
 // reutilização como entrada implícita na próxima primitiva de filtro se essa primitiva de filtro não fornecer valor
 // para seu atributo in.
-func (e *TagSvgFeTurbulence) Result(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Result(value interface{}) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "result", value)
 	return e
 }
@@ -2382,7 +2382,7 @@ func (e *TagSvgFeTurbulence) Result(value interface{}) (ref *TagSvgFeTurbulence)
 //     value: o comprimento horizontal de um elemento
 //       float32: 1.0 = "100%"
 //       qualquer outro tipo: interface{}
-func (e *TagSvgFeTurbulence) Width(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Width(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "width", p)
@@ -2416,7 +2416,7 @@ func (e *TagSvgFeTurbulence) Width(value interface{}) (ref *TagSvgFeTurbulence) 
 //       []float32: []float64{0.0, 10.0} = "0%, 10%"
 //       float32: 10.0 = "10%"
 //       qualquer outro tipo: interface{}
-func (e *TagSvgFeTurbulence) X(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) X(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
 		for _, v := range converted {
@@ -2474,7 +2474,7 @@ func (e *TagSvgFeTurbulence) X(value interface{}) (ref *TagSvgFeTurbulence) {
 //       []float32: []float64{0.0, 10.0} = "0%, 10%"
 //       float32: 10.0 = "10%"
 //       qualquer outro tipo: interface{}
-func (e *TagSvgFeTurbulence) Y(value interface{}) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTile) Y(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
 		for _, v := range converted {
@@ -2511,95 +2511,48 @@ func (e *TagSvgFeTurbulence) Y(value interface{}) (ref *TagSvgFeTurbulence) {
 
 // #filter end --------------------------------------------------------------------------------------------------------
 
-// BaseFrequency
+// In
 //
 // English:
 //
-//  The baseFrequency attribute represents the base frequency parameter for the noise function of the <feTurbulence> filter primitive.
+//  The in attribute identifies input for the given filter primitive.
 //
 //   Input:
-//     baseFrequency: represents the base frequency parameter for the noise function
-//
-// Português:
-//
-//  O atributo baseFrequency representa o parâmetro de frequência base para a função de ruído da primitiva de filtro <feTurbulence>.
-//
-//   Entrada:
-//     baseFrequency: representa o parâmetro de frequência base para a função de ruído
-func (e *TagSvgFeTurbulence) BaseFrequency(baseFrequency float64) (ref *TagSvgFeTurbulence) {
-	e.selfElement.Call("setAttribute", "baseFrequency", baseFrequency)
-	return e
-}
-
-// NumOctaves
-//
-// English:
-//
-// The numOctaves attribute defines the number of octaves for the noise function of the <feTurbulence> primitive.
-//
-//   Input:
-//     value: defines the number of octaves for the noise function
-//
-// An octave is a noise function defined by its frequency and amplitude. A turbulence is built by accumulating several
-// octaves with increasing frequencies and decreasing amplitudes. The higher the number of octaves, the more natural
-// the noise looks. Though more octaves also require more calculations, resulting in a negative impact on performance.
-//
-// Português:
-//
-// O atributo numOctaves define o número de oitavas para a função de ruído da primitiva <feTurbulence>.
-//
-//   Input:
-//     value: define o número de oitavas para a função de ruído
-//
-// Uma oitava é uma função de ruído definida por sua frequência e amplitude. Uma turbulência é construída acumulando
-// várias oitavas com frequências crescentes e amplitudes decrescentes. Quanto maior o número de oitavas, mais natural
-// o ruído parece. Embora mais oitavas também exijam mais cálculos, resultando em um impacto negativo no desempenho.
-func (e *TagSvgFeTurbulence) NumOctaves(value float64) (ref *TagSvgFeTurbulence) {
-	e.selfElement.Call("setAttribute", "numOctaves", value)
-	return e
-}
-
-// Seed
-//
-// English:
-//
-// The seed attribute represents the starting number for the pseudo random number generator of the <feTurbulence> filter
-// primitive.
-//
-// Português:
-//
-// O atributo seed representa o número inicial para o gerador de números pseudo aleatórios da primitiva de filtro
-// <feTurbulence>.
-func (e *TagSvgFeTurbulence) Seed(value float64) (ref *TagSvgFeTurbulence) {
-	e.selfElement.Call("setAttribute", "seed", value)
-	return e
-}
-
-// StdDeviation
-//
-// English:
-//
-// The stdDeviation attribute defines the standard deviation for the blur operation.
-//
-//   Input:
-//     value: defines the standard deviation
-//       const: KSvgStitchTiles... (e.g. KSvgStitchTilesNoStitch)
+//     in: identifies input for the given filter primitive.
+//       KSvgIn... (e.g. KSvgInSourceAlpha)
 //       any other type: interface{}
 //
-// Português:
+// The value can be either one of the six keywords defined below, or a string which matches a previous result attribute
+// value within the same <filter> element. If no value is provided and this is the first filter primitive, then this
+// filter primitive will use SourceGraphic as its input. If no value is provided and this is a subsequent filter
+// primitive, then this filter primitive will use the result from the previous filter primitive as its input.
 //
-// O atributo stdDeviation define o desvio padrão para a operação de desfoque.
+// If the value for result appears multiple times within a given <filter> element, then a reference to that result will
+// use the closest preceding filter primitive with the given value for attribute result.
 //
-//   Input:
-//     value: define o desvio padrão
-//       const: KSvgStitchTiles... (e.g. KSvgStitchTilesNoStitch)
+// Portuguese
+//
+//  O atributo in identifica à entrada para a primitiva de filtro fornecida.
+//
+//   Entrada:
+//     in: identifica à entrada para a primitiva de filtro fornecida.
+//       KSvgIn... (e.g. KSvgInSourceAlpha)
 //       qualquer outro tipo: interface{}
-func (e *TagSvgFeTurbulence) StdDeviation(value interface{}) (ref *TagSvgFeTurbulence) {
-	if converted, ok := value.(SvgStitchTiles); ok {
-		e.selfElement.Call("setAttribute", "stitchTiles", converted.String())
+//
+// O valor pode ser uma das seis palavras-chave definidas abaixo ou uma string que corresponda a um valor de atributo
+// de resultado anterior dentro do mesmo elemento <filter>. Se nenhum valor for fornecido e esta for a primeira
+// primitiva de filtro, essa primitiva de filtro usará SourceGraphic como sua entrada. Se nenhum valor for fornecido e
+// esta for uma primitiva de filtro subsequente, essa primitiva de filtro usará o resultado da primitiva de filtro
+// anterior como sua entrada.
+//
+// Se o valor do resultado aparecer várias vezes em um determinado elemento <filter>, uma referência à esse resultado
+// usará a primitiva de filtro anterior mais próxima com o valor fornecido para o resultado do atributo.
+func (e *TagSvgFeTile) In(in interface{}) (ref *TagSvgFeTile) {
+	if converted, ok := in.(SvgIn); ok {
+		e.selfElement.Call("setAttribute", "in", converted.String())
 		return e
 	}
 
-	e.selfElement.Call("setAttribute", "stitchTiles", value)
+	e.selfElement.Call("setAttribute", "in", in)
 	return e
 }

@@ -15,13 +15,13 @@ import (
 //
 // English:
 //
-// The <feFlood> SVG filter primitive fills the filter subregion with the color and opacity defined by flood-color and
-// flood-opacity.
+// The <feMorphology> SVG filter primitive is used to erode or dilate the input image. Its usefulness lies especially
+// in fattening or thinning effects.
 //
 // Português:
 //
-// A primitiva de filtro SVG <feFlood> preenche a sub-região do filtro com a cor e a opacidade definidas por flood-color
-// e flood-opacity.
+// A primitiva de filtro SVG <feMorphology> é usada para corroer ou dilatar a imagem de entrada. Sua utilidade reside
+// especialmente nos efeitos de engorda ou desbaste.
 type TagSvgFeMorphology struct {
 
 	// id

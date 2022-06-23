@@ -599,34 +599,6 @@ func (e *TagSvgCircle) Cursor(cursor SvgCursor) (ref *TagSvgCircle) {
 	return e
 }
 
-// D
-//
-// English:
-//
-//  The d attribute defines a path to be drawn.
-//
-// A path definition is a list of path commands where each command is composed of a command letter and numbers that
-// represent the command parameters. The commands are detailed below.
-//
-// You can use this attribute with the following SVG elements: <path>, <glyph>, <missing-glyph>.
-//
-// d is a presentation attribute, and hence can also be used as a CSS property.
-//
-// Português:
-//
-//  O atributo d define um caminho a ser desenhado.
-//
-// Uma definição de caminho é uma lista de comandos de caminho em que cada comando é composto por uma letra de comando
-// e números que representam os parâmetros do comando. Os comandos são detalhados abaixo.
-//
-// Você pode usar este atributo com os seguintes elementos SVG: <path>, <glyph>, <missing-glyph>.
-//
-// d é um atributo de apresentação e, portanto, também pode ser usado como uma propriedade CSS.
-func (e *TagSvgCircle) D(d *SvgPath) (ref *TagSvgCircle) {
-	e.selfElement.Call("setAttribute", "d", d.String())
-	return e
-}
-
 // Direction
 //
 // English:

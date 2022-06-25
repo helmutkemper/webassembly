@@ -18,6 +18,10 @@ import (
 	"syscall/js"
 )
 
+type Compatible interface {
+	Get() js.Value
+}
+
 type Stage struct {
 	selfDocument js.Value
 
@@ -45,6 +49,11 @@ type Stage struct {
 func (e *Stage) Init() {
 	e.selfDocument = js.Global().Get("document")
 	e.listener = new(sync.Map)
+}
+
+func (e *Stage) Append(value Compatible) (ref *Stage) {
+	e.selfDocument.Get("body").Call("appendChild", value.Get())
+	return e
 }
 
 // Get

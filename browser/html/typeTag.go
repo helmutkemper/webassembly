@@ -1,5 +1,7 @@
 package html
 
+// todo: remover este arquivo
+
 type Tag string
 
 func (e Tag) String() string {

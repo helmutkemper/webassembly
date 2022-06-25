@@ -178,7 +178,7 @@ type TagSvgFeComponentTransfer struct {
 func (e *TagSvgFeComponentTransfer) Init(id string) (ref *TagSvgFeComponentTransfer) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -189,8 +189,8 @@ func (e *TagSvgFeComponentTransfer) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgFeComponentTransfer) CreateElement(tag Tag) (ref *TagSvgFeComponentTransfer) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgFeComponentTransfer) CreateElement() (ref *TagSvgFeComponentTransfer) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "feComponentTransfer")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

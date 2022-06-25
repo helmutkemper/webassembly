@@ -173,7 +173,7 @@ type TagSvgPolygon struct {
 func (e *TagSvgPolygon) Init(id string) (ref *TagSvgPolygon) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -184,8 +184,8 @@ func (e *TagSvgPolygon) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgPolygon) CreateElement(tag Tag) (ref *TagSvgPolygon) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgPolygon) CreateElement() (ref *TagSvgPolygon) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "polygon")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

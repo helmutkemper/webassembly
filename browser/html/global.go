@@ -4032,6 +4032,41 @@ func (e *TagSvgGlobal) ShapeRendering(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
+// Side
+//
+// English:
+//
+// The side attribute determines the side of a path the text is placed on (relative to the path direction).
+//
+//   Input:
+//     value: side of a path the text is placed
+//       const: KSvgSide... (e.g. KSvgSideRight)
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute, shape-rendering can be used as a CSS property.
+//
+// Português:
+//
+// O atributo side determina o lado de um caminho em que o texto é colocado (em relação à direção do caminho).
+//
+//   Entrada:
+//     value: lado de um caminho em que o texto é colocado
+//       const: KSvgSide... (e.g. KSvgSideRight)
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.
+func (e *TagSvgGlobal) Side(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgSide); ok {
+		e.selfElement.Call("setAttribute", "side", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "side", value)
+	return e
+}
+
 // Spacing
 //
 // English:

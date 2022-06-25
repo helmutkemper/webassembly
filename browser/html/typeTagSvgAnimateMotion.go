@@ -177,7 +177,7 @@ type TagSvgAnimateMotion struct {
 func (e *TagSvgAnimateMotion) Init(id string) (ref *TagSvgAnimateMotion) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -188,8 +188,8 @@ func (e *TagSvgAnimateMotion) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgAnimateMotion) CreateElement(tag Tag) (ref *TagSvgAnimateMotion) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgAnimateMotion) CreateElement() (ref *TagSvgAnimateMotion) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "animateMotion")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

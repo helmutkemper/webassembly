@@ -9,18 +9,24 @@ import (
 	"syscall/js"
 )
 
-// TagSvgMPath
+// TagSvgStyle
 //
 // English:
 //
-// The <metadata> SVG element adds metadata to SVG content. Metadata is structured information about data.
-// The contents of <metadata> should be elements from other XML namespaces such as RDF, FOAF, etc.
+// The SVG <style> element allows style sheets to be embedded directly within SVG content.
+//
+//   Notes:
+//     * SVG's style element has the same attributes as the corresponding element in HTML
+//       (see HTML's <style> element).
 //
 // Português:
 //
-// O elemento SVG <metadata> adiciona metadados ao conteúdo SVG. Metadados são informações estruturadas sobre dados.
-// O conteúdo de <metadata> deve ser elementos de outros namespaces XML, como RDF, FOAF, etc.
-type TagSvgMPath struct {
+// O elemento SVG <style> permite que as folhas de estilo sejam incorporadas diretamente no conteúdo SVG.
+//
+//   Notas:
+//     * O elemento de estilo SVG tem os mesmos atributos que o elemento correspondente em HTML
+//       (definir elemento HTML <style>).
+type TagSvgStyle struct {
 
 	// id
 	//
@@ -164,7 +170,7 @@ type TagSvgMPath struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgMPath) Init(id string) (ref *TagSvgMPath) {
+func (e *TagSvgStyle) Init(id string) (ref *TagSvgStyle) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
@@ -174,12 +180,12 @@ func (e *TagSvgMPath) Init(id string) (ref *TagSvgMPath) {
 	return e
 }
 
-func (e *TagSvgMPath) prepareStageReference() {
+func (e *TagSvgStyle) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgMPath) CreateElement() (ref *TagSvgMPath) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "mpath")
+func (e *TagSvgStyle) CreateElement() (ref *TagSvgStyle) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "style")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return
@@ -190,12 +196,12 @@ func (e *TagSvgMPath) CreateElement() (ref *TagSvgMPath) {
 	return e
 }
 
-func (e *TagSvgMPath) AppendToStage() (ref *TagSvgMPath) {
+func (e *TagSvgStyle) AppendToStage() (ref *TagSvgStyle) {
 	e.stage.Call("appendChild", e.selfElement)
 	return e
 }
 
-func (e *TagSvgMPath) AppendById(appendId string) (ref *TagSvgMPath) {
+func (e *TagSvgStyle) AppendById(appendId string) (ref *TagSvgStyle) {
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
 		log.Print(KIdToAppendNotFound, appendId)
@@ -206,12 +212,12 @@ func (e *TagSvgMPath) AppendById(appendId string) (ref *TagSvgMPath) {
 	return e
 }
 
-func (e *TagSvgMPath) AppendToElement(el js.Value) (ref *TagSvgMPath) {
+func (e *TagSvgStyle) AppendToElement(el js.Value) (ref *TagSvgStyle) {
 	e.selfElement.Call("appendChild", el)
 	return e
 }
 
-func (e *TagSvgMPath) Get() (el js.Value) {
+func (e *TagSvgStyle) Get() (el js.Value) {
 	return e.selfElement
 }
 
@@ -226,7 +232,7 @@ func (e *TagSvgMPath) Get() (el js.Value) {
 // Portuguese
 //
 //  O atributo id atribui um nome exclusivo a um elemento.
-func (e *TagSvgMPath) Id(id string) (ref *TagSvgMPath) {
+func (e *TagSvgStyle) Id(id string) (ref *TagSvgStyle) {
 	e.selfElement.Call("setAttribute", "id", id)
 	return e
 }
@@ -268,7 +274,7 @@ func (e *TagSvgMPath) Id(id string) (ref *TagSvgMPath) {
 // (também conhecido como BCP 47). O glifo deveria ser usado se o atributo xml:lang correspondesse exatamente a um dos
 // idiomas fornecidos no valor desse parâmetro, ou se o atributo xml:lang fosse exatamente igual a um prefixo de um dos
 // idiomas fornecidos no valor desse parâmetro de modo que o primeiro caractere de tag após o prefixo fosse "-".
-func (e *TagSvgMPath) Lang(value interface{}) (ref *TagSvgMPath) {
+func (e *TagSvgStyle) Lang(value interface{}) (ref *TagSvgStyle) {
 
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "lang", converted.String())
@@ -290,7 +296,7 @@ func (e *TagSvgMPath) Lang(value interface{}) (ref *TagSvgMPath) {
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
 // de navegação de foco sequencial.
-func (e *TagSvgMPath) Tabindex(value int) (ref *TagSvgMPath) {
+func (e *TagSvgStyle) Tabindex(value int) (ref *TagSvgStyle) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }
@@ -328,7 +334,7 @@ func (e *TagSvgMPath) Tabindex(value int) (ref *TagSvgMPath) {
 //
 // Há também um atributo lang (sem namespace). Se ambos estiverem definidos, aquele com namespace será usado e o sem
 // namespace será ignorado.
-func (e *TagSvgMPath) XmlLang(value interface{}) (ref *TagSvgMPath) {
+func (e *TagSvgStyle) XmlLang(value interface{}) (ref *TagSvgStyle) {
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "xml:lang", converted.String())
 		return e
@@ -339,3 +345,92 @@ func (e *TagSvgMPath) XmlLang(value interface{}) (ref *TagSvgMPath) {
 }
 
 // #core end ----------------------------------------------------------------------------------------------------------
+
+// #styling start -----------------------------------------------------------------------------------------------------
+
+// Class
+//
+// English:
+//
+// Assigns a class name or set of class names to an element. You may assign the same class name or names to any number
+// of elements, however, multiple class names must be separated by whitespace characters.
+//
+//   Input:
+//     class: Assigns a class name or set of class names to an element
+//
+// An element's class name serves two key roles:
+//   * As a style sheet selector, for when an author assigns style information to a set of elements.
+//   * For general use by the browser.
+//
+// Português:
+//
+// Atribui um nome de classe ou um conjunto de nomes de classe à um elemento. Você pode atribuir o mesmo nome ou nomes
+// de classe a qualquer número de elementos, no entanto, vários nomes de classe devem ser separados por caracteres de
+// espaço em branco.
+//
+//   Entrada:
+//     class: Atribui um nome de classe ou um conjunto de nomes de classe à um elemento.
+//
+// O nome de classe de um elemento tem duas funções principais:
+//   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
+//     elementos.
+//   * Para uso geral pelo navegador.
+func (e *TagSvgStyle) Class(class string) (ref *TagSvgStyle) {
+	e.selfElement.Call("setAttribute", "class", class)
+	return e
+}
+
+// Style
+//
+// English:
+//
+// The style attribute allows to style an element using CSS declarations. It functions identically to the style
+// attribute in HTML.
+//
+// Português:
+//
+// O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
+// em HTML.
+func (e *TagSvgStyle) Style(value string) (ref *TagSvgStyle) {
+	e.selfElement.Call("setAttribute", "style", value)
+	return e
+}
+
+// #styling end -------------------------------------------------------------------------------------------------------
+
+// Type
+//
+// English:
+//
+// Defines the content type of the element
+//
+//   Input:
+//     value: content type of the element
+//       any other type: interface{}
+//
+// Português:
+//
+// Define o tipo de conteúdo do elemento.
+//
+//   Input:
+//     value: tipo de conteúdo do elemento.
+//       qualquer outro tipo: interface{}
+func (e *TagSvgStyle) Type(value interface{}) (ref *TagSvgStyle) {
+	e.selfElement.Call("setAttribute", "type", value)
+	return e
+}
+
+// Media
+//
+// English:
+//
+// The media attribute specifies a media query that must be matched for a style sheet to apply.
+//
+// Português:
+//
+// O atributo de mídia especifica uma consulta de mídia que deve ser correspondida para que uma folha de estilo seja
+// aplicada.
+func (e *TagSvgStyle) Media(value interface{}) (ref *TagSvgStyle) {
+	e.selfElement.Call("setAttribute", "media", value)
+	return e
+}

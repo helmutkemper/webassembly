@@ -1,6 +1,7 @@
 package html
 
 import (
+	"fmt"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
@@ -11,23 +12,28 @@ import (
 	"syscall/js"
 )
 
-// TagSvgG
+// TagSvgView
 //
 // English:
 //
-// The <g> SVG element is a container used to group other SVG elements.
+// The <defs> element is used to store graphical objects that will be used at a later time.
 //
-// Transformations applied to the <g> element are performed on its child elements, and its attributes are inherited by
-// its children. It can also group multiple elements to be referenced later with the <use> element.
+// Objects created inside a <defs> element are not rendered directly. To display them you have to reference them
+// (with a <use> element for example).
+//
+// Graphical objects can be referenced from anywhere, however, defining these objects inside of a <defs> element
+// promotes understandability of the SVG content and is beneficial to the overall accessibility of the document.
 //
 // Português:
 //
-// O elemento SVG <g> é um contêiner usado para agrupar outros elementos SVG.
+// O elemento <defs> é usado para armazenar objetos gráficos que serão usados posteriormente.
 //
-// As transformações aplicadas ao elemento <g> são realizadas em seus elementos filhos, e seus atributos são herdados
-// por seus filhos. Ele também pode agrupar vários elementos para serem referenciados posteriormente com o elemento
-// <use>.
-type TagSvgG struct {
+// Objetos criados dentro de um elemento <defs> não são renderizados diretamente. Para exibi-los, você deve
+// referenciá-los (com um elemento <use>, por exemplo).
+//
+// Graphical objects can be referenced from anywhere, however, defining these objects inside of a <defs> element
+// promotes understandability of the SVG content and is beneficial to the overall accessibility of the document.
+type TagSvgView struct {
 
 	// id
 	//
@@ -171,7 +177,7 @@ type TagSvgG struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgG) Init(id string) (ref *TagSvgG) {
+func (e *TagSvgView) Init(id string) (ref *TagSvgView) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
@@ -181,12 +187,12 @@ func (e *TagSvgG) Init(id string) (ref *TagSvgG) {
 	return e
 }
 
-func (e *TagSvgG) prepareStageReference() {
+func (e *TagSvgView) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgG) CreateElement() (ref *TagSvgG) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "g")
+func (e *TagSvgView) CreateElement() (ref *TagSvgView) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "view")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return
@@ -197,12 +203,12 @@ func (e *TagSvgG) CreateElement() (ref *TagSvgG) {
 	return e
 }
 
-func (e *TagSvgG) AppendToStage() (ref *TagSvgG) {
+func (e *TagSvgView) AppendToStage() (ref *TagSvgView) {
 	e.stage.Call("appendChild", e.selfElement)
 	return e
 }
 
-func (e *TagSvgG) AppendById(appendId string) (ref *TagSvgG) {
+func (e *TagSvgView) AppendById(appendId string) (ref *TagSvgView) {
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
 		log.Print(KIdToAppendNotFound, appendId)
@@ -213,12 +219,12 @@ func (e *TagSvgG) AppendById(appendId string) (ref *TagSvgG) {
 	return e
 }
 
-func (e *TagSvgG) AppendToElement(el js.Value) (ref *TagSvgG) {
+func (e *TagSvgView) AppendToElement(el js.Value) (ref *TagSvgView) {
 	e.selfElement.Call("appendChild", el)
 	return e
 }
 
-func (e *TagSvgG) Get() (el js.Value) {
+func (e *TagSvgView) Get() (el js.Value) {
 	return e.selfElement
 }
 
@@ -233,7 +239,7 @@ func (e *TagSvgG) Get() (el js.Value) {
 // Portuguese
 //
 //  O atributo id atribui um nome exclusivo a um elemento.
-func (e *TagSvgG) Id(id string) (ref *TagSvgG) {
+func (e *TagSvgView) Id(id string) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "id", id)
 	return e
 }
@@ -275,7 +281,7 @@ func (e *TagSvgG) Id(id string) (ref *TagSvgG) {
 // (também conhecido como BCP 47). O glifo deveria ser usado se o atributo xml:lang correspondesse exatamente a um dos
 // idiomas fornecidos no valor desse parâmetro, ou se o atributo xml:lang fosse exatamente igual a um prefixo de um dos
 // idiomas fornecidos no valor desse parâmetro de modo que o primeiro caractere de tag após o prefixo fosse "-".
-func (e *TagSvgG) Lang(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) Lang(value interface{}) (ref *TagSvgView) {
 
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "lang", converted.String())
@@ -297,7 +303,7 @@ func (e *TagSvgG) Lang(value interface{}) (ref *TagSvgG) {
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
 // de navegação de foco sequencial.
-func (e *TagSvgG) Tabindex(value int) (ref *TagSvgG) {
+func (e *TagSvgView) Tabindex(value int) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }
@@ -335,7 +341,7 @@ func (e *TagSvgG) Tabindex(value int) (ref *TagSvgG) {
 //
 // Há também um atributo lang (sem namespace). Se ambos estiverem definidos, aquele com namespace será usado e o sem
 // namespace será ignorado.
-func (e *TagSvgG) XmlLang(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) XmlLang(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(Language); ok {
 		e.selfElement.Call("setAttribute", "xml:lang", converted.String())
 		return e
@@ -378,7 +384,7 @@ func (e *TagSvgG) XmlLang(value interface{}) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, baseline-shift pode ser usado como propriedade CSS.
 //     * Essa propriedade será preterida e os autores são aconselhados a usar alinhamento vertical.
-func (e *TagSvgG) BaselineShift(baselineShift interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) BaselineShift(baselineShift interface{}) (ref *TagSvgView) {
 	if converted, ok := baselineShift.(SvgBaselineShift); ok {
 		e.selfElement.Call("setAttribute", "baseline-shift", converted.String())
 		return e
@@ -411,7 +417,7 @@ func (e *TagSvgG) BaselineShift(baselineShift interface{}) (ref *TagSvgG) {
 //   Entrada:
 //     clipPath: elemento ao qual é aplicado
 //       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
-func (e *TagSvgG) ClipPath(clipPath string) (ref *TagSvgG) {
+func (e *TagSvgView) ClipPath(clipPath string) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "clip-path", clipPath)
 	return e
 }
@@ -437,7 +443,7 @@ func (e *TagSvgG) ClipPath(clipPath string) (ref *TagSvgG) {
 //     value: lado de um caminho
 //       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
 //       qualquer outro tipo: interface{}
-func (e *TagSvgG) ClipRule(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) ClipRule(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgClipRule); ok {
 		e.selfElement.Call("setAttribute", "clip-rule", converted.String())
 		return e
@@ -478,7 +484,7 @@ func (e *TagSvgG) ClipRule(value interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
-func (e *TagSvgG) Color(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) Color(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
 		return e
@@ -529,7 +535,7 @@ func (e *TagSvgG) Color(value interface{}) (ref *TagSvgG) {
 //   Notas:
 //     * Para efeitos de filtro, a propriedade color-interpolation-filters controla qual espaço de cor é usado.
 //     * Como atributo de apresentação, a interpolação de cores pode ser usada como uma propriedade CSS.
-func (e *TagSvgG) ColorInterpolation(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) ColorInterpolation(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation", RGBAToJs(converted))
 		return e
@@ -570,7 +576,7 @@ func (e *TagSvgG) ColorInterpolation(value interface{}) (ref *TagSvgG) {
 //       interpolações de cores ocorrem por padrão no espaço de cores sRGB.
 //     * Não afeta as funções de filtro, que operam no espaço de cores sRGB.
 //     * Como atributo de apresentação, os filtros de interpolação de cores podem ser usados como uma propriedade CSS.
-func (e *TagSvgG) ColorInterpolationFilters(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) ColorInterpolationFilters(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation-filters", RGBAToJs(converted))
 		return e
@@ -601,7 +607,7 @@ func (e *TagSvgG) ColorInterpolationFilters(value interface{}) (ref *TagSvgG) {
 //
 // Como atributo de apresentação, também pode ser usado como propriedade diretamente dentro de uma folha de estilo CSS,
 // veja cursor css para mais informações.
-func (e *TagSvgG) Cursor(cursor SvgCursor) (ref *TagSvgG) {
+func (e *TagSvgView) Cursor(cursor SvgCursor) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "cursor", cursor.String())
 	return e
 }
@@ -646,7 +652,7 @@ func (e *TagSvgG) Cursor(cursor SvgCursor) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, a direção pode ser usada como uma propriedade CSS. Veja a direção do CSS para
 //       mais informações.
-func (e *TagSvgG) Direction(direction SvgDirection) (ref *TagSvgG) {
+func (e *TagSvgView) Direction(direction SvgDirection) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "direction", direction.String())
 	return e
 }
@@ -722,7 +728,7 @@ func (e *TagSvgG) Direction(direction SvgDirection) (ref *TagSvgG) {
 //  Notas:
 //    * Como atributo de apresentação, display pode ser usado como propriedade CSS. Consulte a exibição css para obter
 //      mais informações.
-func (e *TagSvgG) Display(display SvgDisplay) (ref *TagSvgG) {
+func (e *TagSvgView) Display(display SvgDisplay) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "display", display.String())
 	return e
 }
@@ -775,7 +781,7 @@ func (e *TagSvgG) Display(display SvgDisplay) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a linha de base dominante pode ser usada como uma propriedade CSS.
-func (e *TagSvgG) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgG) {
+func (e *TagSvgView) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "dominant-baseline", dominantBaseline.String())
 	return e
 }
@@ -795,7 +801,7 @@ func (e *TagSvgG) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *T
 //  cor (ou qualquer servidor de pintura SVG, como gradientes ou padrões) usado para pintar o elemento;
 //
 // para animação, define o estado final da animação.
-func (e *TagSvgG) Fill(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) Fill(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "fill", RGBAToJs(converted))
 		return e
@@ -822,7 +828,7 @@ func (e *TagSvgG) Fill(value interface{}) (ref *TagSvgG) {
 //
 //   Notes:
 //     *As a presentation attribute fill-opacity can be used as a CSS property.
-func (e *TagSvgG) FillOpacity(fillOpacity float64) (ref *TagSvgG) {
+func (e *TagSvgView) FillOpacity(fillOpacity float64) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "fill-opacity", fillOpacity)
 	return e
 }
@@ -844,7 +850,7 @@ func (e *TagSvgG) FillOpacity(fillOpacity float64) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, fill-rule pode ser usado como uma propriedade CSS.
-func (e *TagSvgG) FillRule(fillRule SvgFillRule) (ref *TagSvgG) {
+func (e *TagSvgView) FillRule(fillRule SvgFillRule) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "fill-rule", fillRule.String())
 	return e
 }
@@ -867,7 +873,7 @@ func (e *TagSvgG) FillRule(fillRule SvgFillRule) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, o filtro pode ser usado como propriedade CSS. Veja filtro css para mais
 //       informações.
-func (e *TagSvgG) Filter(filter string) (ref *TagSvgG) {
+func (e *TagSvgView) Filter(filter string) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "filter", filter)
 	return e
 }
@@ -887,7 +893,7 @@ func (e *TagSvgG) Filter(filter string) (ref *TagSvgG) {
 //
 //   Notes:
 //     * As a presentation attribute, flood-color can be used as a CSS property.
-func (e *TagSvgG) FloodColor(floodColor interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) FloodColor(floodColor interface{}) (ref *TagSvgView) {
 	if converted, ok := floodColor.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "flood-color", RGBAToJs(converted))
 		return e
@@ -912,7 +918,7 @@ func (e *TagSvgG) FloodColor(floodColor interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a opacidade de inundação pode ser usada como uma propriedade CSS.
-func (e *TagSvgG) FloodOpacity(floodOpacity float64) (ref *TagSvgG) {
+func (e *TagSvgView) FloodOpacity(floodOpacity float64) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "flood-opacity", floodOpacity)
 	return e
 }
@@ -936,7 +942,7 @@ func (e *TagSvgG) FloodOpacity(floodOpacity float64) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, font-family pode ser usada como propriedade CSS. Consulte a propriedade CSS
 //       font-family para obter mais informações.
-func (e *TagSvgG) FontFamily(fontFamily string) (ref *TagSvgG) {
+func (e *TagSvgView) FontFamily(fontFamily string) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "font-family", fontFamily)
 	return e
 }
@@ -960,7 +966,7 @@ func (e *TagSvgG) FontFamily(fontFamily string) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, font-size pode ser usado como uma propriedade CSS. Consulte a propriedade CSS
 //       font-size para obter mais informações.
-func (e *TagSvgG) FontSize(fontSize float64) (ref *TagSvgG) {
+func (e *TagSvgView) FontSize(fontSize float64) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "font-size", fontSize)
 	return e
 }
@@ -984,7 +990,7 @@ func (e *TagSvgG) FontSize(fontSize float64) (ref *TagSvgG) {
 //   Notes:
 //     * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
 //       property for more information.
-func (e *TagSvgG) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgG) {
+func (e *TagSvgView) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "font-size-adjust", fontSizeAdjust)
 	return e
 }
@@ -1018,7 +1024,7 @@ func (e *TagSvgG) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, font-stretch pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-stretch para obter mais informações.
-func (e *TagSvgG) FontStretch(fontStretch interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) FontStretch(fontStretch interface{}) (ref *TagSvgView) {
 	if converted, ok := fontStretch.(SvgFontStretch); ok {
 		e.selfElement.Call("setAttribute", "font-stretch", converted.String())
 		return e
@@ -1045,7 +1051,7 @@ func (e *TagSvgG) FontStretch(fontStretch interface{}) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, font-style pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //       font-style para obter mais informações.
-func (e *TagSvgG) FontStyle(fontStyle FontStyleRule) (ref *TagSvgG) {
+func (e *TagSvgView) FontStyle(fontStyle FontStyleRule) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "font-style", fontStyle.String())
 	return e
 }
@@ -1067,7 +1073,7 @@ func (e *TagSvgG) FontStyle(fontStyle FontStyleRule) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, font-variant pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-variant para obter mais informações.
-func (e *TagSvgG) FontVariant(fontVariant FontVariantRule) (ref *TagSvgG) {
+func (e *TagSvgView) FontVariant(fontVariant FontVariantRule) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "font-variant", fontVariant.String())
 	return e
 }
@@ -1091,7 +1097,7 @@ func (e *TagSvgG) FontVariant(fontVariant FontVariantRule) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, o peso da fonte pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-weight para obter mais informações.
-func (e *TagSvgG) FontWeight(fontWeight FontWeightRule) (ref *TagSvgG) {
+func (e *TagSvgView) FontWeight(fontWeight FontWeightRule) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "font-weight", fontWeight.String())
 	return e
 }
@@ -1121,7 +1127,7 @@ func (e *TagSvgG) FontWeight(fontWeight FontWeightRule) (ref *TagSvgG) {
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de imagem pode ser usada como uma propriedade CSS. Consulte
 //       a propriedade de renderização de imagem css para obter mais informações.
-func (e *TagSvgG) ImageRendering(imageRendering string) (ref *TagSvgG) {
+func (e *TagSvgView) ImageRendering(imageRendering string) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "image-rendering", imageRendering)
 	return e
 }
@@ -1163,7 +1169,7 @@ func (e *TagSvgG) ImageRendering(imageRendering string) (ref *TagSvgG) {
 // Notas:
 //   * Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
 //     Consulte a propriedade de espaçamento entre letras do CSS para obter mais informações.
-func (e *TagSvgG) LetterSpacing(value float64) (ref *TagSvgG) {
+func (e *TagSvgView) LetterSpacing(value float64) (ref *TagSvgView) {
 
 	e.selfElement.Call("setAttribute", "letter-spacing", strconv.FormatFloat(value, 'g', -1, 64))
 	return e
@@ -1178,7 +1184,7 @@ func (e *TagSvgG) LetterSpacing(value float64) (ref *TagSvgG) {
 // Português:
 //
 // O atributo lighting-color define a cor da fonte de luz para as primitivas do filtro de iluminação.
-func (e *TagSvgG) LightingColor(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) LightingColor(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "lighting-color", RGBAToJs(converted))
 		return e
@@ -1224,7 +1230,7 @@ func (e *TagSvgG) LightingColor(value interface{}) (ref *TagSvgG) {
 //
 // Notas:
 //   * Como atributo de apresentação, o marker-end pode ser usado como uma propriedade CSS.
-func (e *TagSvgG) MarkerEnd(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) MarkerEnd(value interface{}) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "marker-end", value)
 	return e
 }
@@ -1258,7 +1264,7 @@ func (e *TagSvgG) MarkerEnd(value interface{}) (ref *TagSvgG) {
 //
 // Notas:
 //   * Como atributo de apresentação, o marker-mid pode ser usado como uma propriedade CSS.
-func (e *TagSvgG) MarkerMid(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) MarkerMid(value interface{}) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "marker-mid", value)
 	return e
 }
@@ -1299,7 +1305,7 @@ func (e *TagSvgG) MarkerMid(value interface{}) (ref *TagSvgG) {
 //
 // Notas:
 //   * Como atributo de apresentação, o início do marcador pode ser usado como uma propriedade CSS.
-func (e *TagSvgG) MarkerStart(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) MarkerStart(value interface{}) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "marker-start", value)
 	return e
 }
@@ -1329,7 +1335,7 @@ func (e *TagSvgG) MarkerStart(value interface{}) (ref *TagSvgG) {
 //
 // Notas:
 //   * Como uma máscara de atributo de apresentação pode ser usada como uma propriedade CSS.
-func (e *TagSvgG) Mask(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) Mask(value interface{}) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "mask", value)
 	return e
 }
@@ -1364,7 +1370,7 @@ func (e *TagSvgG) Mask(value interface{}) (ref *TagSvgG) {
 //   Notes:
 //     * Como atributo de apresentação, a opacidade pode ser usada como uma propriedade CSS. Consulte a propriedade de
 //       opacidade do CSS para obter mais informações.
-func (e *TagSvgG) Opacity(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) Opacity(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "opacity", p)
@@ -1418,7 +1424,7 @@ func (e *TagSvgG) Opacity(value interface{}) (ref *TagSvgG) {
 //       <marker> para ser ocultado por padrão.
 //     * Como atributo de apresentação, overflow pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //       overflow para obter mais informações.
-func (e *TagSvgG) Overflow(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) Overflow(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(Overflow); ok {
 		e.selfElement.Call("setAttribute", "overflow", converted.String())
 		return e
@@ -1445,7 +1451,7 @@ func (e *TagSvgG) Overflow(value interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
-func (e *TagSvgG) PointerEvents(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) PointerEvents(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgPointerEvents); ok {
 		e.selfElement.Call("setAttribute", "pointer-events", converted.String())
 		return e
@@ -1482,7 +1488,7 @@ func (e *TagSvgG) PointerEvents(value interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.
-func (e *TagSvgG) ShapeRendering(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) ShapeRendering(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgShapeRendering); ok {
 		e.selfElement.Call("setAttribute", "shape-rendering", converted.String())
 		return e
@@ -1527,7 +1533,7 @@ func (e *TagSvgG) ShapeRendering(value interface{}) (ref *TagSvgG) {
 //       Assim, especificar uma stop-color com o valor transparente é equivalente a especificar uma stop-color com o
 //       valor black e uma stop-opacity com o valor 0.
 //     * Como atributo de apresentação, stop-color pode ser usado como propriedade CSS.
-func (e *TagSvgG) StopColor(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) StopColor(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stop-color", RGBAToJs(converted))
 		return e
@@ -1570,7 +1576,7 @@ func (e *TagSvgG) StopColor(value interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stop-opacity pode ser usado como uma propriedade CSS.
-func (e *TagSvgG) StopOpacity(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) StopOpacity(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stop-opacity", p)
@@ -1612,7 +1618,7 @@ func (e *TagSvgG) StopOpacity(value interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como um traço de atributo de apresentação pode ser usado como uma propriedade CSS.
-func (e *TagSvgG) Stroke(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) Stroke(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stroke", RGBAToJs(converted))
 		return e
@@ -1649,7 +1655,7 @@ func (e *TagSvgG) Stroke(value interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
-func (e *TagSvgG) StrokeDasharray(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) StrokeDasharray(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.([]float64); ok {
 		str := ""
 		for _, v := range converted {
@@ -1692,7 +1698,7 @@ func (e *TagSvgG) StrokeDasharray(value interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgG) StrokeLinecap(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) StrokeLinecap(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1719,7 +1725,7 @@ func (e *TagSvgG) StrokeLinecap(value interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgG) StrokeLinejoin(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) StrokeLinejoin(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1747,7 +1753,7 @@ func (e *TagSvgG) StrokeLinejoin(value interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgG) StrokeMiterlimit(value float64) (ref *TagSvgG) {
+func (e *TagSvgView) StrokeMiterlimit(value float64) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }
@@ -1779,7 +1785,7 @@ func (e *TagSvgG) StrokeMiterlimit(value float64) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a opacidade do traço pode ser usada como uma propriedade CSS.
-func (e *TagSvgG) StrokeOpacity(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) StrokeOpacity(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stroke-opacity", p)
@@ -1809,7 +1815,7 @@ func (e *TagSvgG) StrokeOpacity(value interface{}) (ref *TagSvgG) {
 //     value: definindo a largura do traço
 //       float32: 1.0 = "100%"
 //       qualquer outro tipo: interface{}
-func (e *TagSvgG) StrokeWidth(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) StrokeWidth(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stroke-width", p)
@@ -1866,7 +1872,7 @@ func (e *TagSvgG) StrokeWidth(value interface{}) (ref *TagSvgG) {
 //
 //   Notes:
 //     * As a presentation attribute, text-anchor can be used as a CSS property.
-func (e *TagSvgG) TextAnchor(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) TextAnchor(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgTextAnchor); ok {
 		e.selfElement.Call("setAttribute", "text-anchor", converted.String())
 		return e
@@ -1925,7 +1931,7 @@ func (e *TagSvgG) TextAnchor(value interface{}) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, a decoração de texto pode ser usada como uma propriedade CSS. Consulte a
 //       propriedade CSS text-decoration para obter mais informações.
-func (e *TagSvgG) TextDecoration(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) TextDecoration(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "text-decoration", RGBAToJs(converted))
 		return e
@@ -1962,7 +1968,7 @@ func (e *TagSvgG) TextDecoration(value interface{}) (ref *TagSvgG) {
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de texto pode ser usada como uma propriedade CSS.
 //       Consulte a propriedade de renderização de texto css para obter mais informações.
-func (e *TagSvgG) TextRendering(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) TextRendering(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgTextRendering); ok {
 		e.selfElement.Call("setAttribute", "text-rendering", converted.String())
 		return e
@@ -2006,7 +2012,7 @@ func (e *TagSvgG) TextRendering(value interface{}) (ref *TagSvgG) {
 //       propriedade CSS. No entanto, esteja ciente de que existem algumas diferenças na sintaxe entre a propriedade CSS
 //       e o atributo. Consulte a documentação da transformação da propriedade CSS para obter a sintaxe específica a ser
 //       usada nesse caso.
-func (e *TagSvgG) Transform(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) Transform(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(*TransformFunctions); ok {
 		e.selfElement.Call("setAttribute", "transform", converted.String())
 		return e
@@ -2048,7 +2054,7 @@ func (e *TagSvgG) Transform(value interface{}) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, o unicode-bidi pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS unicode-bidi para obter mais informações.
-func (e *TagSvgG) UnicodeBidi(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) UnicodeBidi(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgTransformOrigin); ok {
 		e.selfElement.Call("setAttribute", "unicode-bidi", converted.String())
 		return e
@@ -2086,7 +2092,7 @@ func (e *TagSvgG) UnicodeBidi(value interface{}) (ref *TagSvgG) {
 //
 //   Notas:
 //     * Como atributo de apresentação, o efeito vetorial pode ser usado como uma propriedade CSS.
-func (e *TagSvgG) VectorEffect(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) VectorEffect(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgVectorEffect); ok {
 		e.selfElement.Call("setAttribute", "vector-effect", converted.String())
 		return e
@@ -2137,7 +2143,7 @@ func (e *TagSvgG) VectorEffect(value interface{}) (ref *TagSvgG) {
 //       mas ainda ocupará espaço nos cálculos de layout de texto;
 //     * Como atributo de apresentação, a visibilidade pode ser usada como propriedade CSS. Consulte a propriedade de
 //       visibilidade do CSS para obter mais informações.
-func (e *TagSvgG) Visibility(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) Visibility(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgVisibility); ok {
 		e.selfElement.Call("setAttribute", "visibility", converted.String())
 		return e
@@ -2186,7 +2192,7 @@ func (e *TagSvgG) Visibility(value interface{}) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, o espaçamento entre palavras pode ser usado como uma propriedade CSS.
 //       Consulte a propriedade de espaçamento entre palavras do CSS para obter mais informações.
-func (e *TagSvgG) WordSpacing(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) WordSpacing(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "word-spacing", p)
@@ -2232,7 +2238,7 @@ func (e *TagSvgG) WordSpacing(value interface{}) (ref *TagSvgG) {
 //   Notas:
 //     * Como atributo de apresentação, o modo de escrita pode ser usado como uma propriedade CSS. Consulte a
 //       propriedade do modo de gravação CSS para obter mais informações.
-func (e *TagSvgG) WritingMode(value interface{}) (ref *TagSvgG) {
+func (e *TagSvgView) WritingMode(value interface{}) (ref *TagSvgView) {
 	if converted, ok := value.(SvgWritingMode); ok {
 		e.selfElement.Call("setAttribute", "writing-mode", converted.String())
 		return e
@@ -2273,7 +2279,7 @@ func (e *TagSvgG) WritingMode(value interface{}) (ref *TagSvgG) {
 //   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
 //     elementos.
 //   * Para uso geral pelo navegador.
-func (e *TagSvgG) Class(class string) (ref *TagSvgG) {
+func (e *TagSvgView) Class(class string) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
 }
@@ -2289,10 +2295,100 @@ func (e *TagSvgG) Class(class string) (ref *TagSvgG) {
 //
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
-func (e *TagSvgG) Style(value string) (ref *TagSvgG) {
+func (e *TagSvgView) Style(value string) (ref *TagSvgView) {
 	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------
+
+// ViewBox
 //
+// English:
+//
+// The viewBox attribute defines the position and dimension, in user space, of an SVG viewport.
+//
+//   Input:
+//     value: defines the position and dimension, in user space, of an SVG viewport
+//       []float64: ex. []float64{0.0, 0.0, 10.0, 10.0} = "0 0 10 10"
+//       any other type: interface{}
+//
+// The value of the viewBox attribute is a list of four numbers: min-x, min-y, width and height.
+// The numbers, which are separated by whitespace and/or a comma, specify a rectangle in user space which is mapped to
+// the bounds of the viewport established for the associated SVG element (not the browser viewport).
+//
+// Português:
+//
+// O atributo viewBox define a posição e a dimensão, no espaço do usuário, de uma viewport SVG.
+//
+//   Input:
+//     value: define a posição e dimensão, no espaço do usuário, de uma viewport SVG
+//       []float64: ex. []float64{0.0, 0.0, 10.0, 10.0} = "0 0 10 10"
+//       qualquer outro tipo: interface{}
+//
+// O valor do atributo viewBox é uma lista de quatro números: min-x, min-y, largura e altura.
+// Os números, que são separados por espaço em branco e ou vírgula, especificam um retângulo no espaço do usuário que é
+// mapeado para os limites da janela de visualização estabelecida para o elemento SVG associado (não a janela de
+// visualização do navegador).
+func (e *TagSvgView) ViewBox(value interface{}) (ref *TagSvgView) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "viewBox", valueStr[:length])
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "viewBox", value)
+	return e
+}
+
+// PreserveAspectRatio
+//
+// English:
+//
+//  The preserveAspectRatio attribute indicates how an element with a viewBox providing a given aspect ratio must fit
+//  into a viewport with a different aspect ratio.
+//
+//   Input:
+//     ratio: Indicates how an element with a viewBox providing a given aspect ratio.
+//       const: KRatio... (e.g. KRatioXMinYMin)
+//       any other type: interface{}
+//     meet: The meet or slice reference
+//       const: KMeetOrSliceReference... (e.g. KMeetOrSliceReferenceSlice)
+//       any other type: interface{}
+//
+// Because the aspect ratio of an SVG image is defined by the viewBox attribute, if this attribute isn't set, the
+// preserveAspectRatio attribute has no effect (with one exception, the <image> element, as described below).
+//
+// Português:
+//
+//  O atributo preserveAspectRatio indica como um elemento com uma viewBox fornecendo uma determinada proporção deve
+//  caber em uma viewport com uma proporção diferente.
+//
+//   Input:
+//     ratio: Indica como um elemento com uma viewBox fornece uma determinada proporção.
+//       const: KRatio... (ex. KRatioXMinYMin)
+//       qualquer outro tipo: interface{}
+//     meet: A referência de encontro ou fatia
+//       const: KMeetOrSliceReference... (ex. KMeetOrSliceReferenceSlice)
+//       qualquer outro tipo: interface{}
+//
+// Como a proporção de uma imagem SVG é definida pelo atributo viewBox, se esse atributo não estiver definido, o
+// atributo preserveAspectRatio não terá efeito (com uma exceção, o elemento <image>, conforme descrito abaixo).
+func (e *TagSvgView) PreserveAspectRatio(ratio, meet interface{}) (ref *TagSvgView) {
+	if converted, ok := ratio.(Ratio); ok {
+		ratio = converted.String()
+	}
+
+	if converted, ok := meet.(MeetOrSliceReference); ok {
+		meet = converted.String()
+	}
+
+	e.selfElement.Call("setAttribute", "preserveAspectRatio", fmt.Sprintf("%v %v", ratio, meet))
+	return e
+}

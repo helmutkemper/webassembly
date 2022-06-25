@@ -168,7 +168,7 @@ type TagSvgFeFuncR struct {
 func (e *TagSvgFeFuncR) Init(id string) (ref *TagSvgFeFuncR) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -179,8 +179,8 @@ func (e *TagSvgFeFuncR) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgFeFuncR) CreateElement(tag Tag) (ref *TagSvgFeFuncR) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgFeFuncR) CreateElement() (ref *TagSvgFeFuncR) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "feFuncR")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

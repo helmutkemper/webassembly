@@ -179,7 +179,7 @@ type TagSvgRadialGradient struct {
 func (e *TagSvgRadialGradient) Init(id string) (ref *TagSvgRadialGradient) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -190,8 +190,8 @@ func (e *TagSvgRadialGradient) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgRadialGradient) CreateElement(tag Tag) (ref *TagSvgRadialGradient) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgRadialGradient) CreateElement() (ref *TagSvgRadialGradient) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "radialGradient")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

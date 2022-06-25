@@ -165,7 +165,7 @@ type TagSvgFeMergeNode struct {
 func (e *TagSvgFeMergeNode) Init(id string) (ref *TagSvgFeMergeNode) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -176,8 +176,8 @@ func (e *TagSvgFeMergeNode) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgFeMergeNode) CreateElement(tag Tag) (ref *TagSvgFeMergeNode) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgFeMergeNode) CreateElement() (ref *TagSvgFeMergeNode) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "feMergeNode")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

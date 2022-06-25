@@ -255,7 +255,7 @@ type TagSvgFeConvolveMatrix struct {
 func (e *TagSvgFeConvolveMatrix) Init(id string) (ref *TagSvgFeConvolveMatrix) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -266,8 +266,8 @@ func (e *TagSvgFeConvolveMatrix) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgFeConvolveMatrix) CreateElement(tag Tag) (ref *TagSvgFeConvolveMatrix) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgFeConvolveMatrix) CreateElement() (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "feConvolveMatrix")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

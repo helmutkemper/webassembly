@@ -175,7 +175,7 @@ type TagSvgPolyline struct {
 func (e *TagSvgPolyline) Init(id string) (ref *TagSvgPolyline) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -186,8 +186,8 @@ func (e *TagSvgPolyline) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgPolyline) CreateElement(tag Tag) (ref *TagSvgPolyline) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgPolyline) CreateElement() (ref *TagSvgPolyline) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "polyline")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

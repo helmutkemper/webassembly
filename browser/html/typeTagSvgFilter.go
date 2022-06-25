@@ -170,7 +170,7 @@ type TagSvgFilter struct {
 func (e *TagSvgFilter) Init(id string) (ref *TagSvgFilter) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -181,8 +181,8 @@ func (e *TagSvgFilter) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgFilter) CreateElement(tag Tag) (ref *TagSvgFilter) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgFilter) CreateElement() (ref *TagSvgFilter) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "filter")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

@@ -173,7 +173,7 @@ type TagSvgClipPath struct {
 func (e *TagSvgClipPath) Init(id string) (ref *TagSvgClipPath) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -184,8 +184,8 @@ func (e *TagSvgClipPath) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgClipPath) CreateElement(tag Tag) (ref *TagSvgClipPath) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgClipPath) CreateElement() (ref *TagSvgClipPath) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "clipPath")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

@@ -1,6 +1,7 @@
 package html
 
 import (
+	"fmt"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
@@ -11,6 +12,26 @@ import (
 	"syscall/js"
 )
 
+// TagSvg
+//
+// English:
+//
+// The svg element is a container that defines a new coordinate system and viewport. It is used as the outermost element
+// of SVG documents, but it can also be used to embed an SVG fragment inside an SVG or HTML document.
+//
+//   Notes:
+//     * The xmlns attribute is only required on the outermost svg element of SVG documents. It is unnecessary for inner
+//       svg elements or inside HTML documents.
+//
+// Português:
+//
+// O elemento svg é um contêiner que define um novo sistema de coordenadas e viewport. Ele é usado como o elemento mais
+// externo dos documentos SVG, mas também pode ser usado para incorporar um fragmento SVG dentro de um documento SVG
+// ou HTML.
+//
+//   Notas:
+//     * O atributo xmlns só é necessário no elemento svg mais externo dos documentos SVG. É desnecessário para
+//       elementos svg internos ou dentro de documentos HTML.
 type TagSvg struct {
 
 	// id
@@ -158,7 +179,7 @@ type TagSvg struct {
 func (e *TagSvg) Init(id string) (ref *TagSvg) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -169,8 +190,8 @@ func (e *TagSvg) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvg) CreateElement(tag Tag) (ref *TagSvg) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvg) CreateElement() (ref *TagSvg) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "svg")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return
@@ -2279,3 +2300,260 @@ func (e *TagSvg) Style(value string) (ref *TagSvg) {
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------
+
+// Height
+//
+// English:
+//
+//  The height attribute defines the vertical length of an element in the user coordinate system.
+//
+// Português:
+//
+//  O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
+func (e *TagSvg) Height(height interface{}) (ref *TagSvg) {
+	if converted, ok := height.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "height", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "height", height)
+	return e
+}
+
+// PreserveAspectRatio
+//
+// English:
+//
+//  The preserveAspectRatio attribute indicates how an element with a viewBox providing a given aspect ratio must fit
+//  into a viewport with a different aspect ratio.
+//
+//   Input:
+//     ratio: Indicates how an element with a viewBox providing a given aspect ratio.
+//       const: KRatio... (e.g. KRatioXMinYMin)
+//       any other type: interface{}
+//     meet: The meet or slice reference
+//       const: KMeetOrSliceReference... (e.g. KMeetOrSliceReferenceSlice)
+//       any other type: interface{}
+//
+// Because the aspect ratio of an SVG image is defined by the viewBox attribute, if this attribute isn't set, the
+// preserveAspectRatio attribute has no effect (with one exception, the <image> element, as described below).
+//
+// Português:
+//
+//  O atributo preserveAspectRatio indica como um elemento com uma viewBox fornecendo uma determinada proporção deve
+//  caber em uma viewport com uma proporção diferente.
+//
+//   Input:
+//     ratio: Indica como um elemento com uma viewBox fornece uma determinada proporção.
+//       const: KRatio... (ex. KRatioXMinYMin)
+//       qualquer outro tipo: interface{}
+//     meet: A referência de encontro ou fatia
+//       const: KMeetOrSliceReference... (ex. KMeetOrSliceReferenceSlice)
+//       qualquer outro tipo: interface{}
+//
+// Como a proporção de uma imagem SVG é definida pelo atributo viewBox, se esse atributo não estiver definido, o
+// atributo preserveAspectRatio não terá efeito (com uma exceção, o elemento <image>, conforme descrito abaixo).
+func (e *TagSvg) PreserveAspectRatio(ratio, meet interface{}) (ref *TagSvg) {
+	if converted, ok := ratio.(Ratio); ok {
+		ratio = converted.String()
+	}
+
+	if converted, ok := meet.(MeetOrSliceReference); ok {
+		meet = converted.String()
+	}
+
+	e.selfElement.Call("setAttribute", "preserveAspectRatio", fmt.Sprintf("%v %v", ratio, meet))
+	return e
+}
+
+// ViewBox
+//
+// English:
+//
+// The viewBox attribute defines the position and dimension, in user space, of an SVG viewport.
+//
+//   Input:
+//     value: defines the position and dimension, in user space, of an SVG viewport
+//       []float64: ex. []float64{0.0, 0.0, 10.0, 10.0} = "0 0 10 10"
+//       any other type: interface{}
+//
+// The value of the viewBox attribute is a list of four numbers: min-x, min-y, width and height.
+// The numbers, which are separated by whitespace and/or a comma, specify a rectangle in user space which is mapped to
+// the bounds of the viewport established for the associated SVG element (not the browser viewport).
+//
+// Português:
+//
+// O atributo viewBox define a posição e a dimensão, no espaço do usuário, de uma viewport SVG.
+//
+//   Input:
+//     value: define a posição e dimensão, no espaço do usuário, de uma viewport SVG
+//       []float64: ex. []float64{0.0, 0.0, 10.0, 10.0} = "0 0 10 10"
+//       qualquer outro tipo: interface{}
+//
+// O valor do atributo viewBox é uma lista de quatro números: min-x, min-y, largura e altura.
+// Os números, que são separados por espaço em branco e ou vírgula, especificam um retângulo no espaço do usuário que é
+// mapeado para os limites da janela de visualização estabelecida para o elemento SVG associado (não a janela de
+// visualização do navegador).
+func (e *TagSvg) ViewBox(value interface{}) (ref *TagSvg) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "viewBox", valueStr[:length])
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "viewBox", value)
+	return e
+}
+
+// Width
+//
+// English:
+//
+// The width attribute defines the horizontal length of an element in the user coordinate system.
+//
+//   Input:
+//     value: the horizontal length of an element
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo largura define o comprimento horizontal de um elemento no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: o comprimento horizontal de um elemento
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvg) Width(value interface{}) (ref *TagSvg) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "width", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "width", value)
+	return e
+}
+
+// X
+//
+// English:
+//
+// The x attribute defines an x-axis coordinate in the user coordinate system.
+//
+//   Input:
+//     value: defines an x-axis coordinate
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo x define uma coordenada do eixo x no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: define uma coordenada do eixo x
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvg) X(value interface{}) (ref *TagSvg) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "x", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 3
+
+		e.selfElement.Call("setAttribute", "x", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "x", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "x", value)
+	return e
+}
+
+// Y
+//
+// English:
+//
+// The y attribute defines an y-axis coordinate in the user coordinate system.
+//
+//   Input:
+//     value: defines an y-axis coordinate
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo y define uma coordenada do eixo y no sistema de coordenadas do usuário.
+//
+//   Entrada:
+//     value: define uma coordenada do eixo y
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []float32: []float64{0.0, 10.0} = "0%, 10%"
+//       float32: 10.0 = "10%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvg) Y(value interface{}) (ref *TagSvg) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "y", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 3
+
+		e.selfElement.Call("setAttribute", "y", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "y", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "y", value)
+	return e
+}

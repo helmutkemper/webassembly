@@ -170,7 +170,7 @@ type TagSvgAnimateTransform struct {
 func (e *TagSvgAnimateTransform) Init(id string) (ref *TagSvgAnimateTransform) {
 	e.listener = new(sync.Map)
 
-	e.CreateElement(KTagSvg)
+	e.CreateElement()
 	e.prepareStageReference()
 	e.Id(id)
 
@@ -181,8 +181,8 @@ func (e *TagSvgAnimateTransform) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
-func (e *TagSvgAnimateTransform) CreateElement(tag Tag) (ref *TagSvgAnimateTransform) {
-	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", tag.String())
+func (e *TagSvgAnimateTransform) CreateElement() (ref *TagSvgAnimateTransform) {
+	e.selfElement = js.Global().Get("document").Call("createElementNS", "http://www.w3.org/2000/svg", "animateTransform")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return

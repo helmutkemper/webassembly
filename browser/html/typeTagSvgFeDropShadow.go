@@ -15,10 +15,12 @@ import (
 //
 // English:
 //
-// The SVG <feDropShadow> filter primitive creates a drop shadow of the input image. It can only be used inside a <filter> element.
+// The SVG <feDropShadow> filter primitive creates a drop shadow of the input image. It can only be used inside a
+// <filter> element.
 //
 //   Notes:
-//     * The drop shadow color and opacity can be changed by using the flood-color and flood-opacity presentation attributes.
+//     * The drop shadow color and opacity can be changed by using the flood-color and flood-opacity presentation
+//       attributes.
 //
 // Português:
 //

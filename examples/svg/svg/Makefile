@@ -19,4 +19,4 @@ help:
 build:
 	#@$(GO) mod tidy
 	@GOARCH=wasm GOOS=js $(GO) build -o main.wasm
-	@$(MAKE) -C ../server build
+	@$(MAKE) -C ../../server build

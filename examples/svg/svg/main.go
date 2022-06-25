@@ -28,7 +28,7 @@ func main() {
 	//</svg>
 
 	//<svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg" stroke="red" fill="grey">
-	s1 := factoryBrowser.NewTagSvg("svg").
+	s1 := factoryBrowser.NewTagSvg("svg1").
 		ViewBox([]float64{0, 0, 300, 100}).
 		Stroke(factoryColor.NewRed()).
 		Fill(factoryColor.NewGrey()).
@@ -47,7 +47,7 @@ func main() {
 				R(4),
 
 			//  <svg viewBox="0 0 10 10" x="200" width="100">
-			factoryBrowser.NewTagSvg("view").
+			factoryBrowser.NewTagSvg("svg2").
 				ViewBox([]float64{0, 0, 10, 10}).
 				X(200).
 				Width(100).

@@ -444,10 +444,12 @@ func (e *TagSvgFeConvolveMatrix) XmlLang(value interface{}) (ref *TagSvgFeConvol
 //
 // English:
 //
-//  The baseline-shift attribute allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text content element. The shifted object might be a sub- or superscript.
+//  The baseline-shift attribute allows repositioning of the dominant-baseline relative to the dominant-baseline of the
+//  parent text content element. The shifted object might be a sub- or superscript.
 //
 //   Input:
-//     baselineShift: allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text content element.
+//     baselineShift: allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text
+//     content element.
 //       float32: 0.05 = "5%"
 //       string: "5%"
 //       consts KSvgBaselineShift... (e.g. KSvgBaselineShiftAuto)
@@ -458,10 +460,12 @@ func (e *TagSvgFeConvolveMatrix) XmlLang(value interface{}) (ref *TagSvgFeConvol
 //
 // Português:
 //
-//  O atributo baseline-shift permite o reposicionamento da linha de base dominante em relação à linha de base dominante do elemento de conteúdo de texto pai. O objeto deslocado pode ser um sub ou sobrescrito.
+//  O atributo baseline-shift permite o reposicionamento da linha de base dominante em relação à linha de base dominante
+//  do elemento de conteúdo de texto pai. O objeto deslocado pode ser um sub ou sobrescrito.
 //
 //   Input:
-//     baselineShift: permite o reposicionamento da linha de base dominante em relação à linha de base dominante do elemento de conteúdo de texto pai.
+//     baselineShift: permite o reposicionamento da linha de base dominante em relação à linha de base dominante do
+//     elemento de conteúdo de texto pai.
 //       float32: 0.05 = "5%"
 //       string: "5%"
 //       consts KSvgBaselineShift... (ex. KSvgBaselineShiftAuto)
@@ -2839,5 +2843,33 @@ func (e *TagSvgFeConvolveMatrix) EdgeMode(edgeMode SvgEdgeMode) (ref *TagSvgFeCo
 //     value: indica como a transparência alfa é tratada.
 func (e *TagSvgFeConvolveMatrix) PreserveAlpha(value bool) (ref *TagSvgFeConvolveMatrix) {
 	e.selfElement.Call("setAttribute", "preserveAlpha", value)
+	return e
+}
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgFeConvolveMatrix) Text(value string) (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgFeConvolveMatrix) Html(value string) (ref *TagSvgFeConvolveMatrix) {
+	e.selfElement.Set("innerHTML", value)
 	return e
 }

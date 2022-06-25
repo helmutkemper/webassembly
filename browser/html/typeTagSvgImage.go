@@ -380,10 +380,12 @@ func (e *TagSvgImage) XmlLang(value interface{}) (ref *TagSvgImage) {
 //
 // English:
 //
-//  The baseline-shift attribute allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text content element. The shifted object might be a sub- or superscript.
+//  The baseline-shift attribute allows repositioning of the dominant-baseline relative to the dominant-baseline of the
+//  parent text content element. The shifted object might be a sub- or superscript.
 //
 //   Input:
-//     baselineShift: allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text content element.
+//     baselineShift: allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text
+//     content element.
 //       float32: 0.05 = "5%"
 //       string: "5%"
 //       consts KSvgBaselineShift... (e.g. KSvgBaselineShiftAuto)
@@ -394,10 +396,12 @@ func (e *TagSvgImage) XmlLang(value interface{}) (ref *TagSvgImage) {
 //
 // Português:
 //
-//  O atributo baseline-shift permite o reposicionamento da linha de base dominante em relação à linha de base dominante do elemento de conteúdo de texto pai. O objeto deslocado pode ser um sub ou sobrescrito.
+//  O atributo baseline-shift permite o reposicionamento da linha de base dominante em relação à linha de base dominante
+//  do elemento de conteúdo de texto pai. O objeto deslocado pode ser um sub ou sobrescrito.
 //
 //   Input:
-//     baselineShift: permite o reposicionamento da linha de base dominante em relação à linha de base dominante do elemento de conteúdo de texto pai.
+//     baselineShift: permite o reposicionamento da linha de base dominante em relação à linha de base dominante do
+//     elemento de conteúdo de texto pai.
 //       float32: 0.05 = "5%"
 //       string: "5%"
 //       consts KSvgBaselineShift... (ex. KSvgBaselineShiftAuto)
@@ -2579,5 +2583,33 @@ func (e *TagSvgImage) PreserveAspectRatio(ratio, meet interface{}) (ref *TagSvgI
 //  a CORS settings attribute.
 func (e *TagSvgImage) CrossOrigin(crossOrigin SvgCrossOrigin) (ref *TagSvgImage) {
 	e.selfElement.Call("setAttribute", "crossorigin", crossOrigin.String())
+	return e
+}
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgImage) Text(value string) (ref *TagSvgImage) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgImage) Html(value string) (ref *TagSvgImage) {
+	e.selfElement.Set("innerHTML", value)
 	return e
 }

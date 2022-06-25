@@ -387,3 +387,31 @@ func (e *TagSvgFeDistantLight) Elevation(elevation float64) (ref *TagSvgFeDistan
 	e.selfElement.Call("setAttribute", "elevation", elevation)
 	return e
 }
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgFeDistantLight) Text(value string) (ref *TagSvgFeDistantLight) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgFeDistantLight) Html(value string) (ref *TagSvgFeDistantLight) {
+	e.selfElement.Set("innerHTML", value)
+	return e
+}

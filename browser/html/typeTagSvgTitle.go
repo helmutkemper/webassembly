@@ -415,3 +415,31 @@ func (e *TagSvgTitle) Style(value string) (ref *TagSvgTitle) {
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgTitle) Text(value string) (ref *TagSvgTitle) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgTitle) Html(value string) (ref *TagSvgTitle) {
+	e.selfElement.Set("innerHTML", value)
+	return e
+}

@@ -1189,3 +1189,31 @@ func (e *TagSvgAnimateTransform) Type(value interface{}) (ref *TagSvgAnimateTran
 	e.selfElement.Call("setAttribute", "type", value)
 	return e
 }
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgAnimateTransform) Text(value string) (ref *TagSvgAnimateTransform) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgAnimateTransform) Html(value string) (ref *TagSvgAnimateTransform) {
+	e.selfElement.Set("innerHTML", value)
+	return e
+}

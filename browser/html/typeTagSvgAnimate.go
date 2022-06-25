@@ -1307,3 +1307,31 @@ func (e *TagSvgAnimate) Accumulate(value interface{}) (ref *TagSvgAnimate) {
 	e.selfElement.Call("setAttribute", "accumulate", value)
 	return e
 }
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgAnimate) Text(value string) (ref *TagSvgAnimate) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgAnimate) Html(value string) (ref *TagSvgAnimate) {
+	e.selfElement.Set("innerHTML", value)
+	return e
+}

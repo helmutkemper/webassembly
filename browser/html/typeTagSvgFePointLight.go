@@ -486,3 +486,31 @@ func (e *TagSvgFePointLight) Z(value interface{}) (ref *TagSvgFePointLight) {
 	e.selfElement.Call("setAttribute", "z", value)
 	return e
 }
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgFePointLight) Text(value string) (ref *TagSvgFePointLight) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgFePointLight) Html(value string) (ref *TagSvgFePointLight) {
+	e.selfElement.Set("innerHTML", value)
+	return e
+}

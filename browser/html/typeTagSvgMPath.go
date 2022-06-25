@@ -349,3 +349,31 @@ func (e *TagSvgMPath) XmlLang(value interface{}) (ref *TagSvgMPath) {
 }
 
 // #core end ----------------------------------------------------------------------------------------------------------
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgMPath) Text(value string) (ref *TagSvgMPath) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgMPath) Html(value string) (ref *TagSvgMPath) {
+	e.selfElement.Set("innerHTML", value)
+	return e
+}

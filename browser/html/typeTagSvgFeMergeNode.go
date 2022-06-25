@@ -393,3 +393,31 @@ func (e *TagSvgFeMergeNode) In(in interface{}) (ref *TagSvgFeMergeNode) {
 	e.selfElement.Call("setAttribute", "in", in)
 	return e
 }
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgFeMergeNode) Text(value string) (ref *TagSvgFeMergeNode) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgFeMergeNode) Html(value string) (ref *TagSvgFeMergeNode) {
+	e.selfElement.Set("innerHTML", value)
+	return e
+}

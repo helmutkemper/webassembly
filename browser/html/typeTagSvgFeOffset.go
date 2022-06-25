@@ -358,10 +358,12 @@ func (e *TagSvgFeOffset) XmlLang(value interface{}) (ref *TagSvgFeOffset) {
 //
 // English:
 //
-//  The baseline-shift attribute allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text content element. The shifted object might be a sub- or superscript.
+//  The baseline-shift attribute allows repositioning of the dominant-baseline relative to the dominant-baseline of the
+//  parent text content element. The shifted object might be a sub- or superscript.
 //
 //   Input:
-//     baselineShift: allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text content element.
+//     baselineShift: allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text
+//     content element.
 //       float32: 0.05 = "5%"
 //       string: "5%"
 //       consts KSvgBaselineShift... (e.g. KSvgBaselineShiftAuto)
@@ -372,10 +374,12 @@ func (e *TagSvgFeOffset) XmlLang(value interface{}) (ref *TagSvgFeOffset) {
 //
 // Português:
 //
-//  O atributo baseline-shift permite o reposicionamento da linha de base dominante em relação à linha de base dominante do elemento de conteúdo de texto pai. O objeto deslocado pode ser um sub ou sobrescrito.
+//  O atributo baseline-shift permite o reposicionamento da linha de base dominante em relação à linha de base dominante
+//  do elemento de conteúdo de texto pai. O objeto deslocado pode ser um sub ou sobrescrito.
 //
 //   Input:
-//     baselineShift: permite o reposicionamento da linha de base dominante em relação à linha de base dominante do elemento de conteúdo de texto pai.
+//     baselineShift: permite o reposicionamento da linha de base dominante em relação à linha de base dominante do
+//     elemento de conteúdo de texto pai.
 //       float32: 0.05 = "5%"
 //       string: "5%"
 //       consts KSvgBaselineShift... (ex. KSvgBaselineShiftAuto)
@@ -2579,5 +2583,33 @@ func (e *TagSvgFeOffset) Dx(dx string) (ref *TagSvgFeOffset) {
 //       (ex. "50%", "20", "0 10" ou "0 10 20")
 func (e *TagSvgFeOffset) Dy(dy string) (ref *TagSvgFeOffset) {
 	e.selfElement.Call("setAttribute", "dy", dy)
+	return e
+}
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgFeOffset) Text(value string) (ref *TagSvgFeOffset) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgFeOffset) Html(value string) (ref *TagSvgFeOffset) {
+	e.selfElement.Set("innerHTML", value)
 	return e
 }

@@ -478,3 +478,31 @@ func (e *TagSvgFeFuncA) Exponent(exponent float64) (ref *TagSvgFeFuncA) {
 	e.selfElement.Call("setAttribute", "exponent", exponent)
 	return e
 }
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgFeFuncA) Text(value string) (ref *TagSvgFeFuncA) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgFeFuncA) Html(value string) (ref *TagSvgFeFuncA) {
+	e.selfElement.Set("innerHTML", value)
+	return e
+}

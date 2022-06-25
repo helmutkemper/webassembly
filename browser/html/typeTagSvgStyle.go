@@ -444,3 +444,31 @@ func (e *TagSvgStyle) Media(value interface{}) (ref *TagSvgStyle) {
 	e.selfElement.Call("setAttribute", "media", value)
 	return e
 }
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgStyle) Text(value string) (ref *TagSvgStyle) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgStyle) Html(value string) (ref *TagSvgStyle) {
+	e.selfElement.Set("innerHTML", value)
+	return e
+}

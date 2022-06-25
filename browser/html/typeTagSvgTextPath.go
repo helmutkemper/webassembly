@@ -213,6 +213,16 @@ func (e *TagSvgTextPath) AppendToElement(el js.Value) (ref *TagSvgTextPath) {
 	return e
 }
 
+func (e *TagSvgTextPath) Append(elements ...Compatible) (ref *TagSvgTextPath) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgTextPath) Get() (el js.Value) {
 	return e.selfElement
 }

@@ -221,6 +221,16 @@ func (e *TagSvgFeDropShadow) AppendToElement(el js.Value) (ref *TagSvgFeDropShad
 	return e
 }
 
+func (e *TagSvgFeDropShadow) Append(elements ...Compatible) (ref *TagSvgFeDropShadow) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgFeDropShadow) Get() (el js.Value) {
 	return e.selfElement
 }

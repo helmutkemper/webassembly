@@ -222,6 +222,16 @@ func (e *TagSvgFeComponentTransfer) AppendToElement(el js.Value) (ref *TagSvgFeC
 	return e
 }
 
+func (e *TagSvgFeComponentTransfer) Append(elements ...Compatible) (ref *TagSvgFeComponentTransfer) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgFeComponentTransfer) Get() (el js.Value) {
 	return e.selfElement
 }

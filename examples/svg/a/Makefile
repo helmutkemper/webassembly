@@ -14,9 +14,9 @@ help:
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
-.PHONY: buildandrun
+.PHONY: buildAndRun
 ## build this example and run local server
-buildandrun:
+buildAndRun:
 	@$(GO) mod tidy
 	@GOARCH=wasm GOOS=js $(GO) build -o main.wasm
 	@$(MAKE) -C ../../server build

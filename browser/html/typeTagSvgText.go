@@ -219,6 +219,16 @@ func (e *TagSvgText) AppendToElement(el js.Value) (ref *TagSvgText) {
 	return e
 }
 
+func (e *TagSvgText) Append(elements ...Compatible) (ref *TagSvgText) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgText) Get() (el js.Value) {
 	return e.selfElement
 }
@@ -2555,5 +2565,33 @@ func (e *TagSvgText) TextLength(value interface{}) (ref *TagSvgText) {
 	}
 
 	e.selfElement.Call("setAttribute", "textLength", value)
+	return e
+}
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagSvgText) Text(value string) (ref *TagSvgText) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagSvgText) Html(value string) (ref *TagSvgText) {
+	e.selfElement.Set("innerHTML", value)
 	return e
 }

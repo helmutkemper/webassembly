@@ -213,6 +213,16 @@ func (e *TagSvgFeSpotLight) AppendToElement(el js.Value) (ref *TagSvgFeSpotLight
 	return e
 }
 
+func (e *TagSvgFeSpotLight) Append(elements ...Compatible) (ref *TagSvgFeSpotLight) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgFeSpotLight) Get() (el js.Value) {
 	return e.selfElement
 }

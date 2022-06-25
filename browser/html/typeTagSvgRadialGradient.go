@@ -223,6 +223,16 @@ func (e *TagSvgRadialGradient) AppendToElement(el js.Value) (ref *TagSvgRadialGr
 	return e
 }
 
+func (e *TagSvgRadialGradient) Append(elements ...Compatible) (ref *TagSvgRadialGradient) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgRadialGradient) Get() (el js.Value) {
 	return e.selfElement
 }

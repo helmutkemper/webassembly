@@ -223,6 +223,16 @@ func (e *TagSvgForeignObject) AppendToElement(el js.Value) (ref *TagSvgForeignOb
 	return e
 }
 
+func (e *TagSvgForeignObject) Append(elements ...Compatible) (ref *TagSvgForeignObject) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgForeignObject) Get() (el js.Value) {
 	return e.selfElement
 }

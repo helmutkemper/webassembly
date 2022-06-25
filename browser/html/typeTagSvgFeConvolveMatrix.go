@@ -299,6 +299,16 @@ func (e *TagSvgFeConvolveMatrix) AppendToElement(el js.Value) (ref *TagSvgFeConv
 	return e
 }
 
+func (e *TagSvgFeConvolveMatrix) Append(elements ...Compatible) (ref *TagSvgFeConvolveMatrix) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgFeConvolveMatrix) Get() (el js.Value) {
 	return e.selfElement
 }

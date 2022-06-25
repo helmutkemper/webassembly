@@ -213,6 +213,16 @@ func (e *TagSvgFeMorphology) AppendToElement(el js.Value) (ref *TagSvgFeMorpholo
 	return e
 }
 
+func (e *TagSvgFeMorphology) Append(elements ...Compatible) (ref *TagSvgFeMorphology) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgFeMorphology) Get() (el js.Value) {
 	return e.selfElement
 }

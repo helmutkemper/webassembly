@@ -227,6 +227,16 @@ func (e *TagSvgFeDisplacementMap) AppendToElement(el js.Value) (ref *TagSvgFeDis
 	return e
 }
 
+func (e *TagSvgFeDisplacementMap) Append(elements ...Compatible) (ref *TagSvgFeDisplacementMap) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgFeDisplacementMap) Get() (el js.Value) {
 	return e.selfElement
 }

@@ -217,6 +217,16 @@ func (e *TagSvgPolygon) AppendToElement(el js.Value) (ref *TagSvgPolygon) {
 	return e
 }
 
+func (e *TagSvgPolygon) Append(elements ...Compatible) (ref *TagSvgPolygon) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgPolygon) Get() (el js.Value) {
 	return e.selfElement
 }

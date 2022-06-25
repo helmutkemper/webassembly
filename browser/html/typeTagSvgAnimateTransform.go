@@ -214,6 +214,16 @@ func (e *TagSvgAnimateTransform) AppendToElement(el js.Value) (ref *TagSvgAnimat
 	return e
 }
 
+func (e *TagSvgAnimateTransform) Append(elements ...Compatible) (ref *TagSvgAnimateTransform) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgAnimateTransform) Get() (el js.Value) {
 	return e.selfElement
 }

@@ -306,6 +306,16 @@ func (e *TagSvgFeColorMatrix) AppendToElement(el js.Value) (ref *TagSvgFeColorMa
 	return e
 }
 
+func (e *TagSvgFeColorMatrix) Append(elements ...Compatible) (ref *TagSvgFeColorMatrix) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgFeColorMatrix) Get() (el js.Value) {
 	return e.selfElement
 }

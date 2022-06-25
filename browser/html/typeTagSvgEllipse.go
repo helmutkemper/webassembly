@@ -221,6 +221,16 @@ func (e *TagSvgEllipse) AppendToElement(el js.Value) (ref *TagSvgEllipse) {
 	return e
 }
 
+func (e *TagSvgEllipse) Append(elements ...Compatible) (ref *TagSvgEllipse) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgEllipse) Get() (el js.Value) {
 	return e.selfElement
 }

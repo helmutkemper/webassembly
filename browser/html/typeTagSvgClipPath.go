@@ -217,6 +217,16 @@ func (e *TagSvgClipPath) AppendToElement(el js.Value) (ref *TagSvgClipPath) {
 	return e
 }
 
+func (e *TagSvgClipPath) Append(elements ...Compatible) (ref *TagSvgClipPath) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
+	}
+
+	e.selfElement.Call("appendChild", fragment)
+	return e
+}
+
 func (e *TagSvgClipPath) Get() (el js.Value) {
 	return e.selfElement
 }

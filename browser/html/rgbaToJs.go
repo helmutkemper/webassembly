@@ -22,6 +22,6 @@ func RGBAToJs(color color.RGBA) string {
 		", " +
 		strconv.Itoa(int(color.B)) +
 		", " +
-		strconv.FormatFloat(float64(color.A)/255.0, 'f', 4, 64) +
+		strconv.FormatFloat(float64(color.A)/255.0, 'g', -1, 64) +
 		" )"
 }

@@ -803,6 +803,11 @@ func (e *TagSvgAnimateTransform) Restart(value interface{}) (ref *TagSvgAnimateT
 //       const: KSvgDurIndefinite
 //       qualquer outro tipo: interface{}
 func (e *TagSvgAnimateTransform) RepeatCount(value interface{}) (ref *TagSvgAnimateTransform) {
+	if converted, ok := value.(SvgDur); ok {
+		e.selfElement.Call("setAttribute", "repeatCount", converted.String())
+		return e
+	}
+
 	e.selfElement.Call("setAttribute", "repeatCount", value)
 	return e
 }
@@ -919,12 +924,105 @@ func (e *TagSvgAnimateTransform) CalcMode(calcMode SvgCalcMode) (ref *TagSvgAnim
 // of values used over the course of an animation, or it's a list of numbers for a color matrix, which is interpreted
 // differently depending on the type of color change to be performed.
 //
+//   Input:
+//     value: list of values
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0%, 10%"
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//       time.Duration: time.Second = "1s"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo values tem significados diferentes, dependendo do contexto em que é usado, ou define uma sequência de
 // valores usados ao longo de uma animação, ou é uma lista de números para uma matriz de cores, que é interpretada de
 // forma diferente dependendo do tipo de mudança de cor a ser executada.
+//
+//   Input:
+//     value: lista de valores
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0%, 10%"
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//       time.Duration: time.Second = "1s"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//       any other type: interface{}
 func (e *TagSvgAnimateTransform) Values(value interface{}) (ref *TagSvgAnimateTransform) {
+	if converted, ok := value.([]color.RGBA); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += RGBAToJs(v) + ";"
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "values", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "%;"
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "values", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ";"
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "values", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]time.Duration); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += v.String() + ";"
+		}
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "values", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "values", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "values", p)
+		return e
+	}
+
+	if converted, ok := value.(float64); ok {
+		p := strconv.FormatFloat(converted, 'g', -1, 64)
+		e.selfElement.Call("setAttribute", "values", p)
+		return e
+	}
+
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "values", RGBAToJs(converted))
+		return e
+	}
+
 	e.selfElement.Call("setAttribute", "values", value)
 	return e
 }

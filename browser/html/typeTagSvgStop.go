@@ -2305,6 +2305,26 @@ func (e *TagSvgStop) Style(value string) (ref *TagSvgStop) {
 
 // #styling end -------------------------------------------------------------------------------------------------------
 
+// Offset
+//
+// No documentation found on the mozilla website
+func (e *TagSvgStop) Offset(value interface{}) (ref *TagSvgStop) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "offset", p)
+		return e
+	}
+
+	if converted, ok := value.(float64); ok {
+		p := strconv.FormatFloat(float64(converted), 'g', -1, 64)
+		e.selfElement.Call("setAttribute", "offset", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "offset", value)
+	return e
+}
+
 // Text
 //
 // English:

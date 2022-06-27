@@ -2347,7 +2347,7 @@ func (e *TagSvgLinearGradient) GradientUnits(gradientUnits SvgGradientUnits) (re
 //  Isso permite coisas como distorcer o gradiente. Essa matriz de transformação adicional é pós-multiplicada para
 //  (ou seja, inserida à direita de) quaisquer transformações definidas anteriormente, incluindo a transformação
 //  implícita necessária para converter de unidades de caixa delimitadora de objeto para espaço do usuário.
-func (e *TagSvgLinearGradient) GradientTransform(gradientTransform float64) (ref *TagSvgLinearGradient) {
+func (e *TagSvgLinearGradient) GradientTransform(gradientTransform interface{}) (ref *TagSvgLinearGradient) {
 	e.selfElement.Call("setAttribute", "gradientTransform", gradientTransform)
 	return e
 }

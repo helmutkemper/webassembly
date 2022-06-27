@@ -3039,10 +3039,14 @@ func (e *TagSvgAnimateMotion) KeySplines(value interface{}) (ref *TagSvgAnimateM
 //
 //   Input:
 //     value: initial value of the attribute
-//       float32: 1.0 = "100%"
-//       time.Duration: 5*time.Second = "5s"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0%, 10%"
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//       time.Duration: time.Second = "1s"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
 //       any other type: interface{}
 //
 // When used with the to attribute, the animation will change the modified attribute from the from value to the to
@@ -3055,28 +3059,85 @@ func (e *TagSvgAnimateMotion) KeySplines(value interface{}) (ref *TagSvgAnimateM
 //
 //   Entrada:
 //     value: valor inicial do atributo
-//       float32: 1.0 = "100%"
-//       time.Duration: 5*time.Second = "5s"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0%, 10%"
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//       time.Duration: time.Second = "1s"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
 //       qualquer outro tipo: interface{}
 //
 // Quando usado com o atributo to, a animação mudará o atributo modificado do valor from para o valor to. Quando usado
 // com o atributo by, a animação mudará o atributo relativamente do valor from pelo valor especificado em by.
 func (e *TagSvgAnimateMotion) From(value interface{}) (ref *TagSvgAnimateMotion) {
+	if converted, ok := value.([]color.RGBA); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += RGBAToJs(v) + ";"
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "from", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "%;"
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "from", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ";"
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "from", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]time.Duration); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += v.String() + ";"
+		}
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "from", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "from", converted.String())
+		return e
+	}
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "from", p)
 		return e
 	}
 
-	if converted, ok := value.(color.RGBA); ok {
-		e.selfElement.Call("setAttribute", "from", RGBAToJs(converted))
+	if converted, ok := value.(float64); ok {
+		p := strconv.FormatFloat(converted, 'g', -1, 64)
+		e.selfElement.Call("setAttribute", "from", p)
 		return e
 	}
 
-	if converted, ok := value.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "from", converted.String())
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "from", RGBAToJs(converted))
 		return e
 	}
 
@@ -3092,10 +3153,14 @@ func (e *TagSvgAnimateMotion) From(value interface{}) (ref *TagSvgAnimateMotion)
 //
 //   Input:
 //     value: final value of the attribute
-//       float32: 1.0 = "100%"
-//       time.Duration: 5*time.Second = "5s"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0%, 10%"
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//       time.Duration: time.Second = "1s"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
 //       any other type: interface{}
 //
 // The value of the attribute will change between the from attribute value and this value.
@@ -3106,27 +3171,84 @@ func (e *TagSvgAnimateMotion) From(value interface{}) (ref *TagSvgAnimateMotion)
 //
 //   Entrada:
 //     value: valor final do atributo
-//       float32: 1.0 = "100%"
-//       time.Duration: 5*time.Second = "5s"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0%, 10%"
+//       []float64: []float64{0.0, 10.0} = "0, 10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//       time.Duration: time.Second = "1s"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
 //       qualquer outro tipo: interface{}
 //
 // O valor do atributo mudará entre o valor do atributo from e este valor.
 func (e *TagSvgAnimateMotion) To(value interface{}) (ref *TagSvgAnimateMotion) {
+	if converted, ok := value.([]color.RGBA); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += RGBAToJs(v) + ";"
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "to", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "%;"
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "to", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ";"
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "to", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]time.Duration); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += v.String() + ";"
+		}
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "to", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "to", converted.String())
+		return e
+	}
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "to", p)
 		return e
 	}
 
-	if converted, ok := value.(color.RGBA); ok {
-		e.selfElement.Call("setAttribute", "to", RGBAToJs(converted))
+	if converted, ok := value.(float64); ok {
+		p := strconv.FormatFloat(converted, 'g', -1, 64)
+		e.selfElement.Call("setAttribute", "to", p)
 		return e
 	}
 
-	if converted, ok := value.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "to", converted.String())
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "to", RGBAToJs(converted))
 		return e
 	}
 

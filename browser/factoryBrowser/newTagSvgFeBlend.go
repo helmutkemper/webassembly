@@ -17,9 +17,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Isso é semelhante ao que é conhecido no software de edição de imagens ao misturar duas camadas. O modo é definido
 // pelo atributo mode.
-func NewTagSvgFeBlend(id string) (ref *html.TagSvgFeBlend) {
+func NewTagSvgFeBlend() (ref *html.TagSvgFeBlend) {
 	ref = &html.TagSvgFeBlend{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

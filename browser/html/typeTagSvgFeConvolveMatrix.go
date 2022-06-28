@@ -252,12 +252,11 @@ type TagSvgFeConvolveMatrix struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeConvolveMatrix) Init(id string) (ref *TagSvgFeConvolveMatrix) {
+func (e *TagSvgFeConvolveMatrix) Init() (ref *TagSvgFeConvolveMatrix) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

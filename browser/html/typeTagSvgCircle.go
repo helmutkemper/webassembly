@@ -164,12 +164,11 @@ type TagSvgCircle struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgCircle) Init(id string) (ref *TagSvgCircle) {
+func (e *TagSvgCircle) Init() (ref *TagSvgCircle) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

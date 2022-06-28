@@ -165,12 +165,11 @@ type TagSvgFeFuncR struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeFuncR) Init(id string) (ref *TagSvgFeFuncR) {
+func (e *TagSvgFeFuncR) Init() (ref *TagSvgFeFuncR) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

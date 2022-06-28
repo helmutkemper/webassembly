@@ -170,12 +170,11 @@ type TagSvgPolygon struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgPolygon) Init(id string) (ref *TagSvgPolygon) {
+func (e *TagSvgPolygon) Init() (ref *TagSvgPolygon) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

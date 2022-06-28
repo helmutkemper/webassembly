@@ -17,9 +17,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Um traçado de recorte restringe a região na qual a tinta pode ser aplicada. Conceitualmente, as partes do desenho
 // que estão fora da região delimitada pelo caminho de recorte não são desenhadas.
-func NewTagSvgClipPath(id string) (ref *html.TagSvgClipPath) {
+func NewTagSvgClipPath() (ref *html.TagSvgClipPath) {
 	ref = &html.TagSvgClipPath{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

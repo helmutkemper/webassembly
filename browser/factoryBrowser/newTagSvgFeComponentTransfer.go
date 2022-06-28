@@ -22,9 +22,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Os cálculos são executados em valores de cores não pré-multiplicados. As cores são modificadas alterando cada canal
 // (R, G, B e A) para o resultado do que os filhos <feFuncR>, <feFuncB>, <feFuncG> e <feFuncA> retornam.
-func NewTagSvgFeComponentTransfer(id string) (ref *html.TagSvgFeComponentTransfer) {
+func NewTagSvgFeComponentTransfer() (ref *html.TagSvgFeComponentTransfer) {
 	ref = &html.TagSvgFeComponentTransfer{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

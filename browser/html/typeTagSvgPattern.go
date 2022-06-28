@@ -173,12 +173,11 @@ type TagSvgPattern struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgPattern) Init(id string) (ref *TagSvgPattern) {
+func (e *TagSvgPattern) Init() (ref *TagSvgPattern) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

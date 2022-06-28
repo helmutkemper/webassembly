@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // O elemento SVG <tspan> define um subtexto dentro de um elemento <text> ou outro elemento <tspan>. Permite o ajuste
 // do estilo eou posição desse subtexto conforme necessário.
-func NewTagSvgTSpan(id string) (ref *html.TagSvgTSpan) {
+func NewTagSvgTSpan() (ref *html.TagSvgTSpan) {
 	ref = &html.TagSvgTSpan{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

@@ -19,9 +19,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // conserve memory while displaying long-running documents.
 //
 // The <discard> element may occur wherever the <animate> element may.
-func NewTagSvgDiscard(id string) (ref *html.TagSvgDiscard) {
+func NewTagSvgDiscard() (ref *html.TagSvgDiscard) {
 	ref = &html.TagSvgDiscard{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

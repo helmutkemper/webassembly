@@ -174,12 +174,11 @@ type TagSvgEllipse struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgEllipse) Init(id string) (ref *TagSvgEllipse) {
+func (e *TagSvgEllipse) Init() (ref *TagSvgEllipse) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

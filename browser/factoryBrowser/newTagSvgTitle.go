@@ -27,9 +27,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //   Notas:
 //     * Para compatibilidade com versões anteriores com SVG 1.1, os elementos <title> devem ser o primeiro elemento
 //       filho de seu pai.
-func NewTagSvgTitle(id string) (ref *html.TagSvgTitle) {
+func NewTagSvgTitle() (ref *html.TagSvgTitle) {
 	ref = &html.TagSvgTitle{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

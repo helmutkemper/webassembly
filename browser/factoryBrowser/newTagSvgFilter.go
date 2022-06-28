@@ -14,9 +14,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // O elemento SVG <filter> define um efeito de filtro personalizado agrupando primitivos de filtro atômico. Ele nunca é
 // renderizado, mas deve ser usado pelo atributo filter em elementos SVG ou pela propriedade CSS filter para elementos
 // SVGHTML.
-func NewTagSvgFilter(id string) (ref *html.TagSvgFilter) {
+func NewTagSvgFilter() (ref *html.TagSvgFilter) {
 	ref = &html.TagSvgFilter{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

@@ -167,12 +167,11 @@ type TagSvgAnimateTransform struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgAnimateTransform) Init(id string) (ref *TagSvgAnimateTransform) {
+func (e *TagSvgAnimateTransform) Init() (ref *TagSvgAnimateTransform) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

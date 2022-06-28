@@ -260,12 +260,11 @@ type TagSvgFeColorMatrix struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeColorMatrix) Init(id string) (ref *TagSvgFeColorMatrix) {
+func (e *TagSvgFeColorMatrix) Init() (ref *TagSvgFeColorMatrix) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }
@@ -2713,7 +2712,7 @@ func (e *TagSvgFeColorMatrix) Values(value interface{}) (ref *TagSvgFeColorMatri
 	if converted, ok := value.([]color.RGBA); ok {
 		var valueStr = ""
 		for _, v := range converted {
-			valueStr += RGBAToJs(v) + ";"
+			valueStr += RGBAToJs(v) + " "
 		}
 
 		var length = len(valueStr) - 1
@@ -2725,7 +2724,7 @@ func (e *TagSvgFeColorMatrix) Values(value interface{}) (ref *TagSvgFeColorMatri
 	if converted, ok := value.([]float32); ok {
 		var valueStr = ""
 		for _, v := range converted {
-			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "%;"
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "% "
 		}
 
 		var length = len(valueStr) - 1
@@ -2737,7 +2736,7 @@ func (e *TagSvgFeColorMatrix) Values(value interface{}) (ref *TagSvgFeColorMatri
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
 		for _, v := range converted {
-			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ";"
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
 		}
 
 		var length = len(valueStr) - 1
@@ -2749,7 +2748,7 @@ func (e *TagSvgFeColorMatrix) Values(value interface{}) (ref *TagSvgFeColorMatri
 	if converted, ok := value.([]time.Duration); ok {
 		var valueStr = ""
 		for _, v := range converted {
-			valueStr += v.String() + ";"
+			valueStr += v.String() + " "
 		}
 		var length = len(valueStr) - 1
 

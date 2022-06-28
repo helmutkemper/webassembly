@@ -14,9 +14,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // O elemento SVG <feMerge> permite que efeitos de filtro sejam aplicados simultaneamente em vez de sequencialmente.
 // Isso é obtido por outros filtros armazenando sua saída por meio do atributo result e acessando-a em um filho
 // <feMergeNode>.
-func NewTagSvgFeMerge(id string) (ref *html.TagSvgFeMerge) {
+func NewTagSvgFeMerge() (ref *html.TagSvgFeMerge) {
 	ref = &html.TagSvgFeMerge{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

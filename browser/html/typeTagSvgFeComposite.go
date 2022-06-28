@@ -228,12 +228,11 @@ type TagSvgFeComposite struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeComposite) Init(id string) (ref *TagSvgFeComposite) {
+func (e *TagSvgFeComposite) Init() (ref *TagSvgFeComposite) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

@@ -166,12 +166,11 @@ type TagSvgFeMorphology struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeMorphology) Init(id string) (ref *TagSvgFeMorphology) {
+func (e *TagSvgFeMorphology) Init() (ref *TagSvgFeMorphology) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

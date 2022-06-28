@@ -19,9 +19,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Se o texto for incluído no SVG fora de um elemento <text>, ele não será renderizado. Isso é diferente de estar
 // oculto por padrão, pois definir a propriedade de exibição não mostrará o texto.
-func NewTagSvgText(id string) (ref *html.TagSvgText) {
+func NewTagSvgText() (ref *html.TagSvgText) {
 	ref = &html.TagSvgText{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

@@ -21,9 +21,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //   Notas:
 //     * A cor e a opacidade da sombra projetada podem ser alteradas usando os atributos de apresentação de cor de
 //       inundação e opacidade de inundação.
-func NewTagSvgFeDropShadow(id string) (ref *html.TagSvgFeDropShadow) {
+func NewTagSvgFeDropShadow() (ref *html.TagSvgFeDropShadow) {
 	ref = &html.TagSvgFeDropShadow{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

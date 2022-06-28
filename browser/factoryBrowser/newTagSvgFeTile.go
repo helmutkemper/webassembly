@@ -14,9 +14,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // A primitiva de filtro SVG <feTile> permite preencher um retângulo de destino com um padrão repetido e lado a lado de
 // uma imagem de entrada.
 // O efeito é semelhante ao de um <pattern>.
-func NewTagSvgFeTile(id string) (ref *html.TagSvgFeTile) {
+func NewTagSvgFeTile() (ref *html.TagSvgFeTile) {
 	ref = &html.TagSvgFeTile{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

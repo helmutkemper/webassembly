@@ -175,12 +175,11 @@ type TagSvgFeComponentTransfer struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeComponentTransfer) Init(id string) (ref *TagSvgFeComponentTransfer) {
+func (e *TagSvgFeComponentTransfer) Init() (ref *TagSvgFeComponentTransfer) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

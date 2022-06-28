@@ -27,9 +27,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // onde P(x,y) é a imagem de entrada, in, e P'(x,y) é o destino. XC(x,y) e YC(x,y) são os valores componentes do canal
 // designado por xChannelSelector e yChannelSelector.
-func NewTagSvgFeDisplacementMap(id string) (ref *html.TagSvgFeDisplacementMap) {
+func NewTagSvgFeDisplacementMap() (ref *html.TagSvgFeDisplacementMap) {
 	ref = &html.TagSvgFeDisplacementMap{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

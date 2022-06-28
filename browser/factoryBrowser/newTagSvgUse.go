@@ -11,9 +11,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // Português:
 //
 // O elemento <use> pega nós de dentro do documento SVG e os duplica em outro lugar.
-func NewTagSvgUse(id string) (ref *html.TagSvgUse) {
+func NewTagSvgUse() (ref *html.TagSvgUse) {
 	ref = &html.TagSvgUse{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

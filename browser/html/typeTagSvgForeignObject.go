@@ -176,12 +176,11 @@ type TagSvgForeignObject struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgForeignObject) Init(id string) (ref *TagSvgForeignObject) {
+func (e *TagSvgForeignObject) Init() (ref *TagSvgForeignObject) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

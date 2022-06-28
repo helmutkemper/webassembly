@@ -164,12 +164,11 @@ type TagSvgMetadata struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgMetadata) Init(id string) (ref *TagSvgMetadata) {
+func (e *TagSvgMetadata) Init() (ref *TagSvgMetadata) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

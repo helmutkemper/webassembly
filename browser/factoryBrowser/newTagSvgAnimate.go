@@ -11,9 +11,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // Português:
 //
 //  O elemento SVG <animate> fornece uma maneira de animar um atributo de um elemento ao longo do tempo.
-func NewTagSvgAnimate(id string) (ref *html.TagSvgAnimate) {
+func NewTagSvgAnimate() (ref *html.TagSvgAnimate) {
 	ref = &html.TagSvgAnimate{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

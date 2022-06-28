@@ -170,12 +170,11 @@ type TagSvgFeBlend struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeBlend) Init(id string) (ref *TagSvgFeBlend) {
+func (e *TagSvgFeBlend) Init() (ref *TagSvgFeBlend) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

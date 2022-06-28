@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // O elemento SVG <path> é o elemento genérico para definir uma forma. Todas as formas básicas podem ser criadas com
 // um elemento de caminho.
-func NewTagSvgPath(id string) (ref *html.TagSvgPath) {
+func NewTagSvgPath() (ref *html.TagSvgPath) {
 	ref = &html.TagSvgPath{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

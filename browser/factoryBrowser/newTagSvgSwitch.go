@@ -28,9 +28,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //   Notas:
 //     * As propriedades de exibição e visibilidade não têm efeito no processamento do elemento <switch>.
 //       Em particular, configurar display:none em um filho não tem efeito no teste truefalse para processamento de <switch>.
-func NewTagSvgSwitch(id string) (ref *html.TagSvgSwitch) {
+func NewTagSvgSwitch() (ref *html.TagSvgSwitch) {
 	ref = &html.TagSvgSwitch{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

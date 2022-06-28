@@ -24,9 +24,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Documentos ricos em estrutura podem ser renderizados graficamente, como fala, ou como Braille, promovendo assim a
 // acessibilidade.
-func NewTagSvgSymbol(id string) (ref *html.TagSvgSymbol) {
+func NewTagSvgSymbol() (ref *html.TagSvgSymbol) {
 	ref = &html.TagSvgSymbol{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

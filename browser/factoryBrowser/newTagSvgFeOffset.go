@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // A primitiva de filtro SVG <feOffset> permite deslocar a imagem de entrada. A imagem de entrada é compensada pelos
 // valores especificados nos atributos dx e dy.
-func NewTagSvgFeOffset(id string) (ref *html.TagSvgFeOffset) {
+func NewTagSvgFeOffset() (ref *html.TagSvgFeOffset) {
 	ref = &html.TagSvgFeOffset{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

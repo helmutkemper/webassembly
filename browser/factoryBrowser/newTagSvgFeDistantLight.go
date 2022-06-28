@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // A primitiva de filtro <feDistantLight> define uma fonte de luz distante que pode ser usada em uma primitiva de filtro
 // de iluminação: <feDiffuseLighting> ou <feSpecularLighting>.
-func NewTagSvgFeDistantLight(id string) (ref *html.TagSvgFeDistantLight) {
+func NewTagSvgFeDistantLight() (ref *html.TagSvgFeDistantLight) {
 	ref = &html.TagSvgFeDistantLight{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

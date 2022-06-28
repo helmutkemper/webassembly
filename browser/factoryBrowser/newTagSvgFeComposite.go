@@ -75,9 +75,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //         * i1 e i2 indicam os valores de canal de pixel correspondentes da imagem de entrada, que mapeiam para in e
 //           in2 respectivamente
 //         * k1, k2, k3 e k4 indicam os valores dos atributos com o mesmo nome.
-func NewTagSvgFeComposite(id string) (ref *html.TagSvgFeComposite) {
+func NewTagSvgFeComposite() (ref *html.TagSvgFeComposite) {
 	ref = &html.TagSvgFeComposite{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

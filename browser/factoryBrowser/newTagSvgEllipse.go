@@ -21,9 +21,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //   Note:
 //     * As elipses não podem especificar a orientação exata da elipse (se, por exemplo, você quiser desenhar uma
 //       elipse inclinada em um ângulo de 45 graus), mas ela pode ser girada usando o atributo transform.
-func NewTagSvgEllipse(id string) (ref *html.TagSvgEllipse) {
+func NewTagSvgEllipse() (ref *html.TagSvgEllipse) {
 	ref = &html.TagSvgEllipse{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

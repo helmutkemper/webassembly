@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // O elemento animateTransform anima um atributo de transformação em seu elemento de destino, permitindo assim que as
 // animações controlem a tradução, dimensionamento, rotação e ou inclinação.
-func NewTagSvgAnimateTransform(id string) (ref *html.TagSvgAnimateTransform) {
+func NewTagSvgAnimateTransform() (ref *html.TagSvgAnimateTransform) {
 	ref = &html.TagSvgAnimateTransform{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

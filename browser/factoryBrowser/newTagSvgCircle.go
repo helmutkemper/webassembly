@@ -11,9 +11,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // Português:
 //
 // O elemento SVG <circle> é uma forma básica SVG, usada para desenhar círculos com base em um ponto central e um raio.
-func NewTagSvgCircle(id string) (ref *html.TagSvgCircle) {
+func NewTagSvgCircle() (ref *html.TagSvgCircle) {
 	ref = &html.TagSvgCircle{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

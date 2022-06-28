@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // O elemento <mask> define uma máscara alfa para compor o objeto atual em segundo plano. Uma máscara é used/referenced
 // usando a propriedade mask.
-func NewTagSvgMask(id string) (ref *html.TagSvgMask) {
+func NewTagSvgMask() (ref *html.TagSvgMask) {
 	ref = &html.TagSvgMask{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

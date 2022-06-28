@@ -19,9 +19,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // O <pattern> é referenciado pelos atributos fill andor stroke em outros elementos gráficos para preencher ou traçar
 // esses elementos com o padrão referenciado.
-func NewTagSvgPattern(id string) (ref *html.TagSvgPattern) {
+func NewTagSvgPattern() (ref *html.TagSvgPattern) {
 	ref = &html.TagSvgPattern{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

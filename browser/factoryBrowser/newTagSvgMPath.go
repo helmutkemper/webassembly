@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // O elemento SVG <metadata> adiciona metadados ao conteúdo SVG. Metadados são informações estruturadas sobre dados.
 // O conteúdo de <metadata> deve ser elementos de outros namespaces XML, como RDF, FOAF, etc.
-func NewTagSvgMPath(id string) (ref *html.TagSvgMPath) {
+func NewTagSvgMPath() (ref *html.TagSvgMPath) {
 	ref = &html.TagSvgMPath{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

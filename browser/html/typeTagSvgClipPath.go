@@ -170,12 +170,11 @@ type TagSvgClipPath struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgClipPath) Init(id string) (ref *TagSvgClipPath) {
+func (e *TagSvgClipPath) Init() (ref *TagSvgClipPath) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

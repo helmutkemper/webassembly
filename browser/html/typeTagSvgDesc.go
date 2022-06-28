@@ -179,12 +179,11 @@ type TagSvgDesc struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgDesc) Init(id string) (ref *TagSvgDesc) {
+func (e *TagSvgDesc) Init() (ref *TagSvgDesc) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

@@ -106,9 +106,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Nele, cada novo valor é exatamente 1 vez seu valor antigo, sem mais nada adicionado. Recomenda-se começar a
 // manipular a matriz a partir daqui.
-func NewTagSvgFeColorMatrix(id string) (ref *html.TagSvgFeColorMatrix) {
+func NewTagSvgFeColorMatrix() (ref *html.TagSvgFeColorMatrix) {
 	ref = &html.TagSvgFeColorMatrix{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

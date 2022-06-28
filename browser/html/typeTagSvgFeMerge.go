@@ -167,12 +167,11 @@ type TagSvgFeMerge struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeMerge) Init(id string) (ref *TagSvgFeMerge) {
+func (e *TagSvgFeMerge) Init() (ref *TagSvgFeMerge) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

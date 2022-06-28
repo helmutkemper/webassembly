@@ -19,9 +19,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // Para formas fechadas veja o elemento <polygon>.
 //
 // Para formas abertas, consulte o elemento <polyline>.
-func NewTagSvgPolyline(id string) (ref *html.TagSvgPolyline) {
+func NewTagSvgPolyline() (ref *html.TagSvgPolyline) {
 	ref = &html.TagSvgPolyline{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

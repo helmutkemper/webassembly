@@ -176,12 +176,11 @@ type TagSvgRadialGradient struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgRadialGradient) Init(id string) (ref *TagSvgRadialGradient) {
+func (e *TagSvgRadialGradient) Init() (ref *TagSvgRadialGradient) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

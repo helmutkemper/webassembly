@@ -167,12 +167,11 @@ type TagSvgFilter struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFilter) Init(id string) (ref *TagSvgFilter) {
+func (e *TagSvgFilter) Init() (ref *TagSvgFilter) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

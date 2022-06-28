@@ -20,9 +20,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //   Notas:
 //     * Para reutilizar um caminho existente, será necessário usar um elemento <mpath> dentro do elemento
 //       <animateMotion> ao invés do atributo path.
-func NewTagSvgAnimateMotion(id string) (ref *html.TagSvgAnimateMotion) {
+func NewTagSvgAnimateMotion() (ref *html.TagSvgAnimateMotion) {
 	ref = &html.TagSvgAnimateMotion{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

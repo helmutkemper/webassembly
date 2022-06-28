@@ -166,12 +166,11 @@ type TagSvgFeFlood struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeFlood) Init(id string) (ref *TagSvgFeFlood) {
+func (e *TagSvgFeFlood) Init() (ref *TagSvgFeFlood) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

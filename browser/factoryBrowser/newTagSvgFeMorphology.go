@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // A primitiva de filtro SVG <feMorphology> é usada para corroer ou dilatar a imagem de entrada. Sua utilidade reside
 // especialmente nos efeitos de engorda ou desbaste.
-func NewTagSvgFeMorphology(id string) (ref *html.TagSvgFeMorphology) {
+func NewTagSvgFeMorphology() (ref *html.TagSvgFeMorphology) {
 	ref = &html.TagSvgFeMorphology{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

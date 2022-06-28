@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // O elemento SVG <stop> define uma cor e sua posição para usar em um gradiente. Este elemento é sempre um filho de um
 // elemento <linearGradient> ou <radialGradient>.
-func NewTagSvgStop(id string) (ref *html.TagSvgStop) {
+func NewTagSvgStop() (ref *html.TagSvgStop) {
 	ref = &html.TagSvgStop{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

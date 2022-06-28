@@ -21,9 +21,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //     * Embora o elemento script do SVG seja equivalente ao elemento HTML <script>, ele tem algumas discrepâncias, como
 //       usar o atributo href em vez de src e não suportar módulos ECMAScript até agora (consulte a compatibilidade do
 //       navegador abaixo para obter detalhes)
-func NewTagSvgScript(id string) (ref *html.TagSvgScript) {
+func NewTagSvgScript() (ref *html.TagSvgScript) {
 	ref = &html.TagSvgScript{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

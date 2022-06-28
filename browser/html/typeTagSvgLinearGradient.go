@@ -176,12 +176,11 @@ type TagSvgLinearGradient struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgLinearGradient) Init(id string) (ref *TagSvgLinearGradient) {
+func (e *TagSvgLinearGradient) Init() (ref *TagSvgLinearGradient) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

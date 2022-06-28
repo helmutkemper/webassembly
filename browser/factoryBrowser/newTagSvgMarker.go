@@ -18,9 +18,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Os marcadores são anexados às formas usando as propriedades de início do marcador, meio do marcador e final do
 // marcador.
-func NewTagSvgMarker(id string) (ref *html.TagSvgMarker) {
+func NewTagSvgMarker() (ref *html.TagSvgMarker) {
 	ref = &html.TagSvgMarker{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

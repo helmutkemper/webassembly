@@ -23,9 +23,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Graphical objects can be referenced from anywhere, however, defining these objects inside of a <defs> element
 // promotes understandability of the SVG content and is beneficial to the overall accessibility of the document.
-func NewTagSvgDefs(id string) (ref *html.TagSvgDefs) {
+func NewTagSvgDefs() (ref *html.TagSvgDefs) {
 	ref = &html.TagSvgDefs{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

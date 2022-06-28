@@ -172,12 +172,11 @@ type TagSvgPolyline struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgPolyline) Init(id string) (ref *TagSvgPolyline) {
+func (e *TagSvgPolyline) Init() (ref *TagSvgPolyline) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

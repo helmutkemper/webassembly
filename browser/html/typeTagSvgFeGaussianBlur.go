@@ -166,12 +166,11 @@ type TagSvgFeGaussianBlur struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeGaussianBlur) Init(id string) (ref *TagSvgFeGaussianBlur) {
+func (e *TagSvgFeGaussianBlur) Init() (ref *TagSvgFeGaussianBlur) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

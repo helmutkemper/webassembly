@@ -34,9 +34,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //   Notes:
 //     * The HTML spec defines <image> as a synonym for <img> while parsing HTML. This specific element and its
 //       behavior only apply inside SVG documents or inline SVG.
-func NewTagSvgImage(id string) (ref *html.TagSvgImage) {
+func NewTagSvgImage() (ref *html.TagSvgImage) {
 	ref = &html.TagSvgImage{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

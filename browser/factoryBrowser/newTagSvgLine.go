@@ -11,9 +11,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // Português:
 //
 // O elemento <line> é uma forma básica SVG usada para criar uma linha conectando dois pontos.
-func NewTagSvgLine(id string) (ref *html.TagSvgLine) {
+func NewTagSvgLine() (ref *html.TagSvgLine) {
 	ref = &html.TagSvgLine{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

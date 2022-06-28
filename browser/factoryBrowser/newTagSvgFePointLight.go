@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // A primitiva de filtro <fePointLight> define uma fonte de luz que permite criar um efeito de luz pontual.
 // Ele que pode ser usado dentro de uma primitiva de filtro de iluminação: <feDiffuseLighting> ou <feSpecularLighting>.
-func NewTagSvgFePointLight(id string) (ref *html.TagSvgFePointLight) {
+func NewTagSvgFePointLight() (ref *html.TagSvgFePointLight) {
 	ref = &html.TagSvgFePointLight{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

@@ -28,9 +28,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //     * Como esse elemento compartilha seu nome de tag com o elemento <a> do HTML, selecionar a com CSS ou
 //       querySelector pode se aplicar ao tipo errado de elemento. Experimente a regra @namespace para distinguir os
 //       dois.
-func NewTagSvgA(id string) (ref *html.TagSvgA) {
+func NewTagSvgA() (ref *html.TagSvgA) {
 	ref = &html.TagSvgA{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

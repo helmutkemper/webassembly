@@ -181,12 +181,11 @@ type TagSvgSwitch struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgSwitch) Init(id string) (ref *TagSvgSwitch) {
+func (e *TagSvgSwitch) Init() (ref *TagSvgSwitch) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

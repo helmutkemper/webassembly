@@ -17,9 +17,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // O último ponto está conectado ao primeiro ponto.
 //
 // Para formas abertas, consulte o elemento <polyline>.
-func NewTagSvgPolygon(id string) (ref *html.TagSvgPolygon) {
+func NewTagSvgPolygon() (ref *html.TagSvgPolygon) {
 	ref = &html.TagSvgPolygon{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

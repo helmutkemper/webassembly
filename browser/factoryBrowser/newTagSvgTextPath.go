@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Para renderizar o texto ao longo da forma de um <path>, coloque o texto em um elemento <textPath> que tenha um
 // atributo href com uma referência ao elemento <path>.
-func NewTagSvgTextPath(id string) (ref *html.TagSvgTextPath) {
+func NewTagSvgTextPath() (ref *html.TagSvgTextPath) {
 	ref = &html.TagSvgTextPath{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

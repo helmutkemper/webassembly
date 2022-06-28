@@ -11,9 +11,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // Português:
 //
 // O feMergeNode recebe o resultado de outro filtro para ser processado por seu pai <feMerge>.
-func NewTagSvgFeMergeNode(id string) (ref *html.TagSvgFeMergeNode) {
+func NewTagSvgFeMergeNode() (ref *html.TagSvgFeMergeNode) {
 	ref = &html.TagSvgFeMergeNode{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

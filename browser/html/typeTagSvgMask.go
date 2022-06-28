@@ -166,12 +166,11 @@ type TagSvgMask struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgMask) Init(id string) (ref *TagSvgMask) {
+func (e *TagSvgMask) Init() (ref *TagSvgMask) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

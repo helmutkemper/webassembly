@@ -30,9 +30,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // Tal mapa deve ser combinado com uma textura usando o termo add do método aritmético <feComposite>.
 // Várias fontes de luz podem ser simuladas adicionando vários desses mapas de luz antes de aplicá-los à imagem de
 // textura.
-func NewTagSvgFeSpecularLighting(id string) (ref *html.TagSvgFeSpecularLighting) {
+func NewTagSvgFeSpecularLighting() (ref *html.TagSvgFeSpecularLighting) {
 	ref = &html.TagSvgFeSpecularLighting{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

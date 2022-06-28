@@ -167,12 +167,11 @@ type TagSvgFeTurbulence struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeTurbulence) Init(id string) (ref *TagSvgFeTurbulence) {
+func (e *TagSvgFeTurbulence) Init() (ref *TagSvgFeTurbulence) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

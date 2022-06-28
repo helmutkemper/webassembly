@@ -1512,13 +1512,12 @@ func (e *TagDiv) Mouse(value mouse.CursorType) (ref *TagDiv) {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagDiv) Init(id string) (ref *TagDiv) {
+func (e *TagDiv) Init() (ref *TagDiv) {
 	e.listener = new(sync.Map)
 	e.tween = make(map[string]interfaces.TweenInterface)
 
 	e.CreateElement(KTagDiv)
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

@@ -173,12 +173,11 @@ type TagSvgDiscard struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgDiscard) Init(id string) (ref *TagSvgDiscard) {
+func (e *TagSvgDiscard) Init() (ref *TagSvgDiscard) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

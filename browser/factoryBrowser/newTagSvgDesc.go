@@ -26,9 +26,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // O texto oculto de um elemento <desc> também pode ser concatenado com o texto visível de outros elementos usando
 // vários IDs em um valor descrito por aria. Nesse caso, o elemento <desc> deve fornecer um ID para referência.
-func NewTagSvgDesc(id string) (ref *html.TagSvgDesc) {
+func NewTagSvgDesc() (ref *html.TagSvgDesc) {
 	ref = &html.TagSvgDesc{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

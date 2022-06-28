@@ -22,9 +22,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //   Notas:
 //     * O atributo xmlns só é necessário no elemento svg mais externo dos documentos SVG. É desnecessário para
 //       elementos svg internos ou dentro de documentos HTML.
-func NewTagSvg(id string) (ref *html.TagSvg) {
+func NewTagSvg() (ref *html.TagSvg) {
 	ref = &html.TagSvg{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

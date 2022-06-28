@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // A primitiva de filtro SVG <feFuncR> define a função de transferência para o componente vermelho do gráfico de
 // entrada de seu elemento pai <feComponentTransfer>.
-func NewTagSvgFeFuncR(id string) (ref *html.TagSvgFeFuncR) {
+func NewTagSvgFeFuncR() (ref *html.TagSvgFeFuncR) {
 	ref = &html.TagSvgFeFuncR{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

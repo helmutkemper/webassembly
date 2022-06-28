@@ -174,12 +174,11 @@ type TagSvgFeDropShadow struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeDropShadow) Init(id string) (ref *TagSvgFeDropShadow) {
+func (e *TagSvgFeDropShadow) Init() (ref *TagSvgFeDropShadow) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

@@ -45,7 +45,7 @@ type TagCanvas struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (el *TagCanvas) Init(id string) (ref *TagCanvas) {
+func (el *TagCanvas) Init() (ref *TagCanvas) {
 	//e.listener = new(sync.Map)
 
 	//e.CreateElement(KTagDiv)

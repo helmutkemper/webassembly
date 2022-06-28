@@ -180,12 +180,11 @@ type TagSvgFeDisplacementMap struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeDisplacementMap) Init(id string) (ref *TagSvgFeDisplacementMap) {
+func (e *TagSvgFeDisplacementMap) Init() (ref *TagSvgFeDisplacementMap) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

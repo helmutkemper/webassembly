@@ -172,12 +172,11 @@ type TagSvgMarker struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgMarker) Init(id string) (ref *TagSvgMarker) {
+func (e *TagSvgMarker) Init() (ref *TagSvgMarker) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

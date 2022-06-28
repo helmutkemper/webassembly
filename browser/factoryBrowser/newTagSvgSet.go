@@ -26,9 +26,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //   Notas:
 //     * O elemento <set> não é aditivo. Os atributos aditivo e acumular não são permitidos e serão ignorados se
 //       especificados.
-func NewTagSvgSet(id string) (ref *html.TagSvgSet) {
+func NewTagSvgSet() (ref *html.TagSvgSet) {
 	ref = &html.TagSvgSet{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

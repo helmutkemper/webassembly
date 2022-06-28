@@ -166,12 +166,11 @@ type TagSvgFeOffset struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeOffset) Init(id string) (ref *TagSvgFeOffset) {
+func (e *TagSvgFeOffset) Init() (ref *TagSvgFeOffset) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

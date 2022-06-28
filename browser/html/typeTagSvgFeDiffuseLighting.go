@@ -176,12 +176,11 @@ type TagSvgFeDiffuseLighting struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFeDiffuseLighting) Init(id string) (ref *TagSvgFeDiffuseLighting) {
+func (e *TagSvgFeDiffuseLighting) Init() (ref *TagSvgFeDiffuseLighting) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

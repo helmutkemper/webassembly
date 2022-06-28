@@ -13,9 +13,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // A primitiva de filtro SVG <feImage> busca dados de imagem de uma fonte externa e fornece os dados de pixel como saída
 // (ou seja, se a fonte externa for uma imagem SVG, ela será rasterizada).
-func NewTagSvgFeImage(id string) (ref *html.TagSvgFeImage) {
+func NewTagSvgFeImage() (ref *html.TagSvgFeImage) {
 	ref = &html.TagSvgFeImage{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

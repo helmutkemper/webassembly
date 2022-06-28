@@ -188,12 +188,11 @@ type TagSvgImage struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgImage) Init(id string) (ref *TagSvgImage) {
+func (e *TagSvgImage) Init() (ref *TagSvgImage) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }
@@ -209,7 +208,7 @@ func (e *TagSvgImage) CreateElement() (ref *TagSvgImage) {
 		return
 	}
 
-	e.selfElement.Call("setAttribute", "xmlns", "http://www.w3.org/2000/svg")
+	//e.selfElement.Call("setAttribute", "xmlns", "http://www.w3.org/2000/svg")
 
 	return e
 }

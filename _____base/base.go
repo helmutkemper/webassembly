@@ -1358,12 +1358,11 @@ func (e *TagBaseGlobal) Mouse(value mouse.CursorType) (ref *TagBaseGlobal) {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagBaseGlobal) Init(id string) (ref *TagBaseGlobal) {
+func (e *TagBaseGlobal) Init() (ref *TagBaseGlobal) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement(KTagDiv)
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

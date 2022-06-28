@@ -99,9 +99,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //    6*100 + 5*120 + 4*140 +
 //    3*200 + 2*220 + 1*240) /
 //   (9+8+7+6+5+4+3+2+1)
-func NewTagSvgFeConvolveMatrix(id string) (ref *html.TagSvgFeConvolveMatrix) {
+func NewTagSvgFeConvolveMatrix() (ref *html.TagSvgFeConvolveMatrix) {
 	ref = &html.TagSvgFeConvolveMatrix{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

@@ -165,12 +165,11 @@ type TagSvgFePointLight struct {
 // Português:
 //
 //  Inicializa o objeto corretamente.
-func (e *TagSvgFePointLight) Init(id string) (ref *TagSvgFePointLight) {
+func (e *TagSvgFePointLight) Init() (ref *TagSvgFePointLight) {
 	e.listener = new(sync.Map)
 
 	e.CreateElement()
 	e.prepareStageReference()
-	e.Id(id)
 
 	return e
 }

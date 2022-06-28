@@ -19,9 +19,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //   Notas:
 //     * O elemento de estilo SVG tem os mesmos atributos que o elemento correspondente em HTML
 //       (definir elemento HTML <style>).
-func NewTagSvgStyle(id string) (ref *html.TagSvgStyle) {
+func NewTagSvgStyle() (ref *html.TagSvgStyle) {
 	ref = &html.TagSvgStyle{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

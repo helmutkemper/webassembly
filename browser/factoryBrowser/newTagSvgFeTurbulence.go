@@ -14,9 +14,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // A primitiva de filtro SVG <feTurbulence> cria uma imagem usando a função de turbulência Perlin. Permite a síntese
 // de texturas artificiais como nuvens ou mármore. A imagem resultante preencherá toda a sub-região primitiva do filtro.
-func NewTagSvgFeTurbulence(id string) (ref *html.TagSvgFeTurbulence) {
+func NewTagSvgFeTurbulence() (ref *html.TagSvgFeTurbulence) {
 	ref = &html.TagSvgFeTurbulence{}
-	ref.Init(id)
+	ref.Init()
 
 	return ref
 }

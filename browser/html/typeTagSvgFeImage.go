@@ -2543,6 +2543,65 @@ func (e *TagSvgFeImage) PreserveAspectRatio(ratio, meet interface{}) (ref *TagSv
 	return e
 }
 
+// HRef
+//
+// English:
+//
+//  The href attribute defines a link to a resource as a reference URL. The exact meaning of that link depends on the
+//  context of each element using it.
+//
+//   Notes:
+//     * Specifications before SVG 2 defined an xlink:href attribute, which is now rendered obsolete by the href
+//       attribute.
+//       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
+//       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
+//
+// Português:
+//
+//  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
+//  contexto de cada elemento que o utiliza.
+//
+//   Notas:
+//     * As especificações anteriores ao SVG 2 definiam um atributo xlink:href, que agora se torna obsoleto pelo
+//       atributo href.
+//       Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
+//       usado como um substituto além do atributo href, por exemplo,
+//       <use href="some-id" xlink:href="some-id x="5" y="5" />.
+func (e *TagSvgFeImage) HRef(href string) (ref *TagSvgFeImage) {
+	e.selfElement.Call("setAttribute", "href", href)
+	return e
+}
+
+// XLinkHRef
+//
+// English:
+//
+// Deprecated: use HRef() function
+//
+// The xlink:href attribute defines a reference to a resource as a reference IRI. The exact meaning of that link depends
+// on the context of each element using it.
+//
+//   Notes:
+//     * SVG 2 removed the need for the xlink namespace, so instead of xlink:href you should use href. If you need to
+//       support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback in addition to
+//       the href attribute, e.g. <use href="some-id" xlink:href="some-id" x="5" y="5" />.
+//
+// Português:
+//
+// Obsoleto: use a função HRef()
+//
+// O atributo xlink:href define uma referência a um recurso como um IRI de referência. O significado exato desse link
+// depende do contexto de cada elemento que o utiliza.
+//
+//   Notas:
+//     * O SVG 2 removeu a necessidade do namespace xlink, então ao invés de xlink:href você deve usar href. Se você
+//       precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser usado como
+//       um substituto além do atributo href, por exemplo, <use href="some-id" xlink:href="some-id" x="5" y="5" >.
+func (e *TagSvgFeImage) XLinkHRef(value interface{}) (ref *TagSvgFeImage) {
+	e.selfElement.Call("setAttribute", "xlink:href", value)
+	return e
+}
+
 // Text
 //
 // English:

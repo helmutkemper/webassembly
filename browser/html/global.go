@@ -1964,6 +1964,12 @@ func (e *TagSvgGlobal) Fy(fy float64) (ref *TagSvgGlobal) {
 //
 //  The gradientTransform attribute contains the definition of an optional additional transformation from the gradient
 //  coordinate system onto the target coordinate system (i.e., userSpaceOnUse or objectBoundingBox).
+//
+//   Input:
+//     value: definition of an optional additional transformation from the gradient coordinate system
+//       Object: &html.TransformFunctions{}
+//       any other type: interface{}
+//
 //  This allows for things such as skewing the gradient. This additional transformation matrix is post-multiplied to
 //  (i.e., inserted to the right of) any previously defined transformations, including the implicit transformation
 //  necessary to convert from object bounding box units to user space.
@@ -1972,11 +1978,27 @@ func (e *TagSvgGlobal) Fy(fy float64) (ref *TagSvgGlobal) {
 //
 //  O atributo gradientTransform contém a definição de uma transformação adicional opcional do sistema de coordenadas
 //  de gradiente para o sistema de coordenadas de destino (ou seja, userSpaceOnUse ou objectBoundingBox).
+//
+//   Entrada:
+//     value: definição de uma transformação adicional opcional do sistema de coordenadas de gradiente
+//       Object: &html.TransformFunctions{}
+//       qualquer outro tipo: interface{}
+//
 //  Isso permite coisas como distorcer o gradiente. Essa matriz de transformação adicional é pós-multiplicada para
 //  (ou seja, inserida à direita de) quaisquer transformações definidas anteriormente, incluindo a transformação
 //  implícita necessária para converter de unidades de caixa delimitadora de objeto para espaço do usuário.
-func (e *TagSvgGlobal) GradientTransform(gradientTransform interface{}) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "gradientTransform", gradientTransform)
+func (e *TagSvgGlobal) GradientTransform(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(*TransformFunctions); ok {
+		e.selfElement.Call("setAttribute", "gradientTransform", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(TransformFunctions); ok {
+		e.selfElement.Call("setAttribute", "gradientTransform", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "gradientTransform", value)
 	return e
 }
 
@@ -1986,12 +2008,27 @@ func (e *TagSvgGlobal) GradientTransform(gradientTransform interface{}) (ref *Ta
 //
 //  The gradientUnits attribute defines the coordinate system used for attributes specified on the gradient elements.
 //
+//   Input:
+//     value: defines the coordinate system
+//       const: KSvgGradientUnits... (e.g. KSvgGradientUnitsUserSpaceOnUse)
+//       any other type: interface{}
+//
 // Portuguese
 //
 //  O atributo gradientUnits define o sistema de coordenadas usado para atributos especificados nos elementos
 //  gradientes.
-func (e *TagSvgGlobal) GradientUnits(gradientUnits SvgGradientUnits) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "gradientUnits", gradientUnits)
+//
+//   Entrada:
+//     value: define o sistema de coordenadas
+//       const: KSvgGradientUnits... (ex. KSvgGradientUnitsUserSpaceOnUse)
+//       any other type: interface{}
+func (e *TagSvgGlobal) GradientUnits(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgGradientUnits); ok {
+		e.selfElement.Call("setAttribute", "gradientUnits", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "gradientUnits", value)
 	return e
 }
 

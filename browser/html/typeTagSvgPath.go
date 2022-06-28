@@ -187,7 +187,7 @@ func (e *TagSvgPath) CreateElement() (ref *TagSvgPath) {
 		return
 	}
 
-	e.selfElement.Call("setAttribute", "xmlns", "http://www.w3.org/2000/svg")
+	//e.selfElement.Call("setAttribute", "xmlns", "http://www.w3.org/2000/svg")
 
 	return e
 }

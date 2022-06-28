@@ -126,12 +126,13 @@ type TransformFunctions struct {
 //       -->
 //       <rect x="10" y="10" width="30" height="20" fill="red" transform="matrix(3 1 -1 3 30 40)" />
 //     </svg>
-func (el *TransformFunctions) Matrix(a, b, c, d, e, f float64) {
+func (el *TransformFunctions) Matrix(a, b, c, d, e, f float64) (ref *TransformFunctions) {
 	if el.data == nil {
 		el.data = make([]string, 0)
 	}
 
 	el.data = append(el.data, fmt.Sprintf("matrix(%v %v %v %v %v %v)", a, b, c, d, e, f))
+	return el
 }
 
 // Translate
@@ -153,12 +154,13 @@ func (el *TransformFunctions) Matrix(a, b, c, d, e, f float64) {
 //
 //   xnew = xold + <x>
 //   ynew = yold + <y>
-func (el *TransformFunctions) Translate(x, y float64) {
+func (el *TransformFunctions) Translate(x, y float64) (ref *TransformFunctions) {
 	if el.data == nil {
 		el.data = make([]string, 0)
 	}
 
 	el.data = append(el.data, fmt.Sprintf("translate(%v %v)", x, y))
+	return el
 }
 
 // Scale
@@ -172,12 +174,13 @@ func (el *TransformFunctions) Translate(x, y float64) {
 //
 // A função de transformação scale(<x> [<y>]) especifica uma operação de escala por x e y. Se y não for fornecido,
 // assume-se que é igual a x.
-func (el *TransformFunctions) Scale(x, y float64) {
+func (el *TransformFunctions) Scale(x, y float64) (ref *TransformFunctions) {
 	if el.data == nil {
 		el.data = make([]string, 0)
 	}
 
 	el.data = append(el.data, fmt.Sprintf("scale(%v %v)", x, y))
+	return el
 }
 
 // RotateAngle
@@ -193,12 +196,13 @@ func (el *TransformFunctions) Scale(x, y float64) {
 // A função de transformação rotate(<a>) especifica uma rotação de um grau em torno de um determinado ponto.
 //
 // A rotação é sobre a origem do sistema de coordenadas do usuário atual.
-func (el *TransformFunctions) RotateAngle(a float64) {
+func (el *TransformFunctions) RotateAngle(a float64) (ref *TransformFunctions) {
 	if el.data == nil {
 		el.data = make([]string, 0)
 	}
 
 	el.data = append(el.data, fmt.Sprintf("rotate(%v)", a))
+	return el
 }
 
 // RotateAngleXCoord
@@ -214,12 +218,13 @@ func (el *TransformFunctions) RotateAngle(a float64) {
 // A função de transformação rotate(<a>) especifica uma rotação de um grau em torno de um determinado ponto.
 //
 // A rotação é sobre o x fornecido e a origem do ponto atual y.
-func (el *TransformFunctions) RotateAngleXCoord(a, x float64) {
+func (el *TransformFunctions) RotateAngleXCoord(a, x float64) (ref *TransformFunctions) {
 	if el.data == nil {
 		el.data = make([]string, 0)
 	}
 
 	el.data = append(el.data, fmt.Sprintf("rotate(%v,%v)", a, x))
+	return el
 }
 
 // Rotate
@@ -235,12 +240,13 @@ func (el *TransformFunctions) RotateAngleXCoord(a, x float64) {
 // A função de transformação rotate(<a>) especifica uma rotação de um grau em torno de um determinado ponto.
 //
 // A rotação é em torno do ponto (x, y).
-func (el *TransformFunctions) Rotate(a, x, y float64) {
+func (el *TransformFunctions) Rotate(a, x, y float64) (ref *TransformFunctions) {
 	if el.data == nil {
 		el.data = make([]string, 0)
 	}
 
 	el.data = append(el.data, fmt.Sprintf("rotate(%v,%v,%v)", a, x, y))
+	return el
 }
 
 // SkewX
@@ -252,12 +258,13 @@ func (el *TransformFunctions) Rotate(a, x, y float64) {
 // Português:
 //
 // A função de transformação skewX(<a>) especifica uma transformação de inclinação ao longo do eixo x em um grau.
-func (el *TransformFunctions) SkewX(a float64) {
+func (el *TransformFunctions) SkewX(a float64) (ref *TransformFunctions) {
 	if el.data == nil {
 		el.data = make([]string, 0)
 	}
 
 	el.data = append(el.data, fmt.Sprintf("skewX(%v)", a))
+	return el
 }
 
 // SkewY
@@ -269,12 +276,13 @@ func (el *TransformFunctions) SkewX(a float64) {
 // Português:
 //
 // A função de transformação skewY(<a>) especifica uma transformação de inclinação ao longo do eixo y em um grau.
-func (el *TransformFunctions) SkewY(a float64) {
+func (el *TransformFunctions) SkewY(a float64) (ref *TransformFunctions) {
 	if el.data == nil {
 		el.data = make([]string, 0)
 	}
 
 	el.data = append(el.data, fmt.Sprintf("skewY(%v)", a))
+	return el
 }
 
 func (el TransformFunctions) String() string {

@@ -2321,12 +2321,27 @@ func (e *TagSvgLinearGradient) Style(value string) (ref *TagSvgLinearGradient) {
 //
 //  The gradientUnits attribute defines the coordinate system used for attributes specified on the gradient elements.
 //
+//   Input:
+//     value: defines the coordinate system
+//       const: KSvgGradientUnits... (e.g. KSvgGradientUnitsUserSpaceOnUse)
+//       any other type: interface{}
+//
 // Portuguese
 //
 //  O atributo gradientUnits define o sistema de coordenadas usado para atributos especificados nos elementos
 //  gradientes.
-func (e *TagSvgLinearGradient) GradientUnits(gradientUnits SvgGradientUnits) (ref *TagSvgLinearGradient) {
-	e.selfElement.Call("setAttribute", "gradientUnits", gradientUnits)
+//
+//   Entrada:
+//     value: define o sistema de coordenadas
+//       const: KSvgGradientUnits... (ex. KSvgGradientUnitsUserSpaceOnUse)
+//       any other type: interface{}
+func (e *TagSvgLinearGradient) GradientUnits(value interface{}) (ref *TagSvgLinearGradient) {
+	if converted, ok := value.(SvgGradientUnits); ok {
+		e.selfElement.Call("setAttribute", "gradientUnits", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "gradientUnits", value)
 	return e
 }
 
@@ -2336,6 +2351,12 @@ func (e *TagSvgLinearGradient) GradientUnits(gradientUnits SvgGradientUnits) (re
 //
 //  The gradientTransform attribute contains the definition of an optional additional transformation from the gradient
 //  coordinate system onto the target coordinate system (i.e., userSpaceOnUse or objectBoundingBox).
+//
+//   Input:
+//     value: definition of an optional additional transformation from the gradient coordinate system
+//       Object: &html.TransformFunctions{}
+//       any other type: interface{}
+//
 //  This allows for things such as skewing the gradient. This additional transformation matrix is post-multiplied to
 //  (i.e., inserted to the right of) any previously defined transformations, including the implicit transformation
 //  necessary to convert from object bounding box units to user space.
@@ -2344,11 +2365,27 @@ func (e *TagSvgLinearGradient) GradientUnits(gradientUnits SvgGradientUnits) (re
 //
 //  O atributo gradientTransform contém a definição de uma transformação adicional opcional do sistema de coordenadas
 //  de gradiente para o sistema de coordenadas de destino (ou seja, userSpaceOnUse ou objectBoundingBox).
+//
+//   Entrada:
+//     value: definição de uma transformação adicional opcional do sistema de coordenadas de gradiente
+//       Object: &html.TransformFunctions{}
+//       qualquer outro tipo: interface{}
+//
 //  Isso permite coisas como distorcer o gradiente. Essa matriz de transformação adicional é pós-multiplicada para
 //  (ou seja, inserida à direita de) quaisquer transformações definidas anteriormente, incluindo a transformação
 //  implícita necessária para converter de unidades de caixa delimitadora de objeto para espaço do usuário.
-func (e *TagSvgLinearGradient) GradientTransform(gradientTransform interface{}) (ref *TagSvgLinearGradient) {
-	e.selfElement.Call("setAttribute", "gradientTransform", gradientTransform)
+func (e *TagSvgLinearGradient) GradientTransform(value interface{}) (ref *TagSvgLinearGradient) {
+	if converted, ok := value.(*TransformFunctions); ok {
+		e.selfElement.Call("setAttribute", "gradientTransform", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(TransformFunctions); ok {
+		e.selfElement.Call("setAttribute", "gradientTransform", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "gradientTransform", value)
 	return e
 }
 
@@ -2547,6 +2584,36 @@ func (e *TagSvgLinearGradient) Y2(value interface{}) (ref *TagSvgLinearGradient)
 	}
 
 	e.selfElement.Call("setAttribute", "y2", value)
+	return e
+}
+
+// XLinkHRef
+//
+// English:
+//
+// Deprecated: use HRef() function
+//
+// The xlink:href attribute defines a reference to a resource as a reference IRI. The exact meaning of that link depends
+// on the context of each element using it.
+//
+//   Notes:
+//     * SVG 2 removed the need for the xlink namespace, so instead of xlink:href you should use href. If you need to
+//       support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback in addition to
+//       the href attribute, e.g. <use href="some-id" xlink:href="some-id" x="5" y="5" />.
+//
+// Português:
+//
+// Obsoleto: use a função HRef()
+//
+// O atributo xlink:href define uma referência a um recurso como um IRI de referência. O significado exato desse link
+// depende do contexto de cada elemento que o utiliza.
+//
+//   Notas:
+//     * O SVG 2 removeu a necessidade do namespace xlink, então ao invés de xlink:href você deve usar href. Se você
+//       precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser usado como
+//       um substituto além do atributo href, por exemplo, <use href="some-id" xlink:href="some-id" x="5" y="5" >.
+func (e *TagSvgLinearGradient) XLinkHRef(value interface{}) (ref *TagSvgLinearGradient) {
+	e.selfElement.Call("setAttribute", "xlink:href", value)
 	return e
 }
 

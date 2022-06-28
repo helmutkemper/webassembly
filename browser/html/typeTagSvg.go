@@ -2572,6 +2572,11 @@ func (e *TagSvg) Y(value interface{}) (ref *TagSvg) {
 	return e
 }
 
+func (e *TagSvg) XmlnsXLink(value string) (ref *TagSvg) {
+	e.selfElement.Call("setAttribute", "xmlns:xlink", value)
+	return e
+}
+
 // Text
 //
 // English:

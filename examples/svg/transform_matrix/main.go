@@ -44,7 +44,6 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
 )
 
@@ -53,9 +52,6 @@ func main() {
 	done := make(chan struct{}, 0)
 
 	stage := factoryBrowser.NewStage()
-
-	tf := &html.TransformFunctions{}
-	tf.Matrix(3, 1, -1, 3, 30, 40)
 
 	s1 := factoryBrowser.NewTagSvg("svg1").
 		ViewBox([]float64{0, 0, 200, 200}).
@@ -98,7 +94,11 @@ func main() {
 				Width(30).
 				Height(20).
 				Fill(factoryColor.NewRed()).
-				Transform(tf),
+				Transform(
+
+					factoryBrowser.NewTransform().
+						Matrix(3, 1, -1, 3, 30, 40),
+				),
 		)
 
 	stage.Append(s1)

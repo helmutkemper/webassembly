@@ -51,7 +51,6 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
 )
 
@@ -60,14 +59,6 @@ func main() {
 	done := make(chan struct{}, 0)
 
 	stage := factoryBrowser.NewStage()
-
-	p1 := &html.SvgPath{}
-	p1.M(10, 30).
-		A(20, 20, 0, 0, 1, 50, 30).
-		A(20, 20, 0, 0, 1, 90, 30).
-		Q(90, 60, 50, 90).
-		Q(10, 60, 10, 30).
-		Z()
 
 	s1 := factoryBrowser.NewTagSvg("svg1").
 		ViewBox([]float64{0, 0, 100, 100}).
@@ -86,7 +77,16 @@ func main() {
 
 			// The original black heart, for reference
 			factoryBrowser.NewTagSvgPath("heart").
-				D(p1),
+				D(
+
+					factoryBrowser.NewPath().
+						M(10, 30).
+						A(20, 20, 0, 0, 1, 50, 30).
+						A(20, 20, 0, 0, 1, 90, 30).
+						Q(90, 60, 50, 90).
+						Q(10, 60, 10, 30).
+						Z(),
+				),
 
 			// Only the portion of the red heart
 			// inside the clip circle is visible.

@@ -25,7 +25,6 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
 )
 
@@ -35,20 +34,6 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	tf := &html.TransformFunctions{}
-	tf.Rotate(-10, 50, 100).
-		Translate(-36, 45.5).
-		SkewX(40).
-		Scale(1, 0.5)
-
-	p1 := &html.SvgPath{}
-	p1.M(10, 30).
-		A(20, 20, 0, 0, 1, 50, 30).
-		A(20, 20, 0, 0, 1, 90, 30).
-		Q(90, 60, 50, 90).
-		Q(10, 60, 10, 30).
-		Z()
-
 	s1 := factoryBrowser.NewTagSvg("svg1").
 		ViewBox([]float64{-40, 0, 150, 100}).
 		XmlnsXLink("http://www.w3.org/1999/xlink").
@@ -56,11 +41,26 @@ func main() {
 
 			factoryBrowser.NewTagSvgG("g1").
 				Fill(factoryColor.NewGray()).
-				Transform(tf).
+				Transform(
+
+					factoryBrowser.NewTransform().
+						Rotate(-10, 50, 100).
+						Translate(-36, 45.5).
+						SkewX(40).
+						Scale(1, 0.5),
+				).
 				Append(
 
 					factoryBrowser.NewTagSvgPath("heart").
-						D(p1),
+						D(
+
+							factoryBrowser.NewPath().M(10, 30).
+								A(20, 20, 0, 0, 1, 50, 30).
+								A(20, 20, 0, 0, 1, 90, 30).
+								Q(90, 60, 50, 90).
+								Q(10, 60, 10, 30).
+								Z(),
+						),
 				),
 
 			factoryBrowser.NewTagSvgUse("us1").

@@ -22,7 +22,7 @@ func main() {
 	factoryBrowser.NewTagSvg("svg").
 		Width(300).
 		Height(120).
-		ViewBox(0, 0, 300, 120).
+		ViewBox([]float64{0, 0, 300, 120}).
 		AppendToStage()
 
 	factoryBrowser.NewTagSvgFilter("convolveMatrix1").
@@ -63,15 +63,3 @@ func main() {
 
 	<-done
 }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//

@@ -4,10 +4,12 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
+	"image/color"
 	"log"
 	"strconv"
 	"sync"
 	"syscall/js"
+	"time"
 )
 
 // TagSvgFeFuncA
@@ -388,7 +390,14 @@ func (e *TagSvgFeFuncA) Type(value interface{}) (ref *TagSvgFeFuncA) {
 //
 //   Input:
 //     value: defines a list of numbers
-//       []float64: e.g. []float64{0.0, 1.0} = "0 1"
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0% 10%"
+//       []float64: []float64{0.0, 10.0} = "0 10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
+//       time.Duration: time.Second = "1s"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
 //       any other type: interface{}
 //
 // Português:
@@ -398,17 +407,82 @@ func (e *TagSvgFeFuncA) Type(value interface{}) (ref *TagSvgFeFuncA) {
 //
 //   Entrada:
 //     value: define uma lista de números
-//       []float64: ex. []float64{0.0, 1.0} = "0 1"
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0% 10%"
+//       []float64: []float64{0.0, 10.0} = "0 10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
+//       time.Duration: time.Second = "1s"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
 //       qualquer outro tipo: interface{}
 func (e *TagSvgFeFuncA) TableValues(value interface{}) (ref *TagSvgFeFuncA) {
-	if converted, ok := value.([]float64); ok {
-		tags := ""
+	if converted, ok := value.([]color.RGBA); ok {
+		var valueStr = ""
 		for _, v := range converted {
-			tags += strconv.FormatFloat(v, 'g', -1, 64) + " "
+			valueStr += RGBAToJs(v) + " "
 		}
-		length := len(tags) - 1
 
-		e.selfElement.Call("setAttribute", "tableValues", tags[:length])
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "tableValues", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "% "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "tableValues", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "tableValues", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]time.Duration); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += v.String() + " "
+		}
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "tableValues", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "tableValues", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "tableValues", p)
+		return e
+	}
+
+	if converted, ok := value.(float64); ok {
+		p := strconv.FormatFloat(converted, 'g', -1, 64)
+		e.selfElement.Call("setAttribute", "tableValues", p)
+		return e
+	}
+
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "tableValues", RGBAToJs(converted))
 		return e
 	}
 
@@ -440,8 +514,15 @@ func (e *TagSvgFeFuncA) Intercept(intercept float64) (ref *TagSvgFeFuncA) {
 //  attribute is gamma.
 //
 //   Input:
-//     amplitude: controls the amplitude of the gamma function
-//       float32: 1.0 = "100%"
+//     value: controls the amplitude of the gamma function
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0% 10%"
+//       []float64: []float64{0.0, 10.0} = "0 10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
+//       time.Duration: time.Second = "1s"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
 //       any other type: interface{}
 //
 // Português:
@@ -450,17 +531,87 @@ func (e *TagSvgFeFuncA) Intercept(intercept float64) (ref *TagSvgFeFuncA) {
 //  atributo de tipo é gama.
 //
 //   Entrada:
-//     amplitude: controla a amplitude da função de gama
-//       float32: 1.0 = "100%"
+//     value: controla a amplitude da função de gama
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0% 10%"
+//       []float64: []float64{0.0, 10.0} = "0 10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
+//       time.Duration: time.Second = "1s"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
 //       qualquer outro tipo: interface{}
-func (e *TagSvgFeFuncA) Amplitude(amplitude interface{}) (ref *TagSvgFeFuncA) {
-	if converted, ok := amplitude.(float32); ok {
+func (e *TagSvgFeFuncA) Amplitude(value interface{}) (ref *TagSvgFeFuncA) {
+	if converted, ok := value.([]color.RGBA); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += RGBAToJs(v) + " "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "amplitude", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "% "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "amplitude", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "amplitude", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]time.Duration); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += v.String() + " "
+		}
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "amplitude", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "amplitude", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "amplitude", p)
 		return e
 	}
 
-	e.selfElement.Call("setAttribute", "amplitude", amplitude)
+	if converted, ok := value.(float64); ok {
+		p := strconv.FormatFloat(converted, 'g', -1, 64)
+		e.selfElement.Call("setAttribute", "amplitude", p)
+		return e
+	}
+
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "amplitude", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "amplitude", value)
 	return e
 }
 
@@ -503,5 +654,56 @@ func (e *TagSvgFeFuncA) Text(value string) (ref *TagSvgFeFuncA) {
 // Adiciona HTML ao conteúdo da tag.
 func (e *TagSvgFeFuncA) Html(value string) (ref *TagSvgFeFuncA) {
 	e.selfElement.Set("innerHTML", value)
+	return e
+}
+
+// Slope
+//
+// English:
+//
+// Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already
+// been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for
+// compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the
+// bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.
+//
+// The slope attribute indicates the vertical stroke angle of a font.
+//
+// Português:
+//
+// Descontinuado: este recurso não é mais recomendado. Embora alguns navegadores ainda possam suportá-lo, ele pode já
+// ter sido removido dos padrões da Web relevantes, pode estar em processo de eliminação ou pode ser mantido apenas para
+// fins de compatibilidade. Evite usá-lo e atualize o código existente, se possível; consulte a tabela de
+// compatibilidade na parte inferior desta página para orientar sua decisão. Esteja ciente de que esse recurso pode
+// deixar de funcionar a qualquer momento.
+//
+// O atributo slope indica o ângulo de traço vertical de uma fonte.
+func (e *TagSvgFeFuncA) Slope(value interface{}) (ref *TagSvgFeFuncA) {
+	e.selfElement.Call("setAttribute", "slope", value)
+	return e
+}
+
+// Offset
+//
+// English:
+//
+// This attribute defines where the gradient stop is placed along the gradient vector.
+//
+// Português:
+//
+// Este atributo define onde a parada de gradiente é colocada ao longo do vetor de gradiente.
+func (e *TagSvgFeFuncA) Offset(value interface{}) (ref *TagSvgFeFuncA) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "offset", p)
+		return e
+	}
+
+	if converted, ok := value.(float64); ok {
+		p := strconv.FormatFloat(float64(converted), 'g', -1, 64)
+		e.selfElement.Call("setAttribute", "offset", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "offset", value)
 	return e
 }

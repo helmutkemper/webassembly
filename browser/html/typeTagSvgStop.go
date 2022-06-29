@@ -2306,7 +2306,13 @@ func (e *TagSvgStop) Style(value string) (ref *TagSvgStop) {
 
 // Offset
 //
-// No documentation found on the mozilla website
+// English:
+//
+// This attribute defines where the gradient stop is placed along the gradient vector.
+//
+// Português:
+//
+// Este atributo define onde a parada de gradiente é colocada ao longo do vetor de gradiente.
 func (e *TagSvgStop) Offset(value interface{}) (ref *TagSvgStop) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"

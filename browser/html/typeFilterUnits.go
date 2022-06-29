@@ -8,7 +8,7 @@ func (e SvgFilterUnits) String() string {
 
 const (
 
-	// KFilterUnitsUserSpaceOnUse
+	// KSvgFilterUnitsUserSpaceOnUse
 	//
 	// English:
 	//
@@ -21,9 +21,9 @@ const (
 	//  x, y, largura e altura representam valores no sistema de coordenadas atual que resulta da tomada do sistema de
 	//  coordenadas do usuário atual no momento em que o elemento <filter> é referenciado (ou seja, o sistema de
 	//  coordenadas do usuário para o elemento que faz referência ao <filter > elemento através de um atributo de filtro).
-	KFilterUnitsUserSpaceOnUse SvgFilterUnits = "userSpaceOnUse"
+	KSvgFilterUnitsUserSpaceOnUse SvgFilterUnits = "userSpaceOnUse"
 
-	// KFilterUnitsObjectBoundingBox
+	// KSvgFilterUnitsObjectBoundingBox
 	//
 	// English:
 	//
@@ -34,5 +34,5 @@ const (
 	//
 	//  Nesse caso, x, y, largura e altura representam frações ou porcentagens da caixa delimitadora no elemento de
 	//  referência.
-	KFilterUnitsObjectBoundingBox SvgFilterUnits = "objectBoundingBox"
+	KSvgFilterUnitsObjectBoundingBox SvgFilterUnits = "objectBoundingBox"
 )

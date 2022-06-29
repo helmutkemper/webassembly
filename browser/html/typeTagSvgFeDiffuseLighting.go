@@ -2614,3 +2614,109 @@ func (e *TagSvgFeDiffuseLighting) Html(value string) (ref *TagSvgFeDiffuseLighti
 	e.selfElement.Set("innerHTML", value)
 	return e
 }
+
+// LimitingConeAngle
+//
+// English:
+//
+// The limitingConeAngle attribute represents the angle in degrees between the spot light axis (i.e. the axis between
+// the light source and the point to which it is pointing at) and the spot light cone. So it defines a limiting cone
+// which restricts the region where the light is projected. No light is projected outside the cone.
+//
+//   Input:
+//     value: represents the angle in degrees between the spot light axis
+//
+// Português:
+//
+// O atributo limitConeAngle representa o ângulo em graus entre o eixo de luz spot (ou seja, o eixo entre a fonte de
+// luz e o ponto para o qual está apontando) e o cone de luz spot. Assim, define um cone limitador que restringe a
+// região onde a luz é projetada. Nenhuma luz é projetada fora do cone.
+//
+//   Input:
+//     value: representa o ângulo em graus entre o eixo da luz spot
+func (e *TagSvgFeDiffuseLighting) LimitingConeAngle(value float64) (ref *TagSvgFeDiffuseLighting) {
+	e.selfElement.Call("setAttribute", "limitingConeAngle", value)
+	return e
+}
+
+// PointsAtX
+//
+// English:
+//
+// The pointsAtX attribute represents the x location in the coordinate system established by attribute primitiveUnits
+// on the <filter> element of the point at which the light source is pointing.
+//
+// Português:
+//
+// O atributo pointsAtX representa a localização x no sistema de coordenadas estabelecido pelo atributo primitivaUnits
+// no elemento <filter> do ponto para o qual a fonte de luz está apontando.
+func (e *TagSvgFeDiffuseLighting) PointsAtX(value interface{}) (ref *TagSvgFeDiffuseLighting) {
+	e.selfElement.Call("setAttribute", "pointsAtX", value)
+	return e
+}
+
+// PointsAtY
+//
+// English:
+//
+// The pointsAtY attribute represents the y location in the coordinate system established by attribute primitiveUnits
+// on the <filter> element of the point at which the light source is pointing.
+//
+// Português:
+//
+// O atributo pointsAtY representa a localização y no sistema de coordenadas estabelecido pelo atributo primitivaUnits
+// no elemento <filter> do ponto para o qual a fonte de luz está apontando.
+func (e *TagSvgFeDiffuseLighting) PointsAtY(value interface{}) (ref *TagSvgFeDiffuseLighting) {
+	e.selfElement.Call("setAttribute", "pointsAtY", value)
+	return e
+}
+
+// PointsAtZ
+//
+// English:
+//
+// The pointsAtZ attribute represents the y location in the coordinate system established by attribute primitiveUnits
+// on the <filter> element of the point at which the light source is pointing, assuming that, in the initial local
+// coordinate system, the positive z-axis comes out towards the person viewing the content and assuming that one unit
+// along the z-axis equals one unit in x and y.
+//
+//   Input:
+//     value: represents the y location in the coordinate system
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo pointsAtZ representa a localização y no sistema de coordenadas estabelecido pelo atributo primitivaUnits
+// no elemento <filter> do ponto em que a fonte de luz está apontando, assumindo que, no sistema de coordenadas local
+// inicial, o eixo z positivo sai em direção a pessoa visualizando o conteúdo e assumindo que uma unidade ao longo do
+// eixo z é igual a uma unidade em x e y.
+//
+//   Input:
+//     value: representa a localização y no sistema de coordenadas
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFeDiffuseLighting) PointsAtZ(value interface{}) (ref *TagSvgFeDiffuseLighting) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "pointsAtZ", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "pointsAtZ", value)
+	return e
+}
+
+// SpecularExponent
+//
+// English:
+//
+// The specularExponent attribute controls the focus for the light source. The bigger the value the brighter the light.
+//
+// Português:
+//
+// O atributo specularExponent controla o foco da fonte de luz. Quanto maior o valor, mais brilhante é a luz.
+func (e *TagSvgFeDiffuseLighting) SpecularExponent(value float64) (ref *TagSvgFeDiffuseLighting) {
+	e.selfElement.Call("setAttribute", "specularExponent", value)
+	return e
+}

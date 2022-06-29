@@ -2616,3 +2616,32 @@ func (e *TagSvgFeTurbulence) Html(value string) (ref *TagSvgFeTurbulence) {
 	e.selfElement.Set("innerHTML", value)
 	return e
 }
+
+// Type
+//
+// English:
+//
+// Indicates whether the filter primitive should perform a noise or turbulence function.
+//
+//   Input:
+//     value: filter primitive
+//       KSvgTypeTurbulence... (e.g. KSvgTypeTurbulenceFractalNoise)
+//       any other type: interface{}
+//
+// Português:
+//
+// Indica se a primitiva do filtro deve executar uma função de ruído ou turbulência.
+//
+//   Input:
+//     value: primitiva do filtro
+//       KSvgTypeTurbulence... (ex. KSvgTypeTurbulenceFractalNoise)
+//       any other type: interface{}
+func (e *TagSvgFeTurbulence) Type(value interface{}) (ref *TagSvgFeTurbulence) {
+	if converted, ok := value.(SvgTypeTurbulence); ok { //fixme: fazer
+		e.selfElement.Call("setAttribute", "type", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "type", value)
+	return e
+}

@@ -76,23 +76,25 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{0, 0, 100, 100}).
 		Append(
 
-			factoryBrowser.NewTagSvgA("a1").HRef("/docs/Web/SVG/Element/circle").
+			factoryBrowser.NewTagSvgA().
+				HRef("/docs/Web/SVG/Element/circle").
 				Append(
 
-					factoryBrowser.NewTagSvgCircle("cir1").
+					factoryBrowser.NewTagSvgCircle().
 						Cx(50).
 						Cy(40).
 						R(35),
 				),
 
-			factoryBrowser.NewTagSvgA("a2").HRef("/docs/Web/SVG/Element/text").
+			factoryBrowser.NewTagSvgA().
+				HRef("/docs/Web/SVG/Element/text").
 				Append(
 
-					factoryBrowser.NewTagSvgText("txt1").
+					factoryBrowser.NewTagSvgText().
 						X(50).
 						Y(90).
 						TextAnchor(html.KSvgTextAnchorMiddle).

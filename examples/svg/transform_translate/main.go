@@ -39,19 +39,19 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{0, 0, 100, 100}).
 		Append(
 
 			// No translation
-			factoryBrowser.NewTagSvgRect("rec1").
+			factoryBrowser.NewTagSvgRect().
 				X(5).
 				Y(5).
 				Width(40).
 				Height(40).
 				Fill(factoryColor.NewGreen()),
 
-			factoryBrowser.NewTagSvgRect("rec2").
+			factoryBrowser.NewTagSvgRect().
 				X(5).
 				Y(5).
 				Width(40).
@@ -65,7 +65,7 @@ func main() {
 						Translate(50, 0),
 				),
 
-			factoryBrowser.NewTagSvgRect("rec3").
+			factoryBrowser.NewTagSvgRect().
 				X(5).
 				Y(5).
 				Width(40).
@@ -77,7 +77,7 @@ func main() {
 						Translate(0, 50),
 				),
 
-			factoryBrowser.NewTagSvgRect("rec4").
+			factoryBrowser.NewTagSvgRect().
 				X(5).
 				Y(5).
 				Width(40).

@@ -34,12 +34,12 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{-40, 0, 150, 100}).
 		XmlnsXLink("http://www.w3.org/1999/xlink").
 		Append(
 
-			factoryBrowser.NewTagSvgG("g1").
+			factoryBrowser.NewTagSvgG().
 				Fill(factoryColor.NewGray()).
 				Transform(
 
@@ -51,7 +51,8 @@ func main() {
 				).
 				Append(
 
-					factoryBrowser.NewTagSvgPath("heart").
+					factoryBrowser.NewTagSvgPath().
+						Id("heart").
 						D(
 
 							factoryBrowser.NewPath().M(10, 30).
@@ -63,7 +64,7 @@ func main() {
 						),
 				),
 
-			factoryBrowser.NewTagSvgUse("us1").
+			factoryBrowser.NewTagSvgUse().
 				HRef("#heart").
 				Fill("none").
 				Stroke(factoryColor.NewRed()),

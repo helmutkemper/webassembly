@@ -39,12 +39,12 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{-50, -50, 100, 100}).
 		Append(
 
 			// uniform scale
-			factoryBrowser.NewTagSvgCircle("cr1").
+			factoryBrowser.NewTagSvgCircle().
 				Cx(0).
 				Cy(0).
 				R(10).
@@ -56,7 +56,7 @@ func main() {
 				),
 
 			// vertical scale
-			factoryBrowser.NewTagSvgCircle("cr1").
+			factoryBrowser.NewTagSvgCircle().
 				Cx(0).
 				Cy(0).
 				R(10).
@@ -68,7 +68,7 @@ func main() {
 				),
 
 			// horizontal scale
-			factoryBrowser.NewTagSvgCircle("cr1").
+			factoryBrowser.NewTagSvgCircle().
 				Cx(0).
 				Cy(0).
 				R(10).
@@ -80,7 +80,7 @@ func main() {
 				),
 
 			// No scale
-			factoryBrowser.NewTagSvgCircle("cr1").
+			factoryBrowser.NewTagSvgCircle().
 				Cx(0).
 				Cy(0).
 				R(10).

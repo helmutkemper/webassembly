@@ -22,14 +22,6 @@
 //    <use href="#circles" />
 //    <text x="70" y="50">Reference</text>
 //
-//
-//
-//
-//
-//
-//
-//
-//
 //    <!-- identity matrix -->
 //    <filter id="colorMeTheSame">
 //      <feColorMatrix in="SourceGraphic"
@@ -41,13 +33,6 @@
 //     </filter>
 //    <use href="#circles" transform="translate(0 70)" filter="url(#colorMeTheSame)" />
 //    <text x="70" y="120">Identity matrix</text>
-//
-//
-//
-//
-//
-//
-//
 //
 //    <!-- Combine RGB into green matrix -->
 //    <filter id="colorMeGreen">
@@ -61,18 +46,6 @@
 //    <use href="#circles" transform="translate(0 140)" filter="url(#colorMeGreen)" />
 //    <text x="70" y="190">rgbToGreen</text>
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //    <!-- saturate -->
 //    <filter id="colorMeSaturate">
 //      <feColorMatrix in="SourceGraphic"
@@ -81,18 +54,6 @@
 //    </filter>
 //    <use href="#circles" transform="translate(0 210)" filter="url(#colorMeSaturate)" />
 //    <text x="70" y="260">saturate</text>
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //    <!-- hueRotate -->
 //    <filter id="colorMeHueRotate">
@@ -177,16 +138,6 @@ func main() {
 				Y(50).
 				Text("Reference"),
 
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-
 			// identity matrix
 			factoryBrowser.NewTagSvgFilter().
 				Id("colorMeTheSame").
@@ -218,27 +169,6 @@ func main() {
 				X(70).
 				Y(120).
 				Text("Identity matrix"),
-
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
 
 			// Combine RGB into green matrix
 			factoryBrowser.NewTagSvgFilter().
@@ -272,20 +202,6 @@ func main() {
 				Y(190).
 				Text("rgbToGreen"),
 
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-
 			//saturate
 			factoryBrowser.NewTagSvgFilter().
 				Id("colorMeSaturate").
@@ -308,20 +224,6 @@ func main() {
 				X(70).
 				Y(260).
 				Text("Saturate"),
-
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
 
 			// hueRotate
 			factoryBrowser.NewTagSvgFilter().

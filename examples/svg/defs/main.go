@@ -37,33 +37,35 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{0, 0, 10, 10}).
 		Append(
 
-			factoryBrowser.NewTagSvgDefs("defs1").
+			factoryBrowser.NewTagSvgDefs().
 				Append(
 
-					factoryBrowser.NewTagSvgCircle("myCircle").
+					factoryBrowser.NewTagSvgCircle().
+						Id("myCircle").
 						Cx(0).
 						Cy(0).
 						R(5),
 
-					factoryBrowser.NewTagSvgLinearGradient("myGradient").
+					factoryBrowser.NewTagSvgLinearGradient().
+						Id("myGradient").
 						GradientTransform("rotate(90)").
 						Append(
 
-							factoryBrowser.NewTagSvgStop("stp1").
+							factoryBrowser.NewTagSvgStop().
 								Offset(float32(0.2)).
 								StopColor(factoryColor.NewGold()),
 
-							factoryBrowser.NewTagSvgStop("stp2").
+							factoryBrowser.NewTagSvgStop().
 								Offset(float32(0.9)).
 								StopColor(factoryColor.NewRed()),
 						),
 				),
 
-			factoryBrowser.NewTagSvgUse("us1").
+			factoryBrowser.NewTagSvgUse().
 				X(5).
 				Y(5).
 				HRef("#myCircle").

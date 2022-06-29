@@ -25,11 +25,11 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{0, 0, 100, 100}).
 		Append(
 
-			factoryBrowser.NewTagSvgCircle("cir1").
+			factoryBrowser.NewTagSvgCircle().
 				Cx(50).
 				Cy(50).
 				R(50),

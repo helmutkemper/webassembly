@@ -46,11 +46,12 @@ func main() {
 	tf.SkewX(20).
 		Translate(-35, 0)
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{0, 0, 420, 200}).
 		Append(
 
-			factoryBrowser.NewTagSvgRadialGradient("gradient1").
+			factoryBrowser.NewTagSvgRadialGradient().
+				Id("gradient1").
 				GradientUnits(html.KSvgGradientUnitsUserSpaceOnUse).
 				Cx(100).
 				Cy(100).
@@ -58,20 +59,21 @@ func main() {
 				Fx(100).
 				Fy(100).Append(
 
-				factoryBrowser.NewTagSvgStop("st1").
+				factoryBrowser.NewTagSvgStop().
 					Offset(float32(0.0)).
 					StopColor(factoryColor.NewDarkblue()),
 
-				factoryBrowser.NewTagSvgStop("st2").
+				factoryBrowser.NewTagSvgStop().
 					Offset(float32(0.5)).
 					StopColor(factoryColor.NewSkyblue()),
 
-				factoryBrowser.NewTagSvgStop("st3").
+				factoryBrowser.NewTagSvgStop().
 					Offset(float32(1.0)).
 					StopColor(factoryColor.NewDarkblue()),
 			),
 
-			factoryBrowser.NewTagSvgRadialGradient("gradient2").
+			factoryBrowser.NewTagSvgRadialGradient().
+				Id("gradient2").
 				GradientUnits(html.KSvgGradientUnitsUserSpaceOnUse).
 				Cx(100).
 				Cy(100).
@@ -80,27 +82,27 @@ func main() {
 				GradientTransform(tf).
 				Fy(100).Append(
 
-				factoryBrowser.NewTagSvgStop("st1").
+				factoryBrowser.NewTagSvgStop().
 					Offset(float32(0.0)).
 					StopColor(factoryColor.NewDarkblue()),
 
-				factoryBrowser.NewTagSvgStop("st2").
+				factoryBrowser.NewTagSvgStop().
 					Offset(float32(0.5)).
 					StopColor(factoryColor.NewSkyblue()),
 
-				factoryBrowser.NewTagSvgStop("st3").
+				factoryBrowser.NewTagSvgStop().
 					Offset(float32(1.0)).
 					StopColor(factoryColor.NewDarkblue()),
 			),
 
-			factoryBrowser.NewTagSvgRect("rt1").
+			factoryBrowser.NewTagSvgRect().
 				X(0).
 				Y(0).
 				Width(200).
 				Height(200).
 				Fill("url(#gradient1)"),
 
-			factoryBrowser.NewTagSvgRect("rt2").
+			factoryBrowser.NewTagSvgRect().
 				X(0).
 				Y(0).
 				Width(200).

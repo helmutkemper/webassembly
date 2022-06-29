@@ -53,12 +53,12 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{0, 0, 200, 200}).
 		XmlnsXLink("http://www.w3.org/1999/xlink").
 		Append(
 
-			factoryBrowser.NewTagSvgRect("rt1").
+			factoryBrowser.NewTagSvgRect().
 				X(10).
 				Y(10).
 				Width(30).
@@ -88,7 +88,7 @@ func main() {
 			//    newX = a * oldX + c * oldY + e = 3 * 40 - 1 * 30 + 30 = 120
 			//    newY = b * oldX + d * oldY + f = 1 * 40 + 3 * 30 + 40 = 170
 
-			factoryBrowser.NewTagSvgRect("rt2").
+			factoryBrowser.NewTagSvgRect().
 				X(10).
 				Y(10).
 				Width(30).

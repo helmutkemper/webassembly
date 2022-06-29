@@ -60,23 +60,25 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{0, 0, 100, 100}).
 		Append(
 
-			factoryBrowser.NewTagSvgClipPath("myClip").
+			factoryBrowser.NewTagSvgClipPath().
+				Id("myClip").
 				Append(
 
 					// Everything outside the circle will be
 					// clipped and therefore invisible.
-					factoryBrowser.NewTagSvgCircle("cir1").
+					factoryBrowser.NewTagSvgCircle().
 						Cx(40).
 						Cy(35).
 						R(35),
 				),
 
 			// The original black heart, for reference
-			factoryBrowser.NewTagSvgPath("heart").
+			factoryBrowser.NewTagSvgPath().
+				Id("heart").
 				D(
 
 					factoryBrowser.NewPath().
@@ -90,7 +92,7 @@ func main() {
 
 			// Only the portion of the red heart
 			// inside the clip circle is visible.
-			factoryBrowser.NewTagSvgUse("use1").
+			factoryBrowser.NewTagSvgUse().
 				ClipPath("url(#myClip)").
 				HRef("#heart").
 				Fill(factoryColor.NewRed()),

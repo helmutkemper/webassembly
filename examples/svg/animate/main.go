@@ -31,21 +31,21 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{0, 0, 10, 10}).
 		Append(
 
-			factoryBrowser.NewTagSvgRect("rect1").
+			factoryBrowser.NewTagSvgRect().
 				Width(10).
 				Height(10).Append(
 
-				factoryBrowser.NewTagSvgAnimate("ani1").
+				factoryBrowser.NewTagSvgAnimate().
 					AttributeName("rx").
 					Values([]float64{0, 5, 0}).
 					Dur(10*time.Second).
 					RepeatCount(html.KSvgDurIndefinite),
 
-				factoryBrowser.NewTagSvgAnimate("ani2").
+				factoryBrowser.NewTagSvgAnimate().
 					AttributeName("fill").
 					Values(
 						[]color.RGBA{

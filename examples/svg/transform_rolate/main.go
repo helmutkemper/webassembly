@@ -34,17 +34,17 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{-12, -2, 34, 14}).
 		Append(
 
-			factoryBrowser.NewTagSvgRect("re1").
+			factoryBrowser.NewTagSvgRect().
 				X(0).
 				Y(0).
 				Width(10).
 				Height(10),
 
-			factoryBrowser.NewTagSvgRect("re2").
+			factoryBrowser.NewTagSvgRect().
 				X(0).
 				Y(0).
 				Width(10).
@@ -56,7 +56,7 @@ func main() {
 						RotateAngle(100),
 				),
 
-			factoryBrowser.NewTagSvgRect("re3").
+			factoryBrowser.NewTagSvgRect().
 				X(0).
 				Y(0).
 				Width(10).

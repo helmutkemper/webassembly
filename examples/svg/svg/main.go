@@ -31,29 +31,29 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{0, 0, 300, 100}).
 		Stroke(factoryColor.NewRed()).
 		Fill(factoryColor.NewGrey()).
 		Append(
 
-			factoryBrowser.NewTagSvgCircle("cir1").
+			factoryBrowser.NewTagSvgCircle().
 				Cx(50).
 				Cy(50).
 				R(40),
 
-			factoryBrowser.NewTagSvgCircle("cir2").
+			factoryBrowser.NewTagSvgCircle().
 				Cx(150).
 				Cy(50).
 				R(4),
 
-			factoryBrowser.NewTagSvg("svg2").
+			factoryBrowser.NewTagSvg().
 				ViewBox([]float64{0, 0, 10, 10}).
 				X(200).
 				Width(100).
 				Append(
 
-					factoryBrowser.NewTagSvgCircle("cir3").
+					factoryBrowser.NewTagSvgCircle().
 						Cx(5).
 						Cy(5).
 						R(4),

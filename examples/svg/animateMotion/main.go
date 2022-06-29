@@ -34,11 +34,11 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		ViewBox([]float64{0, 0, 200, 100}).
 		Append(
 
-			factoryBrowser.NewTagSvgPath("path1").
+			factoryBrowser.NewTagSvgPath().
 				Fill("none").
 				Stroke(factoryColor.NewLightgrey()).
 				D(
@@ -50,12 +50,12 @@ func main() {
 						Z(),
 				),
 
-			factoryBrowser.NewTagSvgCircle("cir1").
+			factoryBrowser.NewTagSvgCircle().
 				R(5).
 				Fill(factoryColor.NewRed()).
 				Append(
 
-					factoryBrowser.NewTagSvgAnimateMotion("mot1").
+					factoryBrowser.NewTagSvgAnimateMotion().
 						Dur(10*time.Second).
 						RepeatCount(html.KSvgDurIndefinite).
 						Path(

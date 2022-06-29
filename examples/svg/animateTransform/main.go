@@ -37,13 +37,13 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg("svg1").
+	s1 := factoryBrowser.NewTagSvg().
 		Width(120).
 		Height(120).
 		ViewBox([]float64{0, 0, 120, 120}).
 		Append(
 
-			factoryBrowser.NewTagSvgPolygon("poly1").
+			factoryBrowser.NewTagSvgPolygon().
 				Points(
 					html.Points{
 						{60, 30},
@@ -53,7 +53,7 @@ func main() {
 				).
 				Append(
 
-					factoryBrowser.NewTagSvgAnimateTransform("trans1").
+					factoryBrowser.NewTagSvgAnimateTransform().
 						AttributeName("transform").
 						Type(html.KSvgTypeTransformRotate).
 						From([]float64{0, 60, 70}).

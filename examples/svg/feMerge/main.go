@@ -6,7 +6,7 @@
 //
 // Este exemplo foi retirado do site https://developer.mozilla.org/en-US/docs/Web/SVG/Element/feMerge
 //
-//    <svg width="200" height="200"
+//  <svg width="200" height="200"
 //    xmlns="http://www.w3.org/2000/svg">
 //
 //    <filter id="feOffset" x="-40" y="-20" width="100" height="200">

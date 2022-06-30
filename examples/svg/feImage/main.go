@@ -45,7 +45,7 @@ func main() {
 						Append(
 
 							factoryBrowser.NewTagSvgFeImage().
-								HRef("//media.prod.mdn.mozit.cloud/attachments/2013/11/15/6457/5e0f6aa96fb8e4593f143aa803576698/mdn_logo_only_color.png"),
+								HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png"),
 						),
 				),
 

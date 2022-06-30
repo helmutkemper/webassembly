@@ -1,20 +1,20 @@
 // English:
 //
-// This example was taken from https://developer.mozilla.org/en-US/docs/Web/SVG/Element/feSpotLight
+// This example was taken from https://developer.mozilla.org/en-US/docs/Web/SVG/Element/fePointLight
 //
 // Português:
 //
-// Este exemplo foi retirado do site https://developer.mozilla.org/en-US/docs/Web/SVG/Element/feSpotLight
+// Este exemplo foi retirado do site https://developer.mozilla.org/en-US/docs/Web/SVG/Element/fePointLight
 //
 //  <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"
 //      xmlns:xlink="http://www.w3.org/1999/xlink">
 //    <defs>
 //      <filter id="spotlight">
 //        <feSpecularLighting result="spotlight" specularConstant="1.5"
-//            specularExponent="4" lighting-color="#FFF">
-//          <feSpotLight x="600" y="600" z="400" limitingConeAngle="5.5" />
+//            specularExponent="80" lighting-color="#FFF">
+//          <fePointLight x="50" y="50" z="220"/>
 //        </feSpecularLighting>
-//        <feComposite in="SourceGraphic" in2="spotlight" operator="out"
+//        <feComposite in="SourceGraphic" in2="spotlight" operator="arithmetic"
 //            k1="0" k2="1" k3="1" k4="0"/>
 //      </filter>
 //    </defs>
@@ -55,21 +55,20 @@ func main() {
 							factoryBrowser.NewTagSvgFeSpecularLighting().
 								Result("spotlight").
 								SpecularConstant(1.5).
-								SpecularExponent(4).
+								SpecularExponent(80).
 								LightingColor("#FFF").
 								Append(
 
-									factoryBrowser.NewTagSvgFeSpotLight().
-										X(600).
-										Y(600).
-										Z(400).
-										LimitingConeAngle(5.5),
+									factoryBrowser.NewTagSvgFePointLight().
+										X(50).
+										Y(50).
+										Z(220),
 								),
 
 							factoryBrowser.NewTagSvgFeComposite().
 								In(html.KSvgInSourceGraphic).
 								In2("spotlight").
-								Operator(html.KSvgOperatorFeCompositeOut).
+								Operator(html.KSvgOperatorFeCompositeArithmetic).
 								K1(0).
 								K2(1).
 								K3(1).

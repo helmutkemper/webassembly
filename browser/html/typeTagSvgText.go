@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"sync"
 	"syscall/js"
+	"time"
 )
 
 // TagSvgText
@@ -2434,7 +2435,11 @@ func (e *TagSvgText) Y(value interface{}) (ref *TagSvgText) {
 //
 //   Input:
 //     dx: indicates a shift along the x-axis on the position of an element or its content.
-//       (e.g. "20%", "0 10%" or "0 10% 20%")
+//       []float32: []float64{0.0, 0.1} = "0% 10%"
+//       []float64: []float64{0.0, 10.0} = "0 10"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       any other type: interface{}
 //
 // Portuguese
 //
@@ -2442,9 +2447,82 @@ func (e *TagSvgText) Y(value interface{}) (ref *TagSvgText) {
 //
 //   Entrada:
 //     dx: indica um deslocamento ao longo do eixo x na posição de um elemento ou seu conteúdo.
-//       (ex. "20%", "0 10%" ou "0 10% 20%")
-func (e *TagSvgText) Dx(dx string) (ref *TagSvgText) {
-	e.selfElement.Call("setAttribute", "dx", dx)
+//       []float32: []float64{0.0, 0.1} = "0% 10%"
+//       []float64: []float64{0.0, 10.0} = "0 10"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgText) Dx(value interface{}) (ref *TagSvgText) {
+	if converted, ok := value.([]color.RGBA); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += RGBAToJs(v) + " "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "dx", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "% "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "dx", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "dx", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]time.Duration); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += v.String() + " "
+		}
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "dx", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "dx", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "dx", p)
+		return e
+	}
+
+	if converted, ok := value.(float64); ok {
+		p := strconv.FormatFloat(converted, 'g', -1, 64)
+		e.selfElement.Call("setAttribute", "dx", p)
+		return e
+	}
+
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "dx", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "dx", value)
 	return e
 }
 
@@ -2456,7 +2534,11 @@ func (e *TagSvgText) Dx(dx string) (ref *TagSvgText) {
 //
 //   Input:
 //     dy: indicates a shift along the y-axis on the position of an element or its content.
-//       (e.g. "50%", "20", "0 10" or "0 10 20")
+//       []float32: []float64{0.0, 0.1} = "0% 10%"
+//       []float64: []float64{0.0, 10.0} = "0 10"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       any other type: interface{}
 //
 // Portuguese
 //
@@ -2464,9 +2546,82 @@ func (e *TagSvgText) Dx(dx string) (ref *TagSvgText) {
 //
 //   Entrada:
 //     dy: indica um deslocamento ao longo do eixo y na posição de um elemento ou seu conteúdo.
-//       (ex. "50%", "20", "0 10" ou "0 10 20")
-func (e *TagSvgText) Dy(dy string) (ref *TagSvgText) {
-	e.selfElement.Call("setAttribute", "dy", dy)
+//       []float32: []float64{0.0, 0.1} = "0% 10%"
+//       []float64: []float64{0.0, 10.0} = "0 10"
+//       float32: 0.1 = "10%"
+//       float64: 10.0 = "10"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgText) Dy(value interface{}) (ref *TagSvgText) {
+	if converted, ok := value.([]color.RGBA); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += RGBAToJs(v) + " "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "dy", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "% "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "dy", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "dy", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]time.Duration); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += v.String() + " "
+		}
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "dy", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(time.Duration); ok {
+		e.selfElement.Call("setAttribute", "dy", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "dy", p)
+		return e
+	}
+
+	if converted, ok := value.(float64); ok {
+		p := strconv.FormatFloat(converted, 'g', -1, 64)
+		e.selfElement.Call("setAttribute", "dy", p)
+		return e
+	}
+
+	if converted, ok := value.(color.RGBA); ok {
+		e.selfElement.Call("setAttribute", "dy", RGBAToJs(converted))
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "dy", value)
 	return e
 }
 

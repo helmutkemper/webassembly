@@ -20,7 +20,8 @@
 //go:build js
 // +build js
 
-//fixme: bug
+//fixme: bug. it is necessary to resize the screen to show the content
+//When a graphic element, type, rectangle, is added to the screen, the bug does not happen.
 
 package main
 

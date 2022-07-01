@@ -2298,7 +2298,7 @@ func (e *TagSvgFeMorphology) Class(class string) (ref *TagSvgFeMorphology) {
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
 func (e *TagSvgFeMorphology) Style(value string) (ref *TagSvgFeMorphology) {
-	e.selfElement.Call("setAttribute", "style", value)
+	e.selfElement.Set("innerHTML", value)
 	return e
 }
 

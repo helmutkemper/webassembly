@@ -2299,7 +2299,7 @@ func (e *TagSvgFeTurbulence) Class(class string) (ref *TagSvgFeTurbulence) {
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
 func (e *TagSvgFeTurbulence) Style(value string) (ref *TagSvgFeTurbulence) {
-	e.selfElement.Call("setAttribute", "style", value)
+	e.selfElement.Set("innerHTML", value)
 	return e
 }
 

@@ -2304,7 +2304,7 @@ func (e *TagSvgMarker) Class(class string) (ref *TagSvgMarker) {
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
 func (e *TagSvgMarker) Style(value string) (ref *TagSvgMarker) {
-	e.selfElement.Call("setAttribute", "style", value)
+	e.selfElement.Set("innerHTML", value)
 	return e
 }
 
@@ -2422,6 +2422,7 @@ func (e *TagSvgMarker) MarkerWidth(value interface{}) (ref *TagSvgMarker) {
 //     value: indica como um marcador é girado
 //       Degrees: Degrees(-65) = "-65deg"
 //       qualquer outro tipo: interface{}
+// fixme: fazer e adicionar KSvgOrien https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/orient#usage_notes
 func (e *TagSvgMarker) Orient(value interface{}) (ref *TagSvgMarker) {
 	if converted, ok := value.(Degrees); ok {
 		e.selfElement.Call("setAttribute", "orient", converted.String())

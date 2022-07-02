@@ -2774,3 +2774,30 @@ func (e *TagSvgText) Html(value string) (ref *TagSvgText) {
 	e.selfElement.Set("innerHTML", value)
 	return e
 }
+
+// SystemLanguage
+//
+// English:
+//
+// The systemLanguage attribute represents a list of supported language tags. This list is matched against the language
+// defined in the user preferences.
+//
+// Português:
+//
+// O atributo systemLanguage representa uma lista de tags de idioma com suporte. Esta lista é comparada com o idioma
+// definido nas preferências do usuário.
+func (e *TagSvgText) SystemLanguage(value interface{}) (ref *TagSvgText) {
+	if converted, ok := value.([]Language); ok {
+		tags := ""
+		for _, v := range converted {
+			tags += v.String() + ", "
+		}
+		length := len(tags) - 2
+
+		e.selfElement.Call("setAttribute", "systemLanguage", tags[:length])
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "systemLanguage", value)
+	return e
+}

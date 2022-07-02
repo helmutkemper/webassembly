@@ -7,15 +7,15 @@
 // Este exemplo foi retirado do site https://developer.mozilla.org/en-US/docs/Web/SVG/Element/set
 //
 //  <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
-//  <style>
-//    rect { cursor: pointer }
-//    .round { rx: 5px; fill: green; }
-//  </style>
+//    <style>
+//      rect { cursor: pointer }
+//      .round { rx: 5px; fill: green; }
+//    </style>
 //
-//  <rect id="me" width="10" height="10">
-//    <set attributeName="class" to="round" begin="me.click" dur="2s" />
-//  </rect>
-//</svg>
+//    <rect id="me" width="10" height="10">
+//      <set attributeName="class" to="round" begin="me.click" dur="2s" />
+//    </rect>
+//  </svg>
 
 //go:build js
 // +build js

@@ -2748,22 +2748,74 @@ func (e *TagSvgAnimateMotion) RepeatDur(value interface{}) (ref *TagSvgAnimateMo
 	return e
 }
 
-// Fill #presentation
+// Rotate
 //
 // English:
 //
-//  The fill attribute has two different meanings. For shapes and text it's a presentation attribute that defines the
-//  color (or any SVG paint servers like gradients or patterns) used to paint the element;
+// The rotate attribute specifies how the animated element rotates as it travels along a path specified in an
+// <animateMotion> element.
 //
-// for animation it defines the final state of the animation.
+//   Input:
+//     value: specifies how the animated element rotates
+//       const: KSvgRotate... (e.g. KSvgRotateAutoReverse)
+//       any other type: interface{}
 //
 // Português:
 //
-//  O atributo fill tem dois significados diferentes. Para formas e texto, é um atributo de apresentação que define a
-//  cor (ou qualquer servidor de pintura SVG, como gradientes ou padrões) usado para pintar o elemento;
+// O atributo de rotação especifica como o elemento animado gira enquanto percorre um caminho especificado em um
+// elemento <animateMotion>.
+//
+//   Entrada:
+//     value: especifica como o elemento animado gira
+//       const: KSvgRotate... (e.g. KSvgRotateAutoReverse)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgAnimateMotion) Rotate(value interface{}) (ref *TagSvgAnimateMotion) {
+	if converted, ok := value.(SvgRotate); ok {
+		e.selfElement.Call("setAttribute", "rotate", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "rotate", value)
+	return e
+}
+
+// Fill
+//
+// English:
+//
+// The fill attribute has two different meanings. For shapes and text it's a presentation attribute that defines the
+// color (or any SVG paint servers like gradients or patterns) used to paint the element;
+//
+// for animation it defines the final state of the animation.
+//
+//   Input:
+//     value: the fill value
+//       nil: fill="none"
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo fill tem dois significados diferentes. Para formas e texto, é um atributo de apresentação que define a
+// cor (ou qualquer servidor de pintura SVG, como gradientes ou padrões) usado para pintar o elemento;
 //
 // para animação, define o estado final da animação.
+//
+//   Input:
+//     value: the fill value
+//       nil: fill="none"
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
 func (e *TagSvgAnimateMotion) Fill(value interface{}) (ref *TagSvgAnimateMotion) {
+	if value == nil {
+		e.selfElement.Call("setAttribute", "fill", "none")
+		return e
+	}
+
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "fill", RGBAToJs(converted))
 		return e

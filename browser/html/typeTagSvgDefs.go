@@ -802,18 +802,39 @@ func (e *TagSvgDefs) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref
 //
 // English:
 //
-//  The fill attribute has two different meanings. For shapes and text it's a presentation attribute that defines the
-//  color (or any SVG paint servers like gradients or patterns) used to paint the element;
+// The fill attribute has two different meanings. For shapes and text it's a presentation attribute that defines the
+// color (or any SVG paint servers like gradients or patterns) used to paint the element;
 //
 // for animation it defines the final state of the animation.
 //
+//   Input:
+//     value: the fill value
+//       nil: fill="none"
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
+//
 // Português:
 //
-//  O atributo fill tem dois significados diferentes. Para formas e texto, é um atributo de apresentação que define a
-//  cor (ou qualquer servidor de pintura SVG, como gradientes ou padrões) usado para pintar o elemento;
+// O atributo fill tem dois significados diferentes. Para formas e texto, é um atributo de apresentação que define a
+// cor (ou qualquer servidor de pintura SVG, como gradientes ou padrões) usado para pintar o elemento;
 //
 // para animação, define o estado final da animação.
+//
+//   Input:
+//     value: the fill value
+//       nil: fill="none"
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
 func (e *TagSvgDefs) Fill(value interface{}) (ref *TagSvgDefs) {
+	if value == nil {
+		e.selfElement.Call("setAttribute", "fill", "none")
+		return e
+	}
+
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "fill", RGBAToJs(converted))
 		return e

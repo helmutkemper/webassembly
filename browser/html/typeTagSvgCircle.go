@@ -2408,3 +2408,8 @@ func (e *TagSvgCircle) Html(value string) (ref *TagSvgCircle) {
 	e.selfElement.Set("innerHTML", value)
 	return e
 }
+
+func (e *TagSvgCircle) AddEventListener(event string, f func(this js.Value, args []js.Value) interface{}) (ref *TagSvgCircle) {
+	e.selfElement.Call("addEventListener", event, js.FuncOf(f))
+	return e
+}

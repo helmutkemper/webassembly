@@ -19,6 +19,7 @@ import (
 //     * While SVG's script element is equivalent to the HTML <script> element, it has some discrepancies, like it uses
 //       the href attribute instead of src and it doesn't support ECMAScript modules so far (See browser compatibility
 //       below for details)
+//     * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - didn't work in tests (07/2022)
 //
 // Português:
 //
@@ -28,6 +29,7 @@ import (
 //     * Embora o elemento script do SVG seja equivalente ao elemento HTML <script>, ele tem algumas discrepâncias, como
 //       usar o atributo href em vez de src e não suportar módulos ECMAScript até agora (consulte a compatibilidade do
 //       navegador abaixo para obter detalhes)
+//     * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - não funcionou nos testes (07/2022)
 type TagSvgScript struct {
 
 	// id
@@ -490,6 +492,9 @@ func (e *TagSvgScript) Type(value interface{}) (ref *TagSvgScript) {
 //       support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback in addition to
 //       the href attribute, e.g. <use href="some-id" xlink:href="some-id" x="5" y="5" />.
 //
+//
+//
+//
 // Português:
 //
 // Obsoleto: use a função HRef()
@@ -506,30 +511,23 @@ func (e *TagSvgScript) XLinkHRef(value interface{}) (ref *TagSvgScript) {
 	return e
 }
 
-// Text
+// Script
 //
 // English:
 //
 // Adds plain text to the tag's content.
 //
+//   Notes:
+//     * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - didn't work in tests (07/2022)
+//
 // Text:
 //
 // Adiciona um texto simples ao conteúdo da tag.
-func (e *TagSvgScript) Text(value string) (ref *TagSvgScript) {
+//
+//   Notras:
+//     * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - não funcionou nos testes (07/2022)
+//
+func (e *TagSvgScript) Script(value string) (ref *TagSvgScript) {
 	e.selfElement.Set("textContent", value)
-	return e
-}
-
-// Html
-//
-// English:
-//
-// Adds HTML to the tag's content.
-//
-// Text:
-//
-// Adiciona HTML ao conteúdo da tag.
-func (e *TagSvgScript) Html(value string) (ref *TagSvgScript) {
-	e.selfElement.Set("innerHTML", value)
 	return e
 }

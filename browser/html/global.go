@@ -964,6 +964,10 @@ func (e *TagSvgGlobal) Cy(cy float64) (ref *TagSvgGlobal) {
 //
 //  The d attribute defines a path to be drawn.
 //
+//   d: path to be drawn
+//     *SvgPath: factoryBrowser.NewPath().M(0, 10).Hd(5).Vd(-9).Hd(12).Vd(9).Hd(5).Vd(16).Hd(-22).Z()
+//     any other type: interface{}
+//
 // A path definition is a list of path commands where each command is composed of a command letter and numbers that
 // represent the command parameters. The commands are detailed below.
 //
@@ -975,14 +979,23 @@ func (e *TagSvgGlobal) Cy(cy float64) (ref *TagSvgGlobal) {
 //
 //  O atributo d define um caminho a ser desenhado.
 //
+//   d: caminho a ser desenhado
+//     *SvgPath: factoryBrowser.NewPath().M(0, 10).Hd(5).Vd(-9).Hd(12).Vd(9).Hd(5).Vd(16).Hd(-22).Z()
+//     qualquer outro tipo: interface{}
+//
 // Uma definição de caminho é uma lista de comandos de caminho em que cada comando é composto por uma letra de comando
 // e números que representam os parâmetros do comando. Os comandos são detalhados abaixo.
 //
 // Você pode usar este atributo com os seguintes elementos SVG: <path>, <glyph>, <missing-glyph>.
 //
 // d é um atributo de apresentação e, portanto, também pode ser usado como uma propriedade CSS.
-func (e *TagSvgGlobal) D(d *SvgPath) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "d", d.String())
+func (e *TagSvgGlobal) D(d interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := d.(*SvgPath); ok {
+		e.selfElement.Call("setAttribute", "d", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "d", d)
 	return e
 }
 
@@ -3403,6 +3416,7 @@ func (e *TagSvgGlobal) Order(value interface{}) (ref *TagSvgGlobal) {
 //
 //   Input:
 //     value: indicates how a marker is rotated
+//       const: KSvgOrient... (e.g. KSvgOrientAuto)
 //       Degrees: Degrees(-65) = "-65deg"
 //       any other type: interface{}
 //
@@ -3412,10 +3426,16 @@ func (e *TagSvgGlobal) Order(value interface{}) (ref *TagSvgGlobal) {
 //
 //   Entrada:
 //     value: indica como um marcador é girado
+//       const: KSvgOrient... (ex. KSvgOrientAuto)
 //       Degrees: Degrees(-65) = "-65deg"
 //       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) Orient(value interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := value.(Degrees); ok {
+		e.selfElement.Call("setAttribute", "orient", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(SvgOrient); ok {
 		e.selfElement.Call("setAttribute", "orient", converted.String())
 		return e
 	}

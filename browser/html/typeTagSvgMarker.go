@@ -2411,6 +2411,7 @@ func (e *TagSvgMarker) MarkerWidth(value interface{}) (ref *TagSvgMarker) {
 //
 //   Input:
 //     value: indicates how a marker is rotated
+//       const: KSvgOrient... (e.g. KSvgOrientAuto)
 //       Degrees: Degrees(-65) = "-65deg"
 //       any other type: interface{}
 //
@@ -2420,11 +2421,16 @@ func (e *TagSvgMarker) MarkerWidth(value interface{}) (ref *TagSvgMarker) {
 //
 //   Entrada:
 //     value: indica como um marcador é girado
+//       const: KSvgOrient... (ex. KSvgOrientAuto)
 //       Degrees: Degrees(-65) = "-65deg"
 //       qualquer outro tipo: interface{}
-// fixme: fazer e adicionar KSvgOrien https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/orient#usage_notes
 func (e *TagSvgMarker) Orient(value interface{}) (ref *TagSvgMarker) {
 	if converted, ok := value.(Degrees); ok {
+		e.selfElement.Call("setAttribute", "orient", converted.String())
+		return e
+	}
+
+	if converted, ok := value.(SvgOrient); ok {
 		e.selfElement.Call("setAttribute", "orient", converted.String())
 		return e
 	}

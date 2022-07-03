@@ -272,6 +272,7 @@ func (e *TagSvgGlobal) Additive(value interface{}) (ref *TagSvgGlobal) {
 func (e *TagSvgGlobal) AlignmentBaseline(alignmentBaseline interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := alignmentBaseline.(SvgAlignmentBaseline); ok {
 		e.selfElement.Call("setAttribute", "alignment-baseline", converted.String())
+		return e
 	}
 
 	e.selfElement.Call("setAttribute", "alignment-baseline", alignmentBaseline)

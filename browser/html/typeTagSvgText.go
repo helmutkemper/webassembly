@@ -2801,3 +2801,55 @@ func (e *TagSvgText) SystemLanguage(value interface{}) (ref *TagSvgText) {
 	e.selfElement.Call("setAttribute", "systemLanguage", value)
 	return e
 }
+
+// AlignmentBaseline
+//
+// English:
+//
+//  The alignment-baseline attribute specifies how an object is aligned with respect to its parent. This property
+//  specifies which baseline of this element is to be aligned with the corresponding baseline of the parent.
+//  For example, this allows alphabetic baselines in Roman text to stay aligned across font size changes.
+//  It defaults to the baseline with the same name as the computed value of the alignment-baseline property.
+//
+//   Input:
+//     alignmentBaseline: specifies how an object is aligned with respect to its parent.
+//       string: url(#myClip)
+//       consts KSvgAlignmentBaseline... (e.g. KSvgAlignmentBaselineTextBeforeEdge)
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute alignment-baseline can be used as a CSS property.
+//     * SVG 2 introduces some changes to the definition of this property. In particular: the values auto, before-edge,
+//       and after-edge have been removed. For backwards compatibility, text-before-edge may be mapped to text-top and
+//       text-after-edge to text-bottom. Neither text-before-edge nor text-after-edge should be used with the
+//       vertical-align property.
+//
+// Português:
+//
+//  O atributo alinhamento-base especifica como um objeto é alinhado em relação ao seu pai. Esta propriedade especifica
+//  qual linha de base deste elemento deve ser alinhada com a linha de base correspondente do pai. Por exemplo, isso
+//  permite que as linhas de base alfabéticas em texto romano permaneçam alinhadas nas alterações de tamanho da fonte.
+//  O padrão é a linha de base com o mesmo nome que o valor calculado da propriedade de linha de base de alinhamento.
+//
+//   Input:
+//     alignmentBaseline: especifica como um objeto é alinhado em relação ao seu pai.
+//       string: url(#myClip)
+//       consts KSvgAlignmentBaseline...  (ex. KSvgAlignmentBaselineTextBeforeEdge)
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como um atributo de apresentação, a linha de base de alinhamento pode ser usada como uma propriedade CSS.
+//     * O SVG 2 introduz algumas mudanças na definição desta propriedade. Em particular: os valores auto, before-edge e
+//       after-edge foram removidos. Para compatibilidade com versões anteriores, text-before-edge pode ser mapeado para
+//       text-top e text-after-edge para text-bottom. Nem text-before-edge nem text-after-edge devem ser usados com a
+//       propriedade vertical-align.
+func (e *TagSvgText) AlignmentBaseline(alignmentBaseline interface{}) (ref *TagSvgText) {
+	log.Printf("type: %T", alignmentBaseline)
+	if converted, ok := alignmentBaseline.(SvgAlignmentBaseline); ok {
+		e.selfElement.Call("setAttribute", "alignment-baseline", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "alignment-baseline", alignmentBaseline)
+	return e
+}

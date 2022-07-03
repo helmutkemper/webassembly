@@ -2333,7 +2333,7 @@ func (e *TagSvgFeDisplacementMap) Class(class string) (ref *TagSvgFeDisplacement
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
 func (e *TagSvgFeDisplacementMap) Style(value string) (ref *TagSvgFeDisplacementMap) {
-	e.selfElement.Set("innerHTML", value)
+	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
 

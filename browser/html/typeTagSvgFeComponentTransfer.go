@@ -2328,7 +2328,7 @@ func (e *TagSvgFeComponentTransfer) Class(class string) (ref *TagSvgFeComponentT
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
 func (e *TagSvgFeComponentTransfer) Style(value string) (ref *TagSvgFeComponentTransfer) {
-	e.selfElement.Set("innerHTML", value)
+	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
 

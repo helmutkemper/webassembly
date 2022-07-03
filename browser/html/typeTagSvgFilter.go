@@ -2320,7 +2320,7 @@ func (e *TagSvgFilter) Class(class string) (ref *TagSvgFilter) {
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
 func (e *TagSvgFilter) Style(value string) (ref *TagSvgFilter) {
-	e.selfElement.Set("innerHTML", value)
+	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
 

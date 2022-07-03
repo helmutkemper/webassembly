@@ -2324,7 +2324,7 @@ func (e *TagSvgG) Class(class string) (ref *TagSvgG) {
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
 func (e *TagSvgG) Style(value string) (ref *TagSvgG) {
-	e.selfElement.Set("innerHTML", value)
+	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
 

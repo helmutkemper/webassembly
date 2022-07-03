@@ -51,8 +51,14 @@ func (e *Stage) Init() {
 	e.listener = new(sync.Map)
 }
 
-func (e *Stage) Append(value Compatible) (ref *Stage) {
-	e.selfDocument.Get("body").Call("appendChild", value.Get())
+func (e *Stage) Append(value interface{}) (ref *Stage) {
+	if converted, ok := value.(Compatible); ok {
+		e.selfDocument.Get("body").Call("appendChild", converted.Get())
+		return e
+	}
+
+	// insertAdjacentHTML('beforeend', data)
+	e.selfDocument.Get("body").Call("insertAdjacentHTML", "afterend", value)
 	return e
 }
 

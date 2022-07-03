@@ -2317,7 +2317,7 @@ func (e *TagSvgCircle) Class(class string) (ref *TagSvgCircle) {
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
 func (e *TagSvgCircle) Style(value string) (ref *TagSvgCircle) {
-	e.selfElement.Set("innerHTML", value)
+	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
 

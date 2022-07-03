@@ -2319,7 +2319,7 @@ func (e *TagSvgStop) Class(class string) (ref *TagSvgStop) {
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
 func (e *TagSvgStop) Style(value string) (ref *TagSvgStop) {
-	e.selfElement.Set("innerHTML", value)
+	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
 

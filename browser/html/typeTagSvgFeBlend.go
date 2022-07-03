@@ -2323,7 +2323,7 @@ func (e *TagSvgFeBlend) Class(class string) (ref *TagSvgFeBlend) {
 // O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
 // em HTML.
 func (e *TagSvgFeBlend) Style(value string) (ref *TagSvgFeBlend) {
-	e.selfElement.Set("innerHTML", value)
+	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
 

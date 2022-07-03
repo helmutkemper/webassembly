@@ -206,7 +206,7 @@ func main() {
 						"</rdf:RDF>",
 				),
 			factoryBrowser.NewTagSvgTitle().
-				Text("Network"),
+				Title("Network"),
 
 			factoryBrowser.NewTagSvgDesc().
 				Text("An example of a computer network based on a hub."),
@@ -247,31 +247,31 @@ func main() {
 						//five groups each using the defined socket
 						factoryBrowser.NewTagSvgG().Id("sock1et").Transform(factoryBrowser.NewTransform().Translate(25, 20)).Append(
 
-							factoryBrowser.NewTagSvgTitle().Text("Socket 1"),
+							factoryBrowser.NewTagSvgTitle().Title("Socket 1"),
 							factoryBrowser.NewTagSvgUse().HRef("#hubPlug"),
 						),
 
 						factoryBrowser.NewTagSvgG().Id("socket2").Transform(factoryBrowser.NewTransform().Translate(70, 20)).Append(
 
-							factoryBrowser.NewTagSvgTitle().Text("Socket 2"),
+							factoryBrowser.NewTagSvgTitle().Title("Socket 2"),
 							factoryBrowser.NewTagSvgUse().HRef("#hubPlug"),
 						),
 
 						factoryBrowser.NewTagSvgG().Id("socket3").Transform(factoryBrowser.NewTransform().Translate(115, 20)).Append(
 
-							factoryBrowser.NewTagSvgTitle().Text("Socket 3"),
+							factoryBrowser.NewTagSvgTitle().Title("Socket 3"),
 							factoryBrowser.NewTagSvgUse().HRef("#hubPlug"),
 						),
 
 						factoryBrowser.NewTagSvgG().Id("socket4").Transform(factoryBrowser.NewTransform().Translate(160, 20)).Append(
 
-							factoryBrowser.NewTagSvgTitle().Text("Socket 4"),
+							factoryBrowser.NewTagSvgTitle().Title("Socket 4"),
 							factoryBrowser.NewTagSvgUse().HRef("#hubPlug"),
 						),
 
 						factoryBrowser.NewTagSvgG().Id("socket5").Transform(factoryBrowser.NewTransform().Translate(205, 20)).Append(
 
-							factoryBrowser.NewTagSvgTitle().Text("Socket 5"),
+							factoryBrowser.NewTagSvgTitle().Title("Socket 5"),
 							factoryBrowser.NewTagSvgUse().HRef("#hubPlug"),
 						),
 					),
@@ -283,7 +283,7 @@ func main() {
 					factoryBrowser.NewTagSvgDesc().Text("A common desktop PC"),
 					factoryBrowser.NewTagSvgG().Id("monitorStand").Transform(factoryBrowser.NewTransform().Translate(40, 121)).Append(
 
-						factoryBrowser.NewTagSvgTitle().Text("Monitor stand"),
+						factoryBrowser.NewTagSvgTitle().Title("Monitor stand"),
 						factoryBrowser.NewTagSvgDesc().Text("One of those cool swivelling monitor stands that sit under the monitor"),
 						//factoryBrowser.NewTagSvgPath().D("m0,0 S 10 10 40 12"),
 						factoryBrowser.NewTagSvgPath().D(factoryBrowser.NewPath().Md(0, 0).S(10, 10, 40, 12)),
@@ -294,7 +294,7 @@ func main() {
 					),
 					factoryBrowser.NewTagSvgG().Id("monitor").Append(
 
-						factoryBrowser.NewTagSvgTitle().Text("Monitor"),
+						factoryBrowser.NewTagSvgTitle().Title("Monitor"),
 						factoryBrowser.NewTagSvgDesc().Text("A very fancy monitor"),
 						factoryBrowser.NewTagSvgRect().Width(160).Height(120),
 						factoryBrowser.NewTagSvgRect().Fill(factoryColor.NewLightgrey()).Width(138).Height(95).X(11).Y(12),
@@ -302,12 +302,12 @@ func main() {
 
 					factoryBrowser.NewTagSvgG().Id("processor").Transform(factoryBrowser.NewTransform().Translate(0, 142)).Append(
 
-						factoryBrowser.NewTagSvgTitle().Text("The computer"),
+						factoryBrowser.NewTagSvgTitle().Title("The computer"),
 						factoryBrowser.NewTagSvgDesc().Text("A desktop computer - broad flat box style"),
 						factoryBrowser.NewTagSvgRect().Width(160).Height(60),
 						factoryBrowser.NewTagSvgG().Id("discDrive").Transform(factoryBrowser.NewTransform().Translate(70, 8)).Append(
 
-							factoryBrowser.NewTagSvgTitle().Text("disc drive"),
+							factoryBrowser.NewTagSvgTitle().Title("disc drive"),
 							factoryBrowser.NewTagSvgDesc().Text("A built-in disc drive"),
 							factoryBrowser.NewTagSvgRect().Width(58).Height(3).X(12).Y(8),
 							factoryBrowser.NewTagSvgRect().Width(8).Height(2).X(12).Y(15),
@@ -322,7 +322,7 @@ func main() {
 
 			// Use the hub symbol.
 			factoryBrowser.NewTagSvgG().Id("Hub").Transform(factoryBrowser.NewTransform().Translate(80, 45)).Append(
-				factoryBrowser.NewTagSvgTitle().Text("Hub"),
+				factoryBrowser.NewTagSvgTitle().Title("Hub"),
 				//factoryBrowser.NewTagSvgUse().HRef("#Hub").Transform("scale(0.75)"),
 				factoryBrowser.NewTagSvgUse().HRef("#hub").Transform(factoryBrowser.NewTransform().Scale(0.75, 0.75)),
 			),
@@ -331,7 +331,7 @@ func main() {
 			//factoryBrowser.NewTagSvgG().Id("ComputerA").Transform("translate(20 170)"),
 			factoryBrowser.NewTagSvgG().Id("ComputerA").Transform(factoryBrowser.NewTransform().Translate(20, 170)).Append(
 
-				factoryBrowser.NewTagSvgTitle().Text("Computer A"),
+				factoryBrowser.NewTagSvgTitle().Title("Computer A"),
 				//factoryBrowser.NewTagSvgUse().HRef("#computer").Transform("scale(0.5)"),
 				factoryBrowser.NewTagSvgUse().HRef("#computer").Transform(factoryBrowser.NewTransform().Scale(0.5, 0.5)),
 			),
@@ -340,7 +340,7 @@ func main() {
 			//factoryBrowser.NewTagSvgG().Id("ComputerB").Transform("translate(300 170)"),
 			factoryBrowser.NewTagSvgG().Id("ComputerB").Transform(factoryBrowser.NewTransform().Translate(300, 170)).Append(
 
-				factoryBrowser.NewTagSvgTitle().Text("Computer B"),
+				factoryBrowser.NewTagSvgTitle().Title("Computer B"),
 				factoryBrowser.NewTagSvgUse().HRef("#computer").Transform(factoryBrowser.NewTransform().Scale(0.5, 0.5)),
 				factoryBrowser.NewTagSvgUse().HRef("#computer").Transform("scale(0.5)"),
 			),
@@ -349,7 +349,7 @@ func main() {
 			//factoryBrowser.NewTagSvgG().Id("CableA").Transform("translate(107 88)"),
 			factoryBrowser.NewTagSvgG().Id("CableA").Transform(factoryBrowser.NewTransform().Translate(107, 88)).Append(
 
-				factoryBrowser.NewTagSvgTitle().Text("Cable A"),
+				factoryBrowser.NewTagSvgTitle().Title("Cable A"),
 				//factoryBrowser.NewTagSvgPath().D("M0,0c100,140 50,140 -8,160"),
 				factoryBrowser.NewTagSvgPath().D(factoryBrowser.NewPath().M(0, 0).Cd(100, 140, 50, 140, -8, 160)),
 			),
@@ -358,7 +358,7 @@ func main() {
 			//factoryBrowser.NewTagSvgG().Id("CableB").Transform("translate(142 88)"),
 			factoryBrowser.NewTagSvgG().Id("CableB").Transform(factoryBrowser.NewTransform().Translate(142, 88)).Append(
 
-				factoryBrowser.NewTagSvgTitle().Text("Cable B"),
+				factoryBrowser.NewTagSvgTitle().Title("Cable B"),
 				factoryBrowser.NewTagSvgDesc().Text("10BaseT twisted pair cable"),
 				//factoryBrowser.NewTagSvgPath().D("M0,0c100,180 110,160 159,160"),
 				factoryBrowser.NewTagSvgPath().D(factoryBrowser.NewPath().M(0, 0).Cd(100, 180, 110, 160, 159, 160)),
@@ -367,7 +367,7 @@ func main() {
 			// Draw Cable N.
 			factoryBrowser.NewTagSvgG().Id("CableN").Transform(factoryBrowser.NewTransform().Translate(242, 88)).Append(
 
-				factoryBrowser.NewTagSvgTitle().Text("Cable N"),
+				factoryBrowser.NewTagSvgTitle().Title("Cable N"),
 				factoryBrowser.NewTagSvgDesc().Text("10BaseT twisted pair cable"),
 				//factoryBrowser.NewTagSvgPath().D("M0,0c0,-70 20,-50 60,-50"),
 				factoryBrowser.NewTagSvgPath().D(factoryBrowser.NewPath().M(0, 0).Cd(0, -70, 20, -50, 60, -50)),

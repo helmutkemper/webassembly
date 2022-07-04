@@ -6,7 +6,7 @@ type SvgPath struct {
 	path string
 }
 
-// M
+// M (MoveTo)
 //
 // English:
 //
@@ -46,7 +46,7 @@ func (e *SvgPath) MoveTo(x, y float64) (ref *SvgPath) {
 	return e
 }
 
-// Md
+// Md (MoveToDelta)
 //
 // English:
 //
@@ -90,7 +90,7 @@ func (e *SvgPath) MoveToDelta(dx, dy float64) (ref *SvgPath) {
 	return e
 }
 
-// L
+// L (LineTo)
 //
 // English:
 //
@@ -130,7 +130,7 @@ func (e *SvgPath) LineTo(x, y float64) (ref *SvgPath) {
 	return e
 }
 
-// Ld
+// Ld (LineToDelta)
 //
 // English:
 //
@@ -174,7 +174,7 @@ func (e *SvgPath) LineToDelta(dx, dy float64) (ref *SvgPath) {
 	return e
 }
 
-// H
+// H (HorizontalLine)
 //
 // English:
 //
@@ -218,7 +218,7 @@ func (e *SvgPath) HorizontalLine(x float64) (ref *SvgPath) {
 	return e
 }
 
-// Hd
+// Hd (HorizontalLineDelta)
 //
 // English:
 //
@@ -262,7 +262,7 @@ func (e *SvgPath) HorizontalLineDelta(dx float64) (ref *SvgPath) {
 	return e
 }
 
-// V
+// V (VerticalLine)
 //
 // English:
 //
@@ -306,7 +306,7 @@ func (e *SvgPath) VerticalLine(y float64) (ref *SvgPath) {
 	return e
 }
 
-// Vd
+// Vd (VerticalLineDelta)
 //
 // English:
 //
@@ -362,7 +362,7 @@ func (e *SvgPath) VerticalLineDelta(dy float64) (ref *SvgPath) {
 	return e
 }
 
-// C
+// C (CubicBezierCurve)
 //
 // English:
 //
@@ -420,7 +420,7 @@ func (e *SvgPath) CubicBezierCurve(x1, y1, x2, y2, x, y float64) (ref *SvgPath) 
 	return e
 }
 
-// Cd
+// Cd (CubicBezierCurveDelta)
 //
 // English:
 //
@@ -482,7 +482,7 @@ func (e *SvgPath) CubicBezierCurveDelta(dx1, dy1, dx2, dy2, dx, dy float64) (ref
 	return e
 }
 
-// S
+// S (SmoothCubicBezier)
 //
 // English:
 //
@@ -526,7 +526,7 @@ func (e *SvgPath) SmoothCubicBezier(x2, y2, x, y float64) (ref *SvgPath) {
 	return e
 }
 
-// Sd
+// Sd (SmoothCubicBezierDelta)
 //
 // English:
 //
@@ -546,7 +546,7 @@ func (e *SvgPath) SmoothCubicBezier(x2, y2, x, y float64) (ref *SvgPath) {
 //  controle inicial é o mesmo que o ponto inicial da curva (ponto atual). Quaisquer pares subsequentes de pares de
 //  coordenadas são interpretados como parâmetro(s) para comandos implícitos de curva(s) Bézier cúbica suave relativa.
 func (e *SvgPath) Sd(dx2, dy2, dx, dy float64) (ref *SvgPath) {
-	e.path += fmt.Sprintf("S %v,%v %v,%v ", dx2, dy2, dx, dy)
+	e.path += fmt.Sprintf("s %v,%v %v,%v ", dx2, dy2, dx, dy)
 	return e
 }
 
@@ -574,7 +574,7 @@ func (e *SvgPath) SmoothCubicBezierDelta(dx2, dy2, dx, dy float64) (ref *SvgPath
 	return e
 }
 
-// Q
+// Q (QuadraticBezierCurve)
 //
 // English:
 //
@@ -626,7 +626,7 @@ func (e *SvgPath) QuadraticBezierCurve(x1, y1, x, y float64) (ref *SvgPath) {
 	return e
 }
 
-// Qd
+// Qd (QuadraticBezierCurveDelta)
 //
 // English:
 //
@@ -682,7 +682,7 @@ func (e *SvgPath) QuadraticBezierCurveDelta(dx1, dy1, dx, dy float64) (ref *SvgP
 	return e
 }
 
-// T
+// T (SmoothQuadraticBezierCurve)
 //
 // English:
 //
@@ -736,7 +736,7 @@ func (e *SvgPath) SmoothQuadraticBezierCurve(x, y float64) (ref *SvgPath) {
 	return e
 }
 
-// Td
+// Td (SmoothQuadraticBezierCurveDelta)
 //
 // English:
 //
@@ -792,7 +792,7 @@ func (e *SvgPath) SmoothQuadraticBezierCurveDelta(dx, dy float64) (ref *SvgPath)
 	return e
 }
 
-// A
+// A (ArcCurve)
 //
 // English:
 //
@@ -864,7 +864,7 @@ func (e *SvgPath) ArcCurve(rx, ry, angle, largeArcFlag, sweepFlag, x, y float64)
 	return e
 }
 
-// Ad
+// Ad (ArcCurveDelta)
 //
 // English:
 //
@@ -940,7 +940,7 @@ func (e *SvgPath) ArcCurveDelta(rx, ry, angle, largeArcFlag, sweepFlag, dx, dy f
 	return e
 }
 
-// Z
+// Z (Close)
 //
 // English:
 //

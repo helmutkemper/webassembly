@@ -937,11 +937,27 @@ func (e *TagSvgGlobal) Cursor(cursor SvgCursor) (ref *TagSvgGlobal) {
 //
 //  The cx attribute define the x-axis coordinate of a center point.
 //
+//   Input:
+//     value: define the x-axis coordinate
+//       float32: 0.05 = "5%"
+//       any other type: interface{}
+//
 // Português:
 //
 //  O atributo cx define a coordenada do eixo x de um ponto central.
-func (e *TagSvgGlobal) Cx(cx float64) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "cx", cx)
+//
+//   Entrada:
+//     value: define a coordenada do eixo x
+//       float32: 0.05 = "5%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Cx(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "cx", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "cx", value)
 	return e
 }
 
@@ -951,11 +967,27 @@ func (e *TagSvgGlobal) Cx(cx float64) (ref *TagSvgGlobal) {
 //
 // The cy attribute define the y-axis coordinate of a center point.
 //
+//   Input:
+//     value: define the y-axis coordinate
+//       float32: 0.05 = "5%"
+//       any other type: interface{}
+//
 // Português:
 //
 //  O atributo cy define a coordenada do eixo y de um ponto central.
-func (e *TagSvgGlobal) Cy(cy float64) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "cy", cy)
+//
+//   Entrada:
+//     value: define a coordenada do eixo y
+//       float32: 0.05 = "5%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Cy(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "cy", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "cy", value)
 	return e
 }
 

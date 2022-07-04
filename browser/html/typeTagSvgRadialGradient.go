@@ -2341,11 +2341,27 @@ func (e *TagSvgRadialGradient) Style(value string) (ref *TagSvgRadialGradient) {
 //
 //  The cx attribute define the x-axis coordinate of a center point.
 //
+//   Input:
+//     value: define the x-axis coordinate
+//       float32: 0.05 = "5%"
+//       any other type: interface{}
+//
 // Português:
 //
 //  O atributo cx define a coordenada do eixo x de um ponto central.
-func (e *TagSvgRadialGradient) Cx(cx float64) (ref *TagSvgRadialGradient) {
-	e.selfElement.Call("setAttribute", "cx", cx)
+//
+//   Entrada:
+//     value: define a coordenada do eixo x
+//       float32: 0.05 = "5%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgRadialGradient) Cx(value interface{}) (ref *TagSvgRadialGradient) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "cx", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "cx", value)
 	return e
 }
 
@@ -2355,11 +2371,27 @@ func (e *TagSvgRadialGradient) Cx(cx float64) (ref *TagSvgRadialGradient) {
 //
 // The cy attribute define the y-axis coordinate of a center point.
 //
+//   Input:
+//     value: define the y-axis coordinate
+//       float32: 0.05 = "5%"
+//       any other type: interface{}
+//
 // Português:
 //
 //  O atributo cy define a coordenada do eixo y de um ponto central.
-func (e *TagSvgRadialGradient) Cy(cy float64) (ref *TagSvgRadialGradient) {
-	e.selfElement.Call("setAttribute", "cy", cy)
+//
+//   Entrada:
+//     value: define a coordenada do eixo y
+//       float32: 0.05 = "5%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgRadialGradient) Cy(value interface{}) (ref *TagSvgRadialGradient) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "cy", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "cy", value)
 	return e
 }
 

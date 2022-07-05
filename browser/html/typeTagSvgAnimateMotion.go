@@ -673,6 +673,12 @@ func (e *TagSvgAnimateMotion) Direction(direction SvgDirection) (ref *TagSvgAnim
 //
 //  The display attribute lets you control the rendering of graphical or container elements.
 //
+//   Input:
+//     value: control the rendering of graphical or container elements
+//       nil: display="none"
+//       const: KSvgDisplay... (e.g. KSvgDisplayBlock)
+//       any other type: interface{}
+//
 // A value of display="none" indicates that the given element and its children will not be rendered. Any value other
 // than none or inherit indicates that the given element will be rendered by the browser.
 //
@@ -708,6 +714,12 @@ func (e *TagSvgAnimateMotion) Direction(direction SvgDirection) (ref *TagSvgAnim
 //
 //  O atributo display permite controlar a renderização de elementos gráficos ou de contêiner.
 //
+//   Entrada:
+//     value: controlar a renderização de elementos gráficos ou de contêiner
+//       nil: display="none"
+//       const: KSvgDisplay... (ex. KSvgDisplayBlock)
+//       qualquer outro tipo: interface{}
+//
 // Um valor de display="none" indica que o elemento fornecido e seus filhos não serão renderizados. Qualquer valor
 // diferente de none ou herdar indica que o elemento fornecido será renderizado pelo navegador.
 //
@@ -738,8 +750,18 @@ func (e *TagSvgAnimateMotion) Direction(direction SvgDirection) (ref *TagSvgAnim
 //  Notas:
 //    * Como atributo de apresentação, display pode ser usado como propriedade CSS. Consulte a exibição css para obter
 //      mais informações.
-func (e *TagSvgAnimateMotion) Display(display SvgDisplay) (ref *TagSvgAnimateMotion) {
-	e.selfElement.Call("setAttribute", "display", display.String())
+func (e *TagSvgAnimateMotion) Display(value interface{}) (ref *TagSvgAnimateMotion) {
+	if value == nil {
+		e.selfElement.Call("setAttribute", "display", "none")
+		return e
+	}
+
+	if converted, ok := value.(SvgDisplay); ok {
+		e.selfElement.Call("setAttribute", "display", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "display", value)
 	return e
 }
 

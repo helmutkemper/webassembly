@@ -751,6 +751,12 @@ func (e *TagSvgFeConvolveMatrix) Direction(direction SvgDirection) (ref *TagSvgF
 //
 //  The display attribute lets you control the rendering of graphical or container elements.
 //
+//   Input:
+//     value: control the rendering of graphical or container elements
+//       nil: display="none"
+//       const: KSvgDisplay... (e.g. KSvgDisplayBlock)
+//       any other type: interface{}
+//
 // A value of display="none" indicates that the given element and its children will not be rendered. Any value other
 // than none or inherit indicates that the given element will be rendered by the browser.
 //
@@ -786,6 +792,12 @@ func (e *TagSvgFeConvolveMatrix) Direction(direction SvgDirection) (ref *TagSvgF
 //
 //  O atributo display permite controlar a renderização de elementos gráficos ou de contêiner.
 //
+//   Entrada:
+//     value: controlar a renderização de elementos gráficos ou de contêiner
+//       nil: display="none"
+//       const: KSvgDisplay... (ex. KSvgDisplayBlock)
+//       qualquer outro tipo: interface{}
+//
 // Um valor de display="none" indica que o elemento fornecido e seus filhos não serão renderizados. Qualquer valor
 // diferente de none ou herdar indica que o elemento fornecido será renderizado pelo navegador.
 //
@@ -816,8 +828,18 @@ func (e *TagSvgFeConvolveMatrix) Direction(direction SvgDirection) (ref *TagSvgF
 //  Notas:
 //    * Como atributo de apresentação, display pode ser usado como propriedade CSS. Consulte a exibição css para obter
 //      mais informações.
-func (e *TagSvgFeConvolveMatrix) Display(display SvgDisplay) (ref *TagSvgFeConvolveMatrix) {
-	e.selfElement.Call("setAttribute", "display", display.String())
+func (e *TagSvgFeConvolveMatrix) Display(value interface{}) (ref *TagSvgFeConvolveMatrix) {
+	if value == nil {
+		e.selfElement.Call("setAttribute", "display", "none")
+		return e
+	}
+
+	if converted, ok := value.(SvgDisplay); ok {
+		e.selfElement.Call("setAttribute", "display", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "display", value)
 	return e
 }
 
@@ -2692,10 +2714,13 @@ func (e *TagSvgFeConvolveMatrix) Order(value interface{}) (ref *TagSvgFeConvolve
 //
 //   Input:
 //     kernelMatrix: list of numbers
-//       The list of <number>s that make up the kernel matrix for the convolution. The number of entries in the list
-//       must equal <orderX> times <orderY>.
-//       If the result of orderX * orderY is not equal to the number of entries in the value list, the filter primitive
-//       acts as a pass through filter.
+//       []float64: []float64{1, 1, 0, 0, 0, 0, 0, 0, -1} = "1 1 0 0 0 0 0 0 -1"
+//       any other type: interface{}
+//
+// The list of <number>s that make up the kernel matrix for the convolution. The number of entries in the list
+// must equal <orderX> times <orderY>.
+// If the result of orderX * orderY is not equal to the number of entries in the value list, the filter primitive
+// acts as a pass through filter.
 //
 // Values are separated by space characters and/or a comma. The number of entries in the list must equal to <orderX>
 // by <orderY> as defined in the order attribute.
@@ -2706,24 +2731,30 @@ func (e *TagSvgFeConvolveMatrix) Order(value interface{}) (ref *TagSvgFeConvolve
 //
 //   Entrada:
 //     kernelMatrix: lista de números
-//       A lista de números que compõem a matriz do kernel para a convolução. O número de entradas na lista deve ser
-//       igual a <orderX> * <orderY>.
-//       Se o resultado da ordem do pedido não for igual ao número de entradas na lista de valores, a primitiva de
-//       filtro atua como um filtro de passagem.
+//       []float64: []float64{1, 1, 0, 0, 0, 0, 0, 0, -1} = "1 1 0 0 0 0 0 0 -1"
+//       any other type: interface{}
+//
+// A lista de números que compõem a matriz do kernel para a convolução. O número de entradas na lista deve ser
+// igual a <orderX> * <orderY>.
+// Se o resultado da ordem do pedido não for igual ao número de entradas na lista de valores, a primitiva de
+// filtro atua como um filtro de passagem.
 //
 // Os valores são separados por caracteres de espaço e ou por vírgula. O número de entradas na lista deve ser igual a
 // <orderX> por <orderY> conforme definido no atributo order.
-func (e *TagSvgFeConvolveMatrix) KernelMatrix(kernelMatrix []float64) (ref *TagSvgFeConvolveMatrix) {
-	kernelMatrixString := ""
+func (e *TagSvgFeConvolveMatrix) KernelMatrix(value interface{}) (ref *TagSvgFeConvolveMatrix) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
 
-	for _, v := range kernelMatrix {
-		kernelMatrixString += strconv.FormatFloat(v, 'g', -1, 64)
-		kernelMatrixString += " "
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "kernelMatrix", valueStr[:length])
+		return e
 	}
 
-	l := len(kernelMatrixString) - 1
-
-	e.selfElement.Call("setAttribute", "kernelMatrix", kernelMatrixString[:l])
+	e.selfElement.Call("setAttribute", "kernelMatrix", value)
 	return e
 }
 

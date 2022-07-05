@@ -904,6 +904,11 @@ func (e *TagSvgPath) Fill(value interface{}) (ref *TagSvgPath) {
 //  The fill-opacity attribute is a presentation attribute defining the opacity of the paint server (color, gradient,
 //  pattern, etc) applied to a shape.
 //
+//   Input:
+//     value: defining the opacity of the paint
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
 //   Notes:
 //     *As a presentation attribute fill-opacity can be used as a CSS property.
 //
@@ -912,10 +917,21 @@ func (e *TagSvgPath) Fill(value interface{}) (ref *TagSvgPath) {
 //  O atributo fill-opacity é um atributo de apresentação que define a opacidade do servidor de pintura (cor, gradiente,
 //  padrão etc.) aplicado a uma forma.
 //
+//   Entrada:
+//     value: definindo a opacidade da tinta
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+//
 //   Notes:
 //     *As a presentation attribute fill-opacity can be used as a CSS property.
-func (e *TagSvgPath) FillOpacity(fillOpacity float64) (ref *TagSvgPath) {
-	e.selfElement.Call("setAttribute", "fill-opacity", fillOpacity)
+func (e *TagSvgPath) FillOpacity(value interface{}) (ref *TagSvgPath) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "fill-opacity", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "fill-opacity", value)
 	return e
 }
 

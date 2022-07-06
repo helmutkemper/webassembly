@@ -1027,7 +1027,7 @@ func (e *TagSvgFeSpotLight) FontFamily(fontFamily string) (ref *TagSvgFeSpotLigh
 //   Notas:
 //     * Como atributo de apresentação, font-size pode ser usado como uma propriedade CSS. Consulte a propriedade CSS
 //       font-size para obter mais informações.
-func (e *TagSvgFeSpotLight) FontSize(fontSize float64) (ref *TagSvgFeSpotLight) {
+func (e *TagSvgFeSpotLight) FontSize(fontSize interface{}) (ref *TagSvgFeSpotLight) {
 	e.selfElement.Call("setAttribute", "font-size", fontSize)
 	return e
 }
@@ -1123,6 +1123,11 @@ func (e *TagSvgFeSpotLight) FontStyle(fontStyle FontStyleRule) (ref *TagSvgFeSpo
 //
 //  The font-variant attribute indicates whether the text is to be rendered using variations of the font's glyphs.
 //
+//   Input:
+//     value: indicates whether the text is to be rendered
+//       const: KFontVariantRule... (e.g. KFontVariantRuleSmallCaps)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute, font-variant can be used as a CSS property. See the css font-variant property
 //       for more information.
@@ -1131,11 +1136,21 @@ func (e *TagSvgFeSpotLight) FontStyle(fontStyle FontStyleRule) (ref *TagSvgFeSpo
 //
 //  O atributo font-variant indica se o texto deve ser renderizado usando variações dos glifos da fonte.
 //
+//   Entrada:
+//     value: indica onde o texto vai ser renderizado.
+//       const: KFontVariantRule... (ex. KFontVariantRuleSmallCaps)
+//       qualquer outro tipo: interface{}
+//
 //   Notas:
 //     * Como atributo de apresentação, font-variant pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-variant para obter mais informações.
-func (e *TagSvgFeSpotLight) FontVariant(fontVariant FontVariantRule) (ref *TagSvgFeSpotLight) {
-	e.selfElement.Call("setAttribute", "font-variant", fontVariant.String())
+func (e *TagSvgFeSpotLight) FontVariant(value interface{}) (ref *TagSvgFeSpotLight) {
+	if converted, ok := value.(FontVariantRule); ok {
+		e.selfElement.Call("setAttribute", "font-variant", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "font-variant", value)
 	return e
 }
 

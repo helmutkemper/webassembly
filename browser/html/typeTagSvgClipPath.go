@@ -1031,7 +1031,7 @@ func (e *TagSvgClipPath) FontFamily(fontFamily string) (ref *TagSvgClipPath) {
 //   Notas:
 //     * Como atributo de apresentação, font-size pode ser usado como uma propriedade CSS. Consulte a propriedade CSS
 //       font-size para obter mais informações.
-func (e *TagSvgClipPath) FontSize(fontSize float64) (ref *TagSvgClipPath) {
+func (e *TagSvgClipPath) FontSize(fontSize interface{}) (ref *TagSvgClipPath) {
 	e.selfElement.Call("setAttribute", "font-size", fontSize)
 	return e
 }
@@ -1127,6 +1127,11 @@ func (e *TagSvgClipPath) FontStyle(fontStyle FontStyleRule) (ref *TagSvgClipPath
 //
 //  The font-variant attribute indicates whether the text is to be rendered using variations of the font's glyphs.
 //
+//   Input:
+//     value: indicates whether the text is to be rendered
+//       const: KFontVariantRule... (e.g. KFontVariantRuleSmallCaps)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute, font-variant can be used as a CSS property. See the css font-variant property
 //       for more information.
@@ -1135,11 +1140,21 @@ func (e *TagSvgClipPath) FontStyle(fontStyle FontStyleRule) (ref *TagSvgClipPath
 //
 //  O atributo font-variant indica se o texto deve ser renderizado usando variações dos glifos da fonte.
 //
+//   Entrada:
+//     value: indica onde o texto vai ser renderizado.
+//       const: KFontVariantRule... (ex. KFontVariantRuleSmallCaps)
+//       qualquer outro tipo: interface{}
+//
 //   Notas:
 //     * Como atributo de apresentação, font-variant pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-variant para obter mais informações.
-func (e *TagSvgClipPath) FontVariant(fontVariant FontVariantRule) (ref *TagSvgClipPath) {
-	e.selfElement.Call("setAttribute", "font-variant", fontVariant.String())
+func (e *TagSvgClipPath) FontVariant(value interface{}) (ref *TagSvgClipPath) {
+	if converted, ok := value.(FontVariantRule); ok {
+		e.selfElement.Call("setAttribute", "font-variant", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "font-variant", value)
 	return e
 }
 

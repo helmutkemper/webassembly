@@ -921,22 +921,14 @@ func (e *TagDiv) AppendById(appendId string) (ref *TagDiv) {
 //     * Equivale a:
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
-func (e *TagDiv) Append(append interface{}) (ref *TagDiv) {
-	switch append.(type) {
-	case *TagDiv:
-		e.selfElement.Call("appendChild", append.(*TagDiv).selfElement)
-	case js.Value:
-		e.selfElement.Call("appendChild", append)
-	case string:
-		toAppend := js.Global().Get("document").Call("getElementById", append.(string))
-		if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
-			log.Print(KIdToAppendNotFound, append.(string))
-			return e
-		}
-
-		toAppend.Call("appendChild", e.selfElement)
+// fixme: fazer append() assim em todas as tags html, exceto svg
+func (e *TagDiv) Append(elements ...Compatible) (ref *TagDiv) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
 	}
 
+	e.selfElement.Call("appendChild", fragment)
 	return e
 }
 
@@ -1071,6 +1063,10 @@ func (e *TagDiv) SetY(y int) (ref *TagDiv) {
 	e.selfElement.Get("style").Set("top", py)
 
 	return e
+}
+
+func (e *TagDiv) Get() (el js.Value) {
+	return e.selfElement
 }
 
 // GetXY

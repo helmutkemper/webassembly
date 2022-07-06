@@ -1161,6 +1161,11 @@ func (e *TagSvgFeGaussianBlur) FontVariant(value interface{}) (ref *TagSvgFeGaus
 //  The font-weight attribute refers to the boldness or lightness of the glyphs used to render the text, relative to
 //  other fonts in the same font family.
 //
+//   Input:
+//     value: refers to the boldness or lightness of the glyphs used to render the text
+//       const: KFontWeightRule... (e.g. KFontWeightRuleBold)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute, font-weight can be used as a CSS property. See the css font-weight property for
 //       more information.
@@ -1170,11 +1175,21 @@ func (e *TagSvgFeGaussianBlur) FontVariant(value interface{}) (ref *TagSvgFeGaus
 //  O atributo font-weight refere-se ao negrito ou leveza dos glifos usados para renderizar o texto, em relação a
 //  outras fontes na mesma família de fontes.
 //
+//   Entrada:
+//     value: refere-se ao negrito ou leveza dos glifos usados para renderizar o texto
+//       const: KFontWeightRule... (ex. KFontWeightRuleBold)
+//       qualquer outro tipo: interface{}
+//
 //   Notas:
 //     * Como atributo de apresentação, o peso da fonte pode ser usado como uma propriedade CSS. Consulte a propriedade
 //       CSS font-weight para obter mais informações.
-func (e *TagSvgFeGaussianBlur) FontWeight(fontWeight FontWeightRule) (ref *TagSvgFeGaussianBlur) {
-	e.selfElement.Call("setAttribute", "font-weight", fontWeight.String())
+func (e *TagSvgFeGaussianBlur) FontWeight(value interface{}) (ref *TagSvgFeGaussianBlur) {
+	if converted, ok := value.(FontWeightRule); ok {
+		e.selfElement.Call("setAttribute", "font-weight", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "font-weight", value)
 	return e
 }
 

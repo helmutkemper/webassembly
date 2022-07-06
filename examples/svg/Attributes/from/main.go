@@ -1,0 +1,56 @@
+// English:
+//
+// This example was taken from https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/From
+//
+// Português:
+//
+// Este exemplo foi retirado do site https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/From
+//
+//  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+//    <rect x="10" y="10" height="100">
+//      <animate attributeName="width" fill="freeze" from="100" to="150" dur="3s"/>
+//    </rect>
+//  </svg>
+
+//go:build js
+// +build js
+
+package main
+
+import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+	"time"
+)
+
+func main() {
+
+	done := make(chan struct{}, 0)
+
+	stage := factoryBrowser.NewStage()
+
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 200}).Append(
+		factoryBrowser.NewTagSvgRect().X(10).Y(10).Height(100).Append(
+			factoryBrowser.NewTagSvgAnimate().AttributeName("width").Fill("freeze").From(100).To(150).Dur(3 * time.Second),
+		),
+	)
+
+	stage.Append(s1)
+
+	<-done
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//

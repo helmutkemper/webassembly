@@ -38,24 +38,22 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 420, 200}).
-		Append(
-			factoryBrowser.NewTagSvgFilter().Id("diffuseLighting1").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
-				factoryBrowser.NewTagSvgFeDiffuseLighting().In(html.KSvgInSourceGraphic).DiffuseConstant(1).Append(
-					factoryBrowser.NewTagSvgFePointLight().X(60).Y(60).Z(20),
-				),
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 420, 200}).Append(
+		factoryBrowser.NewTagSvgFilter().Id("diffuseLighting1").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
+			factoryBrowser.NewTagSvgFeDiffuseLighting().In(html.KSvgInSourceGraphic).DiffuseConstant(1).Append(
+				factoryBrowser.NewTagSvgFePointLight().X(60).Y(60).Z(20),
 			),
+		),
 
-			factoryBrowser.NewTagSvgFilter().Id("diffuseLighting2").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
-				factoryBrowser.NewTagSvgFeDiffuseLighting().In(html.KSvgInSourceGraphic).DiffuseConstant(2).Append(
-					factoryBrowser.NewTagSvgFePointLight().X(60).Y(60).Z(20),
-				),
+		factoryBrowser.NewTagSvgFilter().Id("diffuseLighting2").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
+			factoryBrowser.NewTagSvgFeDiffuseLighting().In(html.KSvgInSourceGraphic).DiffuseConstant(2).Append(
+				factoryBrowser.NewTagSvgFePointLight().X(60).Y(60).Z(20),
 			),
+		),
 
-			factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(200).Height(200).Style("filter: url(#diffuseLighting1);"),
-			factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(200).Height(200).Style("filter: url(#diffuseLighting2); transform: translateX(220px);"),
-		)
+		factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(200).Height(200).Style("filter: url(#diffuseLighting1);"),
+		factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(200).Height(200).Style("filter: url(#diffuseLighting2); transform: translateX(220px);"),
+	)
 
 	stage.Append(s1)
 

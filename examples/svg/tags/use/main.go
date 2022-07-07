@@ -34,14 +34,11 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 30, 10}).
-		Append(
-
-			factoryBrowser.NewTagSvgCircle().Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-			factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-			factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+		factoryBrowser.NewTagSvgCircle().Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+		factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+		factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+	)
 
 	stage.Append(s1)
 

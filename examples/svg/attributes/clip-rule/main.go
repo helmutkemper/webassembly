@@ -42,8 +42,7 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(100).ViewBox([]float64{0, 0, 100, 90}).Append(
+	s1 := factoryBrowser.NewTagSvg().Width(100).ViewBox([]float64{0, 0, 100, 90}).Append(
 
 		// Define star path
 		factoryBrowser.NewTagSvgDefs().Append(

@@ -34,17 +34,13 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 240, 40}).
-		Append(
-
-			factoryBrowser.NewTagSvgStyle().Style(
-				"text  { font: italic 12px serif; }\n"+
-					"tspan { font: bold 10px sans-serif; fill: red; }",
-			),
-
-			factoryBrowser.NewTagSvgText().X(10).Y(30).Class("small").Html("You are\n<tspan>not</tspan>\na banana!"),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 240, 40}).Append(
+		factoryBrowser.NewTagSvgStyle().Style(
+			"text  { font: italic 12px serif; }\n"+
+				"tspan { font: bold 10px sans-serif; fill: red; }",
+		),
+		factoryBrowser.NewTagSvgText().X(10).Y(30).Class("small").Html("You are\n<tspan>not</tspan>\na banana!"),
+	)
 
 	stage.Append(s1)
 

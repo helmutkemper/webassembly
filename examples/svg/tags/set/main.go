@@ -33,20 +33,16 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 10, 10}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 10, 10}).Append(
+		factoryBrowser.NewTagSvgStyle().Style(
+			"rect { cursor: pointer }\n"+
+				".round { rx: 5px; fill: green; }",
+		),
 
-			factoryBrowser.NewTagSvgStyle().Style(
-				"rect { cursor: pointer }\n"+
-					".round { rx: 5px; fill: green; }",
-			),
-
-			factoryBrowser.NewTagSvgRect().Id("me").Width(10).Height(10).Append(
-
-				factoryBrowser.NewTagSvgSet().AttributeName("class").To("round").Begin("me.click").Dur(2*time.Second),
-			),
-		)
+		factoryBrowser.NewTagSvgRect().Id("me").Width(10).Height(10).Append(
+			factoryBrowser.NewTagSvgSet().AttributeName("class").To("round").Begin("me.click").Dur(2*time.Second),
+		),
+	)
 
 	stage.Append(s1)
 

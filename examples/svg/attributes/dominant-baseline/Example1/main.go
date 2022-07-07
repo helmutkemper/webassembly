@@ -31,8 +31,7 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 200, 120}).Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 120}).Append(
 		factoryBrowser.NewTagSvgPath().D(factoryBrowser.NewPath().M(20, 20).L(180, 20).M(20, 50).L(180, 50).M(20, 80).L(180, 80)).Stroke(factoryColor.NewGray()),
 
 		factoryBrowser.NewTagSvgText().DominantBaseline(html.KSvgDominantBaselineAuto).X(30).Y(20).Text("Auto"),

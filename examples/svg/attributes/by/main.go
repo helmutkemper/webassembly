@@ -29,7 +29,6 @@ func main() {
 	stage := factoryBrowser.NewStage()
 
 	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 200}).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
-
 		factoryBrowser.NewTagSvgRect().X(10).Y(10).Width(100).Height(100).Append(
 			factoryBrowser.NewTagSvgAnimate().AttributeName("width").Fill("freeze").By(50).Dur(3 * time.Second),
 		),

@@ -33,21 +33,19 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 440, 200}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 440, 200}).Append(
 
-			factoryBrowser.NewTagSvgFilter().Id("noise1").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
-				factoryBrowser.NewTagSvgFeTurbulence().BaseFrequency(0.025),
-			),
+		factoryBrowser.NewTagSvgFilter().Id("noise1").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
+			factoryBrowser.NewTagSvgFeTurbulence().BaseFrequency(0.025),
+		),
 
-			factoryBrowser.NewTagSvgFilter().Id("noise2").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
-				factoryBrowser.NewTagSvgFeTurbulence().BaseFrequency(0.05),
-			),
+		factoryBrowser.NewTagSvgFilter().Id("noise2").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
+			factoryBrowser.NewTagSvgFeTurbulence().BaseFrequency(0.05),
+		),
 
-			factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(200).Height(200).Style("filter: url(#noise1);"),
-			factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(200).Height(200).Style("filter: url(#noise2); transform: translateX(220px);"),
-		)
+		factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(200).Height(200).Style("filter: url(#noise1);"),
+		factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(200).Height(200).Style("filter: url(#noise2); transform: translateX(220px);"),
+	)
 
 	stage.Append(s1)
 

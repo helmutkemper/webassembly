@@ -76,144 +76,42 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(440).
-		Height(140).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().Width(440).Height(140).Append(
 
-			// No light is applied
-			factoryBrowser.NewTagSvgText().
-				TextAnchor(html.KSvgTextAnchorMiddle).
-				X(60).
-				Y(22).
-				Text("No Light"),
+		// No light is applied
+		factoryBrowser.NewTagSvgText().TextAnchor(html.KSvgTextAnchorMiddle).X(60).Y(22).Text("No Light"),
+		factoryBrowser.NewTagSvgCircle().Cx(60).Cy(80).R(50).Fill(factoryColor.NewGreen()),
 
-			factoryBrowser.NewTagSvgCircle().
-				Cx(60).
-				Cy(80).
-				R(50).
-				Fill(factoryColor.NewGreen()),
+		// the light source is a fePointLight element
+		factoryBrowser.NewTagSvgText().TextAnchor(html.KSvgTextAnchorMiddle).X(170).Y(22).Text("fePointLight"),
+		factoryBrowser.NewTagSvgFilter().Id("lightMe1").Append(
+			factoryBrowser.NewTagSvgFeDiffuseLighting().In(html.KSvgInSourceGraphic).Result("light").LightingColor("white").Append(
+				factoryBrowser.NewTagSvgFePointLight().X(150).Y(60).Z(20),
+			),
+			factoryBrowser.NewTagSvgFeComposite().In(html.KSvgInSourceGraphic).In2("light").Operator(html.KSvgOperatorFeCompositeArithmetic).K1(1).K2(0).K3(0).K4(0),
+		),
+		factoryBrowser.NewTagSvgCircle().Cx(170).Cy(80).R(50).Fill(factoryColor.NewGreen()).Filter("url(#lightMe1)"),
 
-			// the light source is a fePointLight element
-			factoryBrowser.NewTagSvgText().
-				TextAnchor(html.KSvgTextAnchorMiddle).
-				X(170).
-				Y(22).
-				Text("fePointLight"),
+		// the light source is a feDistantLight element
+		factoryBrowser.NewTagSvgText().TextAnchor(html.KSvgTextAnchorMiddle).X(280).Y(22).Text("feDistantLight"),
+		factoryBrowser.NewTagSvgFilter().Id("lightMe2").Append(
+			factoryBrowser.NewTagSvgFeDiffuseLighting().In(html.KSvgInSourceGraphic).Result("light").LightingColor("white").Append(
+				factoryBrowser.NewTagSvgFeDistantLight().Azimuth(240).Elevation(20),
+			),
+			factoryBrowser.NewTagSvgFeComposite().In(html.KSvgInSourceGraphic).In2("light").Operator(html.KSvgOperatorFeCompositeArithmetic).K1(1).K2(0).K3(0).K4(0),
+		),
+		factoryBrowser.NewTagSvgCircle().Cx(280).Cy(80).R(50).Fill(factoryColor.NewGreen()).Filter("url(#lightMe2)"),
 
-			factoryBrowser.NewTagSvgFilter().
-				Id("lightMe1").
-				Append(
-
-					factoryBrowser.NewTagSvgFeDiffuseLighting().
-						In(html.KSvgInSourceGraphic).
-						Result("light").
-						LightingColor("white").
-						Append(
-
-							factoryBrowser.NewTagSvgFePointLight().
-								X(150).
-								Y(60).
-								Z(20),
-						),
-
-					factoryBrowser.NewTagSvgFeComposite().
-						In(html.KSvgInSourceGraphic).
-						In2("light").
-						Operator(html.KSvgOperatorFeCompositeArithmetic).
-						K1(1).
-						K2(0).
-						K3(0).
-						K4(0),
-				),
-
-			factoryBrowser.NewTagSvgCircle().
-				Cx(170).
-				Cy(80).
-				R(50).
-				Fill(factoryColor.NewGreen()).
-				Filter("url(#lightMe1)"),
-
-			// the light source is a feDistantLight element
-			factoryBrowser.NewTagSvgText().
-				TextAnchor(html.KSvgTextAnchorMiddle).
-				X(280).
-				Y(22).
-				Text("feDistantLight"),
-
-			factoryBrowser.NewTagSvgFilter().
-				Id("lightMe2").
-				Append(
-
-					factoryBrowser.NewTagSvgFeDiffuseLighting().
-						In(html.KSvgInSourceGraphic).
-						Result("light").
-						LightingColor("white").
-						Append(
-
-							factoryBrowser.NewTagSvgFeDistantLight().
-								Azimuth(240).
-								Elevation(20),
-						),
-
-					factoryBrowser.NewTagSvgFeComposite().
-						In(html.KSvgInSourceGraphic).
-						In2("light").
-						Operator(html.KSvgOperatorFeCompositeArithmetic).
-						K1(1).
-						K2(0).
-						K3(0).
-						K4(0),
-				),
-
-			factoryBrowser.NewTagSvgCircle().
-				Cx(280).
-				Cy(80).
-				R(50).
-				Fill(factoryColor.NewGreen()).
-				Filter("url(#lightMe2)"),
-
-			// the light source is a feSpotLight source
-			factoryBrowser.NewTagSvgText().
-				TextAnchor(html.KSvgTextAnchorMiddle).
-				X(390).
-				Y(22).
-				Text("feSpotLight"),
-
-			factoryBrowser.NewTagSvgFilter().
-				Id("lightMe3").
-				Append(
-
-					factoryBrowser.NewTagSvgFeDiffuseLighting().In(html.KSvgInSourceGraphic).Result("light").LightingColor("white").
-						Append(
-
-							factoryBrowser.NewTagSvgFeSpotLight().
-								X(360).
-								Y(5).
-								Z(30).
-								LimitingConeAngle(20).
-								PointsAtX(390).
-								PointsAtY(80).
-								PointsAtZ(0),
-						),
-
-					factoryBrowser.NewTagSvgFeComposite().
-						In(html.KSvgInSourceGraphic).
-						In2("light").
-						Operator(html.KSvgOperatorFeCompositeArithmetic).
-						K1(1).
-						K2(0).
-						K3(0).
-						K4(0),
-				),
-
-			factoryBrowser.NewTagSvgCircle().
-				Cx(390).
-				Cy(80).
-				R(50).
-				Fill(factoryColor.NewGreen()).
-				Filter("url(#lightMe3)"),
-		)
+		// the light source is a feSpotLight source
+		factoryBrowser.NewTagSvgText().TextAnchor(html.KSvgTextAnchorMiddle).X(390).Y(22).Text("feSpotLight"),
+		factoryBrowser.NewTagSvgFilter().Id("lightMe3").Append(
+			factoryBrowser.NewTagSvgFeDiffuseLighting().In(html.KSvgInSourceGraphic).Result("light").LightingColor("white").Append(
+				factoryBrowser.NewTagSvgFeSpotLight().X(360).Y(5).Z(30).LimitingConeAngle(20).PointsAtX(390).PointsAtY(80).PointsAtZ(0),
+			),
+			factoryBrowser.NewTagSvgFeComposite().In(html.KSvgInSourceGraphic).In2("light").Operator(html.KSvgOperatorFeCompositeArithmetic).K1(1).K2(0).K3(0).K4(0),
+		),
+		factoryBrowser.NewTagSvgCircle().Cx(390).Cy(80).R(50).Fill(factoryColor.NewGreen()).Filter("url(#lightMe3)"),
+	)
 
 	stage.Append(s1)
 

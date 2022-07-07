@@ -37,25 +37,21 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, -20, 100, 50}).
-		Append(
-
-			factoryBrowser.NewTagSvgSwitch().Append(
-
-				factoryBrowser.NewTagSvgText().SystemLanguage("ar").Text("مرحبا"),
-				factoryBrowser.NewTagSvgText().SystemLanguage("de,nl").Text("Hallo!"),
-				factoryBrowser.NewTagSvgText().SystemLanguage("en-us").Text("Howdy!"),
-				factoryBrowser.NewTagSvgText().SystemLanguage("en-gb").Text("Wotcha!"),
-				factoryBrowser.NewTagSvgText().SystemLanguage("en-au").Text("G'day!"),
-				factoryBrowser.NewTagSvgText().SystemLanguage("en").Text("Hello!"),
-				factoryBrowser.NewTagSvgText().SystemLanguage("es").Text("Hola!"),
-				factoryBrowser.NewTagSvgText().SystemLanguage("fr").Text("Bonjour!"),
-				factoryBrowser.NewTagSvgText().SystemLanguage("ja").Text("こんにちは"),
-				factoryBrowser.NewTagSvgText().SystemLanguage("ru").Text("Привет!"),
-				factoryBrowser.NewTagSvgText().Text("☺"),
-			),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, -20, 100, 50}).Append(
+		factoryBrowser.NewTagSvgSwitch().Append(
+			factoryBrowser.NewTagSvgText().SystemLanguage("ar").Text("مرحبا"),
+			factoryBrowser.NewTagSvgText().SystemLanguage("de,nl").Text("Hallo!"),
+			factoryBrowser.NewTagSvgText().SystemLanguage("en-us").Text("Howdy!"),
+			factoryBrowser.NewTagSvgText().SystemLanguage("en-gb").Text("Wotcha!"),
+			factoryBrowser.NewTagSvgText().SystemLanguage("en-au").Text("G'day!"),
+			factoryBrowser.NewTagSvgText().SystemLanguage("en").Text("Hello!"),
+			factoryBrowser.NewTagSvgText().SystemLanguage("es").Text("Hola!"),
+			factoryBrowser.NewTagSvgText().SystemLanguage("fr").Text("Bonjour!"),
+			factoryBrowser.NewTagSvgText().SystemLanguage("ja").Text("こんにちは"),
+			factoryBrowser.NewTagSvgText().SystemLanguage("ru").Text("Привет!"),
+			factoryBrowser.NewTagSvgText().Text("☺"),
+		),
+	)
 
 	stage.Append(s1)
 

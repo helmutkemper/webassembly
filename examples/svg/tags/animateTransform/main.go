@@ -37,31 +37,11 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(120).
-		Height(120).
-		ViewBox([]float64{0, 0, 120, 120}).
-		Append(
-
-			factoryBrowser.NewTagSvgPolygon().
-				Points(
-					html.Points{
-						{60, 30},
-						{90, 90},
-						{30, 90},
-					},
-				).
-				Append(
-
-					factoryBrowser.NewTagSvgAnimateTransform().
-						AttributeName("transform").
-						Type(html.KSvgTypeTransformRotate).
-						From([]float64{0, 60, 70}).
-						To([]float64{360, 60, 70}).
-						Dur(10 * time.Second).
-						RepeatCount(html.KSvgDurIndefinite),
-				),
-		)
+	s1 := factoryBrowser.NewTagSvg().Width(120).Height(120).ViewBox([]float64{0, 0, 120, 120}).Append(
+		factoryBrowser.NewTagSvgPolygon().Points(html.Points{{60, 30}, {90, 90}, {30, 90}}).Append(
+			factoryBrowser.NewTagSvgAnimateTransform().AttributeName("transform").Type(html.KSvgTypeTransformRotate).From([]float64{0, 60, 70}).To([]float64{360, 60, 70}).Dur(10 * time.Second).RepeatCount(html.KSvgDurIndefinite),
+		),
+	)
 
 	stage.Append(s1)
 

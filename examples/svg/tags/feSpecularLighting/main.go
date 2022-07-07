@@ -36,42 +36,17 @@ func main() {
 	stage := factoryBrowser.NewStage()
 
 	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 220, 220}).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
+		ViewBox([]float64{0, 0, 220, 220}).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgFilter().Id("filter").Append(
+			factoryBrowser.NewTagSvgFeSpecularLighting().Result("specOut").SpecularExponent(20).LightingColor("#bbbbbb").Append(
+				factoryBrowser.NewTagSvgFePointLight().X(50).Y(75).Z(200),
+			),
 
-			factoryBrowser.NewTagSvgFilter().
-				Id("filter").
-				Append(
+			factoryBrowser.NewTagSvgFeComposite().In(html.KSvgInSourceGraphic).In2("specOut").Operator(html.KSvgOperatorFeCompositeArithmetic).K1(0).K2(1).K3(1).K4(0),
+		),
 
-					factoryBrowser.NewTagSvgFeSpecularLighting().
-						Result("specOut").
-						SpecularExponent(20).
-						LightingColor("#bbbbbb").
-						Append(
-
-							factoryBrowser.NewTagSvgFePointLight().
-								X(50).
-								Y(75).
-								Z(200),
-						),
-
-					factoryBrowser.NewTagSvgFeComposite().
-						In(html.KSvgInSourceGraphic).
-						In2("specOut").
-						Operator(html.KSvgOperatorFeCompositeArithmetic).
-						K1(0).
-						K2(1).
-						K3(1).
-						K4(0),
-				),
-
-			factoryBrowser.NewTagSvgCircle().
-				Cx(110).
-				Cy(110).
-				R(100).
-				Style("filter:url(#filter)"),
-		)
+		factoryBrowser.NewTagSvgCircle().Cx(110).Cy(110).R(100).Style("filter:url(#filter)"),
+	)
 
 	stage.Append(s1)
 

@@ -35,23 +35,17 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 10, 10}).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
-
-			factoryBrowser.NewTagSvgDefs().Append(
-
-				factoryBrowser.NewTagSvgRadialGradient().Id("myGradient").Append(
-
-					factoryBrowser.NewTagSvgStop().Offset(float32(0.1)).StopColor(factoryColor.NewGold()),
-					factoryBrowser.NewTagSvgStop().Offset(float32(0.95)).StopColor(factoryColor.NewRed()),
-				),
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 10, 10}).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgRadialGradient().Id("myGradient").Append(
+				factoryBrowser.NewTagSvgStop().Offset(float32(0.1)).StopColor(factoryColor.NewGold()),
+				factoryBrowser.NewTagSvgStop().Offset(float32(0.95)).StopColor(factoryColor.NewRed()),
 			),
+		),
 
-			// using my radial gradient
-			factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4).Fill("url('#myGradient')"),
-		)
+		// using my radial gradient
+		factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4).Fill("url('#myGradient')"),
+	)
 
 	stage.Append(s1)
 

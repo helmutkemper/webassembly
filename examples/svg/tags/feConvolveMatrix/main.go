@@ -37,38 +37,21 @@ func main() {
 	stage := factoryBrowser.NewStage()
 
 	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 200, 200}).
-		Width(200).
-		Height(200).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
-
-			factoryBrowser.NewTagSvgDefs().
-				Append(
-
-					factoryBrowser.NewTagSvgFilter().
-						Id("emboss").
-						Append(
-
-							factoryBrowser.NewTagSvgFeConvolveMatrix().
-								KernelMatrix(
-									[]float64{
-										3, 0, 0,
-										0, 0, 0,
-										0, 0, -3,
-									},
-								),
-						),
+		ViewBox([]float64{0, 0, 200, 200}).Width(200).Height(200).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgFilter().Id("emboss").Append(
+				factoryBrowser.NewTagSvgFeConvolveMatrix().KernelMatrix(
+					[]float64{
+						3, 0, 0,
+						0, 0, 0,
+						0, 0, -3,
+					},
 				),
+			),
+		),
 
-			factoryBrowser.NewTagSvgImage().
-				HRef("//yari-demos.prod.mdn.mozit.cloud/en-US/docs/Web/SVG/Element/feConvolveMatrix/mdn.svg").
-				X(0).
-				Y(0).
-				Height(200).
-				Width(200).
-				Style("filter:url(#emboss);"),
-		)
+		factoryBrowser.NewTagSvgImage().HRef("//yari-demos.prod.mdn.mozit.cloud/en-US/docs/Web/SVG/Element/feConvolveMatrix/mdn.svg").X(0).Y(0).Height(200).Width(200).Style("filter:url(#emboss);"),
+	)
 
 	stage.Append(s1)
 

@@ -29,28 +29,10 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{-5, -5, 10, 10}).
-		Append(
-
-			factoryBrowser.NewTagSvgRect().
-				X(-3).
-				Y(-3).
-				Width(6).
-				Height(6),
-
-			factoryBrowser.NewTagSvgRect().
-				X(-3).
-				Y(-3).
-				Width(6).
-				Height(6).
-				Fill(factoryColor.NewRed()).
-				Transform(
-
-					factoryBrowser.NewTransform().
-						SkewY(30),
-				),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{-5, -5, 10, 10}).Append(
+		factoryBrowser.NewTagSvgRect().X(-3).Y(-3).Width(6).Height(6),
+		factoryBrowser.NewTagSvgRect().X(-3).Y(-3).Width(6).Height(6).Fill(factoryColor.NewRed()).Transform(factoryBrowser.NewTransform().SkewY(30)),
+	)
 
 	stage.Append(s1)
 

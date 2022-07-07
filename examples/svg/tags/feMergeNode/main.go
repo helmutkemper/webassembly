@@ -41,33 +41,19 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(200).
-		Height(200).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
+	s1 := factoryBrowser.NewTagSvg().Width(200).Height(200).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgFilter().Id("feOffset").X(-40).Y(-20).Width(100).Height(200).Append(
+			factoryBrowser.NewTagSvgFeOffset().In(html.KSvgInSourceGraphic).Dx(60).Dy(60),
+			factoryBrowser.NewTagSvgFeGaussianBlur().In(html.KSvgInSourceGraphic).StdDeviation(5).Result("blur2"),
+			factoryBrowser.NewTagSvgFeMerge().Append(
+				factoryBrowser.NewTagSvgFeMergeNode().In("blur2"),
+				factoryBrowser.NewTagSvgFeMergeNode().In(html.KSvgInSourceGraphic),
+			),
+		),
 
-			factoryBrowser.NewTagSvgFilter().
-				Id("feOffset").
-				X(-40).
-				Y(-20).
-				Width(100).
-				Height(200).
-				Append(
-
-					factoryBrowser.NewTagSvgFeOffset().In(html.KSvgInSourceGraphic).Dx(60).Dy(60),
-					factoryBrowser.NewTagSvgFeGaussianBlur().In(html.KSvgInSourceGraphic).StdDeviation(5).Result("blur2"),
-					factoryBrowser.NewTagSvgFeMerge().
-						Append(
-
-							factoryBrowser.NewTagSvgFeMergeNode().In("blur2"),
-							factoryBrowser.NewTagSvgFeMergeNode().In(html.KSvgInSourceGraphic),
-						),
-				),
-
-			factoryBrowser.NewTagSvgRect().X(40).Y(40).Width(100).Height(100).Style("stroke: #000000; fill: green; filter: url(#feOffset);"),
-			factoryBrowser.NewTagSvgRect().X(40).Y(40).Width(100).Height(100).Style("stroke: #000000; fill: green;"),
-		)
+		factoryBrowser.NewTagSvgRect().X(40).Y(40).Width(100).Height(100).Style("stroke: #000000; fill: green; filter: url(#feOffset);"),
+		factoryBrowser.NewTagSvgRect().X(40).Y(40).Width(100).Height(100).Style("stroke: #000000; fill: green;"),
+	)
 
 	stage.Append(s1)
 

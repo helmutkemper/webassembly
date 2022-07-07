@@ -34,46 +34,17 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(200).
-		Height(200).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
+	s1 := factoryBrowser.NewTagSvg().Width(200).Height(200).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
 
-			factoryBrowser.
-				NewTagSvgDefs().
-				Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgFilter().Id("offset").Width(180).Height(180).Append(
+				factoryBrowser.NewTagSvgFeOffset().In(html.KSvgInSourceGraphic).Dx(60).Dy(60),
+			),
+		),
 
-					factoryBrowser.NewTagSvgFilter().
-						Id("offset").
-						Width(180).
-						Height(180).
-						Append(
-
-							factoryBrowser.NewTagSvgFeOffset().
-								In(html.KSvgInSourceGraphic).
-								Dx(60).
-								Dy(60),
-						),
-				),
-
-			factoryBrowser.NewTagSvgRect().
-				X(0).
-				Y(0).
-				Width(100).
-				Height(100).
-				Stroke(factoryColor.NewBlack()).
-				Fill(factoryColor.NewGreen()),
-
-			factoryBrowser.NewTagSvgRect().
-				X(0).
-				Y(0).
-				Width(100).
-				Height(100).
-				Stroke(factoryColor.NewBlack()).
-				Fill(factoryColor.NewGreen()).
-				Filter("url(#offset)"),
-		)
+		factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(100).Height(100).Stroke(factoryColor.NewBlack()).Fill(factoryColor.NewGreen()),
+		factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(100).Height(100).Stroke(factoryColor.NewBlack()).Fill(factoryColor.NewGreen()).Filter("url(#offset)"),
+	)
 
 	stage.Append(s1)
 

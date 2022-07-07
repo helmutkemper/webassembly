@@ -25,16 +25,9 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 200, 100}).
-		Append(
-
-			factoryBrowser.NewTagSvgEllipse().
-				Cx(100).
-				Cy(50).
-				Rx(100).
-				Ry(50),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 100}).Append(
+		factoryBrowser.NewTagSvgEllipse().Cx(100).Cy(50).Rx(100).Ry(50),
+	)
 
 	stage.Append(s1)
 

@@ -38,43 +38,16 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(200).
-		Height(200).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
+	s1 := factoryBrowser.NewTagSvg().Width(200).Height(200).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgFilter().Id("spotlight").Append(
+				factoryBrowser.NewTagSvgFeFlood().Result("floodFill").X(0).Y(0).Width(float32(1)).Height(float32(1)).FloodColor(factoryColor.NewGreen()).FloodOpacity(1),
+				factoryBrowser.NewTagSvgFeBlend().In(html.KSvgInSourceGraphic).In2("floodFill").Mode(html.KSvgModeMultiply),
+			),
+		),
 
-			factoryBrowser.NewTagSvgDefs().
-				Append(
-
-					factoryBrowser.NewTagSvgFilter().
-						Id("spotlight").
-						Append(
-
-							factoryBrowser.NewTagSvgFeFlood().
-								Result("floodFill").
-								X(0).
-								Y(0).
-								Width(float32(1)).
-								Height(float32(1)).
-								FloodColor(factoryColor.NewGreen()).
-								FloodOpacity(1),
-
-							factoryBrowser.NewTagSvgFeBlend().
-								In(html.KSvgInSourceGraphic).
-								In2("floodFill").
-								Mode(html.KSvgModeMultiply),
-						),
-				),
-
-			factoryBrowser.NewTagSvgImage().
-				HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").
-				X(float32(0.1)).
-				Y(float32(0.1)).
-				Width(float32(0.8)).
-				Height(float32(0.8)).
-				Style("filter:url(#spotlight);"),
-		)
+		factoryBrowser.NewTagSvgImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(float32(0.1)).Y(float32(0.1)).Width(float32(0.8)).Height(float32(0.8)).Style("filter:url(#spotlight);"),
+	)
 
 	stage.Append(s1)
 

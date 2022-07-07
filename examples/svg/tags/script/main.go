@@ -46,26 +46,23 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 10, 10}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 10, 10}).Append(
+		factoryBrowser.NewTagSvgScript().Script(
+			"  // <![CDATA[\n"+
+				"function getColor () {\n"+
+				"const R = Math.round(Math.random() * 255).toString(16).padStart(2,'0')\n"+
+				"const G = Math.round(Math.random() * 255).toString(16).padStart(2,'0')\n"+
+				"const B = Math.round(Math.random() * 255).toString(16).padStart(2,'0')\n"+
+				"return `#${R}${G}${B}`\n"+
+				"}\n"+
+				"document.querySelector('circle').addEventListener('click', (e) => {\n"+
+				"e.target.style.fill = getColor()\n"+
+				"})\n"+
+				"// ]]>",
+		),
 
-			factoryBrowser.NewTagSvgScript().Script(
-				"  // <![CDATA[\n"+
-					"function getColor () {\n"+
-					"const R = Math.round(Math.random() * 255).toString(16).padStart(2,'0')\n"+
-					"const G = Math.round(Math.random() * 255).toString(16).padStart(2,'0')\n"+
-					"const B = Math.round(Math.random() * 255).toString(16).padStart(2,'0')\n"+
-					"return `#${R}${G}${B}`\n"+
-					"}\n"+
-					"document.querySelector('circle').addEventListener('click', (e) => {\n"+
-					"e.target.style.fill = getColor()\n"+
-					"})\n"+
-					"// ]]>",
-			),
-
-			factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4),
-		)
+		factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4),
+	)
 
 	stage.Append(s1)
 

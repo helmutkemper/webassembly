@@ -35,23 +35,13 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(200).
-		Height(200).
-		ViewBox([]float64{0, 0, 220, 220}).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
-
-			factoryBrowser.NewTagSvgFilter().
-				Id("displacementFilter").
-				Append(
-
-					factoryBrowser.NewTagSvgFeTurbulence().Type(html.KSvgTypeTurbulenceTurbulence).BaseFrequency(0.05).NumOctaves(2).Result("turbulence"),
-					factoryBrowser.NewTagSvgFeDisplacementMap().In2("turbulence").In(html.KSvgInSourceGraphic).Scale(50).XChannelSelector(html.KSvgChannelSelectorR).YChannelSelector(html.KSvgChannelSelectorG),
-				),
-
-			factoryBrowser.NewTagSvgCircle().Cx(100).Cy(100).R(100).Style("filter: url(#displacementFilter)"),
-		)
+	s1 := factoryBrowser.NewTagSvg().Width(200).Height(200).ViewBox([]float64{0, 0, 220, 220}).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgFilter().Id("displacementFilter").Append(
+			factoryBrowser.NewTagSvgFeTurbulence().Type(html.KSvgTypeTurbulenceTurbulence).BaseFrequency(0.05).NumOctaves(2).Result("turbulence"),
+			factoryBrowser.NewTagSvgFeDisplacementMap().In2("turbulence").In(html.KSvgInSourceGraphic).Scale(50).XChannelSelector(html.KSvgChannelSelectorR).YChannelSelector(html.KSvgChannelSelectorG),
+		),
+		factoryBrowser.NewTagSvgCircle().Cx(100).Cy(100).R(100).Style("filter: url(#displacementFilter)"),
+	)
 
 	stage.Append(s1)
 

@@ -42,74 +42,22 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	tf := &html.TransformFunctions{}
-	tf.SkewX(20).
-		Translate(-35, 0)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 420, 200}).Append(
+		factoryBrowser.NewTagSvgRadialGradient().Id("gradient1").GradientUnits(html.KSvgGradientUnitsUserSpaceOnUse).Cx(100).Cy(100).R(100).Fx(100).Fy(100).Append(
+			factoryBrowser.NewTagSvgStop().Offset(float32(0.0)).StopColor(factoryColor.NewDarkblue()),
+			factoryBrowser.NewTagSvgStop().Offset(float32(0.5)).StopColor(factoryColor.NewSkyblue()),
+			factoryBrowser.NewTagSvgStop().Offset(float32(1.0)).StopColor(factoryColor.NewDarkblue()),
+		),
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 420, 200}).
-		Append(
+		factoryBrowser.NewTagSvgRadialGradient().Id("gradient2").GradientUnits(html.KSvgGradientUnitsUserSpaceOnUse).Cx(100).Cy(100).R(100).Fx(100).GradientTransform(factoryBrowser.NewTransform().SkewX(20).Translate(-35, 0)).Fy(100).Append(
+			factoryBrowser.NewTagSvgStop().Offset(float32(0.0)).StopColor(factoryColor.NewDarkblue()),
+			factoryBrowser.NewTagSvgStop().Offset(float32(0.5)).StopColor(factoryColor.NewSkyblue()),
+			factoryBrowser.NewTagSvgStop().Offset(float32(1.0)).StopColor(factoryColor.NewDarkblue()),
+		),
 
-			factoryBrowser.NewTagSvgRadialGradient().
-				Id("gradient1").
-				GradientUnits(html.KSvgGradientUnitsUserSpaceOnUse).
-				Cx(100).
-				Cy(100).
-				R(100).
-				Fx(100).
-				Fy(100).Append(
-
-				factoryBrowser.NewTagSvgStop().
-					Offset(float32(0.0)).
-					StopColor(factoryColor.NewDarkblue()),
-
-				factoryBrowser.NewTagSvgStop().
-					Offset(float32(0.5)).
-					StopColor(factoryColor.NewSkyblue()),
-
-				factoryBrowser.NewTagSvgStop().
-					Offset(float32(1.0)).
-					StopColor(factoryColor.NewDarkblue()),
-			),
-
-			factoryBrowser.NewTagSvgRadialGradient().
-				Id("gradient2").
-				GradientUnits(html.KSvgGradientUnitsUserSpaceOnUse).
-				Cx(100).
-				Cy(100).
-				R(100).
-				Fx(100).
-				GradientTransform(tf).
-				Fy(100).Append(
-
-				factoryBrowser.NewTagSvgStop().
-					Offset(float32(0.0)).
-					StopColor(factoryColor.NewDarkblue()),
-
-				factoryBrowser.NewTagSvgStop().
-					Offset(float32(0.5)).
-					StopColor(factoryColor.NewSkyblue()),
-
-				factoryBrowser.NewTagSvgStop().
-					Offset(float32(1.0)).
-					StopColor(factoryColor.NewDarkblue()),
-			),
-
-			factoryBrowser.NewTagSvgRect().
-				X(0).
-				Y(0).
-				Width(200).
-				Height(200).
-				Fill("url(#gradient1)"),
-
-			factoryBrowser.NewTagSvgRect().
-				X(0).
-				Y(0).
-				Width(200).
-				Height(200).
-				Fill("url(#gradient2)").
-				Style("transform: translateX(220px);"),
-		)
+		factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(200).Height(200).Fill("url(#gradient1)"),
+		factoryBrowser.NewTagSvgRect().X(0).Y(0).Width(200).Height(200).Fill("url(#gradient2)").Style("transform: translateX(220px);"),
+	)
 
 	stage.Append(s1)
 

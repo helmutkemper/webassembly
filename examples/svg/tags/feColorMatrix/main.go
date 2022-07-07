@@ -90,188 +90,78 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 150, 500}).
-		PreserveAspectRatio(
-			html.KRatioXMidYMid,
-			html.KMeetOrSliceReferenceMeet,
-		).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 150, 500}).PreserveAspectRatio(html.KRatioXMidYMid, html.KMeetOrSliceReferenceMeet).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
 
-			// ref
-			factoryBrowser.NewTagSvgDefs().
-				Append(
+		// ref
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgG().Id("circles").Append(
+				factoryBrowser.NewTagSvgCircle().Cx(30).Cy(30).R(20).Fill(factoryColor.NewBlue()).FillOpacity(0.5),
+				factoryBrowser.NewTagSvgCircle().Cx(20).Cy(50).R(20).Fill(factoryColor.NewGreen()).FillOpacity(0.5),
+				factoryBrowser.NewTagSvgCircle().Cx(40).Cy(50).R(20).Fill(factoryColor.NewRed()).FillOpacity(0.5),
+			),
+		),
 
-					factoryBrowser.NewTagSvgG().
-						Id("circles").
-						Append(
+		factoryBrowser.NewTagSvgUse().HRef("#circles"),
+		factoryBrowser.NewTagSvgText().X(70).Y(50).Text("Reference"),
 
-							factoryBrowser.NewTagSvgCircle().
-								Cx(30).
-								Cy(30).
-								R(20).
-								Fill(factoryColor.NewBlue()).
-								FillOpacity(0.5),
+		// identity matrix
+		factoryBrowser.NewTagSvgFilter().Id("colorMeTheSame").Append(
+			factoryBrowser.NewTagSvgFeColorMatrix().In(html.KSvgInSourceGraphic).Type(html.KSvgTypeFeColorMatrixMatrix).Values(
+				[]float64{
+					1, 0, 0, 0, 0,
+					0, 1, 0, 0, 0,
+					0, 0, 1, 0, 0,
+					0, 0, 0, 1, 0,
+				},
+			),
+		),
 
-							factoryBrowser.NewTagSvgCircle().
-								Cx(20).
-								Cy(50).
-								R(20).
-								Fill(factoryColor.NewGreen()).
-								FillOpacity(0.5),
+		factoryBrowser.NewTagSvgUse().HRef("#circles").Transform(factoryBrowser.NewTransform().Translate(0, 70)).Filter("url(#colorMeTheSame)"),
+		factoryBrowser.NewTagSvgText().X(70).Y(120).Text("Identity matrix"),
 
-							factoryBrowser.NewTagSvgCircle().
-								Cx(40).
-								Cy(50).
-								R(20).
-								Fill(factoryColor.NewRed()).
-								FillOpacity(0.5),
-						),
-				),
+		// Combine RGB into green matrix
+		factoryBrowser.NewTagSvgFilter().Id("colorMeGreen").Append(
+			factoryBrowser.NewTagSvgFeColorMatrix().In(html.KSvgInSourceGraphic).Type(html.KSvgTypeFeColorMatrixMatrix).Values(
+				[]float64{
+					0, 0, 0, 0, 0,
+					1, 1, 1, 1, 0,
+					0, 0, 0, 0, 0,
+					0, 0, 0, 1, 0,
+				},
+			),
+		),
 
-			factoryBrowser.NewTagSvgUse().
-				HRef("#circles"),
+		factoryBrowser.NewTagSvgUse().HRef("#circles").Transform(factoryBrowser.NewTransform().Translate(0, 140)).Filter("url(#colorMeGreen)"),
 
-			factoryBrowser.NewTagSvgText().
-				X(70).
-				Y(50).
-				Text("Reference"),
+		factoryBrowser.NewTagSvgText().X(70).Y(190).Text("rgbToGreen"),
 
-			// identity matrix
-			factoryBrowser.NewTagSvgFilter().
-				Id("colorMeTheSame").
-				Append(
+		//saturate
+		factoryBrowser.NewTagSvgFilter().Id("colorMeSaturate").Append(
+			factoryBrowser.NewTagSvgFeColorMatrix().In(html.KSvgInSourceGraphic).Type(html.KSvgTypeFeColorMatrixSaturate).Values(0.2),
+		),
 
-					factoryBrowser.NewTagSvgFeColorMatrix().
-						In(html.KSvgInSourceGraphic).
-						Type(html.KSvgTypeFeColorMatrixMatrix).
-						Values(
-							[]float64{
-								1, 0, 0, 0, 0,
-								0, 1, 0, 0, 0,
-								0, 0, 1, 0, 0,
-								0, 0, 0, 1, 0,
-							},
-						),
-				),
+		factoryBrowser.NewTagSvgUse().HRef("#circles").Transform(factoryBrowser.NewTransform().Translate(0, 210)).Filter("url(#colorMeSaturate)"),
 
-			factoryBrowser.NewTagSvgUse().
-				HRef("#circles").
-				Transform(
+		factoryBrowser.NewTagSvgText().X(70).Y(260).Text("Saturate"),
 
-					factoryBrowser.NewTransform().
-						Translate(0, 70),
-				).
-				Filter("url(#colorMeTheSame)"),
+		// hueRotate
+		factoryBrowser.NewTagSvgFilter().Id("colorMeHueRotate").Append(
+			factoryBrowser.NewTagSvgFeColorMatrix().In(html.KSvgInSourceGraphic).Type(html.KSvgTypeFeColorMatrixHueRotate).Values(180),
+		),
 
-			factoryBrowser.NewTagSvgText().
-				X(70).
-				Y(120).
-				Text("Identity matrix"),
+		factoryBrowser.NewTagSvgUse().HRef("#circles").Transform(factoryBrowser.NewTransform().Translate(0, 280)).Filter("url(#colorMeHueRotate)"),
 
-			// Combine RGB into green matrix
-			factoryBrowser.NewTagSvgFilter().
-				Id("colorMeGreen").
-				Append(
+		factoryBrowser.NewTagSvgText().X(70).Y(330).Text("hueRotate"),
 
-					factoryBrowser.NewTagSvgFeColorMatrix().
-						In(html.KSvgInSourceGraphic).
-						Type(html.KSvgTypeFeColorMatrixMatrix).
-						Values(
-							[]float64{
-								0, 0, 0, 0, 0,
-								1, 1, 1, 1, 0,
-								0, 0, 0, 0, 0,
-								0, 0, 0, 1, 0,
-							},
-						),
-				),
+		// luminanceToAlpha
+		factoryBrowser.NewTagSvgFilter().Id("colorMeLTA").Append(
+			factoryBrowser.NewTagSvgFeColorMatrix().In(html.KSvgInSourceGraphic).Type(html.KSvgTypeFeColorMatrixLuminanceToAlpha),
+		),
 
-			factoryBrowser.NewTagSvgUse().
-				HRef("#circles").
-				Transform(
+		factoryBrowser.NewTagSvgUse().HRef("#circles").Transform(factoryBrowser.NewTransform().Translate(0, 350)).Filter("url(#colorMeLTA)"),
 
-					factoryBrowser.NewTransform().
-						Translate(0, 140),
-				).
-				Filter("url(#colorMeGreen)"),
-
-			factoryBrowser.NewTagSvgText().
-				X(70).
-				Y(190).
-				Text("rgbToGreen"),
-
-			//saturate
-			factoryBrowser.NewTagSvgFilter().
-				Id("colorMeSaturate").
-				Append(
-
-					factoryBrowser.NewTagSvgFeColorMatrix().
-						In(html.KSvgInSourceGraphic).
-						Type(html.KSvgTypeFeColorMatrixSaturate).
-						Values(0.2),
-				),
-
-			factoryBrowser.NewTagSvgUse().
-				HRef("#circles").
-				Transform(
-					factoryBrowser.NewTransform().Translate(0, 210),
-				).
-				Filter("url(#colorMeSaturate)"),
-
-			factoryBrowser.NewTagSvgText().
-				X(70).
-				Y(260).
-				Text("Saturate"),
-
-			// hueRotate
-			factoryBrowser.NewTagSvgFilter().
-				Id("colorMeHueRotate").
-				Append(
-
-					factoryBrowser.NewTagSvgFeColorMatrix().
-						In(html.KSvgInSourceGraphic).
-						Type(html.KSvgTypeFeColorMatrixHueRotate).
-						Values(180),
-				),
-
-			factoryBrowser.NewTagSvgUse().
-				HRef("#circles").
-				Transform(
-
-					factoryBrowser.NewTransform().Translate(0, 280),
-				).
-				Filter("url(#colorMeHueRotate)"),
-
-			factoryBrowser.NewTagSvgText().
-				X(70).
-				Y(330).
-				Text("hueRotate"),
-
-			// luminanceToAlpha
-			factoryBrowser.NewTagSvgFilter().
-				Id("colorMeLTA").
-				Append(
-
-					factoryBrowser.NewTagSvgFeColorMatrix().
-						In(html.KSvgInSourceGraphic).
-						Type(html.KSvgTypeFeColorMatrixLuminanceToAlpha),
-				),
-
-			factoryBrowser.NewTagSvgUse().
-				HRef("#circles").
-				Transform(
-
-					factoryBrowser.NewTransform().Translate(0, 350),
-				).
-				Filter("url(#colorMeLTA)"),
-
-			factoryBrowser.NewTagSvgText().
-				X(70).
-				Y(400).
-				Text("luminanceToAlpha"),
-		)
+		factoryBrowser.NewTagSvgText().X(70).Y(400).Text("luminanceToAlpha"),
+	)
 
 	stage.Append(s1)
 

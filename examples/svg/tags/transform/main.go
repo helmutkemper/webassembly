@@ -34,41 +34,14 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{-40, 0, 150, 100}).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{-40, 0, 150, 100}).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgG().Fill(factoryColor.NewGray()).Transform(
+			factoryBrowser.NewTransform().Rotate(-10, 50, 100).Translate(-36, 45.5).SkewX(40).Scale(1, 0.5)).Append(
+			factoryBrowser.NewTagSvgPath().Id("heart").D(factoryBrowser.NewPath().M(10, 30).A(20, 20, 0, 0, 1, 50, 30).A(20, 20, 0, 0, 1, 90, 30).Q(90, 60, 50, 90).Q(10, 60, 10, 30).Z()),
+		),
 
-			factoryBrowser.NewTagSvgG().
-				Fill(factoryColor.NewGray()).
-				Transform(
-
-					factoryBrowser.NewTransform().
-						Rotate(-10, 50, 100).
-						Translate(-36, 45.5).
-						SkewX(40).
-						Scale(1, 0.5),
-				).
-				Append(
-
-					factoryBrowser.NewTagSvgPath().
-						Id("heart").
-						D(
-
-							factoryBrowser.NewPath().M(10, 30).
-								A(20, 20, 0, 0, 1, 50, 30).
-								A(20, 20, 0, 0, 1, 90, 30).
-								Q(90, 60, 50, 90).
-								Q(10, 60, 10, 30).
-								Z(),
-						),
-				),
-
-			factoryBrowser.NewTagSvgUse().
-				HRef("#heart").
-				Fill("none").
-				Stroke(factoryColor.NewRed()),
-		)
+		factoryBrowser.NewTagSvgUse().HRef("#heart").Fill("none").Stroke(factoryColor.NewRed()),
+	)
 
 	stage.Append(s1)
 

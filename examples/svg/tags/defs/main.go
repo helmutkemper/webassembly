@@ -37,40 +37,16 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 10, 10}).
-		Append(
-
-			factoryBrowser.NewTagSvgDefs().
-				Append(
-
-					factoryBrowser.NewTagSvgCircle().
-						Id("myCircle").
-						Cx(0).
-						Cy(0).
-						R(5),
-
-					factoryBrowser.NewTagSvgLinearGradient().
-						Id("myGradient").
-						GradientTransform("rotate(90)").
-						Append(
-
-							factoryBrowser.NewTagSvgStop().
-								Offset(float32(0.2)).
-								StopColor(factoryColor.NewGold()),
-
-							factoryBrowser.NewTagSvgStop().
-								Offset(float32(0.9)).
-								StopColor(factoryColor.NewRed()),
-						),
-				),
-
-			factoryBrowser.NewTagSvgUse().
-				X(5).
-				Y(5).
-				HRef("#myCircle").
-				Fill("url('#myGradient')"),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 10, 10}).Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgCircle().Id("myCircle").Cx(0).Cy(0).R(5),
+			factoryBrowser.NewTagSvgLinearGradient().Id("myGradient").GradientTransform("rotate(90)").Append(
+				factoryBrowser.NewTagSvgStop().Offset(float32(0.2)).StopColor(factoryColor.NewGold()),
+				factoryBrowser.NewTagSvgStop().Offset(float32(0.9)).StopColor(factoryColor.NewRed()),
+			),
+		),
+		factoryBrowser.NewTagSvgUse().X(5).Y(5).HRef("#myCircle").Fill("url('#myGradient')"),
+	)
 
 	stage.Append(s1)
 

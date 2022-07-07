@@ -29,16 +29,13 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 220, 100}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 220, 100}).Append(
+		// Simple rectangle
+		factoryBrowser.NewTagSvgRect().Width(100).Height(100),
 
-			// Simple rectangle
-			factoryBrowser.NewTagSvgRect().Width(100).Height(100),
-
-			// Rounded corner rectangle
-			factoryBrowser.NewTagSvgRect().X(120).Width(100).Height(100).Rx(15),
-		)
+		// Rounded corner rectangle
+		factoryBrowser.NewTagSvgRect().X(120).Width(100).Height(100).Rx(15),
+	)
 
 	stage.Append(s1)
 

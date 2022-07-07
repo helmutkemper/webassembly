@@ -57,44 +57,20 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(300).
-		Height(180).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
+	s1 := factoryBrowser.NewTagSvg().Width(300).Height(180).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
 
-			factoryBrowser.NewTagSvgFilter().
-				Id("erode").
-				Append(
+		factoryBrowser.NewTagSvgFilter().Id("erode").Append(
+			factoryBrowser.NewTagSvgFeMorphology().Operator("erode").Radius(1),
+		),
 
-					factoryBrowser.NewTagSvgFeMorphology().
-						Operator("erode").
-						Radius(1),
-				),
+		factoryBrowser.NewTagSvgFilter().Id("dilate").Append(
+			factoryBrowser.NewTagSvgFeMorphology().Operator(html.KKSvgOperatorFeCompositeDilate).Radius(2),
+		),
 
-			factoryBrowser.NewTagSvgFilter().
-				Id("dilate").
-				Append(
-
-					factoryBrowser.NewTagSvgFeMorphology().
-						Operator(html.KKSvgOperatorFeCompositeDilate).
-						Radius(2),
-				),
-
-			factoryBrowser.NewTagSvgText().
-				Y("1em").
-				Text("Normal text"),
-
-			factoryBrowser.NewTagSvgText().
-				Id("thin").
-				Y("2em").
-				Text("Thinned text"),
-
-			factoryBrowser.NewTagSvgText().
-				Id("thick").
-				Y("3em").
-				Text("Thinned text"),
-		)
+		factoryBrowser.NewTagSvgText().Y("1em").Text("Normal text"),
+		factoryBrowser.NewTagSvgText().Id("thin").Y("2em").Text("Thinned text"),
+		factoryBrowser.NewTagSvgText().Id("thick").Y("3em").Text("Thinned text"),
+	)
 
 	stage.Append(s1)
 

@@ -39,53 +39,19 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{-50, -50, 100, 100}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{-50, -50, 100, 100}).Append(
+		// uniform scale
+		factoryBrowser.NewTagSvgCircle().Cx(0).Cy(0).R(10).Fill(factoryColor.NewRed()).Transform(factoryBrowser.NewTransform().Scale(4, 4)),
 
-			// uniform scale
-			factoryBrowser.NewTagSvgCircle().
-				Cx(0).
-				Cy(0).
-				R(10).
-				Fill(factoryColor.NewRed()).
-				Transform(
+		// vertical scale
+		factoryBrowser.NewTagSvgCircle().Cx(0).Cy(0).R(10).Fill(factoryColor.NewYellow()).Transform(factoryBrowser.NewTransform().Scale(1, 4)),
 
-					factoryBrowser.NewTransform().
-						Scale(4, 4),
-				),
+		// horizontal scale
+		factoryBrowser.NewTagSvgCircle().Cx(0).Cy(0).R(10).Fill(factoryColor.NewPink()).Transform(factoryBrowser.NewTransform().Scale(4, 1)),
 
-			// vertical scale
-			factoryBrowser.NewTagSvgCircle().
-				Cx(0).
-				Cy(0).
-				R(10).
-				Fill(factoryColor.NewYellow()).
-				Transform(
-
-					factoryBrowser.NewTransform().
-						Scale(1, 4),
-				),
-
-			// horizontal scale
-			factoryBrowser.NewTagSvgCircle().
-				Cx(0).
-				Cy(0).
-				R(10).
-				Fill(factoryColor.NewPink()).
-				Transform(
-
-					factoryBrowser.NewTransform().
-						Scale(4, 1),
-				),
-
-			// No scale
-			factoryBrowser.NewTagSvgCircle().
-				Cx(0).
-				Cy(0).
-				R(10).
-				Fill(factoryColor.NewBlack()),
-		)
+		// No scale
+		factoryBrowser.NewTagSvgCircle().Cx(0).Cy(0).R(10).Fill(factoryColor.NewBlack()),
+	)
 
 	stage.Append(s1)
 

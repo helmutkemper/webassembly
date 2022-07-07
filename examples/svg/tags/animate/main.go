@@ -31,33 +31,12 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 10, 10}).
-		Append(
-
-			factoryBrowser.NewTagSvgRect().
-				Width(10).
-				Height(10).Append(
-
-				factoryBrowser.NewTagSvgAnimate().
-					AttributeName("rx").
-					Values([]float64{0, 5, 0}).
-					Dur(10*time.Second).
-					RepeatCount(html.KSvgDurIndefinite),
-
-				factoryBrowser.NewTagSvgAnimate().
-					AttributeName("fill").
-					Values(
-						[]color.RGBA{
-							factoryColor.NewBlack(),
-							factoryColor.NewRed(),
-							factoryColor.NewBlack(),
-						},
-					).
-					Dur(10*time.Second).
-					RepeatCount(html.KSvgDurIndefinite),
-			),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 10, 10}).Append(
+		factoryBrowser.NewTagSvgRect().Width(10).Height(10).Append(
+			factoryBrowser.NewTagSvgAnimate().AttributeName("rx").Values([]float64{0, 5, 0}).Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite),
+			factoryBrowser.NewTagSvgAnimate().AttributeName("fill").Values([]color.RGBA{factoryColor.NewBlack(), factoryColor.NewRed(), factoryColor.NewBlack()}).Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite),
+		),
+	)
 
 	stage.Append(s1)
 

@@ -37,30 +37,15 @@ func main() {
 	stage := factoryBrowser.NewStage()
 
 	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 200, 200}).
-		Width(200).
-		Height(200).
-		Append(
+		ViewBox([]float64{0, 0, 200, 200}).Width(200).Height(200).Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgFilter().Id("floodFilter").FilterUnits("userSpaceOnUse").Append(
+				factoryBrowser.NewTagSvgFeFlood().X(50).Y(50).Width(100).Height(100).FloodColor(factoryColor.NewGreen()).FloodOpacity(0.5),
+			),
+		),
 
-			factoryBrowser.NewTagSvgDefs().
-				Append(
-					factoryBrowser.NewTagSvgFilter().Id("floodFilter").
-						FilterUnits("userSpaceOnUse").
-						Append(
-
-							factoryBrowser.NewTagSvgFeFlood().
-								X(50).
-								Y(50).
-								Width(100).
-								Height(100).
-								FloodColor(factoryColor.NewGreen()).
-								FloodOpacity(0.5),
-						),
-				),
-
-			factoryBrowser.NewTagSvgUse().
-				Style("filter: url(#floodFilter);"),
-		)
+		factoryBrowser.NewTagSvgUse().Style("filter: url(#floodFilter);"),
+	)
 
 	stage.Append(s1)
 

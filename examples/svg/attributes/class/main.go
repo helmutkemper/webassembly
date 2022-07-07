@@ -43,7 +43,6 @@ func main() {
 	stage := factoryBrowser.NewStage()
 
 	s1 := factoryBrowser.NewTagSvg().Width(120).Height(220).ViewBox([]float64{0, 0, 120, 120}).Append(
-
 		factoryBrowser.NewTagSvgStyle().Style(
 			//"<![CDATA[\n"+
 			"rect.rectClass {\n"+

@@ -39,56 +39,19 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 100, 100}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 100, 100}).Append(
+		// No translation
+		factoryBrowser.NewTagSvgRect().X(5).Y(5).Width(40).Height(40).Fill(factoryColor.NewGreen()),
+		factoryBrowser.NewTagSvgRect().X(5).Y(5).Width(40).Height(40).Fill(factoryColor.NewBlue()).Transform(
+			factoryBrowser.NewTransform().
+				// When y is not defined, use zero
+				// Quando y não é definido, use zero
+				Translate(50, 0),
+		),
 
-			// No translation
-			factoryBrowser.NewTagSvgRect().
-				X(5).
-				Y(5).
-				Width(40).
-				Height(40).
-				Fill(factoryColor.NewGreen()),
-
-			factoryBrowser.NewTagSvgRect().
-				X(5).
-				Y(5).
-				Width(40).
-				Height(40).
-				Fill(factoryColor.NewBlue()).
-				Transform(
-
-					factoryBrowser.NewTransform().
-						// When y is not defined, use zero
-						// Quando y não é definido, use zero
-						Translate(50, 0),
-				),
-
-			factoryBrowser.NewTagSvgRect().
-				X(5).
-				Y(5).
-				Width(40).
-				Height(40).
-				Fill(factoryColor.NewRed()).
-				Transform(
-
-					factoryBrowser.NewTransform().
-						Translate(0, 50),
-				),
-
-			factoryBrowser.NewTagSvgRect().
-				X(5).
-				Y(5).
-				Width(40).
-				Height(40).
-				Fill(factoryColor.NewYellow()).
-				Transform(
-
-					factoryBrowser.NewTransform().
-						Translate(50, 50),
-				),
-		)
+		factoryBrowser.NewTagSvgRect().X(5).Y(5).Width(40).Height(40).Fill(factoryColor.NewRed()).Transform(factoryBrowser.NewTransform().Translate(0, 50)),
+		factoryBrowser.NewTagSvgRect().X(5).Y(5).Width(40).Height(40).Fill(factoryColor.NewYellow()).Transform(factoryBrowser.NewTransform().Translate(50, 50)),
+	)
 
 	stage.Append(s1)
 

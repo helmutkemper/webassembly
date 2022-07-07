@@ -39,51 +39,17 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(200).
-		Height(200).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
-
-			factoryBrowser.NewTagSvgDefs().
-				Append(
-
-					factoryBrowser.NewTagSvgFilter().
-						Id("spotlight").
-						Append(
-
-							factoryBrowser.NewTagSvgFeSpecularLighting().
-								Result("spotlight").
-								SpecularConstant(1.5).
-								SpecularExponent(80).
-								LightingColor("#FFF").
-								Append(
-
-									factoryBrowser.NewTagSvgFePointLight().
-										X(50).
-										Y(50).
-										Z(220),
-								),
-
-							factoryBrowser.NewTagSvgFeComposite().
-								In(html.KSvgInSourceGraphic).
-								In2("spotlight").
-								Operator(html.KSvgOperatorFeCompositeArithmetic).
-								K1(0).
-								K2(1).
-								K3(1).
-								K4(0),
-						),
+	s1 := factoryBrowser.NewTagSvg().Width(200).Height(200).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgFilter().Id("spotlight").Append(
+				factoryBrowser.NewTagSvgFeSpecularLighting().Result("spotlight").SpecularConstant(1.5).SpecularExponent(80).LightingColor("#FFF").Append(
+					factoryBrowser.NewTagSvgFePointLight().X(50).Y(50).Z(220),
 				),
-
-			factoryBrowser.NewTagSvgImage().
-				HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").
-				X(float32(0.1)).
-				Y(float32(0.1)).
-				Width(float32(0.8)).
-				Height(float32(0.8)).
-				Style("filter:url(#spotlight);"),
-		)
+				factoryBrowser.NewTagSvgFeComposite().In(html.KSvgInSourceGraphic).In2("spotlight").Operator(html.KSvgOperatorFeCompositeArithmetic).K1(0).K2(1).K3(1).K4(0),
+			),
+		),
+		factoryBrowser.NewTagSvgImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(float32(0.1)).Y(float32(0.1)).Width(float32(0.8)).Height(float32(0.8)).Style("filter:url(#spotlight);"),
+	)
 
 	stage.Append(s1)
 

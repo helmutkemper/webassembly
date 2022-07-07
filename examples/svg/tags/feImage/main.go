@@ -33,29 +33,15 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 200, 200}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 200}).Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgFilter().Id("image").Append(
+				factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png"),
+			),
+		),
 
-			factoryBrowser.NewTagSvgDefs().
-				Append(
-
-					factoryBrowser.NewTagSvgFilter().
-						Id("image").
-						Append(
-
-							factoryBrowser.NewTagSvgFeImage().
-								HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png"),
-						),
-				),
-
-			factoryBrowser.NewTagSvgRect().
-				X(float32(0.1)).
-				Y(float32(0.1)).
-				Width(float32(0.8)).
-				Height(float32(0.8)).
-				Style("filter:url(#image);"),
-		)
+		factoryBrowser.NewTagSvgRect().X(float32(0.1)).Y(float32(0.1)).Width(float32(0.8)).Height(float32(0.8)).Style("filter:url(#image);"),
+	)
 
 	stage.Append(s1)
 

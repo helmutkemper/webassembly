@@ -34,40 +34,12 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 200, 100}).
-		Append(
-
-			factoryBrowser.NewTagSvgPath().
-				Fill("none").
-				Stroke(factoryColor.NewLightgrey()).
-				D(
-
-					factoryBrowser.NewPath().
-						M(20, 50).
-						C(20, -50, 180, 150, 180, 50).
-						C(180, -50, 20, 150, 20, 50).
-						Z(),
-				),
-
-			factoryBrowser.NewTagSvgCircle().
-				R(5).
-				Fill(factoryColor.NewRed()).
-				Append(
-
-					factoryBrowser.NewTagSvgAnimateMotion().
-						Dur(10*time.Second).
-						RepeatCount(html.KSvgDurIndefinite).
-						Path(
-
-							factoryBrowser.NewPath().
-								M(20, 50).
-								C(20, -50, 180, 150, 180, 50).
-								C(180, -50, 20, 150, 20, 50).
-								Z(),
-						),
-				),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 100}).Append(
+		factoryBrowser.NewTagSvgPath().Fill("none").Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+		factoryBrowser.NewTagSvgCircle().R(5).Fill(factoryColor.NewRed()).Append(
+			factoryBrowser.NewTagSvgAnimateMotion().Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+		),
+	)
 
 	stage.Append(s1)
 

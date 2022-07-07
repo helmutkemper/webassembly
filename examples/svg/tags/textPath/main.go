@@ -38,20 +38,17 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 100, 100}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 100, 100}).Append(
 
-			// to hide the path, it is usually wrapped in a <defs> element
-			// <defs>
-			factoryBrowser.NewTagSvgPath().Id("MyPath").Fill(nil).Stroke(factoryColor.NewRed()).D(factoryBrowser.NewPath().M(10, 90).Q(90, 90, 90, 45).Q(90, 10, 50, 10).Q(10, 10, 10, 40).Q(10, 70, 45, 70).Q(70, 70, 75, 50)),
-			// <defs>
+		// to hide the path, it is usually wrapped in a <defs> element
+		// <defs>
+		factoryBrowser.NewTagSvgPath().Id("MyPath").Fill(nil).Stroke(factoryColor.NewRed()).D(factoryBrowser.NewPath().M(10, 90).Q(90, 90, 90, 45).Q(90, 10, 50, 10).Q(10, 10, 10, 40).Q(10, 70, 45, 70).Q(70, 70, 75, 50)),
+		// <defs>
 
-			factoryBrowser.NewTagSvgText().Append(
-
-				factoryBrowser.NewTagSvgTextPath().HRef("#MyPath").Html("Quick brown fox jumps over the lazy dog."),
-			),
-		)
+		factoryBrowser.NewTagSvgText().Append(
+			factoryBrowser.NewTagSvgTextPath().HRef("#MyPath").Html("Quick brown fox jumps over the lazy dog."),
+		),
+	)
 
 	stage.Append(s1)
 

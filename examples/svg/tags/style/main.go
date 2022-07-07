@@ -33,21 +33,16 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 10, 10}).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
-
-			factoryBrowser.NewTagSvgStyle().Style(
-				"circle {\n"+
-					"fill: gold;\n"+
-					"stroke: maroon;\n"+
-					"stroke-width: 2px;\n"+
-					"}",
-			),
-
-			factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 10, 10}).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgStyle().Style(
+			"circle {\n"+
+				"fill: gold;\n"+
+				"stroke: maroon;\n"+
+				"stroke-width: 2px;\n"+
+				"}",
+		),
+		factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4),
+	)
 
 	stage.Append(s1)
 

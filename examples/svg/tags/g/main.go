@@ -30,28 +30,13 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 100, 100}).
-		Append(
-
-			// Using g to inherit presentation attributes
-			factoryBrowser.NewTagSvgG().
-				Fill(factoryColor.NewWhite()).
-				Stroke(factoryColor.NewGreen()).
-				StrokeWidth(5).
-				Append(
-
-					factoryBrowser.NewTagSvgCircle().
-						Cx(40).
-						Cy(40).
-						R(25),
-
-					factoryBrowser.NewTagSvgCircle().
-						Cx(60).
-						Cy(60).
-						R(25),
-				),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 100, 100}).Append(
+		// Using g to inherit presentation attributes
+		factoryBrowser.NewTagSvgG().Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewGreen()).StrokeWidth(5).Append(
+			factoryBrowser.NewTagSvgCircle().Cx(40).Cy(40).R(25),
+			factoryBrowser.NewTagSvgCircle().Cx(60).Cy(60).R(25),
+		),
+	)
 
 	stage.Append(s1)
 

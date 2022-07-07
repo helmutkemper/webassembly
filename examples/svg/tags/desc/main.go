@@ -32,25 +32,16 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 10, 10}).
-		Append(
-
-			factoryBrowser.NewTagSvgCircle().
-				Cx(5).
-				Cy(5).
-				R(4).
-				Append(
-
-					factoryBrowser.NewTagSvgDesc().
-						Text(
-							"I'm a circle and that description is here to" +
-								"demonstrate how I can be described, but is it" +
-								"really necessary to describe a simple circle" +
-								"like me?",
-						),
-				),
-		)
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 10, 10}).Append(
+		factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4).Append(
+			factoryBrowser.NewTagSvgDesc().Text(
+				"I'm a circle and that description is here to" +
+					"demonstrate how I can be described, but is it" +
+					"really necessary to describe a simple circle" +
+					"like me?",
+			),
+		),
+	)
 
 	stage.Append(s1)
 

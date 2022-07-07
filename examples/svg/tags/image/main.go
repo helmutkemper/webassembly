@@ -26,16 +26,9 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(200).
-		Height(200).
-		Append(
-
-			factoryBrowser.NewTagSvgImage().
-				HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").
-				Height(200).
-				Width(200),
-		)
+	s1 := factoryBrowser.NewTagSvg().Width(200).Height(200).Append(
+		factoryBrowser.NewTagSvgImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").Height(200).Width(200),
+	)
 
 	stage.Append(s1)
 

@@ -53,53 +53,36 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 200, 200}).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 200}).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgRect().X(10).Y(10).Width(30).Height(20).Fill(factoryColor.NewGreen()),
 
-			factoryBrowser.NewTagSvgRect().
-				X(10).
-				Y(10).
-				Width(30).
-				Height(20).
-				Fill(factoryColor.NewGreen()),
+		//    In the following example we are applying the matrix:
+		//    [a c e]    [3 -1 30]
+		//    [b d f] => [1  3 40]
+		//    [0 0 1]    [0  0  1]
+		//
+		//    which transform the rectangle as such:
+		//
+		//    top left corner: oldX=10 oldY=10
+		//    newX = a * oldX + c * oldY + e = 3 * 10 - 1 * 10 + 30 = 50
+		//    newY = b * oldX + d * oldY + f = 1 * 10 + 3 * 10 + 40 = 80
+		//
+		//    top right corner: oldX=40 oldY=10
+		//    newX = a * oldX + c * oldY + e = 3 * 40 - 1 * 10 + 30 = 140
+		//    newY = b * oldX + d * oldY + f = 1 * 40 + 3 * 10 + 40 = 110
+		//
+		//    bottom left corner: oldX=10 oldY=30
+		//    newX = a * oldX + c * oldY + e = 3 * 10 - 1 * 30 + 30 = 30
+		//    newY = b * oldX + d * oldY + f = 1 * 10 + 3 * 30 + 40 = 140
+		//
+		//    bottom right corner: oldX=40 oldY=30
+		//    newX = a * oldX + c * oldY + e = 3 * 40 - 1 * 30 + 30 = 120
+		//    newY = b * oldX + d * oldY + f = 1 * 40 + 3 * 30 + 40 = 170
 
-			//    In the following example we are applying the matrix:
-			//    [a c e]    [3 -1 30]
-			//    [b d f] => [1  3 40]
-			//    [0 0 1]    [0  0  1]
-			//
-			//    which transform the rectangle as such:
-			//
-			//    top left corner: oldX=10 oldY=10
-			//    newX = a * oldX + c * oldY + e = 3 * 10 - 1 * 10 + 30 = 50
-			//    newY = b * oldX + d * oldY + f = 1 * 10 + 3 * 10 + 40 = 80
-			//
-			//    top right corner: oldX=40 oldY=10
-			//    newX = a * oldX + c * oldY + e = 3 * 40 - 1 * 10 + 30 = 140
-			//    newY = b * oldX + d * oldY + f = 1 * 40 + 3 * 10 + 40 = 110
-			//
-			//    bottom left corner: oldX=10 oldY=30
-			//    newX = a * oldX + c * oldY + e = 3 * 10 - 1 * 30 + 30 = 30
-			//    newY = b * oldX + d * oldY + f = 1 * 10 + 3 * 30 + 40 = 140
-			//
-			//    bottom right corner: oldX=40 oldY=30
-			//    newX = a * oldX + c * oldY + e = 3 * 40 - 1 * 30 + 30 = 120
-			//    newY = b * oldX + d * oldY + f = 1 * 40 + 3 * 30 + 40 = 170
-
-			factoryBrowser.NewTagSvgRect().
-				X(10).
-				Y(10).
-				Width(30).
-				Height(20).
-				Fill(factoryColor.NewRed()).
-				Transform(
-
-					factoryBrowser.NewTransform().
-						Matrix(3, 1, -1, 3, 30, 40),
-				),
-		)
+		factoryBrowser.NewTagSvgRect().X(10).Y(10).Width(30).Height(20).Fill(factoryColor.NewRed()).Transform(
+			factoryBrowser.NewTransform().Matrix(3, 1, -1, 3, 30, 40),
+		),
+	)
 
 	stage.Append(s1)
 

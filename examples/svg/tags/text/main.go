@@ -37,23 +37,20 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 240, 80}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 240, 80}).Append(
+		factoryBrowser.NewTagSvgStyle().Style(
+			".small { font: italic 13px sans-serif; }\n"+
+				".heavy { font: bold 30px sans-serif; }\n\n"+
+				"/* Note that the color of the text is set with the    *\n"+
+				"* fill property, the color property is for HTML only */\n"+
+				".Rrrrr { font: italic 40px serif; fill: red; }\n",
+		),
 
-			factoryBrowser.NewTagSvgStyle().Style(
-				".small { font: italic 13px sans-serif; }\n"+
-					".heavy { font: bold 30px sans-serif; }\n\n"+
-					"/* Note that the color of the text is set with the    *\n"+
-					"* fill property, the color property is for HTML only */\n"+
-					".Rrrrr { font: italic 40px serif; fill: red; }\n",
-			),
-
-			factoryBrowser.NewTagSvgText().X(20).Y(35).Class("small").Text("My"),
-			factoryBrowser.NewTagSvgText().X(40).Y(35).Class("heavy").Text("cat"),
-			factoryBrowser.NewTagSvgText().X(55).Y(55).Class("small").Text("is"),
-			factoryBrowser.NewTagSvgText().X(65).Y(55).Class("Rrrrr").Text("Grumpy!"),
-		)
+		factoryBrowser.NewTagSvgText().X(20).Y(35).Class("small").Text("My"),
+		factoryBrowser.NewTagSvgText().X(40).Y(35).Class("heavy").Text("cat"),
+		factoryBrowser.NewTagSvgText().X(55).Y(55).Class("small").Text("is"),
+		factoryBrowser.NewTagSvgText().X(65).Y(55).Class("Rrrrr").Text("Grumpy!"),
+	)
 
 	stage.Append(s1)
 

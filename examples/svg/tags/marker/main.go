@@ -48,84 +48,26 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 100, 100}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 100, 100}).Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			// arrowhead marker definition
+			factoryBrowser.NewTagSvgMarker().Id("arrow").ViewBox([]float64{0, 0, 10, 10}).RefX(5).RefY(5).MarkerWidth(6).MarkerHeight(6).Orient(html.KSvgOrientAutoStartReverse).Append(
+				factoryBrowser.NewTagSvgPath().D(factoryBrowser.NewPath().M(0, 0).L(10, 5).L(0, 10).Z()),
+			),
 
-			factoryBrowser.NewTagSvgDefs().
-				Append(
+			// simple dot marker definition
+			factoryBrowser.NewTagSvgMarker().Id("dot").ViewBox([]float64{0, 0, 10, 10}).RefX(5).RefY(5).MarkerWidth(5).MarkerHeight(5).Append(
+				factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(5).Fill(factoryColor.NewRed()),
+			),
+		),
 
-					// arrowhead marker definition
-					factoryBrowser.NewTagSvgMarker().
-						Id("arrow").
-						ViewBox([]float64{0, 0, 10, 10}).
-						RefX(5).
-						RefY(5).
-						MarkerWidth(6).
-						MarkerHeight(6).
-						Orient(html.KSvgOrientAutoStartReverse).
-						Append(
+		// Coordinate axes with a arrowhead in both direction
+		factoryBrowser.NewTagSvgPolyline().Points(factoryBrowser.NewPoints([]html.Point{{10, 10}, {10, 90}, {90, 90}})).Fill("none").Stroke(factoryColor.NewBlack()).MarkerStart("url(#arrow)").MarkerEnd("url(#arrow)"),
 
-							factoryBrowser.NewTagSvgPath().
-								D(
-
-									factoryBrowser.NewPath().
-										M(0, 0).
-										L(10, 5).
-										L(0, 10).
-										Z(),
-								),
-						),
-
-					// simple dot marker definition
-					factoryBrowser.NewTagSvgMarker().
-						Id("dot").
-						ViewBox([]float64{0, 0, 10, 10}).
-						RefX(5).
-						RefY(5).
-						MarkerWidth(5).
-						MarkerHeight(5).
-						Append(
-
-							factoryBrowser.NewTagSvgCircle().
-								Cx(5).
-								Cy(5).
-								R(5).
-								Fill(factoryColor.NewRed()),
-						),
-				),
-
-			// Coordinate axes with a arrowhead in both direction
-			factoryBrowser.NewTagSvgPolyline().
-				Points(
-
-					factoryBrowser.NewPoints(
-						[]html.Point{
-							{10, 10}, {10, 90}, {90, 90},
-						},
-					),
-				).
-				Fill("none").
-				Stroke(factoryColor.NewBlack()).
-				MarkerStart("url(#arrow)").
-				MarkerEnd("url(#arrow)"),
-
-			// Data line with polymarkers
-			factoryBrowser.NewTagSvgPolyline().
-				Points(
-
-					factoryBrowser.NewPoints(
-						[]html.Point{
-							{15, 80}, {29, 50}, {43, 60}, {57, 30}, {71, 40}, {85, 15},
-						},
-					),
-				).
-				Fill("none").
-				Stroke(factoryColor.NewGrey()).
-				MarkerStart("url(#dot)").
-				MarkerMid("url(#dot)").
-				MarkerEnd("url(#dot)"),
-		)
+		// Data line with polymarkers
+		factoryBrowser.NewTagSvgPolyline().Points(
+			factoryBrowser.NewPoints([]html.Point{{15, 80}, {29, 50}, {43, 60}, {57, 30}, {71, 40}, {85, 15}})).Fill("none").Stroke(factoryColor.NewGrey()).MarkerStart("url(#dot)").MarkerMid("url(#dot)").MarkerEnd("url(#dot)"),
+	)
 
 	stage.Append(s1)
 

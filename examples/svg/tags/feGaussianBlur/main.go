@@ -37,24 +37,14 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(230).
-		Height(120).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
+	s1 := factoryBrowser.NewTagSvg().Width(230).Height(120).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgFilter().Id("blurMe").Append(
+			factoryBrowser.NewTagSvgFeGaussianBlur().In(html.KSvgInSourceGraphic).StdDeviation(5),
+		),
 
-			factoryBrowser.NewTagSvgFilter().
-				Id("blurMe").
-				Append(
-
-					factoryBrowser.NewTagSvgFeGaussianBlur().
-						In(html.KSvgInSourceGraphic).
-						StdDeviation(5),
-				),
-
-			factoryBrowser.NewTagSvgCircle().Cx(60).Cy(50).R(50).Fill(factoryColor.NewGreen()),
-			factoryBrowser.NewTagSvgCircle().Cx(170).Cy(50).R(50).Fill(factoryColor.NewGreen()).Filter("url(#blurMe)"),
-		)
+		factoryBrowser.NewTagSvgCircle().Cx(60).Cy(50).R(50).Fill(factoryColor.NewGreen()),
+		factoryBrowser.NewTagSvgCircle().Cx(170).Cy(50).R(50).Fill(factoryColor.NewGreen()).Filter("url(#blurMe)"),
+	)
 
 	stage.Append(s1)
 

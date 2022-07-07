@@ -31,20 +31,15 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 20, 10}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 20, 10}).Append(
+		factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4).Append(
+			factoryBrowser.NewTagSvgTitle().Title("I'm a circle"),
+		),
 
-			factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4).Append(
-
-				factoryBrowser.NewTagSvgTitle().Title("I'm a circle"),
-			),
-
-			factoryBrowser.NewTagSvgRect().X(11).Y(1).Width(8).Height(8).Append(
-
-				factoryBrowser.NewTagSvgTitle().Title("I'm a square"),
-			),
-		)
+		factoryBrowser.NewTagSvgRect().X(11).Y(1).Width(8).Height(8).Append(
+			factoryBrowser.NewTagSvgTitle().Title("I'm a square"),
+		),
+	)
 
 	stage.Append(s1)
 

@@ -35,23 +35,17 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 10, 10}).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
-
-			factoryBrowser.NewTagSvgDefs().Append(
-
-				factoryBrowser.NewTagSvgLinearGradient().Id("myGradient").GradientTransform(factoryBrowser.NewTransform().RotateAngle(90)).Append(
-
-					factoryBrowser.NewTagSvgStop().Offset(float32(0.05)).StopColor(factoryColor.NewGold()),
-					factoryBrowser.NewTagSvgStop().Offset(float32(0.95)).StopColor(factoryColor.NewRed()),
-				),
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 10, 10}).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgLinearGradient().Id("myGradient").GradientTransform(factoryBrowser.NewTransform().RotateAngle(90)).Append(
+				factoryBrowser.NewTagSvgStop().Offset(float32(0.05)).StopColor(factoryColor.NewGold()),
+				factoryBrowser.NewTagSvgStop().Offset(float32(0.95)).StopColor(factoryColor.NewRed()),
 			),
+		),
 
-			//using my linear gradient
-			factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4).Fill("url('#myGradient')"),
-		)
+		//using my linear gradient
+		factoryBrowser.NewTagSvgCircle().Cx(5).Cy(5).R(4).Fill("url('#myGradient')"),
+	)
 
 	stage.Append(s1)
 

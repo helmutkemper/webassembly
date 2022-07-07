@@ -83,98 +83,79 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Style("width:800px; height:400px; display: inline;").
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
-
-			factoryBrowser.NewTagSvgDefs().Append(
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("imageOver").Append(
-
-					factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
-					factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeOver),
-				),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("imageIn").Append(
-
-					factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
-					factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeIn),
-				),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("imageOut").Append(
-
-					factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
-					factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeOut),
-				),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("imageAtop").Append(
-
-					factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
-					factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeAtop),
-				),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("imageXor").Append(
-
-					factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
-					factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeXor),
-				),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("imageArithmetic").Append(
-
-					factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
-					factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeArithmetic).K1(0.1).K2(0.2).K3(0.3).K4(0.4),
-				),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("imageLighter").Append(
-
-					factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
-					factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeLighter),
-				),
+	s1 := factoryBrowser.NewTagSvg().Style("width:800px; height:400px; display: inline;").XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgFilter().Id("imageOver").Append(
+				factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
+				factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeOver),
 			),
 
-			factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(0, 25)).Append(
-				factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageOver)"),
-				factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("over"),
+			factoryBrowser.NewTagSvgFilter().Id("imageIn").Append(
+				factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
+				factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeIn),
 			),
 
-			factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(200, 25)).Append(
-				factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageIn)"),
-				factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("in"),
+			factoryBrowser.NewTagSvgFilter().Id("imageOut").Append(
+				factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
+				factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeOut),
 			),
 
-			factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(400, 25)).Append(
-				factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageOut)"),
-				factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("out"),
+			factoryBrowser.NewTagSvgFilter().Id("imageAtop").Append(
+				factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
+				factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeAtop),
 			),
 
-			factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(600, 25)).Append(
-				factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageAtop)"),
-				factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("atop"),
+			factoryBrowser.NewTagSvgFilter().Id("imageXor").Append(
+				factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
+				factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeXor),
 			),
 
-			factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(0, 240)).Append(
-				factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageXor)"),
-				factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("xor"),
+			factoryBrowser.NewTagSvgFilter().Id("imageArithmetic").Append(
+				factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
+				factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeArithmetic).K1(0.1).K2(0.2).K3(0.3).K4(0.4),
 			),
 
-			factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(200, 240)).Append(
-				factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageArithmetic)"),
-				factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("arithmetic"),
+			factoryBrowser.NewTagSvgFilter().Id("imageLighter").Append(
+				factoryBrowser.NewTagSvgFeImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(10).Y(10).Width(160),
+				factoryBrowser.NewTagSvgFeComposite().In2(html.KSvgIn2SourceGraphic).Operator(html.KSvgOperatorFeCompositeLighter),
 			),
+		),
 
-			factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(400, 240)).Append(
-				factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageLighter)"),
-				factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("lighter"),
-			),
-		)
+		factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(0, 25)).Append(
+			factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageOver)"),
+			factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("over"),
+		),
+
+		factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(200, 25)).Append(
+			factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageIn)"),
+			factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("in"),
+		),
+
+		factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(400, 25)).Append(
+			factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageOut)"),
+			factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("out"),
+		),
+
+		factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(600, 25)).Append(
+			factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageAtop)"),
+			factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("atop"),
+		),
+
+		factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(0, 240)).Append(
+			factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageXor)"),
+			factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("xor"),
+		),
+
+		factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(200, 240)).Append(
+			factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageArithmetic)"),
+			factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("arithmetic"),
+		),
+
+		factoryBrowser.NewTagSvgG().Transform(factoryBrowser.NewTransform().Translate(400, 240)).Append(
+			factoryBrowser.NewTagSvgCircle().Cx(90).Cy(80).R(70).Fill("#c00").Style("filter:url(#imageLighter)"),
+			factoryBrowser.NewTagSvgText().X(80).Y(-5).Text("lighter"),
+		),
+	)
 
 	stage.Append(s1)
 

@@ -39,40 +39,14 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		Width(200).
-		Height(200).
-		XmlnsXLink("http://www.w3.org/1999/xlink").
-		Append(
-
-			factoryBrowser.NewTagSvgDefs().
-				Append(
-
-					factoryBrowser.NewTagSvgFilter().
-						Id("tile").
-						X(0).
-						Y(0).
-						Width(float32(1.0)).
-						Height(float32(1.0)).
-						Append(
-
-							factoryBrowser.NewTagSvgFeTile().
-								In(html.KSvgInSourceGraphic).
-								X(50).
-								Y(50).
-								Width(100).
-								Height(100),
-						),
-				),
-
-			factoryBrowser.NewTagSvgImage().
-				HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").
-				X(float32(0.1)).
-				Y(float32(0.1)).
-				Width(float32(0.8)).
-				Height(float32(0.8)).
-				Style("filter:url(#tile);"),
-		)
+	s1 := factoryBrowser.NewTagSvg().Width(200).Height(200).XmlnsXLink("http://www.w3.org/1999/xlink").Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgFilter().Id("tile").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
+				factoryBrowser.NewTagSvgFeTile().In(html.KSvgInSourceGraphic).X(50).Y(50).Width(100).Height(100),
+			),
+		),
+		factoryBrowser.NewTagSvgImage().HRef("//developer.mozilla.org/files/6457/mdn_logo_only_color.png").X(float32(0.1)).Y(float32(0.1)).Width(float32(0.8)).Height(float32(0.8)).Style("filter:url(#tile);"),
+	)
 
 	stage.Append(s1)
 

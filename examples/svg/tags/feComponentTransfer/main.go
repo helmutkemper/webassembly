@@ -99,135 +99,80 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().
-		ViewBox([]float64{0, 0, 600, 300}).
-		Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 600, 300}).Append(
+		factoryBrowser.NewTagSvgDefs().Append(
+			factoryBrowser.NewTagSvgLinearGradient().Id("rainbow").GradientUnits(html.KSvgGradientUnitsUserSpaceOnUse).X1(0).Y1(0).X2(float32(1.0)).Y2(0).Append(
+				factoryBrowser.NewTagSvgStop().Offset(0.0).StopColor("#ff0000"),
+				factoryBrowser.NewTagSvgStop().Offset(0.2).StopColor("#ffff00"),
+				factoryBrowser.NewTagSvgStop().Offset(0.4).StopColor("#00ff00"),
+				factoryBrowser.NewTagSvgStop().Offset(0.6).StopColor("#00ffff"),
+				factoryBrowser.NewTagSvgStop().Offset(0.8).StopColor("#0000ff"),
+				factoryBrowser.NewTagSvgStop().Offset(1.0).StopColor("#800080"),
+			),
 
-			factoryBrowser.NewTagSvgDefs().Append(
-
-				factoryBrowser.NewTagSvgLinearGradient().
-					Id("rainbow").
-					GradientUnits(html.KSvgGradientUnitsUserSpaceOnUse).
-					X1(0).
-					Y1(0).
-					X2(float32(1.0)).
-					Y2(0).Append(
-
-					factoryBrowser.NewTagSvgStop().Offset(0.0).StopColor("#ff0000"),
-					factoryBrowser.NewTagSvgStop().Offset(0.2).StopColor("#ffff00"),
-					factoryBrowser.NewTagSvgStop().Offset(0.4).StopColor("#00ff00"),
-					factoryBrowser.NewTagSvgStop().Offset(0.6).StopColor("#00ffff"),
-					factoryBrowser.NewTagSvgStop().Offset(0.8).StopColor("#0000ff"),
-					factoryBrowser.NewTagSvgStop().Offset(1.0).StopColor("#800080"),
+			factoryBrowser.NewTagSvgFilter().Id("identity").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
+				factoryBrowser.NewTagSvgFeComponentTransfer().Append(
+					factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncIdentity),
+					factoryBrowser.NewTagSvgFeFuncG().Type(html.KSvgTypeFeFuncIdentity),
+					factoryBrowser.NewTagSvgFeFuncB().Type(html.KSvgTypeFeFuncIdentity),
+					factoryBrowser.NewTagSvgFeFuncA().Type(html.KSvgTypeFeFuncIdentity),
 				),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("identity").
-					X(0).
-					Y(0).
-					Width(float32(1.0)).
-					Height(float32(1.0)).
-					Append(
-
-						factoryBrowser.NewTagSvgFeComponentTransfer().
-							Append(
-								factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncIdentity),
-								factoryBrowser.NewTagSvgFeFuncG().Type(html.KSvgTypeFeFuncIdentity),
-								factoryBrowser.NewTagSvgFeFuncB().Type(html.KSvgTypeFeFuncIdentity),
-								factoryBrowser.NewTagSvgFeFuncA().Type(html.KSvgTypeFeFuncIdentity),
-							),
-					),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("table").
-					X(0).
-					Y(0).
-					Width(float32(1.0)).
-					Height(float32(1.0)).
-					Append(
-
-						factoryBrowser.NewTagSvgFeComponentTransfer().
-							Append(
-
-								factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncTable).TableValues([]float64{0, 0, 1, 1}),
-								factoryBrowser.NewTagSvgFeFuncG().Type(html.KSvgTypeFeFuncTable).TableValues([]float64{1, 1, 0, 0}),
-								factoryBrowser.NewTagSvgFeFuncB().Type(html.KSvgTypeFeFuncTable).TableValues([]float64{0, 1, 1, 0}),
-							),
-					),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("discrete").
-					X(0).
-					Y(0).
-					Width(float32(1.0)).
-					Height(float32(1.0)).
-					Append(
-
-						factoryBrowser.NewTagSvgFeComponentTransfer().
-							Append(
-
-								factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncDiscrete).TableValues([]float64{0, 0, 1, 1}),
-								factoryBrowser.NewTagSvgFeFuncG().Type(html.KSvgTypeFeFuncDiscrete).TableValues([]float64{1, 1, 0, 0}),
-								factoryBrowser.NewTagSvgFeFuncB().Type(html.KSvgTypeFeFuncDiscrete).TableValues([]float64{0, 1, 1, 0}),
-							),
-					),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("linear").
-					X(0).
-					Y(0).
-					Width(float32(1.0)).
-					Height(float32(1.0)).
-					Append(
-
-						factoryBrowser.NewTagSvgFeComponentTransfer().
-							Append(
-
-								factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncLinear).Slope(0.5).Intercept(0.0),
-								factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncLinear).Slope(0.5).Intercept(0.25),
-								factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncLinear).Slope(0.5).Intercept(0.5),
-							),
-					),
-
-				factoryBrowser.NewTagSvgFilter().
-					Id("gamma").
-					X(0).
-					Y(0).
-					Width(float32(1.0)).
-					Height(float32(1.0)).
-					Append(
-
-						factoryBrowser.NewTagSvgFeComponentTransfer().
-							Append(
-
-								factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncGamma).Amplitude(4).Exponent(7).Offset(0),
-								factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncGamma).Amplitude(4).Exponent(4).Offset(0),
-								factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncGamma).Amplitude(4).Exponent(1).Offset(0),
-							),
-					),
 			),
 
-			factoryBrowser.NewTagSvgG().FontWeight(html.KFontWeightRuleBold).Append(
-
-				factoryBrowser.NewTagSvgText().X(0).Y(20).Text("Default"),
-				factoryBrowser.NewTagSvgRect().X(0).Y(30).Width(float32(1.0)).Height(20),
-
-				factoryBrowser.NewTagSvgText().X(0).Y(70).Text("Identity"),
-				factoryBrowser.NewTagSvgRect().X(0).Y(80).Width(float32(1.0)).Height(20).Style("filter:url(#identity)"),
-
-				factoryBrowser.NewTagSvgText().X(0).Y(120).Text("Table lookup"),
-				factoryBrowser.NewTagSvgRect().X(0).Y(130).Width(float32(1.0)).Height(20).Style("filter:url(#table)"),
-
-				factoryBrowser.NewTagSvgText().X(0).Y(170).Text("Discrete table lookup"),
-				factoryBrowser.NewTagSvgRect().X(0).Y(180).Width(float32(1.0)).Height(20).Style("filter:url(#discrete)"),
-
-				factoryBrowser.NewTagSvgText().X(0).Y(220).Text("Linear function"),
-				factoryBrowser.NewTagSvgRect().X(0).Y(230).Width(float32(1.0)).Height(20).Style("filter:url(#linear)"),
-
-				factoryBrowser.NewTagSvgText().X(0).Y(270).Text("Gamma function"),
-				factoryBrowser.NewTagSvgRect().X(0).Y(280).Width(float32(1.0)).Height(20).Style("filter:url(#gamma)"),
+			factoryBrowser.NewTagSvgFilter().Id("table").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
+				factoryBrowser.NewTagSvgFeComponentTransfer().Append(
+					factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncTable).TableValues([]float64{0, 0, 1, 1}),
+					factoryBrowser.NewTagSvgFeFuncG().Type(html.KSvgTypeFeFuncTable).TableValues([]float64{1, 1, 0, 0}),
+					factoryBrowser.NewTagSvgFeFuncB().Type(html.KSvgTypeFeFuncTable).TableValues([]float64{0, 1, 1, 0}),
+				),
 			),
-		)
+
+			factoryBrowser.NewTagSvgFilter().Id("discrete").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
+				factoryBrowser.NewTagSvgFeComponentTransfer().Append(
+					factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncDiscrete).TableValues([]float64{0, 0, 1, 1}),
+					factoryBrowser.NewTagSvgFeFuncG().Type(html.KSvgTypeFeFuncDiscrete).TableValues([]float64{1, 1, 0, 0}),
+					factoryBrowser.NewTagSvgFeFuncB().Type(html.KSvgTypeFeFuncDiscrete).TableValues([]float64{0, 1, 1, 0}),
+				),
+			),
+
+			factoryBrowser.NewTagSvgFilter().Id("linear").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
+				factoryBrowser.NewTagSvgFeComponentTransfer().Append(
+					factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncLinear).Slope(0.5).Intercept(0.0),
+					factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncLinear).Slope(0.5).Intercept(0.25),
+					factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncLinear).Slope(0.5).Intercept(0.5),
+				),
+			),
+
+			factoryBrowser.NewTagSvgFilter().Id("gamma").X(0).Y(0).Width(float32(1.0)).Height(float32(1.0)).Append(
+				factoryBrowser.NewTagSvgFeComponentTransfer().Append(
+					factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncGamma).Amplitude(4).Exponent(7).Offset(0),
+					factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncGamma).Amplitude(4).Exponent(4).Offset(0),
+					factoryBrowser.NewTagSvgFeFuncR().Type(html.KSvgTypeFeFuncGamma).Amplitude(4).Exponent(1).Offset(0),
+				),
+			),
+		),
+
+		factoryBrowser.NewTagSvgG().FontWeight(html.KFontWeightRuleBold).Append(
+
+			factoryBrowser.NewTagSvgText().X(0).Y(20).Text("Default"),
+			factoryBrowser.NewTagSvgRect().X(0).Y(30).Width(float32(1.0)).Height(20),
+
+			factoryBrowser.NewTagSvgText().X(0).Y(70).Text("Identity"),
+			factoryBrowser.NewTagSvgRect().X(0).Y(80).Width(float32(1.0)).Height(20).Style("filter:url(#identity)"),
+
+			factoryBrowser.NewTagSvgText().X(0).Y(120).Text("Table lookup"),
+			factoryBrowser.NewTagSvgRect().X(0).Y(130).Width(float32(1.0)).Height(20).Style("filter:url(#table)"),
+
+			factoryBrowser.NewTagSvgText().X(0).Y(170).Text("Discrete table lookup"),
+			factoryBrowser.NewTagSvgRect().X(0).Y(180).Width(float32(1.0)).Height(20).Style("filter:url(#discrete)"),
+
+			factoryBrowser.NewTagSvgText().X(0).Y(220).Text("Linear function"),
+			factoryBrowser.NewTagSvgRect().X(0).Y(230).Width(float32(1.0)).Height(20).Style("filter:url(#linear)"),
+
+			factoryBrowser.NewTagSvgText().X(0).Y(270).Text("Gamma function"),
+			factoryBrowser.NewTagSvgRect().X(0).Y(280).Width(float32(1.0)).Height(20).Style("filter:url(#gamma)"),
+		),
+	)
 
 	stage.Append(s1)
 

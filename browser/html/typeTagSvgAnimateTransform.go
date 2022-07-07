@@ -974,76 +974,7 @@ func (e *TagSvgAnimateTransform) CalcMode(calcMode SvgCalcMode) (ref *TagSvgAnim
 //       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
 //       qualquer outro tipo: interface{}
 func (e *TagSvgAnimateTransform) Values(value interface{}) (ref *TagSvgAnimateTransform) {
-	if converted, ok := value.([]color.RGBA); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += RGBAToJs(v) + ";"
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "values", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]float32); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "%;"
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "values", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]float64); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ";"
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "values", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]time.Duration); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += v.String() + ";"
-		}
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "values", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "values", converted.String())
-		return e
-	}
-
-	if converted, ok := value.(float32); ok {
-		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
-		e.selfElement.Call("setAttribute", "values", p)
-		return e
-	}
-
-	if converted, ok := value.(float64); ok {
-		p := strconv.FormatFloat(converted, 'g', -1, 64)
-		e.selfElement.Call("setAttribute", "values", p)
-		return e
-	}
-
-	if converted, ok := value.(color.RGBA); ok {
-		e.selfElement.Call("setAttribute", "values", RGBAToJs(converted))
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "values", value)
+	e.selfElement.Call("setAttribute", "values", TypeToString(value, ";", ";"))
 	return e
 }
 
@@ -1077,36 +1008,7 @@ func (e *TagSvgAnimateTransform) Values(value interface{}) (ref *TagSvgAnimateTr
 // Cada valor de tempo na lista keyTimes é especificado como um valor de ponto flutuante entre 0 e 1 (inclusive),
 // representando um deslocamento proporcional à duração do elemento de animação.
 func (e *TagSvgAnimateTransform) KeyTimes(value interface{}) (ref *TagSvgAnimateTransform) {
-
-	if converted, ok := value.([]float64); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + "; "
-		}
-
-		var length = len(valueStr) - 2
-
-		e.selfElement.Call("setAttribute", "keyTimes", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]time.Duration); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += v.String() + "; "
-		}
-		var length = len(valueStr) - 2
-
-		e.selfElement.Call("setAttribute", "keyTimes", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "keyTimes", converted.String())
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "keyTimes", value)
+	e.selfElement.Call("setAttribute", "keyTimes", TypeToString(value, ";", ""))
 	return e
 }
 
@@ -1132,18 +1034,7 @@ func (e *TagSvgAnimateTransform) KeyTimes(value interface{}) (ref *TagSvgAnimate
 // Se houver algum erro na especificação de keySplines (valores incorretos, muitos ou poucos valores), a animação não
 // ocorrerá.
 func (e *TagSvgAnimateTransform) KeySplines(value interface{}) (ref *TagSvgAnimateTransform) {
-
-	if converted, ok := value.(*ControlPoint); ok {
-		e.selfElement.Call("setAttribute", "keySplines", converted.String())
-		return e
-	}
-
-	if converted, ok := value.(*KeyTimes); ok {
-		e.selfElement.Call("setAttribute", "keySplines", converted.String())
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "keySplines", value)
+	e.selfElement.Call("setAttribute", "keySplines", TypeToString(value, " ", ";"))
 	return e
 }
 
@@ -1188,75 +1079,7 @@ func (e *TagSvgAnimateTransform) KeySplines(value interface{}) (ref *TagSvgAnima
 // Quando usado com o atributo to, a animação mudará o atributo modificado do valor from para o valor to. Quando usado
 // com o atributo by, a animação mudará o atributo relativamente do valor from pelo valor especificado em by.
 func (e *TagSvgAnimateTransform) From(value interface{}) (ref *TagSvgAnimateTransform) {
-	if converted, ok := value.([]color.RGBA); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += RGBAToJs(v) + " "
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "from", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]float32); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "% "
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "from", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]float64); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
-		}
-
-		var length = len(valueStr) - 1
-		e.selfElement.Call("setAttribute", "from", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]time.Duration); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += v.String() + " "
-		}
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "from", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "from", converted.String())
-		return e
-	}
-
-	if converted, ok := value.(float32); ok {
-		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
-		e.selfElement.Call("setAttribute", "from", p)
-		return e
-	}
-
-	if converted, ok := value.(float64); ok {
-		p := strconv.FormatFloat(converted, 'g', -1, 64)
-		e.selfElement.Call("setAttribute", "from", p)
-		return e
-	}
-
-	if converted, ok := value.(color.RGBA); ok {
-		e.selfElement.Call("setAttribute", "from", RGBAToJs(converted))
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "from", value)
+	e.selfElement.Call("setAttribute", "from", TypeToString(value, " ", " "))
 	return e
 }
 
@@ -1298,76 +1121,7 @@ func (e *TagSvgAnimateTransform) From(value interface{}) (ref *TagSvgAnimateTran
 //
 // O valor do atributo mudará entre o valor do atributo from e este valor.
 func (e *TagSvgAnimateTransform) To(value interface{}) (ref *TagSvgAnimateTransform) {
-	if converted, ok := value.([]color.RGBA); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += RGBAToJs(v) + " "
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "to", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]float32); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "% "
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "to", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]float64); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "to", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]time.Duration); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += v.String() + " "
-		}
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "to", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "to", converted.String())
-		return e
-	}
-
-	if converted, ok := value.(float32); ok {
-		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
-		e.selfElement.Call("setAttribute", "to", p)
-		return e
-	}
-
-	if converted, ok := value.(float64); ok {
-		p := strconv.FormatFloat(converted, 'g', -1, 64)
-		e.selfElement.Call("setAttribute", "to", p)
-		return e
-	}
-
-	if converted, ok := value.(color.RGBA); ok {
-		e.selfElement.Call("setAttribute", "to", RGBAToJs(converted))
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "to", value)
+	e.selfElement.Call("setAttribute", "to", TypeToString(value, " ", " "))
 	return e
 }
 

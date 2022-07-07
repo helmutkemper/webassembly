@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"sync"
 	"syscall/js"
-	"time"
 )
 
 // TagSvgFeColorMatrix
@@ -2798,76 +2797,7 @@ func (e *TagSvgFeColorMatrix) Type(value interface{}) (ref *TagSvgFeColorMatrix)
 //       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
 //       any other type: interface{}
 func (e *TagSvgFeColorMatrix) Values(value interface{}) (ref *TagSvgFeColorMatrix) {
-	if converted, ok := value.([]color.RGBA); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += RGBAToJs(v) + " "
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "values", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]float32); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "% "
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "values", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]float64); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
-		}
-
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "values", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.([]time.Duration); ok {
-		var valueStr = ""
-		for _, v := range converted {
-			valueStr += v.String() + " "
-		}
-		var length = len(valueStr) - 1
-
-		e.selfElement.Call("setAttribute", "values", valueStr[:length])
-		return e
-	}
-
-	if converted, ok := value.(time.Duration); ok {
-		e.selfElement.Call("setAttribute", "values", converted.String())
-		return e
-	}
-
-	if converted, ok := value.(float32); ok {
-		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
-		e.selfElement.Call("setAttribute", "values", p)
-		return e
-	}
-
-	if converted, ok := value.(float64); ok {
-		p := strconv.FormatFloat(converted, 'g', -1, 64)
-		e.selfElement.Call("setAttribute", "values", p)
-		return e
-	}
-
-	if converted, ok := value.(color.RGBA); ok {
-		e.selfElement.Call("setAttribute", "values", RGBAToJs(converted))
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "values", value)
+	e.selfElement.Call("setAttribute", "values", TypeToString(value, " ", " "))
 	return e
 }
 

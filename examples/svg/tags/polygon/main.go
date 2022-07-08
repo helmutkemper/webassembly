@@ -22,7 +22,6 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
 )
 
@@ -35,10 +34,10 @@ func main() {
 	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 100}).Append(
 
 		// Example of a polygon with the default fill
-		factoryBrowser.NewTagSvgPolygon().Points(factoryBrowser.NewPoints([]html.Point{{0, 100}, {50, 25}, {50, 75}, {100, 0}})),
+		factoryBrowser.NewTagSvgPolygon().Points([][]float64{{0, 100}, {50, 25}, {50, 75}, {100, 0}}),
 
 		// Example of the same polygon shape with stroke and no fill
-		factoryBrowser.NewTagSvgPolygon().Points(factoryBrowser.NewPoints([]html.Point{{100, 100}, {150, 25}, {150, 75}, {200, 0}})).Fill(nil).Stroke(factoryColor.NewBlack()),
+		factoryBrowser.NewTagSvgPolygon().Points([][]float64{{100, 100}, {150, 25}, {150, 75}, {200, 0}}).Fill(nil).Stroke(factoryColor.NewBlack()),
 	)
 
 	stage.Append(s1)

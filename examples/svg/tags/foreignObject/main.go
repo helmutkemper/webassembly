@@ -41,7 +41,6 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 )
 
 func main() {
@@ -59,9 +58,7 @@ func main() {
 				"overflow: auto;"+
 				"}"),
 
-		factoryBrowser.NewTagSvgPolygon().Points(
-			factoryBrowser.NewPoints([]html.Point{{5, 5}, {195, 10}, {185, 185}, {10, 195}}),
-		),
+		factoryBrowser.NewTagSvgPolygon().Points([][]float64{{5, 5}, {195, 10}, {185, 185}, {10, 195}}),
 
 		// Common use case: embed HTML text into SVG
 		factoryBrowser.NewTagSvgForeignObject().X(20).Y(20).Width(160).Height(160).Html(

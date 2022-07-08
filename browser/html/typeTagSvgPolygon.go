@@ -2411,17 +2411,7 @@ func (e *TagSvgPolygon) Style(value string) (ref *TagSvgPolygon) {
 // coordenada X e Y no sistema de coordenadas do usuário. Se o atributo contiver um número ímpar de coordenadas, a
 // última será ignorada.
 func (e *TagSvgPolygon) Points(value interface{}) (ref *TagSvgPolygon) {
-	if converted, ok := value.(Points); ok {
-		e.selfElement.Call("setAttribute", "points", converted.String())
-		return e
-	}
-
-	if converted, ok := value.(*Points); ok {
-		e.selfElement.Call("setAttribute", "points", converted.String())
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "points", value)
+	e.selfElement.Call("setAttribute", "points", TypeToString(value, ",", " "))
 	return e
 }
 

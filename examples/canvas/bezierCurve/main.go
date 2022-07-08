@@ -8,7 +8,6 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontFamily"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryEasingTween"
@@ -24,8 +23,7 @@ func main() {
 	done := make(chan struct{}, 0)
 
 	// browser stage
-	var bs = stage.Stage{}
-	bs.Init()
+	var bs = factoryBrowser.NewStage()
 
 	canvas = factoryBrowser.NewTagCanvas("canvas_0", bs.GetWidth(), bs.GetHeight()).
 		AppendById("stage")
@@ -91,13 +89,12 @@ func main() {
 
 	var ripple = &algorithm.BezierCurve{}
 	ripple.Copy(bezier)
-	ripple.GenerateRipple(30, 20)
+	ripple.GenerateRipple(10, 40)
 	for _, point := range *ripple.GetProcessed() {
 		AddDotPalegoldenrod(int(point.X), int(point.Y))
 	}
 
-	var div *html.TagDiv
-	div = factoryBrowser.NewTagDiv("div_0").
+	div := factoryBrowser.NewTagDiv().
 		Class("animate").
 		AddPointsToEasingTween(ripple).
 		SetDeltaX(-15).
@@ -107,7 +104,7 @@ func main() {
 
 	// todo: AddPointsToEasingTween define de forma automática os valores start e end da interpolação.
 	factoryEasingTween.NewLinear(
-		30*time.Second,
+		20*time.Second,
 		0,
 		10000,
 		div.EasingTweenWalkingAndRotateIntoPoints,

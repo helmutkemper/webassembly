@@ -40,14 +40,14 @@ func main() {
 
 	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{-10, -10, 220, 120}).Append(
 		// Default value for fill-rule
-		factoryBrowser.NewTagSvgPolygon().FillRule(html.KSvgFillRuleNonzero).Stroke(factoryColor.NewRed()).Points(factoryBrowser.NewPoints([]html.Point{{50, 0}, {21, 90}, {98, 35}, {2, 35}, {79, 90}})),
+		factoryBrowser.NewTagSvgPolygon().FillRule(html.KSvgFillRuleNonzero).Stroke(factoryColor.NewRed()).Points([][]float64{{50, 0}, {21, 90}, {98, 35}, {2, 35}, {79, 90}}),
 
 		// The center of the shape has two
 		// path segments (shown by the red stroke)
 		// between it and infinity. It is therefore
 		// considered outside the shape, and not filled.
 
-		factoryBrowser.NewTagSvgPolygon().FillRule(html.KSvgFillRuleEvenOdd).Stroke(factoryColor.NewRed()).Points(factoryBrowser.NewPoints([]html.Point{{150, 0}, {121, 90}, {198, 35}, {102, 35}, {179, 90}})),
+		factoryBrowser.NewTagSvgPolygon().FillRule(html.KSvgFillRuleEvenOdd).Stroke(factoryColor.NewRed()).Points([][]float64{{150, 0}, {121, 90}, {198, 35}, {102, 35}, {179, 90}}),
 	)
 
 	stage.Append(s1)

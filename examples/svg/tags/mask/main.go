@@ -28,7 +28,6 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
 )
 
@@ -49,7 +48,7 @@ func main() {
 			factoryBrowser.NewTagSvgPath().D(factoryBrowser.NewPath().M(10, 35).A(20, 20, 0, 0, 1, 50, 35).A(20, 20, 0, 0, 1, 90, 35).Q(90, 65, 50, 95).Q(10, 65, 10, 35).Z()),
 		),
 
-		factoryBrowser.NewTagSvgPolygon().Points(factoryBrowser.NewPoints([]html.Point{{-10, 110}, {110, 110}, {110, -10}})).Fill(factoryColor.NewOrange()),
+		factoryBrowser.NewTagSvgPolygon().Points([][]float64{{-10, 110}, {110, 110}, {110, -10}}).Fill(factoryColor.NewOrange()),
 
 		//with this mask applied, we "punch" a heart shape hole into the circle
 		factoryBrowser.NewTagSvgCircle().Cx(50).Cy(50).Cy(50).R(50).Mask("url(#myMask)"),

@@ -24,7 +24,6 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 )
 
 func main() {
@@ -35,15 +34,7 @@ func main() {
 
 	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 230, 100}).Append(
 		factoryBrowser.NewTagSvgPattern().Id("star").ViewBox([]float64{0, 0, 10, 10}).Width(float32(0.1)).Height(float32(0.1)).Append(
-			factoryBrowser.NewTagSvgPolygon().Points(
-				factoryBrowser.NewPoints(
-					[]html.Point{
-						{0, 0}, {2, 5}, {0, 10},
-						{5, 8}, {10, 10}, {8, 5},
-						{10, 0}, {5, 2},
-					},
-				),
-			),
+			factoryBrowser.NewTagSvgPolygon().Points([][]float64{{0, 0}, {2, 5}, {0, 10}, {5, 8}, {10, 10}, {8, 5}, {10, 0}, {5, 2}}),
 		),
 
 		factoryBrowser.NewTagSvgCircle().Cx(50).Cy(50).R(50).Fill("url(#star)"),

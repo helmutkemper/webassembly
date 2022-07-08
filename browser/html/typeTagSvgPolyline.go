@@ -2413,17 +2413,7 @@ func (e *TagSvgPolyline) Style(value string) (ref *TagSvgPolyline) {
 // coordenada X e Y no sistema de coordenadas do usuário. Se o atributo contiver um número ímpar de coordenadas, a
 // última será ignorada.
 func (e *TagSvgPolyline) Points(value interface{}) (ref *TagSvgPolyline) {
-	if converted, ok := value.(Points); ok {
-		e.selfElement.Call("setAttribute", "points", converted.String())
-		return e
-	}
-
-	if converted, ok := value.(*Points); ok {
-		e.selfElement.Call("setAttribute", "points", converted.String())
-		return e
-	}
-
-	e.selfElement.Call("setAttribute", "points", value)
+	e.selfElement.Call("setAttribute", "points", TypeToString(value, ",", " "))
 	return e
 }
 

@@ -62,11 +62,10 @@ func main() {
 		),
 
 		// Coordinate axes with a arrowhead in both direction
-		factoryBrowser.NewTagSvgPolyline().Points(factoryBrowser.NewPoints([]html.Point{{10, 10}, {10, 90}, {90, 90}})).Fill("none").Stroke(factoryColor.NewBlack()).MarkerStart("url(#arrow)").MarkerEnd("url(#arrow)"),
+		factoryBrowser.NewTagSvgPolyline().Points([][]float64{{10, 10}, {10, 90}, {90, 90}}).Fill("none").Stroke(factoryColor.NewBlack()).MarkerStart("url(#arrow)").MarkerEnd("url(#arrow)"),
 
 		// Data line with polymarkers
-		factoryBrowser.NewTagSvgPolyline().Points(
-			factoryBrowser.NewPoints([]html.Point{{15, 80}, {29, 50}, {43, 60}, {57, 30}, {71, 40}, {85, 15}})).Fill("none").Stroke(factoryColor.NewGrey()).MarkerStart("url(#dot)").MarkerMid("url(#dot)").MarkerEnd("url(#dot)"),
+		factoryBrowser.NewTagSvgPolyline().Points([][]float64{{15, 80}, {29, 50}, {43, 60}, {57, 30}, {71, 40}, {85, 15}}).Fill("none").Stroke(factoryColor.NewGrey()).MarkerStart("url(#dot)").MarkerMid("url(#dot)").MarkerEnd("url(#dot)"),
 	)
 
 	stage.Append(s1)

@@ -48,7 +48,6 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
 	"image/color"
 )
@@ -67,7 +66,7 @@ func main() {
 
 		// Highlight the curve vertex and control points
 		factoryBrowser.NewTagSvgG().Append(
-			factoryBrowser.NewTagSvgPolyline().Points(factoryBrowser.NewPoints([]html.Point{{10, 50}, {25, 25}, {40, 50}})).Stroke(color.RGBA{R: 0, G: 0, B: 0, A: uint8(float64(255) * 0.2)}).Fill(nil),
+			factoryBrowser.NewTagSvgPolyline().Points([][]float64{{10, 50}, {25, 25}, {40, 50}}).Stroke(color.RGBA{R: 0, G: 0, B: 0, A: uint8(float64(255) * 0.2)}).Fill(nil),
 			factoryBrowser.NewTagSvgCircle().Cx(25).Cy(25).R(1.5),
 
 			// Curve vertex points
@@ -75,13 +74,13 @@ func main() {
 			factoryBrowser.NewTagSvgCircle().Cx(40).Cy(50).R(1.5),
 
 			factoryBrowser.NewTagSvgG().Id("SmoothQuadraticDown").Append(
-				factoryBrowser.NewTagSvgPolyline().Points(factoryBrowser.NewPoints([]html.Point{{40, 50}, {55, 75}, {70, 50}})).Stroke(color.RGBA{R: 0, G: 0, B: 0, A: uint8(float64(255) * 0.2)}).StrokeDasharray(2).Fill(nil),
+				factoryBrowser.NewTagSvgPolyline().Points([][]float64{{40, 50}, {55, 75}, {70, 50}}).Stroke(color.RGBA{R: 0, G: 0, B: 0, A: uint8(float64(255) * 0.2)}).StrokeDasharray(2).Fill(nil),
 				factoryBrowser.NewTagSvgCircle().Cx(55).Cy(75).R(1.5).Fill(factoryColor.NewLightgray()),
 				factoryBrowser.NewTagSvgCircle().Cx(70).Cy(50).R(1.5),
 			),
 
 			factoryBrowser.NewTagSvgG().Id("SmoothQuadraticUp").Append(
-				factoryBrowser.NewTagSvgPolyline().Points(factoryBrowser.NewPoints([]html.Point{{70, 50}, {85, 25}, {100, 50}})).Stroke(color.RGBA{R: 0, G: 0, B: 0, A: uint8(float64(255) * 0.2)}).StrokeDasharray(2).Fill(nil),
+				factoryBrowser.NewTagSvgPolyline().Points([][]float64{{70, 50}, {85, 25}, {100, 50}}).Stroke(color.RGBA{R: 0, G: 0, B: 0, A: uint8(float64(255) * 0.2)}).StrokeDasharray(2).Fill(nil),
 				factoryBrowser.NewTagSvgCircle().Cx(85).Cy(25).R(1.5).Fill(factoryColor.NewLightgray()),
 				factoryBrowser.NewTagSvgCircle().Cx(100).Cy(50).R(1.5),
 			),

@@ -2441,6 +2441,9 @@ func (e *TagSvg) Height(height interface{}) (ref *TagSvg) {
 // Because the aspect ratio of an SVG image is defined by the viewBox attribute, if this attribute isn't set, the
 // preserveAspectRatio attribute has no effect (with one exception, the <image> element, as described below).
 //
+//   Notes:
+//     * Use ratio and meet equal to nil for preserveAspectRatio="none"
+//
 // Português:
 //
 //  O atributo preserveAspectRatio indica como um elemento com uma viewBox fornecendo uma determinada proporção deve
@@ -2456,7 +2459,15 @@ func (e *TagSvg) Height(height interface{}) (ref *TagSvg) {
 //
 // Como a proporção de uma imagem SVG é definida pelo atributo viewBox, se esse atributo não estiver definido, o
 // atributo preserveAspectRatio não terá efeito (com uma exceção, o elemento <image>, conforme descrito abaixo).
+//
+//   Notas:
+//     * Use ratio e meet igual a para for preserveAspectRatio="none"
 func (e *TagSvg) PreserveAspectRatio(ratio, meet interface{}) (ref *TagSvg) {
+	if ratio == nil && meet == nil {
+		e.selfElement.Call("setAttribute", "preserveAspectRatio", "none")
+		return e
+	}
+
 	if converted, ok := ratio.(Ratio); ok {
 		ratio = converted.String()
 	}

@@ -2726,7 +2726,7 @@ func (e *TagSvgFeTurbulence) Html(value string) (ref *TagSvgFeTurbulence) {
 //       KSvgTypeTurbulence... (ex. KSvgTypeTurbulenceFractalNoise)
 //       any other type: interface{}
 func (e *TagSvgFeTurbulence) Type(value interface{}) (ref *TagSvgFeTurbulence) {
-	if converted, ok := value.(SvgTypeTurbulence); ok { //fixme: fazer
+	if converted, ok := value.(SvgTypeTurbulence); ok {
 		e.selfElement.Call("setAttribute", "type", converted.String())
 		return e
 	}

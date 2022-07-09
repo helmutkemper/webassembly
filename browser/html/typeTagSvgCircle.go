@@ -2513,3 +2513,40 @@ func (e *TagSvgCircle) AddEventListener(event string, f func(this js.Value, args
 	e.selfElement.Call("addEventListener", event, js.FuncOf(f))
 	return e
 }
+
+// PaintOrder
+//
+// English:
+//
+// The paint-order attribute specifies the order that the fill, stroke, and markers of a given shape or text element
+// are painted.
+//
+//   Input:
+//     value: specifies the order that the fill, stroke, and markers
+//       const: SvgPaintOrder... (e.g. KSvgPaintOrderStroke)
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute, paint-order can be used as a CSS property.
+//
+// Português:
+//
+// O atributo paint-order especifica a ordem em que o preenchimento, o traçado e os marcadores de uma determinada forma
+// ou elemento de texto são pintados.
+//
+//   Entrada:
+//     value: especifica a ordem em que o preenchimento, o traçado e os marcadores
+//       const: SvgPaintOrder... (e.g. KSvgPaintOrderStroke)
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como atributo de apresentação, paint-order pode ser usado como uma propriedade CSS.
+func (e *TagSvgCircle) PaintOrder(value interface{}) (ref *TagSvgCircle) {
+	if converted, ok := value.(SvgPaintOrder); ok {
+		e.selfElement.Call("setAttribute", "paint-order", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "paint-order", value)
+	return e
+}

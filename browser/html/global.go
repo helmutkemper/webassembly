@@ -3770,11 +3770,21 @@ func (e *TagSvgGlobal) PointerEvents(value interface{}) (ref *TagSvgGlobal) {
 // coordinate in the user coordinate system. If the attribute contains an odd number of coordinates, the last one will
 // be ignored.
 //
+//   Input:
+//     value: list of points representing coordinates X and Y
+//       [][]float64: [][]float64{{0,0},{1,1},{2,2}} = "0,0 1,1 2,2"
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo points define uma lista de pontos. Cada ponto é definido por um par de números representando uma
 // coordenada X e Y no sistema de coordenadas do usuário. Se o atributo contiver um número ímpar de coordenadas, a
 // última será ignorada.
+//
+//   Entrada:
+//     value: lista de pontos representando as coordenadas X e Y
+//       [][]float64: [][]float64{{0,0},{1,1},{2,2}} = "0,0 1,1 2,2"
+//       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) Points(value interface{}) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "points", TypeToString(value, ",", " "))
 	return e

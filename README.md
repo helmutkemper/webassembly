@@ -19,3 +19,7 @@ todo: ver toda a documentação, o exemplo
 
 //       float32: 10.0 = "10%" errado
 //       float32: 0.1 = "10%"  certo
+
+
+
+fazer o exemplo https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/pointer-events

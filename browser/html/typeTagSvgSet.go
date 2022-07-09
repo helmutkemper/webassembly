@@ -1052,8 +1052,13 @@ func (e *TagSvgSet) AttributeName(attributeName string) (ref *TagSvgSet) {
 //
 //   Notas:
 //     * Valor padrão: KSvgCalcModePaced
-func (e *TagSvgSet) CalcMode(calcMode SvgCalcMode) (ref *TagSvgSet) {
-	e.selfElement.Call("setAttribute", "calcMode", calcMode.String())
+func (e *TagSvgSet) CalcMode(value interface{}) (ref *TagSvgSet) {
+	if converted, ok := value.(SvgCalcMode); ok {
+		e.selfElement.Call("setAttribute", "calcMode", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "calcMode", value)
 	return e
 }
 

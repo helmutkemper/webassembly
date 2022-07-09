@@ -637,8 +637,13 @@ func (e *TagSvgGlobal) By(by float64) (ref *TagSvgGlobal) {
 //
 //   Notas:
 //     * Valor padrão: KSvgCalcModePaced
-func (e *TagSvgGlobal) CalcMode(calcMode SvgCalcMode) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "calcMode", calcMode.String())
+func (e *TagSvgGlobal) CalcMode(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgCalcMode); ok {
+		e.selfElement.Call("setAttribute", "calcMode", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "calcMode", value)
 	return e
 }
 
@@ -2155,12 +2160,24 @@ func (e *TagSvgGlobal) Fr(fr interface{}) (ref *TagSvgGlobal) {
 // English:
 //
 //  The fx attribute defines the x-axis coordinate of the focal point for a radial gradient.
+//     value: the x-axis coordinate of the focal point for a radial gradient
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
 //
 // Portuguese
 //
 //  O atributo fx define a coordenada do eixo x do ponto focal para um gradiente radial.
-func (e *TagSvgGlobal) Fx(fx float64) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "fx", fx)
+//     value: coordenada do eixo x do ponto focal para um gradiente radial
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Fx(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "fx", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "fx", value)
 	return e
 }
 
@@ -2170,11 +2187,27 @@ func (e *TagSvgGlobal) Fx(fx float64) (ref *TagSvgGlobal) {
 //
 //  The fy attribute defines the y-axis coordinate of the focal point for a radial gradient.
 //
+//   Input:
+//     value: the y-axis coordinate of the focal point for a radial gradient
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
 // Portuguese
 //
 //  O atributo fy define a coordenada do eixo y do ponto focal para um gradiente radial.
-func (e *TagSvgGlobal) Fy(fy float64) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "fy", fy)
+//
+//   Entrada:
+//     value: coordenada do eixo y do ponto focal para um gradiente radial
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Fy(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "fy", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "fy", value)
 	return e
 }
 

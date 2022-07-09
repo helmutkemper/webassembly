@@ -981,8 +981,13 @@ func (e *TagSvgAnimate) Fill(value interface{}) (ref *TagSvgAnimate) {
 //
 //   Notas:
 //     * Valor padrão: KSvgCalcModePaced
-func (e *TagSvgAnimate) CalcMode(calcMode SvgCalcMode) (ref *TagSvgAnimate) {
-	e.selfElement.Call("setAttribute", "calcMode", calcMode.String())
+func (e *TagSvgAnimate) CalcMode(value interface{}) (ref *TagSvgAnimate) {
+	if converted, ok := value.(SvgCalcMode); ok {
+		e.selfElement.Call("setAttribute", "calcMode", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "calcMode", value)
 	return e
 }
 

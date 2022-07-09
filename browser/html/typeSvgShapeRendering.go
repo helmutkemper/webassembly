@@ -7,7 +7,7 @@ func (e SvgShapeRendering) String() string {
 }
 
 const (
-	// KShapeRenderingAuto
+	// KSvgShapeRenderingAuto
 	//
 	// English:
 	//
@@ -18,9 +18,9 @@ const (
 	//
 	// Esse valor indica que o agente do usuário deve fazer compensações apropriadas para equilibrar velocidade, bordas
 	// nítidas e precisão geométrica, mas com precisão geométrica dada mais importância do que velocidade e bordas nítidas.
-	KShapeRenderingAuto SvgShapeRendering = "auto"
+	KSvgShapeRenderingAuto SvgShapeRendering = "auto"
 
-	// KShapeRenderingOptimizeSpeed
+	// KSvgShapeRenderingOptimizeSpeed
 	//
 	// English:
 	//
@@ -32,9 +32,9 @@ const (
 	// Esse valor indica que o agente do usuário deve enfatizar a velocidade de renderização sobre a precisão geométrica
 	// e as bordas nítidas.
 	// Essa opção às vezes fará com que o agente do usuário desative o anti-aliasing de forma.
-	KShapeRenderingOptimizeSpeed SvgShapeRendering = "optimizeSpeed"
+	KSvgShapeRenderingOptimizeSpeed SvgShapeRendering = "optimizeSpeed"
 
-	// KShapeRenderingCrispEdges
+	// KSvgShapeRenderingCrispEdges
 	//
 	// English:
 	//
@@ -50,9 +50,9 @@ const (
 	// usuário pode desativar o anti-aliasing para todas as linhas e curvas ou possivelmente apenas para linhas retas
 	// próximas à vertical ou horizontal. Além disso, o agente do usuário pode ajustar as posições e larguras de linha
 	// para alinhar as bordas com os pixels do dispositivo.
-	KShapeRenderingCrispEdges SvgShapeRendering = "crispEdges"
+	KSvgShapeRenderingCrispEdges SvgShapeRendering = "crispEdges"
 
-	// KShapeRenderingGeometricPrecision
+	// KSvgShapeRenderingGeometricPrecision
 	//
 	// English:
 	//
@@ -61,5 +61,5 @@ const (
 	// Português:
 	//
 	// Indica que o agente do usuário deve enfatizar a precisão geométrica sobre a velocidade e as bordas nítidas.
-	KShapeRenderingGeometricPrecision SvgShapeRendering = "geometricPrecision"
+	KSvgShapeRenderingGeometricPrecision SvgShapeRendering = "geometricPrecision"
 )

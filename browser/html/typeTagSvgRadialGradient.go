@@ -2499,11 +2499,27 @@ func (e *TagSvgRadialGradient) Fr(fr interface{}) (ref *TagSvgRadialGradient) {
 //
 //  The fx attribute defines the x-axis coordinate of the focal point for a radial gradient.
 //
+//   Input:
+//     value: the x-axis coordinate of the focal point for a radial gradient
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
 // Portuguese
 //
 //  O atributo fx define a coordenada do eixo x do ponto focal para um gradiente radial.
-func (e *TagSvgRadialGradient) Fx(fx float64) (ref *TagSvgRadialGradient) {
-	e.selfElement.Call("setAttribute", "fx", fx)
+//
+//   Entrada:
+//     value: coordenada do eixo x do ponto focal para um gradiente radial
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgRadialGradient) Fx(value interface{}) (ref *TagSvgRadialGradient) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "fx", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "fx", value)
 	return e
 }
 
@@ -2513,11 +2529,27 @@ func (e *TagSvgRadialGradient) Fx(fx float64) (ref *TagSvgRadialGradient) {
 //
 //  The fy attribute defines the y-axis coordinate of the focal point for a radial gradient.
 //
+//   Input:
+//     value: the y-axis coordinate of the focal point for a radial gradient
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
 // Portuguese
 //
 //  O atributo fy define a coordenada do eixo y do ponto focal para um gradiente radial.
-func (e *TagSvgRadialGradient) Fy(fy float64) (ref *TagSvgRadialGradient) {
-	e.selfElement.Call("setAttribute", "fy", fy)
+//
+//   Entrada:
+//     value: coordenada do eixo y do ponto focal para um gradiente radial
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgRadialGradient) Fy(value interface{}) (ref *TagSvgRadialGradient) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "fy", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "fy", value)
 	return e
 }
 

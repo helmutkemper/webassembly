@@ -56,6 +56,7 @@ package main
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"image/color"
 )
 
 func main() {
@@ -72,7 +73,20 @@ func main() {
 
 		// The start of the dash array computation
 		// is pulled by 3 user units
-		factoryBrowser.NewTagSvgLine().X1(0).Y1(5).X2(30).Y2(5).Stroke(factoryColor.NewBlack()).StrokeDasharray([]float64{3, 1}),
+		factoryBrowser.NewTagSvgLine().X1(0).Y1(5).X2(30).Y2(5).Stroke(factoryColor.NewBlack()).StrokeDasharray([]float64{3, 1}).StrokeDashOffset(3),
+
+		// The start of the dash array computation
+		// is pushed by 3 user units
+		factoryBrowser.NewTagSvgLine().X1(0).Y1(7).X2(30).Y2(7).Stroke(factoryColor.NewBlack()).StrokeDasharray([]float64{3, 1}).StrokeDashOffset(-3),
+
+		// The start of the dash array computation
+		// is pulled by 1 user units which ends up
+		// in the same rendering as the previous example
+		factoryBrowser.NewTagSvgLine().X1(0).Y1(9).X2(30).Y2(9).Stroke(factoryColor.NewBlack()).StrokeDasharray([]float64{3, 1}).StrokeDashOffset(1),
+
+		// the following red lines highlight the
+		// offset of the dash array for each line
+		factoryBrowser.NewTagSvgPath().D(factoryBrowser.NewPath().M(0, 5).Hd(-3).M(0, 7).Hd(3).M(0, 9).Hd(-1)).Stroke(color.RGBA{R: 255, G: 0, B: 0, A: 128}),
 	)
 
 	stage.Append(s1)

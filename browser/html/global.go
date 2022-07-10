@@ -4794,6 +4794,70 @@ func (e *TagSvgGlobal) StrokeDasharray(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
+// StrokeDashOffset
+//
+// English:
+//
+// The stroke-dasharray attribute is a presentation attribute defining the pattern of dashes and gaps used to paint the
+// outline of the shape
+//
+//   Input:
+//     value: presentation attribute defining the pattern of dashes
+//       float32: 0.1 = "10%"
+//       []float32: (e.g. []float32{0.04, 0.01, 0.02}) = "4% 1% 2%"
+//       []float64: (e.g. []float64{4, 1, 2}) = "4 1 2"
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute, stroke-dasharray can be used as a CSS property.
+//
+// Português:
+//
+// O atributo stroke-dasharray é um atributo de apresentação que define o padrão de traços e lacunas usados para pintar
+// o contorno da forma
+//
+//   Entrada:
+//     value: atributo de apresentação que define o padrão de traços
+//       float32: 0.1 = "10%"
+//       []float32: (e.g. []float32{0.04, 0.01, 0.02}) = "4% 1% 2%"
+//       []float64: (e.g. []float64{4, 1, 2}) = "4 1 2"
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
+func (e *TagSvgGlobal) StrokeDashOffset(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.([]float32); ok {
+		str := ""
+		for _, v := range converted {
+			str += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "% "
+		}
+		length := len(str) - 1
+
+		e.selfElement.Call("setAttribute", "stroke-dashoffset", str[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float64); ok {
+		str := ""
+		for _, v := range converted {
+			str += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+		length := len(str) - 1
+
+		e.selfElement.Call("setAttribute", "stroke-dashoffset", str[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "stroke-dashoffset", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stroke-dashoffset", value)
+	return e
+}
+
 // StrokeLinecap #presentation
 //
 // English:

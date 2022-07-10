@@ -1779,7 +1779,7 @@ func (e *TagSvgFeSpecularLighting) StrokeDasharray(value interface{}) (ref *TagS
 	return e
 }
 
-// StrokeLinecap
+// StrokeLineCap
 //
 // English:
 //
@@ -1806,7 +1806,7 @@ func (e *TagSvgFeSpecularLighting) StrokeDasharray(value interface{}) (ref *TagS
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeSpecularLighting) StrokeLinecap(value interface{}) (ref *TagSvgFeSpecularLighting) {
+func (e *TagSvgFeSpecularLighting) StrokeLineCap(value interface{}) (ref *TagSvgFeSpecularLighting) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1816,7 +1816,7 @@ func (e *TagSvgFeSpecularLighting) StrokeLinecap(value interface{}) (ref *TagSvg
 	return e
 }
 
-// StrokeLinejoin
+// StrokeLineJoin
 //
 // English:
 //
@@ -1833,7 +1833,7 @@ func (e *TagSvgFeSpecularLighting) StrokeLinecap(value interface{}) (ref *TagSvg
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgFeSpecularLighting) StrokeLinejoin(value interface{}) (ref *TagSvgFeSpecularLighting) {
+func (e *TagSvgFeSpecularLighting) StrokeLineJoin(value interface{}) (ref *TagSvgFeSpecularLighting) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1843,7 +1843,7 @@ func (e *TagSvgFeSpecularLighting) StrokeLinejoin(value interface{}) (ref *TagSv
 	return e
 }
 
-// StrokeMiterlimit
+// StrokeMiterLimit
 //
 // English:
 //
@@ -1861,7 +1861,7 @@ func (e *TagSvgFeSpecularLighting) StrokeLinejoin(value interface{}) (ref *TagSv
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgFeSpecularLighting) StrokeMiterlimit(value float64) (ref *TagSvgFeSpecularLighting) {
+func (e *TagSvgFeSpecularLighting) StrokeMiterLimit(value float64) (ref *TagSvgFeSpecularLighting) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }

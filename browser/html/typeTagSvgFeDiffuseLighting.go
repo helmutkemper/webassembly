@@ -1772,7 +1772,7 @@ func (e *TagSvgFeDiffuseLighting) StrokeDasharray(value interface{}) (ref *TagSv
 	return e
 }
 
-// StrokeLinecap
+// StrokeLineCap
 //
 // English:
 //
@@ -1799,7 +1799,7 @@ func (e *TagSvgFeDiffuseLighting) StrokeDasharray(value interface{}) (ref *TagSv
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeDiffuseLighting) StrokeLinecap(value interface{}) (ref *TagSvgFeDiffuseLighting) {
+func (e *TagSvgFeDiffuseLighting) StrokeLineCap(value interface{}) (ref *TagSvgFeDiffuseLighting) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1809,7 +1809,7 @@ func (e *TagSvgFeDiffuseLighting) StrokeLinecap(value interface{}) (ref *TagSvgF
 	return e
 }
 
-// StrokeLinejoin
+// StrokeLineJoin
 //
 // English:
 //
@@ -1826,7 +1826,7 @@ func (e *TagSvgFeDiffuseLighting) StrokeLinecap(value interface{}) (ref *TagSvgF
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgFeDiffuseLighting) StrokeLinejoin(value interface{}) (ref *TagSvgFeDiffuseLighting) {
+func (e *TagSvgFeDiffuseLighting) StrokeLineJoin(value interface{}) (ref *TagSvgFeDiffuseLighting) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1836,7 +1836,7 @@ func (e *TagSvgFeDiffuseLighting) StrokeLinejoin(value interface{}) (ref *TagSvg
 	return e
 }
 
-// StrokeMiterlimit
+// StrokeMiterLimit
 //
 // English:
 //
@@ -1854,7 +1854,7 @@ func (e *TagSvgFeDiffuseLighting) StrokeLinejoin(value interface{}) (ref *TagSvg
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgFeDiffuseLighting) StrokeMiterlimit(value float64) (ref *TagSvgFeDiffuseLighting) {
+func (e *TagSvgFeDiffuseLighting) StrokeMiterLimit(value float64) (ref *TagSvgFeDiffuseLighting) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }

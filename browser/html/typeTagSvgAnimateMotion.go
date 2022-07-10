@@ -1724,7 +1724,7 @@ func (e *TagSvgAnimateMotion) StrokeDasharray(value interface{}) (ref *TagSvgAni
 	return e
 }
 
-// StrokeLinecap
+// StrokeLineCap
 //
 // English:
 //
@@ -1751,7 +1751,7 @@ func (e *TagSvgAnimateMotion) StrokeDasharray(value interface{}) (ref *TagSvgAni
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgAnimateMotion) StrokeLinecap(value interface{}) (ref *TagSvgAnimateMotion) {
+func (e *TagSvgAnimateMotion) StrokeLineCap(value interface{}) (ref *TagSvgAnimateMotion) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1761,7 +1761,7 @@ func (e *TagSvgAnimateMotion) StrokeLinecap(value interface{}) (ref *TagSvgAnima
 	return e
 }
 
-// StrokeLinejoin
+// StrokeLineJoin
 //
 // English:
 //
@@ -1778,7 +1778,7 @@ func (e *TagSvgAnimateMotion) StrokeLinecap(value interface{}) (ref *TagSvgAnima
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgAnimateMotion) StrokeLinejoin(value interface{}) (ref *TagSvgAnimateMotion) {
+func (e *TagSvgAnimateMotion) StrokeLineJoin(value interface{}) (ref *TagSvgAnimateMotion) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1788,7 +1788,7 @@ func (e *TagSvgAnimateMotion) StrokeLinejoin(value interface{}) (ref *TagSvgAnim
 	return e
 }
 
-// StrokeMiterlimit
+// StrokeMiterLimit
 //
 // English:
 //
@@ -1806,7 +1806,7 @@ func (e *TagSvgAnimateMotion) StrokeLinejoin(value interface{}) (ref *TagSvgAnim
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgAnimateMotion) StrokeMiterlimit(value float64) (ref *TagSvgAnimateMotion) {
+func (e *TagSvgAnimateMotion) StrokeMiterLimit(value float64) (ref *TagSvgAnimateMotion) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }

@@ -1762,7 +1762,7 @@ func (e *TagSvgFeMorphology) StrokeDasharray(value interface{}) (ref *TagSvgFeMo
 	return e
 }
 
-// StrokeLinecap
+// StrokeLineCap
 //
 // English:
 //
@@ -1789,7 +1789,7 @@ func (e *TagSvgFeMorphology) StrokeDasharray(value interface{}) (ref *TagSvgFeMo
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeMorphology) StrokeLinecap(value interface{}) (ref *TagSvgFeMorphology) {
+func (e *TagSvgFeMorphology) StrokeLineCap(value interface{}) (ref *TagSvgFeMorphology) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1799,7 +1799,7 @@ func (e *TagSvgFeMorphology) StrokeLinecap(value interface{}) (ref *TagSvgFeMorp
 	return e
 }
 
-// StrokeLinejoin
+// StrokeLineJoin
 //
 // English:
 //
@@ -1816,7 +1816,7 @@ func (e *TagSvgFeMorphology) StrokeLinecap(value interface{}) (ref *TagSvgFeMorp
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgFeMorphology) StrokeLinejoin(value interface{}) (ref *TagSvgFeMorphology) {
+func (e *TagSvgFeMorphology) StrokeLineJoin(value interface{}) (ref *TagSvgFeMorphology) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1826,7 +1826,7 @@ func (e *TagSvgFeMorphology) StrokeLinejoin(value interface{}) (ref *TagSvgFeMor
 	return e
 }
 
-// StrokeMiterlimit
+// StrokeMiterLimit
 //
 // English:
 //
@@ -1844,7 +1844,7 @@ func (e *TagSvgFeMorphology) StrokeLinejoin(value interface{}) (ref *TagSvgFeMor
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgFeMorphology) StrokeMiterlimit(value float64) (ref *TagSvgFeMorphology) {
+func (e *TagSvgFeMorphology) StrokeMiterLimit(value float64) (ref *TagSvgFeMorphology) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }

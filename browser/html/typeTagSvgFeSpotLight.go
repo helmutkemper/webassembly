@@ -1762,7 +1762,7 @@ func (e *TagSvgFeSpotLight) StrokeDasharray(value interface{}) (ref *TagSvgFeSpo
 	return e
 }
 
-// StrokeLinecap
+// StrokeLineCap
 //
 // English:
 //
@@ -1789,7 +1789,7 @@ func (e *TagSvgFeSpotLight) StrokeDasharray(value interface{}) (ref *TagSvgFeSpo
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeSpotLight) StrokeLinecap(value interface{}) (ref *TagSvgFeSpotLight) {
+func (e *TagSvgFeSpotLight) StrokeLineCap(value interface{}) (ref *TagSvgFeSpotLight) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1799,7 +1799,7 @@ func (e *TagSvgFeSpotLight) StrokeLinecap(value interface{}) (ref *TagSvgFeSpotL
 	return e
 }
 
-// StrokeLinejoin
+// StrokeLineJoin
 //
 // English:
 //
@@ -1816,7 +1816,7 @@ func (e *TagSvgFeSpotLight) StrokeLinecap(value interface{}) (ref *TagSvgFeSpotL
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgFeSpotLight) StrokeLinejoin(value interface{}) (ref *TagSvgFeSpotLight) {
+func (e *TagSvgFeSpotLight) StrokeLineJoin(value interface{}) (ref *TagSvgFeSpotLight) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1826,7 +1826,7 @@ func (e *TagSvgFeSpotLight) StrokeLinejoin(value interface{}) (ref *TagSvgFeSpot
 	return e
 }
 
-// StrokeMiterlimit
+// StrokeMiterLimit
 //
 // English:
 //
@@ -1844,7 +1844,7 @@ func (e *TagSvgFeSpotLight) StrokeLinejoin(value interface{}) (ref *TagSvgFeSpot
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgFeSpotLight) StrokeMiterlimit(value float64) (ref *TagSvgFeSpotLight) {
+func (e *TagSvgFeSpotLight) StrokeMiterLimit(value float64) (ref *TagSvgFeSpotLight) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }

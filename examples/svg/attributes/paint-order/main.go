@@ -42,7 +42,7 @@ func main() {
 			factoryBrowser.NewTagSvgStop().StopColor("#CCC").Offset(1),
 		),
 		factoryBrowser.NewTagSvgRect().Width(400).Height(200).Fill("url(#g)"),
-		factoryBrowser.NewTagSvgG().Fill(factoryColor.NewCrimson()).Stroke(factoryColor.NewWhite()).StrokeWidth(6).StrokeLinejoin(html.KSvgStrokeLinejoinRound).TextAnchor(html.KSvgTextAnchorMiddle).FontFamily(factoryFontFamily.NewSansSerif()).FontSize("50px").FontWeight(html.KFontWeightRuleBold).Append(
+		factoryBrowser.NewTagSvgG().Fill(factoryColor.NewCrimson()).Stroke(factoryColor.NewWhite()).StrokeWidth(6).StrokeLineJoin(html.KSvgStrokeLinejoinRound).TextAnchor(html.KSvgTextAnchorMiddle).FontFamily(factoryFontFamily.NewSansSerif()).FontSize("50px").FontWeight(html.KFontWeightRuleBold).Append(
 			factoryBrowser.NewTagSvgText().X(200).Y(75).Text("stroke over"),
 			factoryBrowser.NewTagSvgText().X(200).Y(150).Text("stroke over").PaintOrder(html.KSvgPaintOrderStroke).Id("stroke-under").Text("stroke under"),
 		),

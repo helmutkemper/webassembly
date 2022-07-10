@@ -1763,7 +1763,7 @@ func (e *TagSvgFeTile) StrokeDasharray(value interface{}) (ref *TagSvgFeTile) {
 	return e
 }
 
-// StrokeLinecap
+// StrokeLineCap
 //
 // English:
 //
@@ -1790,7 +1790,7 @@ func (e *TagSvgFeTile) StrokeDasharray(value interface{}) (ref *TagSvgFeTile) {
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeTile) StrokeLinecap(value interface{}) (ref *TagSvgFeTile) {
+func (e *TagSvgFeTile) StrokeLineCap(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1800,7 +1800,7 @@ func (e *TagSvgFeTile) StrokeLinecap(value interface{}) (ref *TagSvgFeTile) {
 	return e
 }
 
-// StrokeLinejoin
+// StrokeLineJoin
 //
 // English:
 //
@@ -1817,7 +1817,7 @@ func (e *TagSvgFeTile) StrokeLinecap(value interface{}) (ref *TagSvgFeTile) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgFeTile) StrokeLinejoin(value interface{}) (ref *TagSvgFeTile) {
+func (e *TagSvgFeTile) StrokeLineJoin(value interface{}) (ref *TagSvgFeTile) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1827,7 +1827,7 @@ func (e *TagSvgFeTile) StrokeLinejoin(value interface{}) (ref *TagSvgFeTile) {
 	return e
 }
 
-// StrokeMiterlimit
+// StrokeMiterLimit
 //
 // English:
 //
@@ -1845,7 +1845,7 @@ func (e *TagSvgFeTile) StrokeLinejoin(value interface{}) (ref *TagSvgFeTile) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgFeTile) StrokeMiterlimit(value float64) (ref *TagSvgFeTile) {
+func (e *TagSvgFeTile) StrokeMiterLimit(value float64) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }

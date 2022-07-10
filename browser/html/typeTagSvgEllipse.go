@@ -1770,7 +1770,7 @@ func (e *TagSvgEllipse) StrokeDasharray(value interface{}) (ref *TagSvgEllipse) 
 	return e
 }
 
-// StrokeLinecap
+// StrokeLineCap
 //
 // English:
 //
@@ -1797,7 +1797,7 @@ func (e *TagSvgEllipse) StrokeDasharray(value interface{}) (ref *TagSvgEllipse) 
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgEllipse) StrokeLinecap(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgEllipse) StrokeLineCap(value interface{}) (ref *TagSvgEllipse) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1807,7 +1807,7 @@ func (e *TagSvgEllipse) StrokeLinecap(value interface{}) (ref *TagSvgEllipse) {
 	return e
 }
 
-// StrokeLinejoin
+// StrokeLineJoin
 //
 // English:
 //
@@ -1824,7 +1824,7 @@ func (e *TagSvgEllipse) StrokeLinecap(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgEllipse) StrokeLinejoin(value interface{}) (ref *TagSvgEllipse) {
+func (e *TagSvgEllipse) StrokeLineJoin(value interface{}) (ref *TagSvgEllipse) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1834,7 +1834,7 @@ func (e *TagSvgEllipse) StrokeLinejoin(value interface{}) (ref *TagSvgEllipse) {
 	return e
 }
 
-// StrokeMiterlimit
+// StrokeMiterLimit
 //
 // English:
 //
@@ -1852,7 +1852,7 @@ func (e *TagSvgEllipse) StrokeLinejoin(value interface{}) (ref *TagSvgEllipse) {
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgEllipse) StrokeMiterlimit(value float64) (ref *TagSvgEllipse) {
+func (e *TagSvgEllipse) StrokeMiterLimit(value float64) (ref *TagSvgEllipse) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }

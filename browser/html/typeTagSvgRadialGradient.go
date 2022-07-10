@@ -1772,7 +1772,7 @@ func (e *TagSvgRadialGradient) StrokeDasharray(value interface{}) (ref *TagSvgRa
 	return e
 }
 
-// StrokeLinecap
+// StrokeLineCap
 //
 // English:
 //
@@ -1799,7 +1799,7 @@ func (e *TagSvgRadialGradient) StrokeDasharray(value interface{}) (ref *TagSvgRa
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgRadialGradient) StrokeLinecap(value interface{}) (ref *TagSvgRadialGradient) {
+func (e *TagSvgRadialGradient) StrokeLineCap(value interface{}) (ref *TagSvgRadialGradient) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1809,7 +1809,7 @@ func (e *TagSvgRadialGradient) StrokeLinecap(value interface{}) (ref *TagSvgRadi
 	return e
 }
 
-// StrokeLinejoin
+// StrokeLineJoin
 //
 // English:
 //
@@ -1826,7 +1826,7 @@ func (e *TagSvgRadialGradient) StrokeLinecap(value interface{}) (ref *TagSvgRadi
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgRadialGradient) StrokeLinejoin(value interface{}) (ref *TagSvgRadialGradient) {
+func (e *TagSvgRadialGradient) StrokeLineJoin(value interface{}) (ref *TagSvgRadialGradient) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1836,7 +1836,7 @@ func (e *TagSvgRadialGradient) StrokeLinejoin(value interface{}) (ref *TagSvgRad
 	return e
 }
 
-// StrokeMiterlimit
+// StrokeMiterLimit
 //
 // English:
 //
@@ -1854,7 +1854,7 @@ func (e *TagSvgRadialGradient) StrokeLinejoin(value interface{}) (ref *TagSvgRad
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgRadialGradient) StrokeMiterlimit(value float64) (ref *TagSvgRadialGradient) {
+func (e *TagSvgRadialGradient) StrokeMiterLimit(value float64) (ref *TagSvgRadialGradient) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }

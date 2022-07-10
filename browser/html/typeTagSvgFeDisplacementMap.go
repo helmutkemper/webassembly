@@ -1776,7 +1776,7 @@ func (e *TagSvgFeDisplacementMap) StrokeDasharray(value interface{}) (ref *TagSv
 	return e
 }
 
-// StrokeLinecap
+// StrokeLineCap
 //
 // English:
 //
@@ -1803,7 +1803,7 @@ func (e *TagSvgFeDisplacementMap) StrokeDasharray(value interface{}) (ref *TagSv
 //
 //   Notas:
 //     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
-func (e *TagSvgFeDisplacementMap) StrokeLinecap(value interface{}) (ref *TagSvgFeDisplacementMap) {
+func (e *TagSvgFeDisplacementMap) StrokeLineCap(value interface{}) (ref *TagSvgFeDisplacementMap) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1813,7 +1813,7 @@ func (e *TagSvgFeDisplacementMap) StrokeLinecap(value interface{}) (ref *TagSvgF
 	return e
 }
 
-// StrokeLinejoin
+// StrokeLineJoin
 //
 // English:
 //
@@ -1830,7 +1830,7 @@ func (e *TagSvgFeDisplacementMap) StrokeLinecap(value interface{}) (ref *TagSvgF
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
-func (e *TagSvgFeDisplacementMap) StrokeLinejoin(value interface{}) (ref *TagSvgFeDisplacementMap) {
+func (e *TagSvgFeDisplacementMap) StrokeLineJoin(value interface{}) (ref *TagSvgFeDisplacementMap) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -1840,7 +1840,7 @@ func (e *TagSvgFeDisplacementMap) StrokeLinejoin(value interface{}) (ref *TagSvg
 	return e
 }
 
-// StrokeMiterlimit
+// StrokeMiterLimit
 //
 // English:
 //
@@ -1858,7 +1858,7 @@ func (e *TagSvgFeDisplacementMap) StrokeLinejoin(value interface{}) (ref *TagSvg
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
-func (e *TagSvgFeDisplacementMap) StrokeMiterlimit(value float64) (ref *TagSvgFeDisplacementMap) {
+func (e *TagSvgFeDisplacementMap) StrokeMiterLimit(value float64) (ref *TagSvgFeDisplacementMap) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }

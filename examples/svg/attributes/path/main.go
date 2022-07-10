@@ -35,7 +35,7 @@ func main() {
 	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 100, 100}).Append(
 		factoryBrowser.NewTagSvgPath().Id("MyPath").Fill(nil).Stroke(factoryColor.NewSilver()).D(factoryBrowser.NewPath().M(10, 90).Q(90, 90, 90, 45).Q(90, 10, 50, 10).Q(10, 10, 10, 40).Q(10, 70, 45, 70).Q(70, 70, 75, 50)),
 		factoryBrowser.NewTagSvgText().Append(
-			factoryBrowser.NewTagSvgTextPath().Path(factoryBrowser.NewPath().M(10, 90).Q(90, 90, 90, 45).Q(90, 10, 50, 10).Q(10, 10, 10, 40).Q(10, 70, 45, 70).Q(70, 70, 75, 50)).Text(
+			factoryBrowser.NewTagSvgTextPath().HRef("#MyPath").Path(factoryBrowser.NewPath().M(10, 90).Q(90, 90, 90, 45).Q(90, 10, 50, 10).Q(10, 10, 10, 40).Q(10, 70, 45, 70).Q(70, 70, 75, 50)).Text(
 				"Quick brown fox jumps over the lazy dog.",
 			),
 		),

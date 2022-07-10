@@ -1751,7 +1751,7 @@ func (e *TagSvgFeTurbulence) StrokeDasharray(value interface{}) (ref *TagSvgFeTu
 	if converted, ok := value.([]float64); ok {
 		str := ""
 		for _, v := range converted {
-			str += strconv.FormatFloat(v, 'g', -1, 64) + ""
+			str += strconv.FormatFloat(v, 'g', -1, 64) + " "
 		}
 		length := len(str) - 1
 
@@ -2657,7 +2657,7 @@ func (e *TagSvgFeTurbulence) Seed(value float64) (ref *TagSvgFeTurbulence) {
 //
 //   Input:
 //     value: defines the standard deviation
-//       const: KSvgStitchTiles... (e.g. KSvgStitchTilesNoStitch)
+//       []float64: []float64{2,5} = "2 5"
 //       any other type: interface{}
 //
 // Português:
@@ -2666,15 +2666,21 @@ func (e *TagSvgFeTurbulence) Seed(value float64) (ref *TagSvgFeTurbulence) {
 //
 //   Input:
 //     value: define o desvio padrão
-//       const: KSvgStitchTiles... (e.g. KSvgStitchTilesNoStitch)
+//       []float64: []float64{2,5} = "2 5"
 //       qualquer outro tipo: interface{}
 func (e *TagSvgFeTurbulence) StdDeviation(value interface{}) (ref *TagSvgFeTurbulence) {
-	if converted, ok := value.(SvgStitchTiles); ok {
-		e.selfElement.Call("setAttribute", "stitchTiles", converted.String())
+	if converted, ok := value.([]float64); ok {
+		str := ""
+		for _, v := range converted {
+			str += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+		length := len(str) - 1
+
+		e.selfElement.Call("setAttribute", "stdDeviation", str[:length])
 		return e
 	}
 
-	e.selfElement.Call("setAttribute", "stitchTiles", value)
+	e.selfElement.Call("setAttribute", "stdDeviation", value)
 	return e
 }
 
@@ -2732,5 +2738,34 @@ func (e *TagSvgFeTurbulence) Type(value interface{}) (ref *TagSvgFeTurbulence) {
 	}
 
 	e.selfElement.Call("setAttribute", "type", value)
+	return e
+}
+
+// StitchTiles
+//
+// English:
+//
+// The stitchTiles attribute defines how the Perlin Noise tiles behave at the border.
+//
+//   Input:
+//     value: defines how the Perlin Noise tiles behave at the border
+//       const: KSvgStitchTiles... (e.g. KSvgStitchTilesNoStitch)
+//       any other type: interface{}
+//
+// Português:
+//
+// O atributo stitchTiles define como os blocos Perlin Noise se comportam na borda.
+//
+//   Entrada:
+//     value: define como os blocos Perlin Noise se comportam na borda
+//       const: KSvgStitchTiles... (ex. KSvgStitchTilesNoStitch)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFeTurbulence) StitchTiles(value interface{}) (ref *TagSvgFeTurbulence) {
+	if converted, ok := value.(SvgStitchTiles); ok {
+		e.selfElement.Call("setAttribute", "stitchTiles", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "stitchTiles", value)
 	return e
 }

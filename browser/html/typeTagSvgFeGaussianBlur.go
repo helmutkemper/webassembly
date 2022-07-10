@@ -1750,7 +1750,7 @@ func (e *TagSvgFeGaussianBlur) StrokeDasharray(value interface{}) (ref *TagSvgFe
 	if converted, ok := value.([]float64); ok {
 		str := ""
 		for _, v := range converted {
-			str += strconv.FormatFloat(v, 'g', -1, 64) + ""
+			str += strconv.FormatFloat(v, 'g', -1, 64) + " "
 		}
 		length := len(str) - 1
 
@@ -2638,7 +2638,7 @@ func (e *TagSvgFeGaussianBlur) In(in interface{}) (ref *TagSvgFeGaussianBlur) {
 //
 //   Input:
 //     value: defines the standard deviation
-//       const: KSvgStitchTiles... (e.g. KSvgStitchTilesNoStitch)
+//       []float64: []float64{2,5} = "2 5"
 //       any other type: interface{}
 //
 // Português:
@@ -2647,11 +2647,17 @@ func (e *TagSvgFeGaussianBlur) In(in interface{}) (ref *TagSvgFeGaussianBlur) {
 //
 //   Input:
 //     value: define o desvio padrão
-//       const: KSvgStitchTiles... (e.g. KSvgStitchTilesNoStitch)
+//       []float64: []float64{2,5} = "2 5"
 //       qualquer outro tipo: interface{}
 func (e *TagSvgFeGaussianBlur) StdDeviation(value interface{}) (ref *TagSvgFeGaussianBlur) {
-	if converted, ok := value.(SvgStitchTiles); ok {
-		e.selfElement.Call("setAttribute", "stdDeviation", converted.String())
+	if converted, ok := value.([]float64); ok {
+		str := ""
+		for _, v := range converted {
+			str += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+		length := len(str) - 1
+
+		e.selfElement.Call("setAttribute", "stdDeviation", str[:length])
 		return e
 	}
 

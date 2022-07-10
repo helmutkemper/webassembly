@@ -1751,7 +1751,7 @@ func (e *TagSvgFeImage) StrokeDasharray(value interface{}) (ref *TagSvgFeImage) 
 	if converted, ok := value.([]float64); ok {
 		str := ""
 		for _, v := range converted {
-			str += strconv.FormatFloat(v, 'g', -1, 64) + ""
+			str += strconv.FormatFloat(v, 'g', -1, 64) + " "
 		}
 		length := len(str) - 1
 

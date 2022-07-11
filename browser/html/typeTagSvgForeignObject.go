@@ -2408,10 +2408,14 @@ func (e *TagSvgForeignObject) Style(value string) (ref *TagSvgForeignObject) {
 // English:
 //
 //  The height attribute defines the vertical length of an element in the user coordinate system.
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
 //
 // Português:
 //
 //  O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) Height(height interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := height.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"

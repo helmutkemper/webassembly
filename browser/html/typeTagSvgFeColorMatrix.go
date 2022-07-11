@@ -2493,10 +2493,14 @@ func (e *TagSvgFeColorMatrix) Style(value string) (ref *TagSvgFeColorMatrix) {
 // English:
 //
 //  The height attribute defines the vertical length of an element in the user coordinate system.
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
 //
 // Português:
 //
 //  O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
 func (e *TagSvgFeColorMatrix) Height(height interface{}) (ref *TagSvgFeColorMatrix) {
 	if converted, ok := height.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"

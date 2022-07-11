@@ -5528,24 +5528,25 @@ func (e *TagSvgGlobal) Transform(value interface{}) (ref *TagSvgGlobal) {
 //     * Como um atributo de apresentação em SVG, transform-origin corresponde em sintaxe e comportamento à propriedade
 //       transform-origin em CSS e pode ser usado como propriedade CSS para estilizar SVG. Consulte a propriedade
 //       transform-origin do CSS para obter mais informações.
-func (e *TagSvgGlobal) TransformOrigin(valueA, valueB interface{}) (ref *TagSvgGlobal) {
-	if converted, ok := valueA.(float32); ok {
-		valueA = strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+func (e *TagSvgGlobal) TransformOrigin(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgTransformOrigin); ok {
+		e.selfElement.Call("setAttribute", "transform-origin", converted.String())
+		return e
 	}
 
-	if converted, ok := valueB.(float32); ok {
-		valueB = strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+	if converted, ok := value.([]SvgTransformOrigin); ok {
+		switch len(converted) {
+		case 1:
+			e.selfElement.Call("setAttribute", "transform-origin", converted[0].String())
+			return e
+
+		case 2:
+			e.selfElement.Call("setAttribute", "transform-origin", fmt.Sprintf("%v %v", converted[0].String(), converted[1].String()))
+			return e
+		}
 	}
 
-	if converted, ok := valueA.(SvgTransformOrigin); ok {
-		valueA = converted.String()
-	}
-
-	if converted, ok := valueB.(SvgTransformOrigin); ok {
-		valueB = converted.String()
-	}
-
-	e.selfElement.Call("setAttribute", "transform-origin", fmt.Sprintf("%v %v", valueA, valueB))
+	e.selfElement.Call("setAttribute", "transform-origin", TypeToString(value, ";", ";"))
 	return e
 }
 

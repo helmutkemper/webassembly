@@ -909,8 +909,8 @@ func (el *TagCanvas) CreateLinearGradient(x0, y0, x1, y1 int) (ref *TagCanvas) {
 //       Fill().
 //       AppendToStage()
 func (el *TagCanvas) CreatePattern(image interface{}, repeatRule CanvasRepeatRule) (ref *TagCanvas) {
-	if converted, ok := image.(*TagImage); ok {
-		el.pattern = el.context.Call("createPattern", converted.GetJs(), repeatRule.String())
+	if converted, ok := image.(*TagImg); ok {
+		el.pattern = el.context.Call("createPattern", converted.Get(), repeatRule.String())
 		return el
 	}
 

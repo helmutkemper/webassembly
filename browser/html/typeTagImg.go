@@ -2,6 +2,8 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"log"
 	"strconv"
 	"strings"
@@ -9,10 +11,91 @@ import (
 	"syscall/js"
 )
 
-type TagImage struct {
-	id          string
+type TagImg struct {
+
+	// id
+	//
+	// English:
+	//
+	//  Unique id, standard html id property.
+	//
+	// Português:
+	//
+	//  Id único, propriedade padrão id do html.
+	id string
+
+	// selfElement
+	//
+	// English:
+	//
+	//  Reference to self element as js.Value.
+	//
+	// Português:
+	//
+	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
-	cssClass    *css.Class
+
+	cssClass *css.Class
+
+	x int
+	y int
+
+	// listener
+	//
+	// English:
+	//
+	//  The javascript function removeEventListener needs to receive the function passed in addEventListener
+	//
+	// Português:
+	//
+	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
+	listener *sync.Map
+
+	// drag
+
+	// stage
+	//
+	// English:
+	//
+	//  Browser main document reference captured at startup.
+	//
+	// Português:
+	//
+	//  Referencia do documento principal do navegador capturado na inicialização.
+	stage js.Value
+
+	// isDragging
+	//
+	// English:
+	//
+	//  Indicates the process of dragging the element.
+	//
+	// Português:
+	//
+	//  Indica o processo de arrasto do elemento.
+	isDragging bool
+
+	// dragDifX
+	//
+	// English:
+	//
+	//  Used in calculating element drag.
+	//
+	// Português:
+	//
+	//  Usado no cálculo do arrasto de elemento.
+	dragDifX int
+
+	// dragDifX
+	//
+	// English:
+	//
+	//  Used in calculating element drag.
+	//
+	// Português:
+	//
+	//  Usado no cálculo do arrasto de elemento.
+	dragDifY int
 
 	// deltaMovieX
 	//
@@ -39,11 +122,64 @@ type TagImage struct {
 	//  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
 	//  GetY(): (y = y - deltaMovieY).
 	deltaMovieY int
+
+	// tween
+	//
+	// English:
+	//
+	//  Easing tween.
+	//
+	// Receives an identifier and a pointer of the tween object to be used in case of multiple
+	// functions.
+	//
+	// Português:
+	//
+	//  Facilitador de interpolação.
+	//
+	// Recebe um identificador e um ponteiro do objeto tween para ser usado em caso de múltiplas
+	// funções.
+	tween map[string]interfaces.TweenInterface
+
+	points    *[]algorithm.Point
+	pointsLen int
+
+	rotateDelta float64
 }
 
-func (e TagImage) GetJs() (element js.Value) {
-	element = e.selfElement
-	return
+// Init
+//
+// English:
+//
+//  Initializes the object correctly.
+//
+// Português:
+//
+//  Inicializa o objeto corretamente.
+func (e *TagImg) Init() (ref *TagImg) {
+	e.listener = new(sync.Map)
+	e.tween = make(map[string]interfaces.TweenInterface)
+
+	e.CreateElement()
+	e.prepareStageReference()
+
+	return e
+}
+
+// prepareStageReference
+//
+// English:
+//
+//  Prepares the stage reference at initialization.
+//
+// Português:
+//
+//  Prepara à referencia do stage na inicialização.
+func (e *TagImg) prepareStageReference() {
+	e.stage = js.Global().Get("document").Get("body")
+}
+
+func (e *TagImg) Get() (el js.Value) {
+	return e.selfElement
 }
 
 // AccessKey
@@ -84,7 +220,7 @@ func (e TagImage) GetJs() (element js.Value) {
 //     importantes no navegador;
 //     Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
 //     pressionadas junto com a tecla Alt.
-func (e *TagImage) AccessKey(key string) (ref *TagImage) {
+func (e *TagImg) AccessKey(key string) (ref *TagImg) {
 	e.selfElement.Set("accesskey", key)
 	return e
 }
@@ -100,7 +236,7 @@ func (e *TagImage) AccessKey(key string) (ref *TagImage) {
 //
 //  Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
 //  carregada. Apenas um elemento em um documento pode ter esse atributo.
-func (e *TagImage) Autofocus(autofocus bool) (ref *TagImage) {
+func (e *TagImg) Autofocus(autofocus bool) (ref *TagImg) {
 	e.selfElement.Set("autofocus", autofocus)
 	return e
 }
@@ -142,7 +278,7 @@ func (e *TagImage) Autofocus(autofocus bool) (ref *TagImage) {
 // O atributo class é usado principalmente para apontar para uma classe em uma folha de estilo.
 // No entanto, também pode ser usado por um JavaScript (através do HTML DOM) para fazer alterações
 // em elementos HTML com uma classe especificada.
-func (e *TagImage) Class(class ...string) (ref *TagImage) {
+func (e *TagImg) Class(class ...string) (ref *TagImg) {
 	e.selfElement.Set("classList", strings.Join(class, " "))
 	return e
 }
@@ -170,7 +306,7 @@ func (e *TagImage) Class(class ...string) (ref *TagImage) {
 //   Nota:
 //     Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
 //     seu pai.
-func (e *TagImage) ContentEditable(editable bool) (ref *TagImage) {
+func (e *TagImg) ContentEditable(editable bool) (ref *TagImg) {
 	e.selfElement.Set("contenteditable", editable)
 	return e
 }
@@ -220,7 +356,7 @@ func (e *TagImage) ContentEditable(editable bool) (ref *TagImage) {
 //   Nota:
 //     * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
 //       usuário.
-func (e *TagImage) Data(data map[string]string) (ref *TagImage) {
+func (e *TagImg) Data(data map[string]string) (ref *TagImg) {
 	for k, v := range data {
 		e.selfElement.Set(" data-"+k, v)
 	}
@@ -243,7 +379,7 @@ func (e *TagImage) Data(data map[string]string) (ref *TagImage) {
 //   Entrada:
 //     dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
 //          KDirAuto ]
-func (e *TagImage) Dir(dir Dir) (ref *TagImage) {
+func (e *TagImg) Dir(dir Dir) (ref *TagImg) {
 	e.selfElement.Set("dir", dir.String())
 	return e
 }
@@ -280,7 +416,7 @@ func (e *TagImage) Dir(dir Dir) (ref *TagImage) {
 //     * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
 //     * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
 //       https://www.w3schools.com/html/html5_draganddrop.asp
-func (e *TagImage) Draggable(draggable Draggable) (ref *TagImage) {
+func (e *TagImg) Draggable(draggable Draggable) (ref *TagImg) {
 	e.selfElement.Set("draggable", draggable.String())
 	return e
 }
@@ -330,7 +466,7 @@ func (e *TagImage) Draggable(draggable Draggable) (ref *TagImage) {
 //
 // Se nenhum valor enterKeyHint foi especificado ou se foi definido com um valor diferente dos
 // permitidos, ele retornará uma string vazia.
-func (e *TagImage) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagImage) {
+func (e *TagImg) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagImg) {
 	e.selfElement.Set("enterKeyHint", enterKeyHint.String())
 	return e
 }
@@ -367,7 +503,7 @@ func (e *TagImage) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagImage) {
 // O atributo oculto também pode ser usado para impedir que um usuário veja um elemento até que alguma
 // outra condição seja atendida (como marcar uma caixa de seleção etc.). Então, um JavaScript pode
 // remover o atributo oculto e tornar o elemento visível.
-func (e *TagImage) Hidden() (ref *TagImage) {
+func (e *TagImg) Hidden() (ref *TagImg) {
 	e.selfElement.Get("style").Set("visibility", "hidden")
 	return e
 }
@@ -393,7 +529,7 @@ func (e *TagImage) Hidden() (ref *TagImage) {
 //
 // O atributo id é mais usado para apontar para um estilo em uma folha de estilo, e por JavaScript
 // (através do HTML DOM) para manipular o elemento com o id específico.
-func (e *TagImage) Id(id string) (ref *TagImage) {
+func (e *TagImg) Id(id string) (ref *TagImg) {
 	e.id = id
 	e.selfElement.Set("id", id)
 	return e
@@ -427,7 +563,7 @@ func (e *TagImage) Id(id string) (ref *TagImage) {
 // imposto na entrada. Para exigir que a entrada esteja em conformidade com um tipo de dados
 // específico, escolha um tipo de elemento <input> apropriado. Para obter orientações específicas
 // sobre como escolher os tipos de <input>, consulte a seção Valores.
-func (e *TagImage) InputMode(inputMode InputMode) (ref *TagImage) {
+func (e *TagImg) InputMode(inputMode InputMode) (ref *TagImg) {
 	e.selfElement.Set("inputmode", inputMode.String())
 	return e
 }
@@ -443,7 +579,7 @@ func (e *TagImage) InputMode(inputMode InputMode) (ref *TagImage) {
 //
 //  Permite especificar que um elemento HTML padrão deve se comportar como um elemento interno
 //  personalizado registrado.
-func (e *TagImage) Is(is string) (ref *TagImage) {
+func (e *TagImg) Is(is string) (ref *TagImg) {
 	e.selfElement.Set("is", is)
 	return e
 }
@@ -457,7 +593,7 @@ func (e *TagImage) Is(is string) (ref *TagImage) {
 // Português:
 //
 //  O identificador global exclusivo de um item.
-func (e *TagImage) ItemId(id string) (ref *TagImage) {
+func (e *TagImg) ItemId(id string) (ref *TagImg) {
 	e.selfElement.Set("itemid", id)
 	return e
 }
@@ -473,7 +609,7 @@ func (e *TagImage) ItemId(id string) (ref *TagImage) {
 //
 //  Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
 //  especificado, onde um itemprop consiste em um par de nome e valor.
-func (e *TagImage) ItemDrop(itemprop string) (ref *TagImage) {
+func (e *TagImg) ItemDrop(itemprop string) (ref *TagImg) {
 	e.selfElement.Set("itemprop", itemprop)
 	return e
 }
@@ -491,7 +627,7 @@ func (e *TagImage) ItemDrop(itemprop string) (ref *TagImage) {
 //  Propriedades que não são descendentes de um elemento com o atributo itemscope podem ser
 //  associadas ao item usando um itemref. Ele fornece uma lista de IDs de elementos (não IDs de itens)
 //  com propriedades adicionais em outras partes do documento.
-func (e *TagImage) ItemRef(itemref string) (ref *TagImage) {
+func (e *TagImg) ItemRef(itemref string) (ref *TagImg) {
 	e.selfElement.Set("itemref", itemref)
 	return e
 }
@@ -509,7 +645,7 @@ func (e *TagImage) ItemRef(itemref string) (ref *TagImage) {
 //  Especifica a URL do vocabulário que será usado para definir itemprops (propriedades do item) na
 //  estrutura de dados. itemscope é usado para definir o escopo de onde na estrutura de dados o
 //  vocabulário definido por tipo de item estará ativo.
-func (e *TagImage) ItemType(itemType string) (ref *TagImage) {
+func (e *TagImg) ItemType(itemType string) (ref *TagImg) {
 	e.selfElement.Set("itemtype", itemType)
 	return e
 }
@@ -533,7 +669,7 @@ func (e *TagImage) ItemType(itemType string) (ref *TagImage) {
 //
 // Exemplos comuns são KLanguageEnglish para inglês, KLanguageSpanish para espanhol, KLanguageFrench
 // para francês e assim por diante.
-func (e *TagImage) Lang(language Language) (ref *TagImage) {
+func (e *TagImg) Lang(language Language) (ref *TagImg) {
 	e.selfElement.Set("lang", language.String())
 	return e
 }
@@ -550,7 +686,7 @@ func (e *TagImage) Lang(language Language) (ref *TagImage) {
 //  Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
 //  o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
 //  pseudo-elemento ::part.
-func (e *TagImage) Nonce(part ...string) (ref *TagImage) {
+func (e *TagImg) Nonce(part ...string) (ref *TagImg) {
 	e.selfElement.Set("part", strings.Join(part, " "))
 	return e
 }
@@ -568,7 +704,7 @@ func (e *TagImage) Nonce(part ...string) (ref *TagImage) {
 //  Atribui um slot em uma shadow DOM shadow tree a um elemento: Um elemento com um atributo slot é
 //  atribuído ao slot criado pelo elemento <slot> cujo valor do atributo name corresponde ao valor
 //  desse atributo slot.
-func (e *TagImage) Slot(slot string) (ref *TagImage) {
+func (e *TagImg) Slot(slot string) (ref *TagImg) {
 	e.selfElement.Set("slot", slot)
 	return e
 }
@@ -596,7 +732,7 @@ func (e *TagImage) Slot(slot string) (ref *TagImage) {
 //         Valores de texto em elementos de entrada (não senha)
 //         Texto em elementos <textarea>
 //         Texto em elementos editáveis
-func (e *TagImage) Spellcheck(spell bool) (ref *TagImage) {
+func (e *TagImg) Spellcheck(spell bool) (ref *TagImg) {
 	e.selfElement.Set("spellcheck", spell)
 
 	return e
@@ -623,7 +759,7 @@ func (e *TagImage) Spellcheck(spell bool) (ref *TagImage) {
 //
 // O atributo style pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagImage) Style(style string) (ref *TagImage) {
+func (e *TagImg) Style(style string) (ref *TagImg) {
 	e.selfElement.Set("style", style)
 	return e
 }
@@ -643,7 +779,7 @@ func (e *TagImage) Style(style string) (ref *TagImage) {
 //
 // O atributo tabindex pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento
 // HTML. No entanto, não é necessariamente útil).
-func (e *TagImage) TabIndex(index int) (ref *TagImage) {
+func (e *TagImg) TabIndex(index int) (ref *TagImg) {
 	e.selfElement.Set("tabindex", index)
 	return e
 }
@@ -668,7 +804,7 @@ func (e *TagImage) TabIndex(index int) (ref *TagImage) {
 //
 // O atributo title pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagImage) Title(title string) (ref *TagImage) {
+func (e *TagImg) Title(title string) (ref *TagImg) {
 	e.selfElement.Set("title", title)
 	return e
 }
@@ -688,7 +824,7 @@ func (e *TagImage) Title(title string) (ref *TagImage) {
 //
 //   Entrada:
 //     translate: elemento deve ser traduzido ou não. [ KTranslateYes | KTranslateNo ]
-func (e *TagImage) Translate(translate Translate) (ref *TagImage) {
+func (e *TagImg) Translate(translate Translate) (ref *TagImg) {
 	e.selfElement.Set("translate", translate.String())
 	return e
 }
@@ -704,45 +840,11 @@ func (e *TagImage) Translate(translate Translate) (ref *TagImage) {
 //
 //  Em um documento HTML, o método Document.createElement() cria o elemento HTML especificado ou um
 //  HTMLUnknownElement se o nome do elemento dado não for conhecido.
-func (e *TagImage) CreateElement(tag Tag, src string, width, height int, waitLoad bool) (ref *TagImage) {
-	e.selfElement = js.Global().Get("document").Call("createElement", tag.String())
+func (e *TagImg) CreateElement() (ref *TagImg) {
+	e.selfElement = js.Global().Get("document").Call("createElement", "img")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return
-	}
-
-	e.selfElement.Set("src", src)
-	e.selfElement.Set("width", width)
-	e.selfElement.Set("height", height)
-
-	if waitLoad == true {
-		var waitGroup = new(sync.WaitGroup)
-
-		waitGroup.Add(1)
-		e.selfElement.Call(
-			"addEventListener",
-			"error",
-			js.FuncOf(
-				func(this js.Value, args []js.Value) interface{} {
-					log.Print("image load error", e.id)
-					waitGroup.Done()
-					return nil
-				},
-			),
-		)
-
-		e.selfElement.Call(
-			"addEventListener",
-			"load",
-			js.FuncOf(
-				func(this js.Value, args []js.Value) interface{} {
-					waitGroup.Done()
-					return nil
-				},
-			),
-		)
-
-		waitGroup.Wait()
 	}
 
 	return e
@@ -776,7 +878,7 @@ func (e *TagImage) CreateElement(tag Tag, src string, width, height int, waitLoa
 //     * Equivale a:
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
-func (e *TagImage) AppendById(appendId string) (ref *TagImage) {
+func (e *TagImg) AppendById(appendId string) (ref *TagImg) {
 
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
@@ -816,10 +918,10 @@ func (e *TagImage) AppendById(appendId string) (ref *TagImage) {
 //     * Equivale a:
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
-func (e *TagImage) Append(append interface{}) (ref *TagImage) {
+func (e *TagImg) Append(append interface{}) (ref *TagImg) {
 	switch append.(type) {
-	case *TagImage:
-		e.selfElement.Call("appendChild", append.(*TagImage).selfElement)
+	case *TagImg:
+		e.selfElement.Call("appendChild", append.(*TagImg).selfElement)
 	case js.Value:
 		e.selfElement.Call("appendChild", append)
 	case string:
@@ -844,7 +946,7 @@ func (e *TagImage) Append(append interface{}) (ref *TagImage) {
 // Português:
 //
 //  Define os eixos X e Y em pixels.
-func (e *TagImage) SetXY(x, y int) (ref *TagImage) {
+func (e *TagImg) SetXY(x, y int) (ref *TagImg) {
 	x = x + e.deltaMovieX
 	y = y + e.deltaMovieY
 
@@ -868,7 +970,7 @@ func (e *TagImage) SetXY(x, y int) (ref *TagImage) {
 //
 //  Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
 //  GetX(): (x = x - deltaMovieX).
-func (e *TagImage) SetDeltaX(delta int) (ref *TagImage) {
+func (e *TagImg) SetDeltaX(delta int) (ref *TagImg) {
 	e.deltaMovieX = delta
 	return
 }
@@ -884,7 +986,7 @@ func (e *TagImage) SetDeltaX(delta int) (ref *TagImage) {
 //
 //  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
 //  GetX(): (y = y - deltaMovieY).
-func (e *TagImage) SetDeltaY(delta int) (ref *TagImage) {
+func (e *TagImg) SetDeltaY(delta int) (ref *TagImg) {
 	e.deltaMovieY = delta
 	return
 }
@@ -898,7 +1000,7 @@ func (e *TagImage) SetDeltaY(delta int) (ref *TagImage) {
 // Português:
 //
 //  Define o eixo X em pixels.
-func (e *TagImage) SetX(x int) (ref *TagImage) {
+func (e *TagImg) SetX(x int) (ref *TagImg) {
 	x = x + e.deltaMovieX
 
 	px := strconv.FormatInt(int64(x), 10) + "px"
@@ -916,7 +1018,7 @@ func (e *TagImage) SetX(x int) (ref *TagImage) {
 // Português:
 //
 //  Define o eixo Y em pixels.
-func (e *TagImage) SetY(y int) (ref *TagImage) {
+func (e *TagImg) SetY(y int) (ref *TagImg) {
 	y = y + e.deltaMovieY
 
 	py := strconv.FormatInt(int64(y), 10) + "px"
@@ -934,7 +1036,7 @@ func (e *TagImage) SetY(y int) (ref *TagImage) {
 // Português:
 //
 //  Retorna os eixos X e Y em pixels.
-func (e *TagImage) GetXY() (x, y int) {
+func (e *TagImg) GetXY() (x, y int) {
 	x = e.selfElement.Get("style").Get("left").Int()
 	y = e.selfElement.Get("style").Get("top").Int()
 
@@ -952,7 +1054,7 @@ func (e *TagImage) GetXY() (x, y int) {
 // Português:
 //
 //  Retorna o eixo X em pixels.
-func (e *TagImage) GetX() (x int) {
+func (e *TagImg) GetX() (x int) {
 	x = e.selfElement.Get("style").Get("left").Int()
 	x = x - e.deltaMovieX
 	return
@@ -967,7 +1069,7 @@ func (e *TagImage) GetX() (x int) {
 // Português:
 //
 //  Retorna o eixo Y em pixels.
-func (e *TagImage) GetY() (y int) {
+func (e *TagImg) GetY() (y int) {
 	y = e.selfElement.Get("style").Get("top").Int()
 	y = y + e.deltaMovieX
 	return
@@ -984,7 +1086,7 @@ func (e *TagImage) GetY() (y int) {
 //
 //  O atributo alt fornece texto alternativo para a imagem, exibindo o valor do atributo se o src da
 //  imagem estiver ausente ou falhar ao carregar.
-func (e *TagImage) Alt(alt string) (ref *TagImage) {
+func (e *TagImg) Alt(alt string) (ref *TagImg) {
 	e.selfElement.Set("alt", alt)
 	return e
 }
@@ -1024,7 +1126,7 @@ func (e *TagImage) Alt(alt string) (ref *TagImage) {
 // pelo site de origem (não enviando nenhum cabeçalho de resposta Access-Control-Allow-Origin ou não
 // incluindo a origem do site em qualquer Access-Control-Allow-Origin response header que ele envia),
 // o navegador bloqueia o carregamento da imagem e registra um erro CORS no console devtools.
-func (e *TagImage) CrossOrigin(cross CrossOrigin) (ref *TagImage) {
+func (e *TagImg) CrossOrigin(cross CrossOrigin) (ref *TagImg) {
 	e.selfElement.Set("crossorigin", cross.String())
 	return e
 }
@@ -1038,7 +1140,7 @@ func (e *TagImage) CrossOrigin(cross CrossOrigin) (ref *TagImage) {
 // Português:
 //
 //  Fornece uma dica de decodificação de imagem para o navegador.
-func (e *TagImage) Decoding(decoding Decoding) (ref *TagImage) {
+func (e *TagImg) Decoding(decoding Decoding) (ref *TagImg) {
 	e.selfElement.Set("decoding", decoding.String())
 	return e
 }
@@ -1052,7 +1154,7 @@ func (e *TagImage) Decoding(decoding Decoding) (ref *TagImage) {
 // Português:
 //
 //  Fornece uma dica da prioridade relativa a ser usada ao buscar a imagem.
-func (e *TagImage) FetchPriority(priority FetchPriority) (ref *TagImage) {
+func (e *TagImg) FetchPriority(priority FetchPriority) (ref *TagImg) {
 	e.selfElement.Set("fetchpriority", priority.String())
 	return e
 }
@@ -1077,7 +1179,7 @@ func (e *TagImage) FetchPriority(priority FetchPriority) (ref *TagImage) {
 //     * Este atributo é permitido somente se o elemento <img> for descendente de um elemento <a> com
 //       um atributo href válido. Isso oferece aos usuários sem dispositivos apontadores um destino
 //       de fallback.
-func (e *TagImage) IsMap(isMap bool) (ref *TagImage) {
+func (e *TagImg) IsMap(isMap bool) (ref *TagImg) {
 	e.selfElement.Set("ismap", isMap)
 	return e
 }
@@ -1136,7 +1238,7 @@ func (e *TagImage) IsMap(isMap bool) (ref *TagImage) {
 //
 //   Note:
 //     * Experimental. Expect behavior to change in the future. (04/2022)
-func (e *TagImage) ReferrerPolicy(referrerPolicy ReferrerPolicy) (ref *TagImage) {
+func (e *TagImg) ReferrerPolicy(referrerPolicy ReferrerPolicy) (ref *TagImg) {
 	e.selfElement.Set("referrerpolicy", referrerPolicy)
 	return e
 }
@@ -1176,7 +1278,7 @@ func (e *TagImage) ReferrerPolicy(referrerPolicy ReferrerPolicy) (ref *TagImage)
 // selecionado afeta o tamanho intrínseco da imagem (o tamanho de exibição da imagem se nenhum estilo
 // CSS for aplicado). Se o atributo srcset estiver ausente ou não contiver valores com um descritor
 // de largura, o atributo tamanhos não terá efeito.
-func (e *TagImage) Sizes(sizes string) (ref *TagImage) {
+func (e *TagImg) Sizes(sizes string) (ref *TagImg) {
 	e.selfElement.Set("sizes", sizes)
 	return e
 }
@@ -1195,8 +1297,39 @@ func (e *TagImage) Sizes(sizes string) (ref *TagImage) {
 //  tratado como uma imagem candidata com um descritor de densidade de pixels 1x, a menos que uma
 //  imagem com esse descritor de densidade de pixels já esteja definida em srcset, ou a menos que
 //  srcset contenha descritores w.
-func (e *TagImage) Src(src string) (ref *TagImage) {
+func (e *TagImg) Src(src string, waitLoad bool) (ref *TagImg) {
 	e.selfElement.Set("src", src)
+
+	if waitLoad == true {
+		var waitGroup = new(sync.WaitGroup)
+
+		waitGroup.Add(1)
+		e.selfElement.Call(
+			"addEventListener",
+			"error",
+			js.FuncOf(
+				func(this js.Value, args []js.Value) interface{} {
+					log.Print("image load error", e.id)
+					waitGroup.Done()
+					return nil
+				},
+			),
+		)
+
+		e.selfElement.Call(
+			"addEventListener",
+			"load",
+			js.FuncOf(
+				func(this js.Value, args []js.Value) interface{} {
+					waitGroup.Done()
+					return nil
+				},
+			),
+		)
+
+		waitGroup.Wait()
+	}
+
 	return e
 }
 
@@ -1245,7 +1378,7 @@ func (e *TagImage) Src(src string) (ref *TagImage) {
 // eles uma margem de manobra significativa para personalizar sua seleção com base em coisas como
 // preferências do usuário ou condições de largura de banda. Veja nosso tutorial de imagens
 // responsivas para obter um exemplo.
-func (e *TagImage) SrcSet(srcSet string) (ref *TagImage) {
+func (e *TagImg) SrcSet(srcSet string) (ref *TagImg) {
 	e.selfElement.Set("srcset", srcSet)
 	return e
 }
@@ -1259,7 +1392,7 @@ func (e *TagImage) SrcSet(srcSet string) (ref *TagImage) {
 // Português:
 //
 //  A largura intrínseca da imagem em pixels. Deve ser um número inteiro sem uma unidade.
-func (e *TagImage) Width(width int) (ref *TagImage) {
+func (e *TagImg) Width(width int) (ref *TagImg) {
 	e.selfElement.Set("width", width)
 	return e
 }
@@ -1279,7 +1412,7 @@ func (e *TagImage) Width(width int) (ref *TagImage) {
 //
 //   Note:
 //     * You cannot use this attribute if the <img> element is inside an <a> or <button> element.
-func (e *TagImage) UseMap(useMap bool) (ref *TagImage) {
+func (e *TagImg) UseMap(useMap bool) (ref *TagImg) {
 	e.selfElement.Set("usemap", useMap)
 	return e
 }

@@ -1,6 +1,7 @@
 package html
 
 import (
+	"fmt"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
@@ -2113,6 +2114,63 @@ func (e *TagSvgUse) Transform(value interface{}) (ref *TagSvgUse) {
 	}
 
 	e.selfElement.Call("setAttribute", "transform", value)
+	return e
+}
+
+// TransformOrigin
+//
+// English:
+//
+// The transform-origin SVG attribute sets the origin for an item's transformations.
+//
+//   Input:
+//     valueA, valueB: the origin for an item's transformations
+//       const: KSvgTransformOrigin... (e.g.: KSvgTransformOriginLeft)
+//       const: []SvgTransformOrigin{KSvgTransformOrigin..., KSvgTransformOrigin...} (e.g.: []SvgTransformOrigin{ KSvgTransformOriginLeft, KSvgTransformOriginTop })
+//       float32: 1.0 = "100%"
+//       []float32: []float32{1.0, 0.5} = "100% 50%"
+//       any other type: interface{}
+//
+//   Notes:
+//     * As a presentation attribute in SVG, transform-origin corresponds in syntax and behavior to the transform-origin
+//       property in CSS, and can be used as CSS property to style SVG. See the CSS transform-origin property for more
+//       information.
+//
+// Português:
+//
+// O atributo SVG transform-origin define a origem das transformações de um item.
+//
+//   Entrada:
+//     value: a origem das transformações de um item
+//       const: KSvgTransformOrigin... (ex.: KSvgTransformOriginLeft)
+//       const: []SvgTransformOrigin{KSvgTransformOrigin..., KSvgTransformOrigin...} (ex.: []SvgTransformOrigin{ KSvgTransformOriginLeft, KSvgTransformOriginTop })
+//       float32: 1.0 = "100%"
+//       []float32: []float32{1.0, 0.5} = "100% 50%"
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como um atributo de apresentação em SVG, transform-origin corresponde em sintaxe e comportamento à propriedade
+//       transform-origin em CSS e pode ser usado como propriedade CSS para estilizar SVG. Consulte a propriedade
+//       transform-origin do CSS para obter mais informações.
+func (e *TagSvgUse) TransformOrigin(value interface{}) (ref *TagSvgUse) {
+	if converted, ok := value.(SvgTransformOrigin); ok {
+		e.selfElement.Call("setAttribute", "transform-origin", converted.String())
+		return e
+	}
+
+	if converted, ok := value.([]SvgTransformOrigin); ok {
+		switch len(converted) {
+		case 1:
+			e.selfElement.Call("setAttribute", "transform-origin", converted[0].String())
+			return e
+
+		case 2:
+			e.selfElement.Call("setAttribute", "transform-origin", fmt.Sprintf("%v %v", converted[0].String(), converted[1].String()))
+			return e
+		}
+	}
+
+	e.selfElement.Call("setAttribute", "transform-origin", TypeToString(value, " ", ";"))
 	return e
 }
 

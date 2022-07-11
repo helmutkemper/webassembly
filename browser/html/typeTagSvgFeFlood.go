@@ -1750,7 +1750,7 @@ func (e *TagSvgFeFlood) StrokeDasharray(value interface{}) (ref *TagSvgFeFlood) 
 	if converted, ok := value.([]float64); ok {
 		str := ""
 		for _, v := range converted {
-			str += strconv.FormatFloat(v, 'g', -1, 64) + ""
+			str += strconv.FormatFloat(v, 'g', -1, 64) + " "
 		}
 		length := len(str) - 1
 
@@ -2509,10 +2509,10 @@ func (e *TagSvgFeFlood) X(value interface{}) (ref *TagSvgFeFlood) {
 	if converted, ok := value.([]float32); ok {
 		var valueStr = ""
 		for _, v := range converted {
-			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "%, "
 		}
 
-		var length = len(valueStr) - 3
+		var length = len(valueStr) - 2
 
 		e.selfElement.Call("setAttribute", "x", valueStr[:length])
 		return e
@@ -2567,10 +2567,10 @@ func (e *TagSvgFeFlood) Y(value interface{}) (ref *TagSvgFeFlood) {
 	if converted, ok := value.([]float32); ok {
 		var valueStr = ""
 		for _, v := range converted {
-			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "%, "
 		}
 
-		var length = len(valueStr) - 3
+		var length = len(valueStr) - 2
 
 		e.selfElement.Call("setAttribute", "y", valueStr[:length])
 		return e

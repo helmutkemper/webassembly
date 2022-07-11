@@ -26,4 +26,4 @@ fazer o exemplo https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/point
 fazer o exemplo https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/restart
 fazer o exemplo2 https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/visibility
 
-+ ""
+

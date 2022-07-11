@@ -2526,10 +2526,10 @@ func (e *TagSvgFeSpecularLighting) X(value interface{}) (ref *TagSvgFeSpecularLi
 	if converted, ok := value.([]float32); ok {
 		var valueStr = ""
 		for _, v := range converted {
-			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "%, "
 		}
 
-		var length = len(valueStr) - 3
+		var length = len(valueStr) - 2
 
 		e.selfElement.Call("setAttribute", "x", valueStr[:length])
 		return e
@@ -2584,10 +2584,10 @@ func (e *TagSvgFeSpecularLighting) Y(value interface{}) (ref *TagSvgFeSpecularLi
 	if converted, ok := value.([]float32); ok {
 		var valueStr = ""
 		for _, v := range converted {
-			valueStr += strconv.FormatFloat(float64(v), 'g', -1, 64) + "%, "
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "%, "
 		}
 
-		var length = len(valueStr) - 3
+		var length = len(valueStr) - 2
 
 		e.selfElement.Call("setAttribute", "y", valueStr[:length])
 		return e

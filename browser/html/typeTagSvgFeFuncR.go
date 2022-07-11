@@ -699,7 +699,7 @@ func (e *TagSvgFeFuncR) Offset(value interface{}) (ref *TagSvgFeFuncR) {
 	}
 
 	if converted, ok := value.(float64); ok {
-		p := strconv.FormatFloat(float64(converted), 'g', -1, 64)
+		p := strconv.FormatFloat(converted, 'g', -1, 64)
 		e.selfElement.Call("setAttribute", "offset", p)
 		return e
 	}

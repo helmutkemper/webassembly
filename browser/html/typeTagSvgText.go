@@ -2409,8 +2409,8 @@ func (e *TagSvgText) Style(value string) (ref *TagSvgText) {
 //   Input:
 //     value: defines an x-axis coordinate
 //       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 10.0} = "0%, 10%"
-//       float32: 10.0 = "10%"
+//       []float32: []float64{0.0, 0.1} = "0%, 10%"
+//       float32: 0.1 = "10%"
 //       any other type: interface{}
 //
 // Português:
@@ -2420,8 +2420,8 @@ func (e *TagSvgText) Style(value string) (ref *TagSvgText) {
 //   Entrada:
 //     value: define uma coordenada do eixo x
 //       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 10.0} = "0%, 10%"
-//       float32: 10.0 = "10%"
+//       []float32: []float64{0.0, 0.1} = "0%, 10%"
+//       float32: 0.1 = "10%"
 //       qualquer outro tipo: interface{}
 func (e *TagSvgText) X(value interface{}) (ref *TagSvgText) {
 	if converted, ok := value.([]float64); ok {
@@ -2467,8 +2467,8 @@ func (e *TagSvgText) X(value interface{}) (ref *TagSvgText) {
 //   Input:
 //     value: defines an y-axis coordinate
 //       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 10.0} = "0%, 10%"
-//       float32: 10.0 = "10%"
+//       []float32: []float32{0.0, 0.1} = "0%, 10%"
+//       float32: 0.1 = "10%"
 //       any other type: interface{}
 //
 // Português:
@@ -2478,8 +2478,8 @@ func (e *TagSvgText) X(value interface{}) (ref *TagSvgText) {
 //   Entrada:
 //     value: define uma coordenada do eixo y
 //       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 10.0} = "0%, 10%"
-//       float32: 10.0 = "10%"
+//       []float32: []float32{0.0, 0.1} = "0%, 10%"
+//       float32: 0.1 = "10%"
 //       qualquer outro tipo: interface{}
 func (e *TagSvgText) Y(value interface{}) (ref *TagSvgText) {
 	if converted, ok := value.([]float64); ok {

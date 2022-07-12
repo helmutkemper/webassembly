@@ -2488,8 +2488,8 @@ func (e *TagSvgFeComponentTransfer) Width(value interface{}) (ref *TagSvgFeCompo
 //   Input:
 //     value: defines an x-axis coordinate
 //       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 10.0} = "0%, 10%"
-//       float32: 10.0 = "10%"
+//       []float32: []float64{0.0, 0.1} = "0%, 10%"
+//       float32: 0.1 = "10%"
 //       any other type: interface{}
 //
 // Português:
@@ -2499,8 +2499,8 @@ func (e *TagSvgFeComponentTransfer) Width(value interface{}) (ref *TagSvgFeCompo
 //   Entrada:
 //     value: define uma coordenada do eixo x
 //       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 10.0} = "0%, 10%"
-//       float32: 10.0 = "10%"
+//       []float32: []float64{0.0, 0.1} = "0%, 10%"
+//       float32: 0.1 = "10%"
 //       qualquer outro tipo: interface{}
 func (e *TagSvgFeComponentTransfer) X(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.([]float64); ok {
@@ -2546,8 +2546,8 @@ func (e *TagSvgFeComponentTransfer) X(value interface{}) (ref *TagSvgFeComponent
 //   Input:
 //     value: defines an y-axis coordinate
 //       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 10.0} = "0%, 10%"
-//       float32: 10.0 = "10%"
+//       []float32: []float32{0.0, 0.1} = "0%, 10%"
+//       float32: 0.1 = "10%"
 //       any other type: interface{}
 //
 // Português:
@@ -2557,8 +2557,8 @@ func (e *TagSvgFeComponentTransfer) X(value interface{}) (ref *TagSvgFeComponent
 //   Entrada:
 //     value: define uma coordenada do eixo y
 //       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 10.0} = "0%, 10%"
-//       float32: 10.0 = "10%"
+//       []float32: []float32{0.0, 0.1} = "0%, 10%"
+//       float32: 0.1 = "10%"
 //       qualquer outro tipo: interface{}
 func (e *TagSvgFeComponentTransfer) Y(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	if converted, ok := value.([]float64); ok {

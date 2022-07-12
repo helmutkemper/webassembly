@@ -975,6 +975,11 @@ func (e *TagSvgFilter) FillOpacity(value interface{}) (ref *TagSvgFilter) {
 //  The fill-rule attribute is a presentation attribute defining the algorithm to use to determine the inside part of
 //  a shape.
 //
+//   Input:
+//     value: defining the algorithm to use to determine the inside part of a shape.
+//       const: KSvgFillRule... (e.g. KSvgFillRuleEvenOdd)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute, fill-rule can be used as a CSS property.
 //
@@ -983,10 +988,20 @@ func (e *TagSvgFilter) FillOpacity(value interface{}) (ref *TagSvgFilter) {
 //  O atributo fill-rule é um atributo de apresentação que define o algoritmo a ser usado para determinar a parte
 //  interna de uma forma.
 //
+//   Input:
+//     value: define o algoritmo a ser usado para determinar a parte interna de uma forma.
+//       const: KSvgFillRule... (eg. KSvgFillRuleEvenOdd)
+//       qualquer outro tipo: interface{}
+//
 //   Notas:
 //     * Como atributo de apresentação, fill-rule pode ser usado como uma propriedade CSS.
-func (e *TagSvgFilter) FillRule(fillRule SvgFillRule) (ref *TagSvgFilter) {
-	e.selfElement.Call("setAttribute", "fill-rule", fillRule.String())
+func (e *TagSvgFilter) FillRule(value interface{}) (ref *TagSvgFilter) {
+	if converted, ok := value.(SvgFillRule); ok {
+		e.selfElement.Call("setAttribute", "fill-rule", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "fill-rule", value)
 	return e
 }
 
@@ -997,6 +1012,9 @@ func (e *TagSvgFilter) FillRule(fillRule SvgFillRule) (ref *TagSvgFilter) {
 //  The filter attribute specifies the filter effects defined by the <filter> element that shall be applied to its
 //  element.
 //
+//   Input:
+//     filter: specifies the filter effects
+//
 //   Notes:
 //     * As a presentation attribute, filter can be used as a CSS property. See css filter for further information.
 //
@@ -1004,6 +1022,9 @@ func (e *TagSvgFilter) FillRule(fillRule SvgFillRule) (ref *TagSvgFilter) {
 //
 //  O atributo filter especifica os efeitos de filtro definidos pelo elemento <filter> que devem ser aplicados ao seu
 //  elemento.
+//
+//   Entrada:
+//     filter: especifica os efeitos do filtro
 //
 //   Notas:
 //     * Como atributo de apresentação, o filtro pode ser usado como propriedade CSS. Veja filtro css para mais
@@ -1019,15 +1040,29 @@ func (e *TagSvgFilter) Filter(filter string) (ref *TagSvgFilter) {
 //
 //  The flood-color attribute indicates what color to use to flood the current filter primitive subregion.
 //
+//   Input:
+//     floodColor: indicates what color to use to flood the current filter primitive subregion
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute, flood-color can be used as a CSS property.
 //
 // Portuguese
 //
-//  The flood-color attribute indicates what color to use to flood the current filter primitive subregion.
+//  O atributo flood-color indica qual cor usar para inundar a sub-região primitiva do filtro atual.
 //
-//   Notes:
-//     * As a presentation attribute, flood-color can be used as a CSS property.
+//   Entrada:
+//     floodColor: indica qual cor usar para inundar a sub-região primitiva do filtro atual
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Como atributo de apresentação, a cor de inundação pode ser usada como uma propriedade CSS.
 func (e *TagSvgFilter) FloodColor(floodColor interface{}) (ref *TagSvgFilter) {
 	if converted, ok := floodColor.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "flood-color", RGBAToJs(converted))
@@ -2641,13 +2676,28 @@ func (e *TagSvgFilter) Height(height interface{}) (ref *TagSvgFilter) {
 //
 // English:
 //
-//  The filterUnits attribute defines the coordinate system for the attributes x, y, width and height.
+// The filterUnits attribute defines the coordinate system for the attributes x, y, width and height.
+//
+//   Input:
+//     value: defines the coordinate system
+//       const: KSvgFilterUnits... (e.g. KSvgFilterUnitsObjectBoundingBox)
+//       any other type: interface{}
 //
 // Portuguese
 //
-//   O atributo filterUnits define o sistema de coordenadas para os atributos x, y, largura e altura.
-func (e *TagSvgFilter) FilterUnits(filterUnits SvgFilterUnits) (ref *TagSvgFilter) {
-	e.selfElement.Call("setAttribute", "filterUnits", filterUnits.String())
+// O atributo filterUnits define o sistema de coordenadas para os atributos x, y, largura e altura.
+//
+//   Entrada:
+//     value: define o sistema de coordenadas
+//       const: KSvgFilterUnits... (ex. KSvgFilterUnitsObjectBoundingBox)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFilter) FilterUnits(value interface{}) (ref *TagSvgFilter) {
+	if converted, ok := value.(SvgFilterUnits); ok {
+		e.selfElement.Call("setAttribute", "filterUnits", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "filterUnits", value)
 	return e
 }
 

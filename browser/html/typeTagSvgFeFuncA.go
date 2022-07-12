@@ -621,9 +621,15 @@ func (e *TagSvgFeFuncA) Amplitude(value interface{}) (ref *TagSvgFeFuncA) {
 //
 //  The exponent attribute defines the exponent of the gamma function.
 //
+//   Input:
+//     exponent: defines the exponent of the gamma function
+//
 // Portuguese
 //
 //  O atributo expoente define o expoente da função gama.
+//
+//   Entrada:
+//     exponent: define o expoente da função gama
 func (e *TagSvgFeFuncA) Exponent(exponent float64) (ref *TagSvgFeFuncA) {
 	e.selfElement.Call("setAttribute", "exponent", exponent)
 	return e

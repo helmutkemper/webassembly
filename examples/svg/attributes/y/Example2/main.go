@@ -30,18 +30,18 @@
 //  <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
 //    <!-- horizontal line to materialized the text base line -->
 //    <line x1="0" y1="40%" x2="100%" y2="40%" />
-//    <line x1="0" y1="90%" x2="100%" y2="90%" />
+//    <line x1="0" y1="60%" x2="100%" y2="60%" />
+//    <line x1="0" y1="80%" x2="100%" y2="80%" />
 //
 //    <!-- vertical line to materialized the x positioning -->
-//    <line x1="25%" y1="0" x2="25%" y2="100%" />
-//    <line x1="50%" y1="0" x2="50%" y2="100%" />
-//    <line x1="75%" y1="0" x2="75%" y2="100%" />
+//    <line x1="5%"  y1="0" x2="5%"  y2="100%" />
+//    <line x1="55%" y1="0" x2="55%" y2="100%" />
 //
-//    <!-- x with a single value -->
-//    <text y="40%" x="50%">SVG</text>
+//    <!-- y with a single value -->
+//    <text y="40%" x="5%">SVG</text>
 //
-//    <!-- x with multiple values -->
-//    <text y="90%" x="25%, 50%, 75%">SVG</text>
+//    <!-- y with multiple values -->
+//    <text y="40%,60%,80%" x="55%">SVG</text>
 //  </svg>
 
 //go:build js
@@ -62,18 +62,18 @@ func main() {
 	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 100}).Append(
 		// horizontal line to materialized the text base line
 		factoryBrowser.NewTagSvgLine().X1(0).Y1(float32(0.4)).X2(float32(1.0)).Y2(float32(0.4)),
-		factoryBrowser.NewTagSvgLine().X1(0).Y1(float32(0.9)).X2(float32(1.0)).Y2(float32(0.9)),
+		factoryBrowser.NewTagSvgLine().X1(0).Y1(float32(0.6)).X2(float32(1.0)).Y2(float32(0.6)),
+		factoryBrowser.NewTagSvgLine().X1(0).Y1(float32(0.8)).X2(float32(1.0)).Y2(float32(0.8)),
 
 		// vertical line to materialized the x positioning
-		factoryBrowser.NewTagSvgLine().X1(float32(0.25)).Y1(0).X2(float32(0.25)).Y2(float32(1)),
-		factoryBrowser.NewTagSvgLine().X1(float32(0.50)).Y1(0).X2(float32(0.50)).Y2(float32(1)),
-		factoryBrowser.NewTagSvgLine().X1(float32(0.75)).Y1(0).X2(float32(0.75)).Y2(float32(1)),
+		factoryBrowser.NewTagSvgLine().X1(float32(0.05)).Y1(0).X2(float32(0.05)).Y2(float32(1)),
+		factoryBrowser.NewTagSvgLine().X1(float32(0.55)).Y1(0).X2(float32(0.55)).Y2(float32(1)),
 
-		// x with a single value
-		factoryBrowser.NewTagSvgText().Y(float32(0.4)).X(float32(0.5)).Text("SVG"),
+		// y with a single value
+		factoryBrowser.NewTagSvgText().Y(float32(0.4)).X(float32(0.05)).Text("SVG"),
 
-		// x with multiple values
-		factoryBrowser.NewTagSvgText().Y(float32(0.9)).X([]float32{0.25, 0.50, 0.75}).Text("SVG"),
+		// y with multiple values
+		factoryBrowser.NewTagSvgText().Y([]float32{0.4, 0.6, 0.8}).X(float32(0.55)).Text("SVG"),
 	)
 
 	stage.Append(s1)

@@ -15,8 +15,6 @@
 //go:build js
 // +build js
 
-// bug: o original não apararece nada
-
 package main
 
 import (

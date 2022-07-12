@@ -1104,16 +1104,22 @@ func (e *TagSvgGlobal) D(d interface{}) (ref *TagSvgGlobal) {
 //
 // English:
 //
-//  The diffuseConstant attribute represents the kd value in the Phong lighting model. In SVG, this can be any
-//  non-negative number.
+// The diffuseConstant attribute represents the kd value in the Phong lighting model. In SVG, this can be any
+// non-negative number.
+//
+//   Input:
+//     diffuseConstant: represents the kd value in the Phong lighting model
 //
 // It's used to determine the final RGB value of a given pixel. The brighter the lighting-color, the smaller this number
 // should be.
 //
 // Português:
 //
-//  O atributo difusoConstant representa o valor kd no modelo de iluminação Phong. Em SVG, pode ser qualquer número
-//  não negativo.
+// O atributo difusoConstant representa o valor kd no modelo de iluminação Phong. Em SVG, pode ser qualquer número
+// não negativo.
+//
+//   Entrada:
+//     diffuseConstant: representa o valor kd no modelo de iluminação Phong
 //
 // É usado para determinar o valor RGB final de um determinado pixel. Quanto mais brilhante a cor da iluminação, menor
 // deve ser esse número.

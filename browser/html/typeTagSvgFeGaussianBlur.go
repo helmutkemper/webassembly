@@ -2746,17 +2746,31 @@ func (e *TagSvgFeGaussianBlur) StdDeviation(value interface{}) (ref *TagSvgFeGau
 //
 // English:
 //
-//  The edgeMode attribute determines how to extend the input image as necessary with color values so that the matrix
-//  operations can be applied when the kernel is positioned at or near the edge of the input image.
+// The edgeMode attribute determines how to extend the input image as necessary with color values so that the matrix
+// operations can be applied when the kernel is positioned at or near the edge of the input image.
+//
+//   Input:
+//     value: determines how to extend the input image
+//       const: KSvgEdgeMode... (e.g. KSvgEdgeModeWrap)
+//       any other type: interface{}
 //
 // Portuguese
 //
-//  O atributo edgeMode determina como estender a imagem de entrada conforme necessário com valores de cor para que as
-//  operações de matriz possam ser aplicadas quando o kernel estiver posicionado na borda da imagem de entrada ou
-//  próximo a ela.
+// O atributo edgeMode determina como estender a imagem de entrada conforme necessário com valores de cor para que as
+// operações de matriz possam ser aplicadas quando o kernel estiver posicionado na borda da imagem de entrada ou
+// próximo a ela.
 //
-func (e *TagSvgFeGaussianBlur) EdgeMode(edgeMode SvgEdgeMode) (ref *TagSvgFeGaussianBlur) {
-	e.selfElement.Call("setAttribute", "edgeMode", edgeMode.String())
+//   Entrada:
+//     value: determina como estender a imagem de entrada
+//       const: KSvgEdgeMode... (ex. KSvgEdgeModeWrap)
+//       any other type: interface{}
+func (e *TagSvgFeGaussianBlur) EdgeMode(value interface{}) (ref *TagSvgFeGaussianBlur) {
+	if converted, ok := value.(SvgEdgeMode); ok {
+		e.selfElement.Call("setAttribute", "edgeMode", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "edgeMode", value)
 	return e
 }
 

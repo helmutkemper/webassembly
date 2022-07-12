@@ -1317,13 +1317,18 @@ func (e *TagSvgGlobal) Divisor(divisor float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// DominantBaseline #presentation
+// DominantBaseline
 //
 // English:
 //
 // The dominant-baseline attribute specifies the dominant baseline, which is the baseline used to align the box's text
 // and inline-level contents. It also indicates the default alignment baseline of any boxes participating in baseline
 // alignment in the box's alignment context.
+//
+//   Input:
+//     value: is the baseline used to align the box's text and inline-level contents
+//       const: KSvgDominantBaseline... (e.g. KSvgDominantBaselineHanging)
+//       any other type: interface{}
 //
 // It is used to determine or re-determine a scaled-baseline-table. A scaled-baseline-table is a compound value with
 // three components:
@@ -1348,6 +1353,11 @@ func (e *TagSvgGlobal) Divisor(divisor float64) (ref *TagSvgGlobal) {
 // texto da caixa e o conteúdo do nível embutido. Também indica a linha de base de alinhamento padrão de todas as caixas
 // que participam do alinhamento da linha de base no contexto de alinhamento da caixa.
 //
+//   Entrada:
+//     value: é a linha de base usada para alinhar o texto da caixa e o conteúdo embutido
+//       const: KSvgDominantBaseline... (ex. KSvgDominantBaselineHanging)
+//       qualquer outro tipo: interface{}
+//
 // Ele é usado para determinar ou re-determinar uma tabela de linha de base dimensionada. Uma tabela de linha de base
 // dimensionada é um valor composto com três componentes:
 //
@@ -1365,8 +1375,13 @@ func (e *TagSvgGlobal) Divisor(divisor float64) (ref *TagSvgGlobal) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a linha de base dominante pode ser usada como uma propriedade CSS.
-func (e *TagSvgGlobal) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "dominant-baseline", dominantBaseline.String())
+func (e *TagSvgGlobal) DominantBaseline(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgDominantBaseline); ok {
+		e.selfElement.Call("setAttribute", "dominant-baseline", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "dominant-baseline", value)
 	return e
 }
 
@@ -1612,17 +1627,31 @@ func (e *TagSvgGlobal) Dy(value interface{}) (ref *TagSvgGlobal) {
 //
 // English:
 //
-//  The edgeMode attribute determines how to extend the input image as necessary with color values so that the matrix
-//  operations can be applied when the kernel is positioned at or near the edge of the input image.
+// The edgeMode attribute determines how to extend the input image as necessary with color values so that the matrix
+// operations can be applied when the kernel is positioned at or near the edge of the input image.
+//
+//   Input:
+//     value: determines how to extend the input image
+//       const: KSvgEdgeMode... (e.g. KSvgEdgeModeWrap)
+//       any other type: interface{}
 //
 // Portuguese
 //
-//  O atributo edgeMode determina como estender a imagem de entrada conforme necessário com valores de cor para que as
-//  operações de matriz possam ser aplicadas quando o kernel estiver posicionado na borda da imagem de entrada ou
-//  próximo a ela.
+// O atributo edgeMode determina como estender a imagem de entrada conforme necessário com valores de cor para que as
+// operações de matriz possam ser aplicadas quando o kernel estiver posicionado na borda da imagem de entrada ou
+// próximo a ela.
 //
-func (e *TagSvgGlobal) EdgeMode(edgeMode SvgEdgeMode) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "edgeMode", edgeMode.String())
+//   Entrada:
+//     value: determina como estender a imagem de entrada
+//       const: KSvgEdgeMode... (ex. KSvgEdgeModeWrap)
+//       any other type: interface{}
+func (e *TagSvgGlobal) EdgeMode(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgEdgeMode); ok {
+		e.selfElement.Call("setAttribute", "edgeMode", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "edgeMode", value)
 	return e
 }
 

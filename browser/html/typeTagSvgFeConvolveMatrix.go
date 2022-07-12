@@ -2986,17 +2986,31 @@ func (e *TagSvgFeConvolveMatrix) TargetY(value int) (ref *TagSvgFeConvolveMatrix
 //
 // English:
 //
-//  The edgeMode attribute determines how to extend the input image as necessary with color values so that the matrix
-//  operations can be applied when the kernel is positioned at or near the edge of the input image.
+// The edgeMode attribute determines how to extend the input image as necessary with color values so that the matrix
+// operations can be applied when the kernel is positioned at or near the edge of the input image.
+//
+//   Input:
+//     value: determines how to extend the input image
+//       const: KSvgEdgeMode... (e.g. KSvgEdgeModeWrap)
+//       any other type: interface{}
 //
 // Portuguese
 //
-//  O atributo edgeMode determina como estender a imagem de entrada conforme necessário com valores de cor para que as
-//  operações de matriz possam ser aplicadas quando o kernel estiver posicionado na borda da imagem de entrada ou
-//  próximo a ela.
+// O atributo edgeMode determina como estender a imagem de entrada conforme necessário com valores de cor para que as
+// operações de matriz possam ser aplicadas quando o kernel estiver posicionado na borda da imagem de entrada ou
+// próximo a ela.
 //
-func (e *TagSvgFeConvolveMatrix) EdgeMode(edgeMode SvgEdgeMode) (ref *TagSvgFeConvolveMatrix) {
-	e.selfElement.Call("setAttribute", "edgeMode", edgeMode.String())
+//   Entrada:
+//     value: determina como estender a imagem de entrada
+//       const: KSvgEdgeMode... (ex. KSvgEdgeModeWrap)
+//       any other type: interface{}
+func (e *TagSvgFeConvolveMatrix) EdgeMode(value interface{}) (ref *TagSvgFeConvolveMatrix) {
+	if converted, ok := value.(SvgEdgeMode); ok {
+		e.selfElement.Call("setAttribute", "edgeMode", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "edgeMode", value)
 	return e
 }
 

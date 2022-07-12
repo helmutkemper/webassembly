@@ -840,7 +840,7 @@ func (e *TagSvgGlobal) Color(value interface{}) (ref *TagSvgGlobal) {
 // O atributo color-interpolation especifica o espaço de cores para interpolações de gradiente, animações de cores e
 // composição alfa.
 //
-//   Input:
+//   Entrada:
 //     value: especifica o espaço de cores para interpolações de gradiente
 //       string: ex. "black"
 //       factory: ex. factoryColor.NewYellow()
@@ -875,8 +875,8 @@ func (e *TagSvgGlobal) ColorInterpolation(value interface{}) (ref *TagSvgGlobal)
 //
 // English:
 //
-//  The color-interpolation-filters attribute specifies the color space for imaging operations performed via filter
-//  effects.
+// The color-interpolation-filters attribute specifies the color space for imaging operations performed via filter
+// effects.
 //
 //   Notes:
 //     * This property just has an affect on filter operations. Therefore, it has no effect on filter primitives like
@@ -890,8 +890,8 @@ func (e *TagSvgGlobal) ColorInterpolation(value interface{}) (ref *TagSvgGlobal)
 //
 // Português:
 //
-//  O atributo color-interpolation-filters especifica o espaço de cores para operações de imagem realizadas por meio de
-//  efeitos de filtro.
+// O atributo color-interpolation-filters especifica o espaço de cores para operações de imagem realizadas por meio de
+// efeitos de filtro.
 //
 //   Notas:
 //     * Esta propriedade afeta apenas as operações de filtro. Portanto, não tem efeito em primitivos de filtro como

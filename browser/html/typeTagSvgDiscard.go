@@ -537,7 +537,7 @@ func (e *TagSvgDiscard) Color(value interface{}) (ref *TagSvgDiscard) {
 // O atributo color-interpolation especifica o espaço de cores para interpolações de gradiente, animações de cores e
 // composição alfa.
 //
-//   Input:
+//   Entrada:
 //     value: especifica o espaço de cores para interpolações de gradiente
 //       string: ex. "black"
 //       factory: ex. factoryColor.NewYellow()

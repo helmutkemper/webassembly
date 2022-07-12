@@ -592,7 +592,7 @@ func (e *TagSvgFeComposite) Color(value interface{}) (ref *TagSvgFeComposite) {
 // O atributo color-interpolation especifica o espaço de cores para interpolações de gradiente, animações de cores e
 // composição alfa.
 //
-//   Input:
+//   Entrada:
 //     value: especifica o espaço de cores para interpolações de gradiente
 //       string: ex. "black"
 //       factory: ex. factoryColor.NewYellow()

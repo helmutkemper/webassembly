@@ -1095,7 +1095,12 @@ func (e *TagImg) Alt(alt string) (ref *TagImg) {
 //
 // English:
 //
-//  Indicates if the fetching of the image must be done using a CORS request.
+// Indicates if the fetching of the image must be done using a CORS request.
+//
+//   Input:
+//     value: Indicates if the fetching of the image must be done using a CORS request.
+//       const: KCrossOrigin... (e.g.: KCrossOriginAnonymous)
+//       any other type: interface{}
 //
 // Image data from a CORS-enabled image returned from a CORS request can be reused in the <canvas>
 // element without being marked "tainted".
@@ -1112,7 +1117,12 @@ func (e *TagImg) Alt(alt string) (ref *TagImg) {
 //
 // Português:
 //
-//  Indica se a busca da imagem deve ser feita por meio de uma solicitação CORS.
+// Indica se a busca da imagem deve ser feita por meio de uma solicitação CORS.
+//
+//   Entrada:
+//     value: Indica se a busca da imagem deve ser feita por meio de uma solicitação CORS.
+//       const: KCrossOrigin... (ex.: KCrossOriginAnonymous)
+//       qualquer outro tipo: interface{}
 //
 // Os dados de imagem de uma imagem habilitada para CORS retornados de uma solicitação CORS podem ser
 // reutilizados no elemento <canvas> sem serem marcados como "contaminados".
@@ -1126,8 +1136,13 @@ func (e *TagImg) Alt(alt string) (ref *TagImg) {
 // pelo site de origem (não enviando nenhum cabeçalho de resposta Access-Control-Allow-Origin ou não
 // incluindo a origem do site em qualquer Access-Control-Allow-Origin response header que ele envia),
 // o navegador bloqueia o carregamento da imagem e registra um erro CORS no console devtools.
-func (e *TagImg) CrossOrigin(cross CrossOrigin) (ref *TagImg) {
-	e.selfElement.Set("crossorigin", cross.String())
+func (e *TagImg) CrossOrigin(value interface{}) (ref *TagImg) {
+	if converted, ok := value.(CrossOrigin); ok {
+		e.selfElement.Set("crossorigin", converted.String())
+		return e
+	}
+
+	e.selfElement.Set("crossorigin", value)
 	return e
 }
 

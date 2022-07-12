@@ -415,17 +415,31 @@ func (e *TagSvgScript) Style(value string) (ref *TagSvgScript) {
 //
 // English:
 //
-//  The crossorigin attribute, valid on the <image> element, provides support for CORS, defining how the element handles
-//  crossorigin requests, thereby enabling the configuration of the CORS requests for the element's fetched data. It is
-//  a CORS settings attribute.
+// The crossorigin attribute, valid on the <image> element, provides support for CORS, defining how the element handles
+// crossorigin requests, thereby enabling the configuration of the CORS requests for the element's fetched data.
+//
+//   Input:
+//     value: provides support for CORS, defining how the element handles crossorigin requests
+//       const: KSvgCrossOrigin... (e.g.: KSvgCrossOriginUseCredentials)
+//       any other type: interface{}
 //
 // Português:
 //
-//  The crossorigin attribute, valid on the <image> element, provides support for CORS, defining how the element handles
-//  crossorigin requests, thereby enabling the configuration of the CORS requests for the element's fetched data. It is
-//  a CORS settings attribute.
-func (e *TagSvgScript) CrossOrigin(crossOrigin SvgCrossOrigin) (ref *TagSvgScript) {
-	e.selfElement.Call("setAttribute", "crossorigin", crossOrigin.String())
+// O atributo crossorigin, válido no elemento <image>, fornece suporte para CORS, definindo como o elemento trata as
+// requisições de origem cruzada, permitindo assim a configuração das requisições CORS para os dados buscados do
+// elemento.
+//
+//   Entrada:
+//     value: fornece suporte para CORS, definindo como o elemento lida com solicitações de origem cruzada
+//       const: KSvgCrossOrigin... (ex.: KSvgCrossOriginUseCredentials)
+//       qualquer outro tipo: interface{}
+func (e *TagSvgScript) CrossOrigin(value interface{}) (ref *TagSvgScript) {
+	if converted, ok := value.(SvgCrossOrigin); ok {
+		e.selfElement.Call("setAttribute", "crossorigin", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "crossorigin", value)
 	return e
 }
 

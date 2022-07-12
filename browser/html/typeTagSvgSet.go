@@ -1002,10 +1002,16 @@ func (e *TagSvgSet) HRef(href string) (ref *TagSvgSet) {
 //  The attributeName attribute indicates the name of the CSS property or attribute of the target element that is going
 //  to be changed during an animation.
 //
+//   Input:
+//     attributeName: indicates the name of the CSS property or attribute of the target element
+//
 // Português:
 //
 //  O atributo attributeName indica o nome da propriedade CSS ou atributo do elemento de destino que será alterado
 //  durante uma animação.
+//
+//   Entrada:
+//     attributeName: indica o nome da propriedade CSS ou atributo do elemento de destino
 func (e *TagSvgSet) AttributeName(attributeName string) (ref *TagSvgSet) {
 	e.selfElement.Call("setAttribute", "attributeName", attributeName)
 	return e

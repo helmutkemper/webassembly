@@ -500,8 +500,15 @@ func (e *TagSvgRect) Color(value interface{}) (ref *TagSvgRect) {
 //
 // English:
 //
-//  The color-interpolation attribute specifies the color space for gradient interpolations, color animations, and alpha
-//  compositing.
+// The color-interpolation attribute specifies the color space for gradient interpolations, color animations, and alpha
+// compositing.
+//
+//   Input:
+//     value: specifies the color space for gradient interpolations
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
 //
 // The color-interpolation property chooses between color operations occurring in the sRGB color space or in a (light
 // energy linear) linearized RGB color space. Having chosen the appropriate color space, component-wise linear
@@ -520,8 +527,15 @@ func (e *TagSvgRect) Color(value interface{}) (ref *TagSvgRect) {
 //
 // Português:
 //
-//  O atributo color-interpolation especifica o espaço de cores para interpolações de gradiente, animações de cores e
-//  composição alfa.
+// O atributo color-interpolation especifica o espaço de cores para interpolações de gradiente, animações de cores e
+// composição alfa.
+//
+//   Input:
+//     value: especifica o espaço de cores para interpolações de gradiente
+//       string: ex. "black"
+//       factory: ex. factoryColor.NewYellow()
+//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
 //
 // A propriedade de interpolação de cores escolhe entre operações de cores que ocorrem no espaço de cores sRGB ou em um
 // espaço de cores RGB linearizado (energia de luz linear). Tendo escolhido o espaço de cor apropriado, a interpolação

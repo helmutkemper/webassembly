@@ -1195,10 +1195,16 @@ func (e *TagSvgAnimateTransform) Type(value interface{}) (ref *TagSvgAnimateTran
 //  The attributeName attribute indicates the name of the CSS property or attribute of the target element that is going
 //  to be changed during an animation.
 //
+//   Input:
+//     attributeName: indicates the name of the CSS property or attribute of the target element
+//
 // Português:
 //
 //  O atributo attributeName indica o nome da propriedade CSS ou atributo do elemento de destino que será alterado
 //  durante uma animação.
+//
+//   Entrada:
+//     attributeName: indica o nome da propriedade CSS ou atributo do elemento de destino
 func (e *TagSvgAnimateTransform) AttributeName(attributeName string) (ref *TagSvgAnimateTransform) {
 	e.selfElement.Call("setAttribute", "attributeName", attributeName)
 	return e

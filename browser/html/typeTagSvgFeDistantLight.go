@@ -378,10 +378,16 @@ func (e *TagSvgFeDistantLight) Azimuth(azimuth float64) (ref *TagSvgFeDistantLig
 //  The elevation attribute specifies the direction angle for the light source from the XY plane towards the Z-axis, in
 //  degrees. Note that the positive Z-axis points towards the viewer of the content.
 //
+//   Input:
+//     elevation: specifies the direction angle for the light source
+//
 // Portuguese
 //
 //  O atributo de elevação especifica o ângulo de direção da fonte de luz do plano XY em direção ao eixo Z, em graus.
 //  Observe que o eixo Z positivo aponta para o visualizador do conteúdo.
+//
+//   Entrada:
+//     elevation: especifica o ângulo de direção para a fonte de luz
 func (e *TagSvgFeDistantLight) Elevation(elevation float64) (ref *TagSvgFeDistantLight) {
 	e.selfElement.Call("setAttribute", "elevation", elevation)
 	return e

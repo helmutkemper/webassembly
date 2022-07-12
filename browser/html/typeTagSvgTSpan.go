@@ -662,9 +662,14 @@ func (e *TagSvgTSpan) Cursor(value interface{}) (ref *TagSvgTSpan) {
 //
 // English:
 //
-//  The direction attribute specifies the inline-base direction of a <text> or <tspan> element. It defines the start
-//  and end points of a line of text as used by the text-anchor and inline-size properties. It also may affect the
-//  direction in which characters are positioned if the unicode-bidi property's value is either embed or bidi-override.
+// The direction attribute specifies the inline-base direction of a <text> or <tspan> element. It defines the start
+// and end points of a line of text as used by the text-anchor and inline-size properties. It also may affect the
+// direction in which characters are positioned if the unicode-bidi property's value is either embed or bidi-override.
+//
+//   Input:
+//     value: specifies the inline-base direction of a <text> or <tspan> element
+//       const: KSvgDirection... (e.g. KSvgDirectionRtl)
+//       any other type: interface{}
 //
 // It applies only to glyphs oriented perpendicular to the inline-base direction, which includes the usual case of
 // horizontally-oriented Latin or Arabic text and the case of narrow-cell Latin or Arabic characters rotated 90 degrees
@@ -681,10 +686,15 @@ func (e *TagSvgTSpan) Cursor(value interface{}) (ref *TagSvgTSpan) {
 //
 // Português:
 //
-//  O atributo direction especifica a direção da base embutida de um elemento <text> ou <tspan>. Ele define os pontos
-//  inicial e final de uma linha de texto conforme usado pelas propriedades text-anchor e inline-size.
-//  Também pode afetar a direção na qual os caracteres são posicionados se o valor da propriedade unicode-bidi for
-//  incorporado ou substituído por bidi.
+// O atributo direction especifica a direção da base embutida de um elemento <text> ou <tspan>. Ele define os pontos
+// inicial e final de uma linha de texto conforme usado pelas propriedades text-anchor e inline-size.
+// Também pode afetar a direção na qual os caracteres são posicionados se o valor da propriedade unicode-bidi for
+// incorporado ou substituído por bidi.
+//
+//   Input:
+//     value: especifica a direção da base inline de um elemento <text> ou <tspan>
+//       const: KSvgDirection... (e.g. KSvgDirectionRtl)
+//       qualquer outro tipo: interface{}
 //
 // Aplica-se apenas a glifos orientados perpendicularmente à direção da base em linha, que inclui o caso usual de texto
 // latino ou árabe orientado horizontalmente e o caso de caracteres latinos ou árabes de célula estreita girados 90
@@ -698,8 +708,13 @@ func (e *TagSvgTSpan) Cursor(value interface{}) (ref *TagSvgTSpan) {
 //   Notas:
 //     * Como atributo de apresentação, a direção pode ser usada como uma propriedade CSS. Veja a direção do CSS para
 //       mais informações.
-func (e *TagSvgTSpan) Direction(direction SvgDirection) (ref *TagSvgTSpan) {
-	e.selfElement.Call("setAttribute", "direction", direction.String())
+func (e *TagSvgTSpan) Direction(value interface{}) (ref *TagSvgTSpan) {
+	if converted, ok := value.(SvgDirection); ok {
+		e.selfElement.Call("setAttribute", "direction", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "direction", value)
 	return e
 }
 

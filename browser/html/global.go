@@ -1130,7 +1130,7 @@ func (e *TagSvgGlobal) DiffuseConstant(diffuseConstant float64) (ref *TagSvgGlob
 	return e
 }
 
-// Direction #presentation
+// Direction
 //
 // English:
 //

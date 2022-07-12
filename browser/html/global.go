@@ -1065,9 +1065,10 @@ func (e *TagSvgGlobal) Cy(value interface{}) (ref *TagSvgGlobal) {
 //
 //  The d attribute defines a path to be drawn.
 //
-//   d: path to be drawn
-//     *SvgPath: factoryBrowser.NewPath().M(0, 10).Hd(5).Vd(-9).Hd(12).Vd(9).Hd(5).Vd(16).Hd(-22).Z()
-//     any other type: interface{}
+//   Input:
+//     d: path to be drawn
+//       *SvgPath: factoryBrowser.NewPath().M(0, 10).Hd(5).Vd(-9).Hd(12).Vd(9).Hd(5).Vd(16).Hd(-22).Z()
+//       any other type: interface{}
 //
 // A path definition is a list of path commands where each command is composed of a command letter and numbers that
 // represent the command parameters. The commands are detailed below.
@@ -1080,9 +1081,10 @@ func (e *TagSvgGlobal) Cy(value interface{}) (ref *TagSvgGlobal) {
 //
 //  O atributo d define um caminho a ser desenhado.
 //
-//   d: caminho a ser desenhado
-//     *SvgPath: factoryBrowser.NewPath().M(0, 10).Hd(5).Vd(-9).Hd(12).Vd(9).Hd(5).Vd(16).Hd(-22).Z()
-//     qualquer outro tipo: interface{}
+//   Entrada:
+//     d: caminho a ser desenhado
+//       *SvgPath: factoryBrowser.NewPath().M(0, 10).Hd(5).Vd(-9).Hd(12).Vd(9).Hd(5).Vd(16).Hd(-22).Z()
+//       qualquer outro tipo: interface{}
 //
 // Uma definição de caminho é uma lista de comandos de caminho em que cada comando é composto por uma letra de comando
 // e números que representam os parâmetros do comando. Os comandos são detalhados abaixo.
@@ -1132,9 +1134,14 @@ func (e *TagSvgGlobal) DiffuseConstant(diffuseConstant float64) (ref *TagSvgGlob
 //
 // English:
 //
-//  The direction attribute specifies the inline-base direction of a <text> or <tspan> element. It defines the start
-//  and end points of a line of text as used by the text-anchor and inline-size properties. It also may affect the
-//  direction in which characters are positioned if the unicode-bidi property's value is either embed or bidi-override.
+// The direction attribute specifies the inline-base direction of a <text> or <tspan> element. It defines the start
+// and end points of a line of text as used by the text-anchor and inline-size properties. It also may affect the
+// direction in which characters are positioned if the unicode-bidi property's value is either embed or bidi-override.
+//
+//   Input:
+//     value: specifies the inline-base direction of a <text> or <tspan> element
+//       const: KSvgDirection... (e.g. KSvgDirectionRtl)
+//       any other type: interface{}
 //
 // It applies only to glyphs oriented perpendicular to the inline-base direction, which includes the usual case of
 // horizontally-oriented Latin or Arabic text and the case of narrow-cell Latin or Arabic characters rotated 90 degrees
@@ -1151,10 +1158,15 @@ func (e *TagSvgGlobal) DiffuseConstant(diffuseConstant float64) (ref *TagSvgGlob
 //
 // Português:
 //
-//  O atributo direction especifica a direção da base embutida de um elemento <text> ou <tspan>. Ele define os pontos
-//  inicial e final de uma linha de texto conforme usado pelas propriedades text-anchor e inline-size.
-//  Também pode afetar a direção na qual os caracteres são posicionados se o valor da propriedade unicode-bidi for
-//  incorporado ou substituído por bidi.
+// O atributo direction especifica a direção da base embutida de um elemento <text> ou <tspan>. Ele define os pontos
+// inicial e final de uma linha de texto conforme usado pelas propriedades text-anchor e inline-size.
+// Também pode afetar a direção na qual os caracteres são posicionados se o valor da propriedade unicode-bidi for
+// incorporado ou substituído por bidi.
+//
+//   Input:
+//     value: especifica a direção da base inline de um elemento <text> ou <tspan>
+//       const: KSvgDirection... (e.g. KSvgDirectionRtl)
+//       qualquer outro tipo: interface{}
 //
 // Aplica-se apenas a glifos orientados perpendicularmente à direção da base em linha, que inclui o caso usual de texto
 // latino ou árabe orientado horizontalmente e o caso de caracteres latinos ou árabes de célula estreita girados 90
@@ -1168,8 +1180,13 @@ func (e *TagSvgGlobal) DiffuseConstant(diffuseConstant float64) (ref *TagSvgGlob
 //   Notas:
 //     * Como atributo de apresentação, a direção pode ser usada como uma propriedade CSS. Veja a direção do CSS para
 //       mais informações.
-func (e *TagSvgGlobal) Direction(direction SvgDirection) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "direction", direction.String())
+func (e *TagSvgGlobal) Direction(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(SvgDirection); ok {
+		e.selfElement.Call("setAttribute", "direction", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "direction", value)
 	return e
 }
 

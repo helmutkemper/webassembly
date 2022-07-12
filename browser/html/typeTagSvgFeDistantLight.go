@@ -364,7 +364,7 @@ func (e *TagSvgFeDistantLight) XmlLang(value interface{}) (ref *TagSvgFeDistantL
 //  O atributo azimute especifica o ângulo de direção da fonte de luz no plano XY (sentido horário), em graus a partir
 //  do eixo x.
 //
-//   Input:
+//   Entrada:
 //     azimuth: especifica o ângulo de direção para a fonte de luz no plano XY
 func (e *TagSvgFeDistantLight) Azimuth(azimuth float64) (ref *TagSvgFeDistantLight) {
 	e.selfElement.Call("setAttribute", "azimuth", azimuth)

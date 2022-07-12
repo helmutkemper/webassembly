@@ -627,8 +627,15 @@ func (e *TagSvgFeComposite) ColorInterpolation(value interface{}) (ref *TagSvgFe
 //
 // English:
 //
-//  The color-interpolation-filters attribute specifies the color space for imaging operations performed via filter
-//  effects.
+// The color-interpolation-filters attribute specifies the color space for imaging operations performed via filter
+// effects.
+//
+//   Input:
+//     value: specifies the color space for imaging operations
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
 //
 //   Notes:
 //     * This property just has an affect on filter operations. Therefore, it has no effect on filter primitives like
@@ -642,8 +649,60 @@ func (e *TagSvgFeComposite) ColorInterpolation(value interface{}) (ref *TagSvgFe
 //
 // Português:
 //
-//  O atributo color-interpolation-filters especifica o espaço de cores para operações de imagem realizadas por meio de
-//  efeitos de filtro.
+// O atributo color-interpolation-filters especifica o espaço de cores para operações de imagem realizadas por meio de
+// efeitos de filtro.
+//
+//   Entrada:
+//     value: especifica o espaço de cores para operações de imagem
+//       string: ex. "black"
+//       factory: ex. factoryColor.NewYellow()
+//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
+//
+//   Notas:
+//     * Esta propriedade afeta apenas as operações de filtro. Portanto, não tem efeito em primitivos de filtro como
+//       <feOffset>, <feImage>, <feTile> ou <feFlood>.
+//     * color-interpolation-filters tem um valor inicial diferente de color-interpolation. color-interpolation-filters
+//       tem um valor inicial de linearRGB, enquanto color-interpolation tem um valor inicial de sRGB. Assim, no caso
+//       padrão, as operações de efeitos de filtro ocorrem no espaço de cores linearRGB, enquanto todas as outras
+//       interpolações de cores ocorrem por padrão no espaço de cores sRGB.
+//     * Não afeta as funções de filtro, que operam no espaço de cores sRGB.
+//     * Como atributo de apresentação, os filtros de interpolação de cores podem ser usados como uma propriedade CSS.
+// ColorInterpolationFilters
+//
+// English:
+//
+// The color-interpolation-filters attribute specifies the color space for imaging operations performed via filter
+// effects.
+//
+//   Input:
+//     value: specifies the color space for imaging operations
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
+//
+//   Notes:
+//     * This property just has an affect on filter operations. Therefore, it has no effect on filter primitives like
+//       <feOffset>, <feImage>, <feTile> or <feFlood>;
+//     * color-interpolation-filters has a different initial value than color-interpolation. color-interpolation-filters
+//       has an initial value of linearRGB, whereas color-interpolation has an initial value of sRGB. Thus, in the
+//       default case, filter effects operations occur in the linearRGB color space, whereas all other color
+//       interpolations occur by default in the sRGB color space;
+//     * It has no affect on filter functions, which operate in the sRGB color space;
+//     * As a presentation attribute, color-interpolation-filters can be used as a CSS property.
+//
+// Português:
+//
+// O atributo color-interpolation-filters especifica o espaço de cores para operações de imagem realizadas por meio de
+// efeitos de filtro.
+//
+//   Entrada:
+//     value: especifica o espaço de cores para operações de imagem
+//       string: ex. "black"
+//       factory: ex. factoryColor.NewYellow()
+//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Esta propriedade afeta apenas as operações de filtro. Portanto, não tem efeito em primitivos de filtro como

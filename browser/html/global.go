@@ -871,12 +871,19 @@ func (e *TagSvgGlobal) ColorInterpolation(value interface{}) (ref *TagSvgGlobal)
 	return e
 }
 
-// ColorInterpolationFilters #presentation
+// ColorInterpolationFilters
 //
 // English:
 //
 // The color-interpolation-filters attribute specifies the color space for imaging operations performed via filter
 // effects.
+//
+//   Input:
+//     value: specifies the color space for imaging operations
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
 //
 //   Notes:
 //     * This property just has an affect on filter operations. Therefore, it has no effect on filter primitives like
@@ -892,6 +899,13 @@ func (e *TagSvgGlobal) ColorInterpolation(value interface{}) (ref *TagSvgGlobal)
 //
 // O atributo color-interpolation-filters especifica o espaço de cores para operações de imagem realizadas por meio de
 // efeitos de filtro.
+//
+//   Entrada:
+//     value: especifica o espaço de cores para operações de imagem
+//       string: ex. "black"
+//       factory: ex. factoryColor.NewYellow()
+//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Esta propriedade afeta apenas as operações de filtro. Portanto, não tem efeito em primitivos de filtro como

@@ -823,6 +823,11 @@ func (e *TagSvgMask) Display(value interface{}) (ref *TagSvgMask) {
 // and inline-level contents. It also indicates the default alignment baseline of any boxes participating in baseline
 // alignment in the box's alignment context.
 //
+//   Input:
+//     value: is the baseline used to align the box's text and inline-level contents
+//       const: KSvgDominantBaseline... (e.g. KSvgDominantBaselineHanging)
+//       any other type: interface{}
+//
 // It is used to determine or re-determine a scaled-baseline-table. A scaled-baseline-table is a compound value with
 // three components:
 //
@@ -846,6 +851,11 @@ func (e *TagSvgMask) Display(value interface{}) (ref *TagSvgMask) {
 // texto da caixa e o conteúdo do nível embutido. Também indica a linha de base de alinhamento padrão de todas as caixas
 // que participam do alinhamento da linha de base no contexto de alinhamento da caixa.
 //
+//   Entrada:
+//     value: é a linha de base usada para alinhar o texto da caixa e o conteúdo embutido
+//       const: KSvgDominantBaseline... (ex. KSvgDominantBaselineHanging)
+//       qualquer outro tipo: interface{}
+//
 // Ele é usado para determinar ou re-determinar uma tabela de linha de base dimensionada. Uma tabela de linha de base
 // dimensionada é um valor composto com três componentes:
 //
@@ -863,8 +873,13 @@ func (e *TagSvgMask) Display(value interface{}) (ref *TagSvgMask) {
 //
 //   Notas:
 //     * Como atributo de apresentação, a linha de base dominante pode ser usada como uma propriedade CSS.
-func (e *TagSvgMask) DominantBaseline(dominantBaseline SvgDominantBaseline) (ref *TagSvgMask) {
-	e.selfElement.Call("setAttribute", "dominant-baseline", dominantBaseline.String())
+func (e *TagSvgMask) DominantBaseline(value interface{}) (ref *TagSvgMask) {
+	if converted, ok := value.(SvgDominantBaseline); ok {
+		e.selfElement.Call("setAttribute", "dominant-baseline", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "dominant-baseline", value)
 	return e
 }
 

@@ -621,7 +621,12 @@ func (e *TagSvgFeOffset) ColorInterpolationFilters(value interface{}) (ref *TagS
 //
 // English:
 //
-//  The cursor attribute specifies the mouse cursor displayed when the mouse pointer is over an element.
+// The cursor attribute specifies the mouse cursor displayed when the mouse pointer is over an element.
+//
+//   Input:
+//     value: specifies the mouse cursor displayed when the mouse pointer is over an element
+//       const: KSvgCursor... (e.g.: KSvgCursorMove)
+//       any other type: interface{}
 //
 // This attribute behaves exactly like the css cursor property except that if the browser supports the <cursor> element,
 // you should be able to use it with the <funciri> notation.
@@ -631,15 +636,25 @@ func (e *TagSvgFeOffset) ColorInterpolationFilters(value interface{}) (ref *TagS
 //
 // Português:
 //
-//  O atributo cursor especifica o cursor do mouse exibido quando o ponteiro do mouse está sobre um elemento.
+// O atributo cursor especifica o cursor do mouse exibido quando o ponteiro do mouse está sobre um elemento.
+//
+//   Entrada:
+//     value: especifica o cursor do mouse exibido quando o ponteiro do mouse está sobre um elemento
+//       const: KSvgCursor... (ex.: KSvgCursorMove)
+//       qualquer outro tipo: interface{}
 //
 // Este atributo se comporta exatamente como a propriedade cursor css, exceto que, se o navegador suportar o elemento
 // <cursor>, você poderá usá-lo com a notação <funciri>.
 //
 // Como atributo de apresentação, também pode ser usado como propriedade diretamente dentro de uma folha de estilo CSS,
 // veja cursor css para mais informações.
-func (e *TagSvgFeOffset) Cursor(cursor SvgCursor) (ref *TagSvgFeOffset) {
-	e.selfElement.Call("setAttribute", "cursor", cursor.String())
+func (e *TagSvgFeOffset) Cursor(value interface{}) (ref *TagSvgFeOffset) {
+	if converted, ok := value.(SvgCursor); ok {
+		e.selfElement.Call("setAttribute", "cursor", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "cursor", value)
 	return e
 }
 

@@ -3427,43 +3427,48 @@ func (e *TagSvgAnimateMotion) Accumulate(value interface{}) (ref *TagSvgAnimateM
 // The keyPoints attribute indicates the simple duration of an animation.
 //
 //   Input:
-//     keyPoints: This value defines a semicolon-separated list of floating point values between 0 and 1 and indicates
-//     how far along the motion path the object shall move at the moment in time specified by corresponding keyTimes
-//     value. The distance is calculated along the path specified by the path attribute. Each progress value in the list
-//     corresponds to a value in the keyTimes attribute list.
-//     If a list of key points is specified, there must be exactly as many values in the keyPoints list as in the
-//     keyTimes list.
-//     If there's a semicolon at the end of the value, optionally followed by white space, both the semicolon and the
-//     trailing white space are ignored.
-//     If there are any errors in the value specification (i.e. bad values, too many or too few values), then that's
-//     an error.
+//     keyPoints: indicates the simple duration of an animation.
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1);rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0%;10%"
+//       []float64: []float64{0.0, 10.0} = "0;10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s;1s"
+//       any other type: interface{}
+//
+// This value defines a semicolon-separated list of floating point values between 0 and 1 and indicates how far along
+// the motion path the object shall move at the moment in time specified by corresponding keyTimes value. The distance
+// is calculated along the path specified by the path attribute. Each progress value in the list corresponds to a value
+// in the keyTimes attribute list.
+// If a list of key points is specified, there must be exactly as many values in the keyPoints list as in the keyTimes
+// list.
+// If there's a semicolon at the end of the value, optionally followed by white space, both the semicolon and the
+// trailing white space are ignored.
+// If there are any errors in the value specification (i.e. bad values, too many or too few values), then that's an
+// error.
 //
 // Português:
 //
 // O atributo keyPoints indica a duração simples de uma animação.
 //
 //   Entrada:
-//     keyPoints: Este valor define uma lista separada por ponto e vírgula de valores de ponto flutuante entre 0 e 1 e
-//     indica a distância ao longo do caminho de movimento o objeto deve se mover no momento especificado pelo valor
-//     keyTimes correspondente. A distância é calculada ao longo do caminho especificado pelo atributo path. Cada valor
-//     de progresso na lista corresponde a um valor na lista de atributos keyTimes.
-//     Se uma lista de pontos-chave for especificada, deve haver exatamente tantos valores na lista keyPoints quanto na
-//     lista keyTimes.
-//     Se houver um ponto e vírgula no final do valor, opcionalmente seguido por espaço em branco, o ponto e vírgula e
-//     o espaço em branco à direita serão ignorados.
-//     Se houver algum erro na especificação do valor (ou seja, valores incorretos, muitos ou poucos valores), isso é
-//     um erro.
-func (e *TagSvgAnimateMotion) KeyPoints(keyPoints []float64) (ref *TagSvgAnimateMotion) {
-	kernelMatrixString := ""
-
-	for _, v := range keyPoints {
-		kernelMatrixString += strconv.FormatFloat(v, 'g', -1, 64)
-		kernelMatrixString += ";"
-	}
-
-	l := len(kernelMatrixString) - 1
-
-	e.selfElement.Call("setAttribute", "keyPoints", kernelMatrixString[:l])
+//     keyPoints: indica a duração simples de uma animação.
+//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1);rgba(255,0,0,1)"
+//       []float32: []float64{0.0, 0.1} = "0%;10%"
+//       []float64: []float64{0.0, 10.0} = "0;10"
+//       []time.Duration: []time.Duration{0, time.Second} = "0s;1s"
+//       any other type: interface{}
+//
+// Este valor define uma lista separada por ponto e vírgula de valores de ponto flutuante entre 0 e 1 e indica a
+// distância ao longo do caminho de movimento o objeto deve se mover no momento especificado pelo valor keyTimes
+// correspondente. A distância é calculada ao longo do caminho especificado pelo atributo path. Cada valor de progresso
+// na lista corresponde a um valor na lista de atributos keyTimes.
+// Se uma lista de pontos-chave for especificada, deve haver exatamente tantos valores na lista keyPoints quanto na
+// lista keyTimes.
+// Se houver um ponto e vírgula no final do valor, opcionalmente seguido por espaço em branco, o ponto e vírgula e o
+// espaço em branco à direita serão ignorados.
+// Se houver algum erro na especificação do valor (ou seja, valores incorretos, muitos ou poucos valores), isso é um
+// erro.
+func (e *TagSvgAnimateMotion) KeyPoints(value interface{}) (ref *TagSvgAnimateMotion) {
+	e.selfElement.Call("setAttribute", "keyPoints", TypeToString(value, ";", ";"))
 	return e
 }
 

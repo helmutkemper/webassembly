@@ -1759,7 +1759,7 @@ func (e *TagSvgA) PointerEvents(value interface{}) (ref *TagSvgA) {
 //
 //   Input:
 //     value: provides hints to the renderer
-//       const: KSvgShapeRendering... (e.g. KShapeRenderingAuto)
+//       const: KSvgShapeRendering... (e.g. KSvgShapeRenderingAuto)
 //       any other type: interface{}
 //
 //   Notes:
@@ -1772,8 +1772,8 @@ func (e *TagSvgA) PointerEvents(value interface{}) (ref *TagSvgA) {
 //
 //   Entrada:
 //     value: fornece dicas para o renderizador
-//       const: KSvgShapeRendering... (ex. KShapeRenderingAuto)
-//       any other type: interface{}
+//       const: KSvgShapeRendering... (ex. KSvgShapeRenderingAuto)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.

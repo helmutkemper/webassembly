@@ -4659,7 +4659,7 @@ func (e *TagSvgGlobal) Ry(value float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Scale
+// Scale #pareiaqui
 //
 // English:
 //
@@ -4691,7 +4691,7 @@ func (e *TagSvgGlobal) Seed(value float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// ShapeRendering #presentation
+// ShapeRendering
 //
 // English:
 //
@@ -4700,7 +4700,7 @@ func (e *TagSvgGlobal) Seed(value float64) (ref *TagSvgGlobal) {
 //
 //   Input:
 //     value: provides hints to the renderer
-//       const: KSvgShapeRendering... (e.g. KShapeRenderingAuto)
+//       const: KSvgShapeRendering... (e.g. KSvgShapeRenderingAuto)
 //       any other type: interface{}
 //
 //   Notes:
@@ -4713,8 +4713,8 @@ func (e *TagSvgGlobal) Seed(value float64) (ref *TagSvgGlobal) {
 //
 //   Entrada:
 //     value: fornece dicas para o renderizador
-//       const: KSvgShapeRendering... (ex. KShapeRenderingAuto)
-//       any other type: interface{}
+//       const: KSvgShapeRendering... (ex. KSvgShapeRenderingAuto)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.

@@ -1074,6 +1074,10 @@ func (e *TagSvgAnimate) KeyTimes(value interface{}) (ref *TagSvgAnimate) {
 // The keySplines attribute defines a set of Bézier curve control points associated with the keyTimes list, defining a
 // cubic Bézier function that controls interval pacing.
 //
+//   Input:
+//     value: set of Bézier curve control points associated with the keyTimes list
+//       [][]float64: [][]float64{{0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}}
+//
 // This attribute is ignored unless the calcMode attribute is set to spline.
 //
 // If there are any errors in the keySplines specification (bad values, too many or too few values), the animation will
@@ -1083,6 +1087,10 @@ func (e *TagSvgAnimate) KeyTimes(value interface{}) (ref *TagSvgAnimate) {
 //
 // O atributo keySplines define um conjunto de pontos de controle da curva Bézier associados à lista keyTimes,
 // definindo uma função Bézier cúbica que controla o ritmo do intervalo.
+//
+//   Entrada:
+//     value: conjunto de pontos de controle da curva Bézier associados à lista keyTimes
+//       [][]float64: [][]float64{{0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}}
 //
 // Esse atributo é ignorado, a menos que o atributo calcMode seja definido como spline.
 //

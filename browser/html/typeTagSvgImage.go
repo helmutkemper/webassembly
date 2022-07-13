@@ -1100,12 +1100,18 @@ func (e *TagSvgImage) FloodColor(floodColor interface{}) (ref *TagSvgImage) {
 //
 //  The flood-opacity attribute indicates the opacity value to use across the current filter primitive subregion.
 //
+//   Input:
+//     floodOpacity: indicates the opacity value
+//
 //   Notes:
 //     * As a presentation attribute, flood-opacity can be used as a CSS property.
 //
 // Portuguese
 //
 //  O atributo flood-opacity indica o valor de opacidade a ser usado na sub-região primitiva de filtro atual.
+//
+//   Entrada:
+//     floodOpacity: indica o valor da opacidade
 //
 //   Notas:
 //     * Como atributo de apresentação, a opacidade de inundação pode ser usada como uma propriedade CSS.
@@ -1118,8 +1124,13 @@ func (e *TagSvgImage) FloodOpacity(floodOpacity float64) (ref *TagSvgImage) {
 //
 // English:
 //
-//  The font-family attribute indicates which font family will be used to render the text, specified as a prioritized
-//  list of font family names and/or generic family names.
+// The font-family attribute indicates which font family will be used to render the text, specified as a prioritized
+// list of font family names and/or generic family names.
+//
+//   Input:
+//     fontFamily: indicates which font family will be used
+//       string: e.g. "Verdana, sans-serif"
+//       factory: e.g. factoryFontFamily.NewArial()
 //
 //   Notes:
 //     * As a presentation attribute, font-family can be used as a CSS property. See the css font-family property for
@@ -1127,8 +1138,13 @@ func (e *TagSvgImage) FloodOpacity(floodOpacity float64) (ref *TagSvgImage) {
 //
 // Portuguese
 //
-//  O atributo font-family indica qual família de fontes será usada para renderizar o texto, especificada como uma lista
-//  priorizada de nomes de famílias de fontes e ou nomes de famílias genéricos.
+// O atributo font-family indica qual família de fontes será usada para renderizar o texto, especificada como uma lista
+// priorizada de nomes de famílias de fontes e ou nomes de famílias genéricos.
+//
+//   Entrada:
+//     fontFamily: indica qual família de fontes será usada
+//       string: ex. "Verdana, sans-serif"
+//       factory: ex. factoryFontFamily.NewArial()
 //
 //   Notas:
 //     * Como atributo de apresentação, font-family pode ser usada como propriedade CSS. Consulte a propriedade CSS
@@ -1142,8 +1158,13 @@ func (e *TagSvgImage) FontFamily(fontFamily string) (ref *TagSvgImage) {
 //
 // English:
 //
-//  The font-size attribute refers to the size of the font from baseline to baseline when multiple lines of text are set
-//  solid in a multiline layout environment.
+// The font-size attribute refers to the size of the font from baseline to baseline when multiple lines of text are set
+// solid in a multiline layout environment.
+//
+//   Input:
+//     fontSize: size of the font
+//       string: e.g. "10px","2em"
+//       any other type: interface{}
 //
 //   Notes:
 //     * As a presentation attribute, font-size can be used as a CSS property. See the css font-size property for more
@@ -1151,8 +1172,13 @@ func (e *TagSvgImage) FontFamily(fontFamily string) (ref *TagSvgImage) {
 //
 // Portuguese
 //
-//  O atributo font-size refere-se ao tamanho da fonte da linha de base a linha de base quando várias linhas de texto
-//  são definidas como sólidas em um ambiente de layout de várias linhas.
+// O atributo font-size refere-se ao tamanho da fonte da linha de base a linha de base quando várias linhas de texto
+// são definidas como sólidas em um ambiente de layout de várias linhas.
+//
+//   Entrada:
+//     fontSize: tamanho da fonte
+//       string: ex. "10px","2em"
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como atributo de apresentação, font-size pode ser usado como uma propriedade CSS. Consulte a propriedade CSS
@@ -1229,7 +1255,12 @@ func (e *TagSvgImage) FontStretch(fontStretch interface{}) (ref *TagSvgImage) {
 //
 // English:
 //
-//  The font-style attribute specifies whether the text is to be rendered using a normal, italic, or oblique face.
+// The font-style attribute specifies whether the text is to be rendered using a normal, italic, or oblique face.
+//
+//   Input:
+//     value: specifies whether the text is to be rendered using a normal, italic, or oblique face
+//       const: KFontStyleRule... (e.g. KFontStyleRuleItalic)
+//       any other type: interface{}
 //
 //   Notes:
 //     * As a presentation attribute, font-style can be used as a CSS property. See the css font-style property for
@@ -1237,13 +1268,23 @@ func (e *TagSvgImage) FontStretch(fontStretch interface{}) (ref *TagSvgImage) {
 //
 // Portuguese
 //
-//  O atributo font-style especifica se o texto deve ser renderizado usando uma face normal, itálica ou oblíqua.
+// O atributo font-style especifica se o texto deve ser renderizado usando uma face normal, itálica ou oblíqua.
+//
+//   Entrada:
+//     value: especifica se o texto deve ser renderizado usando uma face normal, itálica ou oblíqua
+//       const: KFontStyleRule... (ex. KFontStyleRuleItalic)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como atributo de apresentação, font-style pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //       font-style para obter mais informações.
-func (e *TagSvgImage) FontStyle(fontStyle FontStyleRule) (ref *TagSvgImage) {
-	e.selfElement.Call("setAttribute", "font-style", fontStyle.String())
+func (e *TagSvgImage) FontStyle(value interface{}) (ref *TagSvgImage) {
+	if converted, ok := value.(FontStyleRule); ok {
+		e.selfElement.Call("setAttribute", "font-style", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "font-style", value)
 	return e
 }
 

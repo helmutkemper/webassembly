@@ -1647,6 +1647,11 @@ func (e *TagSvgPattern) Opacity(value interface{}) (ref *TagSvgPattern) {
 //
 // The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context.
 //
+//   Input:
+//     value: sets what to do when an element's content is too big to fit in its block formatting context
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       any other type: interface{}
+//
 // This attribute has the same parameter values and meaning as the css overflow property, however, the following
 // additional points apply:
 //   * If it has a value of visible, the attribute has no effect (i.e., a clipping rectangle is not created).
@@ -1667,6 +1672,12 @@ func (e *TagSvgPattern) Opacity(value interface{}) (ref *TagSvgPattern) {
 //
 // O atributo overflow define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto
 // de formatação de bloco.
+//
+//   Entrada:
+//     value: define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto de
+//         formatação de bloco
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       qualquer outro tipo: interface{}
 //
 // Este atributo tem os mesmos valores de parâmetro e significado que a propriedade CSS overflow, no entanto, os
 // seguintes pontos adicionais se aplicam:
@@ -1701,6 +1712,11 @@ func (e *TagSvgPattern) Overflow(value interface{}) (ref *TagSvgPattern) {
 // The pointer-events attribute is a presentation attribute that allows defining whether or when an element may be the
 // target of a mouse event.
 //
+//   Input:
+//     value: defining whether or when an element may be the target of a mouse event
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute pointer-events can be used as a CSS property.
 //
@@ -1708,6 +1724,11 @@ func (e *TagSvgPattern) Overflow(value interface{}) (ref *TagSvgPattern) {
 //
 // O atributo pointer-events é um atributo de apresentação que permite definir se ou quando um elemento pode ser alvo
 // de um evento de mouse.
+//
+//   Entrada:
+//     value: define se ou quando um elemento pode ser alvo de um evento de mouse.
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
@@ -2657,9 +2678,21 @@ func (e *TagSvgPattern) PatternContentUnits(value interface{}) (ref *TagSvgPatte
 //
 // The patternTransform attribute defines a list of transform definitions that are applied to a pattern tile.
 //
+//   Input:
+//     value: defines a list of transform definitions that are applied to a pattern tile
+//       factory: e.g. factoryBrowser.NewTransform().RotateAngle(20).SkewX(30).Scale(1, 0.5)
+//       string: e.g. "rotate(20) skewX(30) scale(1 0.5)"
+//       any other type: interface{}
+//
 // Português:
 //
-// O atributo patternTransform define uma lista de definições de transformação que são aplicadas a um bloco de padrão.
+// O atributo patternTransform define uma lista de definições de transformação que são aplicadas a um tile.
+//
+//   Entrada:
+//     value: define uma lista de definições de transformação que são aplicadas a um tile
+//       factory: ex. factoryBrowser.NewTransform().RotateAngle(20).SkewX(30).Scale(1, 0.5)
+//       string: ex. "rotate(20) skewX(30) scale(1 0.5)"
+//       qualquer outro tipo: interface{}
 func (e *TagSvgPattern) PatternTransform(value interface{}) (ref *TagSvgPattern) {
 	if converted, ok := value.(*TransformFunctions); ok {
 		e.selfElement.Call("setAttribute", "patternTransform", converted.String())

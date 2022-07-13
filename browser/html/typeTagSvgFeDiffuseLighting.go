@@ -1650,6 +1650,11 @@ func (e *TagSvgFeDiffuseLighting) Opacity(value interface{}) (ref *TagSvgFeDiffu
 //
 // The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context.
 //
+//   Input:
+//     value: sets what to do when an element's content is too big to fit in its block formatting context
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       any other type: interface{}
+//
 // This attribute has the same parameter values and meaning as the css overflow property, however, the following
 // additional points apply:
 //   * If it has a value of visible, the attribute has no effect (i.e., a clipping rectangle is not created).
@@ -1670,6 +1675,12 @@ func (e *TagSvgFeDiffuseLighting) Opacity(value interface{}) (ref *TagSvgFeDiffu
 //
 // O atributo overflow define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto
 // de formatação de bloco.
+//
+//   Entrada:
+//     value: define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto de
+//         formatação de bloco
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       qualquer outro tipo: interface{}
 //
 // Este atributo tem os mesmos valores de parâmetro e significado que a propriedade CSS overflow, no entanto, os
 // seguintes pontos adicionais se aplicam:
@@ -1704,6 +1715,11 @@ func (e *TagSvgFeDiffuseLighting) Overflow(value interface{}) (ref *TagSvgFeDiff
 // The pointer-events attribute is a presentation attribute that allows defining whether or when an element may be the
 // target of a mouse event.
 //
+//   Input:
+//     value: defining whether or when an element may be the target of a mouse event
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute pointer-events can be used as a CSS property.
 //
@@ -1711,6 +1727,11 @@ func (e *TagSvgFeDiffuseLighting) Overflow(value interface{}) (ref *TagSvgFeDiff
 //
 // O atributo pointer-events é um atributo de apresentação que permite definir se ou quando um elemento pode ser alvo
 // de um evento de mouse.
+//
+//   Entrada:
+//     value: define se ou quando um elemento pode ser alvo de um evento de mouse.
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
@@ -2595,18 +2616,27 @@ func (e *TagSvgFeDiffuseLighting) Height(height interface{}) (ref *TagSvgFeDiffu
 //
 // English:
 //
-// The result attribute defines the assigned name for this filter primitive. If supplied, then graphics that result from
-// processing this filter primitive can be referenced by an in attribute on a subsequent filter primitive within the
-// same <filter> element. If no value is provided, the output will only be available for re-use as the implicit input
-// into the next filter primitive if that filter primitive provides no value for its in attribute.
+// The result attribute defines the assigned name for this filter primitive.
+//
+//   Input:
+//     value: defines the assigned name for this filter primitive
+//
+// If supplied, then graphics that result from processing this filter primitive can be referenced by an in attribute on
+// a subsequent filter primitive within the same <filter> element. If no value is provided, the output will only be
+// available for re-use as the implicit input into the next filter primitive if that filter primitive provides no value
+// for its in attribute.
 //
 // Português:
 //
-// O atributo result define o nome atribuído para esta primitiva de filtro. Se fornecido, os gráficos resultantes do
-// processamento dessa primitiva de filtro podem ser referenciados por um atributo in em uma primitiva de filtro
-// subsequente dentro do mesmo elemento <filter>. Se nenhum valor for fornecido, a saída só estará disponível para
-// reutilização como entrada implícita na próxima primitiva de filtro se essa primitiva de filtro não fornecer valor
-// para seu atributo in.
+// O atributo result define o nome atribuído para esta primitiva de filtro.
+//
+//   Entrada:
+//     value: define o nome atribuído para esta primitiva de filtro
+//
+// Se fornecido, os gráficos resultantes do processamento dessa primitiva de filtro podem ser referenciados por um
+// atributo in em uma primitiva de filtro subsequente dentro do mesmo elemento <filter>. Se nenhum valor for fornecido,
+// a saída só estará disponível para reutilização como entrada implícita na próxima primitiva de filtro se essa
+// primitiva de filtro não fornecer valor para seu atributo in.
 func (e *TagSvgFeDiffuseLighting) Result(value interface{}) (ref *TagSvgFeDiffuseLighting) {
 	e.selfElement.Call("setAttribute", "result", value)
 	return e
@@ -2907,11 +2937,27 @@ func (e *TagSvgFeDiffuseLighting) LimitingConeAngle(value float64) (ref *TagSvgF
 // The pointsAtX attribute represents the x location in the coordinate system established by attribute primitiveUnits
 // on the <filter> element of the point at which the light source is pointing.
 //
+//   Input:
+//     value: represents the x location in the coordinate system
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo pointsAtX representa a localização x no sistema de coordenadas estabelecido pelo atributo primitivaUnits
 // no elemento <filter> do ponto para o qual a fonte de luz está apontando.
+//
+//   Entrada:
+//     value: representa a localização x no sistema de coordenadas
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
 func (e *TagSvgFeDiffuseLighting) PointsAtX(value interface{}) (ref *TagSvgFeDiffuseLighting) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "pointsAtX", p)
+		return e
+	}
+
 	e.selfElement.Call("setAttribute", "pointsAtX", value)
 	return e
 }
@@ -2923,11 +2969,27 @@ func (e *TagSvgFeDiffuseLighting) PointsAtX(value interface{}) (ref *TagSvgFeDif
 // The pointsAtY attribute represents the y location in the coordinate system established by attribute primitiveUnits
 // on the <filter> element of the point at which the light source is pointing.
 //
+//   Input:
+//     value: represents the y location in the coordinate system
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo pointsAtY representa a localização y no sistema de coordenadas estabelecido pelo atributo primitivaUnits
 // no elemento <filter> do ponto para o qual a fonte de luz está apontando.
+//
+//   Entrada:
+//     value: representa a localização y no sistema de coordenadas
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
 func (e *TagSvgFeDiffuseLighting) PointsAtY(value interface{}) (ref *TagSvgFeDiffuseLighting) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "pointsAtY", p)
+		return e
+	}
+
 	e.selfElement.Call("setAttribute", "pointsAtY", value)
 	return e
 }

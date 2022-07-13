@@ -1640,6 +1640,11 @@ func (e *TagSvgRect) Opacity(value interface{}) (ref *TagSvgRect) {
 //
 // The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context.
 //
+//   Input:
+//     value: sets what to do when an element's content is too big to fit in its block formatting context
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       any other type: interface{}
+//
 // This attribute has the same parameter values and meaning as the css overflow property, however, the following
 // additional points apply:
 //   * If it has a value of visible, the attribute has no effect (i.e., a clipping rectangle is not created).
@@ -1660,6 +1665,12 @@ func (e *TagSvgRect) Opacity(value interface{}) (ref *TagSvgRect) {
 //
 // O atributo overflow define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto
 // de formatação de bloco.
+//
+//   Entrada:
+//     value: define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto de
+//         formatação de bloco
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       qualquer outro tipo: interface{}
 //
 // Este atributo tem os mesmos valores de parâmetro e significado que a propriedade CSS overflow, no entanto, os
 // seguintes pontos adicionais se aplicam:
@@ -1694,6 +1705,11 @@ func (e *TagSvgRect) Overflow(value interface{}) (ref *TagSvgRect) {
 // The pointer-events attribute is a presentation attribute that allows defining whether or when an element may be the
 // target of a mouse event.
 //
+//   Input:
+//     value: defining whether or when an element may be the target of a mouse event
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute pointer-events can be used as a CSS property.
 //
@@ -1701,6 +1717,11 @@ func (e *TagSvgRect) Overflow(value interface{}) (ref *TagSvgRect) {
 //
 // O atributo pointer-events é um atributo de apresentação que permite definir se ou quando um elemento pode ser alvo
 // de um evento de mouse.
+//
+//   Entrada:
+//     value: define se ou quando um elemento pode ser alvo de um evento de mouse.
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
@@ -2731,9 +2752,15 @@ func (e *TagSvgRect) Height(height interface{}) (ref *TagSvgRect) {
 //
 // The rx attribute defines a radius on the x-axis.
 //
+//   Input:
+//     value: defines a radius on the x-axis
+//
 // Português:
 //
 // O atributo rx define um raio no eixo x.
+//
+//   Entrada:
+//     value: defines a radius on the x-axis
 func (e *TagSvgRect) Rx(value float64) (ref *TagSvgRect) {
 	e.selfElement.Call("setAttribute", "rx", value)
 	return e
@@ -2745,9 +2772,15 @@ func (e *TagSvgRect) Rx(value float64) (ref *TagSvgRect) {
 //
 // The ry attribute defines a radius on the y-axis.
 //
+//   Input:
+//     value: defines a radius on the y-axis
+//
 // Português:
 //
 // O atributo ry define um raio no eixo y.
+//
+//   Entrada:
+//     value: define um raio no eixo y
 func (e *TagSvgRect) Ry(value float64) (ref *TagSvgRect) {
 	e.selfElement.Call("setAttribute", "ry", value)
 	return e
@@ -2757,9 +2790,13 @@ func (e *TagSvgRect) Ry(value float64) (ref *TagSvgRect) {
 //
 // English:
 //
-// The pathLength attribute lets authors specify a total length for the path, in user units. This value is then used to
-// calibrate the browser's distance calculations with those of the author, by scaling all distance computations using
-// the ratio pathLength/(computed value of path length).
+// The pathLength attribute lets authors specify a total length for the path, in user units.
+//
+//   Input:
+//     value: lets authors specify a total length for the path
+//
+// This value is then used to calibrate the browser's distance calculations with those of the author, by scaling all
+// distance computations using the ratio pathLength/(computed value of path length).
 //
 // This can affect the actual rendered lengths of paths; including text paths, animation paths, and various stroke
 // operations. Basically, all computations that require the length of the path. stroke-dasharray, for example, will
@@ -2768,8 +2805,13 @@ func (e *TagSvgRect) Ry(value float64) (ref *TagSvgRect) {
 // Português:
 //
 // O atributo pathLength permite que os autores especifiquem um comprimento total para o caminho, em unidades de
-// usuário. Este valor é então usado para calibrar os cálculos de distância do navegador com os do autor, escalando
-// todos os cálculos de distância usando a razão pathLength (valor calculado do comprimento do caminho).
+// usuário.
+//
+//   Entrada:
+//     value: permite que os autores especifiquem um comprimento total para o caminho
+//
+// Este valor é então usado para calibrar os cálculos de distância do navegador com os do autor, escalando todos os
+// cálculos de distância usando a razão pathLength (valor calculado do comprimento do caminho).
 //
 // Isso pode afetar os comprimentos reais dos caminhos renderizados; incluindo caminhos de texto, caminhos de animação
 // e várias operações de traçado. Basicamente, todos os cálculos que exigem o comprimento do caminho. stroke-dasharray,

@@ -1640,6 +1640,11 @@ func (e *TagSvgMask) Opacity(value interface{}) (ref *TagSvgMask) {
 //
 // The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context.
 //
+//   Input:
+//     value: sets what to do when an element's content is too big to fit in its block formatting context
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       any other type: interface{}
+//
 // This attribute has the same parameter values and meaning as the css overflow property, however, the following
 // additional points apply:
 //   * If it has a value of visible, the attribute has no effect (i.e., a clipping rectangle is not created).
@@ -1660,6 +1665,12 @@ func (e *TagSvgMask) Opacity(value interface{}) (ref *TagSvgMask) {
 //
 // O atributo overflow define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto
 // de formatação de bloco.
+//
+//   Entrada:
+//     value: define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto de
+//         formatação de bloco
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       qualquer outro tipo: interface{}
 //
 // Este atributo tem os mesmos valores de parâmetro e significado que a propriedade CSS overflow, no entanto, os
 // seguintes pontos adicionais se aplicam:
@@ -1694,6 +1705,11 @@ func (e *TagSvgMask) Overflow(value interface{}) (ref *TagSvgMask) {
 // The pointer-events attribute is a presentation attribute that allows defining whether or when an element may be the
 // target of a mouse event.
 //
+//   Input:
+//     value: defining whether or when an element may be the target of a mouse event
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute pointer-events can be used as a CSS property.
 //
@@ -1701,6 +1717,11 @@ func (e *TagSvgMask) Overflow(value interface{}) (ref *TagSvgMask) {
 //
 // O atributo pointer-events é um atributo de apresentação que permite definir se ou quando um elemento pode ser alvo
 // de um evento de mouse.
+//
+//   Entrada:
+//     value: define se ou quando um elemento pode ser alvo de um evento de mouse.
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.

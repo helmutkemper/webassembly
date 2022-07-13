@@ -1747,6 +1747,11 @@ func (e *TagSvgFeComposite) Opacity(value interface{}) (ref *TagSvgFeComposite) 
 //
 // The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context.
 //
+//   Input:
+//     value: sets what to do when an element's content is too big to fit in its block formatting context
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       any other type: interface{}
+//
 // This attribute has the same parameter values and meaning as the css overflow property, however, the following
 // additional points apply:
 //   * If it has a value of visible, the attribute has no effect (i.e., a clipping rectangle is not created).
@@ -1767,6 +1772,12 @@ func (e *TagSvgFeComposite) Opacity(value interface{}) (ref *TagSvgFeComposite) 
 //
 // O atributo overflow define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto
 // de formatação de bloco.
+//
+//   Entrada:
+//     value: define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto de
+//         formatação de bloco
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       qualquer outro tipo: interface{}
 //
 // Este atributo tem os mesmos valores de parâmetro e significado que a propriedade CSS overflow, no entanto, os
 // seguintes pontos adicionais se aplicam:
@@ -1801,6 +1812,11 @@ func (e *TagSvgFeComposite) Overflow(value interface{}) (ref *TagSvgFeComposite)
 // The pointer-events attribute is a presentation attribute that allows defining whether or when an element may be the
 // target of a mouse event.
 //
+//   Input:
+//     value: defining whether or when an element may be the target of a mouse event
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute pointer-events can be used as a CSS property.
 //
@@ -1808,6 +1824,11 @@ func (e *TagSvgFeComposite) Overflow(value interface{}) (ref *TagSvgFeComposite)
 //
 // O atributo pointer-events é um atributo de apresentação que permite definir se ou quando um elemento pode ser alvo
 // de um evento de mouse.
+//
+//   Entrada:
+//     value: define se ou quando um elemento pode ser alvo de um evento de mouse.
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
@@ -2692,18 +2713,27 @@ func (e *TagSvgFeComposite) Height(height interface{}) (ref *TagSvgFeComposite) 
 //
 // English:
 //
-// The result attribute defines the assigned name for this filter primitive. If supplied, then graphics that result from
-// processing this filter primitive can be referenced by an in attribute on a subsequent filter primitive within the
-// same <filter> element. If no value is provided, the output will only be available for re-use as the implicit input
-// into the next filter primitive if that filter primitive provides no value for its in attribute.
+// The result attribute defines the assigned name for this filter primitive.
+//
+//   Input:
+//     value: defines the assigned name for this filter primitive
+//
+// If supplied, then graphics that result from processing this filter primitive can be referenced by an in attribute on
+// a subsequent filter primitive within the same <filter> element. If no value is provided, the output will only be
+// available for re-use as the implicit input into the next filter primitive if that filter primitive provides no value
+// for its in attribute.
 //
 // Português:
 //
-// O atributo result define o nome atribuído para esta primitiva de filtro. Se fornecido, os gráficos resultantes do
-// processamento dessa primitiva de filtro podem ser referenciados por um atributo in em uma primitiva de filtro
-// subsequente dentro do mesmo elemento <filter>. Se nenhum valor for fornecido, a saída só estará disponível para
-// reutilização como entrada implícita na próxima primitiva de filtro se essa primitiva de filtro não fornecer valor
-// para seu atributo in.
+// O atributo result define o nome atribuído para esta primitiva de filtro.
+//
+//   Entrada:
+//     value: define o nome atribuído para esta primitiva de filtro
+//
+// Se fornecido, os gráficos resultantes do processamento dessa primitiva de filtro podem ser referenciados por um
+// atributo in em uma primitiva de filtro subsequente dentro do mesmo elemento <filter>. Se nenhum valor for fornecido,
+// a saída só estará disponível para reutilização como entrada implícita na próxima primitiva de filtro se essa
+// primitiva de filtro não fornecer valor para seu atributo in.
 func (e *TagSvgFeComposite) Result(value interface{}) (ref *TagSvgFeComposite) {
 	e.selfElement.Call("setAttribute", "result", value)
 	return e

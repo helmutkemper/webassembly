@@ -1067,7 +1067,8 @@ func (e *TagSvgGlobal) Cy(value interface{}) (ref *TagSvgGlobal) {
 //
 //   Input:
 //     d: path to be drawn
-//       *SvgPath: factoryBrowser.NewPath().M(0, 10).Hd(5).Vd(-9).Hd(12).Vd(9).Hd(5).Vd(16).Hd(-22).Z()
+//       factory: factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()
+//       string: "M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z"
 //       any other type: interface{}
 //
 // A path definition is a list of path commands where each command is composed of a command letter and numbers that
@@ -1083,7 +1084,8 @@ func (e *TagSvgGlobal) Cy(value interface{}) (ref *TagSvgGlobal) {
 //
 //   Entrada:
 //     d: caminho a ser desenhado
-//       *SvgPath: factoryBrowser.NewPath().M(0, 10).Hd(5).Vd(-9).Hd(12).Vd(9).Hd(5).Vd(16).Hd(-22).Z()
+//       factory: factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()
+//       string: "M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z"
 //       qualquer outro tipo: interface{}
 //
 // Uma definição de caminho é uma lista de comandos de caminho em que cada comando é composto por uma letra de comando
@@ -3759,25 +3761,36 @@ func (e *TagSvgGlobal) Orient(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Origin #pareiAqui
+// Origin
 //
 // English:
+//
+//   Input:
+//     value: specifies the origin of motion for an animation
 //
 // The origin attribute specifies the origin of motion for an animation. It has no effect in SVG.
 //
 // Português:
 //
 // O atributo origin especifica a origem do movimento de uma animação. Não tem efeito em SVG.
+//
+//   Entrada:
+//     value: especifica a origem do movimento de uma animação
 func (e *TagSvgGlobal) Origin(value interface{}) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "origin", value)
 	return e
 }
 
-// Overflow #presentation
+// Overflow
 //
 // English:
 //
 // The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context.
+//
+//   Input:
+//     value: sets what to do when an element's content is too big to fit in its block formatting context
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       any other type: interface{}
 //
 // This attribute has the same parameter values and meaning as the css overflow property, however, the following
 // additional points apply:
@@ -3799,6 +3812,12 @@ func (e *TagSvgGlobal) Origin(value interface{}) (ref *TagSvgGlobal) {
 //
 // O atributo overflow define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto
 // de formatação de bloco.
+//
+//   Entrada:
+//     value: define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto de
+//         formatação de bloco
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       qualquer outro tipo: interface{}
 //
 // Este atributo tem os mesmos valores de parâmetro e significado que a propriedade CSS overflow, no entanto, os
 // seguintes pontos adicionais se aplicam:
@@ -3823,38 +3842,6 @@ func (e *TagSvgGlobal) Overflow(value interface{}) (ref *TagSvgGlobal) {
 	}
 
 	e.selfElement.Call("setAttribute", "overflow", value)
-	return e
-}
-
-// OverlinePosition
-//
-// English:
-//
-// The overline-position attribute represents the ideal vertical position of the overline. The overline position is
-// expressed in the font's coordinate system.
-//
-// Português:
-//
-// O atributo overline-position representa a posição vertical ideal da overline. A posição sobreposta é expressa no
-// sistema de coordenadas da fonte.
-func (e *TagSvgGlobal) OverlinePosition(value interface{}) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "overline-position", value)
-	return e
-}
-
-// OverlineThickness
-//
-// English:
-//
-// The overline-thickness attribute represents the ideal thickness of the overline. The overline thickness is expressed
-// in the font's coordinate system.
-//
-// Português:
-//
-// O atributo overline-thickness representa a espessura ideal da overline. A espessura do overline é expressa no sistema
-// de coordenadas da fonte.
-func (e *TagSvgGlobal) OverlineThickness(value interface{}) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "overline-thickness", value)
 	return e
 }
 
@@ -3902,12 +3889,31 @@ func (e *TagSvgGlobal) PaintOrder(value interface{}) (ref *TagSvgGlobal) {
 // The path attribute has two different meanings, either it defines a text path along which the characters of a text
 // are rendered, or a motion path along which a referenced element is animated.
 //
+//   Input:
+//     value: defines a text path along which the characters of a text are rendered, or a motion path along which a
+//         referenced element is animated
+//       factory: factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()
+//       string: "M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z"
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo path tem dois significados diferentes: define um caminho de texto ao longo do qual os caracteres de um
 // texto são renderizados ou um caminho de movimento ao longo do qual um elemento referenciado é animado.
-func (e *TagSvgGlobal) Path(value *SvgPath) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "path", value.String())
+//
+//   Entrada:
+//     value: define um caminho de texto ao longo do qual os caracteres de um texto são renderizados ou um caminho de
+//         movimento ao longo do qual um elemento referenciado é animado
+//       factory: factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()
+//       string: "M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgGlobal) Path(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(*SvgPath); ok {
+		e.selfElement.Call("setAttribute", "path", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "path", value)
 	return e
 }
 
@@ -3915,9 +3921,13 @@ func (e *TagSvgGlobal) Path(value *SvgPath) (ref *TagSvgGlobal) {
 //
 // English:
 //
-// The pathLength attribute lets authors specify a total length for the path, in user units. This value is then used to
-// calibrate the browser's distance calculations with those of the author, by scaling all distance computations using
-// the ratio pathLength/(computed value of path length).
+// The pathLength attribute lets authors specify a total length for the path, in user units.
+//
+//   Input:
+//     value: lets authors specify a total length for the path
+//
+// This value is then used to calibrate the browser's distance calculations with those of the author, by scaling all
+// distance computations using the ratio pathLength/(computed value of path length).
 //
 // This can affect the actual rendered lengths of paths; including text paths, animation paths, and various stroke
 // operations. Basically, all computations that require the length of the path. stroke-dasharray, for example, will
@@ -3926,8 +3936,13 @@ func (e *TagSvgGlobal) Path(value *SvgPath) (ref *TagSvgGlobal) {
 // Português:
 //
 // O atributo pathLength permite que os autores especifiquem um comprimento total para o caminho, em unidades de
-// usuário. Este valor é então usado para calibrar os cálculos de distância do navegador com os do autor, escalando
-// todos os cálculos de distância usando a razão pathLength (valor calculado do comprimento do caminho).
+// usuário.
+//
+//   Entrada:
+//     value: permite que os autores especifiquem um comprimento total para o caminho
+//
+// Este valor é então usado para calibrar os cálculos de distância do navegador com os do autor, escalando todos os
+// cálculos de distância usando a razão pathLength (valor calculado do comprimento do caminho).
 //
 // Isso pode afetar os comprimentos reais dos caminhos renderizados; incluindo caminhos de texto, caminhos de animação
 // e várias operações de traçado. Basicamente, todos os cálculos que exigem o comprimento do caminho. stroke-dasharray,
@@ -3979,9 +3994,21 @@ func (e *TagSvgGlobal) PatternContentUnits(value interface{}) (ref *TagSvgGlobal
 //
 // The patternTransform attribute defines a list of transform definitions that are applied to a pattern tile.
 //
+//   Input:
+//     value: defines a list of transform definitions that are applied to a pattern tile
+//       factory: e.g. factoryBrowser.NewTransform().RotateAngle(20).SkewX(30).Scale(1, 0.5)
+//       string: e.g. "rotate(20) skewX(30) scale(1 0.5)"
+//       any other type: interface{}
+//
 // Português:
 //
-// O atributo patternTransform define uma lista de definições de transformação que são aplicadas a um bloco de padrão.
+// O atributo patternTransform define uma lista de definições de transformação que são aplicadas a um tile.
+//
+//   Entrada:
+//     value: define uma lista de definições de transformação que são aplicadas a um tile
+//       factory: ex. factoryBrowser.NewTransform().RotateAngle(20).SkewX(30).Scale(1, 0.5)
+//       string: ex. "rotate(20) skewX(30) scale(1 0.5)"
+//       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) PatternTransform(value interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := value.(*TransformFunctions); ok {
 		e.selfElement.Call("setAttribute", "patternTransform", converted.String())
@@ -4028,12 +4055,17 @@ func (e *TagSvgGlobal) PatternUnits(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// PointerEvents #presentation
+// PointerEvents
 //
 // English:
 //
 // The pointer-events attribute is a presentation attribute that allows defining whether or when an element may be the
 // target of a mouse event.
+//
+//   Input:
+//     value: defining whether or when an element may be the target of a mouse event
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       any other type: interface{}
 //
 //   Notes:
 //     * As a presentation attribute pointer-events can be used as a CSS property.
@@ -4042,6 +4074,11 @@ func (e *TagSvgGlobal) PatternUnits(value interface{}) (ref *TagSvgGlobal) {
 //
 // O atributo pointer-events é um atributo de apresentação que permite definir se ou quando um elemento pode ser alvo
 // de um evento de mouse.
+//
+//   Entrada:
+//     value: define se ou quando um elemento pode ser alvo de um evento de mouse.
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
@@ -4090,11 +4127,27 @@ func (e *TagSvgGlobal) Points(value interface{}) (ref *TagSvgGlobal) {
 // The pointsAtX attribute represents the x location in the coordinate system established by attribute primitiveUnits
 // on the <filter> element of the point at which the light source is pointing.
 //
+//   Input:
+//     value: represents the x location in the coordinate system
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo pointsAtX representa a localização x no sistema de coordenadas estabelecido pelo atributo primitivaUnits
 // no elemento <filter> do ponto para o qual a fonte de luz está apontando.
+//
+//   Entrada:
+//     value: representa a localização x no sistema de coordenadas
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) PointsAtX(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "pointsAtX", p)
+		return e
+	}
+
 	e.selfElement.Call("setAttribute", "pointsAtX", value)
 	return e
 }
@@ -4106,11 +4159,27 @@ func (e *TagSvgGlobal) PointsAtX(value interface{}) (ref *TagSvgGlobal) {
 // The pointsAtY attribute represents the y location in the coordinate system established by attribute primitiveUnits
 // on the <filter> element of the point at which the light source is pointing.
 //
+//   Input:
+//     value: represents the y location in the coordinate system
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo pointsAtY representa a localização y no sistema de coordenadas estabelecido pelo atributo primitivaUnits
 // no elemento <filter> do ponto para o qual a fonte de luz está apontando.
+//
+//   Entrada:
+//     value: representa a localização y no sistema de coordenadas
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) PointsAtY(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "pointsAtY", p)
+		return e
+	}
+
 	e.selfElement.Call("setAttribute", "pointsAtY", value)
 	return e
 }
@@ -4284,6 +4353,11 @@ func (e *TagSvgGlobal) R(value interface{}) (ref *TagSvgGlobal) {
 //
 // The radius attribute represents the radius (or radii) for the operation on a given <feMorphology> filter primitive.
 //
+//   Input:
+//     value: represents the radius (or radii) for the operation
+//       float32: 1.0 = "100%"
+//       any other type: interface{}
+//
 // If two numbers are provided, the first number represents the x-radius and the second one the y-radius. If one number
 // is provided, then that value is used for both x and y. The values are in the coordinate system established by the
 // primitiveUnits attribute on the <filter> element.
@@ -4294,6 +4368,11 @@ func (e *TagSvgGlobal) R(value interface{}) (ref *TagSvgGlobal) {
 // Português:
 //
 // O atributo radius representa o raio (ou raios) para a operação em uma determinada primitiva de filtro <feMorphology>.
+//
+//   Entrada:
+//     value: representa o raio (ou raios) para à operação
+//       float32: 1.0 = "100%"
+//       qualquer outro tipo: interface{}
 //
 // Se dois números forem fornecidos, o primeiro número representa o raio x e o segundo o raio y. Se um número for
 // fornecido, esse valor será usado para x e y. Os valores estão no sistema de coordenadas estabelecido pelo atributo
@@ -4483,18 +4562,27 @@ func (e *TagSvgGlobal) Restart(value interface{}) (ref *TagSvgGlobal) {
 //
 // English:
 //
-// The result attribute defines the assigned name for this filter primitive. If supplied, then graphics that result from
-// processing this filter primitive can be referenced by an in attribute on a subsequent filter primitive within the
-// same <filter> element. If no value is provided, the output will only be available for re-use as the implicit input
-// into the next filter primitive if that filter primitive provides no value for its in attribute.
+// The result attribute defines the assigned name for this filter primitive.
+//
+//   Input:
+//     value: defines the assigned name for this filter primitive
+//
+// If supplied, then graphics that result from processing this filter primitive can be referenced by an in attribute on
+// a subsequent filter primitive within the same <filter> element. If no value is provided, the output will only be
+// available for re-use as the implicit input into the next filter primitive if that filter primitive provides no value
+// for its in attribute.
 //
 // Português:
 //
-// O atributo result define o nome atribuído para esta primitiva de filtro. Se fornecido, os gráficos resultantes do
-// processamento dessa primitiva de filtro podem ser referenciados por um atributo in em uma primitiva de filtro
-// subsequente dentro do mesmo elemento <filter>. Se nenhum valor for fornecido, a saída só estará disponível para
-// reutilização como entrada implícita na próxima primitiva de filtro se essa primitiva de filtro não fornecer valor
-// para seu atributo in.
+// O atributo result define o nome atribuído para esta primitiva de filtro.
+//
+//   Entrada:
+//     value: define o nome atribuído para esta primitiva de filtro
+//
+// Se fornecido, os gráficos resultantes do processamento dessa primitiva de filtro podem ser referenciados por um
+// atributo in em uma primitiva de filtro subsequente dentro do mesmo elemento <filter>. Se nenhum valor for fornecido,
+// a saída só estará disponível para reutilização como entrada implícita na próxima primitiva de filtro se essa
+// primitiva de filtro não fornecer valor para seu atributo in.
 func (e *TagSvgGlobal) Result(value interface{}) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "result", value)
 	return e
@@ -4537,9 +4625,15 @@ func (e *TagSvgGlobal) Rotate(value interface{}) (ref *TagSvgGlobal) {
 //
 // The rx attribute defines a radius on the x-axis.
 //
+//   Input:
+//     value: defines a radius on the x-axis
+//
 // Português:
 //
 // O atributo rx define um raio no eixo x.
+//
+//   Entrada:
+//     value: defines a radius on the x-axis
 func (e *TagSvgGlobal) Rx(value float64) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "rx", value)
 	return e
@@ -4551,9 +4645,15 @@ func (e *TagSvgGlobal) Rx(value float64) (ref *TagSvgGlobal) {
 //
 // The ry attribute defines a radius on the y-axis.
 //
+//   Input:
+//     value: defines a radius on the y-axis
+//
 // Português:
 //
 // O atributo ry define um raio no eixo y.
+//
+//   Entrada:
+//     value: define um raio no eixo y
 func (e *TagSvgGlobal) Ry(value float64) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "ry", value)
 	return e

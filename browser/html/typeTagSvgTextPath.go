@@ -1640,6 +1640,11 @@ func (e *TagSvgTextPath) Opacity(value interface{}) (ref *TagSvgTextPath) {
 //
 // The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context.
 //
+//   Input:
+//     value: sets what to do when an element's content is too big to fit in its block formatting context
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       any other type: interface{}
+//
 // This attribute has the same parameter values and meaning as the css overflow property, however, the following
 // additional points apply:
 //   * If it has a value of visible, the attribute has no effect (i.e., a clipping rectangle is not created).
@@ -1660,6 +1665,12 @@ func (e *TagSvgTextPath) Opacity(value interface{}) (ref *TagSvgTextPath) {
 //
 // O atributo overflow define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto
 // de formatação de bloco.
+//
+//   Entrada:
+//     value: define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto de
+//         formatação de bloco
+//       const: KOverflow... (e.g. KOverflowHidden)
+//       qualquer outro tipo: interface{}
 //
 // Este atributo tem os mesmos valores de parâmetro e significado que a propriedade CSS overflow, no entanto, os
 // seguintes pontos adicionais se aplicam:
@@ -1694,6 +1705,11 @@ func (e *TagSvgTextPath) Overflow(value interface{}) (ref *TagSvgTextPath) {
 // The pointer-events attribute is a presentation attribute that allows defining whether or when an element may be the
 // target of a mouse event.
 //
+//   Input:
+//     value: defining whether or when an element may be the target of a mouse event
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute pointer-events can be used as a CSS property.
 //
@@ -1701,6 +1717,11 @@ func (e *TagSvgTextPath) Overflow(value interface{}) (ref *TagSvgTextPath) {
 //
 // O atributo pointer-events é um atributo de apresentação que permite definir se ou quando um elemento pode ser alvo
 // de um evento de mouse.
+//
+//   Entrada:
+//     value: define se ou quando um elemento pode ser alvo de um evento de mouse.
+//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//       qualquer outro tipo: interface{}
 //
 //   Notas:
 //     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
@@ -2646,12 +2667,31 @@ func (e *TagSvgTextPath) LengthAdjust(value interface{}) (ref *TagSvgTextPath) {
 // The path attribute has two different meanings, either it defines a text path along which the characters of a text
 // are rendered, or a motion path along which a referenced element is animated.
 //
+//   Input:
+//     value: defines a text path along which the characters of a text are rendered, or a motion path along which a
+//         referenced element is animated
+//       factory: factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()
+//       string: "M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z"
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo path tem dois significados diferentes: define um caminho de texto ao longo do qual os caracteres de um
 // texto são renderizados ou um caminho de movimento ao longo do qual um elemento referenciado é animado.
-func (e *TagSvgTextPath) Path(value *SvgPath) (ref *TagSvgTextPath) {
-	e.selfElement.Call("setAttribute", "path", value.String())
+//
+//   Entrada:
+//     value: define um caminho de texto ao longo do qual os caracteres de um texto são renderizados ou um caminho de
+//         movimento ao longo do qual um elemento referenciado é animado
+//       factory: factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()
+//       string: "M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z"
+//       qualquer outro tipo: interface{}
+func (e *TagSvgTextPath) Path(value interface{}) (ref *TagSvgTextPath) {
+	if converted, ok := value.(*SvgPath); ok {
+		e.selfElement.Call("setAttribute", "path", converted.String())
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "path", value)
 	return e
 }
 

@@ -4659,16 +4659,24 @@ func (e *TagSvgGlobal) Ry(value float64) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Scale #pareiaqui
+// Scale
 //
 // English:
 //
 // The scale attribute defines the displacement scale factor to be used on a <feDisplacementMap> filter primitive.
+//
+//   Input:
+//     value: defines the displacement scale factor
+//
 // The amount is expressed in the coordinate system established by the primitiveUnits attribute on the <filter> element.
 //
 // Português:
 //
 // O atributo scale define o fator de escala de deslocamento a ser usado em uma primitiva de filtro <feDisplacementMap>.
+//
+//   Entrada:
+//     value: define o fator de escala de deslocamento
+//
 // A quantidade é expressa no sistema de coordenadas estabelecido pelo atributo primitivaUnits no elemento <filter>.
 func (e *TagSvgGlobal) Scale(value float64) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "scale", value)
@@ -4682,10 +4690,16 @@ func (e *TagSvgGlobal) Scale(value float64) (ref *TagSvgGlobal) {
 // The seed attribute represents the starting number for the pseudo random number generator of the <feTurbulence> filter
 // primitive.
 //
+//   Input:
+//     value: represents the starting number for the pseudo random number generator
+//
 // Português:
 //
 // O atributo seed representa o número inicial para o gerador de números pseudo aleatórios da primitiva de filtro
 // <feTurbulence>.
+//
+//   Entrada:
+//     value: representa o número inicial para o gerador de números pseudo aleatórios
 func (e *TagSvgGlobal) Seed(value float64) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "seed", value)
 	return e
@@ -4801,10 +4815,16 @@ func (e *TagSvgGlobal) Spacing(value interface{}) (ref *TagSvgGlobal) {
 // The specularConstant attribute controls the ratio of reflection of the specular lighting. It represents the ks value
 // in the Phong lighting model. The bigger the value the stronger the reflection.
 //
+//   Input:
+//     value: controls the ratio of reflection of the specular lighting
+//
 // Português:
 //
 // O atributo specularConstant controla a proporção de reflexão da iluminação especular. Ele representa o valor ks no
 // modelo de iluminação Phong. Quanto maior o valor, mais forte a reflexão.
+//
+//   Entrada:
+//     value: controls the ratio of reflection of the specular lighting
 func (e *TagSvgGlobal) SpecularConstant(value float64) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "specularConstant", value)
 	return e
@@ -4816,9 +4836,15 @@ func (e *TagSvgGlobal) SpecularConstant(value float64) (ref *TagSvgGlobal) {
 //
 // The specularExponent attribute controls the focus for the light source. The bigger the value the brighter the light.
 //
+//   Input:
+//     value: controls the focus for the light source
+//
 // Português:
 //
 // O atributo specularExponent controla o foco da fonte de luz. Quanto maior o valor, mais brilhante é a luz.
+//
+//   Entrada:
+//     value: controla o foco para a fonte de luz
 func (e *TagSvgGlobal) SpecularExponent(value float64) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "specularExponent", value)
 	return e
@@ -4953,7 +4979,7 @@ func (e *TagSvgGlobal) StdDeviation(value interface{}) (ref *TagSvgGlobal) {
 //
 // English:
 //
-//  The stop-color attribute indicates what color to use at a gradient stop.
+// The stop-color attribute indicates what color to use at a gradient stop.
 //
 //   Input:
 //     value: indicates what color to use at a gradient stop
@@ -4970,7 +4996,7 @@ func (e *TagSvgGlobal) StdDeviation(value interface{}) (ref *TagSvgGlobal) {
 //
 // Português:
 //
-//  O atributo stop-color indica qual cor usar em uma parada de gradiente.
+// O atributo stop-color indica qual cor usar em uma parada de gradiente.
 //
 //   Entrada:
 //     value: indica qual cor usar em um fim de gradiente
@@ -5035,38 +5061,6 @@ func (e *TagSvgGlobal) StopOpacity(value interface{}) (ref *TagSvgGlobal) {
 	}
 
 	e.selfElement.Call("setAttribute", "stop-opacity", value)
-	return e
-}
-
-// StrikethroughPosition
-//
-// English:
-//
-// The strikethrough-position attribute represents the ideal vertical position of the strikethrough.
-// The strikethrough position is expressed in the font's coordinate system.
-//
-// Português:
-//
-// O atributo posição tachada representa a posição vertical ideal do tachado.
-// A posição tachada é expressa no sistema de coordenadas da fonte.
-func (e *TagSvgGlobal) StrikethroughPosition(value float64) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "strikethrough-position", value)
-	return e
-}
-
-// StrikethroughThickness
-//
-// English:
-//
-// The strikethrough-thickness attribute represents the ideal thickness of the strikethrough.
-// The strikethrough thickness is expressed in the font's coordinate system.
-//
-// Português:
-//
-// O atributo tachado-espessura representa a espessura ideal do tachado.
-// A espessura tachada é expressa no sistema de coordenadas da fonte.
-func (e *TagSvgGlobal) StrikethroughThickness(value float64) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "strikethrough-thickness", value)
 	return e
 }
 
@@ -5262,6 +5256,11 @@ func (e *TagSvgGlobal) StrokeLineCap(value interface{}) (ref *TagSvgGlobal) {
 // The stroke-linejoin attribute is a presentation attribute defining the shape to be used at the corners of paths when
 // they are stroked.
 //
+//   Input:
+//     value: defining the shape to be used at the corners of paths
+//       const: KSvgStrokeLinejoin... (e.g. KSvgStrokeLinejoinBevel)
+//       any other type: interface{}
+//
 //   Notes:
 //     * As a presentation attribute stroke-linejoin can be used as a CSS property.
 //
@@ -5269,6 +5268,11 @@ func (e *TagSvgGlobal) StrokeLineCap(value interface{}) (ref *TagSvgGlobal) {
 //
 // O atributo stroke-linejoin é um atributo de apresentação que define a forma a ser usada nos cantos dos caminhos
 // quando eles são traçados.
+//
+//   Entrada:
+//     value: define a forma a ser usada nos cantos dos caminhos
+//       const: KSvgStrokeLinejoin... (ex. KSvgStrokeLinejoinBevel)
+//       any other type: interface{}
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
@@ -5282,12 +5286,15 @@ func (e *TagSvgGlobal) StrokeLineJoin(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// StrokeMiterLimit #presentation
+// StrokeMiterLimit
 //
 // English:
 //
 // The stroke-miterlimit attribute is a presentation attribute defining a limit on the ratio of the miter length to the
 // stroke-width used to draw a miter join. When the limit is exceeded, the join is converted from a miter to a bevel.
+//
+//   Input:
+//     value: defining a limit on the ratio of the miter length
 //
 //   Notes:
 //     * As a presentation attribute stroke-miterlimit can be used as a CSS property.
@@ -5297,6 +5304,9 @@ func (e *TagSvgGlobal) StrokeLineJoin(value interface{}) (ref *TagSvgGlobal) {
 // O atributo stroke-miterlimit é um atributo de apresentação que define um limite na proporção do comprimento da mitra
 // para a largura do traço usado para desenhar uma junção de mitra. Quando o limite é excedido, a junção é convertida
 // de uma mitra para um chanfro.
+//
+//   Entrada:
+//     value: definindo um limite na proporção do comprimento da mitra
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
@@ -5373,23 +5383,31 @@ func (e *TagSvgGlobal) StrokeWidth(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Style #styling
+// Style
 //
 // English:
 //
-// The style attribute allows to style an element using CSS declarations. It functions identically to the style
-// attribute in HTML.
+// The style attribute allows to style an element using CSS declarations.
+//
+//   Input:
+//     value: allows to style an element using CSS declarations
+//
+// It functions identically to the style attribute in HTML.
 //
 // Português:
 //
-// O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
-// em HTML.
+// O atributo style permite estilizar um elemento usando declarações CSS.
+//
+//   Entrada:
+//     value: permite estilizar um elemento usando declarações CSS
+//
+// Funciona de forma idêntica ao atributo style em HTML.
 func (e *TagSvgGlobal) Style(value string) (ref *TagSvgGlobal) {
 	e.selfElement.Set("innerHTML", value)
 	return e
 }
 
-// SurfaceScale
+// SurfaceScale #pareiaqui
 //
 // English:
 //
@@ -5804,7 +5822,7 @@ func (e *TagSvgGlobal) To(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Transform #presentation
+// Transform
 //
 // English:
 //
@@ -5813,8 +5831,8 @@ func (e *TagSvgGlobal) To(value interface{}) (ref *TagSvgGlobal) {
 //
 //   Input:
 //     value: defines a list of transform definitions
-//       *TransformFunctions: todo: documentar
-//       TransformFunctions:
+//       factory: e.g. factoryBrowser.NewTransform().Translate(100, 0).Scale(4, 1)
+//       string: e.g. "translate(300,0) scale(4,1)"
 //       any other type: interface{}
 //
 //   Notes:
@@ -5829,8 +5847,8 @@ func (e *TagSvgGlobal) To(value interface{}) (ref *TagSvgGlobal) {
 //
 //   Entrada:
 //     value: define uma lista de definições de transformação
-//       *TransformFunctions: todo: documentar
-//       TransformFunctions:
+//       factory: ex. factoryBrowser.NewTransform().Translate(100, 0).Scale(4, 1)
+//       string: ex. "translate(300,0) scale(4,1)"
 //       qualquer outro tipo: interface{}
 //
 //   Notas:
@@ -6691,6 +6709,7 @@ func (e *TagSvgGlobal) YChannelSelector(value interface{}) (ref *TagSvgGlobal) {
 // pelo atributo primitivoUnits no elemento <filter>, assumindo que, no sistema de coordenadas inicial, o eixo z
 // positivo sai em direção à pessoa visualizar o conteúdo e assumir que uma unidade ao longo do eixo z é igual a uma
 // unidade em x e y.
+// todo: copiar x e y para os tipos
 func (e *TagSvgGlobal) Z(value interface{}) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "z", value)
 	return e

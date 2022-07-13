@@ -401,13 +401,21 @@ func (e *TagSvgTitle) Class(class string) (ref *TagSvgTitle) {
 //
 // English:
 //
-// The style attribute allows to style an element using CSS declarations. It functions identically to the style
-// attribute in HTML.
+// The style attribute allows to style an element using CSS declarations.
+//
+//   Input:
+//     value: allows to style an element using CSS declarations
+//
+// It functions identically to the style attribute in HTML.
 //
 // Português:
 //
-// O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
-// em HTML.
+// O atributo style permite estilizar um elemento usando declarações CSS.
+//
+//   Entrada:
+//     value: permite estilizar um elemento usando declarações CSS
+//
+// Funciona de forma idêntica ao atributo style em HTML.
 func (e *TagSvgTitle) Style(value string) (ref *TagSvgTitle) {
 	e.selfElement.Call("setAttribute", "style", value)
 	return e

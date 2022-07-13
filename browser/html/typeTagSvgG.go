@@ -2021,6 +2021,9 @@ func (e *TagSvgG) StrokeLineJoin(value interface{}) (ref *TagSvgG) {
 // The stroke-miterlimit attribute is a presentation attribute defining a limit on the ratio of the miter length to the
 // stroke-width used to draw a miter join. When the limit is exceeded, the join is converted from a miter to a bevel.
 //
+//   Input:
+//     value: defining a limit on the ratio of the miter length
+//
 //   Notes:
 //     * As a presentation attribute stroke-miterlimit can be used as a CSS property.
 //
@@ -2029,6 +2032,9 @@ func (e *TagSvgG) StrokeLineJoin(value interface{}) (ref *TagSvgG) {
 // O atributo stroke-miterlimit é um atributo de apresentação que define um limite na proporção do comprimento da mitra
 // para a largura do traço usado para desenhar uma junção de mitra. Quando o limite é excedido, a junção é convertida
 // de uma mitra para um chanfro.
+//
+//   Entrada:
+//     value: definindo um limite na proporção do comprimento da mitra
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
@@ -2266,8 +2272,8 @@ func (e *TagSvgG) TextRendering(value interface{}) (ref *TagSvgG) {
 //
 //   Input:
 //     value: defines a list of transform definitions
-//       *TransformFunctions: todo: documentar
-//       TransformFunctions:
+//       factory: e.g. factoryBrowser.NewTransform().Translate(100, 0).Scale(4, 1)
+//       string: e.g. "translate(300,0) scale(4,1)"
 //       any other type: interface{}
 //
 //   Notes:
@@ -2282,8 +2288,8 @@ func (e *TagSvgG) TextRendering(value interface{}) (ref *TagSvgG) {
 //
 //   Entrada:
 //     value: define uma lista de definições de transformação
-//       *TransformFunctions: todo: documentar
-//       TransformFunctions:
+//       factory: ex. factoryBrowser.NewTransform().Translate(100, 0).Scale(4, 1)
+//       string: ex. "translate(300,0) scale(4,1)"
 //       qualquer outro tipo: interface{}
 //
 //   Notas:
@@ -2567,13 +2573,21 @@ func (e *TagSvgG) Class(class string) (ref *TagSvgG) {
 //
 // English:
 //
-// The style attribute allows to style an element using CSS declarations. It functions identically to the style
-// attribute in HTML.
+// The style attribute allows to style an element using CSS declarations.
+//
+//   Input:
+//     value: allows to style an element using CSS declarations
+//
+// It functions identically to the style attribute in HTML.
 //
 // Português:
 //
-// O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
-// em HTML.
+// O atributo style permite estilizar um elemento usando declarações CSS.
+//
+//   Entrada:
+//     value: permite estilizar um elemento usando declarações CSS
+//
+// Funciona de forma idêntica ao atributo style em HTML.
 func (e *TagSvgG) Style(value string) (ref *TagSvgG) {
 	e.selfElement.Call("setAttribute", "style", value)
 	return e

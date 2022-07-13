@@ -2030,6 +2030,9 @@ func (e *TagSvgFeDisplacementMap) StrokeLineJoin(value interface{}) (ref *TagSvg
 // The stroke-miterlimit attribute is a presentation attribute defining a limit on the ratio of the miter length to the
 // stroke-width used to draw a miter join. When the limit is exceeded, the join is converted from a miter to a bevel.
 //
+//   Input:
+//     value: defining a limit on the ratio of the miter length
+//
 //   Notes:
 //     * As a presentation attribute stroke-miterlimit can be used as a CSS property.
 //
@@ -2038,6 +2041,9 @@ func (e *TagSvgFeDisplacementMap) StrokeLineJoin(value interface{}) (ref *TagSvg
 // O atributo stroke-miterlimit é um atributo de apresentação que define um limite na proporção do comprimento da mitra
 // para a largura do traço usado para desenhar uma junção de mitra. Quando o limite é excedido, a junção é convertida
 // de uma mitra para um chanfro.
+//
+//   Entrada:
+//     value: definindo um limite na proporção do comprimento da mitra
 //
 //   Notas:
 //     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
@@ -2275,8 +2281,8 @@ func (e *TagSvgFeDisplacementMap) TextRendering(value interface{}) (ref *TagSvgF
 //
 //   Input:
 //     value: defines a list of transform definitions
-//       *TransformFunctions: todo: documentar
-//       TransformFunctions:
+//       factory: e.g. factoryBrowser.NewTransform().Translate(100, 0).Scale(4, 1)
+//       string: e.g. "translate(300,0) scale(4,1)"
 //       any other type: interface{}
 //
 //   Notes:
@@ -2291,8 +2297,8 @@ func (e *TagSvgFeDisplacementMap) TextRendering(value interface{}) (ref *TagSvgF
 //
 //   Entrada:
 //     value: define uma lista de definições de transformação
-//       *TransformFunctions: todo: documentar
-//       TransformFunctions:
+//       factory: ex. factoryBrowser.NewTransform().Translate(100, 0).Scale(4, 1)
+//       string: ex. "translate(300,0) scale(4,1)"
 //       qualquer outro tipo: interface{}
 //
 //   Notas:
@@ -2576,13 +2582,21 @@ func (e *TagSvgFeDisplacementMap) Class(class string) (ref *TagSvgFeDisplacement
 //
 // English:
 //
-// The style attribute allows to style an element using CSS declarations. It functions identically to the style
-// attribute in HTML.
+// The style attribute allows to style an element using CSS declarations.
+//
+//   Input:
+//     value: allows to style an element using CSS declarations
+//
+// It functions identically to the style attribute in HTML.
 //
 // Português:
 //
-// O atributo style permite estilizar um elemento usando declarações CSS. Funciona de forma idêntica ao atributo style
-// em HTML.
+// O atributo style permite estilizar um elemento usando declarações CSS.
+//
+//   Entrada:
+//     value: permite estilizar um elemento usando declarações CSS
+//
+// Funciona de forma idêntica ao atributo style em HTML.
 func (e *TagSvgFeDisplacementMap) Style(value string) (ref *TagSvgFeDisplacementMap) {
 	e.selfElement.Call("setAttribute", "style", value)
 	return e
@@ -2878,11 +2892,19 @@ func (e *TagSvgFeDisplacementMap) In2(in2 interface{}) (ref *TagSvgFeDisplacemen
 // English:
 //
 // The scale attribute defines the displacement scale factor to be used on a <feDisplacementMap> filter primitive.
+//
+//   Input:
+//     value: defines the displacement scale factor
+//
 // The amount is expressed in the coordinate system established by the primitiveUnits attribute on the <filter> element.
 //
 // Português:
 //
 // O atributo scale define o fator de escala de deslocamento a ser usado em uma primitiva de filtro <feDisplacementMap>.
+//
+//   Entrada:
+//     value: define o fator de escala de deslocamento
+//
 // A quantidade é expressa no sistema de coordenadas estabelecido pelo atributo primitivaUnits no elemento <filter>.
 func (e *TagSvgFeDisplacementMap) Scale(value float64) (ref *TagSvgFeDisplacementMap) {
 	e.selfElement.Call("setAttribute", "scale", value)

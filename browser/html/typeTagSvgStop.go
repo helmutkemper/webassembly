@@ -1410,8 +1410,7 @@ func (e *TagSvgStop) ImageRendering(imageRendering string) (ref *TagSvgStop) {
 //   * Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
 //     Consulte a propriedade de espaçamento entre letras do CSS para obter mais informações.
 func (e *TagSvgStop) LetterSpacing(value float64) (ref *TagSvgStop) {
-
-	e.selfElement.Call("setAttribute", "letter-spacing", strconv.FormatFloat(value, 'g', -1, 64))
+	e.selfElement.Call("setAttribute", "letter-spacing", value)
 	return e
 }
 

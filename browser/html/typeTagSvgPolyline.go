@@ -1416,8 +1416,7 @@ func (e *TagSvgPolyline) ImageRendering(imageRendering string) (ref *TagSvgPolyl
 //   * Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
 //     Consulte a propriedade de espaçamento entre letras do CSS para obter mais informações.
 func (e *TagSvgPolyline) LetterSpacing(value float64) (ref *TagSvgPolyline) {
-
-	e.selfElement.Call("setAttribute", "letter-spacing", strconv.FormatFloat(value, 'g', -1, 64))
+	e.selfElement.Call("setAttribute", "letter-spacing", value)
 	return e
 }
 

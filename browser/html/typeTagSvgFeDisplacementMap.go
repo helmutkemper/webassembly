@@ -1424,8 +1424,7 @@ func (e *TagSvgFeDisplacementMap) ImageRendering(imageRendering string) (ref *Ta
 //   * Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
 //     Consulte a propriedade de espaçamento entre letras do CSS para obter mais informações.
 func (e *TagSvgFeDisplacementMap) LetterSpacing(value float64) (ref *TagSvgFeDisplacementMap) {
-
-	e.selfElement.Call("setAttribute", "letter-spacing", strconv.FormatFloat(value, 'g', -1, 64))
+	e.selfElement.Call("setAttribute", "letter-spacing", value)
 	return e
 }
 

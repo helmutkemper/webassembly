@@ -21,4 +21,4 @@ fazer o exemplo https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/resta
 
 fazer o exemplo2 https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/visibility
 
-
+https://developer.mozilla.org/en-US/docs/Web/CSS/blend-mode

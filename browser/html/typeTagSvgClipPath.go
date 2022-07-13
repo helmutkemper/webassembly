@@ -1418,15 +1418,29 @@ func (e *TagSvgClipPath) LetterSpacing(value float64) (ref *TagSvgClipPath) {
 	return e
 }
 
-// LightingColor
+// LightingColor #presentation
 //
 // English:
 //
 // The lighting-color attribute defines the color of the light source for lighting filter primitives.
 //
+//   Input:
+//     value: defines the color of the light source
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo lighting-color define a cor da fonte de luz para as primitivas do filtro de iluminação.
+//
+//   Input:
+//     value: define a cor da fonte de luz
+//       string: ex. "black"
+//       factory: ex. factoryColor.NewYellow()
+//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
 func (e *TagSvgClipPath) LightingColor(value interface{}) (ref *TagSvgClipPath) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "lighting-color", RGBAToJs(converted))

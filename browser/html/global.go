@@ -3086,9 +3086,23 @@ func (e *TagSvgGlobal) LetterSpacing(value float64) (ref *TagSvgGlobal) {
 //
 // The lighting-color attribute defines the color of the light source for lighting filter primitives.
 //
+//   Input:
+//     value: defines the color of the light source
+//       string: e.g. "black"
+//       factory: e.g. factoryColor.NewYellow()
+//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo lighting-color define a cor da fonte de luz para as primitivas do filtro de iluminação.
+//
+//   Input:
+//     value: define a cor da fonte de luz
+//       string: ex. "black"
+//       factory: ex. factoryColor.NewYellow()
+//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) LightingColor(value interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "lighting-color", RGBAToJs(converted))
@@ -3281,6 +3295,7 @@ func (e *TagSvgGlobal) MarkerHeight(value interface{}) (ref *TagSvgGlobal) {
 //   Input:
 //     value: defines the coordinate system
 //       const KSvgMarkerUnits... (e.g. KSvgMarkerUnitsUserSpaceOnUse)
+//       any other type: interface{}
 //
 // Português:
 //
@@ -3290,6 +3305,7 @@ func (e *TagSvgGlobal) MarkerHeight(value interface{}) (ref *TagSvgGlobal) {
 //   Entrada:
 //     value: define o sistema de coordenadas
 //       const KSvgMarkerUnits... (ex. KSvgMarkerUnitsUserSpaceOnUse)
+//       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) MarkerUnits(value interface{}) (ref *TagSvgGlobal) {
 	if converted, ok := value.(SvgMarkerUnits); ok {
 		e.selfElement.Call("setAttribute", "markerUnits", converted.String())
@@ -3471,10 +3487,18 @@ func (e *TagSvgGlobal) Max(value interface{}) (ref *TagSvgGlobal) {
 //
 // The media attribute specifies a media query that must be matched for a style sheet to apply.
 //
+//   Input:
+//     value: specifies a media query that must be matched for a style sheet to apply
+//       string: e.g. "all and (min-width: 600px)"
+//
 // Português:
 //
 // O atributo de mídia especifica uma consulta de mídia que deve ser correspondida para que uma folha de estilo seja
 // aplicada.
+//
+//   Entrada:
+//     value: especifica uma consulta de mídia que deve ser correspondida para que uma folha de estilo seja aplicada
+//       string: e.g. "all and (min-width: 600px)"
 func (e *TagSvgGlobal) Media(value interface{}) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "media", value)
 	return e
@@ -3735,7 +3759,7 @@ func (e *TagSvgGlobal) Orient(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Origin
+// Origin #pareiAqui
 //
 // English:
 //

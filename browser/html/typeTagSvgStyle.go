@@ -435,10 +435,18 @@ func (e *TagSvgStyle) Type(value interface{}) (ref *TagSvgStyle) {
 //
 // The media attribute specifies a media query that must be matched for a style sheet to apply.
 //
+//   Input:
+//     value: specifies a media query that must be matched for a style sheet to apply
+//       string: e.g. "all and (min-width: 600px)"
+//
 // Português:
 //
 // O atributo de mídia especifica uma consulta de mídia que deve ser correspondida para que uma folha de estilo seja
 // aplicada.
+//
+//   Entrada:
+//     value: especifica uma consulta de mídia que deve ser correspondida para que uma folha de estilo seja aplicada
+//       string: e.g. "all and (min-width: 600px)"
 func (e *TagSvgStyle) Media(value interface{}) (ref *TagSvgStyle) {
 	e.selfElement.Call("setAttribute", "media", value)
 	return e

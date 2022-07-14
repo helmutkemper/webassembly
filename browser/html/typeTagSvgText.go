@@ -304,10 +304,16 @@ func (e *TagSvgText) Lang(value interface{}) (ref *TagSvgText) {
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
+//   Input:
+//     value: control whether an element is focusable
+//
 // Português:
 //
-// O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
+// O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
+//
+//   Input:
+//     value: controlar se um elemento é focalizável
 func (e *TagSvgText) Tabindex(value int) (ref *TagSvgText) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -3047,10 +3053,22 @@ func (e *TagSvgText) Html(value string) (ref *TagSvgText) {
 // The systemLanguage attribute represents a list of supported language tags. This list is matched against the language
 // defined in the user preferences.
 //
+//   Input:
+//     value: list of supported language tags
+//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//       []Language: e.g. []Language{KLanguageEnglishAustralia, KLanguageEnglishAustralia, KLanguageEnglishCanada}
+//       string: e.g. "en-gb, en-us"
+//
 // Português:
 //
 // O atributo systemLanguage representa uma lista de tags de idioma com suporte. Esta lista é comparada com o idioma
 // definido nas preferências do usuário.
+//
+//   Entrada:
+//     value: lista de tags de idioma com suporte
+//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//       []Language: e.g. []Language{KLanguagePortugueseBrazil, KLanguagePortuguesePortugal}
+//       string: e.g. "pt-br, pt-pt"
 func (e *TagSvgText) SystemLanguage(value interface{}) (ref *TagSvgText) {
 	if converted, ok := value.([]Language); ok {
 		tags := ""

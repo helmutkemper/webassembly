@@ -5407,32 +5407,55 @@ func (e *TagSvgGlobal) Style(value string) (ref *TagSvgGlobal) {
 	return e
 }
 
-// SurfaceScale #pareiaqui
+// SurfaceScale
 //
 // English:
 //
 // The surfaceScale attribute represents the height of the surface for a light filter primitive.
 //
+//   Input:
+//     value: represents the height of the surface for a light filter primitive
+//
 // Português:
 //
 // O atributo surfaceScale representa a altura da superfície para uma primitiva de filtro de luz.
+//
+//   Entrada:
+//     value: representa a altura da superfície para uma primitiva de filtro de luz
 func (e *TagSvgGlobal) SurfaceScale(value float64) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "surfaceScale", value)
 	return e
 }
 
-// SystemLanguage #conditionalProcessingAttributes
+// SystemLanguage
 //
 // English:
 //
 // The systemLanguage attribute represents a list of supported language tags. This list is matched against the language
 // defined in the user preferences.
 //
+//   Input:
+//     value: list of supported language tags
+//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//       []Language: e.g. []Language{KLanguageEnglishAustralia, KLanguageEnglishAustralia, KLanguageEnglishCanada}
+//       string: e.g. "en-gb, en-us"
+//
 // Português:
 //
 // O atributo systemLanguage representa uma lista de tags de idioma com suporte. Esta lista é comparada com o idioma
 // definido nas preferências do usuário.
+//
+//   Entrada:
+//     value: lista de tags de idioma com suporte
+//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//       []Language: e.g. []Language{KLanguagePortugueseBrazil, KLanguagePortuguesePortugal}
+//       string: e.g. "pt-br, pt-pt"
 func (e *TagSvgGlobal) SystemLanguage(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.(Language); ok {
+		e.selfElement.Call("setAttribute", "systemLanguage", converted.String())
+		return e
+	}
+
 	if converted, ok := value.([]Language); ok {
 		tags := ""
 		for _, v := range converted {
@@ -5448,17 +5471,23 @@ func (e *TagSvgGlobal) SystemLanguage(value interface{}) (ref *TagSvgGlobal) {
 	return e
 }
 
-// Tabindex #core
+// Tabindex
 //
 // English:
 //
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
+//   Input:
+//     value: control whether an element is focusable
+//
 // Português:
 //
-// O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
+// O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
+//
+//   Input:
+//     value: controlar se um elemento é focalizável
 func (e *TagSvgGlobal) Tabindex(value int) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -5972,10 +6001,16 @@ func (e *TagSvgGlobal) Type(value interface{}) (ref *TagSvgGlobal) {
 // The underline-position attribute represents the ideal vertical position of the underline. The underline position is
 // expressed in the font's coordinate system.
 //
+//   Input:
+//     value: represents the ideal vertical position of the underline
+//
 // Português:
 //
 // O atributo underline-position representa a posição vertical ideal do sublinhado. A posição do sublinhado é expressa
 // no sistema de coordenadas da fonte.
+//
+//   Entrada:
+//     value: representa a posição vertical ideal do sublinhado
 func (e *TagSvgGlobal) UnderlinePosition(value interface{}) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "underline-position", value)
 	return e
@@ -6703,14 +6738,53 @@ func (e *TagSvgGlobal) YChannelSelector(value interface{}) (ref *TagSvgGlobal) {
 // z-axis comes out towards the person viewing the content and assuming that one unit along the z-axis equals one unit
 // in x and y.
 //
+//   Input:
+//     value: defines the location along the z-axis
+//       float32: 0.1 = "10%"
+//       any other type: interface{}
+//
 // Português:
 //
 // O atributo z define a localização ao longo do eixo z para uma fonte de luz no sistema de coordenadas estabelecido
 // pelo atributo primitivoUnits no elemento <filter>, assumindo que, no sistema de coordenadas inicial, o eixo z
 // positivo sai em direção à pessoa visualizar o conteúdo e assumir que uma unidade ao longo do eixo z é igual a uma
 // unidade em x e y.
-// todo: copiar x e y para os tipos
+//
+//   Entrada:
+//     value: define a localização ao longo do eixo z
+//       float32: 0.1 = "10%"
+//       qualquer outro tipo: interface{}
 func (e *TagSvgGlobal) Z(value interface{}) (ref *TagSvgGlobal) {
+	if converted, ok := value.([]float64); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + ", "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "z", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.([]float32); ok {
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatFloat(100.0*float64(v), 'g', -1, 64) + "%, "
+		}
+
+		var length = len(valueStr) - 2
+
+		e.selfElement.Call("setAttribute", "z", valueStr[:length])
+		return e
+	}
+
+	if converted, ok := value.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "z", p)
+		return e
+	}
+
 	e.selfElement.Call("setAttribute", "z", value)
 	return e
 }

@@ -298,10 +298,16 @@ func (e *TagSvgFeTile) Lang(value interface{}) (ref *TagSvgFeTile) {
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
+//   Input:
+//     value: control whether an element is focusable
+//
 // Português:
 //
-// O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
+// O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
+//
+//   Input:
+//     value: controlar se um elemento é focalizável
 func (e *TagSvgFeTile) Tabindex(value int) (ref *TagSvgFeTile) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e

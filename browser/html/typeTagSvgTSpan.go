@@ -2598,10 +2598,22 @@ func (e *TagSvgTSpan) Style(value string) (ref *TagSvgTSpan) {
 // The systemLanguage attribute represents a list of supported language tags. This list is matched against the language
 // defined in the user preferences.
 //
+//   Input:
+//     value: list of supported language tags
+//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//       []Language: e.g. []Language{KLanguageEnglishAustralia, KLanguageEnglishAustralia, KLanguageEnglishCanada}
+//       string: e.g. "en-gb, en-us"
+//
 // Português:
 //
 // O atributo systemLanguage representa uma lista de tags de idioma com suporte. Esta lista é comparada com o idioma
 // definido nas preferências do usuário.
+//
+//   Entrada:
+//     value: lista de tags de idioma com suporte
+//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//       []Language: e.g. []Language{KLanguagePortugueseBrazil, KLanguagePortuguesePortugal}
+//       string: e.g. "pt-br, pt-pt"
 func (e *TagSvgTSpan) SystemLanguage(value interface{}) (ref *TagSvgTSpan) {
 	if converted, ok := value.([]Language); ok {
 		tags := ""

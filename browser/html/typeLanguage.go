@@ -10,19 +10,6 @@ func (e Language) String() string {
 }
 
 const (
-	// KLanguageAbkhazian
-	//
-	// English:
-	//
-	//  Abkhazian: 'ab'
-	KLanguageAbkhazian Language = "ab"
-
-	// KLanguageAfar
-	//
-	// English:
-	//
-	//  Afar: 'aa'
-	KLanguageAfar Language = "aa"
 
 	// KLanguageAfrikaans
 	//
@@ -30,13 +17,6 @@ const (
 	//
 	//  Afrikaans: 'af'
 	KLanguageAfrikaans Language = "af"
-
-	// KLanguageAkan
-	//
-	// English:
-	//
-	//  Akan: 'ak'
-	KLanguageAkan Language = "ak"
 
 	// KLanguageAlbanian
 	//
@@ -52,19 +32,117 @@ const (
 	//  Amharic: 'am'
 	KLanguageAmharic Language = "am"
 
-	// KLanguageArabic
+	// KLanguageArabicAlgeria
 	//
 	// English:
 	//
-	//  Arabic: 'ar'
-	KLanguageArabic Language = "ar"
+	//  Arabic - Algeria: 'ar-dz'
+	KLanguageArabicAlgeria Language = "ar-dz"
 
-	// KLanguageAragonese
+	// KLanguageArabicBahrain
 	//
 	// English:
 	//
-	//  Aragonese: 'an'
-	KLanguageAragonese Language = "an"
+	//  Arabic - Bahrain: 'ar-bh'
+	KLanguageArabicBahrain Language = "ar-bh"
+
+	// KLanguageArabicEgypt
+	//
+	// English:
+	//
+	//  Arabic - Egypt: 'ar-eg'
+	KLanguageArabicEgypt Language = "ar-eg"
+
+	// KLanguageArabicIraq
+	//
+	// English:
+	//
+	//  Arabic - Iraq: 'ar-iq'
+	KLanguageArabicIraq Language = "ar-iq"
+
+	// KLanguageArabicJordan
+	//
+	// English:
+	//
+	//  Arabic - Jordan: 'ar-jo'
+	KLanguageArabicJordan Language = "ar-jo"
+
+	// KLanguageArabicKuwait
+	//
+	// English:
+	//
+	//  Arabic - Kuwait: 'ar-kw'
+	KLanguageArabicKuwait Language = "ar-kw"
+
+	// KLanguageArabicLebanon
+	//
+	// English:
+	//
+	//  Arabic - Lebanon: 'ar-lb'
+	KLanguageArabicLebanon Language = "ar-lb"
+
+	// KLanguageArabicLibya
+	//
+	// English:
+	//
+	//  Arabic - Libya: 'ar-ly'
+	KLanguageArabicLibya Language = "ar-ly"
+
+	// KLanguageArabicMorocco
+	//
+	// English:
+	//
+	//  Arabic - Morocco: 'ar-ma'
+	KLanguageArabicMorocco Language = "ar-ma"
+
+	// KLanguageArabicOman
+	//
+	// English:
+	//
+	//  Arabic - Oman: 'ar-om'
+	KLanguageArabicOman Language = "ar-om"
+
+	// KLanguageArabicQatar
+	//
+	// English:
+	//
+	//  Arabic - Qatar: 'ar-qa'
+	KLanguageArabicQatar Language = "ar-qa"
+
+	// KLanguageArabicSaudiArabia
+	//
+	// English:
+	//
+	//  Arabic - Saudi Arabia: 'ar-sa'
+	KLanguageArabicSaudiArabia Language = "ar-sa"
+
+	// KLanguageArabicSyria
+	//
+	// English:
+	//
+	//  Arabic - Syria: 'ar-sy'
+	KLanguageArabicSyria Language = "ar-sy"
+
+	// KLanguageArabicTunisia
+	//
+	// English:
+	//
+	//  Arabic - Tunisia: 'ar-tn'
+	KLanguageArabicTunisia Language = "ar-tn"
+
+	// KLanguageArabicUnitedArabEmirates
+	//
+	// English:
+	//
+	//  Arabic - United Arab Emirates: 'ar-ae'
+	KLanguageArabicUnitedArabEmirates Language = "ar-ae"
+
+	// KLanguageArabicYemen
+	//
+	// English:
+	//
+	//  Arabic - Yemen: 'ar-ye'
+	KLanguageArabicYemen Language = "ar-ye"
 
 	// KLanguageArmenian
 	//
@@ -80,47 +158,19 @@ const (
 	//  Assamese: 'as'
 	KLanguageAssamese Language = "as"
 
-	// KLanguageAvaric
+	// KLanguageAzeriCyrillic
 	//
 	// English:
 	//
-	//  Avaric: 'av'
-	KLanguageAvaric Language = "av"
+	//  Azeri - Cyrillic: 'az-az'
+	KLanguageAzeriCyrillic Language = "az-az"
 
-	// KLanguageAvestan
+	// KLanguageAzeriLatin
 	//
 	// English:
 	//
-	//  Avestan: 'ae'
-	KLanguageAvestan Language = "ae"
-
-	// KLanguageAymara
-	//
-	// English:
-	//
-	//  Aymara: 'ay'
-	KLanguageAymara Language = "ay"
-
-	// KLanguageAzerbaijani
-	//
-	// English:
-	//
-	//  Azerbaijani: 'az'
-	KLanguageAzerbaijani Language = "az"
-
-	// KLanguageBambara
-	//
-	// English:
-	//
-	//  Bambara: 'bm'
-	KLanguageBambara Language = "bm"
-
-	// KLanguageBashkir
-	//
-	// English:
-	//
-	//  Bashkir: 'ba'
-	KLanguageBashkir Language = "ba"
+	//  Azeri - Latin: 'az-az'
+	KLanguageAzeriLatin Language = "az-az"
 
 	// KLanguageBasque
 	//
@@ -136,26 +186,19 @@ const (
 	//  Belarusian: 'be'
 	KLanguageBelarusian Language = "be"
 
-	// KLanguageBengaliBangla
+	// KLanguageBengaliBangladesh
 	//
 	// English:
 	//
-	//  Bengali (Bangla): 'bn'
-	KLanguageBengaliBangla Language = "bn"
+	//  Bengali - Bangladesh: 'bn'
+	KLanguageBengaliBangladesh Language = "bn"
 
-	// KLanguageBihari
+	// KLanguageBengaliIndia
 	//
 	// English:
 	//
-	//  Bihari: 'bh'
-	KLanguageBihari Language = "bh"
-
-	// KLanguageBislama
-	//
-	// English:
-	//
-	//  Bislama: 'bi'
-	KLanguageBislama Language = "bi"
+	//  Bengali - India: 'bn'
+	KLanguageBengaliIndia Language = "bn"
 
 	// KLanguageBosnian
 	//
@@ -163,13 +206,6 @@ const (
 	//
 	//  Bosnian: 'bs'
 	KLanguageBosnian Language = "bs"
-
-	// KLanguageBreton
-	//
-	// English:
-	//
-	//  Breton: 'br'
-	KLanguageBreton Language = "br"
 
 	// KLanguageBulgarian
 	//
@@ -192,89 +228,40 @@ const (
 	//  Catalan: 'ca'
 	KLanguageCatalan Language = "ca"
 
-	// KLanguageChamorro
+	// KLanguageChineseChina
 	//
 	// English:
 	//
-	//  Chamorro: 'ch'
-	KLanguageChamorro Language = "ch"
+	//  Chinese - China: 'zh-cn'
+	KLanguageChineseChina Language = "zh-cn"
 
-	// KLanguageChechen
+	// KLanguageChineseHongKongSAR
 	//
 	// English:
 	//
-	//  Chechen: 'ce'
-	KLanguageChechen Language = "ce"
+	//  Chinese - Hong Kong SAR: 'zh-hk'
+	KLanguageChineseHongKongSAR Language = "zh-hk"
 
-	// KLanguageChichewa
+	// KLanguageChineseMacauSAR
 	//
 	// English:
 	//
-	//  Chichewa: 'ny'
-	KLanguageChichewa Language = "ny"
+	//  Chinese - Macau SAR: 'zh-mo'
+	KLanguageChineseMacauSAR Language = "zh-mo"
 
-	// KLanguageChewa
+	// KLanguageChineseSingapore
 	//
 	// English:
 	//
-	//  Chewa: 'ny'
-	KLanguageChewa Language = "ny"
+	//  Chinese - Singapore: 'zh-sg'
+	KLanguageChineseSingapore Language = "zh-sg"
 
-	// KLanguageNyanja
+	// KLanguageChineseTaiwan
 	//
 	// English:
 	//
-	//  Nyanja: 'ny'
-	KLanguageNyanja Language = "ny"
-
-	// KLanguageChinese
-	//
-	// English:
-	//
-	//  Chinese: 'zh'
-	KLanguageChinese Language = "zh"
-
-	// KLanguageChineseSimplified
-	//
-	// English:
-	//
-	//  Chinese (Simplified): 'zh-Hans'
-	KLanguageChineseSimplified Language = "zh-Hans"
-
-	// KLanguageChineseTraditional
-	//
-	// English:
-	//
-	//  Chinese (Traditional): 'zh-Hant'
-	KLanguageChineseTraditional Language = "zh-Hant"
-
-	// KLanguageChuvash
-	//
-	// English:
-	//
-	//  Chuvash: 'cv'
-	KLanguageChuvash Language = "cv"
-
-	// KLanguageCornish
-	//
-	// English:
-	//
-	//  Cornish: 'kw'
-	KLanguageCornish Language = "kw"
-
-	// KLanguageCorsican
-	//
-	// English:
-	//
-	//  Corsican: 'co'
-	KLanguageCorsican Language = "co"
-
-	// KLanguageCree
-	//
-	// English:
-	//
-	//  Cree: 'cr'
-	KLanguageCree Language = "cr"
+	//  Chinese - Taiwan: 'zh-tw'
+	KLanguageChineseTaiwan Language = "zh-tw"
 
 	// KLanguageCroatian
 	//
@@ -297,54 +284,110 @@ const (
 	//  Danish: 'da'
 	KLanguageDanish Language = "da"
 
-	// KLanguageDivehi
+	// KLanguageDutchBelgium
 	//
 	// English:
 	//
-	//  Divehi: 'dv'
-	KLanguageDivehi Language = "dv"
+	//  Dutch - Belgium: 'nl-be'
+	KLanguageDutchBelgium Language = "nl-be"
 
-	// KLanguageDhivehi
+	// KLanguageDutchNetherlands
 	//
 	// English:
 	//
-	//  Dhivehi: 'dv'
-	KLanguageDhivehi Language = "dv"
+	//  Dutch - Netherlands: 'nl-nl'
+	KLanguageDutchNetherlands Language = "nl-nl"
 
-	// KLanguageMaldivian
+	// KLanguageEnglishAustralia
 	//
 	// English:
 	//
-	//  Maldivian: 'dv'
-	KLanguageMaldivian Language = "dv"
+	//  English - Australia: 'en-au'
+	KLanguageEnglishAustralia Language = "en-au"
 
-	// KLanguageDutch
+	// KLanguageEnglishBelize
 	//
 	// English:
 	//
-	//  Dutch: 'nl'
-	KLanguageDutch Language = "nl"
+	//  English - Belize: 'en-bz'
+	KLanguageEnglishBelize Language = "en-bz"
 
-	// KLanguageDzongkha
+	// KLanguageEnglishCanada
 	//
 	// English:
 	//
-	//  Dzongkha: 'dz'
-	KLanguageDzongkha Language = "dz"
+	//  English - Canada: 'en-ca'
+	KLanguageEnglishCanada Language = "en-ca"
 
-	// KLanguageEnglish
+	// KLanguageEnglishCaribbean
 	//
 	// English:
 	//
-	//  English: 'en'
-	KLanguageEnglish Language = "en"
+	//  English - Caribbean: 'en-cb'
+	KLanguageEnglishCaribbean Language = "en-cb"
 
-	// KLanguageEsperanto
+	// KLanguageEnglishGreatBritain
 	//
 	// English:
 	//
-	//  Esperanto: 'eo'
-	KLanguageEsperanto Language = "eo"
+	//  English - Great Britain: 'en-gb'
+	KLanguageEnglishGreatBritain Language = "en-gb"
+
+	// KLanguageEnglishIndia
+	//
+	// English:
+	//
+	//  English - India: 'en-in'
+	KLanguageEnglishIndia Language = "en-in"
+
+	// KLanguageEnglishIreland
+	//
+	// English:
+	//
+	//  English - Ireland: 'en-ie'
+	KLanguageEnglishIreland Language = "en-ie"
+
+	// KLanguageEnglishJamaica
+	//
+	// English:
+	//
+	//  English - Jamaica: 'en-jm'
+	KLanguageEnglishJamaica Language = "en-jm"
+
+	// KLanguageEnglishNewZealand
+	//
+	// English:
+	//
+	//  English - New Zealand: 'en-nz'
+	KLanguageEnglishNewZealand Language = "en-nz"
+
+	// KLanguageEnglishPhilippines
+	//
+	// English:
+	//
+	//  English - Philippines: 'en-ph'
+	KLanguageEnglishPhilippines Language = "en-ph"
+
+	// KLanguageEnglishSouthernAfrica
+	//
+	// English:
+	//
+	//  English - Southern Africa: 'en-za'
+	KLanguageEnglishSouthernAfrica Language = "en-za"
+
+	// KLanguageEnglishTrinidad
+	//
+	// English:
+	//
+	//  English - Trinidad: 'en-tt'
+	KLanguageEnglishTrinidad Language = "en-tt"
+
+	// KLanguageEnglishUnitedStates
+	//
+	// English:
+	//
+	//  English - United States: 'en-us'
+	KLanguageEnglishUnitedStates Language = "en-us"
 
 	// KLanguageEstonian
 	//
@@ -353,12 +396,12 @@ const (
 	//  Estonian: 'et'
 	KLanguageEstonian Language = "et"
 
-	// KLanguageEwe
+	// KLanguageFYROMacedonia
 	//
 	// English:
 	//
-	//  Ewe: 'ee'
-	KLanguageEwe Language = "ee"
+	//  FYRO Macedonia: 'mk'
+	KLanguageFYROMacedonia Language = "mk"
 
 	// KLanguageFaroese
 	//
@@ -367,12 +410,12 @@ const (
 	//  Faroese: 'fo'
 	KLanguageFaroese Language = "fo"
 
-	// KLanguageFijian
+	// KLanguageFarsiPersian
 	//
 	// English:
 	//
-	//  Fijian: 'fj'
-	KLanguageFijian Language = "fj"
+	//  Farsi - Persian: 'fa'
+	KLanguageFarsiPersian Language = "fa"
 
 	// KLanguageFinnish
 	//
@@ -381,75 +424,89 @@ const (
 	//  Finnish: 'fi'
 	KLanguageFinnish Language = "fi"
 
-	// KLanguageFrench
+	// KLanguageFrenchBelgium
 	//
 	// English:
 	//
-	//  French: 'fr'
-	KLanguageFrench Language = "fr"
+	//  French - Belgium: 'fr-be'
+	KLanguageFrenchBelgium Language = "fr-be"
 
-	// KLanguageFula
+	// KLanguageFrenchCanada
 	//
 	// English:
 	//
-	//  Fula: 'ff'
-	KLanguageFula Language = "ff"
+	//  French - Canada: 'fr-ca'
+	KLanguageFrenchCanada Language = "fr-ca"
 
-	// KLanguageFulah
+	// KLanguageFrenchFrance
 	//
 	// English:
 	//
-	//  Fulah: 'ff'
-	KLanguageFulah Language = "ff"
+	//  French - France: 'fr-fr'
+	KLanguageFrenchFrance Language = "fr-fr"
 
-	// KLanguagePulaar
+	// KLanguageFrenchLuxembourg
 	//
 	// English:
 	//
-	//  Pulaar: 'ff'
-	KLanguagePulaar Language = "ff"
+	//  French - Luxembourg: 'fr-lu'
+	KLanguageFrenchLuxembourg Language = "fr-lu"
 
-	// KLanguagePular
+	// KLanguageFrenchSwitzerland
 	//
 	// English:
 	//
-	//  Pular: 'ff'
-	KLanguagePular Language = "ff"
+	//  French - Switzerland: 'fr-ch'
+	KLanguageFrenchSwitzerland Language = "fr-ch"
 
-	// KLanguageGalician
+	// KLanguageGaelicIreland
 	//
 	// English:
 	//
-	//  Galician: 'gl'
-	KLanguageGalician Language = "gl"
+	//  Gaelic - Ireland: 'gd-ie'
+	KLanguageGaelicIreland Language = "gd-ie"
 
-	// KLanguageGaelicScottish
+	// KLanguageGaelicScotland
 	//
 	// English:
 	//
-	//  Gaelic (Scottish): 'gd'
-	KLanguageGaelicScottish Language = "gd"
+	//  Gaelic - Scotland: 'gd'
+	KLanguageGaelicScotland Language = "gd"
 
-	// KLanguageGaelicManx
+	// KLanguageGermanAustria
 	//
 	// English:
 	//
-	//  Gaelic (Manx): 'gv'
-	KLanguageGaelicManx Language = "gv"
+	//  German - Austria: 'de-at'
+	KLanguageGermanAustria Language = "de-at"
 
-	// KLanguageGeorgian
+	// KLanguageGermanGermany
 	//
 	// English:
 	//
-	//  Georgian: 'ka'
-	KLanguageGeorgian Language = "ka"
+	//  German - Germany: 'de-de'
+	KLanguageGermanGermany Language = "de-de"
 
-	// KLanguageGerman
+	// KLanguageGermanLiechtenstein
 	//
 	// English:
 	//
-	//  German: 'de'
-	KLanguageGerman Language = "de"
+	//  German - Liechtenstein: 'de-li'
+	KLanguageGermanLiechtenstein Language = "de-li"
+
+	// KLanguageGermanLuxembourg
+	//
+	// English:
+	//
+	//  German - Luxembourg: 'de-lu'
+	KLanguageGermanLuxembourg Language = "de-lu"
+
+	// KLanguageGermanSwitzerland
+	//
+	// English:
+	//
+	//  German - Switzerland: 'de-ch'
+	KLanguageGermanSwitzerland Language = "de-ch"
 
 	// KLanguageGreek
 	//
@@ -458,12 +515,12 @@ const (
 	//  Greek: 'el'
 	KLanguageGreek Language = "el"
 
-	// KLanguageGuarani
+	// KLanguageGuaraniParaguay
 	//
 	// English:
 	//
-	//  Guarani: 'gn'
-	KLanguageGuarani Language = "gn"
+	//  Guarani - Paraguay: 'gn'
+	KLanguageGuaraniParaguay Language = "gn"
 
 	// KLanguageGujarati
 	//
@@ -472,20 +529,6 @@ const (
 	//  Gujarati: 'gu'
 	KLanguageGujarati Language = "gu"
 
-	// KLanguageHaitianCreole
-	//
-	// English:
-	//
-	//  Haitian Creole: 'ht'
-	KLanguageHaitianCreole Language = "ht"
-
-	// KLanguageHausa
-	//
-	// English:
-	//
-	//  Hausa: 'ha'
-	KLanguageHausa Language = "ha"
-
 	// KLanguageHebrew
 	//
 	// English:
@@ -493,26 +536,12 @@ const (
 	//  Hebrew: 'he'
 	KLanguageHebrew Language = "he"
 
-	// KLanguageHerero
-	//
-	// English:
-	//
-	//  Herero: 'hz'
-	KLanguageHerero Language = "hz"
-
 	// KLanguageHindi
 	//
 	// English:
 	//
 	//  Hindi: 'hi'
 	KLanguageHindi Language = "hi"
-
-	// KLanguageHiriMotu
-	//
-	// English:
-	//
-	//  Hiri Motu: 'ho'
-	KLanguageHiriMotu Language = "ho"
 
 	// KLanguageHungarian
 	//
@@ -528,68 +557,26 @@ const (
 	//  Icelandic: 'is'
 	KLanguageIcelandic Language = "is"
 
-	// KLanguageIdo
-	//
-	// English:
-	//
-	//  Ido: 'io'
-	KLanguageIdo Language = "io"
-
-	// KLanguageIgbo
-	//
-	// English:
-	//
-	//  Igbo: 'ig'
-	KLanguageIgbo Language = "ig"
-
 	// KLanguageIndonesian
 	//
 	// English:
 	//
-	//  Indonesian: 'id, in'
-	KLanguageIndonesian Language = "id, in"
+	//  Indonesian: 'id'
+	KLanguageIndonesian Language = "id"
 
-	// KLanguageInterlingua
+	// KLanguageItalianItaly
 	//
 	// English:
 	//
-	//  Interlingua: 'ia'
-	KLanguageInterlingua Language = "ia"
+	//  Italian - Italy: 'it-it'
+	KLanguageItalianItaly Language = "it-it"
 
-	// KLanguageInterlingue
+	// KLanguageItalianSwitzerland
 	//
 	// English:
 	//
-	//  Interlingue: 'ie'
-	KLanguageInterlingue Language = "ie"
-
-	// KLanguageInuktitut
-	//
-	// English:
-	//
-	//  Inuktitut: 'iu'
-	KLanguageInuktitut Language = "iu"
-
-	// KLanguageInupiak
-	//
-	// English:
-	//
-	//  Inupiak: 'ik'
-	KLanguageInupiak Language = "ik"
-
-	// KLanguageIrish
-	//
-	// English:
-	//
-	//  Irish: 'ga'
-	KLanguageIrish Language = "ga"
-
-	// KLanguageItalian
-	//
-	// English:
-	//
-	//  Italian: 'it'
-	KLanguageItalian Language = "it"
+	//  Italian - Switzerland: 'it-ch'
+	KLanguageItalianSwitzerland Language = "it-ch"
 
 	// KLanguageJapanese
 	//
@@ -598,40 +585,12 @@ const (
 	//  Japanese: 'ja'
 	KLanguageJapanese Language = "ja"
 
-	// KLanguageJavanese
-	//
-	// English:
-	//
-	//  Javanese: 'jv'
-	KLanguageJavanese Language = "jv"
-
-	// KLanguageKalaallisut
-	//
-	// English:
-	//
-	//  Kalaallisut: 'kl'
-	KLanguageKalaallisut Language = "kl"
-
-	// KLanguageGreenlandic
-	//
-	// English:
-	//
-	//  Greenlandic: 'kl'
-	KLanguageGreenlandic Language = "kl"
-
 	// KLanguageKannada
 	//
 	// English:
 	//
 	//  Kannada: 'kn'
 	KLanguageKannada Language = "kn"
-
-	// KLanguageKanuri
-	//
-	// English:
-	//
-	//  Kanuri: 'kr'
-	KLanguageKanuri Language = "kr"
 
 	// KLanguageKashmiri
 	//
@@ -654,68 +613,12 @@ const (
 	//  Khmer: 'km'
 	KLanguageKhmer Language = "km"
 
-	// KLanguageKikuyu
-	//
-	// English:
-	//
-	//  Kikuyu: 'ki'
-	KLanguageKikuyu Language = "ki"
-
-	// KLanguageKinyarwandaRwanda
-	//
-	// English:
-	//
-	//  Kinyarwanda (Rwanda): 'rw'
-	KLanguageKinyarwandaRwanda Language = "rw"
-
-	// KLanguageKirundi
-	//
-	// English:
-	//
-	//  Kirundi: 'rn'
-	KLanguageKirundi Language = "rn"
-
-	// KLanguageKyrgyz
-	//
-	// English:
-	//
-	//  Kyrgyz: 'ky'
-	KLanguageKyrgyz Language = "ky"
-
-	// KLanguageKomi
-	//
-	// English:
-	//
-	//  Komi: 'kv'
-	KLanguageKomi Language = "kv"
-
-	// KLanguageKongo
-	//
-	// English:
-	//
-	//  Kongo: 'kg'
-	KLanguageKongo Language = "kg"
-
 	// KLanguageKorean
 	//
 	// English:
 	//
 	//  Korean: 'ko'
 	KLanguageKorean Language = "ko"
-
-	// KLanguageKurdish
-	//
-	// English:
-	//
-	//  Kurdish: 'ku'
-	KLanguageKurdish Language = "ku"
-
-	// KLanguageKwanyama
-	//
-	// English:
-	//
-	//  Kwanyama: 'kj'
-	KLanguageKwanyama Language = "kj"
 
 	// KLanguageLao
 	//
@@ -731,26 +634,12 @@ const (
 	//  Latin: 'la'
 	KLanguageLatin Language = "la"
 
-	// KLanguageLatvianLettish
+	// KLanguageLatvian
 	//
 	// English:
 	//
-	//  Latvian (Lettish): 'lv'
-	KLanguageLatvianLettish Language = "lv"
-
-	// KLanguageLimburgishLimburger
-	//
-	// English:
-	//
-	//  Limburgish ( Limburger): 'li'
-	KLanguageLimburgishLimburger Language = "li"
-
-	// KLanguageLingala
-	//
-	// English:
-	//
-	//  Lingala: 'ln'
-	KLanguageLingala Language = "ln"
+	//  Latvian: 'lv'
+	KLanguageLatvian Language = "lv"
 
 	// KLanguageLithuanian
 	//
@@ -759,61 +648,19 @@ const (
 	//  Lithuanian: 'lt'
 	KLanguageLithuanian Language = "lt"
 
-	// KLanguageLugaKatanga
+	// KLanguageMalayBrunei
 	//
 	// English:
 	//
-	//  Luga-Katanga: 'lu'
-	KLanguageLugaKatanga Language = "lu"
+	//  Malay - Brunei: 'ms-bn'
+	KLanguageMalayBrunei Language = "ms-bn"
 
-	// KLanguageLuganda
+	// KLanguageMalayMalaysia
 	//
 	// English:
 	//
-	//  Luganda: 'lg'
-	KLanguageLuganda Language = "lg"
-
-	// KLanguageGanda
-	//
-	// English:
-	//
-	//  Ganda: 'lg'
-	KLanguageGanda Language = "lg"
-
-	// KLanguageLuxembourgish
-	//
-	// English:
-	//
-	//  Luxembourgish: 'lb'
-	KLanguageLuxembourgish Language = "lb"
-
-	// KLanguageManx
-	//
-	// English:
-	//
-	//  Manx: 'gv'
-	KLanguageManx Language = "gv"
-
-	// KLanguageMacedonian
-	//
-	// English:
-	//
-	//  Macedonian: 'mk'
-	KLanguageMacedonian Language = "mk"
-
-	// KLanguageMalagasy
-	//
-	// English:
-	//
-	//  Malagasy: 'mg'
-	KLanguageMalagasy Language = "mg"
-
-	// KLanguageMalay
-	//
-	// English:
-	//
-	//  Malay: 'ms'
-	KLanguageMalay Language = "ms"
+	//  Malay - Malaysia: 'ms-my'
+	KLanguageMalayMalaysia Language = "ms-my"
 
 	// KLanguageMalayalam
 	//
@@ -843,54 +690,12 @@ const (
 	//  Marathi: 'mr'
 	KLanguageMarathi Language = "mr"
 
-	// KLanguageMarshallese
-	//
-	// English:
-	//
-	//  Marshallese: 'mh'
-	KLanguageMarshallese Language = "mh"
-
-	// KLanguageMoldavian
-	//
-	// English:
-	//
-	//  Moldavian: 'mo'
-	KLanguageMoldavian Language = "mo"
-
 	// KLanguageMongolian
 	//
 	// English:
 	//
 	//  Mongolian: 'mn'
 	KLanguageMongolian Language = "mn"
-
-	// KLanguageNauru
-	//
-	// English:
-	//
-	//  Nauru: 'na'
-	KLanguageNauru Language = "na"
-
-	// KLanguageNavajo
-	//
-	// English:
-	//
-	//  Navajo: 'nv'
-	KLanguageNavajo Language = "nv"
-
-	// KLanguageNdonga
-	//
-	// English:
-	//
-	//  Ndonga: 'ng'
-	KLanguageNdonga Language = "ng"
-
-	// KLanguageNorthernNdebele
-	//
-	// English:
-	//
-	//  Northern Ndebele: 'nd'
-	KLanguageNorthernNdebele Language = "nd"
 
 	// KLanguageNepali
 	//
@@ -899,61 +704,19 @@ const (
 	//  Nepali: 'ne'
 	KLanguageNepali Language = "ne"
 
-	// KLanguageNorwegian
+	// KLanguageNorwegianBokml
 	//
 	// English:
 	//
-	//  Norwegian: 'no'
-	KLanguageNorwegian Language = "no"
-
-	// KLanguageNorwegianBokmål
-	//
-	// English:
-	//
-	//  Norwegian bokmål: 'nb'
-	KLanguageNorwegianBokmål Language = "nb"
+	//  Norwegian - Bokml: 'no-no'
+	KLanguageNorwegianBokml Language = "no-no"
 
 	// KLanguageNorwegianNynorsk
 	//
 	// English:
 	//
-	//  Norwegian nynorsk: 'nn'
-	KLanguageNorwegianNynorsk Language = "nn"
-
-	// KLanguageNuosu
-	//
-	// English:
-	//
-	//  Nuosu: 'ii'
-	KLanguageNuosu Language = "ii"
-
-	// KLanguageOccitan
-	//
-	// English:
-	//
-	//  Occitan: 'oc'
-	KLanguageOccitan Language = "oc"
-
-	// KLanguageOjibwe
-	//
-	// English:
-	//
-	//  Ojibwe: 'oj'
-	KLanguageOjibwe Language = "oj"
-
-	// KLanguageOldChurchSlavonic
-	//
-	// English:
-	//
-	//  Old Church Slavonic: 'cu'
-	KLanguageOldChurchSlavonic Language = "cu"
-
-	// KLanguageOldBulgarian
-	//
-	// English:
-	//
-	//  Old Bulgarian: 'cu'
-	KLanguageOldBulgarian Language = "cu"
+	//  Norwegian - Nynorsk: 'no-no'
+	KLanguageNorwegianNynorsk Language = "no-no"
 
 	// KLanguageOriya
 	//
@@ -962,48 +725,6 @@ const (
 	//  Oriya: 'or'
 	KLanguageOriya Language = "or"
 
-	// KLanguageOromoAfaanOromo
-	//
-	// English:
-	//
-	//  Oromo (Afaan Oromo): 'om'
-	KLanguageOromoAfaanOromo Language = "om"
-
-	// KLanguageOssetian
-	//
-	// English:
-	//
-	//  Ossetian: 'os'
-	KLanguageOssetian Language = "os"
-
-	// KLanguagePali
-	//
-	// English:
-	//
-	//  Pāli: 'pi'
-	KLanguagePali Language = "pi"
-
-	// KLanguagePashto
-	//
-	// English:
-	//
-	//  Pashto: 'ps'
-	KLanguagePashto Language = "ps"
-
-	// KLanguagePushto
-	//
-	// English:
-	//
-	//  Pushto: 'ps'
-	KLanguagePushto Language = "ps"
-
-	// KLanguagePersianFarsi
-	//
-	// English:
-	//
-	//  Persian (Farsi): 'fa'
-	KLanguagePersianFarsi Language = "fa"
-
 	// KLanguagePolish
 	//
 	// English:
@@ -1011,40 +732,47 @@ const (
 	//  Polish: 'pl'
 	KLanguagePolish Language = "pl"
 
-	// KLanguagePortuguese
+	// KLanguagePortugueseBrazil
 	//
 	// English:
 	//
-	//  Portuguese: 'pt'
-	KLanguagePortuguese Language = "pt"
+	//  Portuguese - Brazil: 'pt-br'
+	KLanguagePortugueseBrazil Language = "pt-br"
 
-	// KLanguagePunjabiEastern
+	// KLanguagePortuguesePortugal
 	//
 	// English:
 	//
-	//  Punjabi (Eastern): 'pa'
-	KLanguagePunjabiEastern Language = "pa"
+	//  Portuguese - Portugal: 'pt-pt'
+	KLanguagePortuguesePortugal Language = "pt-pt"
 
-	// KLanguageQuechua
+	// KLanguagePunjabi
 	//
 	// English:
 	//
-	//  Quechua: 'qu'
-	KLanguageQuechua Language = "qu"
+	//  Punjabi: 'pa'
+	KLanguagePunjabi Language = "pa"
 
-	// KLanguageRomansh
+	// KLanguageRaetoRomance
 	//
 	// English:
 	//
-	//  Romansh: 'rm'
-	KLanguageRomansh Language = "rm"
+	//  Raeto-Romance: 'rm'
+	KLanguageRaetoRomance Language = "rm"
 
-	// KLanguageRomanian
+	// KLanguageRomanianMoldova
 	//
 	// English:
 	//
-	//  Romanian: 'ro'
-	KLanguageRomanian Language = "ro"
+	//  Romanian - Moldova: 'ro-mo'
+	KLanguageRomanianMoldova Language = "ro-mo"
+
+	// KLanguageRomanianRomania
+	//
+	// English:
+	//
+	//  Romanian - Romania: 'ro'
+	KLanguageRomanianRomania Language = "ro"
 
 	// KLanguageRussian
 	//
@@ -1053,26 +781,12 @@ const (
 	//  Russian: 'ru'
 	KLanguageRussian Language = "ru"
 
-	// KLanguageSami
+	// KLanguageRussianMoldova
 	//
 	// English:
 	//
-	//  Sami: 'se'
-	KLanguageSami Language = "se"
-
-	// KLanguageSamoan
-	//
-	// English:
-	//
-	//  Samoan: 'sm'
-	KLanguageSamoan Language = "sm"
-
-	// KLanguageSango
-	//
-	// English:
-	//
-	//  Sango: 'sg'
-	KLanguageSango Language = "sg"
+	//  Russian - Moldova: 'ru-mo'
+	KLanguageRussianMoldova Language = "ru-mo"
 
 	// KLanguageSanskrit
 	//
@@ -1081,47 +795,26 @@ const (
 	//  Sanskrit: 'sa'
 	KLanguageSanskrit Language = "sa"
 
-	// KLanguageSerbian
+	// KLanguageSerbianCyrillic
 	//
 	// English:
 	//
-	//  Serbian: 'sr'
-	KLanguageSerbian Language = "sr"
+	//  Serbian - Cyrillic: 'sr-sp'
+	KLanguageSerbianCyrillic Language = "sr-sp"
 
-	// KLanguageSerboCroatian
+	// KLanguageSerbianLatin
 	//
 	// English:
 	//
-	//  Serbo-Croatian: 'sh'
-	KLanguageSerboCroatian Language = "sh"
+	//  Serbian - Latin: 'sr-sp'
+	KLanguageSerbianLatin Language = "sr-sp"
 
-	// KLanguageSesotho
+	// KLanguageSetsuana
 	//
 	// English:
 	//
-	//  Sesotho: 'st'
-	KLanguageSesotho Language = "st"
-
-	// KLanguageSetswana
-	//
-	// English:
-	//
-	//  Setswana: 'tn'
-	KLanguageSetswana Language = "tn"
-
-	// KLanguageShona
-	//
-	// English:
-	//
-	//  Shona: 'sn'
-	KLanguageShona Language = "sn"
-
-	// KLanguageSichuanYi
-	//
-	// English:
-	//
-	//  Sichuan Yi: 'ii'
-	KLanguageSichuanYi Language = "ii"
+	//  Setsuana: 'tn'
+	KLanguageSetsuana Language = "tn"
 
 	// KLanguageSindhi
 	//
@@ -1129,20 +822,6 @@ const (
 	//
 	//  Sindhi: 'sd'
 	KLanguageSindhi Language = "sd"
-
-	// KLanguageSinhalese
-	//
-	// English:
-	//
-	//  Sinhalese: 'si'
-	KLanguageSinhalese Language = "si"
-
-	// KLanguageSiswati
-	//
-	// English:
-	//
-	//  Siswati: 'ss'
-	KLanguageSiswati Language = "ss"
 
 	// KLanguageSlovak
 	//
@@ -1165,61 +844,166 @@ const (
 	//  Somali: 'so'
 	KLanguageSomali Language = "so"
 
-	// KLanguageSouthernNdebele
+	// KLanguageSorbian
 	//
 	// English:
 	//
-	//  Southern Ndebele: 'nr'
-	KLanguageSouthernNdebele Language = "nr"
+	//  Sorbian: 'sb'
+	KLanguageSorbian Language = "sb"
 
-	// KLanguageSpanish
+	// KLanguageSpanishArgentina
 	//
 	// English:
 	//
-	//  Spanish: 'es'
-	KLanguageSpanish Language = "es"
+	//  Spanish - Argentina: 'es-ar'
+	KLanguageSpanishArgentina Language = "es-ar"
 
-	// KLanguageSundanese
+	// KLanguageSpanishBolivia
 	//
 	// English:
 	//
-	//  Sundanese: 'su'
-	KLanguageSundanese Language = "su"
+	//  Spanish - Bolivia: 'es-bo'
+	KLanguageSpanishBolivia Language = "es-bo"
 
-	// KLanguageSwahiliKiswahili
+	// KLanguageSpanishChile
 	//
 	// English:
 	//
-	//  Swahili (Kiswahili): 'sw'
-	KLanguageSwahiliKiswahili Language = "sw"
+	//  Spanish - Chile: 'es-cl'
+	KLanguageSpanishChile Language = "es-cl"
 
-	// KLanguageSwati
+	// KLanguageSpanishColombia
 	//
 	// English:
 	//
-	//  Swati: 'ss'
-	KLanguageSwati Language = "ss"
+	//  Spanish - Colombia: 'es-co'
+	KLanguageSpanishColombia Language = "es-co"
 
-	// KLanguageSwedish
+	// KLanguageSpanishCostaRica
 	//
 	// English:
 	//
-	//  Swedish: 'sv'
-	KLanguageSwedish Language = "sv"
+	//  Spanish - Costa Rica: 'es-cr'
+	KLanguageSpanishCostaRica Language = "es-cr"
 
-	// KLanguageTagalog
+	// KLanguageSpanishDominicanRepublic
 	//
 	// English:
 	//
-	//  Tagalog: 'tl'
-	KLanguageTagalog Language = "tl"
+	//  Spanish - Dominican Republic: 'es-do'
+	KLanguageSpanishDominicanRepublic Language = "es-do"
 
-	// KLanguageTahitian
+	// KLanguageSpanishEcuador
 	//
 	// English:
 	//
-	//  Tahitian: 'ty'
-	KLanguageTahitian Language = "ty"
+	//  Spanish - Ecuador: 'es-ec'
+	KLanguageSpanishEcuador Language = "es-ec"
+
+	// KLanguageSpanishElSalvador
+	//
+	// English:
+	//
+	//  Spanish - El Salvador: 'es-sv'
+	KLanguageSpanishElSalvador Language = "es-sv"
+
+	// KLanguageSpanishGuatemala
+	//
+	// English:
+	//
+	//  Spanish - Guatemala: 'es-gt'
+	KLanguageSpanishGuatemala Language = "es-gt"
+
+	// KLanguageSpanishHonduras
+	//
+	// English:
+	//
+	//  Spanish - Honduras: 'es-hn'
+	KLanguageSpanishHonduras Language = "es-hn"
+
+	// KLanguageSpanishMexico
+	//
+	// English:
+	//
+	//  Spanish - Mexico: 'es-mx'
+	KLanguageSpanishMexico Language = "es-mx"
+
+	// KLanguageSpanishNicaragua
+	//
+	// English:
+	//
+	//  Spanish - Nicaragua: 'es-ni'
+	KLanguageSpanishNicaragua Language = "es-ni"
+
+	// KLanguageSpanishPanama
+	//
+	// English:
+	//
+	//  Spanish - Panama: 'es-pa'
+	KLanguageSpanishPanama Language = "es-pa"
+
+	// KLanguageSpanishParaguay
+	//
+	// English:
+	//
+	//  Spanish - Paraguay: 'es-py'
+	KLanguageSpanishParaguay Language = "es-py"
+
+	// KLanguageSpanishPeru
+	//
+	// English:
+	//
+	//  Spanish - Peru: 'es-pe'
+	KLanguageSpanishPeru Language = "es-pe"
+
+	// KLanguageSpanishPuertoRico
+	//
+	// English:
+	//
+	//  Spanish - Puerto Rico: 'es-pr'
+	KLanguageSpanishPuertoRico Language = "es-pr"
+
+	// KLanguageSpanishSpain
+	//
+	// English:
+	//
+	//  Spanish - Spain: 'es-es'
+	KLanguageSpanishSpain Language = "es-es"
+
+	// KLanguageSpanishUruguay
+	//
+	// English:
+	//
+	//  Spanish - Uruguay: 'es-uy'
+	KLanguageSpanishUruguay Language = "es-uy"
+
+	// KLanguageSpanishVenezuela
+	//
+	// English:
+	//
+	//  Spanish - Venezuela: 'es-ve'
+	KLanguageSpanishVenezuela Language = "es-ve"
+
+	// KLanguageSwahili
+	//
+	// English:
+	//
+	//  Swahili: 'sw'
+	KLanguageSwahili Language = "sw"
+
+	// KLanguageSwedishFinland
+	//
+	// English:
+	//
+	//  Swedish - Finland: 'sv-fi'
+	KLanguageSwedishFinland Language = "sv-fi"
+
+	// KLanguageSwedishSweden
+	//
+	// English:
+	//
+	//  Swedish - Sweden: 'sv-se'
+	KLanguageSwedishSweden Language = "sv-se"
 
 	// KLanguageTajik
 	//
@@ -1263,20 +1047,6 @@ const (
 	//  Tibetan: 'bo'
 	KLanguageTibetan Language = "bo"
 
-	// KLanguageTigrinya
-	//
-	// English:
-	//
-	//  Tigrinya: 'ti'
-	KLanguageTigrinya Language = "ti"
-
-	// KLanguageTonga
-	//
-	// English:
-	//
-	//  Tonga: 'to'
-	KLanguageTonga Language = "to"
-
 	// KLanguageTsonga
 	//
 	// English:
@@ -1298,20 +1068,6 @@ const (
 	//  Turkmen: 'tk'
 	KLanguageTurkmen Language = "tk"
 
-	// KLanguageTwi
-	//
-	// English:
-	//
-	//  Twi: 'tw'
-	KLanguageTwi Language = "tw"
-
-	// KLanguageUyghur
-	//
-	// English:
-	//
-	//  Uyghur: 'ug'
-	KLanguageUyghur Language = "ug"
-
 	// KLanguageUkrainian
 	//
 	// English:
@@ -1326,19 +1082,19 @@ const (
 	//  Urdu: 'ur'
 	KLanguageUrdu Language = "ur"
 
-	// KLanguageUzbek
+	// KLanguageUzbekCyrillic
 	//
 	// English:
 	//
-	//  Uzbek: 'uz'
-	KLanguageUzbek Language = "uz"
+	//  Uzbek - Cyrillic: 'uz-uz'
+	KLanguageUzbekCyrillic Language = "uz-uz"
 
-	// KLanguageVenda
+	// KLanguageUzbekLatin
 	//
 	// English:
 	//
-	//  Venda: 've'
-	KLanguageVenda Language = "ve"
+	//  Uzbek - Latin: 'uz-uz'
+	KLanguageUzbekLatin Language = "uz-uz"
 
 	// KLanguageVietnamese
 	//
@@ -1347,40 +1103,12 @@ const (
 	//  Vietnamese: 'vi'
 	KLanguageVietnamese Language = "vi"
 
-	// KLanguageVolapük
-	//
-	// English:
-	//
-	//  Volapük: 'vo'
-	KLanguageVolapük Language = "vo"
-
-	// KLanguageWallon
-	//
-	// English:
-	//
-	//  Wallon: 'wa'
-	KLanguageWallon Language = "wa"
-
 	// KLanguageWelsh
 	//
 	// English:
 	//
 	//  Welsh: 'cy'
 	KLanguageWelsh Language = "cy"
-
-	// KLanguageWolof
-	//
-	// English:
-	//
-	//  Wolof: 'wo'
-	KLanguageWolof Language = "wo"
-
-	// KLanguageWesternFrisian
-	//
-	// English:
-	//
-	//  Western Frisian: 'fy'
-	KLanguageWesternFrisian Language = "fy"
 
 	// KLanguageXhosa
 	//
@@ -1393,29 +1121,8 @@ const (
 	//
 	// English:
 	//
-	//  Yiddish: 'yi, ji'
-	KLanguageYiddish Language = "yi, ji"
-
-	// KLanguageYoruba
-	//
-	// English:
-	//
-	//  Yoruba: 'yo'
-	KLanguageYoruba Language = "yo"
-
-	// KLanguageZhuang
-	//
-	// English:
-	//
-	//  Zhuang: 'za'
-	KLanguageZhuang Language = "za"
-
-	// KLanguageChuang
-	//
-	// English:
-	//
-	//  Chuang: 'za'
-	KLanguageChuang Language = "za"
+	//  Yiddish: 'yi'
+	KLanguageYiddish Language = "yi"
 
 	// KLanguageZulu
 	//

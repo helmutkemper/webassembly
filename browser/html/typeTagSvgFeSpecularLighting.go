@@ -314,10 +314,16 @@ func (e *TagSvgFeSpecularLighting) Lang(value interface{}) (ref *TagSvgFeSpecula
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
+//   Input:
+//     value: control whether an element is focusable
+//
 // Português:
 //
-// O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
+// O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
+//
+//   Input:
+//     value: controlar se um elemento é focalizável
 func (e *TagSvgFeSpecularLighting) Tabindex(value int) (ref *TagSvgFeSpecularLighting) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -2863,9 +2869,15 @@ func (e *TagSvgFeSpecularLighting) In(in interface{}) (ref *TagSvgFeSpecularLigh
 //
 // The surfaceScale attribute represents the height of the surface for a light filter primitive.
 //
+//   Input:
+//     value: represents the height of the surface for a light filter primitive
+//
 // Português:
 //
 // O atributo surfaceScale representa a altura da superfície para uma primitiva de filtro de luz.
+//
+//   Entrada:
+//     value: representa a altura da superfície para uma primitiva de filtro de luz
 func (e *TagSvgFeSpecularLighting) SurfaceScale(value float64) (ref *TagSvgFeSpecularLighting) {
 	e.selfElement.Call("setAttribute", "surfaceScale", value)
 	return e

@@ -6016,22 +6016,6 @@ func (e *TagSvgGlobal) UnderlinePosition(value interface{}) (ref *TagSvgGlobal) 
 	return e
 }
 
-// UnderlineThickness
-//
-// English:
-//
-// The underline-thickness attribute represents the ideal thickness of the underline. The underline thickness is
-// expressed in the font's coordinate system.
-//
-// Português:
-//
-// O atributo underline-thickness representa a espessura ideal do sublinhado. A espessura do sublinhado é expressa no
-// sistema de coordenadas da fonte.
-func (e *TagSvgGlobal) UnderlineThickness(value interface{}) (ref *TagSvgGlobal) {
-	e.selfElement.Call("setAttribute", "underline-thickness", value)
-	return e
-}
-
 // UnicodeBidi #presentation
 //
 // English:

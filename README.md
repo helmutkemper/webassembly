@@ -4,21 +4,100 @@
 
 > Use at your own risk.
 
+#### English:
+
+This project is porting documentation from developer.mozilla.org into Golang and many of the examples are taken from it.
+
+Now, there are more than 140 examples of how to use svg tags and more than 50 examples of how to use their properties.
+
+#### Português:
+
+Este projeto está portando a documentação do site developer.mozilla.org para dentro do Golang e muitos dos exemplos foram tirados dele.
+
+No momento, são mais de 140 exemplos de como usar as tags svg e mais de 50 exemplos de como usar as suas propriedades.
+
+### Instructions/Instruções:
+
+Para ligar o servidor:
 ```shell
   cd examples/server
   make build
 ```
 
-https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute#animation_attributes
+To see what the documentation will be: / Para ver o que será a documentação:
+```
+http://localhost:3000
+```
 
-https://github.com/tetratelabs/wazero
+To see the stable examples for use: / Para ver os exemplos estáveis para uso:
+```
+http://localhost:3000/examples/svg/
+```
 
+### Example of use / Exemplo de uso
 
+**Reference/Referência:**
 
-fazer o exemplo https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/pointer-events
+[https://developer.mozilla.org/en-US/docs/Web/SVG/Element/animateMotion](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/animateMotion)
 
-fazer o exemplo https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/restart
+**HTML**
+```html
+<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+  <path fill="none" stroke="lightgrey"
+    d="M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z" />
 
-fazer o exemplo2 https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/visibility
+  <circle r="5" fill="red">
+    <animateMotion dur="10s" repeatCount="indefinite"
+      path="M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z" />
+  </circle>
+</svg>
+```
 
-https://developer.mozilla.org/en-US/docs/Web/CSS/blend-mode
+**Golang**
+```go
+//go:build js
+// +build js
+
+package main
+
+import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"time"
+)
+
+func main() {
+
+	done := make(chan struct{}, 0)
+
+	stage := factoryBrowser.NewStage()
+
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 100}).Append(
+		factoryBrowser.NewTagSvgPath().Fill("none").Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+		factoryBrowser.NewTagSvgCircle().R(5).Fill(factoryColor.NewRed()).Append(
+			factoryBrowser.NewTagSvgAnimateMotion().Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+		),
+	)
+
+	stage.Append(s1)
+
+	<-done
+}
+```
+
+How to generate binary file: / Como gerar o arquivo binário
+
+```shell
+  cd examples/svg/tags/animateMotion
+  make build
+```
+
+### Documentation/Documentação
+
+While the current documentation site is not ready, use the in-code documentation. It was written in English and Portuguese.
+
+Enquanto o site de documentação atual não fica pronta, use a documentação embutida no código. Ela foi escrita em inglês e em português.
+
+![documentation](documentation/image/screen.png)
+

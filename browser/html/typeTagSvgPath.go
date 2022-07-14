@@ -671,7 +671,8 @@ func (e *TagSvgPath) Cursor(value interface{}) (ref *TagSvgPath) {
 //
 //   Input:
 //     d: path to be drawn
-//       *SvgPath: factoryBrowser.NewPath().M(0, 10).Hd(5).Vd(-9).Hd(12).Vd(9).Hd(5).Vd(16).Hd(-22).Z()
+//       factory: factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()
+//       string: "M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z"
 //       any other type: interface{}
 //
 // A path definition is a list of path commands where each command is composed of a command letter and numbers that
@@ -687,7 +688,8 @@ func (e *TagSvgPath) Cursor(value interface{}) (ref *TagSvgPath) {
 //
 //   Entrada:
 //     d: caminho a ser desenhado
-//       *SvgPath: factoryBrowser.NewPath().M(0, 10).Hd(5).Vd(-9).Hd(12).Vd(9).Hd(5).Vd(16).Hd(-22).Z()
+//       factory: factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()
+//       string: "M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z"
 //       qualquer outro tipo: interface{}
 //
 // Uma definição de caminho é uma lista de comandos de caminho em que cada comando é composto por uma letra de comando

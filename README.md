@@ -8,13 +8,13 @@
 
 This project is porting documentation from developer.mozilla.org into Golang and many of the examples are taken from it.
 
-Now, there are more than **140 examples** of how to use svg tags and more than **50 examples** of how to use their properties.
+Now, there are more than [140 examples](examples/svg/attributes) of how to use svg tags and more than [50 examples](examples/svg/tags) of how to use their properties.
 
 #### Português:
 
 Este projeto está portando a documentação do site developer.mozilla.org para dentro do Golang e muitos dos exemplos foram tirados dele.
 
-No momento, são mais de **140 exemplos** de como usar as tags svg e mais de **50 exemplos** de como usar as suas propriedades.
+No momento, são mais de [140 exemplos](examples/svg/attributes) de como usar as tags svg e mais de [50 exemplos](examples/svg/tags) de como usar as suas propriedades.
 
 ### Instructions/Instruções:
 

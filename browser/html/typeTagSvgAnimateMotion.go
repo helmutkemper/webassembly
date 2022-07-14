@@ -3667,3 +3667,16 @@ func (e *TagSvgAnimateMotion) Origin(value interface{}) (ref *TagSvgAnimateMotio
 	e.selfElement.Call("setAttribute", "origin", value)
 	return e
 }
+
+func (e *TagSvgAnimateMotion) AddListener() (ref *TagSvgAnimateMotion) {
+	//elem := e.stage.Call("querySelector", "animateMotion")
+	//
+	e.selfElement.Call("addEventListener", "animationstart", js.FuncOf(e.event))
+	return e
+}
+
+func (e *TagSvgAnimateMotion) event(this js.Value, args []js.Value) interface{} {
+	log.Printf("%v", this)
+	log.Printf("%v", args)
+	return nil
+}

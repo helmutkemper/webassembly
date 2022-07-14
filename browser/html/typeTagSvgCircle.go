@@ -2817,3 +2817,150 @@ func (e *TagSvgCircle) StrokeDashOffset(value interface{}) (ref *TagSvgCircle) {
 	e.selfElement.Call("setAttribute", "stroke-dashoffset", value)
 	return e
 }
+
+func (e *TagSvgCircle) AddListener() (ref *TagSvgCircle) {
+	//elem := e.stage.Call("querySelector", "animateMotion")
+	//
+	e.selfElement.Call("addEventListener", "animationstart", js.FuncOf(e.event))
+	return e
+}
+
+func (e *TagSvgCircle) event(this js.Value, args []js.Value) interface{} {
+	log.Printf("%v", this)
+	log.Printf("%v", args)
+	return nil
+}
+
+// todo: functions de div
+
+// GetXY
+//
+// English:
+//
+//  Returns the X and Y axes in pixels.
+//
+// Português:
+//
+//  Retorna os eixos X e Y em pixels.
+func (e *TagSvgCircle) GetXY() (x, y float64) {
+	x = e.GetX()
+	y = e.GetY()
+
+	return
+}
+
+// GetX
+//
+// English:
+//
+//  Returns the X axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo X em pixels.
+func (e *TagSvgCircle) GetX() (x float64) {
+	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
+		return
+	}
+
+	//rect.top, rect.right, rect.bottom, rect.left
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	x = coordinate.Get("left").Float()
+	return
+}
+
+// GetY
+//
+// English:
+//
+//  Returns the Y axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo Y em pixels.
+func (e *TagSvgCircle) GetY() (y float64) {
+	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
+		return
+	}
+
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	y = coordinate.Get("top").Float()
+	return
+}
+
+// GetTop
+//
+// English:
+//
+//  Same as GetX() function, returns the x position of the element.
+//
+// Português:
+//
+//  O mesmo que a função GetX(), retorna a posição x do elemento.
+func (e *TagSvgCircle) GetTop() (top float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	top = coordinate.Get("top").Float()
+	return
+}
+
+// GetRight
+//
+// English:
+//
+//  It is the same as x + width.
+//
+// Português:
+//
+//  É o mesmo que x + width.
+func (e *TagSvgCircle) GetRight() (right float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	right = coordinate.Get("right").Float()
+	return
+}
+
+// GetBottom
+//
+// English:
+//
+//  It is the same as y + height.
+//
+// Português:
+//
+//  É o mesmo que y + Height.
+func (e *TagSvgCircle) GetBottom() (bottom float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	bottom = coordinate.Get("bottom").Float()
+	return
+}
+
+// GetLeft
+//
+// English:
+//
+//  Same as GetY() function, returns the y position of the element.
+//
+// Português:
+//
+//  O mesmo que a função GetY(), retorna a posição y do elemento.
+func (e *TagSvgCircle) GetLeft() (left float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	left = coordinate.Get("left").Float()
+	return
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//

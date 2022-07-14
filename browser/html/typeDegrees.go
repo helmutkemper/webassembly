@@ -15,6 +15,10 @@ func (e *Degrees) SetRad(value float64) {
 	*e = Degrees(value * math.Pi * 180.0)
 }
 
-func (e *Degrees) GetRad() (radians float64) {
-	return float64(*e * math.Pi / 180.0)
+func (e Degrees) GetRad() (radians float64) {
+	return float64(e * math.Pi / 180.0)
+}
+
+func (e Degrees) Get() (degrees float64) {
+	return float64(e)
 }

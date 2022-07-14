@@ -13,6 +13,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/eventUi"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/eventWheel"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/mouse"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
 	"log"
 	"sync"
 	"syscall/js"
@@ -25,6 +26,8 @@ type Compatible interface {
 type Stage struct {
 	selfDocument js.Value
 
+	engine engine.IEngine
+
 	// listener
 	//
 	// English:
@@ -35,6 +38,10 @@ type Stage struct {
 	//
 	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
 	listener *sync.Map
+}
+
+func (e *Stage) Setengine(engine engine.IEngine) {
+	e.engine = engine
 }
 
 // Init
@@ -49,6 +56,10 @@ type Stage struct {
 func (e *Stage) Init() {
 	e.selfDocument = js.Global().Get("document")
 	e.listener = new(sync.Map)
+
+	if e.engine != nil {
+		e.engine.Init()
+	}
 }
 
 func (e *Stage) Append(value interface{}) (ref *Stage) {
@@ -425,4 +436,150 @@ func (e *Stage) RemoveListener(eventType interface{}) (ref *Stage) {
 	}
 
 	return e
+}
+
+// GetFPS
+//
+// English:
+//
+// Português:
+//
+// Retorna a quantidade de FPS atual.
+func (e *Stage) GetFPS() (fps int) {
+	return e.engine.GetFPS()
+}
+
+// AddCursorDrawFunction
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) AddCursorDrawFunction(runnerFunc func()) (UId string) {
+	return e.engine.CursorAddDrawFunction(runnerFunc)
+}
+
+// RemoveCursorDrawFunction
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) RemoveCursorDrawFunction(UId string) {
+	e.engine.CursorRemoveDrawFunction(UId)
+}
+
+// AddHighLatencyFunctions
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) AddHighLatencyFunctions(runnerFunc func()) (UId string, total int) {
+	UId, total = e.engine.HighLatencyAddToFunctions(runnerFunc)
+	return
+}
+
+// DeleteHighLatencyFunctions
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) DeleteHighLatencyFunctions(UId string) {
+	e.engine.HighLatencyDeleteFromFunctions(UId)
+}
+
+// SetHighLatencyZIndex
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) SetHighLatencyZIndex(UId string, index int) int {
+	return e.engine.HighLatencySetZIndex(UId, index)
+}
+
+// AddMathFunctions
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) AddMathFunctions(runnerFunc func()) (UId string, total int) {
+	UId, total = e.engine.MathAddToFunctions(runnerFunc)
+	return
+}
+
+// DeleteMathFunctions
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) DeleteMathFunctions(UId string) {
+	e.engine.MathDeleteFromFunctions(UId)
+}
+
+// SetMathZIndex
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) SetMathZIndex(UId string, index int) int {
+	return e.engine.MathSetZIndex(UId, index)
+}
+
+// AddDrawFunctions
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) AddDrawFunctions(runnerFunc func()) (UId string, total int) {
+	UId, total = e.engine.DrawAddToFunctions(runnerFunc)
+	return
+}
+
+// DeleteDrawFunctions
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) DeleteDrawFunctions(UId string) {
+	e.engine.DrawDeleteFromFunctions(UId)
+}
+
+// SetDrawZIndex
+//
+// English:
+//
+//
+// Português:
+//
+//
+func (e *Stage) SetDrawZIndex(UId string, index int) int {
+	return e.engine.DrawSetZIndex(UId, index)
 }

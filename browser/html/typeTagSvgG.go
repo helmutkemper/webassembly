@@ -2629,3 +2629,137 @@ func (e *TagSvgG) Html(value string) (ref *TagSvgG) {
 	e.selfElement.Set("innerHTML", value)
 	return e
 }
+
+// todo: functions de div
+
+// GetXY
+//
+// English:
+//
+//  Returns the X and Y axes in pixels.
+//
+// Português:
+//
+//  Retorna os eixos X e Y em pixels.
+func (e *TagSvgG) GetXY() (x, y float64) {
+	x = e.GetX()
+	y = e.GetY()
+
+	return
+}
+
+// GetX
+//
+// English:
+//
+//  Returns the X axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo X em pixels.
+func (e *TagSvgG) GetX() (x float64) {
+	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
+		return
+	}
+
+	//rect.top, rect.right, rect.bottom, rect.left
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	x = coordinate.Get("left").Float()
+	return
+}
+
+// GetY
+//
+// English:
+//
+//  Returns the Y axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo Y em pixels.
+func (e *TagSvgG) GetY() (y float64) {
+	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
+		return
+	}
+
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	y = coordinate.Get("top").Float()
+	return
+}
+
+// GetTop
+//
+// English:
+//
+//  Same as GetX() function, returns the x position of the element.
+//
+// Português:
+//
+//  O mesmo que a função GetX(), retorna a posição x do elemento.
+func (e *TagSvgG) GetTop() (top float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	top = coordinate.Get("top").Float()
+	return
+}
+
+// GetRight
+//
+// English:
+//
+//  It is the same as x + width.
+//
+// Português:
+//
+//  É o mesmo que x + width.
+func (e *TagSvgG) GetRight() (right float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	right = coordinate.Get("right").Float()
+	return
+}
+
+// GetBottom
+//
+// English:
+//
+//  It is the same as y + height.
+//
+// Português:
+//
+//  É o mesmo que y + Height.
+func (e *TagSvgG) GetBottom() (bottom float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	bottom = coordinate.Get("bottom").Float()
+	return
+}
+
+// GetLeft
+//
+// English:
+//
+//  Same as GetY() function, returns the y position of the element.
+//
+// Português:
+//
+//  O mesmo que a função GetY(), retorna a posição y do elemento.
+func (e *TagSvgG) GetLeft() (left float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	left = coordinate.Get("left").Float()
+	return
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//

@@ -99,8 +99,11 @@ How to generate binary file: / Como gerar o arquivo binário
 
 ### Documentation/Documentação
 
+
+#### English:
 While the current documentation site is not ready, use the in-code documentation. It was written in English and Portuguese.
 
+#### Português:
 Enquanto o site de documentação atual não fica pronta, use a documentação embutida no código. Ela foi escrita em inglês e em português.
 
 ![documentation](documentation/image/screen.png)

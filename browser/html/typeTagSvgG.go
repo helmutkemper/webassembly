@@ -2630,8 +2630,6 @@ func (e *TagSvgG) Html(value string) (ref *TagSvgG) {
 	return e
 }
 
-// todo: functions de div
-
 // GetXY
 //
 // English:
@@ -2745,6 +2743,25 @@ func (e *TagSvgG) GetLeft() (left float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	left = coordinate.Get("left").Float()
 	return
+}
+
+// Reference
+//
+// English:
+//
+// Pass the object reference to an external variable.
+//
+// Português:
+//
+// Passa a referencia do objeto para uma variável externa.
+//
+//   Example: / Exemplo:
+//     var circle *html.TagSvgCircle
+//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+func (e *TagSvgG) Reference(reference **TagSvgG) (ref *TagSvgG) {
+	*reference = e
+	return e
 }
 
 //

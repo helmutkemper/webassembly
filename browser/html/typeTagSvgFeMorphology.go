@@ -2946,3 +2946,22 @@ func (e *TagSvgFeMorphology) Html(value string) (ref *TagSvgFeMorphology) {
 	e.selfElement.Set("innerHTML", value)
 	return e
 }
+
+// Reference
+//
+// English:
+//
+// Pass the object reference to an external variable.
+//
+// Português:
+//
+// Passa a referencia do objeto para uma variável externa.
+//
+//   Example: / Exemplo:
+//     var circle *html.TagSvgCircle
+//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+func (e *TagSvgFeMorphology) Reference(reference **TagSvgFeMorphology) (ref *TagSvgFeMorphology) {
+	*reference = e
+	return e
+}

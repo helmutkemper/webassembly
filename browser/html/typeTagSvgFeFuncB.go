@@ -719,3 +719,22 @@ func (e *TagSvgFeFuncB) Offset(value interface{}) (ref *TagSvgFeFuncB) {
 	e.selfElement.Call("setAttribute", "offset", value)
 	return e
 }
+
+// Reference
+//
+// English:
+//
+// Pass the object reference to an external variable.
+//
+// Português:
+//
+// Passa a referencia do objeto para uma variável externa.
+//
+//   Example: / Exemplo:
+//     var circle *html.TagSvgCircle
+//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+func (e *TagSvgFeFuncB) Reference(reference **TagSvgFeFuncB) (ref *TagSvgFeFuncB) {
+	*reference = e
+	return e
+}

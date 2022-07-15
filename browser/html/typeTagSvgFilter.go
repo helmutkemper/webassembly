@@ -2913,3 +2913,22 @@ func (e *TagSvgFilter) Html(value string) (ref *TagSvgFilter) {
 	e.selfElement.Set("innerHTML", value)
 	return e
 }
+
+// Reference
+//
+// English:
+//
+// Pass the object reference to an external variable.
+//
+// Português:
+//
+// Passa a referencia do objeto para uma variável externa.
+//
+//   Example: / Exemplo:
+//     var circle *html.TagSvgCircle
+//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+func (e *TagSvgFilter) Reference(reference **TagSvgFilter) (ref *TagSvgFilter) {
+	*reference = e
+	return e
+}

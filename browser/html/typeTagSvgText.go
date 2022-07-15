@@ -3237,3 +3237,137 @@ func (e *TagSvgText) StrokeDashOffset(value interface{}) (ref *TagSvgText) {
 	e.selfElement.Call("setAttribute", "stroke-dashoffset", value)
 	return e
 }
+
+// GetXY
+//
+// English:
+//
+//  Returns the X and Y axes in pixels.
+//
+// Português:
+//
+//  Retorna os eixos X e Y em pixels.
+func (e *TagSvgText) GetXY() (x, y float64) {
+	x = e.GetX()
+	y = e.GetY()
+
+	return
+}
+
+// GetX
+//
+// English:
+//
+//  Returns the X axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo X em pixels.
+func (e *TagSvgText) GetX() (x float64) {
+	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
+		return
+	}
+
+	//rect.top, rect.right, rect.bottom, rect.left
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	x = coordinate.Get("left").Float()
+	return
+}
+
+// GetY
+//
+// English:
+//
+//  Returns the Y axe in pixels.
+//
+// Português:
+//
+//  Retorna o eixo Y em pixels.
+func (e *TagSvgText) GetY() (y float64) {
+	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
+		return
+	}
+
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	y = coordinate.Get("top").Float()
+	return
+}
+
+// GetTop
+//
+// English:
+//
+//  Same as GetX() function, returns the x position of the element.
+//
+// Português:
+//
+//  O mesmo que a função GetX(), retorna a posição x do elemento.
+func (e *TagSvgText) GetTop() (top float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	top = coordinate.Get("top").Float()
+	return
+}
+
+// GetRight
+//
+// English:
+//
+//  It is the same as x + width.
+//
+// Português:
+//
+//  É o mesmo que x + width.
+func (e *TagSvgText) GetRight() (right float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	right = coordinate.Get("right").Float()
+	return
+}
+
+// GetBottom
+//
+// English:
+//
+//  It is the same as y + height.
+//
+// Português:
+//
+//  É o mesmo que y + Height.
+func (e *TagSvgText) GetBottom() (bottom float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	bottom = coordinate.Get("bottom").Float()
+	return
+}
+
+// GetLeft
+//
+// English:
+//
+//  Same as GetY() function, returns the y position of the element.
+//
+// Português:
+//
+//  O mesmo que a função GetY(), retorna a posição y do elemento.
+func (e *TagSvgText) GetLeft() (left float64) {
+	var coordinate = e.selfElement.Call("getBoundingClientRect")
+	left = coordinate.Get("left").Float()
+	return
+}
+
+// Reference
+//
+// English:
+//
+// Pass the object reference to an external variable.
+//
+// Português:
+//
+// Passa a referencia do objeto para uma variável externa.
+//
+//   Example: / Exemplo:
+//     var circle *html.TagSvgCircle
+//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+func (e *TagSvgText) Reference(reference **TagSvgText) (ref *TagSvgText) {
+	*reference = e
+	return e
+}

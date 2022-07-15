@@ -2975,3 +2975,22 @@ func (e *TagSvgRadialGradient) Html(value string) (ref *TagSvgRadialGradient) {
 	e.selfElement.Set("innerHTML", value)
 	return e
 }
+
+// Reference
+//
+// English:
+//
+// Pass the object reference to an external variable.
+//
+// Português:
+//
+// Passa a referencia do objeto para uma variável externa.
+//
+//   Example: / Exemplo:
+//     var circle *html.TagSvgCircle
+//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+func (e *TagSvgRadialGradient) Reference(reference **TagSvgRadialGradient) (ref *TagSvgRadialGradient) {
+	*reference = e
+	return e
+}

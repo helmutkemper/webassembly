@@ -40,13 +40,16 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 400, 600}).Width(400).Append(
+	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 400, 600}).Width(1200).Append(
 		factoryBrowser.NewTagSvg().X(100-25).Y(125).Append(
 			factoryBrowser.NewTagSvgG().Reference(&svgG).Append(
 				factoryBrowser.NewTagSvgCircle().Cx(25).Cy(25).R(10).Fill(nil).StrokeWidth(1).Stroke(factoryColor.NewGray()),
 				factoryBrowser.NewTagSvgLine().X1(25).X2(25).Y1(0).Y2(50).StrokeWidth(1).Stroke(factoryColor.NewGray()),
 				factoryBrowser.NewTagSvgLine().X1(25).Y1(0).X2(20).Y2(5).StrokeWidth(1).Stroke(factoryColor.NewGray()),
 				factoryBrowser.NewTagSvgLine().X1(25).Y1(0).X2(30).Y2(5).StrokeWidth(1).Stroke(factoryColor.NewGray()),
+
+				factoryBrowser.NewTagSvgLine().X1(25).Y1(0+20).X2(25).Y2(50-20).StrokeWidth(1).Stroke(factoryColor.NewRed()),
+				factoryBrowser.NewTagSvgLine().X1(0+20).Y1(25).X2(50-20).Y2(25).StrokeWidth(1).Stroke(factoryColor.NewRed()),
 			),
 		),
 
@@ -59,13 +62,13 @@ func main() {
 		),
 
 		factoryBrowser.NewTagSvgLine().Reference(&line).X1(100).Y1(150).Stroke(factoryColor.NewGray()).StrokeWidth(0.2).Fill(nil),
-		factoryBrowser.NewTagSvgRect().Reference(&rect).X(0).Y(0).Width(10).Height(10).Stroke(factoryColor.NewGreen()).StrokeWidth(1.0).Fill(nil),
+		factoryBrowser.NewTagSvgRect().Reference(&rect).X(100-25+25-5).Y(125+25-5).Width(10).Height(10).Stroke(factoryColor.NewGreen()).StrokeWidth(1.0).Fill(nil),
 	)
 
 	stage.Append(s1)
 
 	stage.AddDrawFunctions(func() {
-		angle := math.Atan2(svgG.GetY()-circle.GetY()+5, svgG.GetX()-circle.GetX()+5)
+		angle := math.Atan2((125+25-5)-circle.GetY()+5, (100-25+25-5)-circle.GetX()+5)
 		svgG.Transform(factoryBrowser.NewTransform().Rotate(angle*180/math.Pi-90, 25, 25))
 		line.X1(100).Y1(150).X2(circle.GetX() + 5).Y2(circle.GetY() + 5)
 		rect.X(svgG.GetX()).Y(svgG.GetY())

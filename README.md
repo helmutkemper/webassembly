@@ -4,6 +4,10 @@
 
 > Use at your own risk.
 
+Why do? / Por quê fazer?
+
+> WebAssembly is a new type of code that can be run in modern web browsers — it is a low-level assembly-like language with a compact binary format that runs with near-native performance and provides languages such as C/C++, C# and Rust with a compilation target so that they can run on the web. It is also designed to run alongside JavaScript, allowing both to work together.
+
 #### English:
 
 This project is porting documentation from developer.mozilla.org into Golang and many of the examples are taken from it.

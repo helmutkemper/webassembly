@@ -1,5 +1,6 @@
 # Dynamic event / Evento dinâmico
 
+Este exemplo mostra como calcular a posição da imagem em uma animação.
 ![screen](./screen.png)
 
 ### O conceito de imagem

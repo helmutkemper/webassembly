@@ -29,49 +29,61 @@ import (
 	"time"
 )
 
-var circle *html.TagSvgCircle
-var svgG *html.TagSvgG
-var rect *html.TagSvgRect
-var line *html.TagSvgLine
-
 func main() {
+	var container *html.TagSvg
+	var circle *html.TagSvgCircle
+	var svgG *html.TagSvgG
+	var line *html.TagSvgLine
+	var cruz *html.TagSvg
+
+	var factor = 1.0
+	var width = 400.0
 
 	done := make(chan struct{}, 0)
 
 	stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 400, 600}).Width(1200).Append(
-		factoryBrowser.NewTagSvg().X(100-25).Y(125).Append(
+	s1 := factoryBrowser.NewTagSvg().Reference(&container).ViewBox([]float64{0, 0, width, 200}).Append(
+		// caminho da bola vermelha
+		factoryBrowser.NewTagSvg().Append(
+			factoryBrowser.NewTagSvgG().Append(
+				factoryBrowser.NewTagSvgPath().Fill("none").Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+				factoryBrowser.NewTagSvgCircle().Reference(&circle).Id("trinidad").Cx(0).Cy(0).R(5).Fill(factoryColor.NewRed()).Append(
+					factoryBrowser.NewTagSvgAnimateMotion().Id("test").Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+				),
+			),
+		),
+
+		// Seta dinâmica
+		factoryBrowser.NewTagSvg().X(100-25).Y(100).Append(
 			factoryBrowser.NewTagSvgG().Reference(&svgG).Append(
 				factoryBrowser.NewTagSvgCircle().Cx(25).Cy(25).R(10).Fill(nil).StrokeWidth(1).Stroke(factoryColor.NewGray()),
 				factoryBrowser.NewTagSvgLine().X1(25).X2(25).Y1(0).Y2(50).StrokeWidth(1).Stroke(factoryColor.NewGray()),
 				factoryBrowser.NewTagSvgLine().X1(25).Y1(0).X2(20).Y2(5).StrokeWidth(1).Stroke(factoryColor.NewGray()),
 				factoryBrowser.NewTagSvgLine().X1(25).Y1(0).X2(30).Y2(5).StrokeWidth(1).Stroke(factoryColor.NewGray()),
-
-				factoryBrowser.NewTagSvgLine().X1(25).Y1(0+20).X2(25).Y2(50-20).StrokeWidth(1).Stroke(factoryColor.NewRed()),
-				factoryBrowser.NewTagSvgLine().X1(0+20).Y1(25).X2(50-20).Y2(25).StrokeWidth(1).Stroke(factoryColor.NewRed()),
 			),
 		),
 
-		factoryBrowser.NewTagSvgG().Append(
-			factoryBrowser.NewTagSvgPath().Fill("none").Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
-			factoryBrowser.NewTagSvgCircle().Reference(&circle).Id("trinidad").Cx(0).Cy(0).R(5).Fill(factoryColor.NewRed()).Append(
-				factoryBrowser.NewTagSvgAnimateMotion().Id("test").Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()).
-					AddListener(),
-			),
+		// cruz vermelha no centro da seta
+		factoryBrowser.NewTagSvg().Reference(&cruz).X(95).Y(120).Stroke(factoryColor.NewRed()).StrokeWidth(0.5).Fill(nil).Append(
+			factoryBrowser.NewTagSvgLine().X1(5).Y1(0).X2(5).Y2(10).StrokeWidth(1).Stroke(factoryColor.NewRed()),
+			factoryBrowser.NewTagSvgLine().X1(0).Y1(5).X2(10).Y2(5).StrokeWidth(1).Stroke(factoryColor.NewRed()),
 		),
 
-		factoryBrowser.NewTagSvgLine().Reference(&line).X1(100).Y1(150).Stroke(factoryColor.NewGray()).StrokeWidth(0.2).Fill(nil),
-		factoryBrowser.NewTagSvgRect().Reference(&rect).X(100-25+25-5).Y(125+25-5).Width(10).Height(10).Stroke(factoryColor.NewGreen()).StrokeWidth(1.0).Fill(nil),
+		// linha azul ligando o centro da seta e a bola vermelha
+		factoryBrowser.NewTagSvgLine().Reference(&line).Stroke(factoryColor.NewBlue()).StrokeWidth(0.1).Fill(nil),
 	)
 
 	stage.Append(s1)
 
+	stage.AddHighLatencyFunctions(func() {
+		factor = (container.GetRight() - container.GetX()) / width
+	})
+
 	stage.AddDrawFunctions(func() {
-		angle := math.Atan2((125+25-5)-circle.GetY()+5, (100-25+25-5)-circle.GetX()+5)
+		angle := math.Atan2(120-circle.GetY()/factor, 95-circle.GetX()/factor)
 		svgG.Transform(factoryBrowser.NewTransform().Rotate(angle*180/math.Pi-90, 25, 25))
-		line.X1(100).Y1(150).X2(circle.GetX() + 5).Y2(circle.GetY() + 5)
-		rect.X(svgG.GetX()).Y(svgG.GetY())
+		line.X1(100).Y1(125).X2(circle.GetX()/factor + 5).Y2(circle.GetY()/factor + 5)
 	})
 
 	<-done

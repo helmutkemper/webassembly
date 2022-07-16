@@ -57,8 +57,8 @@ func (el *Engine) Init() {
 	}
 
 	// fixme: must be a interval of time
-	el.sleepFrame = 2
-	el.fpsLowLatency = 30
+	el.sleepFrame = 0
+	el.fpsLowLatency = 10
 
 	if el.fps == 0 {
 		el.fps = el.fpsMax

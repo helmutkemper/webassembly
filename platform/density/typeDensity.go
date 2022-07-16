@@ -1,11 +1,11 @@
-package iotmaker_platform_coordinate
+package coordinatesystem
 
 import "strconv"
 
 type Density struct {
-	OriginalValue int
-	DensityFactor int
-	DensityValue  int
+	OriginalValue float64
+	DensityFactor float64
+	DensityValue  float64
 }
 
 func (el *Density) adjustDensity() {
@@ -17,53 +17,29 @@ func (el *Density) adjustDensity() {
 }
 
 func (el *Density) Set(value float64) {
-	el.OriginalValue = int(value)
-	el.adjustDensity()
-}
-
-func (el *Density) SetInt(value int) {
 	el.OriginalValue = value
 	el.adjustDensity()
 }
 
-func (el *Density) Add(value int) {
+func (el *Density) Add(value float64) {
 	el.OriginalValue += value
 	el.adjustDensity()
 }
 
-func (el *Density) Sub(value int) {
+func (el *Density) Sub(value float64) {
 	el.OriginalValue -= value
 	el.adjustDensity()
 }
 
-func (el *Density) SetDensityFactor(value interface{}) {
-
-	switch converted := value.(type) {
-	case float64:
-		el.DensityFactor = int(converted)
-	case int:
-		el.DensityFactor = converted
-	}
-
+func (el *Density) SetDensityFactor(value float64) {
+	el.DensityFactor = value
 	el.adjustDensity()
 }
 
-func (el Density) Int() int {
-	return int(el.DensityValue)
-}
-
-func (el Density) Float64() float64 {
-	return float64(el.DensityValue)
-}
-
-func (el Density) Float32() float32 {
-	return float32(el.DensityValue)
-}
-
-func (el Density) Float() float64 {
-	return float64(el.DensityValue)
+func (el Density) Get() float64 {
+	return el.DensityValue
 }
 
 func (el Density) String() string {
-	return strconv.FormatInt(int64(el.OriginalValue), 10)
+	return strconv.FormatFloat(el.OriginalValue, 'g', -1, 64)
 }

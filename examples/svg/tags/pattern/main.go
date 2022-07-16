@@ -38,7 +38,7 @@ func main() {
 		),
 
 		factoryBrowser.NewTagSvgCircle().Cx(50).Cy(50).R(50).Fill("url(#star)"),
-		factoryBrowser.NewTagSvgCircle().Cx(180).Cy(50).R(40).Fill("none").StrokeWidth(20).Stroke("url(#star)"),
+		factoryBrowser.NewTagSvgCircle().Cx(180).Cy(50).R(40).Fill(nil).StrokeWidth(20).Stroke("url(#star)"),
 	)
 
 	stage.Append(s1)

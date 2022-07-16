@@ -39,17 +39,15 @@ func main() {
 	var factor = 1.0
 	var width = 400.0
 
-	done := make(chan struct{}, 0)
-
 	stage := factoryBrowser.NewStage()
 
 	s1 := factoryBrowser.NewTagSvg().Reference(&container).ViewBox([]float64{0, 0, width, 200}).Append(
 		// caminho da bola vermelha
 		factoryBrowser.NewTagSvg().Append(
 			factoryBrowser.NewTagSvgG().Append(
-				factoryBrowser.NewTagSvgPath().Fill("none").Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+				factoryBrowser.NewTagSvgPath().Fill(nil).Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
 				factoryBrowser.NewTagSvgCircle().Reference(&circle).Id("trinidad").Cx(0).Cy(0).R(5).Fill(factoryColor.NewRed()).Append(
-					factoryBrowser.NewTagSvgAnimateMotion().Id("test").Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+					factoryBrowser.NewTagSvgAnimateMotion().Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
 				),
 			),
 		),
@@ -76,15 +74,18 @@ func main() {
 
 	stage.Append(s1)
 
+	// Adiciona uma função de alta latencia para ser executada 10x por segundo.
 	stage.AddHighLatencyFunctions(func() {
 		factor = (container.GetRight() - container.GetX()) / width
 	})
 
+	// Adiciona uma função de baixa latência para ser executada até 120x por segundo.
 	stage.AddDrawFunctions(func() {
 		angle := math.Atan2(120-circle.GetY()/factor, 95-circle.GetX()/factor)
 		svgG.Transform(factoryBrowser.NewTransform().Rotate(angle*180/math.Pi-90, 25, 25))
 		line.X1(100).Y1(125).X2(circle.GetX()/factor + 5).Y2(circle.GetY()/factor + 5)
 	})
 
+	done := make(chan struct{}, 0)
 	<-done
 }

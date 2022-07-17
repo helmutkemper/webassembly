@@ -1285,7 +1285,7 @@ func (e *TagFigCaption) GetRotateDelta() (delta float64) {
 func (e *TagFigCaption) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagFigCaption) {
 
 	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		var mouseEvent = mouse.MouseEvent{}
+		var mouseEvent = mouse.Event{}
 
 		if len(args) > 0 {
 			mouseEvent.Object = args[0]
@@ -1331,9 +1331,9 @@ func (e *TagFigCaption) AddListener(eventType interface{}, manager mouse.SimpleM
 		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
 
-	case mouse.Event:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+	//case mouse.Event:
+	//	e.listener.Store(converted.String(), mouseMoveEvt)
+	//	e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventPageTransition.EventPageTransition:
 		e.listener.Store(converted.String(), mouseMoveEvt)
@@ -1439,9 +1439,9 @@ func (e *TagFigCaption) RemoveListener(eventType interface{}) (ref *TagFigCaptio
 		f, _ := e.listener.Load(converted.String())
 		e.selfElement.Call("removeEventListener", converted.String(), f)
 
-	case mouse.Event:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
+	//case mouse.Event:
+	//	f, _ := e.listener.Load(converted.String())
+	//	e.selfElement.Call("removeEventListener", converted.String(), f)
 
 	case eventPageTransition.EventPageTransition:
 		f, _ := e.listener.Load(converted.String())
@@ -1541,10 +1541,10 @@ func (e *TagFigCaption) prepareStageReference() {
 //       Class("animate").
 //       DragStart().
 //       AppendById("stage")
-func (e *TagFigCaption) DragStart() (ref *TagFigCaption) {
-	e.dragNormalStart()
-	return e
-}
+//func (e *TagFigCaption) DragStart() (ref *TagFigCaption) {
+//	e.dragNormalStart()
+//	return e
+//}
 
 // DragStop
 //
@@ -1579,30 +1579,30 @@ func (e *TagFigCaption) DragStart() (ref *TagFigCaption) {
 //       time.Sleep(10 * time.Second)
 //       div.DragStop()
 //     }()
-func (e *TagFigCaption) DragStop() (ref *TagFigCaption) {
-	e.dragNormalStop()
-	return e
-}
+//func (e *TagFigCaption) DragStop() (ref *TagFigCaption) {
+//	e.dragNormalStop()
+//	return e
+//}
 
-func (e *TagFigCaption) dragNormalStart() {
-	e.AddListener(mouse.KEventMouseDown, e.onStartDragNormal)
-	e.stage.Call("addEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
-	e.stage.Call("addEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
-}
+//func (e *TagFigCaption) dragNormalStart() {
+//	e.AddListener(mouse.KEventMouseDown, e.onStartDragNormal)
+//	e.stage.Call("addEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
+//	e.stage.Call("addEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
+//}
 
-func (e *TagFigCaption) dragNormalStop() {
-	e.RemoveListener(mouse.KEventMouseDown)
-	e.stage.Call("removeEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
-	e.stage.Call("removeEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
-	e.isDragging = false
-}
+//func (e *TagFigCaption) dragNormalStop() {
+//	e.RemoveListener(mouse.KEventMouseDown)
+//	e.stage.Call("removeEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
+//	e.stage.Call("removeEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
+//	e.isDragging = false
+//}
 
 func (e *TagFigCaption) onStopDragNormal(_ js.Value, _ []js.Value) interface{} {
 	e.isDragging = false
 	return nil
 }
 
-func (e *TagFigCaption) onStartDragNormal(event mouse.MouseEvent) {
+func (e *TagFigCaption) onStartDragNormal(event mouse.Event) {
 	var screenX = int(event.GetScreenX())
 	var screenY = int(event.GetScreenY())
 
@@ -1617,7 +1617,7 @@ func (e *TagFigCaption) onMouseDraggingNormal(_ js.Value, args []js.Value) inter
 		return nil
 	}
 
-	var mouseEvent = mouse.MouseEvent{}
+	var mouseEvent = mouse.Event{}
 	if len(args) > 0 {
 		mouseEvent.Object = args[0]
 

@@ -311,7 +311,7 @@ func (e Stage) GetById(id string) (element interface{}) {
 func (e *Stage) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *Stage) {
 
 	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		var mouseEvent = mouse.MouseEvent{}
+		var mouseEvent = mouse.Event{}
 
 		if len(args) > 0 {
 			mouseEvent.Object = args[0]
@@ -357,9 +357,9 @@ func (e *Stage) AddListener(eventType interface{}, manager mouse.SimpleManager) 
 		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
-	case mouse.Event:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
+	//case mouse.Event:
+	//	e.listener.Store(converted.String(), mouseMoveEvt)
+	//	e.selfDocument.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventPageTransition.EventPageTransition:
 		e.listener.Store(converted.String(), mouseMoveEvt)
@@ -415,9 +415,9 @@ func (e *Stage) RemoveListener(eventType interface{}) (ref *Stage) {
 		f, _ := e.listener.Load(converted.String())
 		e.selfDocument.Call("removeEventListener", converted.String(), f)
 
-	case mouse.Event:
-		f, _ := e.listener.Load(converted.String())
-		e.selfDocument.Call("removeEventListener", converted.String(), f)
+	//case mouse.Event:
+	//	f, _ := e.listener.Load(converted.String())
+	//	e.selfDocument.Call("removeEventListener", converted.String(), f)
 
 	case eventPageTransition.EventPageTransition:
 		f, _ := e.listener.Load(converted.String())

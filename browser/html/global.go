@@ -5488,6 +5488,7 @@ func (e *TagSvgGlobal) SystemLanguage(value interface{}) (ref *TagSvgGlobal) {
 //
 //   Input:
 //     value: controlar se um elemento é focalizável
+// todo: int -> interface{} nil anula o tab index
 func (e *TagSvgGlobal) Tabindex(value int) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e

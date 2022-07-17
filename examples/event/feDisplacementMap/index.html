@@ -1,0 +1,28 @@
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+      body {
+          margin: 0 !important;
+          padding: 0 !important;
+      }
+  </style>
+  <script src="../../support/wasm_exec.js"></script>
+  <script>
+    const go = new Go();
+    WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+      go.run(result.instance);
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>
+<!--script>
+  window.onload = function () {
+    setTimeout(function () {
+      let circle = document.getElementById("circle")
+      circle.addEventListener("click", (e) => {console.log("entrou!")})
+    }, 1000)
+  }
+</script-->

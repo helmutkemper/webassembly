@@ -1307,7 +1307,7 @@ func (e *TagFigure) GetRotateDelta() (delta float64) {
 func (e *TagFigure) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagFigure) {
 
 	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		var mouseEvent = mouse.MouseEvent{}
+		var mouseEvent = mouse.Event{}
 
 		if len(args) > 0 {
 			mouseEvent.Object = args[0]
@@ -1353,9 +1353,9 @@ func (e *TagFigure) AddListener(eventType interface{}, manager mouse.SimpleManag
 		e.listener.Store(converted.String(), mouseMoveEvt)
 		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
 
-	case mouse.Event:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+	//case mouse.Event:
+	//	e.listener.Store(converted.String(), mouseMoveEvt)
+	//	e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
 
 	case eventPageTransition.EventPageTransition:
 		e.listener.Store(converted.String(), mouseMoveEvt)
@@ -1461,9 +1461,9 @@ func (e *TagFigure) RemoveListener(eventType interface{}) (ref *TagFigure) {
 		f, _ := e.listener.Load(converted.String())
 		e.selfElement.Call("removeEventListener", converted.String(), f)
 
-	case mouse.Event:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
+	//case mouse.Event:
+	//	f, _ := e.listener.Load(converted.String())
+	//	e.selfElement.Call("removeEventListener", converted.String(), f)
 
 	case eventPageTransition.EventPageTransition:
 		f, _ := e.listener.Load(converted.String())
@@ -1563,10 +1563,10 @@ func (e *TagFigure) prepareStageReference() {
 //       Class("animate").
 //       DragStart().
 //       AppendById("stage")
-func (e *TagFigure) DragStart() (ref *TagFigure) {
-	e.dragNormalStart()
-	return e
-}
+//func (e *TagFigure) DragStart() (ref *TagFigure) {
+//	e.dragNormalStart()
+//	return e
+//}
 
 // DragStop
 //
@@ -1601,56 +1601,56 @@ func (e *TagFigure) DragStart() (ref *TagFigure) {
 //       time.Sleep(10 * time.Second)
 //       div.DragStop()
 //     }()
-func (e *TagFigure) DragStop() (ref *TagFigure) {
-	e.dragNormalStop()
-	return e
-}
+//func (e *TagFigure) DragStop() (ref *TagFigure) {
+//	e.dragNormalStop()
+//	return e
+//}
 
-func (e *TagFigure) dragNormalStart() {
-	e.AddListener(mouse.KEventMouseDown, e.onStartDragNormal)
-	e.stage.Call("addEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
-	e.stage.Call("addEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
-}
+//func (e *TagFigure) dragNormalStart() {
+//	e.AddListener(mouse.KEventMouseDown, e.onStartDragNormal)
+//	e.stage.Call("addEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
+//	e.stage.Call("addEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
+//}
 
-func (e *TagFigure) dragNormalStop() {
-	e.RemoveListener(mouse.KEventMouseDown)
-	e.stage.Call("removeEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
-	e.stage.Call("removeEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
-	e.isDragging = false
-}
+//func (e *TagFigure) dragNormalStop() {
+//	e.RemoveListener(mouse.KEventMouseDown)
+//	e.stage.Call("removeEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
+//	e.stage.Call("removeEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
+//	e.isDragging = false
+//}
 
 func (e *TagFigure) onStopDragNormal(_ js.Value, _ []js.Value) interface{} {
 	e.isDragging = false
 	return nil
 }
 
-func (e *TagFigure) onStartDragNormal(event mouse.MouseEvent) {
-	var screenX = int(event.GetScreenX())
-	var screenY = int(event.GetScreenY())
+//func (e *TagFigure) onStartDragNormal(event mouse.MouseEvent) {
+//	var screenX = int(event.GetScreenX())
+//	var screenY = int(event.GetScreenY())
+//
+//	e.dragDifX = screenX - e.x
+//	e.dragDifY = screenY - e.y
+//
+//	e.isDragging = true
+//}
 
-	e.dragDifX = screenX - e.x
-	e.dragDifY = screenY - e.y
-
-	e.isDragging = true
-}
-
-func (e *TagFigure) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{} {
-	if e.isDragging == false {
-		return nil
-	}
-
-	var mouseEvent = mouse.MouseEvent{}
-	if len(args) > 0 {
-		mouseEvent.Object = args[0]
-
-		var x = int(mouseEvent.GetScreenX()) - e.dragDifX
-		var y = int(mouseEvent.GetScreenY()) - e.dragDifY
-
-		e.SetXY(x, y)
-	}
-
-	return nil
-}
+//func (e *TagFigure) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{} {
+//	if e.isDragging == false {
+//		return nil
+//	}
+//
+//	var mouseEvent = mouse.MouseEvent{}
+//	if len(args) > 0 {
+//		mouseEvent.Object = args[0]
+//
+//		var x = int(mouseEvent.GetScreenX()) - e.dragDifX
+//		var y = int(mouseEvent.GetScreenY()) - e.dragDifY
+//
+//		e.SetXY(x, y)
+//	}
+//
+//	return nil
+//}
 
 // AddPointsToEasingTween
 //

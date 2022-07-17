@@ -11,3 +11,16 @@ fazer o exemplo https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/resta
 fazer o exemplo2 https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/visibility
 
 https://developer.mozilla.org/en-US/docs/Web/CSS/blend-mode
+
+
+https://www.w3.org/TR/DOM-Level-3-Events/#event-flow
+
+
+
+todo: path deve deixar de ser nativo e passar a ser código do framework? - inicio
+https://javascript.info/bezier-curve
+
+https://javascript.info/
+
+https://blog.maximeheckel.com/posts/cubic-bezier-from-math-to-motion/
+todo: path deve deixar de ser nativo e passar a ser código do framework? - fim

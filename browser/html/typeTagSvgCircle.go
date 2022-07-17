@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/mouse"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"image/color"
@@ -26,22 +27,22 @@ type TagSvgCircle struct {
 	//
 	// English:
 	//
-	//  Unique id, standard html id property.
+	// Unique id, standard html id property.
 	//
 	// Português:
 	//
-	//  Id único, propriedade padrão id do html.
+	// Id único, propriedade padrão id do html.
 	id string
 
 	// selfElement
 	//
 	// English:
 	//
-	//  Reference to self element as js.Value.
+	// Reference to self element as js.Value.
 	//
 	// Português:
 	//
-	//  Referencia ao próprio elemento na forma de js.Value.
+	// Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
 
 	cssClass *css.Class
@@ -53,11 +54,11 @@ type TagSvgCircle struct {
 	//
 	// English:
 	//
-	//  The javascript function removeEventListener needs to receive the function passed in addEventListener
+	// The javascript function removeEventListener needs to receive the function passed in addEventListener
 	//
 	// Português:
 	//
-	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
+	// A função javascript removeEventListener necessitam receber a função passada em addEventListener
 	listener *sync.Map
 
 	// drag
@@ -66,84 +67,84 @@ type TagSvgCircle struct {
 	//
 	// English:
 	//
-	//  Browser main document reference captured at startup.
+	// Browser main document reference captured at startup.
 	//
 	// Português:
 	//
-	//  Referencia do documento principal do navegador capturado na inicialização.
+	// Referencia do documento principal do navegador capturado na inicialização.
 	stage js.Value
 
 	// isDragging
 	//
 	// English:
 	//
-	//  Indicates the process of dragging the element.
+	// Indicates the process of dragging the element.
 	//
 	// Português:
 	//
-	//  Indica o processo de arrasto do elemento.
+	// Indica o processo de arrasto do elemento.
 	isDragging bool
 
 	// dragDifX
 	//
 	// English:
 	//
-	//  Used in calculating element drag.
+	// Used in calculating element drag.
 	//
 	// Português:
 	//
-	//  Usado no cálculo do arrasto de elemento.
+	// Usado no cálculo do arrasto de elemento.
 	dragDifX int
 
 	// dragDifX
 	//
 	// English:
 	//
-	//  Used in calculating element drag.
+	// Used in calculating element drag.
 	//
 	// Português:
 	//
-	//  Usado no cálculo do arrasto de elemento.
+	// Usado no cálculo do arrasto de elemento.
 	dragDifY int
 
 	// deltaMovieX
 	//
 	// English:
 	//
-	//  Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
-	//  GetX() function: (x = x - deltaMovieX).
+	// Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
+	// GetX() function: (x = x - deltaMovieX).
 	//
 	// Português:
 	//
-	//  Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
-	//  GetX(): (x = x - deltaMovieX).
+	// Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
+	// GetX(): (x = x - deltaMovieX).
 	deltaMovieX int
 
 	// deltaMovieY
 	//
 	// English:
 	//
-	//  Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
-	//  GetY() function: (y = y - deltaMovieY).
+	// Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
+	// GetY() function: (y = y - deltaMovieY).
 	//
 	// Português:
 	//
-	//  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
-	//  GetY(): (y = y - deltaMovieY).
+	// Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
+	// GetY(): (y = y - deltaMovieY).
 	deltaMovieY int
 
 	// tween
 	//
 	// English:
 	//
-	//  Easing tween.
+	// Easing tween.
 	//
 	// Receives an identifier and a pointer of the tween object to be used in case of multiple
 	// functions.
 	//
 	// Português:
 	//
-	//  Facilitador de interpolação.
+	// Facilitador de interpolação.
 	//
 	// Recebe um identificador e um ponteiro do objeto tween para ser usado em caso de múltiplas
 	// funções.
@@ -159,11 +160,11 @@ type TagSvgCircle struct {
 //
 // English:
 //
-//  Initializes the object correctly.
+// Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+// Inicializa o objeto corretamente.
 func (e *TagSvgCircle) Init() (ref *TagSvgCircle) {
 	e.listener = new(sync.Map)
 
@@ -230,11 +231,11 @@ func (e *TagSvgCircle) Get() (el js.Value) {
 //
 // English:
 //
-//  The id attribute assigns a unique name to an element.
+// The id attribute assigns a unique name to an element.
 //
 // Portuguese
 //
-//  O atributo id atribui um nome exclusivo a um elemento.
+// O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgCircle) Id(id string) (ref *TagSvgCircle) {
 	e.selfElement.Call("setAttribute", "id", id)
 	return e
@@ -361,8 +362,8 @@ func (e *TagSvgCircle) XmlLang(value interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The baseline-shift attribute allows repositioning of the dominant-baseline relative to the dominant-baseline of the
-//  parent text content element. The shifted object might be a sub- or superscript.
+// The baseline-shift attribute allows repositioning of the dominant-baseline relative to the dominant-baseline of the
+// parent text content element. The shifted object might be a sub- or superscript.
 //
 //   Input:
 //     baselineShift: allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text
@@ -377,8 +378,8 @@ func (e *TagSvgCircle) XmlLang(value interface{}) (ref *TagSvgCircle) {
 //
 // Português:
 //
-//  O atributo baseline-shift permite o reposicionamento da linha de base dominante em relação à linha de base dominante
-//  do elemento de conteúdo de texto pai. O objeto deslocado pode ser um sub ou sobrescrito.
+// O atributo baseline-shift permite o reposicionamento da linha de base dominante em relação à linha de base dominante
+// do elemento de conteúdo de texto pai. O objeto deslocado pode ser um sub ou sobrescrito.
 //
 //   Input:
 //     baselineShift: permite o reposicionamento da linha de base dominante em relação à linha de base dominante do
@@ -410,7 +411,7 @@ func (e *TagSvgCircle) BaselineShift(baselineShift interface{}) (ref *TagSvgCirc
 //
 // English:
 //
-//  It binds the element it is applied to with a given <clipPath> element.
+// It binds the element it is applied to with a given <clipPath> element.
 //
 //   Input:
 //     clipPath: the element it is applied
@@ -418,7 +419,7 @@ func (e *TagSvgCircle) BaselineShift(baselineShift interface{}) (ref *TagSvgCirc
 //
 // Português:
 //
-//  Ele associa o elemento ao qual é aplicado a um determinado elemento <clipPath>.
+// Ele associa o elemento ao qual é aplicado a um determinado elemento <clipPath>.
 //
 //   Entrada:
 //     clipPath: elemento ao qual é aplicado
@@ -432,8 +433,8 @@ func (e *TagSvgCircle) ClipPath(clipPath string) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
-//  its target.
+// It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
+// its target.
 //
 //   Input:
 //     value: side of a path
@@ -442,8 +443,8 @@ func (e *TagSvgCircle) ClipPath(clipPath string) (ref *TagSvgCircle) {
 //
 // Português:
 //
-//  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
-//  recortar seu destino.
+// Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
+// recortar seu destino.
 //
 //   Input:
 //     value: lado de um caminho
@@ -463,8 +464,8 @@ func (e *TagSvgCircle) ClipRule(value interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
-//  lighting-color presentation attributes.
+// It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
+// lighting-color presentation attributes.
 //
 //   Input:
 //     value: potential indirect value of color
@@ -478,8 +479,8 @@ func (e *TagSvgCircle) ClipRule(value interface{}) (ref *TagSvgCircle) {
 //
 // Português:
 //
-//  Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
-//  cor de parada, cor de inundação e cor de iluminação.
+// Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
+// cor de parada, cor de inundação e cor de iluminação.
 //
 //   Entrada:
 //     value: valor indireto potencial da cor
@@ -725,7 +726,7 @@ func (e *TagSvgCircle) Direction(value interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The display attribute lets you control the rendering of graphical or container elements.
+// The display attribute lets you control the rendering of graphical or container elements.
 //
 //   Input:
 //     value: control the rendering of graphical or container elements
@@ -761,12 +762,12 @@ func (e *TagSvgCircle) Direction(value interface{}) (ref *TagSvgCircle) {
 // mask. Similarly, setting display="none" on a child of a <clipPath> element will prevent the given child element from
 // contributing to the clipping path.
 //
-//  Notes:
+// Notes:
 //    * As a presentation attribute, display can be used as a CSS property. See css display for further information.
 //
 // Português:
 //
-//  O atributo display permite controlar a renderização de elementos gráficos ou de contêiner.
+// O atributo display permite controlar a renderização de elementos gráficos ou de contêiner.
 //
 //   Entrada:
 //     value: controlar a renderização de elementos gráficos ou de contêiner
@@ -801,7 +802,7 @@ func (e *TagSvgCircle) Direction(value interface{}) (ref *TagSvgCircle) {
 // renderizado como parte da máscara. Da mesma forma, definir display="none" em um filho de um elemento <clipPath>
 // impedirá que o elemento filho fornecido contribua para o caminho de recorte.
 //
-//  Notas:
+// Notas:
 //    * Como atributo de apresentação, display pode ser usado como propriedade CSS. Consulte a exibição css para obter
 //      mais informações.
 func (e *TagSvgCircle) Display(value interface{}) (ref *TagSvgCircle) {
@@ -937,8 +938,8 @@ func (e *TagSvgCircle) Fill(value interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The fill-opacity attribute is a presentation attribute defining the opacity of the paint server (color, gradient,
-//  pattern, etc) applied to a shape.
+// The fill-opacity attribute is a presentation attribute defining the opacity of the paint server (color, gradient,
+// pattern, etc) applied to a shape.
 //
 //   Input:
 //     value: defining the opacity of the paint
@@ -950,8 +951,8 @@ func (e *TagSvgCircle) Fill(value interface{}) (ref *TagSvgCircle) {
 //
 // Portuguese
 //
-//  O atributo fill-opacity é um atributo de apresentação que define a opacidade do servidor de pintura (cor, gradiente,
-//  padrão etc.) aplicado a uma forma.
+// O atributo fill-opacity é um atributo de apresentação que define a opacidade do servidor de pintura (cor, gradiente,
+// padrão etc.) aplicado a uma forma.
 //
 //   Entrada:
 //     value: definindo a opacidade da tinta
@@ -975,8 +976,8 @@ func (e *TagSvgCircle) FillOpacity(value interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The fill-rule attribute is a presentation attribute defining the algorithm to use to determine the inside part of
-//  a shape.
+// The fill-rule attribute is a presentation attribute defining the algorithm to use to determine the inside part of
+// a shape.
 //
 //   Input:
 //     value: defining the algorithm to use to determine the inside part of a shape.
@@ -988,8 +989,8 @@ func (e *TagSvgCircle) FillOpacity(value interface{}) (ref *TagSvgCircle) {
 //
 // Portuguese
 //
-//  O atributo fill-rule é um atributo de apresentação que define o algoritmo a ser usado para determinar a parte
-//  interna de uma forma.
+// O atributo fill-rule é um atributo de apresentação que define o algoritmo a ser usado para determinar a parte
+// interna de uma forma.
 //
 //   Input:
 //     value: define o algoritmo a ser usado para determinar a parte interna de uma forma.
@@ -1012,8 +1013,8 @@ func (e *TagSvgCircle) FillRule(value interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The filter attribute specifies the filter effects defined by the <filter> element that shall be applied to its
-//  element.
+// The filter attribute specifies the filter effects defined by the <filter> element that shall be applied to its
+// element.
 //
 //   Input:
 //     filter: specifies the filter effects
@@ -1023,8 +1024,8 @@ func (e *TagSvgCircle) FillRule(value interface{}) (ref *TagSvgCircle) {
 //
 // Portuguese
 //
-//  O atributo filter especifica os efeitos de filtro definidos pelo elemento <filter> que devem ser aplicados ao seu
-//  elemento.
+// O atributo filter especifica os efeitos de filtro definidos pelo elemento <filter> que devem ser aplicados ao seu
+// elemento.
 //
 //   Entrada:
 //     filter: especifica os efeitos do filtro
@@ -1041,7 +1042,7 @@ func (e *TagSvgCircle) Filter(filter string) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The flood-color attribute indicates what color to use to flood the current filter primitive subregion.
+// The flood-color attribute indicates what color to use to flood the current filter primitive subregion.
 //
 //   Input:
 //     floodColor: indicates what color to use to flood the current filter primitive subregion
@@ -1055,7 +1056,7 @@ func (e *TagSvgCircle) Filter(filter string) (ref *TagSvgCircle) {
 //
 // Portuguese
 //
-//  O atributo flood-color indica qual cor usar para inundar a sub-região primitiva do filtro atual.
+// O atributo flood-color indica qual cor usar para inundar a sub-região primitiva do filtro atual.
 //
 //   Entrada:
 //     floodColor: indica qual cor usar para inundar a sub-região primitiva do filtro atual
@@ -1080,7 +1081,7 @@ func (e *TagSvgCircle) FloodColor(floodColor interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The flood-opacity attribute indicates the opacity value to use across the current filter primitive subregion.
+// The flood-opacity attribute indicates the opacity value to use across the current filter primitive subregion.
 //
 //   Input:
 //     floodOpacity: indicates the opacity value
@@ -1090,7 +1091,7 @@ func (e *TagSvgCircle) FloodColor(floodColor interface{}) (ref *TagSvgCircle) {
 //
 // Portuguese
 //
-//  O atributo flood-opacity indica o valor de opacidade a ser usado na sub-região primitiva de filtro atual.
+// O atributo flood-opacity indica o valor de opacidade a ser usado na sub-região primitiva de filtro atual.
 //
 //   Entrada:
 //     floodOpacity: indica o valor da opacidade
@@ -1174,8 +1175,8 @@ func (e *TagSvgCircle) FontSize(fontSize interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The font-size-adjust attribute allows authors to specify an aspect value for an element that will preserve the
-//  x-height of the first choice font in a substitute font.
+// The font-size-adjust attribute allows authors to specify an aspect value for an element that will preserve the
+// x-height of the first choice font in a substitute font.
 //
 //   Notes:
 //     * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
@@ -1183,8 +1184,8 @@ func (e *TagSvgCircle) FontSize(fontSize interface{}) (ref *TagSvgCircle) {
 //
 // Portuguese
 //
-//  O atributo font-size-adjust permite que os autores especifiquem um valor de aspecto para um elemento que preservará
-//  a altura x da fonte de primeira escolha em uma fonte substituta.
+// O atributo font-size-adjust permite que os autores especifiquem um valor de aspecto para um elemento que preservará
+// a altura x da fonte de primeira escolha em uma fonte substituta.
 //
 //   Notes:
 //     * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
@@ -1198,8 +1199,8 @@ func (e *TagSvgCircle) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgCircle
 //
 // English:
 //
-//  The font-stretch attribute indicates the desired amount of condensing or expansion in the glyphs used to render
-//  the text.
+// The font-stretch attribute indicates the desired amount of condensing or expansion in the glyphs used to render
+// the text.
 //
 //   Input:
 //     fontStretch: indicates the desired amount of condensing or expansion
@@ -1212,8 +1213,8 @@ func (e *TagSvgCircle) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgCircle
 //
 // Portuguese
 //
-//  O atributo font-stretch indica a quantidade desejada de condensação ou expansão nos glifos usados para renderizar
-//  o texto.
+// O atributo font-stretch indica a quantidade desejada de condensação ou expansão nos glifos usados para renderizar
+// o texto.
 //
 //   Entrada:
 //     fontStretch: indica a quantidade desejada de condensação ou expansão
@@ -1274,7 +1275,7 @@ func (e *TagSvgCircle) FontStyle(value interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The font-variant attribute indicates whether the text is to be rendered using variations of the font's glyphs.
+// The font-variant attribute indicates whether the text is to be rendered using variations of the font's glyphs.
 //
 //   Input:
 //     value: indicates whether the text is to be rendered
@@ -1287,7 +1288,7 @@ func (e *TagSvgCircle) FontStyle(value interface{}) (ref *TagSvgCircle) {
 //
 // Portuguese
 //
-//  O atributo font-variant indica se o texto deve ser renderizado usando variações dos glifos da fonte.
+// O atributo font-variant indica se o texto deve ser renderizado usando variações dos glifos da fonte.
 //
 //   Entrada:
 //     value: indica onde o texto vai ser renderizado.
@@ -1311,8 +1312,8 @@ func (e *TagSvgCircle) FontVariant(value interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The font-weight attribute refers to the boldness or lightness of the glyphs used to render the text, relative to
-//  other fonts in the same font family.
+// The font-weight attribute refers to the boldness or lightness of the glyphs used to render the text, relative to
+// other fonts in the same font family.
 //
 //   Input:
 //     value: refers to the boldness or lightness of the glyphs used to render the text
@@ -1325,8 +1326,8 @@ func (e *TagSvgCircle) FontVariant(value interface{}) (ref *TagSvgCircle) {
 //
 // Portuguese
 //
-//  O atributo font-weight refere-se ao negrito ou leveza dos glifos usados para renderizar o texto, em relação a
-//  outras fontes na mesma família de fontes.
+// O atributo font-weight refere-se ao negrito ou leveza dos glifos usados para renderizar o texto, em relação a
+// outras fontes na mesma família de fontes.
 //
 //   Entrada:
 //     value: refere-se ao negrito ou leveza dos glifos usados para renderizar o texto
@@ -1350,8 +1351,8 @@ func (e *TagSvgCircle) FontWeight(value interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The image-rendering attribute provides a hint to the browser about how to make speed vs. quality tradeoffs as it
-//  performs image processing.
+// The image-rendering attribute provides a hint to the browser about how to make speed vs. quality tradeoffs as it
+// performs image processing.
 //
 // The resampling is always done in a truecolor (e.g., 24-bit) color space even if the original data and/or the target
 // device is indexed color.
@@ -1362,8 +1363,8 @@ func (e *TagSvgCircle) FontWeight(value interface{}) (ref *TagSvgCircle) {
 //
 // Portuguese
 //
-//  O atributo de renderização de imagem fornece uma dica ao navegador sobre como fazer compensações de velocidade
-//  versus qualidade enquanto executa o processamento de imagem.
+// O atributo de renderização de imagem fornece uma dica ao navegador sobre como fazer compensações de velocidade
+// versus qualidade enquanto executa o processamento de imagem.
 //
 // A reamostragem é sempre feita em um espaço de cores truecolor (por exemplo, 24 bits), mesmo que os dados originais e
 // ou o dispositivo de destino sejam cores indexadas.
@@ -1780,7 +1781,7 @@ func (e *TagSvgCircle) ShapeRendering(value interface{}) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The stop-color attribute indicates what color to use at a gradient stop.
+// The stop-color attribute indicates what color to use at a gradient stop.
 //
 //   Input:
 //     value: indicates what color to use at a gradient stop
@@ -1797,7 +1798,7 @@ func (e *TagSvgCircle) ShapeRendering(value interface{}) (ref *TagSvgCircle) {
 //
 // Português:
 //
-//  O atributo stop-color indica qual cor usar em uma parada de gradiente.
+// O atributo stop-color indica qual cor usar em uma parada de gradiente.
 //
 //   Entrada:
 //     value: indica qual cor usar em um fim de gradiente
@@ -2598,7 +2599,7 @@ func (e *TagSvgCircle) Style(value string) (ref *TagSvgCircle) {
 //
 // English:
 //
-//  The cx attribute define the x-axis coordinate of a center point.
+// The cx attribute define the x-axis coordinate of a center point.
 //
 //   Input:
 //     value: define the x-axis coordinate
@@ -2607,7 +2608,7 @@ func (e *TagSvgCircle) Style(value string) (ref *TagSvgCircle) {
 //
 // Português:
 //
-//  O atributo cx define a coordenada do eixo x de um ponto central.
+// O atributo cx define a coordenada do eixo x de um ponto central.
 //
 //   Entrada:
 //     value: define a coordenada do eixo x
@@ -2637,7 +2638,7 @@ func (e *TagSvgCircle) Cx(value interface{}) (ref *TagSvgCircle) {
 //
 // Português:
 //
-//  O atributo cy define a coordenada do eixo y de um ponto central.
+// O atributo cy define a coordenada do eixo y de um ponto central.
 //
 //   Entrada:
 //     value: define a coordenada do eixo y
@@ -2709,11 +2710,6 @@ func (e *TagSvgCircle) Text(value string) (ref *TagSvgCircle) {
 // Adiciona HTML ao conteúdo da tag.
 func (e *TagSvgCircle) Html(value string) (ref *TagSvgCircle) {
 	e.selfElement.Set("innerHTML", value)
-	return e
-}
-
-func (e *TagSvgCircle) AddEventListener(event string, f func(this js.Value, args []js.Value) interface{}) (ref *TagSvgCircle) {
-	e.selfElement.Call("addEventListener", event, js.FuncOf(f))
 	return e
 }
 
@@ -2818,30 +2814,17 @@ func (e *TagSvgCircle) StrokeDashOffset(value interface{}) (ref *TagSvgCircle) {
 	return e
 }
 
-func (e *TagSvgCircle) AddListener() (ref *TagSvgCircle) {
-	//elem := e.stage.Call("querySelector", "animateMotion")
-	//
-	e.selfElement.Call("addEventListener", "animationstart", js.FuncOf(e.event))
-	return e
-}
-
-func (e *TagSvgCircle) event(this js.Value, args []js.Value) interface{} {
-	log.Printf("%v", this)
-	log.Printf("%v", args)
-	return nil
-}
-
 // todo: functions de div
 
 // GetXY
 //
 // English:
 //
-//  Returns the X and Y axes in pixels.
+// Returns the X and Y axes in pixels.
 //
 // Português:
 //
-//  Retorna os eixos X e Y em pixels.
+// Retorna os eixos X e Y em pixels.
 func (e *TagSvgCircle) GetXY() (x, y float64) {
 	x = e.GetX()
 	y = e.GetY()
@@ -2853,11 +2836,11 @@ func (e *TagSvgCircle) GetXY() (x, y float64) {
 //
 // English:
 //
-//  Returns the X axe in pixels.
+// Returns the X axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo X em pixels.
+// Retorna o eixo X em pixels.
 func (e *TagSvgCircle) GetX() (x float64) {
 	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
 		return
@@ -2873,11 +2856,11 @@ func (e *TagSvgCircle) GetX() (x float64) {
 //
 // English:
 //
-//  Returns the Y axe in pixels.
+// Returns the Y axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo Y em pixels.
+// Retorna o eixo Y em pixels.
 func (e *TagSvgCircle) GetY() (y float64) {
 	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
 		return
@@ -2892,11 +2875,11 @@ func (e *TagSvgCircle) GetY() (y float64) {
 //
 // English:
 //
-//  Same as GetX() function, returns the x position of the element.
+// Same as GetX() function, returns the x position of the element.
 //
 // Português:
 //
-//  O mesmo que a função GetX(), retorna a posição x do elemento.
+// O mesmo que a função GetX(), retorna a posição x do elemento.
 func (e *TagSvgCircle) GetTop() (top float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	top = coordinate.Get("top").Float()
@@ -2907,11 +2890,11 @@ func (e *TagSvgCircle) GetTop() (top float64) {
 //
 // English:
 //
-//  It is the same as x + width.
+// It is the same as x + width.
 //
 // Português:
 //
-//  É o mesmo que x + width.
+// É o mesmo que x + width.
 func (e *TagSvgCircle) GetRight() (right float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	right = coordinate.Get("right").Float()
@@ -2922,11 +2905,11 @@ func (e *TagSvgCircle) GetRight() (right float64) {
 //
 // English:
 //
-//  It is the same as y + height.
+// It is the same as y + height.
 //
 // Português:
 //
-//  É o mesmo que y + Height.
+// É o mesmo que y + Height.
 func (e *TagSvgCircle) GetBottom() (bottom float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	bottom = coordinate.Get("bottom").Float()
@@ -2937,11 +2920,11 @@ func (e *TagSvgCircle) GetBottom() (bottom float64) {
 //
 // English:
 //
-//  Same as GetY() function, returns the y position of the element.
+// Same as GetY() function, returns the y position of the element.
 //
 // Português:
 //
-//  O mesmo que a função GetY(), retorna a posição y do elemento.
+// O mesmo que a função GetY(), retorna a posição y do elemento.
 func (e *TagSvgCircle) GetLeft() (left float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	left = coordinate.Get("left").Float()
@@ -2965,6 +2948,151 @@ func (e *TagSvgCircle) GetLeft() (left float64) {
 func (e *TagSvgCircle) Reference(reference **TagSvgCircle) (ref *TagSvgCircle) {
 	*reference = e
 	return e
+}
+
+// AddEventListenerMouseClick
+//
+// Enclish:
+//
+// Adds a mouse click event listener equivalent to the JavaScript command addEventListener('click',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de click do mouse equivalente ao comando JavaScript addEventListener('click',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEventClick := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddEventListenerMouseClick(&clmouseEventClickick) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-clickmouseEventClick:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgCircle) AddEventListenerMouseClick(mouseEvet *chan mouse.Data) (ref *TagSvgCircle) {
+	e.selfElement.Call(
+		"addEventListener",
+		"click",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+
+				*mouseEvet <- mouse.EventManager(this, args)
+
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+func (e *TagSvgCircle) AddListener() (ref *TagSvgCircle) {
+	//elem := e.stage.Call("querySelector", "animateMotion")
+	// click
+	//
+	//
+	//
+	//
+	// Animation Event Attributes
+	e.selfElement.Call("addEventListener", "begin", js.FuncOf(e.event))
+	e.selfElement.Call("addEventListener", "end", js.FuncOf(e.event))
+	e.selfElement.Call("addEventListener", "repeat", js.FuncOf(e.event))
+	// Document Event Attributes
+	//e.selfElement.Call("addEventListener", "abort", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "error", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "resize", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "scroll", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "unload", js.FuncOf(e.event))
+	// Document Element Event Attributes
+	//e.selfElement.Call("addEventListener", "copy", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "cut", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "paste", js.FuncOf(e.event))
+	// Global Event Attributes
+	//e.selfElement.Call("addEventListener", "cancel", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "canplay", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "canplaythrough", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "change", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "click", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "close", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "cuechange", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "dblclick", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "drag", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "dragend", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "dragenter", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "dragleave", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "dragover", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "dragstart", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "drop", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "durationchange", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "emptied", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "ended", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "error", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "focus", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "input", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "invalid", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "keydown", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "keypress", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "keyup", js.FuncOf(e.event))
+	e.selfElement.Call("addEventListener", "load", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "loadeddata", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "loadedmetadata", js.FuncOf(e.event))
+	e.selfElement.Call("addEventListener", "loadstart", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "mousedown", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "mouseenter", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "mouseleave", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "mousemove", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "mouseout", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "mouseover", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "mouseup", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "mousewheel", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "pause", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "play", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "playing", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "progress", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "ratechange", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "reset", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "resize", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "scroll", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "seeked", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "seeking", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "select", js.FuncOf(e.event))
+	e.selfElement.Call("addEventListener", "show", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "stalled", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "submit", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "suspend", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "timeupdate", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "toggle", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "volumechange", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "waiting", js.FuncOf(e.event))
+	// Graphical Event Attributes
+	//e.selfElement.Call("addEventListener", "activate", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "focusin", js.FuncOf(e.event))
+	//e.selfElement.Call("addEventListener", "focusout", js.FuncOf(e.event))
+	return e
+}
+
+func (e *TagSvgCircle) event(this js.Value, args []js.Value) interface{} {
+	log.Printf("%v", this.Get("screenX").String())
+	log.Printf("%v", args[0].Get("screenX").Float())
+	//log.Printf("%v", args)
+	return nil
 }
 
 //

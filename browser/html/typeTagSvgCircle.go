@@ -3575,10 +3575,6 @@ func (e *TagSvgCircle) AddListener() (ref *TagSvgCircle) {
 	//
 	//
 	//
-	// Animation Event Attributes
-	//e.selfElement.Call("addEventListener", "begin", js.FuncOf(e.event))
-	//e.selfElement.Call("addEventListener", "end", js.FuncOf(e.event))
-	//e.selfElement.Call("addEventListener", "repeat", js.FuncOf(e.event))
 	// Document Event Attributes
 	//e.selfElement.Call("addEventListener", "abort", js.FuncOf(e.event))
 	//e.selfElement.Call("addEventListener", "error", js.FuncOf(e.event))

@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"image/color"
@@ -3319,5 +3320,614 @@ func (e *TagSvgTSpan) GetLeft() (left float64) {
 //     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgTSpan) Reference(reference **TagSvgTSpan) (ref *TagSvgTSpan) {
 	*reference = e
+	return e
+}
+
+// AddListenerClick
+//
+// Enclish:
+//
+// Adds a mouse click event listener equivalent to the JavaScript command addEventListener('click',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de click do mouse, equivalente ao comando JavaScript addEventListener('click',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEvent := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddListenerClick(&clmouseEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-mouseEvent:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"click",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+				*mouseEvet <- mouse.EventManager(this, args)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerMouseOver
+//
+// Enclish:
+//
+// Adds a mouse over event listener equivalent to the JavaScript command addEventListener('mouseover',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de mouse sobre, equivalente ao comando JavaScript addEventListener('mouseover',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEvent := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddListenerMouseOver(&clmouseEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-mouseEvent:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"mouseover",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+				*mouseEvet <- mouse.EventManager(this, args)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerMouseOut
+//
+// Enclish:
+//
+// Adds a mouse out event listener equivalent to the JavaScript command addEventListener('mouseout',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de mouse fora, equivalente ao comando JavaScript addEventListener('mouseout',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEvent := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddListenerMouseOut(&clmouseEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-mouseEvent:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"mouseout",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+				*mouseEvet <- mouse.EventManager(this, args)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerMouseMove
+//
+// Enclish:
+//
+// Adds a mouse move event listener equivalent to the JavaScript command addEventListener('mousemove',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de mouse move, equivalente ao comando JavaScript addEventListener('mousemove',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEvent := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddListenerMouseMove(&clmouseEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-mouseEvent:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"mousemove",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+				*mouseEvet <- mouse.EventManager(this, args)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerMouseLeave
+//
+// Enclish:
+//
+// Adds a mouse leave event listener equivalent to the JavaScript command addEventListener('mouseleave',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de mouse saiu, equivalente ao comando JavaScript addEventListener('mouseleave',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEvent := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddListenerMouseLeave(&clmouseEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-mouseEvent:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"mouseleave",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+				*mouseEvet <- mouse.EventManager(this, args)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerMouseEnter
+//
+// Enclish:
+//
+// Adds a mouse enter event listener equivalent to the JavaScript command addEventListener('mouseenter',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de mouse entrou equivalente, ao comando JavaScript addEventListener('mouseenter',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEvent := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddListenerMouseEnter(&clmouseEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-mouseEvent:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"mouseenter",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+				*mouseEvet <- mouse.EventManager(this, args)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerMouseDown
+//
+// Enclish:
+//
+// Adds a mouse down event listener equivalent to the JavaScript command addEventListener('mousedown',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de botão do mouse precionado, equivalente ao comando JavaScript
+// addEventListener('mousedown',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEvent := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddListenerMouseDown(&clmouseEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-mouseEvent:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"mousedown",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+				*mouseEvet <- mouse.EventManager(this, args)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerMouseUp
+//
+// Enclish:
+//
+// Adds a mouse uo event listener equivalent to the JavaScript command addEventListener('mouseup',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de botão do mouse liberado, equivalente ao comando JavaScript
+// addEventListener('mouseup',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEvent := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddListenerMouseUp(&clmouseEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-mouseEvent:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"mouseup",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+				*mouseEvet <- mouse.EventManager(this, args)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerMouseWheel
+//
+// Enclish:
+//
+// Adds a mouse wheel event listener equivalent to the JavaScript command addEventListener('mousewheel',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de roda do mouse equivalente ao comando JavaScript addEventListener('mousewheel',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEvent := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddListenerMouseWheel(&clmouseEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-mouseEvent:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"mousewheel",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+				*mouseEvet <- mouse.EventManager(this, args)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerDoubleClick
+//
+// Enclish:
+//
+// Adds a mouse double click event listener equivalent to the JavaScript command addEventListener('dblclick',fn).
+//
+//   Input:
+//     mouseEvet: pointer to channel mouse.Data
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de click duplo do mouse equivalente ao comando JavaScript
+// addEventListener('dblclick',fn).
+//
+//   Entrada:
+//     mouseEvet: ponteiro para o channel mouse.Data
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     mouseEvent := make(chan mouse.Data)
+//     factoryBrowser.NewTagSvgCircle().AddListenerDoubleClick(&clmouseEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-mouseEvent:
+//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"dblclick",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if len(args) == 0 {
+					return nil
+				}
+				*mouseEvet <- mouse.EventManager(this, args)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerFocusIn
+//
+// Enclish:
+//
+// Adds a focus event listener equivalent to the JavaScript command addEventListener('focusin',fn).
+//
+//   Input:
+//     focusEvent: pointer to channel struct{}
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de foco equivalente ao comando JavaScript addEventListener('focusin',fn).
+//
+//   Entrada:
+//     focusEvent: ponteiro para o channel struct{}
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     focusEvent := make(chan struct{})
+//     factoryBrowser.NewTagSvgCircle().AddListenerFocusIn(&focusEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-focusEvent:
+//           log.Printf("focus in")
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerFocusIn(focusEvent *chan struct{}) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"focusin",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				*focusEvent <- struct{}{}
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerFocusOut
+//
+// Enclish:
+//
+// Adds a focus out event listener equivalent to the JavaScript command addEventListener('focusout',fn).
+//
+//   Input:
+//     focusEvent: pointer to channel struct{}
+//
+//   Notes:
+//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+// Português:
+//
+// Adiciona um ouvinte de perda de foco equivalente ao comando JavaScript addEventListener('focusout',fn).
+//
+//   Entrada:
+//     focusEvent: ponteiro para o channel struct{}
+//
+//   Notas:
+//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//
+//   Example: / Exemplo:
+//     focusEvent := make(chan struct{})
+//     factoryBrowser.NewTagSvgCircle().AddListenerFocusOut(&focusEvent) ...
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-focusEvent:
+//           log.Printf("focus out")
+//         }
+//       }
+//     }()
+func (e *TagSvgTSpan) AddListenerFocusOut(focusEvent *chan struct{}) (ref *TagSvgTSpan) {
+	e.selfElement.Call(
+		"addEventListener",
+		"animationiteration",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				*focusEvent <- struct{}{}
+				return nil
+			},
+		),
+	)
 	return e
 }

@@ -61,6 +61,7 @@ func EventManager(this js.Value) (data Data) {
 	event.Object = this
 
 	data.CurrentTime = event.GetCurrentTime()
+	data.This = this
 	return
 }
 
@@ -77,4 +78,19 @@ type Data struct {
 	// Retorna um float representando o tempo atual em segundos em relação ao tempo zero para o contêiner de tempo
 	// fornecido.
 	CurrentTime float64
+
+	// This
+	//
+	// English:
+	//
+	// This is the equivalent property of JavaScript's 'this'.
+	//
+	// The way to use it is This.Get(property string name). E.g. chan.This.Get("id")
+	//
+	// Português:
+	//
+	// Esta é a propriedade equivalente ao 'this' do JavaScript.
+	//
+	// A forma de usar é This.Get(property string name). Ex. chan.This.Get("id")
+	This js.Value
 }

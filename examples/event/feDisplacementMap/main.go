@@ -38,7 +38,9 @@ func main() {
 	done := make(chan struct{}, 0)
 
 	mouseEvent := make(chan mouse.Data)
-	animationEvent := make(chan animation.Data)
+	animationBeginEvent := make(chan animation.Data)
+	animationRepeatEvent := make(chan animation.Data)
+	animationEndEvent := make(chan animation.Data)
 
 	stage := factoryBrowser.NewStage()
 
@@ -51,7 +53,7 @@ func main() {
 		),
 
 		factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("circle").Tabindex(0).Tabindex(1).Cx(100).Cy(100).R(100).Style("filter: url(#displacementFilter)").Append(
-			factoryBrowser.NewTagSvgAnimate().AddListenerBegin(&animationEvent).AddListenerRepeat(&animationEvent).AddListenerEnd(&animationEvent).AttributeName("cx").Dur(1*time.Second).From(100).To(300).RepeatCount(2),
+			factoryBrowser.NewTagSvgAnimate().AddListenerBegin(&animationBeginEvent).AddListenerRepeat(&animationRepeatEvent).AddListenerEnd(&animationEndEvent).AttributeName("cx").Dur(1*time.Second).From(100).To(300).RepeatCount(3),
 		),
 	)
 
@@ -60,10 +62,14 @@ func main() {
 	go func() {
 		for {
 			select {
-			case data := <-animationEvent:
-				log.Printf("current time: %v", data.CurrentTime)
+			case data := <-animationBeginEvent:
+				log.Printf("begin: %v seconds", data.CurrentTime)
+			case data := <-animationRepeatEvent:
+				log.Printf("repeat: %v seconds", data.CurrentTime)
+			case data := <-animationEndEvent:
+				log.Printf("end: %v seconds", data.CurrentTime)
 			case data := <-mouseEvent:
-				log.Printf("click: %v (%v, %v)", data.This.Get("id"), data.ClientX, data.ClientY)
+				log.Printf("click: (%v, %v)", data.ClientX, data.ClientY)
 			}
 		}
 	}()

@@ -261,7 +261,8 @@ func (e *TagSvg) Id(id string) (ref *TagSvg) {
 //
 //   Input:
 //     value: specifies the primary language used in contents
-//       const KLanguage... (e.g. KLanguageEnglish)
+//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//       any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -279,7 +280,8 @@ func (e *TagSvg) Id(id string) (ref *TagSvg) {
 //
 //   Entrada:
 //     value: especifica o idioma principal usado no conteúdo
-//       const KLanguage... (ex. KLanguagePortuguese)
+//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//       qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -309,6 +311,9 @@ func (e *TagSvg) Lang(value interface{}) (ref *TagSvg) {
 //
 //   Input:
 //     value: control whether an element is focusable
+//       int: focus order
+//       nil: focus disabled
+//       any other type: interface{}
 //
 // Português:
 //
@@ -317,7 +322,10 @@ func (e *TagSvg) Lang(value interface{}) (ref *TagSvg) {
 //
 //   Input:
 //     value: controlar se um elemento é focalizável
-func (e *TagSvg) Tabindex(value int) (ref *TagSvg) {
+//       int: ordem do foco
+//       nil: disabilita o foco
+//       qualquer outro tipo: interface{}
+func (e *TagSvg) Tabindex(value interface{}) (ref *TagSvg) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }

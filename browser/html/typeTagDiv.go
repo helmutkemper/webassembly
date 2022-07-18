@@ -2,18 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/event"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/eventAnimation"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/eventClipBoard"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/eventDrag"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/eventFocus"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/eventHashChange"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/eventInput"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/eventKeyboard"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/eventPageTransition"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/eventUi"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/eventWheel"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/mouse"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"log"
@@ -1295,77 +1284,77 @@ func (e *TagDiv) GetRotateDelta() (delta float64) {
 //       log.Print(event.GetScreenX())
 //       log.Print(event.GetScreenY())
 //     }
-func (e *TagDiv) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagDiv) {
-
-	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		var mouseEvent = mouse.Event{}
-
-		if len(args) > 0 {
-			mouseEvent.Object = args[0]
-		}
-
-		if manager != nil {
-			manager(mouseEvent)
-		}
-
-		return nil
-	})
-
-	switch converted := eventType.(type) {
-	case event.Event:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	case eventAnimation.EventAnimation:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	case eventClipBoard.EventClipBoard:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	case eventDrag.EventDrag:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	case eventFocus.EventFocus:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	case eventHashChange.EventHashChange:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	case eventInput.EventInput:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	case eventKeyboard.EventKeyboard:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	//case mouse.Event:
-	//	e.listener.Store(converted.String(), mouseMoveEvt)
-	//	e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	case eventPageTransition.EventPageTransition:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	case eventUi.EventUi:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	case eventWheel.EventWheel:
-		e.listener.Store(converted.String(), mouseMoveEvt)
-		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-
-	default:
-		log.Fatalf("event must be a event type")
-	}
-
-	return e
-}
+//func (e *TagDiv) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagDiv) {
+//
+//	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+//		var mouseEvent = mouse.Event{}
+//
+//		if len(args) > 0 {
+//			mouseEvent.Object = args[0]
+//		}
+//
+//		if manager != nil {
+//			manager(mouseEvent)
+//		}
+//
+//		return nil
+//	})
+//
+//	switch converted := eventType.(type) {
+//	case event.Event:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	case eventAnimation.EventAnimation:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	case eventClipBoard.EventClipBoard:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	case eventDrag.EventDrag:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	case eventFocus.EventFocus:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	case eventHashChange.EventHashChange:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	case eventInput.EventInput:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	case eventKeyboard.EventKeyboard:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	//case mouse.Event:
+//	//	e.listener.Store(converted.String(), mouseMoveEvt)
+//	//	e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	case eventPageTransition.EventPageTransition:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	case eventUi.EventUi:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	case eventWheel.EventWheel:
+//		e.listener.Store(converted.String(), mouseMoveEvt)
+//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
+//
+//	default:
+//		log.Fatalf("event must be a event type")
+//	}
+//
+//	return e
+//}
 
 // RemoveListener
 //
@@ -1418,62 +1407,62 @@ func (e *TagDiv) AddListener(eventType interface{}, manager mouse.SimpleManager)
 //       log.Print(event.GetScreenX())
 //       log.Print(event.GetScreenY())
 //     }
-func (e *TagDiv) RemoveListener(eventType interface{}) (ref *TagDiv) {
-	switch converted := eventType.(type) {
-	case event.Event:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	case eventAnimation.EventAnimation:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	case eventClipBoard.EventClipBoard:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	case eventDrag.EventDrag:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	case eventFocus.EventFocus:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	case eventHashChange.EventHashChange:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	case eventInput.EventInput:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	case eventKeyboard.EventKeyboard:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	//case mouse.Event:
-	//	f, _ := e.listener.Load(converted.String())
-	//	e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	case eventPageTransition.EventPageTransition:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	case eventUi.EventUi:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	case eventWheel.EventWheel:
-		f, _ := e.listener.Load(converted.String())
-		e.selfElement.Call("removeEventListener", converted.String(), f)
-
-	default:
-		log.Fatalf("event must be a event type")
-	}
-
-	return e
-}
+//func (e *TagDiv) RemoveListener(eventType interface{}) (ref *TagDiv) {
+//	switch converted := eventType.(type) {
+//	case event.Event:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	case eventAnimation.EventAnimation:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	case eventClipBoard.EventClipBoard:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	case eventDrag.EventDrag:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	case eventFocus.EventFocus:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	case eventHashChange.EventHashChange:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	case eventInput.EventInput:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	case eventKeyboard.EventKeyboard:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	//case mouse.Event:
+//	//	f, _ := e.listener.Load(converted.String())
+//	//	e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	case eventPageTransition.EventPageTransition:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	case eventUi.EventUi:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	case eventWheel.EventWheel:
+//		f, _ := e.listener.Load(converted.String())
+//		e.selfElement.Call("removeEventListener", converted.String(), f)
+//
+//	default:
+//		log.Fatalf("event must be a event type")
+//	}
+//
+//	return e
+//}
 
 // Mouse
 //

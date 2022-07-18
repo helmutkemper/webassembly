@@ -250,7 +250,8 @@ func (e *TagSvgFePointLight) Id(id string) (ref *TagSvgFePointLight) {
 //
 //   Input:
 //     value: specifies the primary language used in contents
-//       const KLanguage... (e.g. KLanguageEnglish)
+//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//       any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -268,7 +269,8 @@ func (e *TagSvgFePointLight) Id(id string) (ref *TagSvgFePointLight) {
 //
 //   Entrada:
 //     value: especifica o idioma principal usado no conteúdo
-//       const KLanguage... (ex. KLanguagePortuguese)
+//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//       qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -298,6 +300,9 @@ func (e *TagSvgFePointLight) Lang(value interface{}) (ref *TagSvgFePointLight) {
 //
 //   Input:
 //     value: control whether an element is focusable
+//       int: focus order
+//       nil: focus disabled
+//       any other type: interface{}
 //
 // Português:
 //
@@ -306,7 +311,10 @@ func (e *TagSvgFePointLight) Lang(value interface{}) (ref *TagSvgFePointLight) {
 //
 //   Input:
 //     value: controlar se um elemento é focalizável
-func (e *TagSvgFePointLight) Tabindex(value int) (ref *TagSvgFePointLight) {
+//       int: ordem do foco
+//       nil: disabilita o foco
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFePointLight) Tabindex(value interface{}) (ref *TagSvgFePointLight) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }

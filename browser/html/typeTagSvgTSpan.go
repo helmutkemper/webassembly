@@ -252,7 +252,8 @@ func (e *TagSvgTSpan) Id(id string) (ref *TagSvgTSpan) {
 //
 //   Input:
 //     value: specifies the primary language used in contents
-//       const KLanguage... (e.g. KLanguageEnglish)
+//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//       any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -270,7 +271,8 @@ func (e *TagSvgTSpan) Id(id string) (ref *TagSvgTSpan) {
 //
 //   Entrada:
 //     value: especifica o idioma principal usado no conteúdo
-//       const KLanguage... (ex. KLanguagePortuguese)
+//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//       qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -298,11 +300,23 @@ func (e *TagSvgTSpan) Lang(value interface{}) (ref *TagSvgTSpan) {
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
+//   Input:
+//     value: control whether an element is focusable
+//       int: focus order
+//       nil: focus disabled
+//       any other type: interface{}
+//
 // Português:
 //
-// O atributo tabindex permite controlar se um elemento é focalizável e definir a ordem relativa do elemento para fins
+// O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
-func (e *TagSvgTSpan) Tabindex(value int) (ref *TagSvgTSpan) {
+//
+//   Input:
+//     value: controlar se um elemento é focalizável
+//       int: ordem do foco
+//       nil: disabilita o foco
+//       qualquer outro tipo: interface{}
+func (e *TagSvgTSpan) Tabindex(value interface{}) (ref *TagSvgTSpan) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }

@@ -260,7 +260,8 @@ func (e *TagSvgFeComponentTransfer) Id(id string) (ref *TagSvgFeComponentTransfe
 //
 //   Input:
 //     value: specifies the primary language used in contents
-//       const KLanguage... (e.g. KLanguageEnglish)
+//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//       any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -278,7 +279,8 @@ func (e *TagSvgFeComponentTransfer) Id(id string) (ref *TagSvgFeComponentTransfe
 //
 //   Entrada:
 //     value: especifica o idioma principal usado no conteúdo
-//       const KLanguage... (ex. KLanguagePortuguese)
+//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//       qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -308,6 +310,9 @@ func (e *TagSvgFeComponentTransfer) Lang(value interface{}) (ref *TagSvgFeCompon
 //
 //   Input:
 //     value: control whether an element is focusable
+//       int: focus order
+//       nil: focus disabled
+//       any other type: interface{}
 //
 // Português:
 //
@@ -316,7 +321,10 @@ func (e *TagSvgFeComponentTransfer) Lang(value interface{}) (ref *TagSvgFeCompon
 //
 //   Input:
 //     value: controlar se um elemento é focalizável
-func (e *TagSvgFeComponentTransfer) Tabindex(value int) (ref *TagSvgFeComponentTransfer) {
+//       int: ordem do foco
+//       nil: disabilita o foco
+//       qualquer outro tipo: interface{}
+func (e *TagSvgFeComponentTransfer) Tabindex(value interface{}) (ref *TagSvgFeComponentTransfer) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }

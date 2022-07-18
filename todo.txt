@@ -24,3 +24,35 @@ https://javascript.info/
 
 https://blog.maximeheckel.com/posts/cubic-bezier-from-math-to-motion/
 todo: path deve deixar de ser nativo e passar a ser código do framework? - fim
+
+// promise - inicio
+func main() {
+    c := make(chan struct{})
+
+    js.Global().Set("doSomething", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+        handler := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+            resolve := args[0]
+            reject := args[1]
+
+            go func() {
+                data, err := doSomeWork()
+                if err != nil {
+                    // err should be an instance of `error`, eg `errors.New("some error")`
+                    errorConstructor := js.Global().Get("Error")
+                    errorObject := errorConstructor.New(err.Error())
+                    reject.Invoke(errorObject)
+                } else {
+                    resolve.Invoke(js.ValueOf(data))
+                }
+            }()
+
+            return nil
+        })
+
+        promiseConstructor := js.Global().Get("Promise")
+        return promiseConstructor.New(handler)
+    })
+
+    <-c
+}
+// promise - fim

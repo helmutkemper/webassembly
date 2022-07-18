@@ -25,9 +25,10 @@
 package main
 
 import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/animation"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/mouse"
 	"log"
 	"time"
 )
@@ -36,7 +37,8 @@ func main() {
 
 	done := make(chan struct{}, 0)
 
-	mouseEventClick := make(chan mouse.Data)
+	mouseEvent := make(chan mouse.Data)
+	animationEvent := make(chan animation.Data)
 
 	stage := factoryBrowser.NewStage()
 
@@ -48,8 +50,8 @@ func main() {
 			factoryBrowser.NewTagSvgFeDisplacementMap().In2("turbulence").In(html.KSvgInSourceGraphic).Scale(50).XChannelSelector(html.KSvgChannelSelectorR).YChannelSelector(html.KSvgChannelSelectorG),
 		),
 
-		factoryBrowser.NewTagSvgCircle().AddEventListenerMouseClick(&mouseEventClick).Id("circle").Tabindex(0).Tabindex(1).Cx(100).Cy(100).R(100).Style("filter: url(#displacementFilter)").Append(
-			factoryBrowser.NewTagSvgAnimate().AttributeName("cx").Dur(5*time.Second).From(100).To(300).RepeatCount(html.KSvgDurIndefinite),
+		factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("circle").Tabindex(0).Tabindex(1).Cx(100).Cy(100).R(100).Style("filter: url(#displacementFilter)").Append(
+			factoryBrowser.NewTagSvgAnimate().AddListenerBegin(&animationEvent).AddListenerRepeat(&animationEvent).AddListenerEnd(&animationEvent).AttributeName("cx").Dur(1*time.Second).From(100).To(300).RepeatCount(2),
 		),
 	)
 
@@ -58,8 +60,10 @@ func main() {
 	go func() {
 		for {
 			select {
-			case data := <-mouseEventClick:
-				log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+			case data := <-animationEvent:
+				log.Printf("current time: %v", data.CurrentTime)
+			case data := <-mouseEvent:
+				log.Printf("click: %v (%v, %v)", data.This.Get("id"), data.ClientX, data.ClientY)
 			}
 		}
 	}()

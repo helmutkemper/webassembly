@@ -1,8 +1,9 @@
 package base
 
 import (
+	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser/event"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/mouse"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/easingTween"
 	"log"

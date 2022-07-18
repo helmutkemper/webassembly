@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/animation"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"image/color"
@@ -11,6 +12,8 @@ import (
 	"syscall/js"
 	"time"
 )
+
+// https://developer.mozilla.org/en-US/docs/Web/API/SVGAnimationElement
 
 // TagSvgAnimate
 //
@@ -250,7 +253,8 @@ func (e *TagSvgAnimate) Id(id string) (ref *TagSvgAnimate) {
 //
 //   Input:
 //     value: specifies the primary language used in contents
-//       const KLanguage... (e.g. KLanguageEnglish)
+//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//       any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -268,7 +272,8 @@ func (e *TagSvgAnimate) Id(id string) (ref *TagSvgAnimate) {
 //
 //   Entrada:
 //     value: especifica o idioma principal usado no conteúdo
-//       const KLanguage... (ex. KLanguagePortuguese)
+//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//       qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -298,6 +303,9 @@ func (e *TagSvgAnimate) Lang(value interface{}) (ref *TagSvgAnimate) {
 //
 //   Input:
 //     value: control whether an element is focusable
+//       int: focus order
+//       nil: focus disabled
+//       any other type: interface{}
 //
 // Português:
 //
@@ -306,7 +314,10 @@ func (e *TagSvgAnimate) Lang(value interface{}) (ref *TagSvgAnimate) {
 //
 //   Input:
 //     value: controlar se um elemento é focalizável
-func (e *TagSvgAnimate) Tabindex(value int) (ref *TagSvgAnimate) {
+//       int: ordem do foco
+//       nil: disabilita o foco
+//       qualquer outro tipo: interface{}
+func (e *TagSvgAnimate) Tabindex(value interface{}) (ref *TagSvgAnimate) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
 }
@@ -1408,5 +1419,173 @@ func (e *TagSvgAnimate) Html(value string) (ref *TagSvgAnimate) {
 //     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgAnimate) Reference(reference **TagSvgAnimate) (ref *TagSvgAnimate) {
 	*reference = e
+	return e
+}
+
+// AddListenerBegin
+//
+// Enclish:
+//
+// Adds an animation begin event listener equivalent to the JavaScript command addEventListener('beginEvent',fn).
+//
+//   Input:
+//     animationEvent: pointer to channel animation.Data
+//
+//   Notes:
+//     * For more information see the sites https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//       and https://developer.mozilla.org/en-US/docs/Web/API/SVGAnimationElement
+//
+// Português:
+//
+// Adiciona um ouvinte de inicio de animação equivalente ao comando JavaScript addEventListener('beginEvent',fn).
+//
+//   Entrada:
+//     animationEvent: ponteiro para o channel animation.Data
+//
+//   Notas:
+//     * Para mais informações veja os sites https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//       e https://developer.mozilla.org/en-US/docs/Web/API/SVGAnimationElement
+//
+//   Example: / Exemplo:
+//     animationEvent := make(chan animation.Data)
+//     factoryBrowser.NewTagSvgCircle() ... .Append(
+//       factoryBrowser.NewTagSvgAnimate().AddListenerEnd(&animationEvent)...
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-animationEvent:
+//           log.Printf("current time (seconds): %v", data.CurrentTime)
+//         }
+//       }
+//     }()
+func (e *TagSvgAnimate) AddListenerBegin(animationEvent *chan animation.Data) (ref *TagSvgAnimate) {
+	e.selfElement.Call(
+		"addEventListener",
+		"beginEvent",
+		js.FuncOf(
+			func(this js.Value, _ []js.Value) interface{} {
+				if this.IsNull() == true || this.IsUndefined() == true {
+					return nil
+				}
+
+				*animationEvent <- animation.EventManager(this)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerRepeat
+//
+// Enclish:
+//
+// Adds an animation repeat event listener equivalent to the JavaScript command addEventListener('repeatEvent',fn).
+//
+//   Input:
+//     animationEvent: pointer to channel animation.Data
+//
+//   Notes:
+//     * For more information see the sites https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//       and https://developer.mozilla.org/en-US/docs/Web/API/SVGAnimationElement
+//
+// Português:
+//
+// Adiciona um ouvinte de repetição de animação equivalente ao comando JavaScript addEventListener('repeatEvent',fn).
+//
+//   Entrada:
+//     animationEvent: ponteiro para o channel animation.Data
+//
+//   Notas:
+//     * Para mais informações veja os sites https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//       e https://developer.mozilla.org/en-US/docs/Web/API/SVGAnimationElement
+//
+//   Example: / Exemplo:
+//     animationEvent := make(chan animation.Data)
+//     factoryBrowser.NewTagSvgCircle() ... .Append(
+//       factoryBrowser.NewTagSvgAnimate().AddListenerEnd(&animationEvent)...
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-animationEvent:
+//           log.Printf("current time (seconds): %v", data.CurrentTime)
+//         }
+//       }
+//     }()
+func (e *TagSvgAnimate) AddListenerRepeat(animationEvent *chan animation.Data) (ref *TagSvgAnimate) {
+	e.selfElement.Call(
+		"addEventListener",
+		"repeatEvent",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if this.IsNull() == true || this.IsUndefined() == true {
+					return nil
+				}
+
+				*animationEvent <- animation.EventManager(this)
+				return nil
+			},
+		),
+	)
+	return e
+}
+
+// AddListenerEnd
+//
+// Enclish:
+//
+// Adds an animation end event listener equivalent to the JavaScript command addEventListener('endEvent',fn).
+//
+//   Input:
+//     animationEvent: pointer to channel animation.Data
+//
+//   Notes:
+//     * For more information see the sites https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//       and https://developer.mozilla.org/en-US/docs/Web/API/SVGAnimationElement
+//
+// Português:
+//
+// Adiciona um ouvinte de fim de animação equivalente ao comando JavaScript addEventListener('endEvent',fn).
+//
+//   Entrada:
+//     animationEvent: ponteiro para o channel animation.Data
+//
+//   Notas:
+//     * Para mais informações veja os sites https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//       e https://developer.mozilla.org/en-US/docs/Web/API/SVGAnimationElement
+//
+//   Example: / Exemplo:
+//     animationEvent := make(chan animation.Data)
+//     factoryBrowser.NewTagSvgCircle() ... .Append(
+//       factoryBrowser.NewTagSvgAnimate().AddListenerEnd(&animationEvent)...
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case data := <-animationEvent:
+//           log.Printf("current time (seconds): %v", data.CurrentTime)
+//         }
+//       }
+//     }()
+func (e *TagSvgAnimate) AddListenerEnd(animationEvent *chan animation.Data) (ref *TagSvgAnimate) {
+	e.selfElement.Call(
+		"addEventListener",
+		"endEvent",
+		js.FuncOf(
+			func(this js.Value, args []js.Value) interface{} {
+				if this.IsNull() == true || this.IsUndefined() == true {
+					return nil
+				}
+
+				*animationEvent <- animation.EventManager(this)
+				return nil
+			},
+		),
+	)
 	return e
 }

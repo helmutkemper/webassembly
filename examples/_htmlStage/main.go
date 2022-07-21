@@ -2,7 +2,6 @@ package main
 
 import (
 	coordinateManager "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
-	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/engine"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorGradient"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryColorNames"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryDraw"
@@ -16,6 +15,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontFamily"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontStyle"
 	iotmakerPlatformIDraw "github.com/helmutkemper/iotmaker.webassembly/platform/IDraw"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
 	"html"
 )
 

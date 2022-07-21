@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/globalEngine"
+)
 
 // NewTagSvgAnimateMotion
 //
@@ -22,6 +25,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //       <animateMotion> ao invés do atributo path.
 func NewTagSvgAnimateMotion() (ref *html.TagSvgAnimateMotion) {
 	ref = &html.TagSvgAnimateMotion{}
+	ref.SetEngine(globalEngine.Engine) //todo: fazer em todos
 	ref.Init()
 
 	return ref

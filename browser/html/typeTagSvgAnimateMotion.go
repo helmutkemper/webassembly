@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/animation"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
 	"image/color"
 	"log"
 	"strconv"
@@ -168,6 +169,24 @@ type TagSvgAnimateMotion struct {
 	fnBegin  *js.Func
 	fnRepeat *js.Func
 	fnEnd    *js.Func
+	fnMotion *js.Func
+
+	// fnMotionEngineId
+	//
+	// English:
+	//
+	// Engine returns an ID for each function added and the ID must be used to remove the function.
+	//
+	// Português:
+	//
+	// Engine retorna um ID para cada função adicionada e o ID deve ser usado para remover à função.
+	fnMotionEngineId string
+
+	engine engine.IEngine
+}
+
+func (e *TagSvgAnimateMotion) SetEngine(engine engine.IEngine) {
+	e.engine = engine
 }
 
 // Init
@@ -3760,7 +3779,7 @@ func (e *TagSvgAnimateMotion) AddListenerBegin(animationEvent *chan animation.Da
 	return e
 }
 
-func (e *TagSvgAnimateMotion) RemoveListenerBegin(animationEvent *chan animation.Data) (ref *TagSvgAnimateMotion) {
+func (e *TagSvgAnimateMotion) RemoveListenerBegin() (ref *TagSvgAnimateMotion) {
 	if e.fnBegin == nil {
 		return
 	}
@@ -3785,6 +3804,7 @@ func (e *TagSvgAnimateMotion) RemoveListenerBegin(animationEvent *chan animation
 //   Notes:
 //     * For more information see the sites https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //       and https://developer.mozilla.org/en-US/docs/Web/API/SVGAnimationElement
+//     * Em 07/2022, este evento não funciona no safari da apple
 //
 // Português:
 //
@@ -3796,6 +3816,7 @@ func (e *TagSvgAnimateMotion) RemoveListenerBegin(animationEvent *chan animation
 //   Notas:
 //     * Para mais informações veja os sites https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //       e https://developer.mozilla.org/en-US/docs/Web/API/SVGAnimationElement
+//     * On 072022 this event doesn't work on apple safari
 //
 //   Example: / Exemplo:
 //     animationEvent := make(chan animation.Data)
@@ -3833,7 +3854,7 @@ func (e *TagSvgAnimateMotion) AddListenerRepeat(animationEvent *chan animation.D
 	return e
 }
 
-func (e *TagSvgAnimateMotion) RemoveListenerRepeat(animationEvent *chan animation.Data) (ref *TagSvgAnimateMotion) {
+func (e *TagSvgAnimateMotion) RemoveListenerRepeat() (ref *TagSvgAnimateMotion) {
 	if e.fnRepeat == nil {
 		return
 	}
@@ -3917,5 +3938,57 @@ func (e *TagSvgAnimateMotion) RemoveListenerEnd() (ref *TagSvgAnimateMotion) {
 		"endEvent",
 		*e.fnEnd,
 	)
+	return e
+}
+
+func (e *TagSvgAnimateMotion) AddListenerMotion(animationEvent *chan animation.Data) (ref *TagSvgAnimateMotion) {
+
+	//todo: usar o evento 'endEvent' reduziria o custo de processamento
+	//      using 'endEvent' event would reduce processing cost
+
+	var fn js.Func
+
+	if e.fnMotion == nil {
+		fn = js.FuncOf(func(this js.Value, _ []js.Value) interface{} {
+			if this.IsNull() == true || this.IsUndefined() == true {
+				return nil
+			}
+			var create = time.Now()
+			e.fnMotionEngineId, _ = e.engine.DrawAddToFunctions(
+				func() {
+					var now = time.Now()
+					var data animation.Data
+					data.This = this
+					data.CurrentTime = float64(now.Sub(create).Milliseconds()) / 1000.0
+					data.Name = animation.KEventMotion
+					*animationEvent <- data
+				},
+			)
+			return nil
+		})
+		e.fnMotion = &fn
+	}
+	e.selfElement.Call(
+		"addEventListener",
+		"beginEvent",
+		*e.fnMotion,
+	)
+	return e
+}
+
+func (e *TagSvgAnimateMotion) RemoveListenerMotion() (ref *TagSvgAnimateMotion) {
+	if e.fnMotion == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"beginEvent",
+		*e.fnMotion,
+	)
+
+	e.engine.DrawDeleteFromFunctions(e.fnMotionEngineId)
+	e.fnMotion = nil
+
 	return e
 }

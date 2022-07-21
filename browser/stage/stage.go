@@ -29,7 +29,7 @@ type Stage struct {
 	listener *sync.Map
 }
 
-func (e *Stage) Setengine(engine engine.IEngine) {
+func (e *Stage) SetEngine(engine engine.IEngine) {
 	e.engine = engine
 }
 
@@ -45,10 +45,6 @@ func (e *Stage) Setengine(engine engine.IEngine) {
 func (e *Stage) Init() {
 	e.selfDocument = js.Global().Get("document")
 	e.listener = new(sync.Map)
-
-	if e.engine != nil {
-		e.engine.Init()
-	}
 }
 
 func (e *Stage) Append(value interface{}) (ref *Stage) {

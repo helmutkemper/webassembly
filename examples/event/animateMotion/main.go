@@ -22,6 +22,7 @@
 package main
 
 import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/animation"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
@@ -35,9 +36,12 @@ func main() {
 	var svgG *html.TagSvgG
 	var line *html.TagSvgLine
 	var cruz *html.TagSvg
+	var animateMotion *html.TagSvgAnimateMotion
 
 	var factor = 1.0
 	var width = 400.0
+
+	animationEvent := make(chan animation.Data)
 
 	stage := factoryBrowser.NewStage()
 
@@ -46,8 +50,8 @@ func main() {
 		factoryBrowser.NewTagSvg().Append(
 			factoryBrowser.NewTagSvgG().Append(
 				factoryBrowser.NewTagSvgPath().Fill(nil).Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
-				factoryBrowser.NewTagSvgCircle().Reference(&circle).Id("trinidad").Cx(0).Cy(0).R(5).Fill(factoryColor.NewRed()).Append(
-					factoryBrowser.NewTagSvgAnimateMotion().Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+				factoryBrowser.NewTagSvgCircle().Reference(&circle).Id("trinidad").R(5).Fill(factoryColor.NewRed()).Append(
+					factoryBrowser.NewTagSvgAnimateMotion().Reference(&animateMotion).AddListenerMotion(&animationEvent).Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
 				),
 			),
 		),
@@ -74,17 +78,25 @@ func main() {
 
 	stage.Append(s1)
 
-	// Adiciona uma função de alta latencia para ser executada 10x por segundo.
-	stage.AddHighLatencyFunctions(func() {
-		factor = (container.GetRight() - container.GetX()) / width
-	})
+	timeOut := time.NewTimer(10 * time.Second)
 
-	// Adiciona uma função de baixa latência para ser executada até 120x por segundo.
-	stage.AddDrawFunctions(func() {
-		angle := math.Atan2(120-circle.GetY()/factor, 95-circle.GetX()/factor)
-		svgG.Transform(factoryBrowser.NewTransform().Rotate(angle*180/math.Pi-90, 25, 25))
-		line.X1(100).Y1(125).X2(circle.GetX()/factor + 5).Y2(circle.GetY()/factor + 5)
-	})
+	go func() {
+		for {
+			select {
+			case <-timeOut.C:
+				svgG.Opacity(0.0)
+				cruz.Opacity(0.0)
+				line.Opacity(0.0)
+				animateMotion.RemoveListenerMotion()
+
+			case <-animationEvent:
+				factor = (container.GetRight() - container.GetX()) / width
+				angle := math.Atan2(120-circle.GetY()/factor, 95-circle.GetX()/factor)
+				svgG.Transform(factoryBrowser.NewTransform().Rotate(angle*180/math.Pi-90, 25, 25))
+				line.X1(100).Y1(125).X2(circle.GetX()/factor + 5).Y2(circle.GetY()/factor + 5)
+			}
+		}
+	}()
 
 	done := make(chan struct{}, 0)
 	<-done

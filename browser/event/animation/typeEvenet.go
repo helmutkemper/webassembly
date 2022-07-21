@@ -32,6 +32,7 @@ const (
 	KEventBegin  EventName = "begin"
 	KEventRepeat EventName = "repeat"
 	KEventEnd    EventName = "end"
+	KEventMotion EventName = "motion"
 )
 
 // GetCurrentTime

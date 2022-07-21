@@ -157,6 +157,10 @@ type TagSvgAnimateTransform struct {
 	pointsLen int
 
 	rotateDelta float64
+
+	fnBegin  *js.Func
+	fnRepeat *js.Func
+	fnEnd    *js.Func
 }
 
 // Init
@@ -1349,20 +1353,39 @@ func (e *TagSvgAnimateTransform) Reference(reference **TagSvgAnimateTransform) (
 //       }
 //     }()
 func (e *TagSvgAnimateTransform) AddListenerBegin(animationEvent *chan animation.Data) (ref *TagSvgAnimateTransform) {
+	var fn js.Func
+
+	if e.fnBegin == nil {
+		js.FuncOf(func(this js.Value, _ []js.Value) interface{} {
+			if this.IsNull() == true || this.IsUndefined() == true {
+				return nil
+			}
+
+			*animationEvent <- animation.EventManager(animation.KEventBegin, this)
+			return nil
+		})
+		e.fnBegin = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"beginEvent",
-		js.FuncOf(
-			func(this js.Value, _ []js.Value) interface{} {
-				if this.IsNull() == true || this.IsUndefined() == true {
-					return nil
-				}
-
-				*animationEvent <- animation.EventManager(this)
-				return nil
-			},
-		),
+		*e.fnBegin,
 	)
+	return e
+}
+
+func (e *TagSvgAnimateTransform) RemoveListenerBegin() (ref *TagSvgAnimateTransform) {
+	if e.fnBegin == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"beginEvent",
+		*e.fnBegin,
+	)
+	e.fnBegin = nil
 	return e
 }
 
@@ -1405,20 +1428,38 @@ func (e *TagSvgAnimateTransform) AddListenerBegin(animationEvent *chan animation
 //       }
 //     }()
 func (e *TagSvgAnimateTransform) AddListenerRepeat(animationEvent *chan animation.Data) (ref *TagSvgAnimateTransform) {
+	var fn js.Func
+
+	if e.fnRepeat == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if this.IsNull() == true || this.IsUndefined() == true {
+				return nil
+			}
+
+			*animationEvent <- animation.EventManager(animation.KEventRepeat, this)
+			return nil
+		})
+		e.fnRepeat = &fn
+	}
 	e.selfElement.Call(
 		"addEventListener",
 		"repeatEvent",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if this.IsNull() == true || this.IsUndefined() == true {
-					return nil
-				}
-
-				*animationEvent <- animation.EventManager(this)
-				return nil
-			},
-		),
+		*e.fnRepeat,
 	)
+	return e
+}
+
+func (e *TagSvgAnimateTransform) RemoveListenerRepeat() (ref *TagSvgAnimateTransform) {
+	if e.fnRepeat == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"repeatEvent",
+		*e.fnRepeat,
+	)
+	e.fnRepeat = nil
 	return e
 }
 
@@ -1461,19 +1502,38 @@ func (e *TagSvgAnimateTransform) AddListenerRepeat(animationEvent *chan animatio
 //       }
 //     }()
 func (e *TagSvgAnimateTransform) AddListenerEnd(animationEvent *chan animation.Data) (ref *TagSvgAnimateTransform) {
+	var fn js.Func
+
+	if e.fnEnd == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if this.IsNull() == true || this.IsUndefined() == true {
+				return nil
+			}
+
+			*animationEvent <- animation.EventManager(animation.KEventEnd, this)
+			return nil
+		})
+		e.fnEnd = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"endEvent",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if this.IsNull() == true || this.IsUndefined() == true {
-					return nil
-				}
-
-				*animationEvent <- animation.EventManager(this)
-				return nil
-			},
-		),
+		*e.fnEnd,
 	)
+	return e
+}
+
+func (e *TagSvgAnimateTransform) RemoveListenerEnd() (ref *TagSvgAnimateTransform) {
+	if e.fnEnd == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"endEvent",
+		*e.fnEnd,
+	)
+	e.fnEnd = nil
 	return e
 }

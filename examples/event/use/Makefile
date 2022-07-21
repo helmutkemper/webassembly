@@ -26,7 +26,7 @@ buildandrun:
 ## build this example
 build:
 	$(GO) mod tidy
-	GOARCH=wasm GOOS=js $(GO) build -ldflags "-s -w" -o main.wasm
+	GOARCH=wasm GOOS=js $(GO) build -o main.wasm
 
 
 .PHONY: server

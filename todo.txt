@@ -56,3 +56,17 @@ func main() {
     <-c
 }
 // promise - fim
+
+desempenho - inicio
+FPS: 120
+begin: 0 seconds
+repeat: 1.0004119873046875 seconds
+repeat: 2.0003719329833984 seconds
+end: 3.0003321170806885 seconds
+-------------------
+FPS: 120
+begin: 0 seconds
+repeat: 1.016626000404358 seconds
+repeat: 2.0165860652923584 seconds
+end: 3.0165460109710693 seconds
+desempenho - fim

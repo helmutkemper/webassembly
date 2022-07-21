@@ -2,6 +2,25 @@ package mouse
 
 import "syscall/js"
 
+type EventName string
+
+func (e EventName) String() string {
+	return string(e)
+}
+
+const (
+	KEventClick       EventName = "click"
+	KEventMouseOver   EventName = "mouseover"
+	KEventMouseOut    EventName = "mouseout"
+	KEventMouseMove   EventName = "mousemove"
+	KEventMouseLeave  EventName = "mouseleave"
+	KEventMouseEnter  EventName = "mouseenter"
+	KEventMouseDown   EventName = "mousedown"
+	KEventMouseUp     EventName = "mouseup"
+	KEventMouseWheel  EventName = "mousewheel"
+	KEventDoubleClick EventName = "dblclick"
+)
+
 // EventManager
 //
 // English:
@@ -17,7 +36,7 @@ import "syscall/js"
 //
 //   Saída:
 //     data: lista com todas as informações fornecidas pelo navegador.
-func EventManager(this js.Value, args []js.Value) (data Data) {
+func EventManager(name EventName, this js.Value, args []js.Value) (data Data) {
 	var event = Event{}
 	event.Object = args[0]
 

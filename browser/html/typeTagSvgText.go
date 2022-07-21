@@ -163,6 +163,17 @@ type TagSvgText struct {
 	pointsLen int
 
 	rotateDelta float64
+
+	fnClick       *js.Func
+	fnMouseOver   *js.Func
+	fnMouseOut    *js.Func
+	fnMouseMove   *js.Func
+	fnMouseLeave  *js.Func
+	fnMouseEnter  *js.Func
+	fnMouseDown   *js.Func
+	fnMouseUp     *js.Func
+	fnMouseWheel  *js.Func
+	fnDoubleClick *js.Func
 }
 
 // Init
@@ -1466,122 +1477,6 @@ func (e *TagSvgText) LightingColor(value interface{}) (ref *TagSvgText) {
 	}
 
 	e.selfElement.Call("setAttribute", "lighting-color", value)
-	return e
-}
-
-// MarkerEnd
-//
-// English:
-//
-// The marker-end attribute defines the arrowhead or polymarker that will be drawn at the final vertex of the given
-// shape.
-//
-//   Input:
-//     value: the arrowhead or polymarker that will be drawn
-//       string: (e.g. "url(#triangle)")
-//
-// For all shape elements, except <polyline> and <path>, the last vertex is the same as the first vertex. In this case,
-// if the value of marker-start and marker-end are both not none, then two markers will be rendered on that final
-// vertex.
-// For <path> elements, for each closed subpath, the last vertex is the same as the first vertex. marker-end is only
-// rendered on the final vertex of the path data.
-//
-// Notes:
-//   * As a presentation attribute, marker-end can be used as a CSS property.
-//
-// Português:
-//
-// O atributo marker-end define a ponta de seta ou polimarcador que será desenhado no vértice final da forma dada.
-//
-//   Entrada:
-//     value: a ponta de seta ou polimarcador que será desenhado
-//       string: (e.g. "url(#triangle)")
-//
-// Para todos os elementos de forma, exceto <polyline> e <path>, o último vértice é o mesmo que o primeiro vértice.
-// Nesse caso, se o valor de marker-start e marker-end não for nenhum, então dois marcadores serão renderizados nesse
-// vértice final.
-// Para elementos <path>, para cada subcaminho fechado, o último vértice é igual ao primeiro vértice.
-// O final do marcador é renderizado apenas no vértice final dos dados do caminho.
-//
-// Notas:
-//   * Como atributo de apresentação, o marker-end pode ser usado como uma propriedade CSS.
-func (e *TagSvgText) MarkerEnd(value interface{}) (ref *TagSvgText) {
-	e.selfElement.Call("setAttribute", "marker-end", value)
-	return e
-}
-
-// MarkerMid
-//
-// English:
-//
-// The marker-mid attribute defines the arrowhead or polymarker that will be drawn at all interior vertices of the
-// given shape.
-//
-//   Input:
-//     value: defines the arrowhead or polymarker that will be drawn
-//       string: e.g. "url(#circle)"
-//
-// The marker is rendered on every vertex other than the first and last vertices of the path data.
-//
-// Notes:
-//   * As a presentation attribute, marker-mid can be used as a CSS property.
-//
-// Português:
-//
-// O atributo marker-mid define a ponta de seta ou polimarcador que será desenhado em todos os vértices internos da
-// forma dada.
-//
-//   Input:
-//     value: define a ponta de seta ou polimarcador que será desenhado
-//       string: ex. "url(#circle)"
-//
-// O marcador é renderizado em todos os vértices, exceto no primeiro e no último vértice dos dados do caminho.
-//
-// Notas:
-//   * Como atributo de apresentação, o marker-mid pode ser usado como uma propriedade CSS.
-func (e *TagSvgText) MarkerMid(value interface{}) (ref *TagSvgText) {
-	e.selfElement.Call("setAttribute", "marker-mid", value)
-	return e
-}
-
-// MarkerStart
-//
-// English:
-//
-// The marker-start attribute defines the arrowhead or polymarker that will be drawn at the first vertex of the given
-// shape.
-//
-//   Input:
-//     value: defines the arrowhead or polymarker that will be drawn
-//       string: e.g. "url(#triangle)"
-//
-// For all shape elements, except <polyline> and <path>, the last vertex is the same as the first vertex. In this case,
-// if the value of marker-start and marker-end are both not none, then two markers will be rendered on that final
-// vertex.
-// For <path> elements, for each closed subpath, the last vertex is the same as the first vertex. marker-start is only
-// rendered on the first vertex of the path data.
-//
-// Notes:
-//   * As a presentation attribute, marker-start can be used as a CSS property.
-//
-// Português:
-//
-// O atributo marker-start define a ponta de seta ou polimarcador que será desenhado no primeiro vértice da forma dada.
-//
-//   Entrada:
-//     value: define a ponta de seta ou polimarcador que será desenhado
-//       string: e.g. "url(#triangle)"
-//
-// Para todos os elementos de forma, exceto <polyline> e <path>, o último vértice é o mesmo que o primeiro vértice.
-// Nesse caso, se o valor de marker-start e marker-end não for nenhum, então dois marcadores serão renderizados nesse
-// vértice final.
-// Para elementos <path>, para cada subcaminho fechado, o último vértice é igual ao primeiro vértice. O início do
-// marcador é renderizado apenas no primeiro vértice dos dados do caminho.
-//
-// Notas:
-//   * Como atributo de apresentação, o início do marcador pode ser usado como uma propriedade CSS.
-func (e *TagSvgText) MarkerStart(value interface{}) (ref *TagSvgText) {
-	e.selfElement.Call("setAttribute", "marker-start", value)
 	return e
 }
 
@@ -3390,9 +3285,6 @@ func (e *TagSvgText) Reference(reference **TagSvgText) (ref *TagSvgText) {
 //   Input:
 //     mouseEvet: pointer to channel mouse.Data
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
-//
 // Português:
 //
 // Adiciona um ouvinte de evento de click do mouse, equivalente ao comando JavaScript addEventListener('click',fn).
@@ -3400,35 +3292,147 @@ func (e *TagSvgText) Reference(reference **TagSvgText) (ref *TagSvgText) {
 //   Entrada:
 //     mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
-//
 //   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
 //     mouseEvent := make(chan mouse.Data)
-//     factoryBrowser.NewTagSvgCircle().AddListenerClick(&clmouseEvent) ...
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
 //
 //     go func() {
 //       for {
 //         select {
-//         case data := <-mouseEvent:
-//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
 //         }
 //       }
 //     }()
 func (e *TagSvgText) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvgText) {
+	var fn js.Func
+
+	if e.fnClick == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*mouseEvet <- mouse.EventManager(mouse.KEventClick, this, args)
+			return nil
+		})
+		e.fnClick = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"click",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if len(args) == 0 {
-					return nil
-				}
-				*mouseEvet <- mouse.EventManager(this, args)
-				return nil
-			},
-		),
+		*e.fnClick,
 	)
+	return e
+}
+
+// RemoveListenerClick
+//
+// English:
+//
+// Removes a mouse click event listener, equivalent to the JavaScript command RemoveEventListener('click',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de click do mouse, equivalente ao comando JavaScript RemoveEventListener('click',fn).
+//
+//   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
+//         }
+//       }
+//     }()
+func (e *TagSvgText) RemoveListenerClick() (ref *TagSvgText) {
+	if e.fnClick == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"click",
+		*e.fnClick,
+	)
+	e.fnClick = nil
 	return e
 }
 
@@ -3455,31 +3459,146 @@ func (e *TagSvgText) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvgTe
 //     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 //   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
 //     mouseEvent := make(chan mouse.Data)
-//     factoryBrowser.NewTagSvgCircle().AddListenerMouseOver(&clmouseEvent) ...
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
 //
 //     go func() {
 //       for {
 //         select {
-//         case data := <-mouseEvent:
-//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
 //         }
 //       }
 //     }()
 func (e *TagSvgText) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagSvgText) {
+	var fn js.Func
+
+	if e.fnMouseOver == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*mouseEvet <- mouse.EventManager(mouse.KEventMouseOver, this, args)
+			return nil
+		})
+		e.fnMouseOver = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"mouseover",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if len(args) == 0 {
-					return nil
-				}
-				*mouseEvet <- mouse.EventManager(this, args)
-				return nil
-			},
-		),
+		*e.fnMouseOver,
 	)
+	return e
+}
+
+// RemoveListenerMouseOver
+//
+// English:
+//
+// Removes a mouse over event listener, equivalent to the JavaScript command RemoveEventListener('mouseover',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de mouse sobre, equivalente ao comando JavaScript RemoveEventListener('mouseover',fn).
+//
+//   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
+//         }
+//       }
+//     }()
+func (e *TagSvgText) RemoveListenerMouseOver() (ref *TagSvgText) {
+	if e.fnMouseOver == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"mouseover",
+		*e.fnMouseOver,
+	)
+	e.fnMouseOver = nil
 	return e
 }
 
@@ -3506,31 +3625,146 @@ func (e *TagSvgText) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagS
 //     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 //   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
 //     mouseEvent := make(chan mouse.Data)
-//     factoryBrowser.NewTagSvgCircle().AddListenerMouseOut(&clmouseEvent) ...
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
 //
 //     go func() {
 //       for {
 //         select {
-//         case data := <-mouseEvent:
-//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
 //         }
 //       }
 //     }()
 func (e *TagSvgText) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagSvgText) {
+	var fn js.Func
+
+	if e.fnMouseOut == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*mouseEvet <- mouse.EventManager(mouse.KEventMouseOut, this, args)
+			return nil
+		})
+		e.fnMouseOut = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"mouseout",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if len(args) == 0 {
-					return nil
-				}
-				*mouseEvet <- mouse.EventManager(this, args)
-				return nil
-			},
-		),
+		*e.fnMouseOut,
 	)
+	return e
+}
+
+// RemoveListenerMouseOut
+//
+// English:
+//
+// Removes a mouse out event listener, equivalent to the JavaScript command RemoveEventListener('mouseout',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de mouse fora, equivalente ao comando JavaScript RemoveEventListener('mouseout',fn).
+//
+//   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
+//         }
+//       }
+//     }()
+func (e *TagSvgText) RemoveListenerMouseOut() (ref *TagSvgText) {
+	if e.fnMouseOut == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"mouseout",
+		*e.fnMouseOut,
+	)
+	e.fnMouseOut = nil
 	return e
 }
 
@@ -3557,31 +3791,146 @@ func (e *TagSvgText) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagSv
 //     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 //   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
 //     mouseEvent := make(chan mouse.Data)
-//     factoryBrowser.NewTagSvgCircle().AddListenerMouseMove(&clmouseEvent) ...
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
 //
 //     go func() {
 //       for {
 //         select {
-//         case data := <-mouseEvent:
-//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
 //         }
 //       }
 //     }()
 func (e *TagSvgText) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagSvgText) {
+	var fn js.Func
+
+	if e.fnMouseMove == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*mouseEvet <- mouse.EventManager(mouse.KEventMouseMove, this, args)
+			return nil
+		})
+		e.fnMouseMove = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"mousemove",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if len(args) == 0 {
-					return nil
-				}
-				*mouseEvet <- mouse.EventManager(this, args)
-				return nil
-			},
-		),
+		*e.fnMouseMove,
 	)
+	return e
+}
+
+// RemoveListenerMouseMove
+//
+// English:
+//
+// Removes a mouse move event listener, equivalent to the JavaScript command RemoveEventListener('mousemove',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de mouse move, equivalente ao comando JavaScript RemoveEventListener('mousemove',fn).
+//
+//   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
+//         }
+//       }
+//     }()
+func (e *TagSvgText) RemoveListenerMouseMove() (ref *TagSvgText) {
+	if e.fnMouseMove == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"mousemove",
+		*e.fnMouseMove,
+	)
+	e.fnMouseMove = nil
 	return e
 }
 
@@ -3608,31 +3957,146 @@ func (e *TagSvgText) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagS
 //     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 //   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
 //     mouseEvent := make(chan mouse.Data)
-//     factoryBrowser.NewTagSvgCircle().AddListenerMouseLeave(&clmouseEvent) ...
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
 //
 //     go func() {
 //       for {
 //         select {
-//         case data := <-mouseEvent:
-//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
 //         }
 //       }
 //     }()
 func (e *TagSvgText) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *TagSvgText) {
+	var fn js.Func
+
+	if e.fnMouseLeave == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*mouseEvet <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
+			return nil
+		})
+		e.fnMouseLeave = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"mouseleave",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if len(args) == 0 {
-					return nil
-				}
-				*mouseEvet <- mouse.EventManager(this, args)
-				return nil
-			},
-		),
+		e.fnMouseLeave,
 	)
+	return e
+}
+
+// RemoveListenerMouseLeave
+//
+// English:
+//
+// Removes a mouse leave event listener, equivalent to the JavaScript command RemoveEventListener('mouseleave',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de mouse saiu, equivalente ao comando JavaScript RemoveEventListener('mouseleave',fn).
+//
+//   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
+//         }
+//       }
+//     }()
+func (e *TagSvgText) RemoveListenerMouseLeave() (ref *TagSvgText) {
+	if e.fnMouseLeave == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"mouseleave",
+		e.fnMouseLeave,
+	)
+	e.fnMouseLeave = nil
 	return e
 }
 
@@ -3650,7 +4114,7 @@ func (e *TagSvgText) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *Tag
 //
 // Português:
 //
-// Adiciona um ouvinte de evento de mouse entrou equivalente, ao comando JavaScript addEventListener('mouseenter',fn).
+// Adiciona um ouvinte de evento de mouse entrou, equivalente ao comando JavaScript addEventListener('mouseenter',fn).
 //
 //   Entrada:
 //     mouseEvet: ponteiro para o channel mouse.Data
@@ -3659,31 +4123,146 @@ func (e *TagSvgText) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *Tag
 //     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 //   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
 //     mouseEvent := make(chan mouse.Data)
-//     factoryBrowser.NewTagSvgCircle().AddListenerMouseEnter(&clmouseEvent) ...
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
 //
 //     go func() {
 //       for {
 //         select {
-//         case data := <-mouseEvent:
-//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
 //         }
 //       }
 //     }()
 func (e *TagSvgText) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *TagSvgText) {
+	var fn js.Func
+
+	if e.fnMouseEnter == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*mouseEvet <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
+			return nil
+		})
+		e.fnMouseEnter = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"mouseenter",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if len(args) == 0 {
-					return nil
-				}
-				*mouseEvet <- mouse.EventManager(this, args)
-				return nil
-			},
-		),
+		*e.fnMouseEnter,
 	)
+	return e
+}
+
+// RemoveListenerMouseEnter
+//
+// English:
+//
+// Removes a mouse enter event listener, equivalent to the JavaScript command RemoveEventListener('mouseenter',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de mouse entrou, equivalente ao comando JavaScript RemoveEventListener('mouseenter',fn).
+//
+//   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
+//         }
+//       }
+//     }()
+func (e *TagSvgText) RemoveListenerMouseEnter() (ref *TagSvgText) {
+	if e.fnMouseEnter == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"mouseenter",
+		*e.fnMouseEnter,
+	)
+	e.fnMouseEnter = nil
 	return e
 }
 
@@ -3711,31 +4290,146 @@ func (e *TagSvgText) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *Tag
 //     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 //   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
 //     mouseEvent := make(chan mouse.Data)
-//     factoryBrowser.NewTagSvgCircle().AddListenerMouseDown(&clmouseEvent) ...
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
 //
 //     go func() {
 //       for {
 //         select {
-//         case data := <-mouseEvent:
-//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
 //         }
 //       }
 //     }()
 func (e *TagSvgText) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagSvgText) {
+	var fn js.Func
+
+	if e.fnMouseDown == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*mouseEvet <- mouse.EventManager(mouse.KEventMouseDown, this, args)
+			return nil
+		})
+		e.fnMouseDown = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"mousedown",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if len(args) == 0 {
-					return nil
-				}
-				*mouseEvet <- mouse.EventManager(this, args)
-				return nil
-			},
-		),
+		e.fnMouseDown,
 	)
+	return e
+}
+
+// RemoveListenerMouseDown
+//
+// English:
+//
+// Removes a mouse down event listener, equivalent to the JavaScript command RemoveEventListener('mousedown',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de botão do mouse precionado, equivalente ao comando JavaScript RemoveEventListener('mousedown',fn).
+//
+//   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
+//         }
+//       }
+//     }()
+func (e *TagSvgText) RemoveListenerMouseDown() (ref *TagSvgText) {
+	if e.fnMouseDown == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"mousedown",
+		e.fnMouseDown,
+	)
+	e.fnMouseDown = nil
 	return e
 }
 
@@ -3763,31 +4457,146 @@ func (e *TagSvgText) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagS
 //     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 //   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
 //     mouseEvent := make(chan mouse.Data)
-//     factoryBrowser.NewTagSvgCircle().AddListenerMouseUp(&clmouseEvent) ...
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
 //
 //     go func() {
 //       for {
 //         select {
-//         case data := <-mouseEvent:
-//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
 //         }
 //       }
 //     }()
 func (e *TagSvgText) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagSvgText) {
+	var fn js.Func
+
+	if e.fnMouseUp == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*mouseEvet <- mouse.EventManager(mouse.KEventMouseUp, this, args)
+			return nil
+		})
+		e.fnMouseUp = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"mouseup",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if len(args) == 0 {
-					return nil
-				}
-				*mouseEvet <- mouse.EventManager(this, args)
-				return nil
-			},
-		),
+		*e.fnMouseUp,
 	)
+	return e
+}
+
+// RemoveListenerMouseUp
+//
+// English:
+//
+// Removes a mouse up event listener, equivalent to the JavaScript command RemoveEventListener('mouseup',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de botão do mouse liberado, equivalente ao comando JavaScript RemoveEventListener('mouseup',fn).
+//
+//   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
+//         }
+//       }
+//     }()
+func (e *TagSvgText) RemoveListenerMouseUp() (ref *TagSvgText) {
+	if e.fnMouseUp == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"mouseup",
+		*e.fnMouseUp,
+	)
+	e.fnMouseUp = nil
 	return e
 }
 
@@ -3814,31 +4623,146 @@ func (e *TagSvgText) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagSvg
 //     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 //   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
 //     mouseEvent := make(chan mouse.Data)
-//     factoryBrowser.NewTagSvgCircle().AddListenerMouseWheel(&clmouseEvent) ...
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
 //
 //     go func() {
 //       for {
 //         select {
-//         case data := <-mouseEvent:
-//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
 //         }
 //       }
 //     }()
 func (e *TagSvgText) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *TagSvgText) {
+	var fn js.Func
+
+	if e.fnMouseWheel == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*mouseEvet <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
+			return nil
+		})
+		e.fnMouseWheel = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"mousewheel",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if len(args) == 0 {
-					return nil
-				}
-				*mouseEvet <- mouse.EventManager(this, args)
-				return nil
-			},
-		),
+		*e.fnMouseWheel,
 	)
+	return e
+}
+
+// RemoveListenerMouseWheel
+//
+// English:
+//
+// Removes a mouse wheel event listener, equivalent to the JavaScript command RemoveEventListener('mousewheel',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de roda do mouse, equivalente ao comando JavaScript RemoveEventListener('mousewheel',fn).
+//
+//   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
+//         }
+//       }
+//     }()
+func (e *TagSvgText) RemoveListenerMouseWheel() (ref *TagSvgText) {
+	if e.fnMouseWheel == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"mousewheel",
+		*e.fnMouseWheel,
+	)
+	e.fnMouseWheel = nil
 	return e
 }
 
@@ -3866,31 +4790,146 @@ func (e *TagSvgText) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *Tag
 //     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 //   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
 //     mouseEvent := make(chan mouse.Data)
-//     factoryBrowser.NewTagSvgCircle().AddListenerDoubleClick(&clmouseEvent) ...
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
 //
 //     go func() {
 //       for {
 //         select {
-//         case data := <-mouseEvent:
-//           log.Printf("cliente: (%v, %v)", data.ClientX, data.ClientY)
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
 //         }
 //       }
 //     }()
 func (e *TagSvgText) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagSvgText) {
+	var fn js.Func
+
+	if e.fnDoubleClick == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*mouseEvet <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
+			return nil
+		})
+		e.fnDoubleClick = &fn
+	}
+
 	e.selfElement.Call(
 		"addEventListener",
 		"dblclick",
-		js.FuncOf(
-			func(this js.Value, args []js.Value) interface{} {
-				if len(args) == 0 {
-					return nil
-				}
-				*mouseEvet <- mouse.EventManager(this, args)
-				return nil
-			},
-		),
+		*e.fnDoubleClick,
 	)
+	return e
+}
+
+// RemoveListenerDoubleClick
+//
+// English:
+//
+// Removes a double click event listener, equivalent to the JavaScript command RemoveEventListener('dblclick',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de click duplo, equivalente ao comando JavaScript RemoveEventListener('dblclick',fn).
+//
+//   Example: / Exemplo:
+//     tagCircle := &html.TagSvgCircle{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: Remove the addEventListener('click') from the three elements
+//           // Português: Remove o addEventListener('click') dos três elementos
+//           tagCircle.RemoveListenerClick()
+//         }
+//       }
+//     }()
+//
+//   Example: / Exemplo:
+//     tagUse := &html.TagSvgUse{}
+//     mouseEvent := make(chan mouse.Data)
+//
+//     stage := factoryBrowser.NewStage()
+//
+//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//     )
+//
+//     go func() {
+//       for {
+//         select {
+//         case <-mouseEvent:
+//           log.Printf("click")
+//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//           //   the command does not work.
+//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//           //   inválida e o comando não funciona.
+//           tagUse.RemoveListenerClick()
+//         }
+//       }
+//     }()
+func (e *TagSvgText) RemoveListenerDoubleClick() (ref *TagSvgText) {
+	if e.fnDoubleClick == nil {
+		return
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"dblclick",
+		*e.fnDoubleClick,
+	)
+	e.fnDoubleClick = nil
 	return e
 }
 
@@ -3979,7 +5018,7 @@ func (e *TagSvgText) AddListenerFocusIn(focusEvent *chan struct{}) (ref *TagSvgT
 func (e *TagSvgText) AddListenerFocusOut(focusEvent *chan struct{}) (ref *TagSvgText) {
 	e.selfElement.Call(
 		"addEventListener",
-		"animationiteration",
+		"focusout",
 		js.FuncOf(
 			func(this js.Value, args []js.Value) interface{} {
 				*focusEvent <- struct{}{}

@@ -22,6 +22,18 @@ type Event struct {
 	Object js.Value
 }
 
+type EventName string
+
+func (e EventName) String() string {
+	return string(e)
+}
+
+const (
+	KEventBegin  EventName = "begin"
+	KEventRepeat EventName = "repeat"
+	KEventEnd    EventName = "end"
+)
+
 // GetCurrentTime
 //
 // English:
@@ -56,12 +68,13 @@ func (e Event) GetClientX() (clientX float64) {
 //
 //   Saída:
 //     data: lista com todas as informações fornecidas pelo navegador.
-func EventManager(this js.Value) (data Data) {
+func EventManager(name EventName, this js.Value) (data Data) {
 	var event = Event{}
 	event.Object = this
 
 	data.CurrentTime = event.GetCurrentTime()
 	data.This = this
+	data.Name = name
 	return
 }
 
@@ -93,4 +106,15 @@ type Data struct {
 	//
 	// A forma de usar é This.Get(property string name). Ex. chan.This.Get("id")
 	This js.Value
+
+	// Name
+	//
+	// English:
+	//
+	// Name o event
+	//
+	// Português:
+	//
+	// Nome do evento
+	Name EventName
 }

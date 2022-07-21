@@ -1697,6 +1697,14 @@ func (e *TagSvgAnimate) AddListenerMotion(animationEvent *chan animation.Data) (
 		"beginEvent",
 		*e.fnMotion,
 	)
+	e.selfElement.Call(
+		"addEventListener",
+		"endEvent",
+		js.FuncOf(func(this js.Value, _ []js.Value) interface{} {
+			e.RemoveListenerMotion()
+			return nil
+		}),
+	)
 	return e
 }
 
@@ -1705,6 +1713,14 @@ func (e *TagSvgAnimate) RemoveListenerMotion() (ref *TagSvgAnimate) {
 		return
 	}
 
+	e.selfElement.Call(
+		"removeEventListener",
+		"endEvent",
+		js.FuncOf(func(this js.Value, _ []js.Value) interface{} {
+			e.RemoveListenerMotion()
+			return nil
+		}),
+	)
 	e.selfElement.Call(
 		"removeEventListener",
 		"beginEvent",

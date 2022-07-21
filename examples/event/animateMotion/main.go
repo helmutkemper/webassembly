@@ -26,6 +26,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"log"
 	"math"
 	"time"
 )
@@ -51,7 +52,7 @@ func main() {
 			factoryBrowser.NewTagSvgG().Append(
 				factoryBrowser.NewTagSvgPath().Fill(nil).Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
 				factoryBrowser.NewTagSvgCircle().Reference(&circle).Id("trinidad").R(5).Fill(factoryColor.NewRed()).Append(
-					factoryBrowser.NewTagSvgAnimateMotion().Reference(&animateMotion).AddListenerMotion(&animationEvent).Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+					factoryBrowser.NewTagSvgAnimateMotion().Reference(&animateMotion).AddListenerMotion(&animationEvent).Dur(10*time.Second).RepeatCount(0).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
 				),
 			),
 		),
@@ -84,6 +85,8 @@ func main() {
 		for {
 			select {
 			case <-timeOut.C:
+				circle.Cx(20).Cy(50)
+
 				svgG.Opacity(0.0)
 				cruz.Opacity(0.0)
 				line.Opacity(0.0)
@@ -94,6 +97,7 @@ func main() {
 				angle := math.Atan2(120-circle.GetY()/factor, 95-circle.GetX()/factor)
 				svgG.Transform(factoryBrowser.NewTransform().Rotate(angle*180/math.Pi-90, 25, 25))
 				line.X1(100).Y1(125).X2(circle.GetX()/factor + 5).Y2(circle.GetY()/factor + 5)
+				log.Printf("line")
 			}
 		}
 	}()

@@ -47,7 +47,7 @@ func main() {
 		// caminho da bola vermelha
 		factoryBrowser.NewTagSvg().Append(
 			factoryBrowser.NewTagSvgPath().Fill(nil).Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
-			factoryBrowser.NewTagSvgCircle().Reference(&circle).Id("trinidad").R(5).Fill(factoryColor.NewRed()).Append(
+			factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed()).Append(
 				factoryBrowser.NewTagSvgAnimateMotion().Reference(&animateMotion).AddListenerMotion(&animationEvent).Dur(3*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
 			),
 		),

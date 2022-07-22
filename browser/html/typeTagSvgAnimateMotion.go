@@ -3412,6 +3412,7 @@ func (e *TagSvgAnimateMotion) By(by float64) (ref *TagSvgAnimateMotion) {
 //
 //   Input:
 //     attributeName: indicates the name of the CSS property or attribute of the target element
+//       const: KAttribute... (e.g. KAttributeSeed = "seed")
 //
 // Português:
 //
@@ -3420,6 +3421,7 @@ func (e *TagSvgAnimateMotion) By(by float64) (ref *TagSvgAnimateMotion) {
 //
 //   Entrada:
 //     attributeName: indica o nome da propriedade CSS ou atributo do elemento de destino
+//       const: KAttribute... (ex. KAttributeSeed = "seed")
 func (e *TagSvgAnimateMotion) AttributeName(attributeName string) (ref *TagSvgAnimateMotion) {
 	e.selfElement.Call("setAttribute", "attributeName", attributeName)
 	return e

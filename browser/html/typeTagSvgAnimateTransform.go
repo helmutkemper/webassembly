@@ -1239,6 +1239,7 @@ func (e *TagSvgAnimateTransform) Type(value interface{}) (ref *TagSvgAnimateTran
 //
 //   Input:
 //     attributeName: indicates the name of the CSS property or attribute of the target element
+//       const: KAttribute... (e.g. KAttributeSeed = "seed")
 //
 // Português:
 //
@@ -1247,6 +1248,7 @@ func (e *TagSvgAnimateTransform) Type(value interface{}) (ref *TagSvgAnimateTran
 //
 //   Entrada:
 //     attributeName: indica o nome da propriedade CSS ou atributo do elemento de destino
+//       const: KAttribute... (ex. KAttributeSeed = "seed")
 func (e *TagSvgAnimateTransform) AttributeName(attributeName string) (ref *TagSvgAnimateTransform) {
 	e.selfElement.Call("setAttribute", "attributeName", attributeName)
 	return e

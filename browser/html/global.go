@@ -320,6 +320,7 @@ func (e *TagSvgGlobal) Amplitude(amplitude interface{}) (ref *TagSvgGlobal) {
 //
 //   Input:
 //     attributeName: indicates the name of the CSS property or attribute of the target element
+//       const: KAttribute... (e.g. KAttributeSeed = "seed")
 //
 // Português:
 //
@@ -328,6 +329,7 @@ func (e *TagSvgGlobal) Amplitude(amplitude interface{}) (ref *TagSvgGlobal) {
 //
 //   Entrada:
 //     attributeName: indica o nome da propriedade CSS ou atributo do elemento de destino
+//       const: KAttribute... (ex. KAttributeSeed = "seed")
 func (e *TagSvgGlobal) AttributeName(attributeName string) (ref *TagSvgGlobal) {
 	e.selfElement.Call("setAttribute", "attributeName", attributeName)
 	return e

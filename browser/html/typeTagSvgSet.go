@@ -1026,6 +1026,7 @@ func (e *TagSvgSet) HRef(href string) (ref *TagSvgSet) {
 //
 //   Input:
 //     attributeName: indicates the name of the CSS property or attribute of the target element
+//       const: KAttribute... (e.g. KAttributeSeed = "seed")
 //
 // Português:
 //
@@ -1034,6 +1035,7 @@ func (e *TagSvgSet) HRef(href string) (ref *TagSvgSet) {
 //
 //   Entrada:
 //     attributeName: indica o nome da propriedade CSS ou atributo do elemento de destino
+//       const: KAttribute... (ex. KAttributeSeed = "seed")
 func (e *TagSvgSet) AttributeName(attributeName string) (ref *TagSvgSet) {
 	e.selfElement.Call("setAttribute", "attributeName", attributeName)
 	return e

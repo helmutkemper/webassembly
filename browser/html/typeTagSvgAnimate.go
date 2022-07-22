@@ -1666,10 +1666,6 @@ func (e *TagSvgAnimate) RemoveListenerEnd() (ref *TagSvgAnimate) {
 }
 
 func (e *TagSvgAnimate) AddListenerMotion(animationEvent *chan animation.Data) (ref *TagSvgAnimate) {
-
-	//todo: usar o evento 'endEvent' reduziria o custo de processamento
-	//      using 'endEvent' event would reduce processing cost
-
 	var fn js.Func
 
 	if e.fnMotion == nil {

@@ -45,11 +45,29 @@ const kFpsMin = 10
 //    * Definir fps elevados travam o navegador em um teste feito no Mac M1 com 16GB de RAM
 const kFpsMax = 120
 
+// FuncList
+//
+// English:
+//
+// Gets the pointer of the system function to be executed and the ID
+//
+// Português:
+//
+// Recebe o ponteiro de função do sistema a ser executada e o ID
 type FuncList struct {
 	id string
 	f  func()
 }
 
+// Engine
+//
+// English:
+//
+// Controls a list of functions responsible for keeping the system and animations running at 120 fps when possible.
+//
+// Português:
+//
+// Controla uma lista funções responssável por mante o sistema e as animações funcionando a 120 fps, quando possível.
 type Engine struct {
 	sleepFrame    int
 	fps           int
@@ -65,16 +83,81 @@ type Engine struct {
 	tickerLowLatency *time.Ticker
 	tickerVerifyFps  *time.Ticker
 
+	// funcListToHighLatency
+	//
+	// English:
+	//
+	// List of secondary, low-priority functions.
+	//
+	// Português:
+	//
+	// Lista de funções secundárias, de baixa prioridade.
 	funcListToHighLatency []FuncList
+
+	// funcListToSystem
+	//
+	// English:
+	//
+	// List of system roles, that is, high-priority joins tasked with preparing data to be used by user roles.
+	//
+	// Português:
+	//
+	// Lista de funções do sistema, ou seja, junções de alta prioridade encarregada de preparar dados para serem usados
+	// por funções do usuário.
 	funcListToSystem      []FuncList
 	funcListToAfterSystem []FuncList
-	funcListToMath        []FuncList
-	funcListToDraw        []FuncList
 
+	// funcListToMath
+	//
+	// English:
+	//
+	// List of user functions in charge of making the necessary calculations for the animations or any other data that you
+	// need is ready before the animation.
+	//
+	// Use these functions to calculate game points, character states, and anything used to decide what to draw.
+	//
+	// Português:
+	//
+	// Lista de funções do usuário encarregadas de fazer os cálculos necessários para as animações ou qualquer outro dado
+	// que necessite está pronto antes da animação.
+	//
+	// Use estas funções para cácular pontos de jogo, estados so personagens e qualquer coisa usada para decidir o que
+	// desenhar.
+	funcListToMath []FuncList
+
+	// funcListToDraw
+	//
+	// English:
+	//
+	// List of functions used to draw something on the screen, after all the calculations needed to know what to draw have
+	// been done.
+	//
+	// Português:
+	//
+	// Lista de funções usadas para desenhar algo na tela, depois que todos os cálculos necessários para saber o que
+	// desenhar foram feitos.
+	funcListToDraw []FuncList
+
+	// funcCursorDraw
+	//
+	// English:
+	//
+	// Last function be drawn, usually mouse pointer control.
+	//
+	// Português:
+	//
+	// Ultima função ser desenhada, geralmente, controle do ponteiro do mouse.
 	funcCursorDraw FuncList
 
-	// pt_br: impede que o laço ocorra em intervalos muitos próximos e trave o
-	// processamento do browser para outras tarefas
+	// slipFrame
+	//
+	// English:
+	//
+	// Prevents the loop from occurring at too close intervals and locks browser processing for other tasks
+	//
+	// Português:
+	//
+	// Impede que o laço ocorra em intervalos muitos próximos e trave o processamento do browser para outras tarefas
 	slipFrame          int
 	slipFrameTimeAlarm time.Duration
 
@@ -82,6 +165,15 @@ type Engine struct {
 	conterOverflow int
 }
 
+// Init
+//
+// English:
+//
+// Start the engine
+//
+// Português:
+//
+// Inicializa à engine
 func (el *Engine) Init() {
 	if el.fpsMin == 0 {
 		el.fpsMin = kFpsMin
@@ -115,6 +207,10 @@ func (el *Engine) Init() {
 //
 // English:
 //
+// Sleep Frame can delay processing to prevent crashes.
+//
+// This functionality is experimental and comes from C++, where the loop can crash the system.
+//
 // Português:
 //
 // Sleep Frame pode dá um tempo no processamento para impedir travamentos.
@@ -127,6 +223,10 @@ func (el *Engine) SetSleepFrame(value int) {
 // GetSleepFrame
 //
 // English:
+//
+// Sleep Frame can delay processing to prevent crashes.
+//
+// This functionality is experimental and comes from C++, where the loop can crash the system.
 //
 // Português:
 //
@@ -155,6 +255,11 @@ func (el *Engine) SetFpsMax(value int) {
 //
 // English:
 //
+// Sets the minimum amount of FPS.
+//
+//   Notes:
+//     * The FPS value automatically drops when the system is very busy.
+//
 // Português:
 //
 // Define a quantidade mínima de FPS.
@@ -169,9 +274,17 @@ func (el *Engine) SetFpsMin(value int) {
 //
 // English:
 //
+// Sets the maximum amount of FPS.
+//
+//   Notes:
+//     * The FPS value automatically goes up when the system is not overloaded.
+//
 // Português:
 //
-// Define a quantidade de FPS
+// Define a quantidade máxima de FPS.
+//
+//   Notas:
+//     * O valor do FPS sobe de forma automática quando o sistema não está sobrecarregado.
 func (el *Engine) SetFPS(value int) {
 	el.fps = value
 	el.stopTicker = true
@@ -194,6 +307,8 @@ func (el *Engine) GetFPS() int {
 //
 // English:
 //
+// Allows you to recreate the function that draws the cursor.
+//
 // Português:
 //
 // Permite recriar a função que desenha o cursor.
@@ -208,9 +323,11 @@ func (el *Engine) CursorAddDrawFunction(runnerFunc func()) string {
 //
 // English:
 //
+// Removes the role responsible for recreating the cursor.
+//
 // Português:
 //
-// Remove a função que recria o cursor.
+// Remove a função responssável por recria o cursor.
 func (el *Engine) CursorRemoveDrawFunction(id string) {
 	el.funcCursorDraw = FuncList{}
 }
@@ -218,6 +335,18 @@ func (el *Engine) CursorRemoveDrawFunction(id string) {
 // HighLatencyAddToFunctions
 //
 // English:
+//
+// Adds a high latency function, a low execution priority function.
+//
+//   Input:
+//     runnerFunc: function to be performed.
+//
+//   Output:
+//     UId: used to identify the function when removing.
+//     total: total number of functions running.
+//
+//   Notes:
+//     * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
@@ -244,6 +373,14 @@ func (el *Engine) HighLatencyAddToFunctions(runnerFunc func()) (string, int) {
 //
 // English:
 //
+// Removes a high latency function added by the HighLatencyAddToFunctions() function.
+//
+//   Input:
+//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//
+//   Notes:
+//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//
 // Português:
 //
 // Remove uma função de alta latencia adicionada pela função HighLatencyAddToFunctions().
@@ -265,6 +402,15 @@ func (el *Engine) HighLatencyDeleteFromFunctions(UId string) {
 // HighLatencySetZIndex
 //
 // English:
+//
+// Allows you to change the order of execution of the function, in the execution list.
+//
+//   Input:
+//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//     index: 0 for the first function in the list
+//
+//   Notes:
+//     * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
@@ -330,6 +476,17 @@ func (el *Engine) HighLatencySetZIndex(UId string, index int) int {
 //
 // English:
 //
+// Returns the function execution index in the list, where 0 is the first function to be executed.
+//
+//   Input:
+//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//
+//   Output:
+//     index: Function execution order.
+//
+//   Notes:
+//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//
 // Português:
 //
 // Retorna o índice de execução da função na lista, onde 0 é a primera função a ser executada.
@@ -355,6 +512,17 @@ func (el *Engine) HighLatencyGetZIndex(UId string) int {
 // HighLatencySetAsFistFunctionToRun
 //
 // English:
+//
+// Makes the function first on the execution list for high latency functions.
+//
+//   Input:
+//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//
+//   Output:
+//     index: Function execution order.
+//
+//   Notes:
+//     * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
@@ -396,6 +564,17 @@ func (el *Engine) HighLatencySetAsFistFunctionToRun(UId string) int {
 // HighLatencySetAsLastFunctionToRun
 //
 // English:
+//
+// Makes the function last on the execution list for high latency functions.
+//
+//   Input:
+//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//
+//   Entrada:
+//     index: Function execution order.
+//
+//   Notes:
+//     * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //

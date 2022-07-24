@@ -1453,7 +1453,7 @@ func (e *TagSvgAnimateTransform) AddListenerBegin(animationEvent *chan animation
 //     }()
 func (e *TagSvgAnimateTransform) RemoveListenerBegin() (ref *TagSvgAnimateTransform) {
 	if e.fnBegin == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -1588,7 +1588,7 @@ func (e *TagSvgAnimateTransform) AddListenerRepeat(animationEvent *chan animatio
 //     }()
 func (e *TagSvgAnimateTransform) RemoveListenerRepeat() (ref *TagSvgAnimateTransform) {
 	if e.fnRepeat == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -1722,7 +1722,7 @@ func (e *TagSvgAnimateTransform) AddListenerEnd(animationEvent *chan animation.D
 //     }()
 func (e *TagSvgAnimateTransform) RemoveListenerEnd() (ref *TagSvgAnimateTransform) {
 	if e.fnEnd == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -1876,7 +1876,7 @@ func (e *TagSvgAnimateTransform) AddListenerMotion(animationEvent *chan animatio
 //     }()
 func (e *TagSvgAnimateTransform) RemoveListenerMotion() (ref *TagSvgAnimateTransform) {
 	if e.fnMotion == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(

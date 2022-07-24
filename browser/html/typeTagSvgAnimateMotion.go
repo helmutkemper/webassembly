@@ -3842,7 +3842,7 @@ func (e *TagSvgAnimateMotion) AddListenerBegin(animationEvent *chan animation.Da
 //     }()
 func (e *TagSvgAnimateMotion) RemoveListenerBegin() (ref *TagSvgAnimateMotion) {
 	if e.fnBegin == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(

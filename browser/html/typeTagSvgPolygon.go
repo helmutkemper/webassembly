@@ -3094,7 +3094,7 @@ func (e *TagSvgPolygon) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSv
 //     }()
 func (e *TagSvgPolygon) RemoveListenerClick() (ref *TagSvgPolygon) {
 	if e.fnClick == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -3259,7 +3259,7 @@ func (e *TagSvgPolygon) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *T
 //     }()
 func (e *TagSvgPolygon) RemoveListenerMouseOver() (ref *TagSvgPolygon) {
 	if e.fnMouseOver == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -3424,7 +3424,7 @@ func (e *TagSvgPolygon) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *Ta
 //     }()
 func (e *TagSvgPolygon) RemoveListenerMouseOut() (ref *TagSvgPolygon) {
 	if e.fnMouseOut == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -3589,7 +3589,7 @@ func (e *TagSvgPolygon) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *T
 //     }()
 func (e *TagSvgPolygon) RemoveListenerMouseMove() (ref *TagSvgPolygon) {
 	if e.fnMouseMove == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -3754,7 +3754,7 @@ func (e *TagSvgPolygon) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *
 //     }()
 func (e *TagSvgPolygon) RemoveListenerMouseLeave() (ref *TagSvgPolygon) {
 	if e.fnMouseLeave == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -3919,7 +3919,7 @@ func (e *TagSvgPolygon) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *
 //     }()
 func (e *TagSvgPolygon) RemoveListenerMouseEnter() (ref *TagSvgPolygon) {
 	if e.fnMouseEnter == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -4085,7 +4085,7 @@ func (e *TagSvgPolygon) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *T
 //     }()
 func (e *TagSvgPolygon) RemoveListenerMouseDown() (ref *TagSvgPolygon) {
 	if e.fnMouseDown == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -4251,7 +4251,7 @@ func (e *TagSvgPolygon) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *Tag
 //     }()
 func (e *TagSvgPolygon) RemoveListenerMouseUp() (ref *TagSvgPolygon) {
 	if e.fnMouseUp == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -4416,7 +4416,7 @@ func (e *TagSvgPolygon) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *
 //     }()
 func (e *TagSvgPolygon) RemoveListenerMouseWheel() (ref *TagSvgPolygon) {
 	if e.fnMouseWheel == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -4582,7 +4582,7 @@ func (e *TagSvgPolygon) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref 
 //     }()
 func (e *TagSvgPolygon) RemoveListenerDoubleClick() (ref *TagSvgPolygon) {
 	if e.fnDoubleClick == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(

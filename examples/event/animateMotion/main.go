@@ -23,14 +23,19 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/animation"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/document"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"log"
 	"math"
+	"syscall/js"
 	"time"
 )
 
 func main() {
+	js.Global().Get("window").Set("name", "test")
+
 	var container *html.TagSvg
 	var circle *html.TagSvgCircle
 	var svgG *html.TagSvgG
@@ -40,6 +45,8 @@ func main() {
 	var width = 400.0
 
 	animationEvent := make(chan animation.Data)
+	animationResize := make(chan document.Data)
+	newWindow := make(chan struct{})
 
 	stage := factoryBrowser.NewStage()
 
@@ -64,14 +71,27 @@ func main() {
 	)
 
 	stage.Append(s1)
+	nw := stage.NewWindow("http://localhost:3000/documentation/")
+	nw.AddListenerOnLoad(&newWindow)
 
-	timeOut := time.NewTicker(5 * time.Second)
+	stage.AddListenerResize(&animationResize)
+
+	timeOut := time.NewTicker(10 * time.Second)
 
 	go func() {
 		for {
 			select {
+			case <-newWindow:
+				nw.Scroll(0, 1000)
+				nw.MoveTo(100, 100)
+				nw.ResizeTo(200, 500)
+
 			case <-timeOut.C:
 				animateMotion.RemoveListenerMotion()
+
+			case data := <-animationResize:
+				log.Printf("%+v", data)
+				//data.Blur()
 
 			case <-animationEvent:
 				factor = (container.GetRight() - container.GetX()) / width

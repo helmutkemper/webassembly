@@ -3211,7 +3211,7 @@ func (e *TagSvgUse) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvgUse
 //     }()
 func (e *TagSvgUse) RemoveListenerClick() (ref *TagSvgUse) {
 	if e.fnClick == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -3377,7 +3377,7 @@ func (e *TagSvgUse) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagSv
 //     }()
 func (e *TagSvgUse) RemoveListenerMouseOver() (ref *TagSvgUse) {
 	if e.fnMouseOver == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -3543,7 +3543,7 @@ func (e *TagSvgUse) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagSvg
 //     }()
 func (e *TagSvgUse) RemoveListenerMouseOut() (ref *TagSvgUse) {
 	if e.fnMouseOut == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -3709,7 +3709,7 @@ func (e *TagSvgUse) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagSv
 //     }()
 func (e *TagSvgUse) RemoveListenerMouseMove() (ref *TagSvgUse) {
 	if e.fnMouseMove == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -3875,7 +3875,7 @@ func (e *TagSvgUse) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *TagS
 //     }()
 func (e *TagSvgUse) RemoveListenerMouseLeave() (ref *TagSvgUse) {
 	if e.fnMouseLeave == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -4041,7 +4041,7 @@ func (e *TagSvgUse) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *TagS
 //     }()
 func (e *TagSvgUse) RemoveListenerMouseEnter() (ref *TagSvgUse) {
 	if e.fnMouseEnter == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -4208,7 +4208,7 @@ func (e *TagSvgUse) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagSv
 //     }()
 func (e *TagSvgUse) RemoveListenerMouseDown() (ref *TagSvgUse) {
 	if e.fnMouseDown == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -4375,7 +4375,7 @@ func (e *TagSvgUse) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagSvgU
 //     }()
 func (e *TagSvgUse) RemoveListenerMouseUp() (ref *TagSvgUse) {
 	if e.fnMouseUp == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -4541,7 +4541,7 @@ func (e *TagSvgUse) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *TagS
 //     }()
 func (e *TagSvgUse) RemoveListenerMouseWheel() (ref *TagSvgUse) {
 	if e.fnMouseWheel == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -4708,7 +4708,7 @@ func (e *TagSvgUse) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *Tag
 //     }()
 func (e *TagSvgUse) RemoveListenerDoubleClick() (ref *TagSvgUse) {
 	if e.fnDoubleClick == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(

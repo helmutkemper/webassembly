@@ -3122,7 +3122,7 @@ func (e *TagSvgCircle) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvg
 //     }()
 func (e *TagSvgCircle) RemoveListenerClick() (ref *TagSvgCircle) {
 	if e.fnClick == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -4611,7 +4611,7 @@ func (e *TagSvgCircle) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *
 //     }()
 func (e *TagSvgCircle) RemoveListenerDoubleClick() (ref *TagSvgCircle) {
 	if e.fnDoubleClick == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(

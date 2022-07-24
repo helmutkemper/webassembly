@@ -3272,7 +3272,7 @@ func (e *TagSvgRect) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvgRe
 //     }()
 func (e *TagSvgRect) RemoveListenerClick() (ref *TagSvgRect) {
 	if e.fnClick == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(
@@ -3438,7 +3438,7 @@ func (e *TagSvgRect) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagS
 //     }()
 func (e *TagSvgRect) RemoveListenerMouseOver() (ref *TagSvgRect) {
 	if e.fnMouseOver == nil {
-		return
+		return e
 	}
 
 	e.selfElement.Call(

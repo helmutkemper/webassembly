@@ -11,6 +11,7 @@ import (
 
 // todo: https://developer.mozilla.org/en-US/docs/Web/API/Window/showOpenFilePicker
 // todo: https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker
+// https://developer.mozilla.org/en-US/docs/Web/API/Window
 
 type Compatible interface {
 	Get() js.Value
@@ -35,6 +36,7 @@ type Stage struct {
 
 	fnResize *js.Func
 	fnLoad   *js.Func
+	fnUnload *js.Func
 }
 
 func (e *Stage) SetEngine(engine engine.IEngine) {
@@ -693,6 +695,28 @@ func (e *Stage) AddListenerOnLoad(windowEvet *chan struct{}) (ref *Stage) {
 	return e
 }
 
+func (e *Stage) AddListenerOnUnload(windowEvet *chan struct{}) (ref *Stage) {
+	var fn js.Func
+	//todo: transforma THIS em STAGE
+	if e.fnUnload == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*windowEvet <- struct{}{}
+			return nil
+		})
+		e.fnUnload = &fn
+	}
+
+	e.selfWindow.Get("window").Call(
+		"addEventListener",
+		"unload",
+		*e.fnUnload,
+	)
+	return e
+}
+
 func (e *Stage) RemoveListenerOnLoad() (ref *Stage) {
 	if e.fnLoad == nil {
 		return e
@@ -1004,7 +1028,7 @@ func (e *Stage) GetFrameLength() (length int) {
 	return
 }
 
-// GetClosed
+// GetIsClosed
 //
 // English:
 //
@@ -1013,7 +1037,7 @@ func (e *Stage) GetFrameLength() (length int) {
 // Português:
 //
 // A propriedade somente leitura Window.closed indica se a janela referenciada está fechada ou não
-func (e *Stage) GetClosed() (closed bool) {
+func (e *Stage) GetIsClosed() (closed bool) {
 	closed = e.selfWindow.Get("closed").Bool()
 	return
 }

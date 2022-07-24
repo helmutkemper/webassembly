@@ -46,7 +46,9 @@ func main() {
 
 	animationEvent := make(chan animation.Data)
 	animationResize := make(chan document.Data)
+	windowResize := make(chan document.Data)
 	newWindow := make(chan struct{})
+	closeWindow := make(chan struct{})
 
 	stage := factoryBrowser.NewStage()
 
@@ -73,6 +75,7 @@ func main() {
 	stage.Append(s1)
 	nw := stage.NewWindow("http://localhost:3000/documentation/")
 	nw.AddListenerOnLoad(&newWindow)
+	nw.AddListenerResize(&windowResize)
 
 	stage.AddListenerResize(&animationResize)
 
@@ -81,10 +84,17 @@ func main() {
 	go func() {
 		for {
 			select {
+			case <-windowResize:
+				log.Printf("is closed: %v", nw.GetIsClosed())
+
+			case <-closeWindow:
+				log.Printf("is closed: %v", nw.GetIsClosed())
+
 			case <-newWindow:
 				nw.Scroll(0, 1000)
 				nw.MoveTo(100, 100)
 				nw.ResizeTo(200, 500)
+				nw.AddListenerOnUnload(&closeWindow)
 
 			case <-timeOut.C:
 				animateMotion.RemoveListenerMotion()

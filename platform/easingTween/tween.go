@@ -30,7 +30,9 @@ type Tween struct {
 	loopEndValue       float64
 }
 
-// SetEngine
+//todo: não tem função de nome SetFunção(), tem, Função() e GetFunção()
+
+// Engine
 //
 // English:
 //
@@ -51,7 +53,7 @@ type Tween struct {
 //
 //   Saída:
 //     object: referência para o objeto Tween corrente.
-func (el *Tween) SetEngine(value engine.IEngine) (object interfaces.TweenInterface) {
+func (el *Tween) Engine(value engine.IEngine) (object interfaces.TweenInterface) {
 	el.engine = value
 	return el
 }

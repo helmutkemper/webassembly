@@ -40,6 +40,7 @@ func EventManager(name EventName, this js.Value, args []js.Value) (data Data) {
 	var event = Event{}
 	event.Object = args[0]
 
+	data.EventName = name
 	data.ClientX = event.GetClientX()
 	data.ClientY = event.GetClientY()
 	data.MovementX = event.GetMovementX()

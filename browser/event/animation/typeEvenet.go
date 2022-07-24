@@ -75,7 +75,7 @@ func EventManager(name EventName, this js.Value) (data Data) {
 
 	data.CurrentTime = event.GetCurrentTime()
 	data.This = this
-	data.Name = name
+	data.EventName = name
 	return
 }
 
@@ -108,7 +108,7 @@ type Data struct {
 	// A forma de usar é This.Get(property string name). Ex. chan.This.Get("id")
 	This js.Value
 
-	// Name
+	// EventName
 	//
 	// English:
 	//
@@ -117,5 +117,5 @@ type Data struct {
 	// Português:
 	//
 	// Nome do evento
-	Name EventName
+	EventName EventName
 }

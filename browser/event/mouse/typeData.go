@@ -12,6 +12,17 @@ import "syscall/js"
 //
 // Arquiva os valores coletados durante o evento do mouse.
 type Data struct {
+	// EventName
+	//
+	// English:
+	//
+	// Name o event
+	//
+	// Português:
+	//
+	// Nome do evento
+	EventName EventName
+
 	// ClientX
 	//
 	// English:

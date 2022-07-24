@@ -1785,7 +1785,7 @@ func (e *TagSvgAnimateTransform) AddListenerMotion(animationEvent *chan animatio
 					var data animation.Data
 					data.This = this
 					data.CurrentTime = float64(now.Sub(create).Milliseconds()) / 1000.0
-					data.Name = animation.KEventMotion
+					data.EventName = animation.KEventMotion
 					*animationEvent <- data
 				},
 			)

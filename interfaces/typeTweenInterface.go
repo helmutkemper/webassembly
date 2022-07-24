@@ -7,7 +7,7 @@ import (
 
 type TweenInterface interface {
 
-	// SetEngine
+	// Engine
 	//
 	// English:
 	//
@@ -28,7 +28,7 @@ type TweenInterface interface {
 	//
 	//   Saída:
 	//     object: referência para o objeto Tween corrente.
-	SetEngine(value engine.IEngine) (object TweenInterface)
+	Engine(value engine.IEngine) (object TweenInterface)
 
 	// SetTweenFunc
 	//

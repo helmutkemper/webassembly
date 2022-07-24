@@ -13,14 +13,64 @@ import (
 // todo: https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker
 // https://developer.mozilla.org/en-US/docs/Web/API/Window
 
+// Compatible
+//
+// English:
+//
+// Defines the functions necessary for the graphic elements to work on the stage.
+//
+// Português:
+//
+// Define as funções necessárias ao funcionamento dos elementos gráficos no palco.
 type Compatible interface {
 	Get() js.Value
 }
 
+// Stage
+//
+// English:
+//
+// Defines the structure necessary for the wasm application stage to work.
+//
+// Português:
+//
+// Define a estrutura necessária para o funcionamento do palco da aplicação wasm.
 type Stage struct {
+	// selfDocument
+	//
+	// English:
+	//
+	// Defines the browser or graphic 'document'.
+	//
+	// Português:
+	//
+	// Define o 'documento' do navegador ou do elemnto gráfico.
 	selfDocument js.Value
-	selfWindow   js.Value
 
+	// selfWindow
+	//
+	// English:
+	//
+	// Defines the browser window.
+	//
+	// Português:
+	//
+	// Define a janela do navegador.
+	selfWindow js.Value
+
+	// engine
+	//
+	// English:
+	//
+	// Defines the engine responsible for the calculations used in the application.
+	//
+	// The engine is responsible for making animations run at 120 fps.
+	//
+	// Português:
+	//
+	// Define a engine responssável pelos cálculos usados na aplicação.
+	//
+	// A engine é responssável por fazer a animações rodar a 120 fps.
 	engine engine.IEngine
 
 	// listener
@@ -34,12 +84,66 @@ type Stage struct {
 	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
 	listener *sync.Map
 
+	// fnResize
+	//
+	// English:
+	//
+	// Gets the pointer of the stage's onResize event function.
+	//
+	// Português:
+	//
+	// Recebe o ponteiro da função de evento onResize do stage.
 	fnResize *js.Func
-	fnLoad   *js.Func
+
+	// fnLoad
+	//
+	// English:
+	//
+	// Gets the pointer of the stage's onLoad event function.
+	//
+	// Português:
+	//
+	// Recebe o ponteiro da função de evento onLoad do stage.
+	fnLoad *js.Func
+
+	// fnUnload
+	//
+	// English:
+	//
+	// Gets the pointer of the stage's onUnLoad event function.
+	//
+	// Português:
+	//
+	// Recebe o ponteiro da função de evento onUnLoad do stage.
 	fnUnload *js.Func
 }
 
-func (e *Stage) SetEngine(engine engine.IEngine) {
+// Engine
+//
+// English:
+//
+// Defines the engine responsible for the calculations used in the application.
+//
+//   Input:
+//     engine: object pointer compatible with engine interface
+//
+// The engine is responsible for making animations run at 120 fps.
+//
+//   Notes:
+//     * The engine object must have been properly initialized before being pointed.
+//
+// Português:
+//
+// Define a engine responssável pelos cálculos usados na aplicação.
+//
+//   Entrada:
+//     engine: ponteiro de objeto compatível com a interface de engine
+//
+// A engine é responssável por fazer a animações rodar a 120 fps.
+//
+//   Notas:
+//     * O objeto engine deve ter sido devidamente inicializado antes de ser apontado.
+func (e *Stage) Engine(engine engine.IEngine) {
 	e.engine = engine
 }
 
@@ -90,10 +194,50 @@ func (e *Stage) WindowName(name string) {
 	js.Global().Get("window").Set("name", name)
 }
 
+// NewWindow
+//
+// English:
+//
+// Opens a new simplified browser window.
+//
+//   Input:
+//     url: window content address.
+//
+//   Output:
+//     newWindow: Pointer to new Stage object with new window controls.
+//
+// Português:
+//
+// Abre uma nova janela simplificada no navegador.
+//
+//   Entrada:
+//     url: endereço do conteúdo da janela.
+//
+//   Saída:
+//     newWindow: Ponteiro para novo objeto Stage com os controles da nova janela.
 func (e *Stage) NewWindow(url string) (newWindow *Stage) {
 	// WASM has a bug, use: "_blank", "width=100,height=100"
 	window := js.Global().Get("window").Call("open", url, "_blank", "width=100,height=100")
 
+	return e.NewStage(window)
+}
+
+// NewStage
+//
+// English:
+//
+// Transforms a javascript object from the window.open() function into a working Stage pointer.
+//
+//   Notes:
+//    * This function is used internally, please use the NewWindow() function
+//
+// Português:
+//
+// Transforma um objeto javascript proveniente da função window.open() em um ponteiro de Stage funcional.
+//
+//   Notas:
+//    * Esta função é usada internamente, por favor, use a função NewWindow()
+func (e *Stage) NewStage(window js.Value) (newWindow *Stage) {
 	newWindow = new(Stage)
 	newWindow.selfDocument = window.Get("document")
 	newWindow.selfWindow = window.Get("window")
@@ -116,6 +260,21 @@ func (e *Stage) Init() {
 	e.listener = new(sync.Map)
 }
 
+// Append
+//
+// English:
+//
+// Adds new graphical elements to the application stage.
+//
+//   Input:
+//     elements: list of graphical objects compatible with the Compatible interface.
+//
+// Português:
+//
+// Adiciona novos elementos gráficos ao palco da aplicação.
+//
+//   Entrada:
+//     elements: lista de objetos gráficos compatíveis com a interface Compatible.
 func (e *Stage) Append(elements ...Compatible) (ref *Stage) {
 	fragment := js.Global().Get("document").Call("createDocumentFragment")
 	for _, element := range elements {
@@ -130,11 +289,11 @@ func (e *Stage) Append(elements ...Compatible) (ref *Stage) {
 //
 // English:
 //
-//  Returns the document.
+//  Returns the javascript object.
 //
 // Português:
 //
-//  Retorna o documento.
+//  Retorna o objeto javascript.
 func (e *Stage) Get() js.Value {
 	return e.selfDocument
 }
@@ -153,7 +312,7 @@ func (e *Stage) MouseAuto() (ref *Stage) {
 	return e
 }
 
-// MouseHide
+// MouseHide #testar
 //
 // English:
 //
@@ -167,7 +326,7 @@ func (e *Stage) MouseHide() (ref *Stage) {
 	return e
 }
 
-// SetMouse
+// SetMouse #testar
 //
 // English:
 //
@@ -191,26 +350,6 @@ func (e *Stage) SetMouse(value mouse.CursorType) (ref *Stage) {
 	return e
 }
 
-// Add
-//
-// English:
-//
-//  Adds an element to the document.
-//
-//   Input:
-//     value: js.Value element containing an html document.
-//
-// Português:
-//
-//  Adiciona um elemento ao documento.
-//
-//   Entrada:
-//     value: elemento js.Value contendo um documento html.
-func (e *Stage) Add(value interface{}) (ref *Stage) {
-	e.selfDocument.Get("body").Call("appendChild", value)
-	return e
-}
-
 // Remove
 //
 // English:
@@ -231,7 +370,7 @@ func (e *Stage) Remove(value interface{}) (ref *Stage) {
 	return e
 }
 
-// GetWidth
+// GetWidth #testar
 //
 // English:
 //
@@ -250,7 +389,7 @@ func (e Stage) GetWidth() (width int) {
 	return e.selfDocument.Get("body").Get("clientWidth").Int()
 }
 
-// GetHeight
+// GetHeight #testar
 //
 // English:
 //
@@ -269,7 +408,7 @@ func (e Stage) GetHeight() (height int) {
 	return e.selfDocument.Get("body").Get("clientHeight").Int()
 }
 
-// ResizeToScreen
+// ResizeStageToScreen
 //
 // English:
 //
@@ -278,7 +417,7 @@ func (e Stage) GetHeight() (height int) {
 // Português:
 //
 //  Redimensiona o documento para o tamanho do documento principal.
-func (e *Stage) ResizeToScreen() (ref *Stage) {
+func (e *Stage) ResizeStageToScreen() (ref *Stage) {
 	e.selfDocument.Get("body").Set("width", js.Global().Get("document").Get("body").Get("clientWidth").Int())
 	e.selfDocument.Get("body").Set("height", js.Global().Get("document").Get("body").Get("clientHeight").Int())
 	return e
@@ -495,9 +634,11 @@ func (e Stage) GetById(id string) (element interface{}) {
 //
 // English:
 //
+// Returns the amount of current FPS used in calculations.
+//
 // Português:
 //
-// Retorna a quantidade de FPS atual.
+// Retorna a quantidade de FPS atual usado nos cálculos.
 func (e *Stage) GetFPS() (fps int) {
 	return e.engine.GetFPS()
 }
@@ -637,15 +778,15 @@ func (e *Stage) SetDrawZIndex(UId string, index int) int {
 	return e.engine.DrawSetZIndex(UId, index)
 }
 
-func (e *Stage) AddListenerResize(mouseEvet *chan document.Data) (ref *Stage) {
+func (e *Stage) AddListenerResize(windowEvet *chan document.Data) (ref *Stage) {
 	var fn js.Func
-	//todo: transforma THIS em STAGE
+
 	if e.fnResize == nil {
 		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			if len(args) == 0 {
 				return nil
 			}
-			*mouseEvet <- document.EventManager(document.KEventResize, this, args)
+			*windowEvet <- document.EventManager(document.KEventResize, this, args)
 			return nil
 		})
 		e.fnResize = &fn
@@ -673,15 +814,15 @@ func (e *Stage) RemoveListenerResize() (ref *Stage) {
 	return e
 }
 
-func (e *Stage) AddListenerOnLoad(windowEvet *chan struct{}) (ref *Stage) {
+func (e *Stage) AddListenerLoad(windowEvet *chan document.Data) (ref *Stage) {
 	var fn js.Func
-	//todo: transforma THIS em STAGE
+
 	if e.fnLoad == nil {
 		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			if len(args) == 0 {
 				return nil
 			}
-			*windowEvet <- struct{}{}
+			*windowEvet <- document.EventManager(document.KEventLoad, this, args)
 			return nil
 		})
 		e.fnLoad = &fn
@@ -695,15 +836,15 @@ func (e *Stage) AddListenerOnLoad(windowEvet *chan struct{}) (ref *Stage) {
 	return e
 }
 
-func (e *Stage) AddListenerOnUnload(windowEvet *chan struct{}) (ref *Stage) {
+func (e *Stage) AddListenerOnUnload(windowEvet *chan document.Data) (ref *Stage) {
 	var fn js.Func
-	//todo: transforma THIS em STAGE
+
 	if e.fnUnload == nil {
 		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			if len(args) == 0 {
 				return nil
 			}
-			*windowEvet <- struct{}{}
+			*windowEvet <- document.EventManager(document.KEventUnLoad, this, args)
 			return nil
 		})
 		e.fnUnload = &fn

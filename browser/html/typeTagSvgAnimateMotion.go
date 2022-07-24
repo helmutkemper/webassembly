@@ -185,7 +185,7 @@ type TagSvgAnimateMotion struct {
 	engine engine.IEngine
 }
 
-func (e *TagSvgAnimateMotion) SetEngine(engine engine.IEngine) {
+func (e *TagSvgAnimateMotion) Engine(engine engine.IEngine) {
 	e.engine = engine
 }
 
@@ -4171,7 +4171,7 @@ func (e *TagSvgAnimateMotion) AddListenerMotion(animationEvent *chan animation.D
 					var data animation.Data
 					data.This = this
 					data.CurrentTime = float64(now.Sub(create).Milliseconds()) / 1000.0
-					data.Name = animation.KEventMotion
+					data.EventName = animation.KEventMotion
 					*animationEvent <- data
 				},
 			)

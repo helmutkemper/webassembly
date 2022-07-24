@@ -25,7 +25,7 @@ import (
 //       <animateMotion> ao invés do atributo path.
 func NewTagSvgAnimateMotion() (ref *html.TagSvgAnimateMotion) {
 	ref = &html.TagSvgAnimateMotion{}
-	ref.SetEngine(globalEngine.Engine) //todo: fazer em todos
+	ref.Engine(globalEngine.Engine) //todo: fazer em todos
 	ref.Init()
 
 	return ref

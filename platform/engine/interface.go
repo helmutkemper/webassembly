@@ -6,6 +6,16 @@ type IEngine interface {
 	SetSleepFrame(value int)
 	GetSleepFrame() int
 	SetFPS(value int)
+
+	// GetFPS
+	//
+	// English:
+	//
+	// Returns the amount of current FPS used in calculations.
+	//
+	// Português:
+	//
+	// Retorna a quantidade de FPS atual usado nos cálculos.
 	GetFPS() int
 	CursorAddDrawFunction(runnerFunc func()) string
 	CursorRemoveDrawFunction(id string)

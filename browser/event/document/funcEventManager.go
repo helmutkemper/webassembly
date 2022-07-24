@@ -12,6 +12,8 @@ func (e EventName) String() string {
 
 const (
 	KEventResize EventName = "resize"
+	KEventLoad   EventName = "load"
+	KEventUnLoad EventName = "unload"
 )
 
 // EventManager
@@ -30,6 +32,8 @@ const (
 //   Saída:
 //     data: lista com todas as informações fornecidas pelo navegador.
 func EventManager(name EventName, this js.Value, args []js.Value) (data Data) {
+	//todo: colocar name
+
 	var event = Event{}
 	event.Object = this
 

@@ -7,7 +7,7 @@ import (
 
 func NewStage() (ref *stage.Stage) {
 	ref = &stage.Stage{}
-	ref.SetEngine(globalEngine.Engine)
+	ref.Engine(globalEngine.Engine)
 	ref.Init()
 
 	return ref

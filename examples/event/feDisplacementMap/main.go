@@ -72,7 +72,7 @@ func main() {
 		for {
 			select {
 			case data := <-animationEvent:
-				switch data.Name {
+				switch data.EventName {
 				case animation.KEventBegin:
 					text += fmt.Sprintf("<tspan x='5' y='%v'>begin: %v seconds</tspan>", y, data.CurrentTime)
 				case animation.KEventRepeat:

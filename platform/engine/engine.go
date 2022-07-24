@@ -6,8 +6,43 @@ import (
 	"time"
 )
 
+// kUIdSize
+//
+// English:
+//
+// Defines the size of the UID linked to each added role.
+//
+// Português:
+//
+// Define o tamanho do UID vinculado a cada função adicionada.
 const kUIdSize = 10
+
+// kFpsMin
+//
+// English:
+//
+// Sets the minimum amount of fps allowed for automatic engine tuning
+//
+// Português:
+//
+// Define a quantidade mínima de fps permitida para o ajuste automático da engine
 const kFpsMin = 10
+
+// kFpsMax
+//
+// English:
+//
+// Sets the maximum amount of fps allowed for automatic engine tuning
+//
+//   Notes:
+//    * Setting high fps crashes the browser in a test done on Mac M1 with 16GB of RAM
+//
+// Português:
+//
+// Define a quantidade máxima de fps permitida para o ajuste automático da engine
+//
+//   Notas:
+//    * Definir fps elevados travam o navegador em um teste feito no Mac M1 com 16GB de RAM
 const kFpsMax = 120
 
 type FuncList struct {
@@ -146,9 +181,11 @@ func (el *Engine) SetFPS(value int) {
 //
 // English:
 //
+// Returns the amount of current FPS used in calculations.
+//
 // Português:
 //
-// Retorna a quantidade de FPS atual
+// Retorna a quantidade de FPS atual usado nos cálculos.
 func (el *Engine) GetFPS() int {
 	return el.fps
 }

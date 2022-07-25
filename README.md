@@ -112,3 +112,15 @@ Enquanto o site de documentação atual não fica pronta, use a documentação e
 
 ![documentation](documentation/image/screen.png)
 
+### Tip
+
+How to create a new `js.Value{}`
+> newObject := js.Global().Get("Object")
+> 
+> newArray := js.Global().Get("Array")
+
+> test := js.Global().Get("Object")
+>
+> test.Set("test", "está vivo!")
+>
+> log.Printf("test: %v", test.Get("document"))

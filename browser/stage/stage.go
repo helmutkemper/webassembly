@@ -408,7 +408,7 @@ func (e Stage) GetHeight() (height int) {
 	return e.selfDocument.Get("body").Get("clientHeight").Int()
 }
 
-// ResizeStageToScreen
+// ResizeStageToScreen #deprecated
 //
 // English:
 //
@@ -647,34 +647,57 @@ func (e *Stage) GetFPS() (fps int) {
 //
 // English:
 //
+// Allows you to recreate the function that draws the cursor.
 //
 // Português:
 //
-//
-func (e *Stage) AddCursorDrawFunction(runnerFunc func()) (UId string) {
-	return e.engine.CursorAddDrawFunction(runnerFunc)
+// Permite recriar a função que desenha o cursor.
+func (e *Stage) AddCursorDrawFunction(runnerFunc func()) {
+	e.engine.CursorAddDrawFunction(runnerFunc)
 }
 
 // RemoveCursorDrawFunction
 //
 // English:
 //
+// Removes the role responsible for recreating the cursor.
 //
 // Português:
 //
-//
-func (e *Stage) RemoveCursorDrawFunction(UId string) {
-	e.engine.CursorRemoveDrawFunction(UId)
+// Remove a função responssável por recria o cursor.
+func (e *Stage) RemoveCursorDrawFunction() {
+	e.engine.CursorRemoveDrawFunction()
 }
 
 // AddHighLatencyFunctions
 //
 // English:
 //
+// Adds a high latency function, a low execution priority function.
+//
+//   Input:
+//     runnerFunc: function to be performed.
+//
+//   Output:
+//     UId: used to identify the function when removing.
+//     total: total number of functions running.
+//
+//   Notes:
+//     * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
+// Adiciona uma função de alta latencia, uma função de baixa prioridade de execussão.
 //
+//   Entrada:
+//     runnerFunc: função a ser executada.
+//
+//   Saída:
+//     UId da função, usado para identificar a função na hora de remover.
+//     total: quantidade total de funções em execução.
+//
+//   Notas:
+//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (e *Stage) AddHighLatencyFunctions(runnerFunc func()) (UId string, total int) {
 	UId, total = e.engine.HighLatencyAddToFunctions(runnerFunc)
 	return
@@ -684,10 +707,23 @@ func (e *Stage) AddHighLatencyFunctions(runnerFunc func()) (UId string, total in
 //
 // English:
 //
+// Removes a high latency function added by the HighLatencyAddToFunctions() function.
+//
+//   Input:
+//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//
+//   Notes:
+//     * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
+// Remove uma função de alta latencia adicionada pela função HighLatencyAddToFunctions().
 //
+//   Entrada:
+//     UId: ID retornado pela função HighLatencyAddToFunctions().
+//
+//   Notas:
+//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (e *Stage) DeleteHighLatencyFunctions(UId string) {
 	e.engine.HighLatencyDeleteFromFunctions(UId)
 }
@@ -696,10 +732,25 @@ func (e *Stage) DeleteHighLatencyFunctions(UId string) {
 //
 // English:
 //
+// Allows you to change the order of execution of the function, in the execution list.
+//
+//   Input:
+//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//     index: 0 for the first function in the list
+//
+//   Notes:
+//     * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
+// Permite trocar a ordem de execução da função, na lista de execução.
 //
+//   Entrada:
+//     UId: ID retornado pela função HighLatencyAddToFunctions().
+//     index: 0 para a primeira função da lista
+//
+//   Notas:
+//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (e *Stage) SetHighLatencyZIndex(UId string, index int) int {
 	return e.engine.HighLatencySetZIndex(UId, index)
 }
@@ -1107,8 +1158,7 @@ func (e *Stage) ScrollTo(x, y float64) {
 //
 // Obtém o nome do contexto de navegação da janela.
 func (e *Stage) GetName() (name string) {
-	name = e.selfWindow.Get("name").String()
-	return
+	return e.selfWindow.Get("name").String()
 }
 
 // GetInnerWidth
@@ -1129,8 +1179,7 @@ func (e *Stage) GetName() (name string) {
 // Mais precisamente, innerWidth retorna a largura da viewport de layout da janela. A altura interior da janela—a
 // altura da viewport de layout—pode ser obtida da propriedade innerHeight.
 func (e *Stage) GetInnerWidth() (width float64) {
-	width = e.selfWindow.Get("innerWidth").Float()
-	return
+	return e.selfWindow.Get("innerWidth").Float()
 }
 
 // GetInnerHeight
@@ -1151,8 +1200,7 @@ func (e *Stage) GetInnerWidth() (width float64) {
 // O valor de innerHeight é obtido da altura da viewport de layout da janela. A largura pode ser obtida usando a
 // propriedade innerWidth.
 func (e *Stage) GetInnerHeight() (height float64) {
-	height = e.selfWindow.Get("innerHeight").Float()
-	return
+	return e.selfWindow.Get("innerHeight").Float()
 }
 
 // GetFrameLength
@@ -1165,8 +1213,7 @@ func (e *Stage) GetInnerHeight() (height float64) {
 //
 // Retorna o número de quadros (elementos <frame> ou <iframe>) na janela.
 func (e *Stage) GetFrameLength() (length int) {
-	length = e.selfWindow.Get("length").Int()
-	return
+	return e.selfWindow.Get("length").Int()
 }
 
 // GetIsClosed
@@ -1179,8 +1226,7 @@ func (e *Stage) GetFrameLength() (length int) {
 //
 // A propriedade somente leitura Window.closed indica se a janela referenciada está fechada ou não
 func (e *Stage) GetIsClosed() (closed bool) {
-	closed = e.selfWindow.Get("closed").Bool()
-	return
+	return e.selfWindow.Get("closed").Bool()
 }
 
 // GetOuterHeight
@@ -1201,8 +1247,7 @@ func (e *Stage) GetIsClosed() (closed bool) {
 //   Notas:
 //     * Para alterar o tamanho de uma janela, consulte window.resizeBy() e window.resizeTo().
 func (e *Stage) GetOuterHeight() (outerHeight float64) {
-	outerHeight = e.selfWindow.Get("outerHeight").Float()
-	return
+	return e.selfWindow.Get("outerHeight").Float()
 }
 
 // GetOuterWidth
@@ -1224,8 +1269,7 @@ func (e *Stage) GetOuterHeight() (outerHeight float64) {
 //   Notas:
 //    * Para alterar o tamanho de uma janela, consulte window.resizeBy() e window.resizeTo().
 func (e *Stage) GetOuterWidth() (outerWidth float64) {
-	outerWidth = e.selfWindow.Get("outerWidth").Float()
-	return
+	return e.selfWindow.Get("outerWidth").Float()
 }
 
 // GetScrollX
@@ -1249,8 +1293,7 @@ func (e *Stage) GetOuterWidth() (outerWidth float64) {
 // Em termos mais técnicos, scrollX retorna a coordenada X da borda esquerda da viewport atual. Se não houver viewport,
 // o valor retornado será 0.
 func (e *Stage) GetScrollX() (scrollX float64) {
-	scrollX = e.selfWindow.Get("scrollX").Float()
-	return
+	return e.selfWindow.Get("scrollX").Float()
 }
 
 // GetScrollY
@@ -1277,8 +1320,7 @@ func (e *Stage) GetScrollX() (scrollX float64) {
 // Em termos mais técnicos, scrollY retorna a coordenada Y da borda superior da viewport atual. Se não houver viewport,
 // o valor retornado será 0.
 func (e *Stage) GetScrollY() (scrollY float64) {
-	scrollY = e.selfWindow.Get("scrollY").Float()
-	return
+	return e.selfWindow.Get("scrollY").Float()
 }
 
 // GetScreenX
@@ -1293,8 +1335,7 @@ func (e *Stage) GetScrollY() (scrollY float64) {
 // A propriedade somente leitura Window.screenX retorna a distância horizontal, em pixels CSS, da borda esquerda da
 // janela de visualização do navegador do usuário para o lado esquerdo da tela.
 func (e *Stage) GetScreenX() (screenX float64) {
-	screenX = e.selfWindow.Get("screenX").Float()
-	return
+	return e.selfWindow.Get("screenX").Float()
 }
 
 // GetScreenY
@@ -1309,8 +1350,7 @@ func (e *Stage) GetScreenX() (screenX float64) {
 // A propriedade screenY retorna a distância vertical, em pixels CSS, da borda superior da janela de visualização do
 // navegador do usuário até a borda superior da tela.
 func (e *Stage) GetScreenY() (screenY float64) {
-	screenY = e.selfWindow.Get("screenY").Float()
-	return
+	return e.selfWindow.Get("screenY").Float()
 }
 
 // GetOpener
@@ -1358,8 +1398,7 @@ func (e *Stage) GetScreenY() (screenY float64) {
 //    Como a nova janela é carregada em um contexto de navegação diferente, ela não terá uma referência à janela de
 //    abertura.
 func (e *Stage) GetOpener() (opener js.Value) {
-	opener = e.selfWindow.Get("opener")
-	return
+	return e.selfWindow.Get("opener")
 }
 
 // GetParent
@@ -1382,8 +1421,7 @@ func (e *Stage) GetOpener() (opener js.Value) {
 // Quando uma janela é carregada em um <iframe>, <object> ou <frame>, seu pai é a janela com o elemento incorporado
 // à janela.
 func (e *Stage) GetParent() (parent js.Value) {
-	parent = e.selfWindow.Get("parent")
-	return
+	return e.selfWindow.Get("parent")
 }
 
 // GetScreen
@@ -1400,8 +1438,7 @@ func (e *Stage) GetParent() (parent js.Value) {
 // implementando a interface Tela, é um objeto especial para inspecionar as propriedades da tela na qual a janela
 // atual está sendo renderizada.
 func (e *Stage) GetScreen() (parent js.Value) {
-	parent = e.selfWindow.Get("screen")
-	return
+	return e.selfWindow.Get("screen")
 }
 
 // GetScrollBars
@@ -1414,8 +1451,7 @@ func (e *Stage) GetScreen() (parent js.Value) {
 //
 // A propriedade Window.scrollbars retorna o objeto scrollbars, cuja visibilidade pode ser verificada.
 func (e *Stage) GetScrollBars() (scrollbars js.Value) {
-	scrollbars = e.selfWindow.Get("scrollbars")
-	return
+	return e.selfWindow.Get("scrollbars")
 }
 
 // GetStatusBar
@@ -1428,8 +1464,7 @@ func (e *Stage) GetScrollBars() (scrollbars js.Value) {
 //
 // A propriedade Window.statusbar retorna o objeto statusbar, cuja visibilidade pode ser alternada na janela.
 func (e *Stage) GetStatusBar() (statusbar js.Value) {
-	statusbar = e.selfWindow.Get("statusbar")
-	return
+	return e.selfWindow.Get("statusbar")
 }
 
 // GetTop
@@ -1442,6 +1477,5 @@ func (e *Stage) GetStatusBar() (statusbar js.Value) {
 //
 // Retorna uma referência à janela superior na hierarquia de janelas.
 func (e *Stage) GetTop() (top js.Value) {
-	top = e.selfWindow.Get("top")
-	return
+	return e.selfWindow.Get("top")
 }

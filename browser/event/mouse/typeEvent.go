@@ -28,8 +28,7 @@ type Event struct {
 // Por exemplo, clicar na borda esquerda da janela de visualização sempre resultará em um evento de
 // mouse com um valor clientX de 0, independentemente de a página ser rolada horizontalmente.
 func (e Event) GetClientX() (clientX float64) {
-	clientX = e.Object.Get("clientX").Float()
-	return
+	return e.Object.Get("clientX").Float()
 }
 
 // GetClientY
@@ -52,8 +51,7 @@ func (e Event) GetClientX() (clientX float64) {
 // Por exemplo, clicar na borda superior da janela de visualização sempre resultará em um evento de
 // mouse com um valor clientY de 0, independentemente de a página ser rolada verticalmente.
 func (e Event) GetClientY() (clientY float64) {
-	clientY = e.Object.Get("clientY").Float()
-	return
+	return e.Object.Get("clientY").Float()
 }
 
 // GetMovementX
@@ -72,8 +70,7 @@ func (e Event) GetClientY() (clientY float64) {
 // o valor da propriedade é calculado assim:
 // currentEvent.movementX = currentEvent.screenX - previousEvent.screenX.
 func (e Event) GetMovementX() (movementX float64) {
-	movementX = e.Object.Get("movementX").Float()
-	return
+	return e.Object.Get("movementX").Float()
 }
 
 // GetMovementY
@@ -92,8 +89,7 @@ func (e Event) GetMovementX() (movementX float64) {
 // Em outras palavras, o valor da propriedade é calculado assim:
 // currentEvent.movementY = currentEvent.screenY - previousEvent.screenY.
 func (e Event) GetMovementY() (movementY float64) {
-	movementY = e.Object.Get("movementY").Float()
-	return
+	return e.Object.Get("movementY").Float()
 }
 
 // GetOffsetX
@@ -108,8 +104,7 @@ func (e Event) GetMovementY() (movementY float64) {
 // A propriedade somente leitura offsetX da interface MouseEvent fornece o deslocamento na coordenada
 // X do ponteiro do mouse entre esse evento e a borda de preenchimento do nó de destino.
 func (e Event) GetOffsetX() (offsetX float64) {
-	offsetX = e.Object.Get("offsetX").Float()
-	return
+	return e.Object.Get("offsetX").Float()
 }
 
 // GetOffsetY
@@ -124,8 +119,7 @@ func (e Event) GetOffsetX() (offsetX float64) {
 // A propriedade somente leitura offsetY da interface MouseEvent fornece o deslocamento na coordenada
 // Y do ponteiro do mouse entre esse evento e a borda de preenchimento do nó de destino.
 func (e Event) GetOffsetY() (offsetY float64) {
-	offsetY = e.Object.Get("offsetY").Float()
-	return
+	return e.Object.Get("offsetY").Float()
 }
 
 // GetPageX
@@ -191,8 +185,7 @@ func (e Event) GetOffsetY() (offsetY float64) {
 // Consulte Compatibilidade do navegador para saber quais navegadores foram atualizados para usar
 // o tipo de dados revisado.
 func (e Event) GetPageX() (pageX float64) {
-	pageX = e.Object.Get("pageX").Float()
-	return
+	return e.Object.Get("pageX").Float()
 }
 
 // GetPageY
@@ -216,8 +209,7 @@ func (e Event) GetPageX() (pageX float64) {
 //   Saída:
 //     pageY: Um valor de ponto flutuante duplo.
 func (e Event) GetPageY() (pageY float64) {
-	pageY = e.Object.Get("pageY").Float()
-	return
+	return e.Object.Get("pageY").Float()
 }
 
 // GetScreenX
@@ -242,8 +234,7 @@ func (e Event) GetPageY() (pageY float64) {
 //       único dispositivo e, portanto, o intervalo do valor screenX aumentará para a largura
 //       combinada das telas.
 func (e Event) GetScreenX() (screenX float64) {
-	screenX = e.Object.Get("screenX").Float()
-	return
+	return e.Object.Get("screenX").Float()
 }
 
 // GetScreenY
@@ -258,8 +249,7 @@ func (e Event) GetScreenX() (screenX float64) {
 // A propriedade somente leitura screenY da interface MouseEvent fornece a coordenada vertical
 // (deslocamento) do ponteiro do mouse em coordenadas globais (tela).
 func (e Event) GetScreenY() (screenY float64) {
-	screenY = e.Object.Get("screenY").Float()
-	return
+	return e.Object.Get("screenY").Float()
 }
 
 // GetX
@@ -272,8 +262,7 @@ func (e Event) GetScreenY() (screenY float64) {
 //
 // A propriedade MouseEvent.x é um alias para a propriedade MouseEvent.clientX.
 func (e Event) GetX() (x float64) {
-	x = e.Object.Get("x").Float()
-	return
+	return e.Object.Get("x").Float()
 }
 
 // GetY
@@ -286,8 +275,7 @@ func (e Event) GetX() (x float64) {
 //
 // A propriedade MouseEvent.y é um alias para a propriedade MouseEvent.clientY.
 func (e Event) GetY() (y float64) {
-	y = e.Object.Get("y").Float()
-	return
+	return e.Object.Get("y").Float()
 }
 
 // GetRelatedTarget
@@ -318,8 +306,7 @@ func (e Event) GetY() (y float64) {
 //       log.Print("id: ", target.Get("id"))
 //     }
 func (e Event) GetRelatedTarget() (object js.Value) {
-	object = e.Object.Get("relatedTarget")
-	return
+	return e.Object.Get("relatedTarget")
 }
 
 // GetRegion
@@ -340,8 +327,7 @@ func (e Event) GetRelatedTarget() (object js.Value) {
 //   Saída:
 //     region: Um DOMString que representa o id da região do hit.
 func (e Event) GetRegion() (region string) {
-	region = e.Object.Get("region").String()
-	return
+	return e.Object.Get("region").String()
 }
 
 // GetButton

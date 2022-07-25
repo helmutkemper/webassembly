@@ -20,8 +20,7 @@ type Event struct {
 //
 // Obtém o nome do contexto de navegação da janela.
 func (e Event) GetName() (name string) {
-	name = e.Object.Get("name").String()
-	return
+	return e.Object.Get("name").String()
 }
 
 // GetWidth
@@ -42,8 +41,7 @@ func (e Event) GetName() (name string) {
 // Mais precisamente, innerWidth retorna a largura da viewport de layout da janela. A altura interior da janela—a
 // altura da viewport de layout—pode ser obtida da propriedade innerHeight.
 func (e Event) GetWidth() (width float64) {
-	width = e.Object.Get("innerWidth").Float()
-	return
+	return e.Object.Get("innerWidth").Float()
 }
 
 // GetHeight
@@ -64,8 +62,7 @@ func (e Event) GetWidth() (width float64) {
 // O valor de innerHeight é obtido da altura da viewport de layout da janela. A largura pode ser obtida usando a
 // propriedade innerWidth.
 func (e Event) GetHeight() (height float64) {
-	height = e.Object.Get("innerHeight").Float()
-	return
+	return e.Object.Get("innerHeight").Float()
 }
 
 // GetFrameLength
@@ -78,8 +75,7 @@ func (e Event) GetHeight() (height float64) {
 //
 // Retorna o número de quadros (elementos <frame> ou <iframe>) na janela.
 func (e Event) GetFrameLength() (length int) {
-	length = e.Object.Get("length").Int()
-	return
+	return e.Object.Get("length").Int()
 }
 
 // GetClosed
@@ -92,8 +88,7 @@ func (e Event) GetFrameLength() (length int) {
 //
 // A propriedade somente leitura Window.closed indica se a janela referenciada está fechada ou não
 func (e Event) GetClosed() (closed bool) {
-	closed = e.Object.Get("closed").Bool()
-	return
+	return e.Object.Get("closed").Bool()
 }
 
 // GetOuterHeight
@@ -114,8 +109,7 @@ func (e Event) GetClosed() (closed bool) {
 //   Notas:
 //     * Para alterar o tamanho de uma janela, consulte window.resizeBy() e window.resizeTo().
 func (e Event) GetOuterHeight() (outerHeight float64) {
-	outerHeight = e.Object.Get("outerHeight").Float()
-	return
+	return e.Object.Get("outerHeight").Float()
 }
 
 // GetOuterWidth
@@ -137,8 +131,7 @@ func (e Event) GetOuterHeight() (outerHeight float64) {
 //   Notas:
 //    * Para alterar o tamanho de uma janela, consulte window.resizeBy() e window.resizeTo().
 func (e Event) GetOuterWidth() (outerWidth float64) {
-	outerWidth = e.Object.Get("outerWidth").Float()
-	return
+	return e.Object.Get("outerWidth").Float()
 }
 
 // GetScrollX
@@ -162,8 +155,7 @@ func (e Event) GetOuterWidth() (outerWidth float64) {
 // Em termos mais técnicos, scrollX retorna a coordenada X da borda esquerda da viewport atual. Se não houver viewport,
 // o valor retornado será 0.
 func (e Event) GetScrollX() (scrollX float64) {
-	scrollX = e.Object.Get("scrollX").Float()
-	return
+	return e.Object.Get("scrollX").Float()
 }
 
 // GetScrollY
@@ -190,8 +182,7 @@ func (e Event) GetScrollX() (scrollX float64) {
 // Em termos mais técnicos, scrollY retorna a coordenada Y da borda superior da viewport atual. Se não houver viewport,
 // o valor retornado será 0.
 func (e Event) GetScrollY() (scrollY float64) {
-	scrollY = e.Object.Get("scrollY").Float()
-	return
+	return e.Object.Get("scrollY").Float()
 }
 
 // GetScreenX
@@ -206,8 +197,7 @@ func (e Event) GetScrollY() (scrollY float64) {
 // A propriedade somente leitura Window.screenX retorna a distância horizontal, em pixels CSS, da borda esquerda da
 // janela de visualização do navegador do usuário para o lado esquerdo da tela.
 func (e Event) GetScreenX() (screenX float64) {
-	screenX = e.Object.Get("screenX").Float()
-	return
+	return e.Object.Get("screenX").Float()
 }
 
 // GetScreenY
@@ -222,8 +212,7 @@ func (e Event) GetScreenX() (screenX float64) {
 // A propriedade screenY retorna a distância vertical, em pixels CSS, da borda superior da janela de visualização do
 // navegador do usuário até a borda superior da tela.
 func (e Event) GetScreenY() (screenY float64) {
-	screenY = e.Object.Get("screenY").Float()
-	return
+	return e.Object.Get("screenY").Float()
 }
 
 // GetOpener
@@ -271,8 +260,7 @@ func (e Event) GetScreenY() (screenY float64) {
 //    Como a nova janela é carregada em um contexto de navegação diferente, ela não terá uma referência à janela de
 //    abertura.
 func (e Event) GetOpener() (opener js.Value) {
-	opener = e.Object.Get("opener")
-	return
+	return e.Object.Get("opener")
 }
 
 // GetParent
@@ -295,8 +283,7 @@ func (e Event) GetOpener() (opener js.Value) {
 // Quando uma janela é carregada em um <iframe>, <object> ou <frame>, seu pai é a janela com o elemento incorporado
 // à janela.
 func (e Event) GetParent() (parent js.Value) {
-	parent = e.Object.Get("parent")
-	return
+	return e.Object.Get("parent")
 }
 
 // GetScreen
@@ -313,8 +300,7 @@ func (e Event) GetParent() (parent js.Value) {
 // implementando a interface Tela, é um objeto especial para inspecionar as propriedades da tela na qual a janela
 // atual está sendo renderizada.
 func (e Event) GetScreen() (parent js.Value) {
-	parent = e.Object.Get("screen")
-	return
+	return e.Object.Get("screen")
 }
 
 // GetScrollBars
@@ -327,8 +313,7 @@ func (e Event) GetScreen() (parent js.Value) {
 //
 // A propriedade Window.scrollbars retorna o objeto scrollbars, cuja visibilidade pode ser verificada.
 func (e Event) GetScrollBars() (scrollbars js.Value) {
-	scrollbars = e.Object.Get("scrollbars")
-	return
+	return e.Object.Get("scrollbars")
 }
 
 // GetStatusBar
@@ -341,8 +326,7 @@ func (e Event) GetScrollBars() (scrollbars js.Value) {
 //
 // A propriedade Window.statusbar retorna o objeto statusbar, cuja visibilidade pode ser alternada na janela.
 func (e Event) GetStatusBar() (statusbar js.Value) {
-	statusbar = e.Object.Get("statusbar")
-	return
+	return e.Object.Get("statusbar")
 }
 
 // GetTop
@@ -355,6 +339,20 @@ func (e Event) GetStatusBar() (statusbar js.Value) {
 //
 // Retorna uma referência à janela superior na hierarquia de janelas.
 func (e Event) GetTop() (top js.Value) {
-	top = e.Object.Get("top")
-	return
+	return e.Object.Get("top")
+}
+
+// GetNavigator
+//
+// English:
+//
+// Returns a reference to the Navigator object, which has methods and properties about the application running
+// the script.
+//
+// Português:
+//
+// Retorna uma referência ao objeto Navigator, que possui métodos e propriedades sobre o aplicativo que executa
+// o script.
+func (e Event) GetNavigator() (navigator js.Value) {
+	return e.Object.Get("navigator")
 }

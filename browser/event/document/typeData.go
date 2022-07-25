@@ -4,6 +4,114 @@ import (
 	"syscall/js"
 )
 
+type Navigator struct {
+	// This
+	//
+	// English:
+	//
+	// This is the equivalent property of JavaScript's 'this'.
+	//
+	// The way to use it is This.Get(property string name). E.g. chan.This.Get("id")
+	//
+	// Português:
+	//
+	// Esta é a propriedade equivalente ao 'this' do JavaScript.
+	//
+	// A forma de usar é This.Get(property string name). Ex. chan.This.Get("id")
+	This js.Value
+
+	// CookieEnabled
+	//
+	// English:
+	//
+	// Boolean value that indicates whether cookies are enabled or not.
+	//
+	//   Notes:
+	//    * When the browser is configured to block third-party cookies, and navigator.cookieEnabled is invoked inside a
+	//      third-party iframe, it returns true in Safari, Edge Spartan and IE (while trying to set a cookie in such
+	//      scenario would fail). It returns false in Firefox and Chromium-based browsers.
+	//    * Web browsers may prevent writing certain cookies in certain scenarios. For example, Chrome 80+ does not allow
+	//      creating cookies with SameSite=None attribute, unless they are created over HTTPS and with Secure attribute.
+	//
+	// Português:
+	//
+	// Valor booleano que indica se os cookies estão habilitados ou não.
+	//
+	//   Notas:
+	//    * Quando o navegador está configurado para bloquear cookies de terceiros e o navigator.cookieEnabled é invocado
+	//      dentro de um iframe de terceiros, ele retorna true no Safari, Edge Spartan e IE (enquanto tentar definir um
+	//      cookie nesse cenário falharia). Ele retorna false em navegadores baseados em Firefox e Chromium.
+	//    * Os navegadores da Web podem impedir a gravação de determinados cookies em determinados cenários. Por exemplo,
+	//      o Chrome 80+ não permite a criação de cookies com o atributo SameSite=None, a menos que sejam criados em HTTPS
+	//      e com o atributo Secure.
+	CookieEnabled bool
+}
+
+// GetCookieEnabled
+//
+// English:
+//
+// Boolean value that indicates whether cookies are enabled or not.
+//
+//   Notes:
+//    * When the browser is configured to block third-party cookies, and navigator.cookieEnabled is invoked inside a
+//      third-party iframe, it returns true in Safari, Edge Spartan and IE (while trying to set a cookie in such
+//      scenario would fail). It returns false in Firefox and Chromium-based browsers.
+//    * Web browsers may prevent writing certain cookies in certain scenarios. For example, Chrome 80+ does not allow
+//      creating cookies with SameSite=None attribute, unless they are created over HTTPS and with Secure attribute.
+//
+// Português:
+//
+// Valor booleano que indica se os cookies estão habilitados ou não.
+//
+//   Notas:
+//    * Quando o navegador está configurado para bloquear cookies de terceiros e o navigator.cookieEnabled é invocado
+//      dentro de um iframe de terceiros, ele retorna true no Safari, Edge Spartan e IE (enquanto tentar definir um
+//      cookie nesse cenário falharia). Ele retorna false em navegadores baseados em Firefox e Chromium.
+//    * Os navegadores da Web podem impedir a gravação de determinados cookies em determinados cenários. Por exemplo,
+//      o Chrome 80+ não permite a criação de cookies com o atributo SameSite=None, a menos que sejam criados em HTTPS
+//      e com o atributo Secure.
+func (e Navigator) GetCookieEnabled() (enabled bool) {
+	return e.This.Get("cookieEnabled").Bool()
+}
+
+// Geolocation
+//
+// English:
+//
+// The Geolocation interface represents an object able to obtain the position of the device programmatically. It gives
+// Web content access to the location of the device. This allows a website or app to offer customized results based on
+// the user's location.
+//
+// An object with this interface is obtained using the navigator.geolocation property implemented by the Navigator
+// object.
+//
+//   Notes:
+//    * For security reasons, when a web page tries to access location information, the user is notified and asked to
+//      grant permission. Be aware that each browser has its own policies and methods for requesting this permission.
+//    * This feature is available only in secure contexts (HTTPS), in some or all supporting browsers.
+//
+// Português:
+//
+// A interface Geolocation representa um objeto capaz de obter a posição do dispositivo programaticamente.
+// Dá acesso ao conteúdo da Web à localização do dispositivo. Isso permite que um site ou aplicativo ofereça resultados
+// personalizados com base na localização do usuário.
+//
+// An object with this interface is obtained using the navigator.geolocation property implemented by the Navigator
+// object.
+//
+//   Notes:
+//    * Por motivos de segurança, quando uma página da Web tenta acessar informações de localização, o usuário é
+//      notificado e solicitado a conceder permissão. Esteja ciente de que cada navegador tem suas próprias políticas e
+//      métodos para solicitar essa permissão.
+//    * Este recurso está disponível apenas em contextos seguros (HTTPS), em alguns ou em todos os navegadores compatíveis.
+type Geolocation struct {
+}
+
+func (e Navigator) GetGeolocation() (geolocation bool) {
+	return e.This.Call("getCurrentPosition").Bool()
+}
+
 // Data
 //
 // English:

@@ -312,11 +312,9 @@ func (el *Engine) GetFPS() int {
 // Português:
 //
 // Permite recriar a função que desenha o cursor.
-func (el *Engine) CursorAddDrawFunction(runnerFunc func()) string {
+func (el *Engine) CursorAddDrawFunction(runnerFunc func()) {
 	UId := el.getUId()
 	el.funcCursorDraw = FuncList{id: UId, f: runnerFunc}
-
-	return UId
 }
 
 // CursorRemoveDrawFunction
@@ -328,7 +326,7 @@ func (el *Engine) CursorAddDrawFunction(runnerFunc func()) string {
 // Português:
 //
 // Remove a função responssável por recria o cursor.
-func (el *Engine) CursorRemoveDrawFunction(id string) {
+func (el *Engine) CursorRemoveDrawFunction() {
 	el.funcCursorDraw = FuncList{}
 }
 
@@ -617,6 +615,18 @@ func (el *Engine) HighLatencySetAsLastFunctionToRun(UId string) int {
 //
 // English:
 //
+// Adds a function to the run list.
+//
+//   Input:
+//     runnerFunc: função a ser executada.
+//
+//   Output:
+//     UId: used to identify the function when removing.
+//     total: total number of functions running.
+//
+//   Notes:
+//     * System functions are the first functions in the list of executions and should be the system usage function.
+//
 // Português:
 //
 // Adiciona uma função a lista de execuções.
@@ -642,6 +652,14 @@ func (el *Engine) SystemAddToFunctions(runnerFunc func()) (string, int) {
 //
 // English:
 //
+// Removes a function from the system functions list, added by the SystemAddToFunctions() function.
+//
+//   Input:
+//     UId: ID returned by the SystemAddToFunctions() function.
+//
+//   Notes:
+//     * System functions are the first functions in the list of executions and should be the system usage functions.
+//
 // Português:
 //
 // Remove uma função da lista de funções do sistema, adicionada pela função SystemAddToFunctions().
@@ -663,6 +681,15 @@ func (el *Engine) SystemDeleteFromFunctions(UId string) {
 // SystemSetZIndex
 //
 // English:
+//
+// Allows you to change the order of execution of the function, in the execution list.
+//
+//   Input:
+//     UId: ID returned by the SystemAddToFunctions() function.
+//     index: 0 for the first function in the list
+//
+//   Notes:
+//     * System functions are the first functions in the list of executions and should be the system usage functions.
 //
 // Português:
 //
@@ -727,6 +754,14 @@ func (el *Engine) SystemSetZIndex(UId string, index int) int {
 // SystemGetZIndex
 //
 // English:
+//
+// Returns the function execution index in the list, where 0 is the first function to be executed.
+//
+//   Input:
+//     UId: ID returned by the SystemAddToFunctions() function.
+//
+//   Entrada:
+//     index: Function execution order.
 //
 // Português:
 //

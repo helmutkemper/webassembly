@@ -50,8 +50,7 @@ func (e Event) GetCurrentTime() (currentTime float64) {
 }
 
 func (e Event) GetClientX() (clientX float64) {
-	clientX = e.Object.Get("clientX").Float()
-	return
+	return e.Object.Get("clientX").Float()
 }
 
 // EventManager

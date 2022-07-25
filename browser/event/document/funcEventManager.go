@@ -1,6 +1,7 @@
 package document
 
 import (
+	"log"
 	"syscall/js"
 )
 
@@ -31,12 +32,11 @@ const (
 //
 //   Saída:
 //     data: lista com todas as informações fornecidas pelo navegador.
-func EventManager(name EventName, this js.Value, args []js.Value) (data Data) {
-	//todo: colocar name
-
+func EventManager(eventName EventName, this js.Value, args []js.Value) (data Data) {
 	var event = Event{}
 	event.Object = this
 
+	data.EventName = eventName
 	data.Width = event.GetWidth()
 	data.Height = event.GetHeight()
 	data.Name = event.GetName()
@@ -54,6 +54,9 @@ func EventManager(name EventName, this js.Value, args []js.Value) (data Data) {
 	data.ScrollBars = event.GetScrollBars()
 	data.StatusBar = event.GetStatusBar()
 	data.Top = event.GetTop()
+
+	log.Printf("navigator %v", event.GetNavigator())
+
 	data.This = this
 
 	return

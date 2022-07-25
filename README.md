@@ -121,5 +121,5 @@ newArray  := js.Global().Get("Array")
 
 test := js.Global().Get("Object")
 test.Set("test", "I'm alive!")
-log.Printf("test: %v", test.Get("document"))
+log.Printf("test: %v", test.Get("test"))
 ```

@@ -115,12 +115,11 @@ Enquanto o site de documentação atual não fica pronta, use a documentação e
 ### Tip
 
 How to create a new `js.Value{}`
-> newObject := js.Global().Get("Object")
-> 
-> newArray := js.Global().Get("Array")
+```go
+newObject := js.Global().Get("Object")
+newArray  := js.Global().Get("Array")
 
-> test := js.Global().Get("Object")
->
-> test.Set("test", "está vivo!")
->
-> log.Printf("test: %v", test.Get("document"))
+test := js.Global().Get("Object")
+test.Set("test", "I'm alive!")
+log.Printf("test: %v", test.Get("document"))
+```

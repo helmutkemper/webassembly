@@ -78,7 +78,7 @@ func main() {
 	stage := factoryBrowser.NewStage()
 
 	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 100}).Append(
-		factoryBrowser.NewTagSvgPath().Fill("none").Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+		factoryBrowser.NewTagSvgPath().Fill(nil).Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
 		factoryBrowser.NewTagSvgCircle().R(5).Fill(factoryColor.NewRed()).Append(
 			factoryBrowser.NewTagSvgAnimateMotion().Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
 		),
@@ -112,9 +112,9 @@ Enquanto o site de documentação atual não fica pronta, use a documentação e
 
 ![documentation](documentation/image/screen.png)
 
-### Tip
+### Golnag JS Tips
 
-How to create a new `js.Value{}`
+How to create a new `js.Value{}`:
 ```go
 newObject := js.Global().Get("Object")
 newArray  := js.Global().Get("Array")
@@ -122,4 +122,16 @@ newArray  := js.Global().Get("Array")
 test := js.Global().Get("Object")
 test.Set("test", "I'm alive!")
 log.Printf("test: %v", test.Get("test"))
+```
+
+How to create a callback (of hell) function:
+```go
+var callBack = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	...
+	return nil
+})
+```
+
+```go
+.Get("message").String()
 ```

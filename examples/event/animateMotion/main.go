@@ -73,7 +73,7 @@ func main() {
 	)
 
 	stage.Append(s1)
-	nw := stage.NewWindow("http://localhost:3000/documentation/")
+	nw := stage.NewWindow("https://localhost/documentation/")
 	nw.AddListenerLoad(&newWindow)
 	nw.AddListenerResize(&windowResize)
 
@@ -117,6 +117,9 @@ func main() {
 			}
 		}
 	}()
+
+	var g document.Geolocation
+	log.Printf("%+v", g.GetGeolocation())
 
 	done := make(chan struct{}, 0)
 	<-done

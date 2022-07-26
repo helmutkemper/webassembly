@@ -45,6 +45,8 @@ type Navigator struct {
 	//      o Chrome 80+ não permite a criação de cookies com o atributo SameSite=None, a menos que sejam criados em HTTPS
 	//      e com o atributo Secure.
 	CookieEnabled bool
+
+	Object js.Value
 }
 
 // GetCookieEnabled
@@ -72,7 +74,7 @@ type Navigator struct {
 //      o Chrome 80+ não permite a criação de cookies com o atributo SameSite=None, a menos que sejam criados em HTTPS
 //      e com o atributo Secure.
 func (e Navigator) GetCookieEnabled() (enabled bool) {
-	return e.This.Get("cookieEnabled").Bool()
+	return e.Object.Get("cookieEnabled").Bool()
 }
 
 // Geolocation
@@ -106,10 +108,249 @@ func (e Navigator) GetCookieEnabled() (enabled bool) {
 //      métodos para solicitar essa permissão.
 //    * Este recurso está disponível apenas em contextos seguros (HTTPS), em alguns ou em todos os navegadores compatíveis.
 type Geolocation struct {
+
+	// enableHighAccuracy
+	//
+	// English:
+	//
+	// A boolean value that indicates the application would like to receive the best possible results.
+	// If true and if the device is able to provide a more accurate position, it will do so. Note that this can result in
+	// slower response times or increased power consumption (with a GPS chip on a mobile device for example). On the other
+	// hand, if false, the device can take the liberty to save resources by responding more quickly and/or using less
+	// power.
+	//
+	// Default: false.
+	//
+	// Português:
+	//
+	// Um valor booleano que indica que o aplicativo gostaria de receber os melhores resultados possíveis. Se for
+	// verdadeiro e se o dispositivo for capaz de fornecer uma posição mais precisa, ele o fará. Observe que isso pode
+	// resultar em tempos de resposta mais lentos ou maior consumo de energia (com um chip GPS em um dispositivo móvel,
+	// por exemplo). Por outro lado, se falso, o dispositivo pode ter a liberdade de economizar recursos respondendo mais
+	// rapidamente e ou usando menos energia.
+	//
+	// Padrão: falso.
+	enableHighAccuracy bool
+
+	// timeout
+	//
+	// English:
+	//
+	// A positive long value representing the maximum length of time (in milliseconds) the device is allowed to take in
+	// order to return a position.
+	// The default value is Infinity, meaning that getCurrentPosition() won't return until the position is available.
+	//
+	// Português:
+	//
+	// Um valor longo positivo que representa o tempo máximo (em milissegundos) que o dispositivo pode levar para retornar
+	// uma posição.
+	// O valor padrão é Infinity, o que significa que getCurrentPosition() não retornará até que a posição esteja
+	// disponível.
+	timeout int
+
+	// maximumAge
+	//
+	// English:
+	//
+	// A positive long value indicating the maximum age in milliseconds of a possible cached position that is acceptable
+	// to return.
+	// If set to 0, it means that the device cannot use a cached position and must attempt to retrieve the real current
+	// position.
+	// If set to -1 the device must return a cached position regardless of its age.
+	// Default: 0.
+	//
+	// Português:
+	//
+	// Um valor longo positivo que indica a idade máxima em milissegundos de uma possível posição em cache que é aceitável
+	// retornar.
+	// Se definido como 0, significa que o dispositivo não pode usar uma posição em cache e deve tentar recuperar a
+	// posição atual real.
+	// Se definido como -1, o dispositivo deve retornar uma posição em cache, independentemente de sua idade.
+	// Padrão: 0.
+	maximumAge int
+
+	Object js.Value
 }
 
-func (e Navigator) GetGeolocation() (geolocation bool) {
-	return e.This.Call("getCurrentPosition").Bool()
+// MaximumAge
+//
+// English:
+//
+// A positive long value indicating the maximum age in milliseconds of a possible cached position that is acceptable
+// to return.
+//
+//   Input:
+//     maximumAge: value indicating the maximum age in milliseconds.
+//
+// If set to 0, it means that the device cannot use a cached position and must attempt to retrieve the real current
+// position.
+// If set to -1 the device must return a cached position regardless of its age.
+// Default: 0.
+//
+// Português:
+//
+// Um valor longo positivo que indica a idade máxima em milissegundos de uma possível posição em cache que é aceitável
+// retornar.
+//
+//   Entrada:
+//     maximumAge: valor que indica a idade máxima em milissegundos.
+//
+// Se definido como 0, significa que o dispositivo não pode usar uma posição em cache e deve tentar recuperar a
+// posição atual real.
+// Se definido como -1, o dispositivo deve retornar uma posição em cache, independentemente de sua idade.
+// Padrão: 0.
+func (e *Geolocation) MaximumAge(maximumAge int) {
+	e.maximumAge = maximumAge
+}
+
+// Timeout
+//
+// English:
+//
+// A positive long value representing the maximum length of time (in milliseconds) the device is allowed to take in
+// order to return a position.
+//
+//   Input:
+//     timeout: value representing the maximum length of time (in milliseconds)
+//
+// The default value is Infinity, meaning that getCurrentPosition() won't return until the position is available.
+//
+// Português:
+//
+// Um valor longo positivo que representa o tempo máximo (em milissegundos) que o dispositivo pode levar para retornar
+// uma posição.
+//
+//   Entrada:
+//     timeout: valor que representa a duração máxima de tempo (em milissegundos)
+//
+// O valor padrão é Infinity, o que significa que getCurrentPosition() não retornará até que a posição esteja
+// disponível.
+func (e *Geolocation) Timeout(timeout int) {
+	e.timeout = timeout
+}
+
+// EnableHighAccuracy
+//
+// English:
+//
+// A boolean value that indicates the application would like to receive the best possible results.
+//
+//   Input:
+//     enableHighAccuracy: indicates the application would like to receive the best possible results.
+//
+// If true and if the device is able to provide a more accurate position, it will do so. Note that this can result in
+// slower response times or increased power consumption (with a GPS chip on a mobile device for example). On the other
+// hand, if false, the device can take the liberty to save resources by responding more quickly and/or using less
+// power.
+//
+// Default: false.
+//
+// Português:
+//
+// Um valor booleano que indica que o aplicativo gostaria de receber os melhores resultados possíveis.
+//
+//   Entrada:
+//     enableHighAccuracy: indica que o aplicativo gostaria de receber os melhores resultados possíveis.
+//
+// Se for verdadeiro e se o dispositivo for capaz de fornecer uma posição mais precisa, ele o fará. Observe que isso
+// pode resultar em tempos de resposta mais lentos ou maior consumo de energia (com um chip GPS em um dispositivo móvel,
+// por exemplo). Por outro lado, se falso, o dispositivo pode ter a liberdade de economizar recursos respondendo mais
+// rapidamente e ou usando menos energia.
+//
+// Padrão: falso.
+func (e *Geolocation) EnableHighAccuracy(enableHighAccuracy bool) {
+	e.enableHighAccuracy = enableHighAccuracy
+}
+
+type Coordinate struct {
+	Latitude  float64
+	Longitude float64
+
+	Accuracy     float64
+	ErrorCode    int
+	ErrorMessage string
+}
+
+// GetGeolocation
+//
+// English:
+//
+// Get the current position of the device.
+//
+//   Output:
+//     coordinate: coordinate object
+//
+//   Notes:
+//     * Accuracy is in meters
+//     * This feature is available only in secure contexts (HTTPS).
+//
+// Português:
+//
+// Retorna a posição atual do dispositivo.
+//
+//   Saída:
+//     coordinate: objeto de coordenadas
+//
+//   Notas:
+//     * Accuracy é em metros.
+//     * Esse recurso está disponível apenas em contextos seguros (HTTPS).
+// todo: not tested
+func (e *Geolocation) GetGeolocation() (coordinate Coordinate) {
+	var options = e.prepareOptions()
+
+	onError := js.FuncOf(func(errJs js.Value, _ []js.Value) interface{} {
+		coordinate.ErrorCode = errJs.Get("code").Int()
+		coordinate.ErrorMessage = errJs.Get("message").String()
+		return nil
+	})
+
+	onSuccess := js.FuncOf(func(pos js.Value, _ []js.Value) interface{} {
+		if pos.IsUndefined() || pos.IsNull() {
+			return nil
+		}
+
+		coordinates := pos.Get("coords")
+		coordinate.Latitude = coordinates.Get("latitude").Float()
+		coordinate.Longitude = coordinates.Get("longitude").Float()
+		coordinate.Accuracy = coordinates.Get("accuracy").Float()
+
+		return nil
+	})
+
+	js.Global().Get("navigator").Get("geolocation").Call("getCurrentPosition", onSuccess, onError, options)
+	return
+}
+
+// prepareOptions
+//
+// English:
+//
+// An optional object from Geolocation.getCurrentPosition()
+//
+// See https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
+//
+// Português:
+//
+// Um objeto opcional de Geolocation.getCurrentPosition()
+//
+// Veja https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
+func (e Geolocation) prepareOptions() (options js.Value) {
+	options = js.Global().Get("Object")
+
+	if e.maximumAge < 0 {
+		options.Set("maximumAge", "Infinity")
+	} else {
+		options.Set("maximumAge", e.maximumAge)
+	}
+
+	if e.timeout > 0 {
+		options.Set("timeout", e.timeout)
+	} else {
+		options.Set("timeout", "Infinity")
+	}
+
+	options.Set("enableHighAccuracy", e.enableHighAccuracy)
+	return
 }
 
 // Data
@@ -446,6 +687,8 @@ type Data struct {
 	//
 	// A forma de usar é This.Get(property string name). Ex. chan.This.Get("id")
 	This js.Value
+
+	Object js.Value
 }
 
 // Blur
@@ -458,7 +701,7 @@ type Data struct {
 //
 // Desvia o foco da janela.
 func (e Data) Blur() {
-	e.This.Call("blur")
+	e.Object.Call("blur")
 }
 
 // Close
@@ -485,7 +728,7 @@ func (e Data) Blur() {
 //   Notas
 //    * Close() não tem efeito quando chamado em objetos Window retornados por HTMLIFrameElement.contentWindow.
 func (e Data) Close() {
-	e.This.Call("close")
+	e.Object.Call("close")
 }
 
 // Focus
@@ -500,7 +743,7 @@ func (e Data) Close() {
 // Faz um pedido para trazer a janela para a frente. Pode falhar devido às configurações do usuário e não é garantido
 // que a janela esteja na frente antes que esse método retorne.
 func (e Data) Focus() {
-	e.This.Call("focus")
+	e.Object.Call("focus")
 }
 
 // MoveTo
@@ -527,7 +770,7 @@ func (e Data) Focus() {
 //   Notes:
 //    * This function moves the window to an absolute location. In contrast, window.moveBy() moves the window relative to its current location.
 func (e Data) MoveTo(x, y float64) {
-	e.This.Call("moveTo", x, y)
+	e.Object.Call("moveTo", x, y)
 }
 
 // MoveBy
@@ -560,7 +803,7 @@ func (e Data) MoveTo(x, y float64) {
 //    * Esta função move a janela em relação à sua localização atual. Em contraste, window.moveTo() move a janela para
 //      um local absoluto.
 func (e Data) MoveBy(deltaX, deltaY float64) {
-	e.This.Call("moveBy", deltaX, deltaY)
+	e.Object.Call("moveBy", deltaX, deltaY)
 }
 
 // ResizeBy
@@ -581,7 +824,7 @@ func (e Data) MoveBy(deltaX, deltaY float64) {
 //     xDelta: Número de pixels para aumentar a janela horizontalmente.
 //     yDelta: Número de pixels para aumentar a janela verticalmente.
 func (e Data) ResizeBy(deltaX, deltaY float64) {
-	e.This.Call("resizeBy", deltaX, deltaY)
+	e.Object.Call("resizeBy", deltaX, deltaY)
 }
 
 // ResizeTo
@@ -603,7 +846,7 @@ func (e Data) ResizeBy(deltaX, deltaY float64) {
 //     height: Um valor inteiro que representa o novo outerHeight em pixels (incluindo barras de rolagem, barras de
 //       título etc.)
 func (e Data) ResizeTo(width, height float64) {
-	e.This.Call("resizeTo", width, height)
+	e.Object.Call("resizeTo", width, height)
 }
 
 // Scroll
@@ -624,7 +867,7 @@ func (e Data) ResizeTo(width, height float64) {
 //     x: É o pixel ao longo do eixo horizontal do documento que você deseja exibir no canto superior esquerdo.
 //     y: é o pixel ao longo do eixo vertical do documento que você deseja exibir no canto superior esquerdo.
 func (e Data) Scroll(x, y float64) {
-	e.This.Call("scroll", x, y)
+	e.Object.Call("scroll", x, y)
 }
 
 // ScrollBy
@@ -645,7 +888,7 @@ func (e Data) Scroll(x, y float64) {
 //     x: É o valor de pixel horizontal pelo qual você deseja rolar.
 //     y: É o valor de pixel vertical pelo qual você deseja rolar.
 func (e Data) ScrollBy(x, y float64) {
-	e.This.Call("scrollBy", x, y)
+	e.Object.Call("scrollBy", x, y)
 }
 
 // ScrollTo
@@ -666,5 +909,5 @@ func (e Data) ScrollBy(x, y float64) {
 //     x: É o pixel ao longo do eixo horizontal do documento que você deseja exibir no canto superior esquerdo.
 //     y: É o pixel ao longo do eixo vertical do documento que você deseja exibir no canto superior esquerdo.
 func (e Data) ScrollTo(x, y float64) {
-	e.This.Call("scrollTo", x, y)
+	e.Object.Call("scrollTo", x, y)
 }

@@ -9,6 +9,10 @@ import (
 	"runtime"
 )
 
+// https://stackoverflow.com/questions/7580508/getting-chrome-to-accept-self-signed-localhost-certificate
+
+// https://gist.github.com/denji/12b3a568f092ab951456
+
 func main() {
 	var err error
 	var addrs []net.Addr
@@ -35,8 +39,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./"))
 	http.Handle("/", fs)
 
-	log.Println("Listening on :3000...")
-	err = http.ListenAndServe(":3000", nil)
+	log.Println("Listening https on :443...")
+	//err = http.ListenAndServe(":3000", nil)
+	err = http.ListenAndServeTLS(":443", "./examples/server/server.crt", "./examples/server/server.key", nil)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -126,7 +126,7 @@ log.Printf("test: %v", test.Get("test"))
 
 How to create a callback (of hell) function:
 
-Example:
+Javascript Example:
 ```javascript
 const options = {
   enableHighAccuracy: true,

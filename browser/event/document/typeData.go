@@ -295,12 +295,60 @@ type Coordinate struct {
 //     * Accuracy é em metros.
 //     * Esse recurso está disponível apenas em contextos seguros (HTTPS).
 // todo: not tested
-func (e *Geolocation) GetGeolocation() (coordinate Coordinate) {
+func (e *Geolocation) GetGeolocation(chCoordinate *chan Coordinate) {
+	var coordinate Coordinate
+	var options = e.prepareOptions()
+
+	onError := js.FuncOf(func(_ js.Value, args []js.Value) interface{} {
+		coordinate.ErrorCode = args[0].Get("code").Int()
+		coordinate.ErrorMessage = args[0].Get("message").String()
+		*chCoordinate <- coordinate
+		return nil
+	})
+
+	onSuccess := js.FuncOf(func(pos js.Value, args []js.Value) interface{} {
+		if len(args) == 0 || args[0].IsUndefined() || args[0].IsNull() {
+			return nil
+		}
+
+		coordinates := args[0].Get("coords")
+		coordinate.Latitude = coordinates.Get("latitude").Float()
+		coordinate.Longitude = coordinates.Get("longitude").Float()
+		coordinate.Accuracy = coordinates.Get("accuracy").Float()
+		*chCoordinate <- coordinate
+		return nil
+	})
+
+	js.Global().Get("navigator").Get("geolocation").Call("getCurrentPosition", onSuccess, onError, options)
+	return
+}
+
+// WatchPosition
+//
+// English:
+//
+// Register a handler function that will be called automatically each time the position of the device changes.
+//
+//   Notes:
+//     * This feature is available only in secure contexts (HTTPS).
+//
+// Português:
+//
+// Registre uma função de manipulador que será chamada automaticamente toda vez que a posição do dispositivo for
+// alterada.
+//
+//   Notas:
+//     * Este recurso está disponível apenas em contextos seguros (HTTPS).
+// todo: not tested
+func (e *Geolocation) WatchPosition(chCoordinate *chan Coordinate) {
+	var coordinate Coordinate
 	var options = e.prepareOptions()
 
 	onError := js.FuncOf(func(errJs js.Value, _ []js.Value) interface{} {
 		coordinate.ErrorCode = errJs.Get("code").Int()
 		coordinate.ErrorMessage = errJs.Get("message").String()
+
+		*chCoordinate <- coordinate
 		return nil
 	})
 
@@ -314,10 +362,11 @@ func (e *Geolocation) GetGeolocation() (coordinate Coordinate) {
 		coordinate.Longitude = coordinates.Get("longitude").Float()
 		coordinate.Accuracy = coordinates.Get("accuracy").Float()
 
+		*chCoordinate <- coordinate
 		return nil
 	})
 
-	js.Global().Get("navigator").Get("geolocation").Call("getCurrentPosition", onSuccess, onError, options)
+	js.Global().Get("navigator").Get("geolocation").Call("watchPosition", onSuccess, onError, options)
 	return
 }
 

@@ -150,7 +150,7 @@ function error(err) {
 navigator.geolocation.getCurrentPosition(success, error, options);
 ```
 
-Function success javascript:
+Function success, javascript:
 ```javascript
 function success(pos) {
   const crd = pos.coords;
@@ -162,7 +162,7 @@ function success(pos) {
 }
 ```
 
-Function success golang:
+Function success, golang:
 ```go
 var success = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 	// javascript `pos` is golang `args[0]`
@@ -176,3 +176,60 @@ var success = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 })
 ```
 
+Function error, javascript:
+```javascript
+function error(err) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+```
+
+Function error, javascript:
+```go
+var err = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	// javascript `err` is golang `args[0]`
+	log.Printf("ERROR(%v): %v", args[0].Get("code"), args[0].Get("message")) 
+})
+```
+
+Javascript options:
+```javascript
+const options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
+};
+```
+
+Javascript options in golang:
+```go
+var options = js.Global().Get("Object")
+options.Set("enableHighAccuracy", true)
+options.Set("timeout", 5000)
+options.Set("maximumAge", 0)
+```
+
+Complete golang function:
+```go
+var options = js.Global().Get("Object")
+options.Set("enableHighAccuracy", true)
+options.Set("timeout", 5000)
+options.Set("maximumAge", 0)
+
+var success = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+  // javascript `pos` is golang `args[0]`
+  var crd = args[0].Get("coords")
+
+  log.Printf("Your current position is:")
+  log.Printf("Latitude $v:", crd.Get("latitude"))
+  log.Printf("Longitude $v:", crd.Get("longitude"))
+  log.Printf("More or less $v meters", crd.Get("accuracy"))
+  return nil
+})
+
+var err = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+  // javascript `err` is golang `args[0]`
+  log.Printf("ERROR(%v): %v", args[0].Get("code"), args[0].Get("message"))
+})
+
+js.Global().Get("navigator").Get("geolocation").Call("getCurrentPosition", success, err, options)
+```

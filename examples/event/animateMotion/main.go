@@ -118,16 +118,6 @@ func main() {
 		}
 	}()
 
-	var g document.Geolocation
-	var coordinate = make(chan document.Coordinate)
-	g.GetGeolocation(&coordinate)
-	go func() {
-		select {
-		case converted := <-coordinate:
-			log.Printf("converted: %+v", converted)
-		}
-	}()
-
 	done := make(chan struct{}, 0)
 	<-done
 }

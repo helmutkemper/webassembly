@@ -46,6 +46,77 @@ type Navigator struct {
 	//      e com o atributo Secure.
 	CookieEnabled bool
 
+	// HardwareConcurrency
+	//
+	// English:
+	//
+	// Returns the number of logical processors available to run threads on the user's computer.
+	//
+	// Modern computers have multiple physical processor cores in their CPU (two or four cores is typical), but each
+	// physical core is also usually able to run more than one thread at a time using advanced scheduling techniques.
+	// So a four-core CPU may offer eight logical processor cores, for example. The number of logical processor cores can
+	// be used to measure the number of threads which can effectively be run at once without them having to context
+	// switch.
+	//
+	// The browser may, however, choose to report a lower number of logical cores in order to represent more accurately
+	// the number of Workers that can run at once, so don't treat this as an absolute measurement of the number of cores
+	// in the user's system.
+	//
+	// Português:
+	//
+	// Retorna o número de processadores lógicos disponíveis para executar threads no computador do usuário.
+	//
+	// Os computadores modernos têm vários núcleos de processador físico em sua CPU (dois ou quatro núcleos é típico), mas
+	// cada núcleo físico também geralmente é capaz de executar mais de um thread por vez usando técnicas avançadas de
+	// agendamento. Assim, uma CPU de quatro núcleos pode oferecer oito núcleos de processador lógico, por exemplo. O
+	// número de núcleos de processador lógico pode ser usado para medir o número de threads que podem efetivamente ser
+	// executados de uma só vez sem que eles precisem alternar o contexto.
+	//
+	// O navegador pode, no entanto, optar por relatar um número menor de núcleos lógicos para representar com mais
+	// precisão o número de Workers que podem ser executados ao mesmo tempo, portanto, não trate isso como uma medida
+	// absoluta do número de núcleos no sistema do usuário.
+	HardwareConcurrency int
+
+	// Language
+	//
+	// English:
+	//
+	// The Navigator.language read-only property returns a string representing the preferred language of the user, usually
+	// the language of the browser UI.
+	//
+	// A string. lang stores a string representing the language version as defined in RFC 5646: Tags for Identifying
+	// Languages (also known as BCP 47). Examples of valid language codes include "en", "en-US", "fr", "fr-FR", "es-ES",
+	// etc.
+	//
+	//   Notes:
+	//     * Safari on iOS prior to 10.2, the country code returned is lowercase: "en-us", "fr-fr" etc.
+	//
+	// Português:
+	//
+	// A propriedade somente leitura Navigator.language retorna uma string representando o idioma preferido do usuário,
+	// geralmente o idioma da interface do usuário do navegador.
+	//
+	// Uma linha. lang armazena uma string representando a versão do idioma conforme definido na RFC 5646: Tags for
+	// Identification Languages (também conhecido como BCP 47). Exemplos de códigos de idioma válidos incluem "en",
+	// "en-US", "fr", "fr-FR", "es-ES", etc.
+	//
+	//   Notas:
+	//     * Safari no iOS anterior a 10.2, o código do país retornado é minúsculo: "en-us", "fr-fr" etc.
+	Language string
+
+	// MaxTouchPoints
+	//
+	// English:
+	//
+	// The maxTouchPoints read-only property of the Navigator interface returns the maximum number of simultaneous touch
+	// contact points are supported by the current device.
+	//
+	// Português:
+	//
+	// A propriedade somente leitura maxTouchPoints da interface Navigator retorna o número máximo de pontos de contato de
+	// toque simultâneos suportados pelo dispositivo atual.
+	MaxTouchPoints int
+
 	Object js.Value
 }
 
@@ -75,6 +146,89 @@ type Navigator struct {
 //      e com o atributo Secure.
 func (e Navigator) GetCookieEnabled() (enabled bool) {
 	return e.Object.Get("cookieEnabled").Bool()
+}
+
+// GetHardwareConcurrency
+//
+// English:
+//
+// Returns the number of logical processors available to run threads on the user's computer.
+//
+// Modern computers have multiple physical processor cores in their CPU (two or four cores is typical), but each
+// physical core is also usually able to run more than one thread at a time using advanced scheduling techniques.
+// So a four-core CPU may offer eight logical processor cores, for example. The number of logical processor cores can
+// be used to measure the number of threads which can effectively be run at once without them having to context
+// switch.
+//
+// The browser may, however, choose to report a lower number of logical cores in order to represent more accurately
+// the number of Workers that can run at once, so don't treat this as an absolute measurement of the number of cores
+// in the user's system.
+//
+// Português:
+//
+// Retorna o número de processadores lógicos disponíveis para executar threads no computador do usuário.
+//
+// Os computadores modernos têm vários núcleos de processador físico em sua CPU (dois ou quatro núcleos é típico), mas
+// cada núcleo físico também geralmente é capaz de executar mais de um thread por vez usando técnicas avançadas de
+// agendamento. Assim, uma CPU de quatro núcleos pode oferecer oito núcleos de processador lógico, por exemplo. O
+// número de núcleos de processador lógico pode ser usado para medir o número de threads que podem efetivamente ser
+// executados de uma só vez sem que eles precisem alternar o contexto.
+//
+// O navegador pode, no entanto, optar por relatar um número menor de núcleos lógicos para representar com mais
+// precisão o número de Workers que podem ser executados ao mesmo tempo, portanto, não trate isso como uma medida
+// absoluta do número de núcleos no sistema do usuário.
+func (e Navigator) GetHardwareConcurrency() (concurrency int) {
+	return e.Object.Get("hardwareConcurrency").Int()
+}
+
+// GetLanguage
+//
+// English:
+//
+// The Navigator.language read-only property returns a string representing the preferred language of the user, usually
+// the language of the browser UI.
+//
+// A string. lang stores a string representing the language version as defined in RFC 5646: Tags for Identifying
+// Languages (also known as BCP 47). Examples of valid language codes include "en", "en-US", "fr", "fr-FR", "es-ES",
+// etc.
+//
+//   Notes:
+//     * Safari on iOS prior to 10.2, the country code returned is lowercase: "en-us", "fr-fr" etc.
+//
+// Português:
+//
+// A propriedade somente leitura Navigator.language retorna uma string representando o idioma preferido do usuário,
+// geralmente o idioma da interface do usuário do navegador.
+//
+// Uma linha. lang armazena uma string representando a versão do idioma conforme definido na RFC 5646: Tags for
+// Identification Languages (também conhecido como BCP 47). Exemplos de códigos de idioma válidos incluem "en",
+// "en-US", "fr", "fr-FR", "es-ES", etc.
+//
+//   Notas:
+//     * Safari no iOS anterior a 10.2, o código do país retornado é minúsculo: "en-us", "fr-fr" etc.
+func (e Navigator) GetLanguage() (language string) {
+	return e.Object.Get("language").String()
+}
+
+// GetMaxTouchPoints
+//
+// English:
+//
+// The maxTouchPoints read-only property of the Navigator interface returns the maximum number of simultaneous touch
+// contact points are supported by the current device.
+//
+// Português:
+//
+// A propriedade somente leitura maxTouchPoints da interface Navigator retorna o número máximo de pontos de contato de
+// toque simultâneos suportados pelo dispositivo atual.
+func (e Navigator) GetMaxTouchPoints() (maxTouchPoints int) {
+	return e.Object.Get("maxTouchPoints").Int()
+}
+
+// todo: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/mediaDevices
+//       https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices
+func (e Navigator) GetMediaDevices() (maxTouchPoints int) {
+	return e.Object.Get("mediaDevices").Int()
 }
 
 // Data

@@ -191,8 +191,8 @@ func (e *Geolocation) EnableHighAccuracy(enableHighAccuracy bool) {
 //
 // Get the current position of the device.
 //
-//   Output:
-//     coordinate: coordinate object
+//   Input:
+//     chCoordinate: channel pointer coordinate object
 //
 //   Notes:
 //     * Accuracy is in meters
@@ -202,8 +202,8 @@ func (e *Geolocation) EnableHighAccuracy(enableHighAccuracy bool) {
 //
 // Retorna a posição atual do dispositivo.
 //
-//   Saída:
-//     coordinate: objeto de coordenadas
+//   Entrada:
+//     chCoordinate: ponteiro para o channel com o objeto de coordenada
 //
 //   Notas:
 //     * Accuracy é em metros.
@@ -242,6 +242,12 @@ func (e *Geolocation) GetPosition(chCoordinate *chan Coordinate) {
 //
 // Register a handler function that will be called automatically each time the position of the device changes.
 //
+//   Input:
+//     chCoordinate: channel pointer coordinate object
+//
+//   Output:
+//     id: watchPosition function id for cancel function
+//
 //   Notes:
 //     * This feature is available only in secure contexts (HTTPS).
 //
@@ -250,9 +256,15 @@ func (e *Geolocation) GetPosition(chCoordinate *chan Coordinate) {
 // Registre uma função de manipulador que será chamada automaticamente toda vez que a posição do dispositivo for
 // alterada.
 //
+//   Entrada:
+//     chCoordinate: ponteiro para o channel com o objeto de coordenada
+//
+//   Saída:
+//     id: id da função watchPosition para cancelamento
+//
 //   Notas:
 //     * Este recurso está disponível apenas em contextos seguros (HTTPS).
-func (e *Geolocation) WatchPosition(chCoordinate *chan Coordinate) {
+func (e *Geolocation) WatchPosition(chCoordinate *chan Coordinate) (id int) {
 	var coordinate Coordinate
 	var options = e.prepareOptions()
 
@@ -278,8 +290,27 @@ func (e *Geolocation) WatchPosition(chCoordinate *chan Coordinate) {
 		return nil
 	})
 
-	js.Global().Get("navigator").Get("geolocation").Call("watchPosition", onSuccess, onError, options)
-	return
+	return js.Global().Get("navigator").Get("geolocation").Call("watchPosition", onSuccess, onError, options).Int()
+}
+
+// ClearWatch
+//
+// English:
+//
+// Unregister location/error monitoring handlers previously installed using WatchPosition() function.
+//
+//   Input:
+//     id: Number returned by the WatchPosition() function when installing the handler you wish to remove.
+//
+// Português:
+//
+// Cancele o registro de manipuladores de monitoramento/erro de localização instalados anteriormente usando a função
+// WatchPosition().
+//
+//   Entrada:
+//     id: Número retornado pela função WatchPosition() ao instalar o manipulador que você deseja remover.
+func (e *Geolocation) ClearWatch(id int) {
+	js.Global().Get("navigator").Get("geolocation").Call("watchPosition", id)
 }
 
 // prepareOptions

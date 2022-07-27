@@ -39,7 +39,7 @@ func main() {
 	fs := http.FileServer(http.Dir("./"))
 	http.Handle("/", fs)
 
-	log.Println("Listening https on :443...")
+	log.Println("Listening https on :443... ")
 	//err = http.ListenAndServe(":3000", nil)
 	err = http.ListenAndServeTLS(":443", "./examples/server/server.crt", "./examples/server/server.key", nil)
 	if err != nil {

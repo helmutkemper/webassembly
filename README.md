@@ -269,9 +269,9 @@ Call javascript function:
 Javascript:
 ```html
 <script>
-	window.test = function (a){
-	console.log(a)
-}
+  window.test = function (a){
+    console.log(a)
+  }
 </script>
 ```
 

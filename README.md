@@ -245,6 +245,7 @@ type Data struct {
 
 list := make([]Data, 0)
 end := make(chan struct{})
+
 forEach := js.FuncOf(func(_ js.Value, args []js.Value) any {
   data := Data{
     DeviceId: args[0].Get("deviceId").String(),

@@ -2,6 +2,9 @@ package geolocation
 
 import "syscall/js"
 
+// https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
+// https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/watchPosition
+
 // Geolocation
 //
 // English:
@@ -13,10 +16,10 @@ import "syscall/js"
 // An object with this interface is obtained using the navigator.geolocation property implemented by the Navigator
 // object.
 //
-//   Notes:
-//    * For security reasons, when a web page tries to access location information, the user is notified and asked to
-//      grant permission. Be aware that each browser has its own policies and methods for requesting this permission.
-//    * This feature is available only in secure contexts (HTTPS), in some or all supporting browsers.
+//	Notes:
+//	 * For security reasons, when a web page tries to access location information, the user is notified and asked to
+//	   grant permission. Be aware that each browser has its own policies and methods for requesting this permission.
+//	 * This feature is available only in secure contexts (HTTPS), in some or all supporting browsers.
 //
 // Português:
 //
@@ -27,11 +30,11 @@ import "syscall/js"
 // An object with this interface is obtained using the navigator.geolocation property implemented by the Navigator
 // object.
 //
-//   Notes:
-//    * Por motivos de segurança, quando uma página da Web tenta acessar informações de localização, o usuário é
-//      notificado e solicitado a conceder permissão. Esteja ciente de que cada navegador tem suas próprias políticas e
-//      métodos para solicitar essa permissão.
-//    * Este recurso está disponível apenas em contextos seguros (HTTPS), em alguns ou em todos os navegadores compatíveis.
+//	Notes:
+//	 * Por motivos de segurança, quando uma página da Web tenta acessar informações de localização, o usuário é
+//	   notificado e solicitado a conceder permissão. Esteja ciente de que cada navegador tem suas próprias políticas e
+//	   métodos para solicitar essa permissão.
+//	 * Este recurso está disponível apenas em contextos seguros (HTTPS), em alguns ou em todos os navegadores compatíveis.
 type Geolocation struct {
 
 	// enableHighAccuracy
@@ -102,8 +105,8 @@ type Geolocation struct {
 // A positive long value indicating the maximum age in milliseconds of a possible cached position that is acceptable
 // to return.
 //
-//   Input:
-//     maximumAge: value indicating the maximum age in milliseconds.
+//	Input:
+//	  maximumAge: value indicating the maximum age in milliseconds.
 //
 // If set to 0, it means that the device cannot use a cached position and must attempt to retrieve the real current
 // position.
@@ -115,8 +118,8 @@ type Geolocation struct {
 // Um valor longo positivo que indica a idade máxima em milissegundos de uma possível posição em cache que é aceitável
 // retornar.
 //
-//   Entrada:
-//     maximumAge: valor que indica a idade máxima em milissegundos.
+//	Entrada:
+//	  maximumAge: valor que indica a idade máxima em milissegundos.
 //
 // Se definido como 0, significa que o dispositivo não pode usar uma posição em cache e deve tentar recuperar a
 // posição atual real.
@@ -133,8 +136,8 @@ func (e *Geolocation) MaximumAge(maximumAge int) {
 // A positive long value representing the maximum length of time (in milliseconds) the device is allowed to take in
 // order to return a position.
 //
-//   Input:
-//     timeout: value representing the maximum length of time (in milliseconds)
+//	Input:
+//	  timeout: value representing the maximum length of time (in milliseconds)
 //
 // The default value is Infinity, meaning that getCurrentPosition() won't return until the position is available.
 //
@@ -143,8 +146,8 @@ func (e *Geolocation) MaximumAge(maximumAge int) {
 // Um valor longo positivo que representa o tempo máximo (em milissegundos) que o dispositivo pode levar para retornar
 // uma posição.
 //
-//   Entrada:
-//     timeout: valor que representa a duração máxima de tempo (em milissegundos)
+//	Entrada:
+//	  timeout: valor que representa a duração máxima de tempo (em milissegundos)
 //
 // O valor padrão é Infinity, o que significa que getCurrentPosition() não retornará até que a posição esteja
 // disponível.
@@ -158,8 +161,8 @@ func (e *Geolocation) Timeout(timeout int) {
 //
 // A boolean value that indicates the application would like to receive the best possible results.
 //
-//   Input:
-//     enableHighAccuracy: indicates the application would like to receive the best possible results.
+//	Input:
+//	  enableHighAccuracy: indicates the application would like to receive the best possible results.
 //
 // If true and if the device is able to provide a more accurate position, it will do so. Note that this can result in
 // slower response times or increased power consumption (with a GPS chip on a mobile device for example). On the other
@@ -172,8 +175,8 @@ func (e *Geolocation) Timeout(timeout int) {
 //
 // Um valor booleano que indica que o aplicativo gostaria de receber os melhores resultados possíveis.
 //
-//   Entrada:
-//     enableHighAccuracy: indica que o aplicativo gostaria de receber os melhores resultados possíveis.
+//	Entrada:
+//	  enableHighAccuracy: indica que o aplicativo gostaria de receber os melhores resultados possíveis.
 //
 // Se for verdadeiro e se o dispositivo for capaz de fornecer uma posição mais precisa, ele o fará. Observe que isso
 // pode resultar em tempos de resposta mais lentos ou maior consumo de energia (com um chip GPS em um dispositivo móvel,
@@ -191,23 +194,23 @@ func (e *Geolocation) EnableHighAccuracy(enableHighAccuracy bool) {
 //
 // Get the current position of the device.
 //
-//   Input:
-//     chCoordinate: channel pointer coordinate object
+//	Input:
+//	  chCoordinate: channel pointer coordinate object
 //
-//   Notes:
-//     * Accuracy is in meters
-//     * This feature is available only in secure contexts (HTTPS).
+//	Notes:
+//	  * Accuracy is in meters
+//	  * This feature is available only in secure contexts (HTTPS).
 //
 // Português:
 //
 // Retorna a posição atual do dispositivo.
 //
-//   Entrada:
-//     chCoordinate: ponteiro para o channel com o objeto de coordenada
+//	Entrada:
+//	  chCoordinate: ponteiro para o channel com o objeto de coordenada
 //
-//   Notas:
-//     * Accuracy é em metros.
-//     * Esse recurso está disponível apenas em contextos seguros (HTTPS).
+//	Notas:
+//	  * Accuracy é em metros.
+//	  * Esse recurso está disponível apenas em contextos seguros (HTTPS).
 func (e *Geolocation) GetPosition(chCoordinate *chan Coordinate) {
 	var coordinate Coordinate
 	var options = e.prepareOptions()
@@ -242,28 +245,28 @@ func (e *Geolocation) GetPosition(chCoordinate *chan Coordinate) {
 //
 // Register a handler function that will be called automatically each time the position of the device changes.
 //
-//   Input:
-//     chCoordinate: channel pointer coordinate object
+//	Input:
+//	  chCoordinate: channel pointer coordinate object
 //
-//   Output:
-//     id: watchPosition function id for cancel function
+//	Output:
+//	  id: watchPosition function id for cancel function
 //
-//   Notes:
-//     * This feature is available only in secure contexts (HTTPS).
+//	Notes:
+//	  * This feature is available only in secure contexts (HTTPS).
 //
 // Português:
 //
 // Registre uma função de manipulador que será chamada automaticamente toda vez que a posição do dispositivo for
 // alterada.
 //
-//   Entrada:
-//     chCoordinate: ponteiro para o channel com o objeto de coordenada
+//	Entrada:
+//	  chCoordinate: ponteiro para o channel com o objeto de coordenada
 //
-//   Saída:
-//     id: id da função watchPosition para cancelamento
+//	Saída:
+//	  id: id da função watchPosition para cancelamento
 //
-//   Notas:
-//     * Este recurso está disponível apenas em contextos seguros (HTTPS).
+//	Notas:
+//	  * Este recurso está disponível apenas em contextos seguros (HTTPS).
 func (e *Geolocation) WatchPosition(chCoordinate *chan Coordinate) (id int) {
 	var coordinate Coordinate
 	var options = e.prepareOptions()
@@ -299,16 +302,16 @@ func (e *Geolocation) WatchPosition(chCoordinate *chan Coordinate) (id int) {
 //
 // Unregister location/error monitoring handlers previously installed using WatchPosition() function.
 //
-//   Input:
-//     id: Number returned by the WatchPosition() function when installing the handler you wish to remove.
+//	Input:
+//	  id: Number returned by the WatchPosition() function when installing the handler you wish to remove.
 //
 // Português:
 //
 // Cancele o registro de manipuladores de monitoramento/erro de localização instalados anteriormente usando a função
 // WatchPosition().
 //
-//   Entrada:
-//     id: Número retornado pela função WatchPosition() ao instalar o manipulador que você deseja remover.
+//	Entrada:
+//	  id: Número retornado pela função WatchPosition() ao instalar o manipulador que você deseja remover.
 func (e *Geolocation) ClearWatch(id int) {
 	js.Global().Get("navigator").Get("geolocation").Call("watchPosition", id)
 }

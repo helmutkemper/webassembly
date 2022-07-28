@@ -7,6 +7,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/geolocation"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/media"
 )
 
 func main() {
@@ -35,6 +36,9 @@ func main() {
 			tagText.Html(text)
 		}
 	}()
+
+	d := media.Devices{}
+	d.EnumerateDevices()
 
 	done := make(chan struct{}, 0)
 	<-done

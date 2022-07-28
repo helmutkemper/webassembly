@@ -433,7 +433,7 @@ func (e *TagInput) ItemId(id string) (ref *TagInput) {
 	return e
 }
 
-// ItemDrop
+// ItemProp
 //
 // English:
 //
@@ -444,7 +444,7 @@ func (e *TagInput) ItemId(id string) (ref *TagInput) {
 //
 //  Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
 //  especificado, onde um itemprop consiste em um par de nome e valor.
-func (e *TagInput) ItemDrop(itemprop string) (ref *TagInput) {
+func (e *TagInput) ItemProp(itemprop string) (ref *TagInput) {
 	e.selfElement.Set("itemprop", itemprop)
 	return e
 }
@@ -653,7 +653,7 @@ func (e *TagInput) Title(title string) (ref *TagInput) {
 //   Input:
 //     translate: element should be translated or not. [ KTranslateYes | KTranslateNo ]
 //
-// English:
+// Português:
 //
 //  Especifica se o conteúdo de um elemento deve ser traduzido ou não.
 //

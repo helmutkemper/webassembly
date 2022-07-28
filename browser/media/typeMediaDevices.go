@@ -54,12 +54,12 @@ type DevicesData struct {
 	//
 	// English:
 	//
-	// Returns an enumerated value that is either "videoinput", "audioinput" or "audiooutput". fixme: to constant
+	// Returns an enumerated value that is either "videoinput", "audioinput" or "audiooutput".
 	//
 	// Português:
 	//
 	// Retorna um valor enumerado que é "videoinput", "audioinput" ou "audiooutput".
-	Kind string
+	Kind Kind
 
 	// Label
 	//
@@ -123,7 +123,7 @@ func (e *Devices) EnumerateDevices() (list []DevicesData, err error) {
 		data := DevicesData{
 			DeviceId: args[0].Get("deviceId").String(),
 			GroupId:  args[0].Get("groupId").String(),
-			Kind:     args[0].Get("kind").String(),
+			Kind:     Kind(args[0].Get("kind").String()),
 			Label:    args[0].Get("label").String(),
 		}
 		list = append(list, data)

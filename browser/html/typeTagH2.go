@@ -31,14 +31,14 @@ import (
 // a subheading. This functionality has never been implemented; therefore it is important to use your
 // headings to describe the outline of your document.
 //
-//   Notes:
-//     * Heading information can be used by user agents to construct a table of contents for a
-//       document automatically.
-//     * Avoid using heading elements to resize text. Instead, use the CSS font-size property.
-//     * Avoid skipping heading levels: always start from <h1>, followed by <h2> and so on.
-//     * Use only one <h1> per page or view. It should concisely describe the overall purpose of the
-//       content.
-//     * The align attribute is obsolete; don't use it.
+//	Notes:
+//	  * Heading information can be used by user agents to construct a table of contents for a
+//	    document automatically.
+//	  * Avoid using heading elements to resize text. Instead, use the CSS font-size property.
+//	  * Avoid skipping heading levels: always start from <h1>, followed by <h2> and so on.
+//	  * Use only one <h1> per page or view. It should concisely describe the overall purpose of the
+//	    content.
+//	  * The align attribute is obsolete; don't use it.
 //
 // Português:
 //
@@ -56,15 +56,15 @@ import (
 // definida é um subtítulo. Essa funcionalidade nunca foi implementada; portanto, é importante usar
 // seus títulos para descrever o esboço do seu documento.
 //
-//   Notas:
-//     * As informações de cabeçalho podem ser usadas por agentes de usuário para construir
-//       automaticamente um índice para um documento.
-//     * Evite usar elementos de título para redimensionar o texto. Em vez disso, use a propriedade
-//       CSS font-size.
-//     * Evite pular níveis de título: sempre comece de <h1>, seguido de <h2> e assim por diante.
-//     * Use apenas um <h1> por página ou visualização. Deve descrever de forma concisa o propósito
-//       geral do conteúdo.
-//     * O atributo align está obsoleto; não o use.
+//	Notas:
+//	  * As informações de cabeçalho podem ser usadas por agentes de usuário para construir
+//	    automaticamente um índice para um documento.
+//	  * Evite usar elementos de título para redimensionar o texto. Em vez disso, use a propriedade
+//	    CSS font-size.
+//	  * Evite pular níveis de título: sempre comece de <h1>, seguido de <h2> e assim por diante.
+//	  * Use apenas um <h1> por página ou visualização. Deve descrever de forma concisa o propósito
+//	    geral do conteúdo.
+//	  * O atributo align está obsoleto; não o use.
 type TagH2 struct {
 
 	// id
@@ -204,40 +204,40 @@ type TagH2 struct {
 //
 // English:
 //
-//  Specifies a shortcut key to activate/focus an element.
+//	Specifies a shortcut key to activate/focus an element.
 //
-//   Input:
-//     character: A single character that specifies the shortcut key to activate/focus the element.
+//	 Input:
+//	   character: A single character that specifies the shortcut key to activate/focus the element.
 //
-//   Note:
-//     * The accessKey attribute value must be a single character (a letter or a digit).
-//     * Adapting accessKeys to all international languages are difficult.
-//     * The accessKey value may not be present on all keyboards.
+//	 Note:
+//	   * The accessKey attribute value must be a single character (a letter or a digit).
+//	   * Adapting accessKeys to all international languages are difficult.
+//	   * The accessKey value may not be present on all keyboards.
 //
 //
-//   Warning:
-//     Using accessKeys is difficult because they may conflict with other key standards in the
-//     browser;
-//     To avoid this problem, most browsers will use accessKeys only if pressed together with the Alt
-//     key.
+//	 Warning:
+//	   Using accessKeys is difficult because they may conflict with other key standards in the
+//	   browser;
+//	   To avoid this problem, most browsers will use accessKeys only if pressed together with the Alt
+//	   key.
 //
 // Português:
 //
-//  Especifica uma tecla de atalho para ativar o foco de um elemento.
+//	Especifica uma tecla de atalho para ativar o foco de um elemento.
 //
-//   Entrada:
-//     character: Um único caractere que especifica a tecla de atalho para ativar o foco do elemento.
+//	 Entrada:
+//	   character: Um único caractere que especifica a tecla de atalho para ativar o foco do elemento.
 //
-//   Nota:
-//     * O valor do atributo accessKey deve ser um único caractere (uma letra ou um dígito).
-//     * Adaptar as teclas de acesso a todos os idiomas internacionais é difícil.
-//     * O valor accessKey pode não estar presente em todos os teclados.
+//	 Nota:
+//	   * O valor do atributo accessKey deve ser um único caractere (uma letra ou um dígito).
+//	   * Adaptar as teclas de acesso a todos os idiomas internacionais é difícil.
+//	   * O valor accessKey pode não estar presente em todos os teclados.
 //
-//   Aviso:
-//     O uso de accessKeys é difícil porque eles podem entrar em conflito com outros padrões
-//     importantes no navegador;
-//     Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
-//     pressionadas junto com a tecla Alt.
+//	 Aviso:
+//	   O uso de accessKeys é difícil porque eles podem entrar em conflito com outros padrões
+//	   importantes no navegador;
+//	   Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
+//	   pressionadas junto com a tecla Alt.
 func (e *TagH2) AccessKey(key string) (ref *TagH2) {
 	e.selfElement.Set("accesskey", key)
 	return e
@@ -247,13 +247,13 @@ func (e *TagH2) AccessKey(key string) (ref *TagH2) {
 //
 // English:
 //
-//  This Boolean attribute specifies that the button should have input focus when the page loads.
-//  Only one element in a document can have this attribute.
+//	This Boolean attribute specifies that the button should have input focus when the page loads.
+//	Only one element in a document can have this attribute.
 //
 // Português:
 //
-//  Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
-//  carregada. Apenas um elemento em um documento pode ter esse atributo.
+//	Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
+//	carregada. Apenas um elemento em um documento pode ter esse atributo.
 func (e *TagH2) Autofocus(autofocus bool) (ref *TagH2) {
 	e.selfElement.Set("autofocus", autofocus)
 	return e
@@ -263,35 +263,35 @@ func (e *TagH2) Autofocus(autofocus bool) (ref *TagH2) {
 //
 // English:
 //
-//  The class attribute specifies one or more class names for an element.
+//	The class attribute specifies one or more class names for an element.
 //
-//   Input:
-//     classname: Specifies one or more class names for an element. To specify multiple classes,
-//                separate the class names with a space, e.g. <span class="left important">.
-//                This allows you to combine several CSS classes for one HTML element.
+//	 Input:
+//	   classname: Specifies one or more class names for an element. To specify multiple classes,
+//	              separate the class names with a space, e.g. <span class="left important">.
+//	              This allows you to combine several CSS classes for one HTML element.
 //
-//                Naming rules:
-//                  Must begin with a letter A-Z or a-z;
-//                  Can be followed by: letters (A-Za-z), digits (0-9), hyphens ("-"), and
-//                  underscores ("_").
+//	              Naming rules:
+//	                Must begin with a letter A-Z or a-z;
+//	                Can be followed by: letters (A-Za-z), digits (0-9), hyphens ("-"), and
+//	                underscores ("_").
 //
 // The class attribute is mostly used to point to a class in a style sheet. However, it can also be
 // used by a JavaScript (via the HTML DOM) to make changes to HTML elements with a specified class.
 //
 // Português:
 //
-//  O atributo class especifica um ou mais nomes de classe para um elemento.
+//	O atributo class especifica um ou mais nomes de classe para um elemento.
 //
-//   Entrada:
-//     classname: Especifica um ou mais nomes de classe para um elemento. Para especificar várias
-//                classes, separe os nomes das classes com um espaço, por exemplo <span class="left
-//                important">.
-//                Isso permite combinar várias classes CSS para um elemento HTML.
+//	 Entrada:
+//	   classname: Especifica um ou mais nomes de classe para um elemento. Para especificar várias
+//	              classes, separe os nomes das classes com um espaço, por exemplo <span class="left
+//	              important">.
+//	              Isso permite combinar várias classes CSS para um elemento HTML.
 //
-//                Regras de nomenclatura:
-//                  Deve começar com uma letra A-Z ou a-z;
-//                  Pode ser seguido por: letras (A-Za-z), dígitos (0-9), hífens ("-") e
-//                  sublinhados ("_").
+//	              Regras de nomenclatura:
+//	                Deve começar com uma letra A-Z ou a-z;
+//	                Pode ser seguido por: letras (A-Za-z), dígitos (0-9), hífens ("-") e
+//	                sublinhados ("_").
 //
 // O atributo class é usado principalmente para apontar para uma classe em uma folha de estilo.
 // No entanto, também pode ser usado por um JavaScript (através do HTML DOM) para fazer alterações
@@ -305,27 +305,25 @@ func (e *TagH2) Class(class ...string) (ref *TagH2) {
 //
 // English:
 //
-//  The contentEditable attribute specifies whether the content of an element is editable or not.
+//	The contentEditable attribute specifies whether the content of an element is editable or not.
 //
-//   Input:
-//     contentEditable: specifies whether the content of an element is editable or not
+//	 Input:
+//	   contentEditable: specifies whether the content of an element is editable or not
 //
-//   Note:
-//     When the contentEditable attribute is not set on an element, the element will inherit it from
-//     its parent.
-//
+//	 Note:
+//	   When the contentEditable attribute is not set on an element, the element will inherit it from
+//	   its parent.
 //
 // Português:
 //
+//	O atributo contentEditable especifica se o conteúdo de um elemento é editável ou não.
 //
-//  O atributo contentEditable especifica se o conteúdo de um elemento é editável ou não.
+//	 Entrada:
+//	   contentEditable: especifica se o conteúdo de um elemento é editável ou não.
 //
-//   Entrada:
-//     contentEditable: especifica se o conteúdo de um elemento é editável ou não.
-//
-//   Nota:
-//     Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
-//     seu pai.
+//	 Nota:
+//	   Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
+//	   seu pai.
 func (e *TagH2) ContentEditable(editable bool) (ref *TagH2) {
 	e.selfElement.Set("contenteditable", editable)
 	return e
@@ -335,10 +333,10 @@ func (e *TagH2) ContentEditable(editable bool) (ref *TagH2) {
 //
 // English:
 //
-//  Used to store custom data private to the page or application.
+//	Used to store custom data private to the page or application.
 //
-//   Input:
-//     data: custom data private to the page or application.
+//	 Input:
+//	   data: custom data private to the page or application.
 //
 // The data-* attributes is used to store custom data private to the page or application.
 // The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
@@ -346,19 +344,20 @@ func (e *TagH2) ContentEditable(editable bool) (ref *TagH2) {
 // experience (without any Ajax calls or server-side database queries).
 //
 // The data-* attributes consist of two parts:
-//   The attribute name should not contain any uppercase letters, and must be at least one character
-//   long after the prefix "data-";
-//   The attribute value can be any string.
 //
-//   Note:
-//     * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
+//	The attribute name should not contain any uppercase letters, and must be at least one character
+//	long after the prefix "data-";
+//	The attribute value can be any string.
+//
+//	Note:
+//	  * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
 //
 // Português:
 //
-//  Usado para armazenar dados personalizados privados para a página ou aplicativo.
+//	Usado para armazenar dados personalizados privados para a página ou aplicativo.
 //
-//   Entrada:
-//     data: dados personalizados privados para a página ou aplicativo.
+//	 Entrada:
+//	   data: dados personalizados privados para a página ou aplicativo.
 //
 // Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
 // aplicativo;
@@ -369,13 +368,14 @@ func (e *TagH2) ContentEditable(editable bool) (ref *TagH2) {
 // servidor).
 //
 // Os atributos de dados consistem em duas partes:
-//   O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
-//   prefixo "data-";
-//   O valor do atributo pode ser qualquer string.
 //
-//   Nota:
-//     * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
-//       usuário.
+//	O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+//	prefixo "data-";
+//	O valor do atributo pode ser qualquer string.
+//
+//	Nota:
+//	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
+//	    usuário.
 func (e *TagH2) Data(data map[string]string) (ref *TagH2) {
 	for k, v := range data {
 		e.selfElement.Set(" data-"+k, v)
@@ -387,18 +387,18 @@ func (e *TagH2) Data(data map[string]string) (ref *TagH2) {
 //
 // English:
 //
-//  Specifies the text direction for the content in an element.
+//	Specifies the text direction for the content in an element.
 //
-//   Input:
-//     dir: direction for the content in an element. [ KDirLeftToRight | KDirRightToLeft | KDirAuto ]
+//	 Input:
+//	   dir: direction for the content in an element. [ KDirLeftToRight | KDirRightToLeft | KDirAuto ]
 //
 // Português:
 //
-//  Especifica a direção do texto para o conteúdo em um elemento.
+//	Especifica a direção do texto para o conteúdo em um elemento.
 //
-//   Entrada:
-//     dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
-//          KDirAuto ]
+//	 Entrada:
+//	   dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
+//	        KDirAuto ]
 func (e *TagH2) Dir(dir Dir) (ref *TagH2) {
 	e.selfElement.Set("dir", dir.String())
 	return e
@@ -408,34 +408,34 @@ func (e *TagH2) Dir(dir Dir) (ref *TagH2) {
 //
 // English:
 //
-//  Specifies whether an element is draggable or not.
+//	Specifies whether an element is draggable or not.
 //
-//   Input:
-//     draggable: element is draggable or not. [ KDraggableYes | KDraggableNo | KDraggableAuto ]
+//	 Input:
+//	   draggable: element is draggable or not. [ KDraggableYes | KDraggableNo | KDraggableAuto ]
 //
 // The draggable attribute specifies whether an element is draggable or not.
 //
-//   Note:
-//     * Links and images are draggable by default;
-//     * The draggable attribute is often used in drag and drop operations.
-//     * Read our HTML Drag and Drop tutorial to learn more.
-//       https://www.w3schools.com/html/html5_draganddrop.asp
+//	Note:
+//	  * Links and images are draggable by default;
+//	  * The draggable attribute is often used in drag and drop operations.
+//	  * Read our HTML Drag and Drop tutorial to learn more.
+//	    https://www.w3schools.com/html/html5_draganddrop.asp
 //
 // Português:
 //
-//  Especifica se um elemento pode ser arrastado ou não. [ KDraggableYes | KDraggableNo |
-//  KDraggableAuto ]
+//	Especifica se um elemento pode ser arrastado ou não. [ KDraggableYes | KDraggableNo |
+//	KDraggableAuto ]
 //
-//   Entrada:
-//     draggable: elemento é arrastável ou não.
+//	 Entrada:
+//	   draggable: elemento é arrastável ou não.
 //
 // O atributo arrastável especifica se um elemento é arrastável ou não.
 //
-//   Nota:
-//     * Links e imagens podem ser arrastados por padrão;
-//     * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
-//     * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
-//       https://www.w3schools.com/html/html5_draganddrop.asp
+//	Nota:
+//	  * Links e imagens podem ser arrastados por padrão;
+//	  * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
+//	  * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
+//	    https://www.w3schools.com/html/html5_draganddrop.asp
 func (e *TagH2) Draggable(draggable Draggable) (ref *TagH2) {
 	e.selfElement.Set("draggable", draggable.String())
 	return e
@@ -445,44 +445,44 @@ func (e *TagH2) Draggable(draggable Draggable) (ref *TagH2) {
 //
 // English:
 //
-//  The enterKeyHint property is an enumerated property defining what action label (or icon) to
-//  present for the enter key on virtual keyboards. It reflects the enterkeyhint HTML global attribute
-//  and is an enumerated property, only accepting the following values as a DOMString:
+//	The enterKeyHint property is an enumerated property defining what action label (or icon) to
+//	present for the enter key on virtual keyboards. It reflects the enterkeyhint HTML global attribute
+//	and is an enumerated property, only accepting the following values as a DOMString:
 //
-//   Input:
-//     enterKeyHint: defining what action label (or icon) to present for the enter key on virtual
-//       keyboards
-//       KEnterKeyHintEnter: typically indicating inserting a new line.
-//       KEnterKeyHintDone: typically meaning there is nothing more to input and the input method
-//        editor (IME) will be closed.
-//       KEnterKeyHintGo: typically meaning to take the user to the target of the text they typed.
-//       KEnterKeyHintNext: typically taking the user to the next field that will accept text.
-//       KEnterKeyHintPrevious: typically taking the user to the previous field that will accept text.
-//       KEnterKeyHintSearch: typically taking the user to the results of searching for the text they
-//         have typed.
-//       KEnterKeyHintSend: typically delivering the text to its target.
+//	 Input:
+//	   enterKeyHint: defining what action label (or icon) to present for the enter key on virtual
+//	     keyboards
+//	     KEnterKeyHintEnter: typically indicating inserting a new line.
+//	     KEnterKeyHintDone: typically meaning there is nothing more to input and the input method
+//	      editor (IME) will be closed.
+//	     KEnterKeyHintGo: typically meaning to take the user to the target of the text they typed.
+//	     KEnterKeyHintNext: typically taking the user to the next field that will accept text.
+//	     KEnterKeyHintPrevious: typically taking the user to the previous field that will accept text.
+//	     KEnterKeyHintSearch: typically taking the user to the results of searching for the text they
+//	       have typed.
+//	     KEnterKeyHintSend: typically delivering the text to its target.
 //
 // If no enterKeyHint value has been specified or if it was set to a different value than the allowed
 // ones, it will return an empty string.
 //
 // Português:
 //
-//  A propriedade enterKeyHint é uma propriedade enumerada que define qual rótulo de ação (ou ícone)
-//  apresentar para a tecla Enter em teclados virtuais. Ele reflete o atributo global enterkeyhint
-//  HTML e é uma propriedade enumerada, aceitando apenas os seguintes valores como DOMString:
+//	A propriedade enterKeyHint é uma propriedade enumerada que define qual rótulo de ação (ou ícone)
+//	apresentar para a tecla Enter em teclados virtuais. Ele reflete o atributo global enterkeyhint
+//	HTML e é uma propriedade enumerada, aceitando apenas os seguintes valores como DOMString:
 //
-//   Entrada:
-//     enterKeyHint: definindo qual rótulo de ação (ou ícone) apresentar para a tecla Enter em
-//       teclados virtuais
-//       KEnterKeyHintEnter: normalmente indicando a inserção de uma nova linha.
-//       KEnterKeyHintDone: normalmente significa que não há mais nada para inserir e o editor de
-//         método de entrada (IME) será fechado.
-//       KEnterKeyHintGo: normalmente significando levar o usuário ao destino do texto digitado.
-//       KEnterKeyHintNext: normalmente levando o usuário para o próximo campo que aceitará texto.
-//       KEnterKeyHintPrevious: normalmente levando o usuário ao campo anterior que aceitará texto.
-//       KEnterKeyHintSearch: normalmente levando o usuário aos resultados da pesquisa do texto que
-//         digitou.
-//       KEnterKeyHintSend: normalmente entregando o texto ao seu destino.
+//	 Entrada:
+//	   enterKeyHint: definindo qual rótulo de ação (ou ícone) apresentar para a tecla Enter em
+//	     teclados virtuais
+//	     KEnterKeyHintEnter: normalmente indicando a inserção de uma nova linha.
+//	     KEnterKeyHintDone: normalmente significa que não há mais nada para inserir e o editor de
+//	       método de entrada (IME) será fechado.
+//	     KEnterKeyHintGo: normalmente significando levar o usuário ao destino do texto digitado.
+//	     KEnterKeyHintNext: normalmente levando o usuário para o próximo campo que aceitará texto.
+//	     KEnterKeyHintPrevious: normalmente levando o usuário ao campo anterior que aceitará texto.
+//	     KEnterKeyHintSearch: normalmente levando o usuário aos resultados da pesquisa do texto que
+//	       digitou.
+//	     KEnterKeyHintSend: normalmente entregando o texto ao seu destino.
 //
 // Se nenhum valor enterKeyHint foi especificado ou se foi definido com um valor diferente dos
 // permitidos, ele retornará uma string vazia.
@@ -495,10 +495,10 @@ func (e *TagH2) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagH2) {
 //
 // English:
 //
-//  Specifies that an element is not yet, or is no longer, relevant.
+//	Specifies that an element is not yet, or is no longer, relevant.
 //
-//   Input:
-//     hidden:
+//	 Input:
+//	   hidden:
 //
 // The hidden attribute is a boolean attribute.
 //
@@ -512,7 +512,7 @@ func (e *TagH2) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagH2) {
 //
 // Português:
 //
-//  Especifica que um elemento ainda não é ou não é mais relevante.
+//	Especifica que um elemento ainda não é ou não é mais relevante.
 //
 // O atributo oculto é um atributo booleano.
 //
@@ -532,7 +532,7 @@ func (e *TagH2) Hidden() (ref *TagH2) {
 //
 // English:
 //
-//  Specifies a unique id for an element
+//	Specifies a unique id for an element
 //
 // The id attribute specifies a unique id for an HTML element (the value must be unique within the
 // HTML document).
@@ -542,7 +542,7 @@ func (e *TagH2) Hidden() (ref *TagH2) {
 //
 // Português:
 //
-//  Especifica um ID exclusivo para um elemento
+//	Especifica um ID exclusivo para um elemento
 //
 // O atributo id especifica um id exclusivo para um elemento HTML (o valor deve ser exclusivo no
 // documento HTML).
@@ -559,9 +559,9 @@ func (e *TagH2) Id(id string) (ref *TagH2) {
 //
 // English:
 //
-//  The inputmode global attribute is an enumerated attribute that hints at the type of data that
-//  might be entered by the user while editing the element or its contents. This allows a browser to
-//  display an appropriate virtual keyboard.
+//	The inputmode global attribute is an enumerated attribute that hints at the type of data that
+//	might be entered by the user while editing the element or its contents. This allows a browser to
+//	display an appropriate virtual keyboard.
 //
 // It is used primarily on <input> elements, but is usable on any element in contenteditable mode.
 //
@@ -572,9 +572,9 @@ func (e *TagH2) Id(id string) (ref *TagH2) {
 //
 // Português:
 //
-//  O atributo global inputmode é um atributo enumerado que indica o tipo de dados que pode ser
-//  inserido pelo usuário ao editar o elemento ou seu conteúdo. Isso permite que um navegador exiba
-//  um teclado virtual apropriado.
+//	O atributo global inputmode é um atributo enumerado que indica o tipo de dados que pode ser
+//	inserido pelo usuário ao editar o elemento ou seu conteúdo. Isso permite que um navegador exiba
+//	um teclado virtual apropriado.
 //
 // Ele é usado principalmente em elementos <input>, mas pode ser usado em qualquer elemento no modo
 // contenteditable.
@@ -592,13 +592,13 @@ func (e *TagH2) InputMode(inputMode InputMode) (ref *TagH2) {
 //
 // English:
 //
-//  Allows you to specify that a standard HTML element should behave like a registered custom
-//  built-in element.
+//	Allows you to specify that a standard HTML element should behave like a registered custom
+//	built-in element.
 //
 // Português:
 //
-//  Permite especificar que um elemento HTML padrão deve se comportar como um elemento interno
-//  personalizado registrado.
+//	Permite especificar que um elemento HTML padrão deve se comportar como um elemento interno
+//	personalizado registrado.
 func (e *TagH2) Is(is string) (ref *TagH2) {
 	e.selfElement.Set("is", is)
 	return e
@@ -608,28 +608,28 @@ func (e *TagH2) Is(is string) (ref *TagH2) {
 //
 // English:
 //
-//  The unique, global identifier of an item.
+//	The unique, global identifier of an item.
 //
 // Português:
 //
-//  O identificador global exclusivo de um item.
+//	O identificador global exclusivo de um item.
 func (e *TagH2) ItemId(id string) (ref *TagH2) {
 	e.selfElement.Set("itemid", id)
 	return e
 }
 
-// ItemDrop
+// ItemProp
 //
 // English:
 //
-//  Used to add properties to an item. Every HTML element may have an itemprop attribute specified,
-//  where an itemprop consists of a name and value pair.
+//	Used to add properties to an item. Every HTML element may have an itemprop attribute specified,
+//	where an itemprop consists of a name and value pair.
 //
 // Português:
 //
-//  Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
-//  especificado, onde um itemprop consiste em um par de nome e valor.
-func (e *TagH2) ItemDrop(itemprop string) (ref *TagH2) {
+//	Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
+//	especificado, onde um itemprop consiste em um par de nome e valor.
+func (e *TagH2) ItemProp(itemprop string) (ref *TagH2) {
 	e.selfElement.Set("itemprop", itemprop)
 	return e
 }
@@ -638,15 +638,15 @@ func (e *TagH2) ItemDrop(itemprop string) (ref *TagH2) {
 //
 // English:
 //
-//  Properties that are not descendants of an element with the itemscope attribute can be associated
-//  with the item using an itemref. It provides a list of element ids (not itemids) with additional
-//  properties elsewhere in the document.
+//	Properties that are not descendants of an element with the itemscope attribute can be associated
+//	with the item using an itemref. It provides a list of element ids (not itemids) with additional
+//	properties elsewhere in the document.
 //
 // Português:
 //
-//  Propriedades que não são descendentes de um elemento com o atributo itemscope podem ser
-//  associadas ao item usando um itemref. Ele fornece uma lista de IDs de elementos (não IDs de itens)
-//  com propriedades adicionais em outras partes do documento.
+//	Propriedades que não são descendentes de um elemento com o atributo itemscope podem ser
+//	associadas ao item usando um itemref. Ele fornece uma lista de IDs de elementos (não IDs de itens)
+//	com propriedades adicionais em outras partes do documento.
 func (e *TagH2) ItemRef(itemref string) (ref *TagH2) {
 	e.selfElement.Set("itemref", itemref)
 	return e
@@ -656,15 +656,15 @@ func (e *TagH2) ItemRef(itemref string) (ref *TagH2) {
 //
 // English:
 //
-//  Specifies the URL of the vocabulary that will be used to define itemprops (item properties) in
-//  the data structure. itemscope is used to set the scope of where in the data structure the
-//  vocabulary set by itemtype will be active.
+//	Specifies the URL of the vocabulary that will be used to define itemprops (item properties) in
+//	the data structure. itemscope is used to set the scope of where in the data structure the
+//	vocabulary set by itemtype will be active.
 //
 // Português:
 //
-//  Especifica a URL do vocabulário que será usado para definir itemprops (propriedades do item) na
-//  estrutura de dados. itemscope é usado para definir o escopo de onde na estrutura de dados o
-//  vocabulário definido por tipo de item estará ativo.
+//	Especifica a URL do vocabulário que será usado para definir itemprops (propriedades do item) na
+//	estrutura de dados. itemscope é usado para definir o escopo de onde na estrutura de dados o
+//	vocabulário definido por tipo de item estará ativo.
 func (e *TagH2) ItemType(itemType string) (ref *TagH2) {
 	e.selfElement.Set("itemtype", itemType)
 	return e
@@ -674,7 +674,7 @@ func (e *TagH2) ItemType(itemType string) (ref *TagH2) {
 //
 // English:
 //
-//  Specifies the language of the element's content.
+//	Specifies the language of the element's content.
 //
 // The lang attribute specifies the language of the element's content.
 //
@@ -683,7 +683,7 @@ func (e *TagH2) ItemType(itemType string) (ref *TagH2) {
 //
 // Português:
 //
-//  Especifica o idioma do conteúdo do elemento.
+//	Especifica o idioma do conteúdo do elemento.
 //
 // O atributo lang especifica o idioma do conteúdo do elemento.
 //
@@ -698,14 +698,14 @@ func (e *TagH2) Lang(language Language) (ref *TagH2) {
 //
 // English:
 //
-//  A space-separated list of the part names of the element. Part names allows CSS to select and style
-//  specific elements in a shadow tree via the ::part pseudo-element.
+//	A space-separated list of the part names of the element. Part names allows CSS to select and style
+//	specific elements in a shadow tree via the ::part pseudo-element.
 //
 // Português:
 //
-//  Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
-//  o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
-//  pseudo-elemento ::part.
+//	Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
+//	o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
+//	pseudo-elemento ::part.
 func (e *TagH2) Nonce(part ...string) (ref *TagH2) {
 	e.selfElement.Set("part", strings.Join(part, " "))
 	return e
@@ -715,15 +715,15 @@ func (e *TagH2) Nonce(part ...string) (ref *TagH2) {
 //
 // English:
 //
-//  Assigns a slot in a shadow DOM shadow tree to an element: An element with a slot attribute is
-//  assigned to the slot created by the <slot> element whose name attribute's value matches that slot
-//  attribute's value.
+//	Assigns a slot in a shadow DOM shadow tree to an element: An element with a slot attribute is
+//	assigned to the slot created by the <slot> element whose name attribute's value matches that slot
+//	attribute's value.
 //
 // Português:
 //
-//  Atribui um slot em uma shadow DOM shadow tree a um elemento: Um elemento com um atributo slot é
-//  atribuído ao slot criado pelo elemento <slot> cujo valor do atributo name corresponde ao valor
-//  desse atributo slot.
+//	Atribui um slot em uma shadow DOM shadow tree a um elemento: Um elemento com um atributo slot é
+//	atribuído ao slot criado pelo elemento <slot> cujo valor do atributo name corresponde ao valor
+//	desse atributo slot.
 func (e *TagH2) Slot(slot string) (ref *TagH2) {
 	e.selfElement.Set("slot", slot)
 	return e
@@ -733,25 +733,25 @@ func (e *TagH2) Slot(slot string) (ref *TagH2) {
 //
 // English:
 //
-//  Specifies whether the element is to have its spelling and grammar checked or not
+//	Specifies whether the element is to have its spelling and grammar checked or not
 //
-//   Note:
-//     * The following can be spellchecked:
-//         Text values in input elements (not password)
-//         Text in <textarea> elements
-//         Text in editable elements
+//	 Note:
+//	   * The following can be spellchecked:
+//	       Text values in input elements (not password)
+//	       Text in <textarea> elements
+//	       Text in editable elements
 //
 // Português:
 //
-//  Especifica se o elemento deve ter sua ortografia e gramática verificadas ou não
+//	Especifica se o elemento deve ter sua ortografia e gramática verificadas ou não
 //
 // O seguinte pode ser verificado ortográfico:
 //
-//   Nota:
-//     * O seguinte pode ser verificado ortográfico:
-//         Valores de texto em elementos de entrada (não senha)
-//         Texto em elementos <textarea>
-//         Texto em elementos editáveis
+//	Nota:
+//	  * O seguinte pode ser verificado ortográfico:
+//	      Valores de texto em elementos de entrada (não senha)
+//	      Texto em elementos <textarea>
+//	      Texto em elementos editáveis
 func (e *TagH2) Spellcheck(spell bool) (ref *TagH2) {
 	e.selfElement.Set("spellcheck", spell)
 
@@ -762,7 +762,7 @@ func (e *TagH2) Spellcheck(spell bool) (ref *TagH2) {
 //
 // English:
 //
-//  Specifies an inline CSS style for an element.
+//	Specifies an inline CSS style for an element.
 //
 // The style attribute will override any style set globally, e.g. styles specified in the <style> tag
 // or in an external style sheet.
@@ -772,7 +772,7 @@ func (e *TagH2) Spellcheck(spell bool) (ref *TagH2) {
 //
 // Português:
 //
-//  Especifica um estilo CSS embutido para um elemento
+//	Especifica um estilo CSS embutido para um elemento
 //
 // O atributo style substituirá qualquer conjunto de estilos globalmente, por exemplo estilos
 // especificados na tag <style> ou em uma folha de estilo externa.
@@ -788,14 +788,14 @@ func (e *TagH2) Style(style string) (ref *TagH2) {
 //
 // English:
 //
-//  Specifies the tabbing order of an element (when the "tab" button is used for navigating).
+//	Specifies the tabbing order of an element (when the "tab" button is used for navigating).
 //
 // The tabindex attribute can be used on any HTML element (it will validate on any HTML element.
 // However, it is not necessarily useful).
 //
 // Português:
 //
-//  Especifica a ordem de tabulação de um elemento (quando o botão "tab" é usado para navegar).
+//	Especifica a ordem de tabulação de um elemento (quando o botão "tab" é usado para navegar).
 //
 // O atributo tabindex pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento
 // HTML. No entanto, não é necessariamente útil).
@@ -808,7 +808,7 @@ func (e *TagH2) TabIndex(index int) (ref *TagH2) {
 //
 // English:
 //
-//  Specifies extra information about an element.
+//	Specifies extra information about an element.
 //
 // The information is most often shown as a tooltip text when the mouse moves over the element.
 //
@@ -817,7 +817,7 @@ func (e *TagH2) TabIndex(index int) (ref *TagH2) {
 //
 // Português:
 //
-//  Especifica informações extras sobre um elemento.
+//	Especifica informações extras sobre um elemento.
 //
 // As informações geralmente são mostradas como um texto de dica de ferramenta quando o mouse se move
 // sobre o elemento.
@@ -833,17 +833,17 @@ func (e *TagH2) Title(title string) (ref *TagH2) {
 //
 // English:
 //
-//  Specifies whether the content of an element should be translated or not.
+//	Specifies whether the content of an element should be translated or not.
 //
-//   Input:
-//     translate: element should be translated or not. [ KTranslateYes | KTranslateNo ]
+//	 Input:
+//	   translate: element should be translated or not. [ KTranslateYes | KTranslateNo ]
 //
-// English:
+// Português:
 //
-//  Especifica se o conteúdo de um elemento deve ser traduzido ou não.
+//	Especifica se o conteúdo de um elemento deve ser traduzido ou não.
 //
-//   Entrada:
-//     translate: elemento deve ser traduzido ou não. [ KTranslateYes | KTranslateNo ]
+//	 Entrada:
+//	   translate: elemento deve ser traduzido ou não. [ KTranslateYes | KTranslateNo ]
 func (e *TagH2) Translate(translate Translate) (ref *TagH2) {
 	e.selfElement.Set("translate", translate.String())
 	return e
@@ -853,13 +853,13 @@ func (e *TagH2) Translate(translate Translate) (ref *TagH2) {
 //
 // English:
 //
-//  In an HTML document, the Document.createElement() method creates the specified HTML element or an
-//  HTMLUnknownElement if the given element name is not known.
+//	In an HTML document, the Document.createElement() method creates the specified HTML element or an
+//	HTMLUnknownElement if the given element name is not known.
 //
 // Português:
 //
-//  Em um documento HTML, o método Document.createElement() cria o elemento HTML especificado ou um
-//  HTMLUnknownElement se o nome do elemento dado não for conhecido.
+//	Em um documento HTML, o método Document.createElement() cria o elemento HTML especificado ou um
+//	HTMLUnknownElement se o nome do elemento dado não for conhecido.
 func (e *TagH2) CreateElement() (ref *TagH2) {
 	e.selfElement = js.Global().Get("document").Call("createElement", "h2")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
@@ -874,30 +874,30 @@ func (e *TagH2) CreateElement() (ref *TagH2) {
 //
 // English:
 //
-//  Adds a node to the end of the list of children of a specified parent node. If the node already
-//  exists in the document, it is removed from its current parent node before being added to the
-//  new parent.
+//	Adds a node to the end of the list of children of a specified parent node. If the node already
+//	exists in the document, it is removed from its current parent node before being added to the
+//	new parent.
 //
-//   Input:
-//     appendId: id of parent element.
+//	 Input:
+//	   appendId: id of parent element.
 //
-//   Note:
-//     * The equivalent of:
-//         var p = document.createElement("p");
-//         document.body.appendChild(p);
+//	 Note:
+//	   * The equivalent of:
+//	       var p = document.createElement("p");
+//	       document.body.appendChild(p);
 //
 // Português:
 //
-//  Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
-//  documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
+//	Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
+//	documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
 //
-//   Entrada:
-//     appendId: id do elemento pai.
+//	 Entrada:
+//	   appendId: id do elemento pai.
 //
-//   Nota:
-//     * Equivale a:
-//         var p = document.createElement("p");
-//         document.body.appendChild(p);
+//	 Nota:
+//	   * Equivale a:
+//	       var p = document.createElement("p");
+//	       document.body.appendChild(p);
 func (e *TagH2) AppendById(appendId string) (ref *TagH2) {
 
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
@@ -914,30 +914,31 @@ func (e *TagH2) AppendById(appendId string) (ref *TagH2) {
 //
 // English:
 //
-//  Adds a node to the end of the list of children of a specified parent node. If the node already
-//  exists in the document, it is removed from its current parent node before being added to the new
-//  parent.
+//	Adds a node to the end of the list of children of a specified parent node. If the node already
+//	exists in the document, it is removed from its current parent node before being added to the new
+//	parent.
 //
-//   Input:
-//     append: element in js.Value format.
+//	 Input:
+//	   append: element in js.Value format.
 //
-//   Note:
-//     * The equivalent of:
-//         var p = document.createElement("p");
-//         document.body.appendChild(p);
+//	 Note:
+//	   * The equivalent of:
+//	       var p = document.createElement("p");
+//	       document.body.appendChild(p);
 //
 // Português:
 //
-//  Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
-//  documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
+//	Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
+//	documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
 //
-//   Entrada:
-//     appendId: elemento no formato js.Value.
+//	 Entrada:
+//	   appendId: elemento no formato js.Value.
 //
-//   Nota:
-//     * Equivale a:
-//         var p = document.createElement("p");
-//         document.body.appendChild(p);
+//	 Nota:
+//	   * Equivale a:
+//	       var p = document.createElement("p");
+//	       document.body.appendChild(p);
+//
 // fixme: fazer append() assim em todas as tags html, exceto svg
 func (e *TagH2) Append(elements ...Compatible) (ref *TagH2) {
 	fragment := js.Global().Get("document").Call("createDocumentFragment")
@@ -953,15 +954,15 @@ func (e *TagH2) Append(elements ...Compatible) (ref *TagH2) {
 //
 // English:
 //
-//  Adds a node to the end of the list of children in the main document body. If the node already
-//  exists somewhere in the document, it is removed from its current parent node before being added
-//  to the main document.
+//	Adds a node to the end of the list of children in the main document body. If the node already
+//	exists somewhere in the document, it is removed from its current parent node before being added
+//	to the main document.
 //
 // Português:
 //
-//  Adiciona um nó ao final da lista de filhos do corpo do documento principal. Se o nó já existir
-//  em alguma parte do documento, ele é removido de seu nó pai atual antes de ser adicionado ao
-//  documento principal.
+//	Adiciona um nó ao final da lista de filhos do corpo do documento principal. Se o nó já existir
+//	em alguma parte do documento, ele é removido de seu nó pai atual antes de ser adicionado ao
+//	documento principal.
 //
 // todo:https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
 // todo: appendMany()
@@ -974,11 +975,11 @@ func (e *TagH2) AppendToStage() (ref *TagH2) {
 //
 // English:
 //
-//  Sets the X and Y axes in pixels.
+//	Sets the X and Y axes in pixels.
 //
 // Português:
 //
-//  Define os eixos X e Y em pixels.
+//	Define os eixos X e Y em pixels.
 func (e *TagH2) SetXY(x, y int) (ref *TagH2) {
 
 	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
@@ -1004,13 +1005,13 @@ func (e *TagH2) SetXY(x, y int) (ref *TagH2) {
 //
 // English:
 //
-//  Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
-//  GetX() function: (x = x - deltaMovieX).
+//	Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
+//	GetX() function: (x = x - deltaMovieX).
 //
 // Português:
 //
-//  Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
-//  GetX(): (x = x - deltaMovieX).
+//	Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
+//	GetX(): (x = x - deltaMovieX).
 func (e *TagH2) SetDeltaX(delta int) (ref *TagH2) {
 	e.deltaMovieX = delta
 	return e
@@ -1020,13 +1021,13 @@ func (e *TagH2) SetDeltaX(delta int) (ref *TagH2) {
 //
 // English:
 //
-//  Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
-//  GetY() function: (y = y - deltaMovieY).
+//	Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
+//	GetY() function: (y = y - deltaMovieY).
 //
 // Português:
 //
-//  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
-//  GetX(): (y = y - deltaMovieY).
+//	Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
+//	GetX(): (y = y - deltaMovieY).
 func (e *TagH2) SetDeltaY(delta int) (ref *TagH2) {
 	e.deltaMovieY = delta
 	return e
@@ -1036,11 +1037,11 @@ func (e *TagH2) SetDeltaY(delta int) (ref *TagH2) {
 //
 // English:
 //
-//  Sets the X axe in pixels.
+//	Sets the X axe in pixels.
 //
 // Português:
 //
-//  Define o eixo X em pixels.
+//	Define o eixo X em pixels.
 func (e *TagH2) SetX(x int) (ref *TagH2) {
 
 	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
@@ -1061,11 +1062,11 @@ func (e *TagH2) SetX(x int) (ref *TagH2) {
 //
 // English:
 //
-//  Sets the Y axe in pixels.
+//	Sets the Y axe in pixels.
 //
 // Português:
 //
-//  Define o eixo Y em pixels.
+//	Define o eixo Y em pixels.
 func (e *TagH2) SetY(y int) (ref *TagH2) {
 
 	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
@@ -1090,11 +1091,11 @@ func (e *TagH2) Get() (el js.Value) {
 //
 // English:
 //
-//  Returns the X and Y axes in pixels.
+//	Returns the X and Y axes in pixels.
 //
 // Português:
 //
-//  Retorna os eixos X e Y em pixels.
+//	Retorna os eixos X e Y em pixels.
 func (e *TagH2) GetXY() (x, y int) {
 	x = e.GetX()
 	y = e.GetY()
@@ -1106,11 +1107,11 @@ func (e *TagH2) GetXY() (x, y int) {
 //
 // English:
 //
-//  Returns the X axe in pixels.
+//	Returns the X axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo X em pixels.
+//	Retorna o eixo X em pixels.
 func (e *TagH2) GetX() (x int) {
 	//rect.top, rect.right, rect.bottom, rect.left
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
@@ -1122,11 +1123,11 @@ func (e *TagH2) GetX() (x int) {
 //
 // English:
 //
-//  Returns the Y axe in pixels.
+//	Returns the Y axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo Y em pixels.
+//	Retorna o eixo Y em pixels.
 func (e *TagH2) GetY() (y int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	y = coordinate.Get("top").Int()
@@ -1137,11 +1138,11 @@ func (e *TagH2) GetY() (y int) {
 //
 // English:
 //
-//  Same as GetX() function, returns the x position of the element.
+//	Same as GetX() function, returns the x position of the element.
 //
 // Português:
 //
-//  O mesmo que a função GetX(), retorna a posição x do elemento.
+//	O mesmo que a função GetX(), retorna a posição x do elemento.
 func (e *TagH2) GetTop() (top int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	top = coordinate.Get("top").Int()
@@ -1152,11 +1153,11 @@ func (e *TagH2) GetTop() (top int) {
 //
 // English:
 //
-//  It is the same as x + width.
+//	It is the same as x + width.
 //
 // Português:
 //
-//  É o mesmo que x + width.
+//	É o mesmo que x + width.
 func (e *TagH2) GetRight() (right int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	right = coordinate.Get("right").Int()
@@ -1167,11 +1168,11 @@ func (e *TagH2) GetRight() (right int) {
 //
 // English:
 //
-//  It is the same as y + height.
+//	It is the same as y + height.
 //
 // Português:
 //
-//  É o mesmo que y + Height.
+//	É o mesmo que y + Height.
 func (e *TagH2) GetBottom() (bottom int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	bottom = coordinate.Get("bottom").Int()
@@ -1182,11 +1183,11 @@ func (e *TagH2) GetBottom() (bottom int) {
 //
 // English:
 //
-//  Same as GetY() function, returns the y position of the element.
+//	Same as GetY() function, returns the y position of the element.
 //
 // Português:
 //
-//  O mesmo que a função GetY(), retorna a posição y do elemento.
+//	O mesmo que a função GetY(), retorna a posição y do elemento.
 func (e *TagH2) GetLeft() (left int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	left = coordinate.Get("left").Int()
@@ -1197,25 +1198,25 @@ func (e *TagH2) GetLeft() (left int) {
 //
 // English:
 //
-//  Defines a transformation that rotates an element around a fixed point on the 2D plane, without deforming it.
+//	Defines a transformation that rotates an element around a fixed point on the 2D plane, without deforming it.
 //
-//   Input:
-//     angle: representing the angle of the rotation. The direction of rotation depends on the writing direction.
-//     In a left-to-right context, a positive angle denotes a clockwise rotation, a negative angle a counter-clockwise
-//     one.
-//     In a right-to-left context, a positive angle denotes a counter-clockwise rotation, a negative angle a clockwise
-//     one.
+//	 Input:
+//	   angle: representing the angle of the rotation. The direction of rotation depends on the writing direction.
+//	   In a left-to-right context, a positive angle denotes a clockwise rotation, a negative angle a counter-clockwise
+//	   one.
+//	   In a right-to-left context, a positive angle denotes a counter-clockwise rotation, a negative angle a clockwise
+//	   one.
 //
 // Português:
 //
-//  Define uma transformação que gira um elemento em torno de um ponto fixo no plano 2D, sem deformá-lo.
+//	Define uma transformação que gira um elemento em torno de um ponto fixo no plano 2D, sem deformá-lo.
 //
-//   Entrada:
-//     angle: representando o ângulo de rotação. O sentido de rotação depende do sentido de escrita.
-//     Em um contexto da esquerda para a direita, um ângulo positivo denota uma rotação no sentido horário, um ângulo
-//     negativo no sentido anti-horário.
-//     Em um contexto da direita para a esquerda, um ângulo positivo denota uma rotação no sentido anti-horário, um
-//     ângulo negativo denota uma rotação no sentido horário.
+//	 Entrada:
+//	   angle: representando o ângulo de rotação. O sentido de rotação depende do sentido de escrita.
+//	   Em um contexto da esquerda para a direita, um ângulo positivo denota uma rotação no sentido horário, um ângulo
+//	   negativo no sentido anti-horário.
+//	   Em um contexto da direita para a esquerda, um ângulo positivo denota uma rotação no sentido anti-horário, um
+//	   ângulo negativo denota uma rotação no sentido horário.
 func (e *TagH2) Rotate(angle float64) (ref *TagH2) {
 	angleAsString := strconv.FormatFloat(angle+e.rotateDelta, 'E', -1, 64)
 	e.selfElement.Get("style").Set("transform", "rotate("+angleAsString+"rad)")
@@ -1226,17 +1227,17 @@ func (e *TagH2) Rotate(angle float64) (ref *TagH2) {
 //
 // English:
 //
-//  Used in conjunction with the Rotate() function, sets the rotation adjustment angle, ie Rotate() = angle + delta.
+//	Used in conjunction with the Rotate() function, sets the rotation adjustment angle, ie Rotate() = angle + delta.
 //
-//   Input:
-//     angle: delta, object rotation adjustment angle.
+//	 Input:
+//	   angle: delta, object rotation adjustment angle.
 //
 // Português:
 //
-//  Usada em conjunto com a função Rotate(), define o ângulo de ajuste da rotação, ou seja, Rotate() = angle + delta.
+//	Usada em conjunto com a função Rotate(), define o ângulo de ajuste da rotação, ou seja, Rotate() = angle + delta.
 //
-//   Entrada:
-//     angle: delta, ângulo de ajuste da rotação do objeto.
+//	 Entrada:
+//	   angle: delta, ângulo de ajuste da rotação do objeto.
 func (e *TagH2) RotateDelta(delta float64) (ref *TagH2) {
 	e.rotateDelta = delta
 	return e
@@ -1246,17 +1247,17 @@ func (e *TagH2) RotateDelta(delta float64) (ref *TagH2) {
 //
 // English:
 //
-//  Returns the rotation adjustment angle, i.e. Rotate() = angle + delta.
+//	Returns the rotation adjustment angle, i.e. Rotate() = angle + delta.
 //
-//   Output:
-//     angle: delta, object rotation adjustment angle.
+//	 Output:
+//	   angle: delta, object rotation adjustment angle.
 //
 // Português:
 //
-//  Retorna o ângulo de ajuste da rotação, ou seja, Rotate() = angle + delta.
+//	Retorna o ângulo de ajuste da rotação, ou seja, Rotate() = angle + delta.
 //
-//   Saída:
-//     angle: delta, ângulo de ajuste da rotação do objeto.
+//	 Saída:
+//	   angle: delta, ângulo de ajuste da rotação do objeto.
 func (e *TagH2) GetRotateDelta() (delta float64) {
 	return e.rotateDelta
 }
@@ -1496,21 +1497,21 @@ func (e *TagH2) GetRotateDelta() (delta float64) {
 //
 // English:
 //
-//  Defines the shape of the mouse pointer.
+//	Defines the shape of the mouse pointer.
 //
-//   Input:
-//     value: mouse pointer shape.
-//       Example: SetMouse(mouse.KCursorCell) // Use mouse.K... and let autocomplete do the
-//                rest
+//	 Input:
+//	   value: mouse pointer shape.
+//	     Example: SetMouse(mouse.KCursorCell) // Use mouse.K... and let autocomplete do the
+//	              rest
 //
 // Português:
 //
-//  Define o formato do ponteiro do mouse.
+//	Define o formato do ponteiro do mouse.
 //
-//   Entrada:
-//     value: formato do ponteiro do mouse.
-//       Exemplo: SetMouse(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
-//                o resto
+//	 Entrada:
+//	   value: formato do ponteiro do mouse.
+//	     Exemplo: SetMouse(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
+//	              o resto
 func (e *TagH2) Mouse(value mouse.CursorType) (ref *TagH2) {
 	e.selfElement.Get("style").Set("cursor", value.String())
 	return e
@@ -1520,11 +1521,11 @@ func (e *TagH2) Mouse(value mouse.CursorType) (ref *TagH2) {
 //
 // English:
 //
-//  Initializes the object correctly.
+//	Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+//	Inicializa o objeto corretamente.
 func (e *TagH2) Init() (ref *TagH2) {
 	e.listener = new(sync.Map)
 	e.tween = make(map[string]interfaces.TweenInterface)
@@ -1539,11 +1540,11 @@ func (e *TagH2) Init() (ref *TagH2) {
 //
 // English:
 //
-//  Prepares the stage reference at initialization.
+//	Prepares the stage reference at initialization.
 //
 // Português:
 //
-//  Prepara à referencia do stage na inicialização.
+//	Prepara à referencia do stage na inicialização.
 func (e *TagH2) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
@@ -1664,23 +1665,23 @@ func (e *TagH2) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{} {
 //
 // English:
 //
-//  This function returns an easing tween function compatible with the easing onStepFunc() function in order to use the
-//  points generated by the line algorithms as a reference to the movement.
+//	This function returns an easing tween function compatible with the easing onStepFunc() function in order to use the
+//	points generated by the line algorithms as a reference to the movement.
 //
-//   Note:
-//     * The 'onStartValue' and 'onEndValue' parameters must have the values 0 and 10000.
-//       Example:
-//         factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
+//	 Note:
+//	   * The 'onStartValue' and 'onEndValue' parameters must have the values 0 and 10000.
+//	     Example:
+//	       factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
 //
 // Português:
 //
-//  Esta função retorna uma função easing tween compatível com a função onStepFunc() do easing de modo a usar os pontos
-//  gerados pelos algoritmos de linha como referência ao movimento.
+//	Esta função retorna uma função easing tween compatível com a função onStepFunc() do easing de modo a usar os pontos
+//	gerados pelos algoritmos de linha como referência ao movimento.
 //
-//   Nota:
-//     * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
-//       Exemplo:
-//         factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
+//	 Nota:
+//	   * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
+//	     Exemplo:
+//	       factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
 func (e *TagH2) AddPointsToEasingTween(algorithmRef algorithm.CurveInterface) (ref *TagH2) {
 	if algorithmRef == nil {
 		return e
@@ -1698,26 +1699,25 @@ func (e *TagH2) AddPointsToEasingTween(algorithmRef algorithm.CurveInterface) (r
 //
 // English:
 //
-//  Moves the element on the line added by the AddPointsToEasingTween() function.
+//	Moves the element on the line added by the AddPointsToEasingTween() function.
 //
 // This function returns a second function compatible with the easing tween's onStepFunc() function.
 //
-//   Note:
-//     * The 'onStartValue' and 'onEndValue' parameters must have the values 0 and 10000.
-//       Example:
-//         factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
+//	Note:
+//	  * The 'onStartValue' and 'onEndValue' parameters must have the values 0 and 10000.
+//	    Example:
+//	      factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
 //
 // Português:
 //
-//
-//  Desloca o elemento na linha adicionada pela função AddPointsToEasingTween().
+//	Desloca o elemento na linha adicionada pela função AddPointsToEasingTween().
 //
 // Esta função retorna uma segunda função compatível com a função onStepFunc() do easing tween.
 //
-//   Nota:
-//     * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
-//       Exemplo:
-//         factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
+//	Nota:
+//	  * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
+//	    Exemplo:
+//	      factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
 func (e *TagH2) EasingTweenWalkingIntoPoints() (function func(percent, p float64, args interface{})) {
 
 	function = func(forTenThousand, percent float64, args interface{}) {
@@ -1739,29 +1739,28 @@ func (e *TagH2) EasingTweenWalkingIntoPoints() (function func(percent, p float64
 //
 // English:
 //
-//  Moves the element on the line added by the AddPointsToEasingTween() function and adjusts the rotation of the
-//  element with respect to the next point.
+//	Moves the element on the line added by the AddPointsToEasingTween() function and adjusts the rotation of the
+//	element with respect to the next point.
 //
 // This function returns a second function compatible with the easing tween's onStepFunc() function.
 //
-//   Note:
-//     * Use the RotateDelta() function to adjust the starting angle;
-//     * The 'onStartValue' and 'onEndValue' parameters must have the values 0 and 10000.
-//       Example:
-//         factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
+//	Note:
+//	  * Use the RotateDelta() function to adjust the starting angle;
+//	  * The 'onStartValue' and 'onEndValue' parameters must have the values 0 and 10000.
+//	    Example:
+//	      factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
 //
 // Português:
 //
-//
-//  Desloca o elemento na linha adicionada pela função AddPointsToEasingTween() e ajusta a rotação do elemento em relação ao próximo ponto.
+//	Desloca o elemento na linha adicionada pela função AddPointsToEasingTween() e ajusta a rotação do elemento em relação ao próximo ponto.
 //
 // Esta função retorna uma segunda função compatível com a função onStepFunc() do easing tween.
 //
-//   Nota:
-//     * Use a função RotateDelta() para ajustar o ângulo inicial;
-//     * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
-//       Exemplo:
-//         factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
+//	Nota:
+//	  * Use a função RotateDelta() para ajustar o ângulo inicial;
+//	  * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
+//	    Exemplo:
+//	      factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
 func (e *TagH2) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenThousand, percent float64, args interface{})) {
 
 	function = func(forTenThousand, percent float64, args interface{}) {

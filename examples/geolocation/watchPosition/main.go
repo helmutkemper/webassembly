@@ -22,6 +22,7 @@ func main() {
 
 	var geo geolocation.Geolocation
 	var coordinate = make(chan geolocation.Coordinate)
+	geo.GetPosition(&coordinate)
 	geo.WatchPosition(&coordinate)
 	go func() {
 		select {

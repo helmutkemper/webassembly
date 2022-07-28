@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
@@ -13,40 +14,22 @@ import (
 	"syscall/js"
 )
 
-// TagFigure
+// TagVideo
 //
 // English:
 //
-// The <figure> HTML element represents self-contained content, potentially with an optional caption,
-// which is specified using the <figcaption> element. The figure, its caption, and its contents are
-// referenced as a single unit.
+// The <video> HTML element embeds a media player which supports video playback into the document.
 //
-//	Notes:
-//	  * Usually a <figure> is an image, illustration, diagram, code snippet, etc., that is referenced
-//	    in the main flow of a document, but that can be moved to another part of the document or to
-//	    an appendix without affecting the main flow.
-//	  * Being a sectioning root, the outline of the content of the <figure> element is excluded from
-//	    the main outline of the document.
-//	  * A caption can be associated with the <figure> element by inserting a <figcaption> inside it
-//	    (as the first or the last child). The first <figcaption> element found in the figure is
-//	    presented as the figure's caption.
+// You can use <video> for audio content as well, but the <audio> element may provide a more appropriate user
+// experience.
 //
 // Português:
 //
-// O elemento HTML <figure> representa conteúdo autocontido, potencialmente com uma legenda opcional,
-// que é especificada usando o elemento <figcaption>. A figura, sua legenda e seu conteúdo são
-// referenciados como uma única unidade.
+// O elemento HTML <video> incorpora um media player que suporta a reprodução de vídeo no documento.
 //
-//	Notas:
-//	  * Normalmente uma <figura> é uma imagem, ilustração, diagrama, trecho de código, etc., que é
-//	    referenciado no fluxo principal de um documento, mas que pode ser movido para outra parte do
-//	    documento ou para um apêndice sem afetar o fluxo principal.
-//	  * Sendo a seção principal, o contorno do conteúdo do elemento <figure> é excluído do contorno
-//	    principal do documento.
-//	  * Uma legenda pode ser associada ao elemento <figure> inserindo um <figcaption> dentro dele
-//	    (como o primeiro ou o último filho). O primeiro elemento <figcaption> encontrado na figura é
-//	    apresentado como legenda da figura.
-type TagFigure struct {
+// Você também pode usar <video> para conteúdo de áudio, mas o elemento <audio> pode fornecer uma experiência de usuário
+// mais apropriada.
+type TagVideo struct {
 
 	// id
 	//
@@ -179,6 +162,8 @@ type TagFigure struct {
 	pointsLen int
 
 	rotateDelta float64
+
+	fnCanplay *js.Func
 }
 
 // AccessKey
@@ -219,7 +204,7 @@ type TagFigure struct {
 //	   importantes no navegador;
 //	   Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
 //	   pressionadas junto com a tecla Alt.
-func (e *TagFigure) AccessKey(key string) (ref *TagFigure) {
+func (e *TagVideo) AccessKey(key string) (ref *TagVideo) {
 	e.selfElement.Set("accesskey", key)
 	return e
 }
@@ -235,7 +220,7 @@ func (e *TagFigure) AccessKey(key string) (ref *TagFigure) {
 //
 //	Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
 //	carregada. Apenas um elemento em um documento pode ter esse atributo.
-func (e *TagFigure) Autofocus(autofocus bool) (ref *TagFigure) {
+func (e *TagVideo) Autofocus(autofocus bool) (ref *TagVideo) {
 	e.selfElement.Set("autofocus", autofocus)
 	return e
 }
@@ -277,7 +262,7 @@ func (e *TagFigure) Autofocus(autofocus bool) (ref *TagFigure) {
 // O atributo class é usado principalmente para apontar para uma classe em uma folha de estilo.
 // No entanto, também pode ser usado por um JavaScript (através do HTML DOM) para fazer alterações
 // em elementos HTML com uma classe especificada.
-func (e *TagFigure) Class(class ...string) (ref *TagFigure) {
+func (e *TagVideo) Class(class ...string) (ref *TagVideo) {
 	e.selfElement.Set("classList", strings.Join(class, " "))
 	return e
 }
@@ -305,7 +290,7 @@ func (e *TagFigure) Class(class ...string) (ref *TagFigure) {
 //	 Nota:
 //	   Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
 //	   seu pai.
-func (e *TagFigure) ContentEditable(editable bool) (ref *TagFigure) {
+func (e *TagVideo) ContentEditable(editable bool) (ref *TagVideo) {
 	e.selfElement.Set("contenteditable", editable)
 	return e
 }
@@ -357,7 +342,7 @@ func (e *TagFigure) ContentEditable(editable bool) (ref *TagFigure) {
 //	Nota:
 //	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
 //	    usuário.
-func (e *TagFigure) Data(data map[string]string) (ref *TagFigure) {
+func (e *TagVideo) Data(data map[string]string) (ref *TagVideo) {
 	for k, v := range data {
 		e.selfElement.Set(" data-"+k, v)
 	}
@@ -380,7 +365,7 @@ func (e *TagFigure) Data(data map[string]string) (ref *TagFigure) {
 //	 Entrada:
 //	   dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
 //	        KDirAuto ]
-func (e *TagFigure) Dir(dir Dir) (ref *TagFigure) {
+func (e *TagVideo) Dir(dir Dir) (ref *TagVideo) {
 	e.selfElement.Set("dir", dir.String())
 	return e
 }
@@ -417,7 +402,7 @@ func (e *TagFigure) Dir(dir Dir) (ref *TagFigure) {
 //	  * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
 //	  * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
 //	    https://www.w3schools.com/html/html5_draganddrop.asp
-func (e *TagFigure) Draggable(draggable Draggable) (ref *TagFigure) {
+func (e *TagVideo) Draggable(draggable Draggable) (ref *TagVideo) {
 	e.selfElement.Set("draggable", draggable.String())
 	return e
 }
@@ -467,7 +452,7 @@ func (e *TagFigure) Draggable(draggable Draggable) (ref *TagFigure) {
 //
 // Se nenhum valor enterKeyHint foi especificado ou se foi definido com um valor diferente dos
 // permitidos, ele retornará uma string vazia.
-func (e *TagFigure) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagFigure) {
+func (e *TagVideo) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagVideo) {
 	e.selfElement.Set("enterKeyHint", enterKeyHint.String())
 	return e
 }
@@ -504,7 +489,7 @@ func (e *TagFigure) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagFigure) {
 // O atributo oculto também pode ser usado para impedir que um usuário veja um elemento até que alguma
 // outra condição seja atendida (como marcar uma caixa de seleção etc.). Então, um JavaScript pode
 // remover o atributo oculto e tornar o elemento visível.
-func (e *TagFigure) Hidden() (ref *TagFigure) {
+func (e *TagVideo) Hidden() (ref *TagVideo) {
 	e.selfElement.Get("style").Set("visibility", "hidden")
 	return e
 }
@@ -530,72 +515,9 @@ func (e *TagFigure) Hidden() (ref *TagFigure) {
 //
 // O atributo id é mais usado para apontar para um estilo em uma folha de estilo, e por JavaScript
 // (através do HTML DOM) para manipular o elemento com o id específico.
-func (e *TagFigure) Id(id string) (ref *TagFigure) {
+func (e *TagVideo) Id(id string) (ref *TagVideo) {
 	e.id = id
 	e.selfElement.Set("id", id)
-	return e
-}
-
-// InputMode
-//
-// English:
-//
-//	The inputmode global attribute is an enumerated attribute that hints at the type of data that
-//	might be entered by the user while editing the element or its contents. This allows a browser to
-//	display an appropriate virtual keyboard.
-//
-// It is used primarily on <input> elements, but is usable on any element in contenteditable mode.
-//
-// It's important to understand that the inputmode attribute doesn't cause any validity requirements
-// to be enforced on input. To require that input conforms to a particular data type, choose an
-// appropriate <input> element type. For specific guidance on choosing <input> types, see the Values
-// section.
-//
-// Português:
-//
-//	O atributo global inputmode é um atributo enumerado que indica o tipo de dados que pode ser
-//	inserido pelo usuário ao editar o elemento ou seu conteúdo. Isso permite que um navegador exiba
-//	um teclado virtual apropriado.
-//
-// Ele é usado principalmente em elementos <input>, mas pode ser usado em qualquer elemento no modo
-// contenteditable.
-//
-// É importante entender que o atributo inputmode não faz com que nenhum requisito de validade seja
-// imposto na entrada. Para exigir que a entrada esteja em conformidade com um tipo de dados
-// específico, escolha um tipo de elemento <input> apropriado. Para obter orientações específicas
-// sobre como escolher os tipos de <input>, consulte a seção Valores.
-func (e *TagFigure) InputMode(inputMode InputMode) (ref *TagFigure) {
-	e.selfElement.Set("inputmode", inputMode.String())
-	return e
-}
-
-// Is
-//
-// English:
-//
-//	Allows you to specify that a standard HTML element should behave like a registered custom
-//	built-in element.
-//
-// Português:
-//
-//	Permite especificar que um elemento HTML padrão deve se comportar como um elemento interno
-//	personalizado registrado.
-func (e *TagFigure) Is(is string) (ref *TagFigure) {
-	e.selfElement.Set("is", is)
-	return e
-}
-
-// ItemId
-//
-// English:
-//
-//	The unique, global identifier of an item.
-//
-// Português:
-//
-//	O identificador global exclusivo de um item.
-func (e *TagFigure) ItemId(id string) (ref *TagFigure) {
-	e.selfElement.Set("itemid", id)
 	return e
 }
 
@@ -610,7 +532,7 @@ func (e *TagFigure) ItemId(id string) (ref *TagFigure) {
 //
 //	Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
 //	especificado, onde um itemprop consiste em um par de nome e valor.
-func (e *TagFigure) ItemProp(itemprop string) (ref *TagFigure) {
+func (e *TagVideo) ItemProp(itemprop string) (ref *TagVideo) {
 	e.selfElement.Set("itemprop", itemprop)
 	return e
 }
@@ -628,7 +550,7 @@ func (e *TagFigure) ItemProp(itemprop string) (ref *TagFigure) {
 //	Propriedades que não são descendentes de um elemento com o atributo itemscope podem ser
 //	associadas ao item usando um itemref. Ele fornece uma lista de IDs de elementos (não IDs de itens)
 //	com propriedades adicionais em outras partes do documento.
-func (e *TagFigure) ItemRef(itemref string) (ref *TagFigure) {
+func (e *TagVideo) ItemRef(itemref string) (ref *TagVideo) {
 	e.selfElement.Set("itemref", itemref)
 	return e
 }
@@ -646,7 +568,7 @@ func (e *TagFigure) ItemRef(itemref string) (ref *TagFigure) {
 //	Especifica a URL do vocabulário que será usado para definir itemprops (propriedades do item) na
 //	estrutura de dados. itemscope é usado para definir o escopo de onde na estrutura de dados o
 //	vocabulário definido por tipo de item estará ativo.
-func (e *TagFigure) ItemType(itemType string) (ref *TagFigure) {
+func (e *TagVideo) ItemType(itemType string) (ref *TagVideo) {
 	e.selfElement.Set("itemtype", itemType)
 	return e
 }
@@ -670,7 +592,7 @@ func (e *TagFigure) ItemType(itemType string) (ref *TagFigure) {
 //
 // Exemplos comuns são KLanguageEnglish para inglês, KLanguageSpanish para espanhol, KLanguageFrench
 // para francês e assim por diante.
-func (e *TagFigure) Lang(language Language) (ref *TagFigure) {
+func (e *TagVideo) Lang(language Language) (ref *TagVideo) {
 	e.selfElement.Set("lang", language.String())
 	return e
 }
@@ -687,7 +609,7 @@ func (e *TagFigure) Lang(language Language) (ref *TagFigure) {
 //	Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
 //	o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
 //	pseudo-elemento ::part.
-func (e *TagFigure) Nonce(part ...string) (ref *TagFigure) {
+func (e *TagVideo) Nonce(part ...string) (ref *TagVideo) {
 	e.selfElement.Set("part", strings.Join(part, " "))
 	return e
 }
@@ -705,7 +627,7 @@ func (e *TagFigure) Nonce(part ...string) (ref *TagFigure) {
 //	Atribui um slot em uma shadow DOM shadow tree a um elemento: Um elemento com um atributo slot é
 //	atribuído ao slot criado pelo elemento <slot> cujo valor do atributo name corresponde ao valor
 //	desse atributo slot.
-func (e *TagFigure) Slot(slot string) (ref *TagFigure) {
+func (e *TagVideo) Slot(slot string) (ref *TagVideo) {
 	e.selfElement.Set("slot", slot)
 	return e
 }
@@ -733,7 +655,7 @@ func (e *TagFigure) Slot(slot string) (ref *TagFigure) {
 //	      Valores de texto em elementos de entrada (não senha)
 //	      Texto em elementos <textarea>
 //	      Texto em elementos editáveis
-func (e *TagFigure) Spellcheck(spell bool) (ref *TagFigure) {
+func (e *TagVideo) Spellcheck(spell bool) (ref *TagVideo) {
 	e.selfElement.Set("spellcheck", spell)
 
 	return e
@@ -760,7 +682,7 @@ func (e *TagFigure) Spellcheck(spell bool) (ref *TagFigure) {
 //
 // O atributo style pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagFigure) Style(style string) (ref *TagFigure) {
+func (e *TagVideo) Style(style string) (ref *TagVideo) {
 	e.selfElement.Set("style", style)
 	return e
 }
@@ -780,7 +702,7 @@ func (e *TagFigure) Style(style string) (ref *TagFigure) {
 //
 // O atributo tabindex pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento
 // HTML. No entanto, não é necessariamente útil).
-func (e *TagFigure) TabIndex(index int) (ref *TagFigure) {
+func (e *TagVideo) TabIndex(index int) (ref *TagVideo) {
 	e.selfElement.Set("tabindex", index)
 	return e
 }
@@ -805,7 +727,7 @@ func (e *TagFigure) TabIndex(index int) (ref *TagFigure) {
 //
 // O atributo title pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagFigure) Title(title string) (ref *TagFigure) {
+func (e *TagVideo) Title(title string) (ref *TagVideo) {
 	e.selfElement.Set("title", title)
 	return e
 }
@@ -825,8 +747,349 @@ func (e *TagFigure) Title(title string) (ref *TagFigure) {
 //
 //	 Entrada:
 //	   translate: elemento deve ser traduzido ou não. [ KTranslateYes | KTranslateNo ]
-func (e *TagFigure) Translate(translate Translate) (ref *TagFigure) {
+func (e *TagVideo) Translate(translate Translate) (ref *TagVideo) {
 	e.selfElement.Set("translate", translate.String())
+	return e
+}
+
+// AutoPlay
+//
+// English:
+//
+// If specified, the video automatically begins to play back as soon as it can do so without stopping to finish loading
+// the data.
+//
+//	Input:
+//	  autoplay: the video automatically begins to play back
+//
+// To disable video autoplay, autoplay="false" will not work; the video will autoplay if the attribute is there in the
+// <video> tag at all. To remove autoplay, the attribute needs to be removed altogether.
+//
+// In some browsers (e.g. Chrome 70.0) autoplay doesn't work if no muted attribute is present.
+//
+//	Notes:
+//	 * Sites that automatically play audio (or videos with an audio track) can be an unpleasant experience for users,
+//	   so should be avoided when possible. If you must offer autoplay functionality, you should make it opt-in
+//	   (requiring a user to specifically enable it). However, this can be useful when creating media elements whose
+//	   source will be set at a later time, under user control. See our autoplay guide for additional information about
+//	   how to properly use autoplay.
+//
+// Português:
+//
+// Se especificado, o vídeo começará a ser reproduzido automaticamente assim que puder, sem parar para concluir o
+// carregamento dos dados.
+//
+//	Entrada:
+//	  autoplay: o vídeo começa a ser reproduzido automaticamente
+//
+// Para desabilitar a reprodução automática de vídeo, autoplay="false" não funcionará; o vídeo será reproduzido
+// automaticamente se o atributo estiver na tag <video>. Para remover a reprodução automática, o atributo precisa ser
+// removido completamente.
+//
+// Em alguns navegadores (por exemplo, Chrome 70.0), a reprodução automática não funciona se nenhum atributo mudo
+// estiver presente.
+//
+//	Notas:
+//	 * Sites que reproduzem áudio automaticamente (ou vídeos com faixa de áudio) podem ser uma experiência desagradável
+//	   para os usuários, portanto, devem ser evitados sempre que possível. Se você deve oferecer a funcionalidade de
+//	   reprodução automática, você deve ativá-la (exigindo que um usuário a habilite especificamente). No entanto,
+//	   isso pode ser útil ao criar elementos de mídia cuja origem será definida posteriormente, sob controle do
+//	   usuário. Consulte nosso guia de reprodução automática para obter informações adicionais sobre como usar a
+//	   reprodução automática corretamente.
+func (e *TagVideo) AutoPlay(autoplay bool) (ref *TagVideo) {
+	e.selfElement.Set("autoplay", autoplay)
+	return e
+}
+
+// Controls
+//
+// English:
+//
+// If this attribute is present, the browser will offer controls to allow the user to control video playback,
+// including volume, seeking, and pause/resume playback.
+//
+//	Input:
+//	  controls: the browser will offer controls to allow the user to control video playback
+//
+// Português:
+//
+// Se esse atributo estiver presente, o navegador oferecerá controles para permitir que o usuário controle a reprodução
+// do vídeo, incluindo volume, busca e pausar e retomar a reprodução.
+//
+//	Entrada:
+//	  controls: o navegador oferecerá controles para permitir que o usuário controle a reprodução do vídeo
+func (e *TagVideo) Controls(controls bool) (ref *TagVideo) {
+	e.selfElement.Set("controls", controls)
+	return e
+}
+
+// Crossorigin
+//
+// English:
+//
+// This enumerated attribute indicates whether to use CORS to fetch the related video.
+//
+//	Input:
+//	  value: indicates whether to use CORS to fetch the related video
+//	    const: KCrossOrigin... (e.g. KCrossOriginAnonymous)
+//	    any other type: interface{}
+//
+// CORS-enabled resources can be reused in the <canvas> element without being tainted.
+//
+// When not present, the resource is fetched without a CORS request (i.e. without sending the Origin: HTTP header),
+// preventing its non-tainted used in <canvas> elements. If invalid, it is handled as if the enumerated keyword
+// anonymous was used. See CORS settings attributes for additional information.
+//
+// Português:
+//
+// This enumerated attribute indicates whether to use CORS to fetch the related video.
+//
+//	Entrada:
+//	  value: indica se deve usar CORS para buscar o vídeo relacionado
+//	    const: KCrossOrigin... (ex. KCrossOriginAnonymous)
+//	    qualquer outro tipo: interface{}
+//
+// CORS-enabled resources can be reused in the <canvas> element without being tainted.
+//
+// Quando não está presente, o recurso é buscado sem uma solicitação CORS (ou seja, sem enviar o cabeçalho
+// Origin: HTTP), evitando que seu uso não contaminado em elementos <canvas>. Se inválido, é tratado como se a
+// palavra-chave enumerada anônimo fosse usada. Consulte Atributos de configurações do CORS para obter informações
+// adicionais.
+func (e *TagVideo) Crossorigin(value interface{}) (ref *TagVideo) {
+	if converted, ok := value.(CrossOrigin); ok {
+		e.selfElement.Set("crossorigin", converted.String())
+		return e
+	}
+
+	e.selfElement.Set("crossorigin", value)
+	return e
+}
+
+// Height
+//
+// English:
+//
+// The height of the video's display area, in CSS pixels (absolute values only; no percentages).
+//
+//	Input:
+//	  value: the height of the video's display area
+//
+// Português:
+//
+// A altura da área de exibição do vídeo, em pixels CSS (somente valores absolutos; sem porcentagens).
+//
+//	Entrada:
+//	  value: a altura da área de exibição do vídeo
+func (e *TagVideo) Height(value float64) (ref *TagVideo) {
+	e.selfElement.Set("height", value)
+	return e
+}
+
+// Loop
+//
+// English:
+//
+// If specified, the browser will automatically seek back to the start upon reaching the end of the video.
+//
+//	Input:
+//	  value: the browser will automatically seek back to the start upon reaching the end of the video.
+//
+// Português:
+//
+// Se especificado, o navegador retornará automaticamente ao início ao chegar ao final do vídeo.
+//
+//	Entrada:
+//	  value: o navegador retornará automaticamente ao início ao chegar ao final do vídeo.
+func (e *TagVideo) Loop(value bool) (ref *TagVideo) {
+	e.selfElement.Set("loop", value)
+	return e
+}
+
+// Muted
+//
+// English:
+//
+// Indicates the default setting of the audio contained in the video. If set, the audio will be initially silenced.
+//
+//	Input:
+//	  value: If true, the audio will be initially silenced.
+//
+// Its default value is false, meaning that the audio will be played when the video is played.
+//
+// Português:
+//
+// Indica o padrão do áudio contido no vídeo. Se definido, o áudio será silenciado inicialmente.
+//
+//	Entrada:
+//	  value: Se true, o áudio será silenciado inicialmente.
+//
+// O valor padrão é false, significando que o áudio será tocado quando o vídeo for tocado.
+func (e *TagVideo) Muted(value bool) (ref *TagVideo) {
+	e.selfElement.Set("muted", value)
+	return e
+}
+
+// PlaySinLine
+//
+// English:
+//
+// Indicating that the video is to be played "inline", that is within the element's playback area.
+//
+//	Input:
+//	  value: If true, the video is to be played "inline", that is within the element's playback area.
+//
+// Note that the absence of this attribute does not imply that the video will always be played in fullscreen.
+//
+// Português:
+//
+// Indicando que o vídeo deve ser reproduzido "inline", ou seja, dentro da área de reprodução do elemento.
+//
+//	Entrada:
+//	  value: Se true, o vídeo deve ser reproduzido "inline", ou seja, dentro da área de reprodução do elemento.
+//
+// Observe que a ausência deste atributo não implica que o vídeo seja sempre reproduzido em tela cheia.
+func (e *TagVideo) PlaySinLine(value bool) (ref *TagVideo) {
+	e.selfElement.Set("playsinline", value)
+	return e
+}
+
+// Poster
+//
+// English:
+//
+// A URL for an image to be shown while the video is downloading.
+//
+//	Input:
+//	  value: A URL for an image to be shown while the video is downloading.
+//
+// If this attribute isn't specified, nothing is displayed until the first frame is available, then the first frame is
+// shown as the poster frame.
+//
+// Português:
+//
+// Um URL para uma imagem a ser exibida durante o download do vídeo.
+//
+//	Entrada:
+//	  value: Um URL para uma imagem a ser exibida durante o download do vídeo.
+//
+// Se este atributo não for especificado, nada será exibido até que o primeiro quadro esteja disponível, então o
+// primeiro quadro será mostrado como o quadro de pôster.
+func (e *TagVideo) Poster(value string) (ref *TagVideo) {
+	e.selfElement.Set("poster", value)
+	return e
+}
+
+// Preload
+//
+// English:
+//
+// This enumerated attribute is intended to provide a hint to the browser about what the author thinks will lead to the
+// best user experience with regards to what content is loaded before the video is played.
+//
+//	Input:
+//	  value: The preload attribute specifies what the user agent should do before the video is played.
+//	    Const: KPreload... (e.g. KPreloadMetadata)
+//	    any other type: interface{}
+//
+//	Notes:
+//	 * The autoplay attribute has precedence over preload. If autoplay is specified, the browser would obviously need
+//	   to start downloading the video for playback.
+//	 * The specification does not force the browser to follow the value of this attribute; it is a mere hint.
+//
+// Português:
+//
+// Esse atributo enumerado destina-se a fornecer uma dica ao navegador sobre o que o autor acha que levará à melhor
+// experiência do usuário em relação ao conteúdo carregado antes da reprodução do vídeo.
+//
+//	Entrada:
+//	  value: O atributo preload especifica o que o navegador deve fazer antes da reprodução do vídeo.
+//	    Const: KPreload... (ex. KPreloadMetadata)
+//	    qualquer outro tipo: interface{}
+//
+//	Notas:
+//	 * O atributo de reprodução automática tem precedência sobre o pré-carregamento. Se a reprodução automática for
+//	   especificada, o navegador obviamente precisaria iniciar o download do vídeo para reprodução.
+//	 * A especificação não força o navegador a seguir o valor deste atributo; é uma mera dica.
+func (e *TagVideo) Preload(value interface{}) (ref *TagVideo) {
+	if converted, ok := value.(Preload); ok {
+		e.selfElement.Set("preload", converted.String())
+		return e
+	}
+
+	e.selfElement.Set("preload", value)
+	return e
+}
+
+// Src
+//
+// English:
+//
+// The URL of the video to embed. This is optional; you may instead use the <source> element within the video block to
+// specify the video to embed.
+//
+//	Input:
+//	  value: The URL of the video to embed.
+//
+// Português:
+//
+// O URL do vídeo a ser incorporado. Isso é opcional; você pode usar o elemento <source> dentro do bloco de vídeo para
+// especificar o vídeo a ser incorporado.
+//
+//	Entrada:
+//	  value: O URL do vídeo a ser incorporado.
+func (e *TagVideo) Src(value string) (ref *TagVideo) {
+	e.selfElement.Set("src", value)
+	return e
+}
+
+// Width
+//
+// English:
+//
+// The width of the video's display area, in CSS pixels (absolute values only; no percentages).
+//
+// Português:
+//
+// A largura da área de exibição do vídeo, em pixels CSS (somente valores absolutos; sem porcentagens).
+func (e *TagVideo) Width(value float64) (ref *TagVideo) {
+	e.selfElement.Set("width", value)
+	return e
+}
+
+func (e *TagVideo) AddListenerCanPlay(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnCanplay == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventCanPlay, this, args)
+			return nil
+		})
+		e.fnCanplay = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"canplay",
+		*e.fnCanplay,
+	)
+	return e
+}
+
+func (e *TagVideo) RemoveListenerCanPlay() (ref *TagVideo) {
+	if e.fnCanplay == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"canplay",
+		*e.fnCanplay,
+	)
+	e.fnCanplay = nil
 	return e
 }
 
@@ -841,8 +1104,8 @@ func (e *TagFigure) Translate(translate Translate) (ref *TagFigure) {
 //
 //	Em um documento HTML, o método Document.createElement() cria o elemento HTML especificado ou um
 //	HTMLUnknownElement se o nome do elemento dado não for conhecido.
-func (e *TagFigure) CreateElement() (ref *TagFigure) {
-	e.selfElement = js.Global().Get("document").Call("createElement", "figure")
+func (e *TagVideo) CreateElement() (ref *TagVideo) {
+	e.selfElement = js.Global().Get("document").Call("createElement", "video")
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
 		return
@@ -879,7 +1142,7 @@ func (e *TagFigure) CreateElement() (ref *TagFigure) {
 //	   * Equivale a:
 //	       var p = document.createElement("p");
 //	       document.body.appendChild(p);
-func (e *TagFigure) AppendById(appendId string) (ref *TagFigure) {
+func (e *TagVideo) AppendById(appendId string) (ref *TagVideo) {
 
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
@@ -921,7 +1184,7 @@ func (e *TagFigure) AppendById(appendId string) (ref *TagFigure) {
 //	       document.body.appendChild(p);
 //
 // fixme: fazer append() assim em todas as tags html, exceto svg
-func (e *TagFigure) Append(elements ...Compatible) (ref *TagFigure) {
+func (e *TagVideo) Append(elements ...Compatible) (ref *TagVideo) {
 	fragment := js.Global().Get("document").Call("createDocumentFragment")
 	for _, element := range elements {
 		fragment.Call("appendChild", element.Get())
@@ -947,7 +1210,7 @@ func (e *TagFigure) Append(elements ...Compatible) (ref *TagFigure) {
 //
 // todo:https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
 // todo: appendMany()
-func (e *TagFigure) AppendToStage() (ref *TagFigure) {
+func (e *TagVideo) AppendToStage() (ref *TagVideo) {
 	e.stage.Call("appendChild", e.selfElement)
 	return e
 }
@@ -961,7 +1224,7 @@ func (e *TagFigure) AppendToStage() (ref *TagFigure) {
 // Português:
 //
 //	Define os eixos X e Y em pixels.
-func (e *TagFigure) SetXY(x, y int) (ref *TagFigure) {
+func (e *TagVideo) SetXY(x, y int) (ref *TagVideo) {
 
 	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
 	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
@@ -993,7 +1256,7 @@ func (e *TagFigure) SetXY(x, y int) (ref *TagFigure) {
 //
 //	Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
 //	GetX(): (x = x - deltaMovieX).
-func (e *TagFigure) SetDeltaX(delta int) (ref *TagFigure) {
+func (e *TagVideo) SetDeltaX(delta int) (ref *TagVideo) {
 	e.deltaMovieX = delta
 	return e
 }
@@ -1009,7 +1272,7 @@ func (e *TagFigure) SetDeltaX(delta int) (ref *TagFigure) {
 //
 //	Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
 //	GetX(): (y = y - deltaMovieY).
-func (e *TagFigure) SetDeltaY(delta int) (ref *TagFigure) {
+func (e *TagVideo) SetDeltaY(delta int) (ref *TagVideo) {
 	e.deltaMovieY = delta
 	return e
 }
@@ -1023,7 +1286,7 @@ func (e *TagFigure) SetDeltaY(delta int) (ref *TagFigure) {
 // Português:
 //
 //	Define o eixo X em pixels.
-func (e *TagFigure) SetX(x int) (ref *TagFigure) {
+func (e *TagVideo) SetX(x int) (ref *TagVideo) {
 
 	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
 	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
@@ -1048,7 +1311,7 @@ func (e *TagFigure) SetX(x int) (ref *TagFigure) {
 // Português:
 //
 //	Define o eixo Y em pixels.
-func (e *TagFigure) SetY(y int) (ref *TagFigure) {
+func (e *TagVideo) SetY(y int) (ref *TagVideo) {
 
 	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
 	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
@@ -1064,7 +1327,7 @@ func (e *TagFigure) SetY(y int) (ref *TagFigure) {
 	return e
 }
 
-func (e *TagFigure) Get() (el js.Value) {
+func (e *TagVideo) Get() (el js.Value) {
 	return e.selfElement
 }
 
@@ -1077,7 +1340,7 @@ func (e *TagFigure) Get() (el js.Value) {
 // Português:
 //
 //	Retorna os eixos X e Y em pixels.
-func (e *TagFigure) GetXY() (x, y int) {
+func (e *TagVideo) GetXY() (x, y int) {
 	x = e.GetX()
 	y = e.GetY()
 
@@ -1093,7 +1356,7 @@ func (e *TagFigure) GetXY() (x, y int) {
 // Português:
 //
 //	Retorna o eixo X em pixels.
-func (e *TagFigure) GetX() (x int) {
+func (e *TagVideo) GetX() (x int) {
 	//rect.top, rect.right, rect.bottom, rect.left
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	x = coordinate.Get("left").Int()
@@ -1109,7 +1372,7 @@ func (e *TagFigure) GetX() (x int) {
 // Português:
 //
 //	Retorna o eixo Y em pixels.
-func (e *TagFigure) GetY() (y int) {
+func (e *TagVideo) GetY() (y int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	y = coordinate.Get("top").Int()
 	return
@@ -1124,7 +1387,7 @@ func (e *TagFigure) GetY() (y int) {
 // Português:
 //
 //	O mesmo que a função GetX(), retorna a posição x do elemento.
-func (e *TagFigure) GetTop() (top int) {
+func (e *TagVideo) GetTop() (top int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	top = coordinate.Get("top").Int()
 	return
@@ -1139,7 +1402,7 @@ func (e *TagFigure) GetTop() (top int) {
 // Português:
 //
 //	É o mesmo que x + width.
-func (e *TagFigure) GetRight() (right int) {
+func (e *TagVideo) GetRight() (right int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	right = coordinate.Get("right").Int()
 	return
@@ -1154,7 +1417,7 @@ func (e *TagFigure) GetRight() (right int) {
 // Português:
 //
 //	É o mesmo que y + Height.
-func (e *TagFigure) GetBottom() (bottom int) {
+func (e *TagVideo) GetBottom() (bottom int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	bottom = coordinate.Get("bottom").Int()
 	return
@@ -1169,7 +1432,7 @@ func (e *TagFigure) GetBottom() (bottom int) {
 // Português:
 //
 //	O mesmo que a função GetY(), retorna a posição y do elemento.
-func (e *TagFigure) GetLeft() (left int) {
+func (e *TagVideo) GetLeft() (left int) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	left = coordinate.Get("left").Int()
 	return
@@ -1198,7 +1461,7 @@ func (e *TagFigure) GetLeft() (left int) {
 //	   negativo no sentido anti-horário.
 //	   Em um contexto da direita para a esquerda, um ângulo positivo denota uma rotação no sentido anti-horário, um
 //	   ângulo negativo denota uma rotação no sentido horário.
-func (e *TagFigure) Rotate(angle float64) (ref *TagFigure) {
+func (e *TagVideo) Rotate(angle float64) (ref *TagVideo) {
 	angleAsString := strconv.FormatFloat(angle+e.rotateDelta, 'E', -1, 64)
 	e.selfElement.Get("style").Set("transform", "rotate("+angleAsString+"rad)")
 	return e
@@ -1219,7 +1482,7 @@ func (e *TagFigure) Rotate(angle float64) (ref *TagFigure) {
 //
 //	 Entrada:
 //	   angle: delta, ângulo de ajuste da rotação do objeto.
-func (e *TagFigure) RotateDelta(delta float64) (ref *TagFigure) {
+func (e *TagVideo) RotateDelta(delta float64) (ref *TagVideo) {
 	e.rotateDelta = delta
 	return e
 }
@@ -1239,7 +1502,7 @@ func (e *TagFigure) RotateDelta(delta float64) (ref *TagFigure) {
 //
 //	 Saída:
 //	   angle: delta, ângulo de ajuste da rotação do objeto.
-func (e *TagFigure) GetRotateDelta() (delta float64) {
+func (e *TagVideo) GetRotateDelta() (delta float64) {
 	return e.rotateDelta
 }
 
@@ -1294,7 +1557,7 @@ func (e *TagFigure) GetRotateDelta() (delta float64) {
 //       log.Print(event.GetScreenX())
 //       log.Print(event.GetScreenY())
 //     }
-//func (e *TagFigure) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagFigure) {
+//func (e *TagVideo) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagVideo) {
 //
 //	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 //		var mouseEvent = mouse.Event{}
@@ -1417,7 +1680,7 @@ func (e *TagFigure) GetRotateDelta() (delta float64) {
 //       log.Print(event.GetScreenX())
 //       log.Print(event.GetScreenY())
 //     }
-//func (e *TagFigure) RemoveListener(eventType interface{}) (ref *TagFigure) {
+//func (e *TagVideo) RemoveListener(eventType interface{}) (ref *TagVideo) {
 //	switch converted := eventType.(type) {
 //	case event.Event:
 //		f, _ := e.listener.Load(converted.String())
@@ -1493,7 +1756,7 @@ func (e *TagFigure) GetRotateDelta() (delta float64) {
 //	   value: formato do ponteiro do mouse.
 //	     Exemplo: SetMouse(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
 //	              o resto
-func (e *TagFigure) Mouse(value mouse.CursorType) (ref *TagFigure) {
+func (e *TagVideo) Mouse(value mouse.CursorType) (ref *TagVideo) {
 	e.selfElement.Get("style").Set("cursor", value.String())
 	return e
 }
@@ -1507,7 +1770,7 @@ func (e *TagFigure) Mouse(value mouse.CursorType) (ref *TagFigure) {
 // Português:
 //
 //	Inicializa o objeto corretamente.
-func (e *TagFigure) Init() (ref *TagFigure) {
+func (e *TagVideo) Init() (ref *TagVideo) {
 	e.listener = new(sync.Map)
 	e.tween = make(map[string]interfaces.TweenInterface)
 
@@ -1526,7 +1789,7 @@ func (e *TagFigure) Init() (ref *TagFigure) {
 // Português:
 //
 //	Prepara à referencia do stage na inicialização.
-func (e *TagFigure) prepareStageReference() {
+func (e *TagVideo) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
 
@@ -1553,7 +1816,7 @@ func (e *TagFigure) prepareStageReference() {
 //       Class("animate").
 //       DragStart().
 //       AppendById("stage")
-//func (e *TagFigure) DragStart() (ref *TagFigure) {
+//func (e *TagVideo) DragStart() (ref *TagVideo) {
 //	e.dragNormalStart()
 //	return e
 //}
@@ -1591,30 +1854,30 @@ func (e *TagFigure) prepareStageReference() {
 //       time.Sleep(10 * time.Second)
 //       div.DragStop()
 //     }()
-//func (e *TagFigure) DragStop() (ref *TagFigure) {
+//func (e *TagVideo) DragStop() (ref *TagVideo) {
 //	e.dragNormalStop()
 //	return e
 //}
 
-//func (e *TagFigure) dragNormalStart() {
+//func (e *TagVideo) dragNormalStart() {
 //	e.AddListener(mouse.KEventMouseDown, e.onStartDragNormal)
 //	e.stage.Call("addEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
 //	e.stage.Call("addEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
 //}
-
-//func (e *TagFigure) dragNormalStop() {
+//
+//func (e *TagVideo) dragNormalStop() {
 //	e.RemoveListener(mouse.KEventMouseDown)
 //	e.stage.Call("removeEventListener", mouse.KEventMouseUp.String(), js.FuncOf(e.onStopDragNormal))
 //	e.stage.Call("removeEventListener", mouse.KEventMouseMove.String(), js.FuncOf(e.onMouseDraggingNormal))
 //	e.isDragging = false
 //}
 
-func (e *TagFigure) onStopDragNormal(_ js.Value, _ []js.Value) interface{} {
+func (e *TagVideo) onStopDragNormal(_ js.Value, _ []js.Value) interface{} {
 	e.isDragging = false
 	return nil
 }
 
-//func (e *TagFigure) onStartDragNormal(event mouse.MouseEvent) {
+//func (e *TagVideo) onStartDragNormal(event mouse.MouseEvent) {
 //	var screenX = int(event.GetScreenX())
 //	var screenY = int(event.GetScreenY())
 //
@@ -1624,7 +1887,7 @@ func (e *TagFigure) onStopDragNormal(_ js.Value, _ []js.Value) interface{} {
 //	e.isDragging = true
 //}
 
-//func (e *TagFigure) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{} {
+//func (e *TagVideo) onMouseDraggingNormal(_ js.Value, args []js.Value) interface{} {
 //	if e.isDragging == false {
 //		return nil
 //	}
@@ -1663,7 +1926,7 @@ func (e *TagFigure) onStopDragNormal(_ js.Value, _ []js.Value) interface{} {
 //	   * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
 //	     Exemplo:
 //	       factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
-func (e *TagFigure) AddPointsToEasingTween(algorithmRef algorithm.CurveInterface) (ref *TagFigure) {
+func (e *TagVideo) AddPointsToEasingTween(algorithmRef algorithm.CurveInterface) (ref *TagVideo) {
 	if algorithmRef == nil {
 		return e
 	}
@@ -1699,7 +1962,7 @@ func (e *TagFigure) AddPointsToEasingTween(algorithmRef algorithm.CurveInterface
 //	  * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
 //	    Exemplo:
 //	      factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
-func (e *TagFigure) EasingTweenWalkingIntoPoints() (function func(percent, p float64, args interface{})) {
+func (e *TagVideo) EasingTweenWalkingIntoPoints() (function func(percent, p float64, args interface{})) {
 
 	function = func(forTenThousand, percent float64, args interface{}) {
 
@@ -1742,7 +2005,7 @@ func (e *TagFigure) EasingTweenWalkingIntoPoints() (function func(percent, p flo
 //	  * O parâmetros 'onStartValue' e 'onEndValue' devem, obrigatoriamente, ter os valores 0 e 10000.
 //	    Exemplo:
 //	      factoryEasingTween.NewLinear(5*time.Second, 0, 10000, div.EasingTweenWalkingAndRotateIntoPoints(), 0)
-func (e *TagFigure) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenThousand, percent float64, args interface{})) {
+func (e *TagVideo) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenThousand, percent float64, args interface{})) {
 
 	function = func(forTenThousand, percent float64, args interface{}) {
 
@@ -1787,32 +2050,4 @@ func (e *TagFigure) EasingTweenWalkingAndRotateIntoPoints() (function func(forTe
 	}
 
 	return
-}
-
-// Text
-//
-// English:
-//
-// Adds plain text to the tag's content.
-//
-// Text:
-//
-// Adiciona um texto simples ao conteúdo da tag.
-func (e *TagFigure) Text(value string) (ref *TagFigure) {
-	e.selfElement.Set("textContent", value)
-	return e
-}
-
-// Html
-//
-// English:
-//
-// Adds HTML to the tag's content.
-//
-// Text:
-//
-// Adiciona HTML ao conteúdo da tag.
-func (e *TagFigure) Html(value string) (ref *TagFigure) {
-	e.selfElement.Set("innerHTML", value)
-	return e
 }

@@ -12,7 +12,7 @@ import (
 //
 // English:
 //
-//  The Anchor element.
+//	The Anchor element.
 //
 // The <a> HTML element (or anchor element), with its href attribute, creates a hyperlink to web
 // pages, files, email addresses, locations in the same page, or anything else a URL can address.
@@ -22,7 +22,7 @@ import (
 //
 // Português:
 //
-//  O elemento Âncora.
+//	O elemento Âncora.
 //
 // O elemento HTML <a> (ou elemento âncora), com seu atributo href, cria um hiperlink para páginas
 // da web, arquivos, endereços de e-mail, locais na mesma página ou qualquer outra coisa que um URL
@@ -41,40 +41,40 @@ type TagA struct {
 //
 // English:
 //
-//  Specifies a shortcut key to activate/focus an element.
+//	Specifies a shortcut key to activate/focus an element.
 //
-//   Input:
-//     character: A single character that specifies the shortcut key to activate/focus the element.
+//	 Input:
+//	   character: A single character that specifies the shortcut key to activate/focus the element.
 //
-//   Note:
-//     * The accessKey attribute value must be a single character (a letter or a digit).
-//     * Adapting accessKeys to all international languages are difficult.
-//     * The accessKey value may not be present on all keyboards.
+//	 Note:
+//	   * The accessKey attribute value must be a single character (a letter or a digit).
+//	   * Adapting accessKeys to all international languages are difficult.
+//	   * The accessKey value may not be present on all keyboards.
 //
 //
-//   Warning:
-//     Using accessKeys is difficult because they may conflict with other key standards in the
-//     browser;
-//     To avoid this problem, most browsers will use accessKeys only if pressed together with the Alt
-//     key.
+//	 Warning:
+//	   Using accessKeys is difficult because they may conflict with other key standards in the
+//	   browser;
+//	   To avoid this problem, most browsers will use accessKeys only if pressed together with the Alt
+//	   key.
 //
 // Português:
 //
-//  Especifica uma tecla de atalho para ativar o foco de um elemento.
+//	Especifica uma tecla de atalho para ativar o foco de um elemento.
 //
-//   Entrada:
-//     character: Um único caractere que especifica a tecla de atalho para ativar o foco do elemento.
+//	 Entrada:
+//	   character: Um único caractere que especifica a tecla de atalho para ativar o foco do elemento.
 //
-//   Nota:
-//     * O valor do atributo accessKey deve ser um único caractere (uma letra ou um dígito).
-//     * Adaptar as teclas de acesso a todos os idiomas internacionais é difícil.
-//     * O valor accessKey pode não estar presente em todos os teclados.
+//	 Nota:
+//	   * O valor do atributo accessKey deve ser um único caractere (uma letra ou um dígito).
+//	   * Adaptar as teclas de acesso a todos os idiomas internacionais é difícil.
+//	   * O valor accessKey pode não estar presente em todos os teclados.
 //
-//   Aviso:
-//     O uso de accessKeys é difícil porque eles podem entrar em conflito com outros padrões
-//     importantes no navegador;
-//     Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
-//     pressionadas junto com a tecla Alt.
+//	 Aviso:
+//	   O uso de accessKeys é difícil porque eles podem entrar em conflito com outros padrões
+//	   importantes no navegador;
+//	   Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
+//	   pressionadas junto com a tecla Alt.
 func (e *TagA) AccessKey(key string) (ref *TagA) {
 	e.selfElement.Set("accesskey", key)
 	return e
@@ -84,13 +84,13 @@ func (e *TagA) AccessKey(key string) (ref *TagA) {
 //
 // English:
 //
-//  This Boolean attribute specifies that the button should have input focus when the page loads.
-//  Only one element in a document can have this attribute.
+//	This Boolean attribute specifies that the button should have input focus when the page loads.
+//	Only one element in a document can have this attribute.
 //
 // Português:
 //
-//  Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
-//  carregada. Apenas um elemento em um documento pode ter esse atributo.
+//	Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
+//	carregada. Apenas um elemento em um documento pode ter esse atributo.
 func (e *TagA) Autofocus(autofocus bool) (ref *TagA) {
 	switch e.tag {
 	case KTagButton:
@@ -107,35 +107,35 @@ func (e *TagA) Autofocus(autofocus bool) (ref *TagA) {
 //
 // English:
 //
-//  The class attribute specifies one or more class names for an element.
+//	The class attribute specifies one or more class names for an element.
 //
-//   Input:
-//     classname: Specifies one or more class names for an element. To specify multiple classes,
-//                separate the class names with a space, e.g. <span class="left important">.
-//                This allows you to combine several CSS classes for one HTML element.
+//	 Input:
+//	   classname: Specifies one or more class names for an element. To specify multiple classes,
+//	              separate the class names with a space, e.g. <span class="left important">.
+//	              This allows you to combine several CSS classes for one HTML element.
 //
-//                Naming rules:
-//                  Must begin with a letter A-Z or a-z;
-//                  Can be followed by: letters (A-Za-z), digits (0-9), hyphens ("-"), and
-//                  underscores ("_").
+//	              Naming rules:
+//	                Must begin with a letter A-Z or a-z;
+//	                Can be followed by: letters (A-Za-z), digits (0-9), hyphens ("-"), and
+//	                underscores ("_").
 //
 // The class attribute is mostly used to point to a class in a style sheet. However, it can also be
 // used by a JavaScript (via the HTML DOM) to make changes to HTML elements with a specified class.
 //
 // Português:
 //
-//  O atributo class especifica um ou mais nomes de classe para um elemento.
+//	O atributo class especifica um ou mais nomes de classe para um elemento.
 //
-//   Entrada:
-//     classname: Especifica um ou mais nomes de classe para um elemento. Para especificar várias
-//                classes, separe os nomes das classes com um espaço, por exemplo <span class="left
-//                important">.
-//                Isso permite combinar várias classes CSS para um elemento HTML.
+//	 Entrada:
+//	   classname: Especifica um ou mais nomes de classe para um elemento. Para especificar várias
+//	              classes, separe os nomes das classes com um espaço, por exemplo <span class="left
+//	              important">.
+//	              Isso permite combinar várias classes CSS para um elemento HTML.
 //
-//                Regras de nomenclatura:
-//                  Deve começar com uma letra A-Z ou a-z;
-//                  Pode ser seguido por: letras (A-Za-z), dígitos (0-9), hífens ("-") e
-//                  sublinhados ("_").
+//	              Regras de nomenclatura:
+//	                Deve começar com uma letra A-Z ou a-z;
+//	                Pode ser seguido por: letras (A-Za-z), dígitos (0-9), hífens ("-") e
+//	                sublinhados ("_").
 //
 // O atributo class é usado principalmente para apontar para uma classe em uma folha de estilo.
 // No entanto, também pode ser usado por um JavaScript (através do HTML DOM) para fazer alterações
@@ -149,25 +149,25 @@ func (e *TagA) Class(class ...string) (ref *TagA) {
 //
 // English:
 //
-//  The contentEditable attribute specifies whether the content of an element is editable or not.
+//	The contentEditable attribute specifies whether the content of an element is editable or not.
 //
-//   Input:
-//     contentEditable: specifies whether the content of an element is editable or not
+//	 Input:
+//	   contentEditable: specifies whether the content of an element is editable or not
 //
-//   Note:
-//     When the contentEditable attribute is not set on an element, the element will inherit it from
-//     its parent.
+//	 Note:
+//	   When the contentEditable attribute is not set on an element, the element will inherit it from
+//	   its parent.
 //
 // Português:
 //
-//  O atributo contentEditable especifica se o conteúdo de um elemento é editável ou não.
+//	O atributo contentEditable especifica se o conteúdo de um elemento é editável ou não.
 //
-//   Entrada:
-//     contentEditable: especifica se o conteúdo de um elemento é editável ou não.
+//	 Entrada:
+//	   contentEditable: especifica se o conteúdo de um elemento é editável ou não.
 //
-//   Nota:
-//     Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
-//     seu pai.
+//	 Nota:
+//	   Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
+//	   seu pai.
 func (e *TagA) ContentEditable(editable bool) (ref *TagA) {
 	e.selfElement.Set("contenteditable", editable)
 	return e
@@ -177,10 +177,10 @@ func (e *TagA) ContentEditable(editable bool) (ref *TagA) {
 //
 // English:
 //
-//  Used to store custom data private to the page or application.
+//	Used to store custom data private to the page or application.
 //
-//   Input:
-//     data: custom data private to the page or application.
+//	 Input:
+//	   data: custom data private to the page or application.
 //
 // The data-* attributes is used to store custom data private to the page or application.
 // The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
@@ -188,19 +188,20 @@ func (e *TagA) ContentEditable(editable bool) (ref *TagA) {
 // experience (without any Ajax calls or server-side database queries).
 //
 // The data-* attributes consist of two parts:
-//   The attribute name should not contain any uppercase letters, and must be at least one character
-//   long after the prefix "data-";
-//   The attribute value can be any string.
 //
-//   Note:
-//     * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
+//	The attribute name should not contain any uppercase letters, and must be at least one character
+//	long after the prefix "data-";
+//	The attribute value can be any string.
+//
+//	Note:
+//	  * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
 //
 // Português:
 //
-//  Usado para armazenar dados personalizados privados para a página ou aplicativo.
+//	Usado para armazenar dados personalizados privados para a página ou aplicativo.
 //
-//   Entrada:
-//     data: dados personalizados privados para a página ou aplicativo.
+//	 Entrada:
+//	   data: dados personalizados privados para a página ou aplicativo.
 //
 // Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
 // aplicativo;
@@ -211,13 +212,14 @@ func (e *TagA) ContentEditable(editable bool) (ref *TagA) {
 // servidor).
 //
 // Os atributos de dados consistem em duas partes:
-//   O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
-//   prefixo "data-";
-//   O valor do atributo pode ser qualquer string.
 //
-//   Nota:
-//     * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
-//       usuário.
+//	O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+//	prefixo "data-";
+//	O valor do atributo pode ser qualquer string.
+//
+//	Nota:
+//	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
+//	    usuário.
 func (e *TagA) Data(data map[string]string) (ref *TagA) {
 	for k, v := range data {
 		e.selfElement.Set(" data-"+k, v)
@@ -229,18 +231,18 @@ func (e *TagA) Data(data map[string]string) (ref *TagA) {
 //
 // English:
 //
-//  Specifies the text direction for the content in an element.
+//	Specifies the text direction for the content in an element.
 //
-//   Input:
-//     dir: direction for the content in an element. [ KDirLeftToRight | KDirRightToLeft | KDirAuto ]
+//	 Input:
+//	   dir: direction for the content in an element. [ KDirLeftToRight | KDirRightToLeft | KDirAuto ]
 //
 // Português:
 //
-//  Especifica a direção do texto para o conteúdo em um elemento.
+//	Especifica a direção do texto para o conteúdo em um elemento.
 //
-//   Entrada:
-//     dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
-//          KDirAuto ]
+//	 Entrada:
+//	   dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
+//	        KDirAuto ]
 func (e *TagA) Dir(dir Dir) (ref *TagA) {
 	e.selfElement.Set("dir", dir.String())
 	return e
@@ -250,34 +252,34 @@ func (e *TagA) Dir(dir Dir) (ref *TagA) {
 //
 // English:
 //
-//  Specifies whether an element is draggable or not.
+//	Specifies whether an element is draggable or not.
 //
-//   Input:
-//     draggable: element is draggable or not. [ KDraggableYes | KDraggableNo | KDraggableAuto ]
+//	 Input:
+//	   draggable: element is draggable or not. [ KDraggableYes | KDraggableNo | KDraggableAuto ]
 //
 // The draggable attribute specifies whether an element is draggable or not.
 //
-//   Note:
-//     * Links and images are draggable by default;
-//     * The draggable attribute is often used in drag and drop operations.
-//     * Read our HTML Drag and Drop tutorial to learn more.
-//       https://www.w3schools.com/html/html5_draganddrop.asp
+//	Note:
+//	  * Links and images are draggable by default;
+//	  * The draggable attribute is often used in drag and drop operations.
+//	  * Read our HTML Drag and Drop tutorial to learn more.
+//	    https://www.w3schools.com/html/html5_draganddrop.asp
 //
 // Português:
 //
-//  Especifica se um elemento pode ser arrastado ou não. [ KDraggableYes | KDraggableNo |
-//  KDraggableAuto ]
+//	Especifica se um elemento pode ser arrastado ou não. [ KDraggableYes | KDraggableNo |
+//	KDraggableAuto ]
 //
-//   Entrada:
-//     draggable: elemento é arrastável ou não.
+//	 Entrada:
+//	   draggable: elemento é arrastável ou não.
 //
 // O atributo arrastável especifica se um elemento é arrastável ou não.
 //
-//   Nota:
-//     * Links e imagens podem ser arrastados por padrão;
-//     * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
-//     * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
-//       https://www.w3schools.com/html/html5_draganddrop.asp
+//	Nota:
+//	  * Links e imagens podem ser arrastados por padrão;
+//	  * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
+//	  * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
+//	    https://www.w3schools.com/html/html5_draganddrop.asp
 func (e *TagA) Draggable(draggable Draggable) (ref *TagA) {
 	e.selfElement.Set("draggable", draggable.String())
 	return e
@@ -287,44 +289,44 @@ func (e *TagA) Draggable(draggable Draggable) (ref *TagA) {
 //
 // English:
 //
-//  The enterKeyHint property is an enumerated property defining what action label (or icon) to
-//  present for the enter key on virtual keyboards. It reflects the enterkeyhint HTML global attribute
-//  and is an enumerated property, only accepting the following values as a DOMString:
+//	The enterKeyHint property is an enumerated property defining what action label (or icon) to
+//	present for the enter key on virtual keyboards. It reflects the enterkeyhint HTML global attribute
+//	and is an enumerated property, only accepting the following values as a DOMString:
 //
-//   Input:
-//     enterKeyHint: defining what action label (or icon) to present for the enter key on virtual
-//       keyboards
-//       KEnterKeyHintEnter: typically indicating inserting a new line.
-//       KEnterKeyHintDone: typically meaning there is nothing more to input and the input method
-//         editor (IME) will be closed.
-//       KEnterKeyHintGo: typically meaning to take the user to the target of the text they typed.
-//       KEnterKeyHintNext: typically taking the user to the next field that will accept text.
-//       KEnterKeyHintPrevious: typically taking the user to the previous field that will accept text.
-//       KEnterKeyHintSearch: typically taking the user to the results of searching for the text they
-//         have typed.
-//       KEnterKeyHintSend: typically delivering the text to its target.
+//	 Input:
+//	   enterKeyHint: defining what action label (or icon) to present for the enter key on virtual
+//	     keyboards
+//	     KEnterKeyHintEnter: typically indicating inserting a new line.
+//	     KEnterKeyHintDone: typically meaning there is nothing more to input and the input method
+//	       editor (IME) will be closed.
+//	     KEnterKeyHintGo: typically meaning to take the user to the target of the text they typed.
+//	     KEnterKeyHintNext: typically taking the user to the next field that will accept text.
+//	     KEnterKeyHintPrevious: typically taking the user to the previous field that will accept text.
+//	     KEnterKeyHintSearch: typically taking the user to the results of searching for the text they
+//	       have typed.
+//	     KEnterKeyHintSend: typically delivering the text to its target.
 //
 // If no enterKeyHint value has been specified or if it was set to a different value than the allowed
 // ones, it will return an empty string.
 //
 // Português:
 //
-//  The enterKeyHint property is an enumerated property defining what action label (or icon) to
-//  present for the enter key on virtual keyboards. It reflects the enterkeyhint HTML global attribute
-//  and is an enumerated property, only accepting the following values as a DOMString:
+//	The enterKeyHint property is an enumerated property defining what action label (or icon) to
+//	present for the enter key on virtual keyboards. It reflects the enterkeyhint HTML global attribute
+//	and is an enumerated property, only accepting the following values as a DOMString:
 //
-//   Input:
-//     enterKeyHint: defining what action label (or icon) to present for the enter key on virtual
-//       keyboards
-//       KEnterKeyHintEnter: typically indicating inserting a new line.
-//       KEnterKeyHintDone: typically meaning there is nothing more to input and the input method
-//         editor (IME) will be closed.
-//       KEnterKeyHintGo: typically meaning to take the user to the target of the text they typed.
-//       KEnterKeyHintNext: typically taking the user to the next field that will accept text.
-//       KEnterKeyHintPrevious: typically taking the user to the previous field that will accept text.
-//       KEnterKeyHintSearch: typically taking the user to the results of searching for the text they
-//         have typed.
-//       KEnterKeyHintSend: typically delivering the text to its target.
+//	 Input:
+//	   enterKeyHint: defining what action label (or icon) to present for the enter key on virtual
+//	     keyboards
+//	     KEnterKeyHintEnter: typically indicating inserting a new line.
+//	     KEnterKeyHintDone: typically meaning there is nothing more to input and the input method
+//	       editor (IME) will be closed.
+//	     KEnterKeyHintGo: typically meaning to take the user to the target of the text they typed.
+//	     KEnterKeyHintNext: typically taking the user to the next field that will accept text.
+//	     KEnterKeyHintPrevious: typically taking the user to the previous field that will accept text.
+//	     KEnterKeyHintSearch: typically taking the user to the results of searching for the text they
+//	       have typed.
+//	     KEnterKeyHintSend: typically delivering the text to its target.
 //
 // If no enterKeyHint value has been specified or if it was set to a different value than the allowed
 // ones, it will return an empty string.
@@ -337,10 +339,10 @@ func (e *TagA) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagA) {
 //
 // English:
 //
-//  Specifies that an element is not yet, or is no longer, relevant.
+//	Specifies that an element is not yet, or is no longer, relevant.
 //
-//   Input:
-//     hidden:
+//	 Input:
+//	   hidden:
 //
 // The hidden attribute is a boolean attribute.
 //
@@ -354,7 +356,7 @@ func (e *TagA) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagA) {
 //
 // Português:
 //
-//  Especifica que um elemento ainda não é ou não é mais relevante.
+//	Especifica que um elemento ainda não é ou não é mais relevante.
 //
 // O atributo oculto é um atributo booleano.
 //
@@ -374,7 +376,7 @@ func (e *TagA) Hidden() (ref *TagA) {
 //
 // English:
 //
-//  Specifies a unique id for an element
+//	Specifies a unique id for an element
 //
 // The id attribute specifies a unique id for an HTML element (the value must be unique within the
 // HTML document).
@@ -384,7 +386,7 @@ func (e *TagA) Hidden() (ref *TagA) {
 //
 // Português:
 //
-//  Especifica um ID exclusivo para um elemento
+//	Especifica um ID exclusivo para um elemento
 //
 // O atributo id especifica um id exclusivo para um elemento HTML (o valor deve ser exclusivo no
 // documento HTML).
@@ -401,8 +403,8 @@ func (e *TagA) Id(id string) (ref *TagA) {
 //
 // English:
 //
-//  The inputmode global attribute is an enumerated attribute that hints at the type of data that
-//  might be entered by the user while editing the element or its contents.
+//	The inputmode global attribute is an enumerated attribute that hints at the type of data that
+//	might be entered by the user while editing the element or its contents.
 //
 // This allows a browser to display an appropriate virtual keyboard.
 //
@@ -415,9 +417,9 @@ func (e *TagA) Id(id string) (ref *TagA) {
 //
 // Português:
 //
-//  O atributo global inputmode é um atributo enumerado que indica o tipo de dados que pode ser
-//  inserido pelo usuário ao editar o elemento ou seu conteúdo. Isso permite que um navegador exiba
-//  um teclado virtual apropriado.
+//	O atributo global inputmode é um atributo enumerado que indica o tipo de dados que pode ser
+//	inserido pelo usuário ao editar o elemento ou seu conteúdo. Isso permite que um navegador exiba
+//	um teclado virtual apropriado.
 //
 // Ele é usado principalmente em elementos <input>, mas pode ser usado em qualquer elemento no modo
 // contenteditable.
@@ -435,13 +437,13 @@ func (e *TagA) InputMode(inputMode InputMode) (ref *TagA) {
 //
 // English:
 //
-//  Allows you to specify that a standard HTML element should behave like a registered custom
-//  built-in element.
+//	Allows you to specify that a standard HTML element should behave like a registered custom
+//	built-in element.
 //
 // Português:
 //
-//  Permite especificar que um elemento HTML padrão deve se comportar como um elemento interno
-//  personalizado registrado.
+//	Permite especificar que um elemento HTML padrão deve se comportar como um elemento interno
+//	personalizado registrado.
 func (e *TagA) Is(is string) (ref *TagA) {
 	e.selfElement.Set("is", is)
 	return e
@@ -451,28 +453,28 @@ func (e *TagA) Is(is string) (ref *TagA) {
 //
 // English:
 //
-//  The unique, global identifier of an item.
+//	The unique, global identifier of an item.
 //
 // Português:
 //
-//  O identificador global exclusivo de um item.
+//	O identificador global exclusivo de um item.
 func (e *TagA) ItemId(id string) (ref *TagA) {
 	e.selfElement.Set("itemid", id)
 	return e
 }
 
-// ItemDrop
+// ItemProp
 //
 // English:
 //
-//  Used to add properties to an item. Every HTML element may have an itemprop attribute specified,
-//  where an itemprop consists of a name and value pair.
+//	Used to add properties to an item. Every HTML element may have an itemprop attribute specified,
+//	where an itemprop consists of a name and value pair.
 //
 // Português:
 //
-//  Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
-//  especificado, onde um itemprop consiste em um par de nome e valor.
-func (e *TagA) ItemDrop(itemprop string) (ref *TagA) {
+//	Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
+//	especificado, onde um itemprop consiste em um par de nome e valor.
+func (e *TagA) ItemProp(itemprop string) (ref *TagA) {
 	e.selfElement.Set("itemprop", itemprop)
 	return e
 }
@@ -481,15 +483,15 @@ func (e *TagA) ItemDrop(itemprop string) (ref *TagA) {
 //
 // English:
 //
-//  Properties that are not descendants of an element with the itemscope attribute can be associated
-//  with the item using an itemref. It provides a list of element ids (not itemids) with additional
-//  properties elsewhere in the document.
+//	Properties that are not descendants of an element with the itemscope attribute can be associated
+//	with the item using an itemref. It provides a list of element ids (not itemids) with additional
+//	properties elsewhere in the document.
 //
 // Português:
 //
-//  Propriedades que não são descendentes de um elemento com o atributo itemscope podem ser
-//  associadas ao item usando um itemref. Ele fornece uma lista de IDs de elementos (não IDs de itens)
-//  com propriedades adicionais em outras partes do documento.
+//	Propriedades que não são descendentes de um elemento com o atributo itemscope podem ser
+//	associadas ao item usando um itemref. Ele fornece uma lista de IDs de elementos (não IDs de itens)
+//	com propriedades adicionais em outras partes do documento.
 func (e *TagA) ItemRef(itemref string) (ref *TagA) {
 	e.selfElement.Set("itemref", itemref)
 	return e
@@ -499,15 +501,15 @@ func (e *TagA) ItemRef(itemref string) (ref *TagA) {
 //
 // English:
 //
-//  Specifies the URL of the vocabulary that will be used to define itemprops (item properties) in
-//  the data structure. itemscope is used to set the scope of where in the data structure the
-//  vocabulary set by itemtype will be active.
+//	Specifies the URL of the vocabulary that will be used to define itemprops (item properties) in
+//	the data structure. itemscope is used to set the scope of where in the data structure the
+//	vocabulary set by itemtype will be active.
 //
 // Português:
 //
-//  Especifica a URL do vocabulário que será usado para definir itemprops (propriedades do item) na
-//  estrutura de dados. itemscope é usado para definir o escopo de onde na estrutura de dados o
-//  vocabulário definido por tipo de item estará ativo.
+//	Especifica a URL do vocabulário que será usado para definir itemprops (propriedades do item) na
+//	estrutura de dados. itemscope é usado para definir o escopo de onde na estrutura de dados o
+//	vocabulário definido por tipo de item estará ativo.
 func (e *TagA) ItemType(itemType string) (ref *TagA) {
 	e.selfElement.Set("itemtype", itemType)
 	return e
@@ -517,7 +519,7 @@ func (e *TagA) ItemType(itemType string) (ref *TagA) {
 //
 // English:
 //
-//  Specifies the language of the element's content.
+//	Specifies the language of the element's content.
 //
 // The lang attribute specifies the language of the element's content.
 //
@@ -526,7 +528,7 @@ func (e *TagA) ItemType(itemType string) (ref *TagA) {
 //
 // Português:
 //
-//  Especifica o idioma do conteúdo do elemento.
+//	Especifica o idioma do conteúdo do elemento.
 //
 // O atributo lang especifica o idioma do conteúdo do elemento.
 //
@@ -541,14 +543,14 @@ func (e *TagA) Lang(language Language) (ref *TagA) {
 //
 // English:
 //
-//  A space-separated list of the part names of the element. Part names allows CSS to select and
-//  style specific elements in a shadow tree via the ::part pseudo-element.
+//	A space-separated list of the part names of the element. Part names allows CSS to select and
+//	style specific elements in a shadow tree via the ::part pseudo-element.
 //
 // Português:
 //
-//  Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem
-//  que o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
-//  pseudo-elemento ::part.
+//	Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem
+//	que o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
+//	pseudo-elemento ::part.
 func (e *TagA) Nonce(part ...string) (ref *TagA) {
 	e.selfElement.Set("part", strings.Join(part, " "))
 	return e
@@ -558,15 +560,15 @@ func (e *TagA) Nonce(part ...string) (ref *TagA) {
 //
 // English:
 //
-//  Assigns a slot in a shadow DOM shadow tree to an element: An element with a slot attribute is
-//  assigned to the slot created by the <slot> element whose name attribute's value matches that
-//  slot attribute's value.
+//	Assigns a slot in a shadow DOM shadow tree to an element: An element with a slot attribute is
+//	assigned to the slot created by the <slot> element whose name attribute's value matches that
+//	slot attribute's value.
 //
 // Português:
 //
-//  Atribui um slot em uma shadow DOM shadow tree a um elemento: Um elemento com um atributo slot é
-//  atribuído ao slot criado pelo elemento <slot> cujo valor do atributo name corresponde ao valor
-//  desse atributo slot.
+//	Atribui um slot em uma shadow DOM shadow tree a um elemento: Um elemento com um atributo slot é
+//	atribuído ao slot criado pelo elemento <slot> cujo valor do atributo name corresponde ao valor
+//	desse atributo slot.
 func (e *TagA) Slot(slot string) (ref *TagA) {
 	e.selfElement.Set("slot", slot)
 	return e
@@ -576,25 +578,25 @@ func (e *TagA) Slot(slot string) (ref *TagA) {
 //
 // English:
 //
-//  Specifies whether the element is to have its spelling and grammar checked or not
+//	Specifies whether the element is to have its spelling and grammar checked or not
 //
-//   Note:
-//     * The following can be spellchecked:
-//         Text values in input elements (not password)
-//         Text in <textarea> elements
-//         Text in editable elements
+//	 Note:
+//	   * The following can be spellchecked:
+//	       Text values in input elements (not password)
+//	       Text in <textarea> elements
+//	       Text in editable elements
 //
 // Português:
 //
-//  Especifica se o elemento deve ter sua ortografia e gramática verificadas ou não
+//	Especifica se o elemento deve ter sua ortografia e gramática verificadas ou não
 //
 // O seguinte pode ser verificado ortográfico:
 //
-//   Nota:
-//     * O seguinte pode ser verificado ortográfico:
-//         Valores de texto em elementos de entrada (não senha)
-//         Texto em elementos <textarea>
-//         Texto em elementos editáveis
+//	Nota:
+//	  * O seguinte pode ser verificado ortográfico:
+//	      Valores de texto em elementos de entrada (não senha)
+//	      Texto em elementos <textarea>
+//	      Texto em elementos editáveis
 func (e *TagA) Spellcheck(spell bool) (ref *TagA) {
 	e.selfElement.Set("spellcheck", spell)
 
@@ -605,7 +607,7 @@ func (e *TagA) Spellcheck(spell bool) (ref *TagA) {
 //
 // English:
 //
-//  Specifies an inline CSS style for an element.
+//	Specifies an inline CSS style for an element.
 //
 // The style attribute will override any style set globally, e.g. styles specified in the <style> tag
 // or in an external style sheet.
@@ -615,7 +617,7 @@ func (e *TagA) Spellcheck(spell bool) (ref *TagA) {
 //
 // Português:
 //
-//  Especifica um estilo CSS embutido para um elemento
+//	Especifica um estilo CSS embutido para um elemento
 //
 // O atributo style substituirá qualquer conjunto de estilos globalmente, por exemplo estilos
 // especificados na tag <style> ou em uma folha de estilo externa.
@@ -631,14 +633,14 @@ func (e *TagA) Style(style string) (ref *TagA) {
 //
 // English:
 //
-//  Specifies the tabbing order of an element (when the "tab" button is used for navigating).
+//	Specifies the tabbing order of an element (when the "tab" button is used for navigating).
 //
 // The tabindex attribute can be used on any HTML element (it will validate on any HTML element.
 // However, it is not necessarily useful).
 //
 // Português:
 //
-//  Especifica a ordem de tabulação de um elemento (quando o botão "tab" é usado para navegar).
+//	Especifica a ordem de tabulação de um elemento (quando o botão "tab" é usado para navegar).
 //
 // O atributo tabindex pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento
 // HTML. No entanto, não é necessariamente útil).
@@ -651,7 +653,7 @@ func (e *TagA) TabIndex(index int) (ref *TagA) {
 //
 // English:
 //
-//  Specifies extra information about an element.
+//	Specifies extra information about an element.
 //
 // The information is most often shown as a tooltip text when the mouse moves over the element.
 //
@@ -660,7 +662,7 @@ func (e *TagA) TabIndex(index int) (ref *TagA) {
 //
 // Português:
 //
-//  Especifica informações extras sobre um elemento.
+//	Especifica informações extras sobre um elemento.
 //
 // As informações geralmente são mostradas como um texto de dica de ferramenta quando o mouse se move
 // sobre o elemento.
@@ -676,17 +678,17 @@ func (e *TagA) Title(title string) (ref *TagA) {
 //
 // English:
 //
-//  Specifies whether the content of an element should be translated or not.
+//	Specifies whether the content of an element should be translated or not.
 //
-//   Input:
-//     translate: element should be translated or not. [ KTranslateYes | KTranslateNo ]
+//	 Input:
+//	   translate: element should be translated or not. [ KTranslateYes | KTranslateNo ]
 //
-// English:
+// Português:
 //
-//  Especifica se o conteúdo de um elemento deve ser traduzido ou não.
+//	Especifica se o conteúdo de um elemento deve ser traduzido ou não.
 //
-//   Entrada:
-//     translate: elemento deve ser traduzido ou não. [ KTranslateYes | KTranslateNo ]
+//	 Entrada:
+//	   translate: elemento deve ser traduzido ou não. [ KTranslateYes | KTranslateNo ]
 func (e *TagA) Translate(translate Translate) (ref *TagA) {
 	e.selfElement.Set("translate", translate.String())
 	return e
@@ -696,56 +698,56 @@ func (e *TagA) Translate(translate Translate) (ref *TagA) {
 //
 // English:
 //
-//  Causes the browser to treat the linked URL as a download. Can be used with or without a value
+//	Causes the browser to treat the linked URL as a download. Can be used with or without a value
 //
-//   Note:
-//     * Without a value, the browser will suggest a filename/extension, generated from various
-//       sources:
-//         The Content-Disposition HTTP header;
-//         The final segment in the URL path;
-//         The media type (from the Content-Type header, the start of a data: URL, or Blob.type for a
-//         blob: URL).
-//     * Defining a value suggests it as the filename. / and \ characters are converted to
-//       underscores (_). Filesystems may forbid other characters in filenames, so browsers will
-//       adjust the suggested name if necessary;
-//     * Download only works for same-origin URLs, or the blob: and data: schemes;
-//     * How browsers treat downloads varies by browser, user settings, and other factors. The user
-//       may be prompted before a download starts, or the file may be saved automatically, or it may
-//       open automatically, either in an external application or in the browser itself;
-//     * If the Content-Disposition header has different information from the download attribute,
-//       resulting behavior may differ:
-//         * If the header specifies a filename, it takes priority over a filename specified in the
-//           download attribute;
-//         * If the header specifies a disposition of inline, Chrome and Firefox prioritize the
-//           attribute and treat it as a download. Old Firefox versions (before 82) prioritize the
-//           header and will display the content inline.
+//	 Note:
+//	   * Without a value, the browser will suggest a filename/extension, generated from various
+//	     sources:
+//	       The Content-Disposition HTTP header;
+//	       The final segment in the URL path;
+//	       The media type (from the Content-Type header, the start of a data: URL, or Blob.type for a
+//	       blob: URL).
+//	   * Defining a value suggests it as the filename. / and \ characters are converted to
+//	     underscores (_). Filesystems may forbid other characters in filenames, so browsers will
+//	     adjust the suggested name if necessary;
+//	   * Download only works for same-origin URLs, or the blob: and data: schemes;
+//	   * How browsers treat downloads varies by browser, user settings, and other factors. The user
+//	     may be prompted before a download starts, or the file may be saved automatically, or it may
+//	     open automatically, either in an external application or in the browser itself;
+//	   * If the Content-Disposition header has different information from the download attribute,
+//	     resulting behavior may differ:
+//	       * If the header specifies a filename, it takes priority over a filename specified in the
+//	         download attribute;
+//	       * If the header specifies a disposition of inline, Chrome and Firefox prioritize the
+//	         attribute and treat it as a download. Old Firefox versions (before 82) prioritize the
+//	         header and will display the content inline.
 //
 // Português:
 //
-//  Faz com que o navegador trate a URL vinculada como um download. Pode ser usado com ou sem valor
+//	Faz com que o navegador trate a URL vinculada como um download. Pode ser usado com ou sem valor
 //
-//   Nota:
-//     * Sem um valor, o navegador sugerirá uma extensão de nome de arquivo, gerada a partir de várias
-//       fontes:
-//         O cabeçalho HTTP Content-Disposition;
-//         O segmento final no caminho do URL;
-//         O tipo de mídia (do cabeçalho Content-Type, o início de um data: URL ou Blob.type para um
-//         blob: URL).
-//     * Definir um valor sugere-o como o nome do arquivo. / e \ caracteres são convertidos em
-//       sublinhados (_). Os sistemas de arquivos podem proibir outros caracteres em nomes de
-//       arquivos, portanto, os navegadores ajustarão o nome sugerido, se necessário;
-//     * O download funciona apenas para URLs de mesma origem, ou os esquemas blob: e data: schemes;
-//     * A forma como os navegadores tratam os downloads varia de acordo com o navegador, as
-//       configurações do usuário e outros fatores. O usuário pode ser avisado antes do início de um
-//       download, ou o arquivo pode ser salvo automaticamente, ou pode ser aberto automaticamente,
-//       seja em um aplicativo externo ou no próprio navegador;
-//     * Se o cabeçalho Content-Disposition tiver informações diferentes do atributo download, o
-//       comportamento resultante pode ser diferente:
-//         * Se o cabeçalho especificar um nome de arquivo, ele terá prioridade sobre um nome de
-//           arquivo especificado no atributo download;
-//         * Se o cabeçalho especificar uma disposição de inline, o Chrome e o Firefox priorizarão o
-//           atributo e o tratarão como um download. Versões antigas do Firefox (antes de 82)
-//           priorizam o cabeçalho e exibirão o conteúdo inline.
+//	 Nota:
+//	   * Sem um valor, o navegador sugerirá uma extensão de nome de arquivo, gerada a partir de várias
+//	     fontes:
+//	       O cabeçalho HTTP Content-Disposition;
+//	       O segmento final no caminho do URL;
+//	       O tipo de mídia (do cabeçalho Content-Type, o início de um data: URL ou Blob.type para um
+//	       blob: URL).
+//	   * Definir um valor sugere-o como o nome do arquivo. / e \ caracteres são convertidos em
+//	     sublinhados (_). Os sistemas de arquivos podem proibir outros caracteres em nomes de
+//	     arquivos, portanto, os navegadores ajustarão o nome sugerido, se necessário;
+//	   * O download funciona apenas para URLs de mesma origem, ou os esquemas blob: e data: schemes;
+//	   * A forma como os navegadores tratam os downloads varia de acordo com o navegador, as
+//	     configurações do usuário e outros fatores. O usuário pode ser avisado antes do início de um
+//	     download, ou o arquivo pode ser salvo automaticamente, ou pode ser aberto automaticamente,
+//	     seja em um aplicativo externo ou no próprio navegador;
+//	   * Se o cabeçalho Content-Disposition tiver informações diferentes do atributo download, o
+//	     comportamento resultante pode ser diferente:
+//	       * Se o cabeçalho especificar um nome de arquivo, ele terá prioridade sobre um nome de
+//	         arquivo especificado no atributo download;
+//	       * Se o cabeçalho especificar uma disposição de inline, o Chrome e o Firefox priorizarão o
+//	         atributo e o tratarão como um download. Versões antigas do Firefox (antes de 82)
+//	         priorizam o cabeçalho e exibirão o conteúdo inline.
 func (e *TagA) Download(download string) (ref *TagA) {
 	e.selfElement.Set("download", download)
 	return e
@@ -755,25 +757,25 @@ func (e *TagA) Download(download string) (ref *TagA) {
 //
 // English:
 //
-//  The URL that the hyperlink points to. Links are not restricted to HTTP-based URLs — they can use
-//  any URL scheme supported by browsers:
-//    * Sections of a page with fragment URLs;
-//    * Pieces of media files with media fragments;
-//    * Telephone numbers with tel: URLs;
-//    * Email addresses with mailto: URLs;
-//    * While web browsers may not support other URL schemes, web sites can with
-//      registerProtocolHandler().
+//	The URL that the hyperlink points to. Links are not restricted to HTTP-based URLs — they can use
+//	any URL scheme supported by browsers:
+//	  * Sections of a page with fragment URLs;
+//	  * Pieces of media files with media fragments;
+//	  * Telephone numbers with tel: URLs;
+//	  * Email addresses with mailto: URLs;
+//	  * While web browsers may not support other URL schemes, web sites can with
+//	    registerProtocolHandler().
 //
 // Português:
 //
-//  A URL para a qual o hiperlink aponta. Os links não são restritos a URLs baseados em HTTP — eles
-//  podem usar qualquer esquema de URL suportado pelos navegadores:
-//    * Seções de uma página com URLs de fragmento;
-//    * Pedaços de arquivos de mídia com fragmentos de mídia;
-//    * Números de telefone com tel: URLs;
-//    * Endereços de e-mail com mailto: URLs;
-//    * Embora os navegadores da Web possam não suportar outros esquemas de URL, os sites da Web podem
-//      com registerProtocolHandler().
+//	A URL para a qual o hiperlink aponta. Os links não são restritos a URLs baseados em HTTP — eles
+//	podem usar qualquer esquema de URL suportado pelos navegadores:
+//	  * Seções de uma página com URLs de fragmento;
+//	  * Pedaços de arquivos de mídia com fragmentos de mídia;
+//	  * Números de telefone com tel: URLs;
+//	  * Endereços de e-mail com mailto: URLs;
+//	  * Embora os navegadores da Web possam não suportar outros esquemas de URL, os sites da Web podem
+//	    com registerProtocolHandler().
 func (e *TagA) HRef(href string) (ref *TagA) {
 	e.selfElement.Set("href", href)
 	return e
@@ -783,13 +785,13 @@ func (e *TagA) HRef(href string) (ref *TagA) {
 //
 // English:
 //
-//  Hints at the human language of the linked URL. No built-in functionality. Allowed values are the
-//  same as the global lang attribute.
+//	Hints at the human language of the linked URL. No built-in functionality. Allowed values are the
+//	same as the global lang attribute.
 //
 // Português:
 //
-//  Dicas para a linguagem humana da URL vinculada. Nenhuma funcionalidade embutida. Os valores
-//  permitidos são os mesmos do atributo lang global.
+//	Dicas para a linguagem humana da URL vinculada. Nenhuma funcionalidade embutida. Os valores
+//	permitidos são os mesmos do atributo lang global.
 func (e *TagA) HRefLang(hreflang string) (ref *TagA) {
 	e.selfElement.Set("hreflang", hreflang)
 	return e
@@ -799,13 +801,13 @@ func (e *TagA) HRefLang(hreflang string) (ref *TagA) {
 //
 // English:
 //
-//  A space-separated list of URLs. When the link is followed, the browser will send POST requests
-//  with the body PING to the URLs. Typically for tracking.
+//	A space-separated list of URLs. When the link is followed, the browser will send POST requests
+//	with the body PING to the URLs. Typically for tracking.
 //
 // Português:
 //
-//  Uma lista de URLs separados por espaços. Quando o link for seguido, o navegador enviará
-//  solicitações POST com o corpo PING para as URLs. Normalmente para rastreamento.
+//	Uma lista de URLs separados por espaços. Quando o link for seguido, o navegador enviará
+//	solicitações POST com o corpo PING para as URLs. Normalmente para rastreamento.
 func (e *TagA) Ping(ping ...string) (ref *TagA) {
 	switch e.tag {
 	case KTagA:
@@ -821,56 +823,56 @@ func (e *TagA) Ping(ping ...string) (ref *TagA) {
 //
 // English:
 //
-//  How much of the referrer to send when following the link.
+//	How much of the referrer to send when following the link.
 //
-//   KRefPolicyNoReferrer: The Referer header will not be sent.
-//   KRefPolicyNoReferrerWhenDowngrade: The Referer header will not be sent to origins without TLS
-//     (HTTPS).
-//   KRefPolicyOrigin: The sent referrer will be limited to the origin of the referring page: its
-//     scheme, host, and port.
-//   KRefPolicyOriginWhenCrossOrigin: The referrer sent to other origins will be limited to the
-//     scheme, the host, and the port. Navigations on the same origin will still include the path.
-//   KRefPolicySameOrigin: A referrer will be sent for same origin, but cross-origin requests will
-//     contain no referrer information.
-//   KRefPolicyStrictOrigin: Only send the origin of the document as the referrer when the protocol
-//     security level stays the same (HTTPS→HTTPS), but don't send it to a less secure destination
-//     (HTTPS→HTTP).
-//   KRefPolicyStrictOriginWhenCrossOrigin (default): Send a full URL when performing a same-origin
-//     request, only send the origin when the protocol security level stays the same (HTTPS→HTTPS),
-//     and send no header to a less secure destination (HTTPS→HTTP).
-//   KRefPolicyUnsafeUrl: The referrer will include the origin and the path (but not the fragment,
-//     password, or username). This value is unsafe, because it leaks origins and paths from
-//     TLS-protected resources to insecure origins.
+//	 KRefPolicyNoReferrer: The Referer header will not be sent.
+//	 KRefPolicyNoReferrerWhenDowngrade: The Referer header will not be sent to origins without TLS
+//	   (HTTPS).
+//	 KRefPolicyOrigin: The sent referrer will be limited to the origin of the referring page: its
+//	   scheme, host, and port.
+//	 KRefPolicyOriginWhenCrossOrigin: The referrer sent to other origins will be limited to the
+//	   scheme, the host, and the port. Navigations on the same origin will still include the path.
+//	 KRefPolicySameOrigin: A referrer will be sent for same origin, but cross-origin requests will
+//	   contain no referrer information.
+//	 KRefPolicyStrictOrigin: Only send the origin of the document as the referrer when the protocol
+//	   security level stays the same (HTTPS→HTTPS), but don't send it to a less secure destination
+//	   (HTTPS→HTTP).
+//	 KRefPolicyStrictOriginWhenCrossOrigin (default): Send a full URL when performing a same-origin
+//	   request, only send the origin when the protocol security level stays the same (HTTPS→HTTPS),
+//	   and send no header to a less secure destination (HTTPS→HTTP).
+//	 KRefPolicyUnsafeUrl: The referrer will include the origin and the path (but not the fragment,
+//	   password, or username). This value is unsafe, because it leaks origins and paths from
+//	   TLS-protected resources to insecure origins.
 //
-//   Note:
-//     * Experimental. Expect behavior to change in the future. (04/2022)
+//	 Note:
+//	   * Experimental. Expect behavior to change in the future. (04/2022)
 //
 // Português:
 //
-//  Quanto do referenciador enviar ao seguir o link.
+//	Quanto do referenciador enviar ao seguir o link.
 //
-//   KRefPolicyNoReferrer: O cabeçalho Referer não será enviado.
-//   KRefPolicyNoReferrerWhenDowngrade: O cabeçalho Referer não será enviado para origens sem
-//     TLS (HTTPS).
-//   KRefPolicyOrigin: O referenciador enviado será limitado à origem da página de referência: seu
-//     esquema, host e porta.
-//   KRefPolicyOriginWhenCrossOrigin: O referenciador enviado para outras origens será limitado ao
-//     esquema, ao host e à porta. As navegações na mesma origem ainda incluirão o caminho.
-//   KRefPolicySameOrigin: Um referenciador será enviado para a mesma origem, mas as solicitações
-//     de origem cruzada não conterão informações de referenciador.
-//   KRefPolicyStrictOrigin: Só envie a origem do documento como referenciador quando o nível de
-//     segurança do protocolo permanecer o mesmo (HTTPS→HTTPS), mas não envie para um destino menos
-//     seguro (HTTPS→HTTP).
-//   KRefPolicyStrictOriginWhenCrossOrigin (padrão): Envie uma URL completa ao realizar uma
-//     solicitação de mesma origem, envie a origem apenas quando o nível de segurança do protocolo
-//     permanecer o mesmo (HTTPS→HTTPS) e não envie nenhum cabeçalho para um destino menos seguro
-//     (HTTPS→HTTP).
-//   KRefPolicyUnsafeUrl: O referenciador incluirá a origem e o caminho (mas não o fragmento, a
-//     senha ou o nome de usuário). Esse valor não é seguro porque vaza origens e caminhos de
-//     recursos protegidos por TLS para origens inseguras.
+//	 KRefPolicyNoReferrer: O cabeçalho Referer não será enviado.
+//	 KRefPolicyNoReferrerWhenDowngrade: O cabeçalho Referer não será enviado para origens sem
+//	   TLS (HTTPS).
+//	 KRefPolicyOrigin: O referenciador enviado será limitado à origem da página de referência: seu
+//	   esquema, host e porta.
+//	 KRefPolicyOriginWhenCrossOrigin: O referenciador enviado para outras origens será limitado ao
+//	   esquema, ao host e à porta. As navegações na mesma origem ainda incluirão o caminho.
+//	 KRefPolicySameOrigin: Um referenciador será enviado para a mesma origem, mas as solicitações
+//	   de origem cruzada não conterão informações de referenciador.
+//	 KRefPolicyStrictOrigin: Só envie a origem do documento como referenciador quando o nível de
+//	   segurança do protocolo permanecer o mesmo (HTTPS→HTTPS), mas não envie para um destino menos
+//	   seguro (HTTPS→HTTP).
+//	 KRefPolicyStrictOriginWhenCrossOrigin (padrão): Envie uma URL completa ao realizar uma
+//	   solicitação de mesma origem, envie a origem apenas quando o nível de segurança do protocolo
+//	   permanecer o mesmo (HTTPS→HTTPS) e não envie nenhum cabeçalho para um destino menos seguro
+//	   (HTTPS→HTTP).
+//	 KRefPolicyUnsafeUrl: O referenciador incluirá a origem e o caminho (mas não o fragmento, a
+//	   senha ou o nome de usuário). Esse valor não é seguro porque vaza origens e caminhos de
+//	   recursos protegidos por TLS para origens inseguras.
 //
-//   Note:
-//     * Experimental. Expect behavior to change in the future. (04/2022)
+//	 Note:
+//	   * Experimental. Expect behavior to change in the future. (04/2022)
 func (e *TagA) ReferrerPolicy(referrerPolicy ReferrerPolicy) (ref *TagA) {
 	e.selfElement.Set("referrerpolicy", referrerPolicy)
 	return e
@@ -880,11 +882,11 @@ func (e *TagA) ReferrerPolicy(referrerPolicy ReferrerPolicy) (ref *TagA) {
 //
 // English:
 //
-//  The relationship of the linked URL as space-separated link types.
+//	The relationship of the linked URL as space-separated link types.
 //
 // Português:
 //
-//  O relacionamento da URL vinculada como tipos de link separados por espaço.
+//	O relacionamento da URL vinculada como tipos de link separados por espaço.
 func (e *TagA) Rel(rel string) (ref *TagA) {
 	switch e.tag {
 	case KTagA:
@@ -904,33 +906,33 @@ func (e *TagA) Rel(rel string) (ref *TagA) {
 // Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
 // The following keywords have special meanings for where to load the URL:
 //
-//   KTargetSelf: the current browsing context; (Default)
-//   KTargetBlank: usually a new tab, but users can configure browsers to open a new window instead;
-//   KTargetParent: the parent browsing context of the current one. If no parent, behaves as _self;
-//   KTargetTop: the topmost browsing context (the "highest" context that's an ancestor of the current
-//     one). If no ancestors, behaves as _self.
+//	KTargetSelf: the current browsing context; (Default)
+//	KTargetBlank: usually a new tab, but users can configure browsers to open a new window instead;
+//	KTargetParent: the parent browsing context of the current one. If no parent, behaves as _self;
+//	KTargetTop: the topmost browsing context (the "highest" context that's an ancestor of the current
+//	  one). If no ancestors, behaves as _self.
 //
-//   Note:
-//     * Setting target="_blank" on <a> elements implicitly provides the same rel behavior as setting
-//       rel="noopener" which does not set window.opener. See browser compatibility for support
-//       status.
+//	Note:
+//	  * Setting target="_blank" on <a> elements implicitly provides the same rel behavior as setting
+//	    rel="noopener" which does not set window.opener. See browser compatibility for support
+//	    status.
 //
 // Português:
 //
 // Onde exibir a URL vinculada, como o nome de um contexto de navegação (uma guia, janela ou
 // <iframe>). As seguintes palavras-chave têm significados especiais para onde carregar o URL:
 //
-//   KTargetSelf: o contexto de navegação atual; (padrão)
-//   KTargetBlank: geralmente uma nova guia, mas os usuários podem configurar os navegadores para
-//     abrir uma nova janela;
-//   KTargetParent: o contexto de navegação pai do atual. Se nenhum pai, se comporta como _self;
-//   KTargetTop: o contexto de navegação mais alto (o contexto "mais alto" que é um ancestral do
-//     atual). Se não houver ancestrais, se comporta como _self.
+//	KTargetSelf: o contexto de navegação atual; (padrão)
+//	KTargetBlank: geralmente uma nova guia, mas os usuários podem configurar os navegadores para
+//	  abrir uma nova janela;
+//	KTargetParent: o contexto de navegação pai do atual. Se nenhum pai, se comporta como _self;
+//	KTargetTop: o contexto de navegação mais alto (o contexto "mais alto" que é um ancestral do
+//	  atual). Se não houver ancestrais, se comporta como _self.
 //
-//   Nota:
-//     * Definir target="_blank" em elementos <a> fornece implicitamente o mesmo comportamento rel
-//       que definir rel="noopener" que não define window.opener. Consulte a compatibilidade do
-//       navegador para obter o status do suporte.
+//	Nota:
+//	  * Definir target="_blank" em elementos <a> fornece implicitamente o mesmo comportamento rel
+//	    que definir rel="noopener" que não define window.opener. Consulte a compatibilidade do
+//	    navegador para obter o status do suporte.
 func (e *TagA) Target(target Target) (ref *TagA) {
 	switch e.tag {
 	case KTagA:
@@ -961,13 +963,13 @@ func (e *TagA) Type(typeProperty Mime) (ref *TagA) {
 //
 // English:
 //
-//  In an HTML document, the Document.createElement() method creates the specified HTML element or an
-//  HTMLUnknownElement if the given element name is not known.
+//	In an HTML document, the Document.createElement() method creates the specified HTML element or an
+//	HTMLUnknownElement if the given element name is not known.
 //
 // Português:
 //
-//  Em um documento HTML, o método Document.createElement() cria o elemento HTML especificado ou um
-//  HTMLUnknownElement se o nome do elemento dado não for conhecido.
+//	Em um documento HTML, o método Document.createElement() cria o elemento HTML especificado ou um
+//	HTMLUnknownElement se o nome do elemento dado não for conhecido.
 func (e *TagA) CreateElement(tag Tag) (ref *TagA) {
 	e.selfElement = js.Global().Get("document").Call("createElement", tag.String())
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
@@ -983,30 +985,30 @@ func (e *TagA) CreateElement(tag Tag) (ref *TagA) {
 //
 // English:
 //
-//  Adds a node to the end of the list of children of a specified parent node. If the node already
-//  exists in the document, it is removed from its current parent node before being added to the
-//  new parent.
+//	Adds a node to the end of the list of children of a specified parent node. If the node already
+//	exists in the document, it is removed from its current parent node before being added to the
+//	new parent.
 //
-//   Input:
-//     appendId: id of parent element.
+//	 Input:
+//	   appendId: id of parent element.
 //
-//   Note:
-//     * The equivalent of:
-//         var p = document.createElement("p");
-//         document.body.appendChild(p);
+//	 Note:
+//	   * The equivalent of:
+//	       var p = document.createElement("p");
+//	       document.body.appendChild(p);
 //
 // Português:
 //
-//  Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
-//  documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
+//	Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
+//	documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
 //
-//   Entrada:
-//     appendId: id do elemento pai.
+//	 Entrada:
+//	   appendId: id do elemento pai.
 //
-//   Nota:
-//     * Equivale a:
-//         var p = document.createElement("p");
-//         document.body.appendChild(p);
+//	 Nota:
+//	   * Equivale a:
+//	       var p = document.createElement("p");
+//	       document.body.appendChild(p);
 func (e *TagA) AppendById(appendId string) (ref *TagA) {
 
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
@@ -1023,30 +1025,30 @@ func (e *TagA) AppendById(appendId string) (ref *TagA) {
 //
 // English:
 //
-//  Adds a node to the end of the list of children of a specified parent node. If the node already
-//  exists in the document, it is removed from its current parent node before being added to the new
-//  parent.
+//	Adds a node to the end of the list of children of a specified parent node. If the node already
+//	exists in the document, it is removed from its current parent node before being added to the new
+//	parent.
 //
-//   Input:
-//     append: element in js.Value format.
+//	 Input:
+//	   append: element in js.Value format.
 //
-//   Note:
-//     * The equivalent of:
-//         var p = document.createElement("p");
-//         document.body.appendChild(p);
+//	 Note:
+//	   * The equivalent of:
+//	       var p = document.createElement("p");
+//	       document.body.appendChild(p);
 //
 // Português:
 //
-//  Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
-//  documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
+//	Adiciona um nó ao final da lista de filhos de um nó pai especificado. Se o nó já existir no
+//	documento, ele é removido de seu nó pai atual antes de ser adicionado ao novo pai.
 //
-//   Entrada:
-//     appendId: elemento no formato js.Value.
+//	 Entrada:
+//	   appendId: elemento no formato js.Value.
 //
-//   Nota:
-//     * Equivale a:
-//         var p = document.createElement("p");
-//         document.body.appendChild(p);
+//	 Nota:
+//	   * Equivale a:
+//	       var p = document.createElement("p");
+//	       document.body.appendChild(p);
 func (e *TagA) Append(append interface{}) (ref *TagA) {
 	switch append.(type) {
 	case *TagA:
@@ -1070,11 +1072,11 @@ func (e *TagA) Append(append interface{}) (ref *TagA) {
 //
 // English:
 //
-//  Sets the X and Y axes in pixels.
+//	Sets the X and Y axes in pixels.
 //
 // Português:
 //
-//  Define os eixos X e Y em pixels.
+//	Define os eixos X e Y em pixels.
 func (e *TagA) SetXY(x, y int) (ref *TagA) {
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	py := strconv.FormatInt(int64(y), 10) + "px"
@@ -1089,11 +1091,11 @@ func (e *TagA) SetXY(x, y int) (ref *TagA) {
 //
 // English:
 //
-//  Sets the X axe in pixels.
+//	Sets the X axe in pixels.
 //
 // Português:
 //
-//  Define o eixo X em pixels.
+//	Define o eixo X em pixels.
 func (e *TagA) SetX(x int) (ref *TagA) {
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	e.selfElement.Get("style").Set("left", px)
@@ -1105,11 +1107,11 @@ func (e *TagA) SetX(x int) (ref *TagA) {
 //
 // English:
 //
-//  Sets the Y axe in pixels.
+//	Sets the Y axe in pixels.
 //
 // Português:
 //
-//  Define o eixo Y em pixels.
+//	Define o eixo Y em pixels.
 func (e *TagA) SetY(y int) (ref *TagA) {
 	py := strconv.FormatInt(int64(y), 10) + "px"
 	e.selfElement.Get("style").Set("top", py)
@@ -1121,11 +1123,11 @@ func (e *TagA) SetY(y int) (ref *TagA) {
 //
 // English:
 //
-//  Returns the X and Y axes in pixels.
+//	Returns the X and Y axes in pixels.
 //
 // Português:
 //
-//  Retorna os eixos X e Y em pixels.
+//	Retorna os eixos X e Y em pixels.
 func (e *TagA) GetXY() (x, y int) {
 	x = e.selfElement.Get("style").Get("left").Int()
 	y = e.selfElement.Get("style").Get("top").Int()
@@ -1137,11 +1139,11 @@ func (e *TagA) GetXY() (x, y int) {
 //
 // English:
 //
-//  Returns the X axe in pixels.
+//	Returns the X axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo X em pixels.
+//	Retorna o eixo X em pixels.
 func (e *TagA) GetX() (x int) {
 	x = e.selfElement.Get("style").Get("left").Int()
 
@@ -1152,11 +1154,11 @@ func (e *TagA) GetX() (x int) {
 //
 // English:
 //
-//  Returns the Y axe in pixels.
+//	Returns the Y axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo Y em pixels.
+//	Retorna o eixo Y em pixels.
 func (e *TagA) GetY() (y int) {
 	y = e.selfElement.Get("style").Get("top").Int()
 

@@ -233,3 +233,49 @@ var err = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 
 js.Global().Get("navigator").Get("geolocation").Call("getCurrentPosition", success, err, options)
 ```
+
+Promise, real example:
+```go
+forEach := js.FuncOf(func(_ js.Value, args []js.Value) any {
+  log.Printf("deviceId: %v", args[0].Get("deviceId"))
+  log.Printf("groupId: %v", args[0].Get("groupId"))
+  log.Printf("kind: %v", args[0].Get("kind"))
+  log.Printf("label: %v", args[0].Get("label"))
+  log.Print("")
+  log.Print("")
+  log.Print("")
+  return nil
+})
+
+var resolve = js.FuncOf(func(_ js.Value, args []js.Value) interface{} {
+  // enumerateDevices() returns an array, but, go returns an object (bug)
+	// call a forEach() correct this problem.
+	args[0].Call("forEach", forEach)
+  return nil
+})
+
+var reject = js.FuncOf(func(_ js.Value, args []js.Value) interface{} {
+  log.Printf("code: %v", args[0].Get("code"))
+  log.Printf("message: %v", args[0].Get("message"))
+  return nil
+})
+
+// enumerateDevices() returns a promise
+js.Global().Get("navigator").Get("mediaDevices").Call("enumerateDevices").Call("then", resolve, reject)
+```
+
+Call javascript function:
+
+Javascript:
+```html
+<script>
+	window.test = function (a){
+	console.log(a)
+}
+</script>
+```
+
+Golang:
+```go
+js.Global().Call("test", value)
+```

@@ -236,32 +236,43 @@ js.Global().Get("navigator").Get("geolocation").Call("getCurrentPosition", succe
 
 #### How to get a promise, real example:
 ```go
+type Data struct {
+  DeviceId string
+  GroupId  string
+  Kind     string
+  Label    string
+}
+
+list := make([]Data, 0)
+end := make(chan struct{})
 forEach := js.FuncOf(func(_ js.Value, args []js.Value) any {
-  log.Printf("deviceId: %v", args[0].Get("deviceId"))
-  log.Printf("groupId: %v", args[0].Get("groupId"))
-  log.Printf("kind: %v", args[0].Get("kind"))
-  log.Printf("label: %v", args[0].Get("label"))
-  log.Print("")
-  log.Print("")
-  log.Print("")
+  data := Data{
+    DeviceId: args[0].Get("deviceId").String(),
+    GroupId:  args[0].Get("groupId").String(),
+    Kind:     args[0].Get("kind").String(),
+    Label:    args[0].Get("label").String(),
+  }
+  list = append(list, data)
   return nil
 })
 
-var resolve = js.FuncOf(func(_ js.Value, args []js.Value) interface{} {
+var success = js.FuncOf(func(_ js.Value, args []js.Value) interface{} {
   // enumerateDevices() returns an array, but, go returns an object (bug)
-  // call a forEach() correct this problem.
+  // call a forEach() for correct this problem.
   args[0].Call("forEach", forEach)
+  end <- struct{}{}
   return nil
 })
 
-var reject = js.FuncOf(func(_ js.Value, args []js.Value) interface{} {
-  log.Printf("code: %v", args[0].Get("code"))
+var failure = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
   log.Printf("message: %v", args[0].Get("message"))
   return nil
 })
 
 // enumerateDevices() returns a promise
-js.Global().Get("navigator").Get("mediaDevices").Call("enumerateDevices").Call("then", resolve, reject)
+js.Global().Get("navigator").Get("mediaDevices").Call("enumerateDevices").Call("then", success, failure)
+<-end
+log.Printf("list: %+v", list)
 ```
 
 #### How to call javascript function:

@@ -114,7 +114,7 @@ Enquanto o site de documentação atual não fica pronta, use a documentação e
 
 ### Golnag JS Tips
 
-How to create a new `js.Value{}`:
+#### How to create a new `js.Value{}`:
 ```go
 newObject := js.Global().Get("Object")
 newArray  := js.Global().Get("Array")
@@ -124,7 +124,7 @@ test.Set("test", "I'm alive!")
 log.Printf("test: %v", test.Get("test"))
 ```
 
-How to create a callback (of hell) function:
+#### How to create a callback (of hell) function:
 
 Javascript Example:
 ```javascript
@@ -183,7 +183,7 @@ function error(err) {
 }
 ```
 
-Function error, javascript:
+Function error, golang:
 ```go
 var err = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 	// javascript `err` is golang `args[0]`
@@ -200,7 +200,7 @@ const options = {
 };
 ```
 
-Javascript options in golang:
+Javascript options, golang:
 ```go
 var options = js.Global().Get("Object")
 options.Set("enableHighAccuracy", true)
@@ -234,7 +234,7 @@ var err = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 js.Global().Get("navigator").Get("geolocation").Call("getCurrentPosition", success, err, options)
 ```
 
-Promise, real example:
+#### How to get a promise, real example:
 ```go
 forEach := js.FuncOf(func(_ js.Value, args []js.Value) any {
   log.Printf("deviceId: %v", args[0].Get("deviceId"))
@@ -264,7 +264,7 @@ var reject = js.FuncOf(func(_ js.Value, args []js.Value) interface{} {
 js.Global().Get("navigator").Get("mediaDevices").Call("enumerateDevices").Call("then", resolve, reject)
 ```
 
-Call javascript function:
+#### How to call javascript function:
 
 Javascript:
 ```html

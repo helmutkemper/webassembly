@@ -65,28 +65,28 @@ http://localhost:3000/examples/svg/
 package main
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
-	"time"
+  "github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+  "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+  "github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+  "time"
 )
 
 func main() {
 
-	done := make(chan struct{}, 0)
+  done := make(chan struct{}, 0)
 
-	stage := factoryBrowser.NewStage()
+  stage := factoryBrowser.NewStage()
 
-	s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 100}).Append(
-		factoryBrowser.NewTagSvgPath().Fill(nil).Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
-		factoryBrowser.NewTagSvgCircle().R(5).Fill(factoryColor.NewRed()).Append(
-			factoryBrowser.NewTagSvgAnimateMotion().Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
-		),
-	)
+  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 200, 100}).Append(
+    factoryBrowser.NewTagSvgPath().Fill(nil).Stroke(factoryColor.NewLightgrey()).D(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+    factoryBrowser.NewTagSvgCircle().R(5).Fill(factoryColor.NewRed()).Append(
+      factoryBrowser.NewTagSvgAnimateMotion().Dur(10*time.Second).RepeatCount(html.KSvgDurIndefinite).Path(factoryBrowser.NewPath().M(20, 50).C(20, -50, 180, 150, 180, 50).C(180, -50, 20, 150, 20, 50).Z()),
+    ),
+  )
 
-	stage.Append(s1)
+  stage.Append(s1)
 
-	<-done
+  <-done
 }
 ```
 
@@ -165,14 +165,14 @@ function success(pos) {
 Function success, golang:
 ```go
 var success = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-	// javascript `pos` is golang `args[0]`
-	var crd = args[0].Get("coords")
-	
-	log.Printf("Your current position is:")
-	log.Printf("Latitude $v:", crd.Get("latitude"))
-	log.Printf("Longitude $v:", crd.Get("longitude"))
-	log.Printf("More or less $v meters", crd.Get("accuracy"))
-	return nil
+  // javascript `pos` is golang `args[0]`
+  var crd = args[0].Get("coords")
+  
+  log.Printf("Your current position is:")
+  log.Printf("Latitude $v:", crd.Get("latitude"))
+  log.Printf("Longitude $v:", crd.Get("longitude"))
+  log.Printf("More or less $v meters", crd.Get("accuracy"))
+  return nil
 })
 ```
 
@@ -186,8 +186,8 @@ function error(err) {
 Function error, golang:
 ```go
 var err = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-	// javascript `err` is golang `args[0]`
-	log.Printf("ERROR(%v): %v", args[0].Get("code"), args[0].Get("message")) 
+  // javascript `err` is golang `args[0]`
+  log.Printf("ERROR(%v): %v", args[0].Get("code"), args[0].Get("message")) 
 })
 ```
 
@@ -249,8 +249,8 @@ forEach := js.FuncOf(func(_ js.Value, args []js.Value) any {
 
 var resolve = js.FuncOf(func(_ js.Value, args []js.Value) interface{} {
   // enumerateDevices() returns an array, but, go returns an object (bug)
-	// call a forEach() correct this problem.
-	args[0].Call("forEach", forEach)
+  // call a forEach() correct this problem.
+  args[0].Call("forEach", forEach)
   return nil
 })
 

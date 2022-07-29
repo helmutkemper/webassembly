@@ -23,6 +23,17 @@ func (e EventName) String() string {
 }
 
 const (
+	// KEventAbort
+	//
+	// English:
+	//
+	// Fired when the resource was not fully loaded, but not as the result of an error.
+	//
+	// Português:
+	//
+	// Disparado quando o recurso não foi totalmente carregado, mas não como resultado de um erro.
+	KEventAbort EventName = "abort"
+
 	// KEventCanPlay
 	//
 	// English:
@@ -46,17 +57,6 @@ const (
 	//
 	// O navegador estima que pode reproduzir a mídia até o fim sem parar para o buffer de conteúdo.
 	KEventCanPlayThrough EventName = "canplaythrough"
-
-	// KEventComplete
-	//
-	// English:
-	//
-	// The rendering of an OfflineAudioContext is terminated.
-	//
-	// Português:
-	//
-	// A renderização de um OfflineAudioContext é encerrada.
-	KEventComplete EventName = "complete"
 
 	// KEventDurationChange
 	//
@@ -93,6 +93,17 @@ const (
 	// A reprodução foi interrompida porque o fim da mídia foi atingido.
 	KEventEnded EventName = "ended"
 
+	// KEventError
+	//
+	// English:
+	//
+	// Fired when the resource could not be loaded due to an error.
+	//
+	// Português:
+	//
+	// Disparado quando o recurso não pôde ser carregado devido a um erro.
+	KEventError EventName = "error"
+
 	// KEventLoadedData
 	//
 	// English:
@@ -114,6 +125,17 @@ const (
 	//
 	// Os metadados foram carregados.
 	KEventLoadedMetadata EventName = "loadedmetadata"
+
+	// KEventLoadStart
+	//
+	// English:
+	//
+	// Fired when the browser has started to load a resource.
+	//
+	// Português:
+	//
+	// Disparado quando o navegador começou a carregar um recurso.
+	KEventLoadStart EventName = "loadstart"
 
 	// KEventPause
 	//

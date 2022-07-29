@@ -1127,23 +1127,30 @@ func (e *TagVideo) Width(value float64) (ref *TagVideo) {
 //	  mouseEvet: ponteiro para o channel event.Data
 //
 //	Example: / Exemplo:
-//	  videoEvent := make(chan event.Data)
+//	    stage := factoryBrowser.NewStage()
 //
-//	  s1 := factoryBrowser.NewTagVideo().AddListenerCanPlay(&videoEvent).Controls(true).Width(250).Append(
-//	    factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
-//	    factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4").Type("video/mp4"),
-//	  )
+//	    videoEvent := make(chan event.Data)
 //
-//	  stage.Append(s1)
+//	    tagVideo := &html.TagVideo{}
 //
-//	  go func() {
-//	    for {
-//	      select {
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
 //	        case converted := <-videoEvent:
-//	        log.Printf("%+v", converted)
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
 //	      }
-//	    }
-//	  }()
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) AddListenerCanPlay(evet *chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
@@ -1176,6 +1183,32 @@ func (e *TagVideo) AddListenerCanPlay(evet *chan event.Data) (ref *TagVideo) {
 // Português:
 //
 // Remove um ouvinte de evento de vídeo pode tocar, equivalente ao comando JavaScript RemoveEventListener('canplay',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) RemoveListenerCanPlay() (ref *TagVideo) {
 	if e.fnCanplay == nil {
 		return e
@@ -1190,6 +1223,47 @@ func (e *TagVideo) RemoveListenerCanPlay() (ref *TagVideo) {
 	return e
 }
 
+// AddListenerCanPlayThrough
+//
+// Enclish:
+//
+// Adds a video event litener can play through, equivalent to the JavaScript command addEventListener('canplaythrough',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo pode tocar por completo, equivalente ao comando JavaScript addEventListener('canplaythrough',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) AddListenerCanPlayThrough(evet *chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
@@ -1213,6 +1287,41 @@ func (e *TagVideo) AddListenerCanPlayThrough(evet *chan event.Data) (ref *TagVid
 	return e
 }
 
+// RemoveListenerCanPlayThrough
+//
+// English:
+//
+// Removes a video event litener can play through, equivalent to the JavaScript command RemoveEventListener('canplaythrough',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo pode tocar por completo, equivalente ao comando JavaScript RemoveEventListener('canplaythrough',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) RemoveListenerCanPlayThrough() (ref *TagVideo) {
 	if e.fnCanPlayThrough == nil {
 		return e
@@ -1227,6 +1336,47 @@ func (e *TagVideo) RemoveListenerCanPlayThrough() (ref *TagVideo) {
 	return e
 }
 
+// AddListenerComplete
+//
+// Enclish:
+//
+// Adds a video event litener complete, equivalent to the JavaScript command addEventListener('complete',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo completo, equivalente ao comando JavaScript addEventListener('complete',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) AddListenerComplete(evet *chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
@@ -1250,6 +1400,41 @@ func (e *TagVideo) AddListenerComplete(evet *chan event.Data) (ref *TagVideo) {
 	return e
 }
 
+// RemoveListenerComplete
+//
+// English:
+//
+// Removes a video event litener complete, equivalent to the JavaScript command RemoveEventListener('complete',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo completo, equivalente ao comando JavaScript RemoveEventListener('complete',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) RemoveListenerComplete() (ref *TagVideo) {
 	if e.fnComplete == nil {
 		return e
@@ -1264,6 +1449,47 @@ func (e *TagVideo) RemoveListenerComplete() (ref *TagVideo) {
 	return e
 }
 
+// AddListenerDurationChange
+//
+// Enclish:
+//
+// Adds a video event litener duration change, equivalent to the JavaScript command addEventListener('durationchange',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo mudança de duração, equivalente ao comando JavaScript addEventListener('durationchange',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) AddListenerDurationChange(evet *chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
@@ -1287,6 +1513,41 @@ func (e *TagVideo) AddListenerDurationChange(evet *chan event.Data) (ref *TagVid
 	return e
 }
 
+// RemoveListenerDurationChange
+//
+// English:
+//
+// Removes a video event litener duration change, equivalent to the JavaScript command RemoveEventListener('durationchange',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo mudança de duração, equivalente ao comando JavaScript RemoveEventListener('durationchange',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) RemoveListenerDurationChange() (ref *TagVideo) {
 	if e.fnDurationChange == nil {
 		return e
@@ -1301,6 +1562,47 @@ func (e *TagVideo) RemoveListenerDurationChange() (ref *TagVideo) {
 	return e
 }
 
+// AddListenerEmptied
+//
+// Enclish:
+//
+// Adds a video event litener emptied, equivalent to the JavaScript command addEventListener('emptied',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo esvaziado, equivalente ao comando JavaScript addEventListener('emptied',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) AddListenerEmptied(evet *chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
@@ -1324,6 +1626,41 @@ func (e *TagVideo) AddListenerEmptied(evet *chan event.Data) (ref *TagVideo) {
 	return e
 }
 
+// RemoveListenerEmptied
+//
+// English:
+//
+// Removes a video event litener emptied, equivalent to the JavaScript command RemoveEventListener('emptied',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo esvaziado, equivalente ao comando JavaScript RemoveEventListener('emptied',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) RemoveListenerEmptied() (ref *TagVideo) {
 	if e.fnEmptied == nil {
 		return e
@@ -1338,6 +1675,47 @@ func (e *TagVideo) RemoveListenerEmptied() (ref *TagVideo) {
 	return e
 }
 
+// AddListenerEnded
+//
+// Enclish:
+//
+// Adds a video event litener ended, equivalent to the JavaScript command addEventListener('ended',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo terminou, equivalente ao comando JavaScript addEventListener('ended',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) AddListenerEnded(evet *chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
@@ -1361,6 +1739,41 @@ func (e *TagVideo) AddListenerEnded(evet *chan event.Data) (ref *TagVideo) {
 	return e
 }
 
+// RemoveListenerEnded
+//
+// English:
+//
+// Removes a video event litener ended, equivalent to the JavaScript command RemoveEventListener('ended',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo terminou, equivalente ao comando JavaScript RemoveEventListener('ended',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (e *TagVideo) RemoveListenerEnded() (ref *TagVideo) {
 	if e.fnEnded == nil {
 		return e
@@ -1372,6 +1785,1475 @@ func (e *TagVideo) RemoveListenerEnded() (ref *TagVideo) {
 		*e.fnEnded,
 	)
 	e.fnEnded = nil
+	return e
+}
+
+// AddListenerLoadedMetadata
+//
+// Enclish:
+//
+// Adds a video event litener loaded metadata, equivalent to the JavaScript command addEventListener('loadedmetadata',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo metadata carregado, equivalente ao comando JavaScript addEventListener('loadedmetadata',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerLoadedMetadata(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnLoadedMetadata == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventLoadedMetadata, this, args)
+			return nil
+		})
+		e.fnLoadedMetadata = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"loadedmetadata",
+		*e.fnLoadedMetadata,
+	)
+	return e
+}
+
+// RemoveListenerLoadedMetadata
+//
+// English:
+//
+// Removes a video event litener loaded metadata, equivalent to the JavaScript command RemoveEventListener('loadedmetadata',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo metadata carregado, equivalente ao comando JavaScript RemoveEventListener('loadedmetadata',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerLoadedMetadata() (ref *TagVideo) {
+	if e.fnLoadedMetadata == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"loadedmetadata",
+		*e.fnLoadedMetadata,
+	)
+	e.fnLoadedMetadata = nil
+	return e
+}
+
+// AddListenerPause
+//
+// Enclish:
+//
+// Adds a video event litener pause, equivalent to the JavaScript command addEventListener('pause',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo pausa, equivalente ao comando JavaScript addEventListener('pause',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerPause(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnPause == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventPause, this, args)
+			return nil
+		})
+		e.fnPause = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"pause",
+		*e.fnPause,
+	)
+	return e
+}
+
+// RemoveListenerPause
+//
+// English:
+//
+// Removes a video event litener pause, equivalent to the JavaScript command RemoveEventListener('pause',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo pausa, equivalente ao comando JavaScript RemoveEventListener('pause',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerPause() (ref *TagVideo) {
+	if e.fnPause == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"pause",
+		*e.fnPause,
+	)
+	e.fnPause = nil
+	return e
+}
+
+// AddListenerPlay
+//
+// Enclish:
+//
+// Adds a video event litener play, equivalent to the JavaScript command addEventListener('play',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo tocar, equivalente ao comando JavaScript addEventListener('play',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerPlay(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnPlay == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventPlay, this, args)
+			return nil
+		})
+		e.fnPlay = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"play",
+		*e.fnPlay,
+	)
+	return e
+}
+
+// RemoveListenerPlay
+//
+// English:
+//
+// Removes a video event litener play, equivalent to the JavaScript command RemoveEventListener('play',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo tocar, equivalente ao comando JavaScript RemoveEventListener('play',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerPlay() (ref *TagVideo) {
+	if e.fnPlay == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"play",
+		*e.fnPlay,
+	)
+	e.fnPlay = nil
+	return e
+}
+
+// AddListenerPlaying
+//
+// Enclish:
+//
+// Adds a video event litener playing, equivalent to the JavaScript command addEventListener('playing',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo tocando, equivalente ao comando JavaScript addEventListener('playing',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerPlaying(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnPlaying == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventPlaying, this, args)
+			return nil
+		})
+		e.fnPlaying = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"playing",
+		*e.fnPlaying,
+	)
+	return e
+}
+
+// RemoveListenerPlaying
+//
+// English:
+//
+// Removes a video event litener playing, equivalent to the JavaScript command RemoveEventListener('playing',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo tocando, equivalente ao comando JavaScript RemoveEventListener('playing',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerPlaying() (ref *TagVideo) {
+	if e.fnPlaying == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"playing",
+		*e.fnPlaying,
+	)
+	e.fnPlaying = nil
+	return e
+}
+
+// AddListenerProgress
+//
+// Enclish:
+//
+// Adds a video event litener progress, equivalent to the JavaScript command addEventListener('progress',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo progresso, equivalente ao comando JavaScript addEventListener('progress',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerProgress(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnProgress == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventProgress, this, args)
+			return nil
+		})
+		e.fnProgress = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"progress",
+		*e.fnProgress,
+	)
+	return e
+}
+
+// RemoveListenerProgress
+//
+// English:
+//
+// Removes a video event litener progress, equivalent to the JavaScript command RemoveEventListener('progress',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo progresso, equivalente ao comando JavaScript RemoveEventListener('progress',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerProgress() (ref *TagVideo) {
+	if e.fnProgress == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"progress",
+		*e.fnProgress,
+	)
+	e.fnProgress = nil
+	return e
+}
+
+// AddListenerRateChange
+//
+// Enclish:
+//
+// Adds a video event litener rate change, equivalent to the JavaScript command addEventListener('ratechange',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo troca de taxa, equivalente ao comando JavaScript addEventListener('ratechange',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerRateChange(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnRateChange == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventRateChange, this, args)
+			return nil
+		})
+		e.fnRateChange = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"ratechange",
+		*e.fnRateChange,
+	)
+	return e
+}
+
+// RemoveListenerRateChange
+//
+// English:
+//
+// Removes a video event litener rate change, equivalent to the JavaScript command RemoveEventListener('ratechange',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo troca de taxa, equivalente ao comando JavaScript RemoveEventListener('ratechange',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerRateChange() (ref *TagVideo) {
+	if e.fnRateChange == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"ratechange",
+		*e.fnRateChange,
+	)
+	e.fnRateChange = nil
+	return e
+}
+
+// AddListenerSeeked
+//
+// Enclish:
+//
+// Adds a video event litener seeked, equivalent to the JavaScript command addEventListener('seeked',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo procurou, equivalente ao comando JavaScript addEventListener('seeked',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerSeeked(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnSeeked == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventSeeked, this, args)
+			return nil
+		})
+		e.fnSeeked = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"seeked",
+		*e.fnSeeked,
+	)
+	return e
+}
+
+// RemoveListenerSeeked
+//
+// English:
+//
+// Removes a video event litener seeked, equivalent to the JavaScript command RemoveEventListener('seeked',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo procurou, equivalente ao comando JavaScript RemoveEventListener('seeked',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerSeeked() (ref *TagVideo) {
+	if e.fnSeeked == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"seeked",
+		*e.fnSeeked,
+	)
+	e.fnSeeked = nil
+	return e
+}
+
+// AddListenerSeeking
+//
+// Enclish:
+//
+// Adds a video event litener seeking, equivalent to the JavaScript command addEventListener('seeking',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo buscando, equivalente ao comando JavaScript addEventListener('seeking',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerSeeking(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnSeeking == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventSeeking, this, args)
+			return nil
+		})
+		e.fnSeeking = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"seeking",
+		*e.fnSeeking,
+	)
+	return e
+}
+
+// RemoveListenerSeeking
+//
+// English:
+//
+// Removes a video event litener seeking, equivalent to the JavaScript command RemoveEventListener('seeking',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo buscando, equivalente ao comando JavaScript RemoveEventListener('seeking',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerSeeking() (ref *TagVideo) {
+	if e.fnSeeking == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"seeking",
+		*e.fnSeeking,
+	)
+	e.fnSeeking = nil
+	return e
+}
+
+// AddListenerStalled
+//
+// Enclish:
+//
+// Adds a video event litener stalled, equivalent to the JavaScript command addEventListener('stalled',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo parado, equivalente ao comando JavaScript addEventListener('stalled',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerStalled(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnStalled == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventStalled, this, args)
+			return nil
+		})
+		e.fnStalled = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"stalled",
+		*e.fnStalled,
+	)
+	return e
+}
+
+// RemoveListenerStalled
+//
+// English:
+//
+// Removes a video event litener stalled, equivalent to the JavaScript command RemoveEventListener('stalled',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo parado, equivalente ao comando JavaScript RemoveEventListener('stalled',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerStalled() (ref *TagVideo) {
+	if e.fnStalled == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"stalled",
+		*e.fnStalled,
+	)
+	e.fnStalled = nil
+	return e
+}
+
+// AddListenerSuspend
+//
+// Enclish:
+//
+// Adds a video event litener suspend, equivalent to the JavaScript command addEventListener('suspend',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo suspenso, equivalente ao comando JavaScript addEventListener('suspend',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerSuspend(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnSuspend == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventSuspend, this, args)
+			return nil
+		})
+		e.fnSuspend = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"suspend",
+		*e.fnSuspend,
+	)
+	return e
+}
+
+// RemoveListenerSuspend
+//
+// English:
+//
+// Removes a video event litener suspend, equivalent to the JavaScript command RemoveEventListener('suspend',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo suspenso, equivalente ao comando JavaScript RemoveEventListener('suspend',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerSuspend() (ref *TagVideo) {
+	if e.fnSuspend == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"suspend",
+		*e.fnSuspend,
+	)
+	e.fnSuspend = nil
+	return e
+}
+
+// AddListenerTimeUpdate
+//
+// Enclish:
+//
+// Adds a video event litener time update, equivalent to the JavaScript command addEventListener('timeupdate',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo tempo atualizado, equivalente ao comando JavaScript addEventListener('timeupdate',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerTimeUpdate(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnTimeUpdate == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventTimeUpdate, this, args)
+			return nil
+		})
+		e.fnTimeUpdate = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"timeupdate",
+		*e.fnTimeUpdate,
+	)
+	return e
+}
+
+// RemoveListenerTimeUpdate
+//
+// English:
+//
+// Removes a video event litener time update, equivalent to the JavaScript command RemoveEventListener('timeupdate',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo tempo atualizado, equivalente ao comando JavaScript RemoveEventListener('timeupdate',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerTimeUpdate() (ref *TagVideo) {
+	if e.fnTimeUpdate == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"timeupdate",
+		*e.fnTimeUpdate,
+	)
+	e.fnTimeUpdate = nil
+	return e
+}
+
+// AddListenerVolumeChange
+//
+// Enclish:
+//
+// Adds a video event litener volume change, equivalent to the JavaScript command addEventListener('volumechange',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo troca de volume, equivalente ao comando JavaScript addEventListener('volumechange',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerVolumeChange(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnVolumeChange == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventVolumeChange, this, args)
+			return nil
+		})
+		e.fnVolumeChange = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"volumechange",
+		*e.fnVolumeChange,
+	)
+	return e
+}
+
+// RemoveListenerVolumeChange
+//
+// English:
+//
+// Removes a video event litener volume change, equivalent to the JavaScript command RemoveEventListener('volumechange',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo troce de volume, equivalente ao comando JavaScript RemoveEventListener('volumechange',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerVolumeChange() (ref *TagVideo) {
+	if e.fnVolumeChange == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"volumechange",
+		*e.fnVolumeChange,
+	)
+	e.fnVolumeChange = nil
+	return e
+}
+
+// AddListenerWaiting
+//
+// Enclish:
+//
+// Adds a video event litener waiting, equivalent to the JavaScript command addEventListener('waiting',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo esperando, equivalente ao comando JavaScript addEventListener('waiting',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) AddListenerWaiting(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnWaiting == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventWaiting, this, args)
+			return nil
+		})
+		e.fnWaiting = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"waiting",
+		*e.fnWaiting,
+	)
+	return e
+}
+
+// RemoveListenerWaiting
+//
+// English:
+//
+// Removes a video event litener waiting, equivalent to the JavaScript command RemoveEventListener('waiting',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo esperando, equivalente ao comando JavaScript RemoveEventListener('waiting',fn).
+//
+//	Example: / Exemplo:
+//	    stage := factoryBrowser.NewStage()
+//
+//	    videoEvent := make(chan event.Data)
+//
+//	    tagVideo := &html.TagVideo{}
+//
+//	    s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+//	      factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    )
+//
+//	    stage.Append(s1)
+//
+//	    go func() {
+//	      for {
+//	        select {
+//	        case converted := <-videoEvent:
+//	          log.Printf("%+v", converted.EventName)
+//	          tagVideo.RemoveListenerEnded()
+//	        }
+//	      }
+//	    }()
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
+func (e *TagVideo) RemoveListenerWaiting() (ref *TagVideo) {
+	if e.fnWaiting == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"waiting",
+		*e.fnWaiting,
+	)
+	e.fnWaiting = nil
 	return e
 }
 
@@ -1787,237 +3669,6 @@ func (e *TagVideo) RotateDelta(delta float64) (ref *TagVideo) {
 func (e *TagVideo) GetRotateDelta() (delta float64) {
 	return e.rotateDelta
 }
-
-// AddListener
-//
-// English:
-//
-//  Associates a function with an event.
-//
-//   Example:
-//
-//     stage.AddListener(browserMouse.KEventMouseOver, onMouseEvent)
-//     timer := time.NewTimer(10 * time.Second)
-//     go func() {
-//       select {
-//         case <-timer.C:
-//         stage.RemoveListener(mouse.KEventMouseOver)
-//       }
-//     }()
-//
-//     func onMouseEvent(event browserMouse.MouseEvent) {
-//       isNull, target := event.GetRelatedTarget()
-//       if isNull == false {
-//         log.Print("id: ", target.Get("id"))
-//         log.Print("tagName: ", target.Get("tagName"))
-//       }
-//       log.Print(event.GetScreenX())
-//       log.Print(event.GetScreenY())
-//     }
-//
-// Português:
-//
-//  Associa uma função a um evento.
-//
-//   Exemplo:
-//
-//     stage.AddListener(browserMouse.KEventMouseOver, onMouseEvent)
-//     timer := time.NewTimer(10 * time.Second)
-//     go func() {
-//       select {
-//         case <-timer.C:
-//         stage.RemoveListener(mouse.KEventMouseOver)
-//       }
-//     }()
-//
-//     func onMouseEvent(event browserMouse.MouseEvent) {
-//       isNull, target := event.GetRelatedTarget()
-//       if isNull == false {
-//         log.Print("id: ", target.Get("id"))
-//         log.Print("tagName: ", target.Get("tagName"))
-//       }
-//       log.Print(event.GetScreenX())
-//       log.Print(event.GetScreenY())
-//     }
-//func (e *TagVideo) AddListener(eventType interface{}, manager mouse.SimpleManager) (ref *TagVideo) {
-//
-//	mouseMoveEvt := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-//		var mouseEvent = mouse.Event{}
-//
-//		if len(args) > 0 {
-//			mouseEvent.Object = args[0]
-//		}
-//
-//		if manager != nil {
-//			manager(mouseEvent)
-//		}
-//
-//		return nil
-//	})
-//
-//	switch converted := eventType.(type) {
-//	case event.Event:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	case eventAnimation.EventAnimation:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	case eventClipBoard.EventClipBoard:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	case eventDrag.EventDrag:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	case eventFocus.EventFocus:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	case eventHashChange.EventHashChange:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	case eventInput.EventInput:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	case eventKeyboard.EventKeyboard:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	//case mouse.Event:
-//	//	e.listener.Store(converted.String(), mouseMoveEvt)
-//	//	e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	case eventPageTransition.EventPageTransition:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	case eventUi.EventUi:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	case eventWheel.EventWheel:
-//		e.listener.Store(converted.String(), mouseMoveEvt)
-//		e.selfElement.Call("addEventListener", converted.String(), mouseMoveEvt)
-//
-//	default:
-//		log.Fatalf("event must be a event type")
-//	}
-//
-//	return e
-//}
-
-// RemoveListener
-//
-// English:
-//
-//  Remove the function associated with the event
-//
-//   Example:
-//
-//     stage.AddListener(browserMouse.KEventMouseOver, onMouseEvent)
-//     timer := time.NewTimer(10 * time.Second)
-//     go func() {
-//       select {
-//         case <-timer.C:
-//         stage.RemoveListener(mouse.KEventMouseOver)
-//       }
-//     }()
-//
-//     func onMouseEvent(event browserMouse.MouseEvent) {
-//       isNull, target := event.GetRelatedTarget()
-//       if isNull == false {
-//         log.Print("id: ", target.Get("id"))
-//         log.Print("tagName: ", target.Get("tagName"))
-//       }
-//       log.Print(event.GetScreenX())
-//       log.Print(event.GetScreenY())
-//     }
-//
-// Português:
-//
-//  Remove a função associada com o evento.
-//
-//   Exemplo:
-//
-//     stage.AddListener(browserMouse.KEventMouseOver, onMouseEvent)
-//     timer := time.NewTimer(10 * time.Second)
-//     go func() {
-//       select {
-//         case <-timer.C:
-//         stage.RemoveListener(mouse.KEventMouseOver)
-//       }
-//     }()
-//
-//     func onMouseEvent(event browserMouse.MouseEvent) {
-//       isNull, target := event.GetRelatedTarget()
-//       if isNull == false {
-//         log.Print("id: ", target.Get("id"))
-//         log.Print("tagName: ", target.Get("tagName"))
-//       }
-//       log.Print(event.GetScreenX())
-//       log.Print(event.GetScreenY())
-//     }
-//func (e *TagVideo) RemoveListener(eventType interface{}) (ref *TagVideo) {
-//	switch converted := eventType.(type) {
-//	case event.Event:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	case eventAnimation.EventAnimation:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	case eventClipBoard.EventClipBoard:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	case eventDrag.EventDrag:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	case eventFocus.EventFocus:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	case eventHashChange.EventHashChange:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	case eventInput.EventInput:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	case eventKeyboard.EventKeyboard:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	//case mouse.Event:
-//	//	f, _ := e.listener.Load(converted.String())
-//	//	e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	case eventPageTransition.EventPageTransition:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	case eventUi.EventUi:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	case eventWheel.EventWheel:
-//		f, _ := e.listener.Load(converted.String())
-//		e.selfElement.Call("removeEventListener", converted.String(), f)
-//
-//	default:
-//		log.Fatalf("event must be a event type")
-//	}
-//
-//	return e
-//}
 
 // Mouse
 //

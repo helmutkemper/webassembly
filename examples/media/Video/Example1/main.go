@@ -19,6 +19,7 @@ package main
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"log"
 )
 
@@ -28,7 +29,9 @@ func main() {
 
 	videoEvent := make(chan event.Data)
 
-	s1 := factoryBrowser.NewTagVideo().AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+	tagVideo := &html.TagVideo{}
+
+	s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
 		factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
 		factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4").Type("video/mp4"),
 	)
@@ -40,6 +43,7 @@ func main() {
 			select {
 			case converted := <-videoEvent:
 				log.Printf("%+v", converted.EventName)
+				tagVideo.RemoveListenerEnded()
 			}
 		}
 	}()

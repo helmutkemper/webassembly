@@ -13,8 +13,6 @@ import (
 	"syscall/js"
 )
 
-// todo: autocapitalize exportparts itemscope part
-
 // TagDiv
 //
 // English:
@@ -219,7 +217,27 @@ func (e *TagDiv) AccessKey(key string) (ref *TagDiv) {
 	return e
 }
 
-// Autofocus #global
+// AutoCapitalize #global
+//
+// English:
+//
+// Controls whether and how text input is automatically capitalized as it is entered/edited by the user.
+//
+// Português:
+//
+// Controla se e como a entrada de texto é colocada em maiúsculas automaticamente à medida que é inserida e editada
+// pelo usuário.
+func (e *TagDiv) AutoCapitalize(value interface{}) (ref *TagDiv) {
+	if converted, ok := value.(AutoCapitalize); ok {
+		e.selfElement.Set("autocapitalize", converted.String())
+		return e
+	}
+
+	e.selfElement.Set("autocapitalize", value)
+	return e
+}
+
+// AutoFocus #global
 //
 // English:
 //
@@ -230,7 +248,7 @@ func (e *TagDiv) AccessKey(key string) (ref *TagDiv) {
 //
 //	Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
 //	carregada. Apenas um elemento em um documento pode ter esse atributo.
-func (e *TagDiv) Autofocus(autofocus bool) (ref *TagDiv) {
+func (e *TagDiv) AutoFocus(autofocus bool) (ref *TagDiv) {
 	e.selfElement.Set("autofocus", autofocus)
 	return e
 }
@@ -565,6 +583,28 @@ func (e *TagDiv) ItemRef(itemref string) (ref *TagDiv) {
 	return e
 }
 
+// ItemScope #global
+//
+// English:
+//
+// itemscope (usually) works along with itemtype to specify that the HTML contained in a block is about a particular
+// item.
+//
+// itemscope creates the Item and defines the scope of the itemtype associated with it. itemtype is a valid URL of a
+// vocabulary (such as schema.org) that describes the item and its properties context.
+//
+// Português:
+//
+// itemscope (geralmente) funciona junto com itemtype para especificar que o HTML contido em um bloco é sobre um item
+// específico.
+//
+// itemscope cria o Item e define o escopo do tipo de item associado a ele. itemtype é uma URL válida de um vocabulário
+// (como schema.org) que descreve o item e seu contexto de propriedades.
+func (e *TagDiv) ItemScope(itemscope bool) (ref *TagDiv) {
+	e.selfElement.Set("itemscope", itemscope)
+	return e
+}
+
 // ItemType #global
 //
 // English:
@@ -607,7 +647,7 @@ func (e *TagDiv) Lang(language Language) (ref *TagDiv) {
 	return e
 }
 
-// Nonce #global
+// Part #global
 //
 // English:
 //
@@ -619,8 +659,24 @@ func (e *TagDiv) Lang(language Language) (ref *TagDiv) {
 //	Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
 //	o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
 //	pseudo-elemento ::part.
-func (e *TagDiv) Nonce(part ...string) (ref *TagDiv) {
+func (e *TagDiv) Part(part ...string) (ref *TagDiv) {
 	e.selfElement.Set("part", strings.Join(part, " "))
+	return e
+}
+
+// Nonce
+//
+// English:
+//
+// A cryptographic nonce ("number used once") which can be used by Content Security Policy to determine whether or not
+// a given fetch will be allowed to proceed.
+//
+// Português:
+//
+// Um nonce criptográfico ("número usado uma vez") que pode ser usado pela Política de Segurança de Conteúdo para
+// determinar se uma determinada busca terá permissão para prosseguir.
+func (e *TagDiv) Nonce(nonce string) (ref *TagDiv) {
+	e.selfElement.Set("nonce", nonce)
 	return e
 }
 

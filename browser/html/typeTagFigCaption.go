@@ -653,7 +653,7 @@ func (e *TagFigCaption) Lang(language Language) (ref *TagFigCaption) {
 	return e
 }
 
-// Nonce
+// Part
 //
 // English:
 //
@@ -665,8 +665,24 @@ func (e *TagFigCaption) Lang(language Language) (ref *TagFigCaption) {
 //	Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
 //	o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
 //	pseudo-elemento ::part.
-func (e *TagFigCaption) Nonce(part ...string) (ref *TagFigCaption) {
+func (e *TagFigCaption) Part(part ...string) (ref *TagFigCaption) {
 	e.selfElement.Set("part", strings.Join(part, " "))
+	return e
+}
+
+// Nonce
+//
+// English:
+//
+// A cryptographic nonce ("number used once") which can be used by Content Security Policy to determine whether or not
+// a given fetch will be allowed to proceed.
+//
+// Português:
+//
+// Um nonce criptográfico ("número usado uma vez") que pode ser usado pela Política de Segurança de Conteúdo para
+// determinar se uma determinada busca terá permissão para prosseguir.
+func (e *TagFigCaption) Nonce(nonce string) (ref *TagFigCaption) {
+	e.selfElement.Set("nonce", nonce)
 	return e
 }
 

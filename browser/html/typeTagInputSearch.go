@@ -509,7 +509,7 @@ func (e *TagInputSearch) Lang(language Language) (ref *TagInputSearch) {
 	return e
 }
 
-// Nonce
+// Part
 //
 // English:
 //
@@ -521,8 +521,24 @@ func (e *TagInputSearch) Lang(language Language) (ref *TagInputSearch) {
 //	Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
 //	o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
 //	pseudo-elemento ::part.
-func (e *TagInputSearch) Nonce(part ...string) (ref *TagInputSearch) {
+func (e *TagInputSearch) Part(part ...string) (ref *TagInputSearch) {
 	e.selfElement.Set("part", strings.Join(part, " "))
+	return e
+}
+
+// Nonce
+//
+// English:
+//
+// A cryptographic nonce ("number used once") which can be used by Content Security Policy to determine whether or not
+// a given fetch will be allowed to proceed.
+//
+// Português:
+//
+// Um nonce criptográfico ("número usado uma vez") que pode ser usado pela Política de Segurança de Conteúdo para
+// determinar se uma determinada busca terá permissão para prosseguir.
+func (e *TagInputSearch) Nonce(nonce string) (ref *TagInputSearch) {
+	e.selfElement.Set("nonce", nonce)
 	return e
 }
 

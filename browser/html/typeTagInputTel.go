@@ -509,7 +509,7 @@ func (e *TagInputTel) Lang(language Language) (ref *TagInputTel) {
 	return e
 }
 
-// Nonce
+// Part
 //
 // English:
 //
@@ -521,8 +521,24 @@ func (e *TagInputTel) Lang(language Language) (ref *TagInputTel) {
 //	Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
 //	o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
 //	pseudo-elemento ::part.
-func (e *TagInputTel) Nonce(part ...string) (ref *TagInputTel) {
+func (e *TagInputTel) Part(part ...string) (ref *TagInputTel) {
 	e.selfElement.Set("part", strings.Join(part, " "))
+	return e
+}
+
+// Nonce
+//
+// English:
+//
+// A cryptographic nonce ("number used once") which can be used by Content Security Policy to determine whether or not
+// a given fetch will be allowed to proceed.
+//
+// Português:
+//
+// Um nonce criptográfico ("número usado uma vez") que pode ser usado pela Política de Segurança de Conteúdo para
+// determinar se uma determinada busca terá permissão para prosseguir.
+func (e *TagInputTel) Nonce(nonce string) (ref *TagInputTel) {
+	e.selfElement.Set("nonce", nonce)
 	return e
 }
 

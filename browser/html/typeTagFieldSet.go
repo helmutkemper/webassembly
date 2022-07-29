@@ -508,7 +508,7 @@ func (e *TagFieldset) Lang(language Language) (ref *TagFieldset) {
 	return e
 }
 
-// Nonce
+// Part
 //
 // English:
 //
@@ -520,8 +520,24 @@ func (e *TagFieldset) Lang(language Language) (ref *TagFieldset) {
 //	Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
 //	o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
 //	pseudo-elemento ::part.
-func (e *TagFieldset) Nonce(part ...string) (ref *TagFieldset) {
+func (e *TagFieldset) Part(part ...string) (ref *TagFieldset) {
 	e.selfElement.Set("part", strings.Join(part, " "))
+	return e
+}
+
+// Nonce
+//
+// English:
+//
+// A cryptographic nonce ("number used once") which can be used by Content Security Policy to determine whether or not
+// a given fetch will be allowed to proceed.
+//
+// Português:
+//
+// Um nonce criptográfico ("número usado uma vez") que pode ser usado pela Política de Segurança de Conteúdo para
+// determinar se uma determinada busca terá permissão para prosseguir.
+func (e *TagFieldset) Nonce(nonce string) (ref *TagFieldset) {
+	e.selfElement.Set("nonce", nonce)
 	return e
 }
 

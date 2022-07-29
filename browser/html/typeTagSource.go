@@ -13,7 +13,7 @@ import (
 	"syscall/js"
 )
 
-// TagDiv
+// TagSource
 //
 // English:
 //
@@ -164,6 +164,25 @@ type TagSource struct {
 	pointsLen int
 
 	rotateDelta float64
+}
+
+// Reference
+//
+// English:
+//
+// Pass the object reference to an external variable.
+//
+// Português:
+//
+// Passa a referencia do objeto para uma variável externa.
+//
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+func (e *TagSource) Reference(reference **TagSource) (ref *TagSource) {
+	*reference = e
+	return e
 }
 
 // #global - start -----------------------------------------------------------------------------------------------------

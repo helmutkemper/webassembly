@@ -200,6 +200,25 @@ type TagH6 struct {
 	rotateDelta float64
 }
 
+// Reference
+//
+// English:
+//
+// Pass the object reference to an external variable.
+//
+// Português:
+//
+// Passa a referencia do objeto para uma variável externa.
+//
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+func (e *TagH6) Reference(reference **TagH6) (ref *TagH6) {
+	*reference = e
+	return e
+}
+
 // AccessKey
 //
 // English:

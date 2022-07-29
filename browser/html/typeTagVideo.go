@@ -163,7 +163,45 @@ type TagVideo struct {
 
 	rotateDelta float64
 
-	fnCanplay *js.Func
+	fnCanplay        *js.Func
+	fnCanPlayThrough *js.Func
+	fnComplete       *js.Func
+	fnDurationChange *js.Func
+	fnEmptied        *js.Func
+	fnEnded          *js.Func
+	fnLoadedData     *js.Func
+	fnLoadedMetadata *js.Func
+	fnPause          *js.Func
+	fnPlay           *js.Func
+	fnPlaying        *js.Func
+	fnProgress       *js.Func
+	fnRateChange     *js.Func
+	fnSeeked         *js.Func
+	fnSeeking        *js.Func
+	fnStalled        *js.Func
+	fnSuspend        *js.Func
+	fnTimeUpdate     *js.Func
+	fnVolumeChange   *js.Func
+	fnWaiting        *js.Func
+}
+
+// Reference
+//
+// English:
+//
+// Pass the object reference to an external variable.
+//
+// Português:
+//
+// Passa a referencia do objeto para uma variável externa.
+//
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+func (e *TagVideo) Reference(reference **TagVideo) (ref *TagVideo) {
+	*reference = e
+	return e
 }
 
 // AccessKey
@@ -1072,6 +1110,40 @@ func (e *TagVideo) Width(value float64) (ref *TagVideo) {
 	return e
 }
 
+// AddListenerCanPlay
+//
+// Enclish:
+//
+// Adds a video event litener can play, equivalent to the JavaScript command addEventListener('canplay',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel event.Data
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de vídeo pode tocar, equivalente ao comando JavaScript addEventListener('canplay',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel event.Data
+//
+//	Example: / Exemplo:
+//	  videoEvent := make(chan event.Data)
+//
+//	  s1 := factoryBrowser.NewTagVideo().AddListenerCanPlay(&videoEvent).Controls(true).Width(250).Append(
+//	    factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
+//	    factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4").Type("video/mp4"),
+//	  )
+//
+//	  stage.Append(s1)
+//
+//	  go func() {
+//	    for {
+//	      select {
+//	        case converted := <-videoEvent:
+//	        log.Printf("%+v", converted)
+//	      }
+//	    }
+//	  }()
 func (e *TagVideo) AddListenerCanPlay(evet *chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
@@ -1095,6 +1167,15 @@ func (e *TagVideo) AddListenerCanPlay(evet *chan event.Data) (ref *TagVideo) {
 	return e
 }
 
+// RemoveListenerCanPlay
+//
+// English:
+//
+// Removes a video event litener can play, equivalent to the JavaScript command RemoveEventListener('canplay',fn).
+//
+// Português:
+//
+// Remove um ouvinte de evento de vídeo pode tocar, equivalente ao comando JavaScript RemoveEventListener('canplay',fn).
 func (e *TagVideo) RemoveListenerCanPlay() (ref *TagVideo) {
 	if e.fnCanplay == nil {
 		return e
@@ -1106,6 +1187,191 @@ func (e *TagVideo) RemoveListenerCanPlay() (ref *TagVideo) {
 		*e.fnCanplay,
 	)
 	e.fnCanplay = nil
+	return e
+}
+
+func (e *TagVideo) AddListenerCanPlayThrough(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnCanPlayThrough == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventCanPlayThrough, this, args)
+			return nil
+		})
+		e.fnCanPlayThrough = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"canplaythrough",
+		*e.fnCanPlayThrough,
+	)
+	return e
+}
+
+func (e *TagVideo) RemoveListenerCanPlayThrough() (ref *TagVideo) {
+	if e.fnCanPlayThrough == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"canplaythrough",
+		*e.fnCanPlayThrough,
+	)
+	e.fnCanPlayThrough = nil
+	return e
+}
+
+func (e *TagVideo) AddListenerComplete(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnComplete == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventComplete, this, args)
+			return nil
+		})
+		e.fnComplete = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"complete",
+		*e.fnComplete,
+	)
+	return e
+}
+
+func (e *TagVideo) RemoveListenerComplete() (ref *TagVideo) {
+	if e.fnComplete == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"complete",
+		*e.fnComplete,
+	)
+	e.fnComplete = nil
+	return e
+}
+
+func (e *TagVideo) AddListenerDurationChange(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnDurationChange == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventDurationChange, this, args)
+			return nil
+		})
+		e.fnDurationChange = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"durationchange",
+		*e.fnDurationChange,
+	)
+	return e
+}
+
+func (e *TagVideo) RemoveListenerDurationChange() (ref *TagVideo) {
+	if e.fnDurationChange == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"durationchange",
+		*e.fnDurationChange,
+	)
+	e.fnDurationChange = nil
+	return e
+}
+
+func (e *TagVideo) AddListenerEmptied(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnEmptied == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventEmptied, this, args)
+			return nil
+		})
+		e.fnEmptied = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"emptied",
+		*e.fnEmptied,
+	)
+	return e
+}
+
+func (e *TagVideo) RemoveListenerEmptied() (ref *TagVideo) {
+	if e.fnEmptied == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"emptied",
+		*e.fnEmptied,
+	)
+	e.fnEmptied = nil
+	return e
+}
+
+func (e *TagVideo) AddListenerEnded(evet *chan event.Data) (ref *TagVideo) {
+	var fn js.Func
+
+	if e.fnEnded == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+
+			*evet <- event.EventManager(event.KEventEnded, this, args)
+			return nil
+		})
+		e.fnEnded = &fn
+	}
+
+	e.selfElement.Call(
+		"addEventListener",
+		"ended",
+		*e.fnEnded,
+	)
+	return e
+}
+
+func (e *TagVideo) RemoveListenerEnded() (ref *TagVideo) {
+	if e.fnEnded == nil {
+		return e
+	}
+
+	e.selfElement.Call(
+		"removeEventListener",
+		"ended",
+		*e.fnEnded,
+	)
+	e.fnEnded = nil
 	return e
 }
 

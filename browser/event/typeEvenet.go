@@ -14,7 +14,6 @@ package event
 
 import (
 	"syscall/js"
-	"time"
 )
 
 type EventName string
@@ -407,13 +406,17 @@ func (e *Event) GetTarget() (target js.Value) {
 //
 // English:
 //
-// # The time at which the event was created
+// This value is the number of milliseconds elapsed from the beginning of the time origin until the event was created.
+// If the global object is Window, the time origin is the moment the user clicked on the link, or the script that
+// initiated the loading of the document. In a worker, the time origin is the moment of creation of the worker.
 //
 // Português:
 //
-// A hora em que o evento foi criado.
-func (e *Event) GetTimeStamp() (timeStamp time.Time) {
-	return time.Unix(int64(e.Object.Get("timeStamp").Int()), 0)
+// Esse valor é o número de milissegundos decorridos desde o início da origem do tempo até a criação do evento.
+// Se o objeto global for Window, a origem do tempo é o momento em que o usuário clicou no link, ou o script que
+// iniciou o carregamento do documento. Em um trabalhador, a origem do tempo é o momento de criação do trabalhador.
+func (e *Event) GetTimeStamp() (timeStamp float64) {
+	return e.Object.Get("timeStamp").Float()
 }
 
 // GetType
@@ -562,12 +565,16 @@ type Data struct {
 	//
 	// English:
 	//
-	// The time at which the event was created
+	// This value is the number of milliseconds elapsed from the beginning of the time origin until the event was created.
+	// If the global object is Window, the time origin is the moment the user clicked on the link, or the script that
+	// initiated the loading of the document. In a worker, the time origin is the moment of creation of the worker.
 	//
 	// Português:
 	//
-	// A hora em que o evento foi criado.
-	TimeStamp time.Time
+	// Esse valor é o número de milissegundos decorridos desde o início da origem do tempo até a criação do evento.
+	// Se o objeto global for Window, a origem do tempo é o momento em que o usuário clicou no link, ou o script que
+	// iniciou o carregamento do documento. Em um trabalhador, a origem do tempo é o momento de criação do trabalhador.
+	TimeStamp float64
 
 	// Type
 	//

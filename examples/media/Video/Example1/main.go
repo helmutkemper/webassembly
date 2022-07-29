@@ -28,7 +28,7 @@ func main() {
 
 	videoEvent := make(chan event.Data)
 
-	s1 := factoryBrowser.NewTagVideo().AddListenerCanPlay(&videoEvent).Controls(true).Width(250).Append(
+	s1 := factoryBrowser.NewTagVideo().AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
 		factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
 		factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4").Type("video/mp4"),
 	)
@@ -39,7 +39,7 @@ func main() {
 		for {
 			select {
 			case converted := <-videoEvent:
-				log.Printf("%+v", converted)
+				log.Printf("%+v", converted.EventName)
 			}
 		}
 	}()

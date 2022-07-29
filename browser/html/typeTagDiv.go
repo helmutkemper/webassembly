@@ -172,6 +172,25 @@ type TagDiv struct {
 	rotateDelta float64
 }
 
+// Reference
+//
+// English:
+//
+// Pass the object reference to an external variable.
+//
+// Português:
+//
+// Passa a referencia do objeto para uma variável externa.
+//
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+func (e *TagDiv) Reference(reference **TagDiv) (ref *TagDiv) {
+	*reference = e
+	return e
+}
+
 // #global - start -----------------------------------------------------------------------------------------------------
 
 // AccessKey #global

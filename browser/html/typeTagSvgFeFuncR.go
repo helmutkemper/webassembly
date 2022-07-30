@@ -162,11 +162,11 @@ type TagSvgFeFuncR struct {
 //
 // English:
 //
-//  Initializes the object correctly.
+//	Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+//	Inicializa o objeto corretamente.
 func (e *TagSvgFeFuncR) Init() (ref *TagSvgFeFuncR) {
 	e.listener = new(sync.Map)
 
@@ -233,13 +233,18 @@ func (e *TagSvgFeFuncR) Get() (el js.Value) {
 //
 // English:
 //
-//  The id attribute assigns a unique name to an element.
+//	The id attribute assigns a unique name to an element.
 //
 // Portuguese
 //
-//  O atributo id atribui um nome exclusivo a um elemento.
+//	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgFeFuncR) Id(id string) (ref *TagSvgFeFuncR) {
 	e.selfElement.Call("setAttribute", "id", id)
+
+	// Saves the element reference with ID for later use.
+	// Salva a referência dos elementos com ID para uso posterior.
+	htmlGlobalAllElementsList.Delete(id)
+	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -250,10 +255,10 @@ func (e *TagSvgFeFuncR) Id(id string) (ref *TagSvgFeFuncR) {
 // The lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language used in contents
-//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language used in contents
+//	    const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//	    any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -269,10 +274,10 @@ func (e *TagSvgFeFuncR) Id(id string) (ref *TagSvgFeFuncR) {
 // O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal usado no conteúdo
-//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal usado no conteúdo
+//	    const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//	    qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -300,22 +305,22 @@ func (e *TagSvgFeFuncR) Lang(value interface{}) (ref *TagSvgFeFuncR) {
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
-//   Input:
-//     value: control whether an element is focusable
-//       int: focus order
-//       nil: focus disabled
-//       any other type: interface{}
+//	Input:
+//	  value: control whether an element is focusable
+//	    int: focus order
+//	    nil: focus disabled
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
 //
-//   Input:
-//     value: controlar se um elemento é focalizável
-//       int: ordem do foco
-//       nil: disabilita o foco
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: controlar se um elemento é focalizável
+//	    int: ordem do foco
+//	    nil: disabilita o foco
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgFeFuncR) Tabindex(value interface{}) (ref *TagSvgFeFuncR) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -328,10 +333,10 @@ func (e *TagSvgFeFuncR) Tabindex(value interface{}) (ref *TagSvgFeFuncR) {
 // The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language
-//       const: KLanguage... (e.g. KLanguageEnglish)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language
+//	    const: KLanguage... (e.g. KLanguageEnglish)
+//	    any other type: interface{}
 //
 // It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
 // contains.
@@ -344,10 +349,10 @@ func (e *TagSvgFeFuncR) Tabindex(value interface{}) (ref *TagSvgFeFuncR) {
 // O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal
-//       const: KLanguage... (e.g. KLanguagePortuguese)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal
+//	    const: KLanguage... (e.g. KLanguagePortuguese)
+//	    qualquer outro tipo: interface{}
 //
 // É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
 // contém.
@@ -372,19 +377,19 @@ func (e *TagSvgFeFuncR) XmlLang(value interface{}) (ref *TagSvgFeFuncR) {
 //
 // Indicates the type of component transfer function.
 //
-//   Input:
-//     value: type of component transfer function
-//       const: KSvgTypeFeFunc... (e.g. KSvgTypeFeFuncIdentity)
-//       any other type: interface{}
+//	Input:
+//	  value: type of component transfer function
+//	    const: KSvgTypeFeFunc... (e.g. KSvgTypeFeFuncIdentity)
+//	    any other type: interface{}
 //
 // Português:
 //
 // Indica o tipo de função de transferência de componentes.
 //
-//   Input:
-//     value: tipo de função de transferência de componente
-//       const: KSvgTypeFeFunc... (ex. KSvgTypeFeFuncIdentity)
-//       any other type: interface{}
+//	Input:
+//	  value: tipo de função de transferência de componente
+//	    const: KSvgTypeFeFunc... (ex. KSvgTypeFeFuncIdentity)
+//	    any other type: interface{}
 func (e *TagSvgFeFuncR) Type(value interface{}) (ref *TagSvgFeFuncR) {
 	if converted, ok := value.(SvgTypeFeFunc); ok {
 		e.selfElement.Call("setAttribute", "type", converted.String())
@@ -402,34 +407,34 @@ func (e *TagSvgFeFuncR) Type(value interface{}) (ref *TagSvgFeFuncR) {
 // The tableValues attribute defines a list of numbers defining a lookup table of values for a color component transfer
 // function.
 //
-//   Input:
-//     value: defines a list of numbers
-//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
-//       []float32: []float64{0.0, 0.1} = "0% 10%"
-//       []float64: []float64{0.0, 10.0} = "0 10"
-//       []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
-//       time.Duration: time.Second = "1s"
-//       float32: 0.1 = "10%"
-//       float64: 10.0 = "10"
-//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
-//       any other type: interface{}
+//	Input:
+//	  value: defines a list of numbers
+//	    []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
+//	    []float32: []float64{0.0, 0.1} = "0% 10%"
+//	    []float64: []float64{0.0, 10.0} = "0 10"
+//	    []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
+//	    time.Duration: time.Second = "1s"
+//	    float32: 0.1 = "10%"
+//	    float64: 10.0 = "10"
+//	    color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo tableValues define uma lista de números que definem uma tabela de consulta de valores para uma função de
 // transferência de componente de cor.
 //
-//   Entrada:
-//     value: define uma lista de números
-//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
-//       []float32: []float64{0.0, 0.1} = "0% 10%"
-//       []float64: []float64{0.0, 10.0} = "0 10"
-//       []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
-//       time.Duration: time.Second = "1s"
-//       float32: 0.1 = "10%"
-//       float64: 10.0 = "10"
-//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define uma lista de números
+//	    []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
+//	    []float32: []float64{0.0, 0.1} = "0% 10%"
+//	    []float64: []float64{0.0, 10.0} = "0 10"
+//	    []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
+//	    time.Duration: time.Second = "1s"
+//	    float32: 0.1 = "10%"
+//	    float64: 10.0 = "10"
+//	    color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgFeFuncR) TableValues(value interface{}) (ref *TagSvgFeFuncR) {
 	if converted, ok := value.([]color.RGBA); ok {
 		var valueStr = ""
@@ -508,13 +513,13 @@ func (e *TagSvgFeFuncR) TableValues(value interface{}) (ref *TagSvgFeFuncR) {
 //
 // English:
 //
-//  The intercept attribute defines the intercept of the linear function of color component transfers when the type
-//  attribute is set to linear.
+//	The intercept attribute defines the intercept of the linear function of color component transfers when the type
+//	attribute is set to linear.
 //
 // Portuguese
 //
-//  O atributo de interceptação define a interceptação da função linear de transferências de componentes de cor quando
-//  o atributo de tipo é definido como linear.
+//	O atributo de interceptação define a interceptação da função linear de transferências de componentes de cor quando
+//	o atributo de tipo é definido como linear.
 func (e *TagSvgFeFuncR) Intercept(intercept float64) (ref *TagSvgFeFuncR) {
 	e.selfElement.Call("setAttribute", "intercept", intercept)
 	return e
@@ -524,37 +529,37 @@ func (e *TagSvgFeFuncR) Intercept(intercept float64) (ref *TagSvgFeFuncR) {
 //
 // English:
 //
-//  The amplitude attribute controls the amplitude of the gamma function of a component transfer element when its type
-//  attribute is gamma.
+//	The amplitude attribute controls the amplitude of the gamma function of a component transfer element when its type
+//	attribute is gamma.
 //
-//   Input:
-//     value: controls the amplitude of the gamma function
-//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
-//       []float32: []float64{0.0, 0.1} = "0% 10%"
-//       []float64: []float64{0.0, 10.0} = "0 10"
-//       []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
-//       time.Duration: time.Second = "1s"
-//       float32: 0.1 = "10%"
-//       float64: 10.0 = "10"
-//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
-//       any other type: interface{}
+//	 Input:
+//	   value: controls the amplitude of the gamma function
+//	     []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
+//	     []float32: []float64{0.0, 0.1} = "0% 10%"
+//	     []float64: []float64{0.0, 10.0} = "0 10"
+//	     []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
+//	     time.Duration: time.Second = "1s"
+//	     float32: 0.1 = "10%"
+//	     float64: 10.0 = "10"
+//	     color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//	     any other type: interface{}
 //
 // Português:
 //
-//  O atributo amplitude controla à amplitude da função gama de um elemento de transferência de componente quando seu
-//  atributo de tipo é gama.
+//	O atributo amplitude controla à amplitude da função gama de um elemento de transferência de componente quando seu
+//	atributo de tipo é gama.
 //
-//   Entrada:
-//     value: controla a amplitude da função de gama
-//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
-//       []float32: []float64{0.0, 0.1} = "0% 10%"
-//       []float64: []float64{0.0, 10.0} = "0 10"
-//       []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
-//       time.Duration: time.Second = "1s"
-//       float32: 0.1 = "10%"
-//       float64: 10.0 = "10"
-//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
-//       qualquer outro tipo: interface{}
+//	 Entrada:
+//	   value: controla a amplitude da função de gama
+//	     []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1) rgba(255,0,0,1)"
+//	     []float32: []float64{0.0, 0.1} = "0% 10%"
+//	     []float64: []float64{0.0, 10.0} = "0 10"
+//	     []time.Duration: []time.Duration{0, time.Second} = "0s 1s"
+//	     time.Duration: time.Second = "1s"
+//	     float32: 0.1 = "10%"
+//	     float64: 10.0 = "10"
+//	     color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//	     qualquer outro tipo: interface{}
 func (e *TagSvgFeFuncR) Amplitude(value interface{}) (ref *TagSvgFeFuncR) {
 	if converted, ok := value.([]color.RGBA); ok {
 		var valueStr = ""
@@ -633,17 +638,17 @@ func (e *TagSvgFeFuncR) Amplitude(value interface{}) (ref *TagSvgFeFuncR) {
 //
 // English:
 //
-//  The exponent attribute defines the exponent of the gamma function.
+//	The exponent attribute defines the exponent of the gamma function.
 //
-//   Input:
-//     exponent: defines the exponent of the gamma function
+//	 Input:
+//	   exponent: defines the exponent of the gamma function
 //
 // Portuguese
 //
-//  O atributo expoente define o expoente da função gama.
+//	O atributo expoente define o expoente da função gama.
 //
-//   Entrada:
-//     exponent: define o expoente da função gama
+//	 Entrada:
+//	   exponent: define o expoente da função gama
 func (e *TagSvgFeFuncR) Exponent(exponent float64) (ref *TagSvgFeFuncR) {
 	e.selfElement.Call("setAttribute", "exponent", exponent)
 	return e
@@ -738,10 +743,10 @@ func (e *TagSvgFeFuncR) Offset(value interface{}) (ref *TagSvgFeFuncR) {
 //
 // Passa a referencia do objeto para uma variável externa.
 //
-//   Example: / Exemplo:
-//     var circle *html.TagSvgCircle
-//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
-//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgFeFuncR) Reference(reference **TagSvgFeFuncR) (ref *TagSvgFeFuncR) {
 	*reference = e
 	return e

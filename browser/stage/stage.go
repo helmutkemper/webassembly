@@ -124,25 +124,25 @@ type Stage struct {
 //
 // Defines the engine responsible for the calculations used in the application.
 //
-//   Input:
-//     engine: object pointer compatible with engine interface
+//	Input:
+//	  engine: object pointer compatible with engine interface
 //
 // The engine is responsible for making animations run at 120 fps.
 //
-//   Notes:
-//     * The engine object must have been properly initialized before being pointed.
+//	Notes:
+//	  * The engine object must have been properly initialized before being pointed.
 //
 // Português:
 //
 // Define a engine responssável pelos cálculos usados na aplicação.
 //
-//   Entrada:
-//     engine: ponteiro de objeto compatível com a interface de engine
+//	Entrada:
+//	  engine: ponteiro de objeto compatível com a interface de engine
 //
 // A engine é responssável por fazer a animações rodar a 120 fps.
 //
-//   Notas:
-//     * O objeto engine deve ter sido devidamente inicializado antes de ser apontado.
+//	Notas:
+//	  * O objeto engine deve ter sido devidamente inicializado antes de ser apontado.
 func (e *Stage) Engine(engine engine.IEngine) {
 	e.engine = engine
 }
@@ -166,8 +166,8 @@ func (e *Stage) Engine(engine engine.IEngine) {
 // however, not rely on window.name for cross-domain messaging — that is not its intended purpose and there are
 // safer/better ways of sharing information between windows. Window.postMessage() is the recommended mechanism.
 //
-//   Notes:
-//     * window.name converts all stored values to their string representations using the toString method.
+//	Notes:
+//	  * window.name converts all stored values to their string representations using the toString method.
 //
 // Português:
 //
@@ -188,8 +188,8 @@ func (e *Stage) Engine(engine engine.IEngine) {
 // finalidade pretendida e existem maneiras melhores e mais seguras de compartilhar informações entre janelas.
 // Window.postMessage() é o mecanismo recomendado.
 //
-//   Notas:
-//     * window.name converte todos os valores armazenados em suas representações de string usando o método toString.
+//	Notas:
+//	  * window.name converte todos os valores armazenados em suas representações de string usando o método toString.
 func (e *Stage) WindowName(name string) {
 	js.Global().Get("window").Set("name", name)
 }
@@ -200,21 +200,21 @@ func (e *Stage) WindowName(name string) {
 //
 // Opens a new simplified browser window.
 //
-//   Input:
-//     url: window content address.
+//	Input:
+//	  url: window content address.
 //
-//   Output:
-//     newWindow: Pointer to new Stage object with new window controls.
+//	Output:
+//	  newWindow: Pointer to new Stage object with new window controls.
 //
 // Português:
 //
 // Abre uma nova janela simplificada no navegador.
 //
-//   Entrada:
-//     url: endereço do conteúdo da janela.
+//	Entrada:
+//	  url: endereço do conteúdo da janela.
 //
-//   Saída:
-//     newWindow: Ponteiro para novo objeto Stage com os controles da nova janela.
+//	Saída:
+//	  newWindow: Ponteiro para novo objeto Stage com os controles da nova janela.
 func (e *Stage) NewWindow(url string) (newWindow *Stage) {
 	// WASM has a bug, use: "_blank", "width=100,height=100"
 	window := js.Global().Get("window").Call("open", url, "_blank", "width=100,height=100")
@@ -228,15 +228,15 @@ func (e *Stage) NewWindow(url string) (newWindow *Stage) {
 //
 // Transforms a javascript object from the window.open() function into a working Stage pointer.
 //
-//   Notes:
-//    * This function is used internally, please use the NewWindow() function
+//	Notes:
+//	 * This function is used internally, please use the NewWindow() function
 //
 // Português:
 //
 // Transforma um objeto javascript proveniente da função window.open() em um ponteiro de Stage funcional.
 //
-//   Notas:
-//    * Esta função é usada internamente, por favor, use a função NewWindow()
+//	Notas:
+//	 * Esta função é usada internamente, por favor, use a função NewWindow()
 func (e *Stage) NewStage(window js.Value) (newWindow *Stage) {
 	newWindow = new(Stage)
 	newWindow.selfDocument = window.Get("document")
@@ -249,11 +249,11 @@ func (e *Stage) NewStage(window js.Value) (newWindow *Stage) {
 //
 // English:
 //
-//  Initializes the document with the browser's main document.
+//	Initializes the document with the browser's main document.
 //
 // Português:
 //
-//  Inicializa o documento com o documento principal do navegador.
+//	Inicializa o documento com o documento principal do navegador.
 func (e *Stage) Init() {
 	e.selfDocument = js.Global().Get("document")
 	e.selfWindow = js.Global().Get("window")
@@ -266,15 +266,15 @@ func (e *Stage) Init() {
 //
 // Adds new graphical elements to the application stage.
 //
-//   Input:
-//     elements: list of graphical objects compatible with the Compatible interface.
+//	Input:
+//	  elements: list of graphical objects compatible with the Compatible interface.
 //
 // Português:
 //
 // Adiciona novos elementos gráficos ao palco da aplicação.
 //
-//   Entrada:
-//     elements: lista de objetos gráficos compatíveis com a interface Compatible.
+//	Entrada:
+//	  elements: lista de objetos gráficos compatíveis com a interface Compatible.
 func (e *Stage) Append(elements ...Compatible) (ref *Stage) {
 	fragment := js.Global().Get("document").Call("createDocumentFragment")
 	for _, element := range elements {
@@ -289,11 +289,11 @@ func (e *Stage) Append(elements ...Compatible) (ref *Stage) {
 //
 // English:
 //
-//  Returns the javascript object.
+//	Returns the javascript object.
 //
 // Português:
 //
-//  Retorna o objeto javascript.
+//	Retorna o objeto javascript.
 func (e *Stage) Get() js.Value {
 	return e.selfDocument
 }
@@ -302,11 +302,11 @@ func (e *Stage) Get() js.Value {
 //
 // English:
 //
-//  Sets the mouse pointer to auto.
+//	Sets the mouse pointer to auto.
 //
 // Português:
 //
-//  Define o ponteiro do mouse como automático.
+//	Define o ponteiro do mouse como automático.
 func (e *Stage) MouseAuto() (ref *Stage) {
 	e.selfDocument.Get("body").Set("style", mouse.KCursorAuto.String())
 	return e
@@ -316,11 +316,11 @@ func (e *Stage) MouseAuto() (ref *Stage) {
 //
 // English:
 //
-//  Sets the mouse pointer to hide.
+//	Sets the mouse pointer to hide.
 //
 // Português:
 //
-//  Define o ponteiro do mouse como oculto.
+//	Define o ponteiro do mouse como oculto.
 func (e *Stage) MouseHide() (ref *Stage) {
 	e.selfDocument.Get("body").Set("style", mouse.KCursorNone.String())
 	return e
@@ -330,21 +330,21 @@ func (e *Stage) MouseHide() (ref *Stage) {
 //
 // English:
 //
-//  Defines the shape of the mouse pointer.
+//	Defines the shape of the mouse pointer.
 //
-//   Input:
-//     value: mouse pointer shape.
-//       Example: SetMouse(mouse.KCursorCell) // Use mouse.K... and let autocomplete do the
-//                rest
+//	 Input:
+//	   value: mouse pointer shape.
+//	     Example: SetMouse(mouse.KCursorCell) // Use mouse.K... and let autocomplete do the
+//	              rest
 //
 // Português:
 //
-//  Define o formato do ponteiro do mouse.
+//	Define o formato do ponteiro do mouse.
 //
-//   Entrada:
-//     value: formato do ponteiro do mouse.
-//       Exemplo: SetMouse(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
-//                o resto
+//	 Entrada:
+//	   value: formato do ponteiro do mouse.
+//	     Exemplo: SetMouse(mouse.KCursorCell) // Use mouse.K... e deixe o autocompletar fazer
+//	              o resto
 func (e *Stage) SetMouse(value mouse.CursorType) (ref *Stage) {
 	e.selfDocument.Get("body").Set("style", value.String())
 	return e
@@ -354,17 +354,17 @@ func (e *Stage) SetMouse(value mouse.CursorType) (ref *Stage) {
 //
 // English:
 //
-//  Removes an html element from the document.
+//	Removes an html element from the document.
 //
-//   Input:
-//     value: js.Value element containing an html document.
+//	 Input:
+//	   value: js.Value element containing an html document.
 //
 // Português:
 //
-//  Remove um elemento html do documento.
+//	Remove um elemento html do documento.
 //
-//   Entrada:
-//     value: elemento js.Value contendo um documento html.
+//	 Entrada:
+//	   value: elemento js.Value contendo um documento html.
 func (e *Stage) Remove(value interface{}) (ref *Stage) {
 	e.selfDocument.Get("body").Call("removeChild", value)
 	return e
@@ -374,17 +374,17 @@ func (e *Stage) Remove(value interface{}) (ref *Stage) {
 //
 // English:
 //
-//  Returns the width of the document in pixels.
+//	Returns the width of the document in pixels.
 //
-//   Output:
-//     width: document size in pixels.
+//	 Output:
+//	   width: document size in pixels.
 //
 // Português:
 //
-//  Retorna o comprimento do documento em pixels.
+//	Retorna o comprimento do documento em pixels.
 //
-//   Saída:
-//     width: tamanho do documento em pixels.
+//	 Saída:
+//	   width: tamanho do documento em pixels.
 func (e Stage) GetWidth() (width int) {
 	return e.selfDocument.Get("body").Get("clientWidth").Int()
 }
@@ -393,17 +393,17 @@ func (e Stage) GetWidth() (width int) {
 //
 // English:
 //
-//  Returns the length of the document in pixels.
+//	Returns the length of the document in pixels.
 //
-//   Output:
-//     width: document size in pixels.
+//	 Output:
+//	   width: document size in pixels.
 //
 // Português:
 //
-//  Retorna a altura do documento em pixels.
+//	Retorna a altura do documento em pixels.
 //
-//   Saída:
-//     width: tamanho do documento em pixels.
+//	 Saída:
+//	   width: tamanho do documento em pixels.
 func (e Stage) GetHeight() (height int) {
 	return e.selfDocument.Get("body").Get("clientHeight").Int()
 }
@@ -412,11 +412,11 @@ func (e Stage) GetHeight() (height int) {
 //
 // English:
 //
-//  Resizes the document to the size of the main document.
+//	Resizes the document to the size of the main document.
 //
 // Português:
 //
-//  Redimensiona o documento para o tamanho do documento principal.
+//	Redimensiona o documento para o tamanho do documento principal.
 func (e *Stage) ResizeStageToScreen() (ref *Stage) {
 	e.selfDocument.Get("body").Set("width", js.Global().Get("document").Get("body").Get("clientWidth").Int())
 	e.selfDocument.Get("body").Set("height", js.Global().Get("document").Get("body").Get("clientHeight").Int())
@@ -427,30 +427,30 @@ func (e *Stage) ResizeStageToScreen() (ref *Stage) {
 //
 // Português:
 //
-//  Retorna a referência do elemento através do seu ID.
+//	Retorna a referência do elemento através do seu ID.
 //
-//   Entrada:
-//     id: string que diferência maiúsculas e minúsculas representando o ID único do elemento sendo
-//         procurado.
-//   Nota:
-//     * Elemento é uma referência a um objeto Element, ou null se um elemento com o ID especificado
-//       não estiver contido neste documento.
-//     * Se não existe um elemento com o id fornecido, esta função retorna null. Note, o parâmetro ID
-//       diferência maiúsculas e minúsculas. Assim document.getElementById("Main") retornará null ao
-//       invés do elemento <div id="main">, devido a "M" e "m" diferirem para o objetivo deste método;
-//     * Elementos que não estão no documento não são procurados por getElementById. Quando criar um
-//       elemento e atribuir um ID ao mesmo, você deve inserir o elemento na árvore do documento com
-//       insertBefore ou método similar antes que você possa acessá-lo com getElementById:
+//	 Entrada:
+//	   id: string que diferência maiúsculas e minúsculas representando o ID único do elemento sendo
+//	       procurado.
+//	 Nota:
+//	   * Elemento é uma referência a um objeto Element, ou null se um elemento com o ID especificado
+//	     não estiver contido neste documento.
+//	   * Se não existe um elemento com o id fornecido, esta função retorna null. Note, o parâmetro ID
+//	     diferência maiúsculas e minúsculas. Assim document.getElementById("Main") retornará null ao
+//	     invés do elemento <div id="main">, devido a "M" e "m" diferirem para o objetivo deste método;
+//	   * Elementos que não estão no documento não são procurados por getElementById. Quando criar um
+//	     elemento e atribuir um ID ao mesmo, você deve inserir o elemento na árvore do documento com
+//	     insertBefore ou método similar antes que você possa acessá-lo com getElementById:
 //
-//         var elemento = document.createElement("div");
-//         elemento.id = 'testqq';
-//         var el = document.getElementById('testqq'); // el será null!
+//	       var elemento = document.createElement("div");
+//	       elemento.id = 'testqq';
+//	       var el = document.getElementById('testqq'); // el será null!
 //
-//     * Documentos não-HTML, a implementação do DOM deve ter informações que diz quais atributos são
-//       do tipo ID.  Atributos com o nome "id" não são do tipo ID a menos que assim sejam definidos
-//       nos documentos DTD. O atributo id é definido para ser um tipo ID em casos comuns de  XHTML,
-//       XUL, e outros. Implementações que não reconhecem se os atributos são do tipo ID, ou não são
-//       esperados retornam null.
+//	   * Documentos não-HTML, a implementação do DOM deve ter informações que diz quais atributos são
+//	     do tipo ID.  Atributos com o nome "id" não são do tipo ID a menos que assim sejam definidos
+//	     nos documentos DTD. O atributo id é definido para ser um tipo ID em casos comuns de  XHTML,
+//	     XUL, e outros. Implementações que não reconhecem se os atributos são do tipo ID, ou não são
+//	     esperados retornam null.
 func (e Stage) GetById(id string) (element interface{}) {
 	elementRet := js.Global().Get("document").Call("getElementById", id)
 	if elementRet.IsUndefined() == true || elementRet.IsNull() {
@@ -675,29 +675,29 @@ func (e *Stage) RemoveCursorDrawFunction() {
 //
 // Adds a high latency function, a low execution priority function.
 //
-//   Input:
-//     runnerFunc: function to be performed.
+//	Input:
+//	  runnerFunc: function to be performed.
 //
-//   Output:
-//     UId: used to identify the function when removing.
-//     total: total number of functions running.
+//	Output:
+//	  UId: used to identify the function when removing.
+//	  total: total number of functions running.
 //
-//   Notes:
-//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//	Notes:
+//	  * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
 // Adiciona uma função de alta latencia, uma função de baixa prioridade de execussão.
 //
-//   Entrada:
-//     runnerFunc: função a ser executada.
+//	Entrada:
+//	  runnerFunc: função a ser executada.
 //
-//   Saída:
-//     UId da função, usado para identificar a função na hora de remover.
-//     total: quantidade total de funções em execução.
+//	Saída:
+//	  UId da função, usado para identificar a função na hora de remover.
+//	  total: quantidade total de funções em execução.
 //
-//   Notas:
-//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
+//	Notas:
+//	  * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (e *Stage) AddHighLatencyFunctions(runnerFunc func()) (UId string, total int) {
 	UId, total = e.engine.HighLatencyAddToFunctions(runnerFunc)
 	return
@@ -709,21 +709,21 @@ func (e *Stage) AddHighLatencyFunctions(runnerFunc func()) (UId string, total in
 //
 // Removes a high latency function added by the HighLatencyAddToFunctions() function.
 //
-//   Input:
-//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//	Input:
+//	  UId: ID returned by the HighLatencyAddToFunctions() function.
 //
-//   Notes:
-//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//	Notes:
+//	  * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
 // Remove uma função de alta latencia adicionada pela função HighLatencyAddToFunctions().
 //
-//   Entrada:
-//     UId: ID retornado pela função HighLatencyAddToFunctions().
+//	Entrada:
+//	  UId: ID retornado pela função HighLatencyAddToFunctions().
 //
-//   Notas:
-//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
+//	Notas:
+//	  * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (e *Stage) DeleteHighLatencyFunctions(UId string) {
 	e.engine.HighLatencyDeleteFromFunctions(UId)
 }
@@ -734,23 +734,23 @@ func (e *Stage) DeleteHighLatencyFunctions(UId string) {
 //
 // Allows you to change the order of execution of the function, in the execution list.
 //
-//   Input:
-//     UId: ID returned by the HighLatencyAddToFunctions() function.
-//     index: 0 for the first function in the list
+//	Input:
+//	  UId: ID returned by the HighLatencyAddToFunctions() function.
+//	  index: 0 for the first function in the list
 //
-//   Notes:
-//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//	Notes:
+//	  * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
 // Permite trocar a ordem de execução da função, na lista de execução.
 //
-//   Entrada:
-//     UId: ID retornado pela função HighLatencyAddToFunctions().
-//     index: 0 para a primeira função da lista
+//	Entrada:
+//	  UId: ID retornado pela função HighLatencyAddToFunctions().
+//	  index: 0 para a primeira função da lista
 //
-//   Notas:
-//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
+//	Notas:
+//	  * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (e *Stage) SetHighLatencyZIndex(UId string, index int) int {
 	return e.engine.HighLatencySetZIndex(UId, index)
 }
@@ -759,10 +759,7 @@ func (e *Stage) SetHighLatencyZIndex(UId string, index int) int {
 //
 // English:
 //
-//
 // Português:
-//
-//
 func (e *Stage) AddMathFunctions(runnerFunc func()) (UId string, total int) {
 	UId, total = e.engine.MathAddToFunctions(runnerFunc)
 	return
@@ -772,10 +769,7 @@ func (e *Stage) AddMathFunctions(runnerFunc func()) (UId string, total int) {
 //
 // English:
 //
-//
 // Português:
-//
-//
 func (e *Stage) DeleteMathFunctions(UId string) {
 	e.engine.MathDeleteFromFunctions(UId)
 }
@@ -784,10 +778,7 @@ func (e *Stage) DeleteMathFunctions(UId string) {
 //
 // English:
 //
-//
 // Português:
-//
-//
 func (e *Stage) SetMathZIndex(UId string, index int) int {
 	return e.engine.MathSetZIndex(UId, index)
 }
@@ -796,10 +787,7 @@ func (e *Stage) SetMathZIndex(UId string, index int) int {
 //
 // English:
 //
-//
 // Português:
-//
-//
 func (e *Stage) AddDrawFunctions(runnerFunc func()) (UId string, total int) {
 	UId, total = e.engine.DrawAddToFunctions(runnerFunc)
 	return
@@ -809,10 +797,7 @@ func (e *Stage) AddDrawFunctions(runnerFunc func()) (UId string, total int) {
 //
 // English:
 //
-//
 // Português:
-//
-//
 func (e *Stage) DeleteDrawFunctions(UId string) {
 	e.engine.DrawDeleteFromFunctions(UId)
 }
@@ -821,10 +806,7 @@ func (e *Stage) DeleteDrawFunctions(UId string) {
 //
 // English:
 //
-//
 // Português:
-//
-//
 func (e *Stage) SetDrawZIndex(UId string, index int) int {
 	return e.engine.DrawSetZIndex(UId, index)
 }
@@ -948,8 +930,8 @@ func (e *Stage) Blur() {
 // was not opened by a script, an error similar to this one appears in the console: Scripts may not close windows that
 // were not opened by script.
 //
-//   Notes
-//    * Close() has no effect when called on Window objects returned by HTMLIFrameElement.contentWindow.
+//	Notes
+//	 * Close() has no effect when called on Window objects returned by HTMLIFrameElement.contentWindow.
 //
 // Português:
 //
@@ -959,8 +941,8 @@ func (e *Stage) Blur() {
 // não foi aberta por um script, um erro semelhante a este aparece no console: Scripts não podem fechar janelas que não
 // foram abertas por script.
 //
-//   Notas
-//    * Close() não tem efeito quando chamado em objetos Window retornados por HTMLIFrameElement.contentWindow.
+//	Notas
+//	 * Close() não tem efeito quando chamado em objetos Window retornados por HTMLIFrameElement.contentWindow.
 func (e *Stage) Close() {
 	e.selfWindow.Call("close")
 }
@@ -986,23 +968,23 @@ func (e *Stage) Focus() {
 //
 // Moves the window to the specified coordinates.
 //
-//   Input:
-//     x: is the horizontal coordinate to be moved to.
-//     y: is the vertical coordinate to be moved to.
+//	Input:
+//	  x: is the horizontal coordinate to be moved to.
+//	  y: is the vertical coordinate to be moved to.
 //
-//   Notes:
-//    * This function moves the window to an absolute location. In contrast, window.moveBy() moves the window relative to its current location.
+//	Notes:
+//	 * This function moves the window to an absolute location. In contrast, window.moveBy() moves the window relative to its current location.
 //
 // Português:
 //
 // Move a janela para as coordenadas especificadas.
 //
-//   Entrada:
-//     x: é a coordenada horizontal a ser movida.
-//     y: é a coordenada vertical a ser movida.
+//	Entrada:
+//	  x: é a coordenada horizontal a ser movida.
+//	  y: é a coordenada vertical a ser movida.
 //
-//   Notes:
-//    * This function moves the window to an absolute location. In contrast, window.moveBy() moves the window relative to its current location.
+//	Notes:
+//	 * This function moves the window to an absolute location. In contrast, window.moveBy() moves the window relative to its current location.
 func (e *Stage) MoveTo(x, y float64) {
 	e.selfWindow.Call("moveTo", x, y)
 }
@@ -1013,29 +995,29 @@ func (e *Stage) MoveTo(x, y float64) {
 //
 // The moveBy() method of the Window interface moves the current window by a specified amount.
 //
-//   Input:
-//     deltaX: is the amount of pixels to move the window horizontally. Positive values are to the right, while negative
-//       values are to the left.
-//     deltaY: is the amount of pixels to move the window vertically. Positive values are down, while negative values
-//       are up.
+//	Input:
+//	  deltaX: is the amount of pixels to move the window horizontally. Positive values are to the right, while negative
+//	    values are to the left.
+//	  deltaY: is the amount of pixels to move the window vertically. Positive values are down, while negative values
+//	    are up.
 //
-//   Notes:
-//    * This function moves the window relative to its current location. In contrast, window.moveTo() moves the window
-//      to an absolute location.
+//	Notes:
+//	 * This function moves the window relative to its current location. In contrast, window.moveTo() moves the window
+//	   to an absolute location.
 //
 // Português:
 //
 // O método moveBy() da interface Window move a janela atual por um valor especificado.
 //
-//   Entrada:
-//     deltaX: é a quantidade de pixels para mover a janela horizontalmente. Os valores positivos estão à direita,
-//       enquanto os valores negativos estão à esquerda.
-//     deltaY: é a quantidade de pixels para mover a janela verticalmente. Os valores positivos estão em baixa, enquanto
-//       os valores negativos estão em alta.
+//	Entrada:
+//	  deltaX: é a quantidade de pixels para mover a janela horizontalmente. Os valores positivos estão à direita,
+//	    enquanto os valores negativos estão à esquerda.
+//	  deltaY: é a quantidade de pixels para mover a janela verticalmente. Os valores positivos estão em baixa, enquanto
+//	    os valores negativos estão em alta.
 //
-//   Notas:
-//    * Esta função move a janela em relação à sua localização atual. Em contraste, window.moveTo() move a janela para
-//      um local absoluto.
+//	Notas:
+//	 * Esta função move a janela em relação à sua localização atual. Em contraste, window.moveTo() move a janela para
+//	   um local absoluto.
 func (e *Stage) MoveBy(deltaX, deltaY float64) {
 	e.selfWindow.Call("moveBy", deltaX, deltaY)
 }
@@ -1046,17 +1028,17 @@ func (e *Stage) MoveBy(deltaX, deltaY float64) {
 //
 // The Window.resizeBy() method resizes the current window by a specified amount.
 //
-//   Input:
-//     xDelta: Number of pixels to grow the window horizontally.
-//     yDelta: Number of pixels to grow the window vertically.
+//	Input:
+//	  xDelta: Number of pixels to grow the window horizontally.
+//	  yDelta: Number of pixels to grow the window vertically.
 //
 // Português:
 //
 // O método Window.resizeBy() redimensiona a janela atual em um valor especificado.
 //
-//   Entrada:
-//     xDelta: Número de pixels para aumentar a janela horizontalmente.
-//     yDelta: Número de pixels para aumentar a janela verticalmente.
+//	Entrada:
+//	  xDelta: Número de pixels para aumentar a janela horizontalmente.
+//	  yDelta: Número de pixels para aumentar a janela verticalmente.
 func (e *Stage) ResizeBy(deltaX, deltaY float64) {
 	e.selfWindow.Call("resizeBy", deltaX, deltaY)
 }
@@ -1067,18 +1049,18 @@ func (e *Stage) ResizeBy(deltaX, deltaY float64) {
 //
 // The Window.resizeTo() method dynamically resizes the window.
 //
-//   Input:
-//     width: An integer representing the new outerWidth in pixels (including scroll bars, title bars, etc).
-//     height: An integer value representing the new outerHeight in pixels (including scroll bars, title bars, etc).
+//	Input:
+//	  width: An integer representing the new outerWidth in pixels (including scroll bars, title bars, etc).
+//	  height: An integer value representing the new outerHeight in pixels (including scroll bars, title bars, etc).
 //
 // Português:
 //
 // O método Window.resizeTo() redimensiona dinamicamente a janela.
 //
-//   Entrada:
-//     width: Um inteiro que representa o novo outerWidth em pixels (incluindo barras de rolagem, barras de título etc.)
-//     height: Um valor inteiro que representa o novo outerHeight em pixels (incluindo barras de rolagem, barras de
-//       título etc.)
+//	Entrada:
+//	  width: Um inteiro que representa o novo outerWidth em pixels (incluindo barras de rolagem, barras de título etc.)
+//	  height: Um valor inteiro que representa o novo outerHeight em pixels (incluindo barras de rolagem, barras de
+//	    título etc.)
 func (e *Stage) ResizeTo(width, height float64) {
 	e.selfWindow.Call("resizeTo", width, height)
 }
@@ -1089,17 +1071,17 @@ func (e *Stage) ResizeTo(width, height float64) {
 //
 // Scrolls the window to a particular place in the document.
 //
-//   Input:
-//     x: Is the pixel along the horizontal axis of the document that you want displayed in the upper left.
-//     y: is the pixel along the vertical axis of the document that you want displayed in the upper left.
+//	Input:
+//	  x: Is the pixel along the horizontal axis of the document that you want displayed in the upper left.
+//	  y: is the pixel along the vertical axis of the document that you want displayed in the upper left.
 //
 // Português:
 //
 // Rola a janela para um local específico no documento.
 //
-//   Entrada:
-//     x: É o pixel ao longo do eixo horizontal do documento que você deseja exibir no canto superior esquerdo.
-//     y: é o pixel ao longo do eixo vertical do documento que você deseja exibir no canto superior esquerdo.
+//	Entrada:
+//	  x: É o pixel ao longo do eixo horizontal do documento que você deseja exibir no canto superior esquerdo.
+//	  y: é o pixel ao longo do eixo vertical do documento que você deseja exibir no canto superior esquerdo.
 func (e *Stage) Scroll(x, y float64) {
 	e.selfWindow.Call("scroll", x, y)
 }
@@ -1110,17 +1092,17 @@ func (e *Stage) Scroll(x, y float64) {
 //
 // Scrolls the document in the window by the given amount.
 //
-//   Input:
-//     x: Is the horizontal pixel value that you want to scroll by.
-//     y: Is the vertical pixel value that you want to scroll by.
+//	Input:
+//	  x: Is the horizontal pixel value that you want to scroll by.
+//	  y: Is the vertical pixel value that you want to scroll by.
 //
 // Português:
 //
 // Rola o documento na janela pela quantidade especificada.
 //
-//   Entrada:
-//     x: É o valor de pixel horizontal pelo qual você deseja rolar.
-//     y: É o valor de pixel vertical pelo qual você deseja rolar.
+//	Entrada:
+//	  x: É o valor de pixel horizontal pelo qual você deseja rolar.
+//	  y: É o valor de pixel vertical pelo qual você deseja rolar.
 func (e *Stage) ScrollBy(x, y float64) {
 	e.selfWindow.Call("scrollBy", x, y)
 }
@@ -1131,17 +1113,17 @@ func (e *Stage) ScrollBy(x, y float64) {
 //
 // Scrolls to a particular set of coordinates in the document.
 //
-//   Input:
-//     x: Is the pixel along the horizontal axis of the document that you want displayed in the upper left.
-//     y: Is the pixel along the vertical axis of the document that you want displayed in the upper left.
+//	Input:
+//	  x: Is the pixel along the horizontal axis of the document that you want displayed in the upper left.
+//	  y: Is the pixel along the vertical axis of the document that you want displayed in the upper left.
 //
 // Português:
 //
 // Rola para um determinado conjunto de coordenadas no documento.
 //
-//   Entrada:
-//     x: É o pixel ao longo do eixo horizontal do documento que você deseja exibir no canto superior esquerdo.
-//     y: É o pixel ao longo do eixo vertical do documento que você deseja exibir no canto superior esquerdo.
+//	Entrada:
+//	  x: É o pixel ao longo do eixo horizontal do documento que você deseja exibir no canto superior esquerdo.
+//	  y: É o pixel ao longo do eixo vertical do documento que você deseja exibir no canto superior esquerdo.
 func (e *Stage) ScrollTo(x, y float64) {
 	e.selfWindow.Call("scrollTo", x, y)
 }
@@ -1220,7 +1202,7 @@ func (e *Stage) GetFrameLength() (length int) {
 //
 // English:
 //
-// The Window.closed read-only property indicates whether the referenced window is closed or not
+// # The Window.closed read-only property indicates whether the referenced window is closed or not
 //
 // Português:
 //
@@ -1236,16 +1218,16 @@ func (e *Stage) GetIsClosed() (closed bool) {
 // The Window.outerHeight read-only property returns the height in pixels of the whole browser window, including any
 // sidebar, window chrome, and window-resizing borders/handles.
 //
-//   Notes:
-//     * To change the size of a window, see window.resizeBy() and window.resizeTo().
+//	Notes:
+//	  * To change the size of a window, see window.resizeBy() and window.resizeTo().
 //
 // Português:
 //
 // A propriedade somente leitura Window.outerHeight retorna a altura em pixels de toda a janela do navegador, incluindo
 // qualquer barra lateral, cromo de janela e alças de borda de redimensionamento de janela.
 //
-//   Notas:
-//     * Para alterar o tamanho de uma janela, consulte window.resizeBy() e window.resizeTo().
+//	Notas:
+//	  * Para alterar o tamanho de uma janela, consulte window.resizeBy() e window.resizeTo().
 func (e *Stage) GetOuterHeight() (outerHeight float64) {
 	return e.selfWindow.Get("outerHeight").Float()
 }
@@ -1257,8 +1239,8 @@ func (e *Stage) GetOuterHeight() (outerHeight float64) {
 // Window.outerWidth read-only property returns the width of the outside of the browser window. It represents the width
 // of the whole browser window including sidebar (if expanded), window chrome and window resizing borders/handles.
 //
-//   Notes:
-//    * To change the size of a window, see window.resizeBy() and window.resizeTo().
+//	Notes:
+//	 * To change the size of a window, see window.resizeBy() and window.resizeTo().
 //
 // Português:
 //
@@ -1266,8 +1248,8 @@ func (e *Stage) GetOuterHeight() (outerHeight float64) {
 // Ele representa a largura de toda a janela do navegador, incluindo barra lateral (se expandida), cromo da janela e
 // alças de bordas de redimensionamento de janela.
 //
-//   Notas:
-//    * Para alterar o tamanho de uma janela, consulte window.resizeBy() e window.resizeTo().
+//	Notas:
+//	 * Para alterar o tamanho de uma janela, consulte window.resizeBy() e window.resizeTo().
 func (e *Stage) GetOuterWidth() (outerWidth float64) {
 	return e.selfWindow.Get("outerWidth").Float()
 }
@@ -1369,12 +1351,12 @@ func (e *Stage) GetScreenY() (screenY float64) {
 // replaced by a phishing page by the newly opened page.
 //
 // In the following cases, the browser does not populate window.opener, but leaves it null:
-//  * The opener can be omitted by specifying rel=noopener on a link, or passing noopener in the windowFeatures
-//    parameter.
-//  * Windows opened because of links with a target of _blank don't get an opener, unless explicitly requested with
-//    rel=opener.
-//  * Having a Cross-Origin-Opener-Policy header with a value of same-origin prevents setting opener.
-//    Since the new window is loaded in a different browsing context, it won't have a reference to the opening window.
+//   - The opener can be omitted by specifying rel=noopener on a link, or passing noopener in the windowFeatures
+//     parameter.
+//   - Windows opened because of links with a target of _blank don't get an opener, unless explicitly requested with
+//     rel=opener.
+//   - Having a Cross-Origin-Opener-Policy header with a value of same-origin prevents setting opener.
+//     Since the new window is loaded in a different browsing context, it won't have a reference to the opening window.
 //
 // Português:
 //
@@ -1390,13 +1372,13 @@ func (e *Stage) GetScreenY() (screenY float64) {
 // substituída por uma página de phishing pela página recém-aberta.
 //
 // Nos casos a seguir, o navegador não preenche window.opener, mas o deixa nulo:
-//  * O opener pode ser omitido especificando rel=noopener em um link ou passando noopener no parâmetro
-//    windowFeatures.
-//  * O Windows aberto devido a links com um destino de _blank não obtém um abridor, a menos que solicitado
-//    explicitamente com rel=opener.
-//  * Ter um cabeçalho Cross-Opener-Policy com um valor de mesma origem impede a configuração do abridor.
-//    Como a nova janela é carregada em um contexto de navegação diferente, ela não terá uma referência à janela de
-//    abertura.
+//   - O opener pode ser omitido especificando rel=noopener em um link ou passando noopener no parâmetro
+//     windowFeatures.
+//   - O Windows aberto devido a links com um destino de _blank não obtém um abridor, a menos que solicitado
+//     explicitamente com rel=opener.
+//   - Ter um cabeçalho Cross-Opener-Policy com um valor de mesma origem impede a configuração do abridor.
+//     Como a nova janela é carregada em um contexto de navegação diferente, ela não terá uma referência à janela de
+//     abertura.
 func (e *Stage) GetOpener() (opener js.Value) {
 	return e.selfWindow.Get("opener")
 }

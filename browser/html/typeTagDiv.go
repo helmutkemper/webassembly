@@ -342,7 +342,7 @@ func (e *TagDiv) ContentEditable(editable bool) (ref *TagDiv) {
 	return e
 }
 
-// Data #global
+// Data #global #replicar
 //
 // English:
 //
@@ -391,9 +391,66 @@ func (e *TagDiv) ContentEditable(editable bool) (ref *TagDiv) {
 //	    usuário.
 func (e *TagDiv) Data(data map[string]string) (ref *TagDiv) {
 	for k, v := range data {
-		e.selfElement.Set(" data-"+k, v)
+		e.selfElement.Set("data-"+k, v)
 	}
 	return e
+}
+
+// GetData #global #replicar
+//
+// English:
+//
+//		Used to get custom data private to the page or application.
+//
+//		 Input:
+//		   key: custom key of data to get
+//
+//	  Output:
+//	    value: value of custom data
+//
+// The data-* attributes is used to store custom data private to the page or application.
+// The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
+// The stored (custom) data can then be used in the page's JavaScript to create a more engaging user
+// experience (without any Ajax calls or server-side database queries).
+//
+// The data-* attributes consist of two parts:
+//
+//	The attribute name should not contain any uppercase letters, and must be at least one character
+//	long after the prefix "data-";
+//	The attribute value can be any string.
+//
+//	Note:
+//	  * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
+//
+// Português:
+//
+//		Usado para armazenar dados personalizados privados para a página ou aplicativo.
+//
+//		 Entrada:
+//		   key: chave personalizada de dados para obter
+//
+//	  Saída:
+//	    value: valor do dado personalizado
+//
+// Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
+// aplicativo;
+// Os atributos de dados nos dão a capacidade de incorporar atributos de dados personalizados em todos
+// os elementos HTML;
+// Os dados armazenados (personalizados) podem ser usados no JavaScript da página para criar uma
+// experiência de usuário mais envolvente (sem chamadas Ajax ou consultas de banco de dados do lado do
+// servidor).
+//
+// Os atributos de dados consistem em duas partes:
+//
+//	O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+//	prefixo "data-";
+//	O valor do atributo pode ser qualquer string.
+//
+//	Nota:
+//	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
+//	    usuário.
+func (e *TagDiv) GetData(key string) (value string) {
+	return e.selfElement.Get("data-" + key).String()
 }
 
 // Dir #global
@@ -565,6 +622,11 @@ func (e *TagDiv) Hidden() (ref *TagDiv) {
 func (e *TagDiv) Id(id string) (ref *TagDiv) {
 	e.id = id
 	e.selfElement.Set("id", id)
+
+	// Saves the element reference with ID for later use.
+	// Salva a referência dos elementos com ID para uso posterior.
+	htmlGlobalAllElementsList.Delete(id)
+	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 

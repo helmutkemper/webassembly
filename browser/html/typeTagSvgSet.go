@@ -21,9 +21,9 @@ import (
 // It supports all attribute types, including those that cannot reasonably be interpolated, such as string and boolean
 // values. For attributes that can be reasonably be interpolated, the <animate> is usually preferred.
 //
-//   Notes:
-//     * The <set> element is non-additive. The additive and accumulate attributes are not allowed, and will be
-//       ignored if specified.
+//	Notes:
+//	  * The <set> element is non-additive. The additive and accumulate attributes are not allowed, and will be
+//	    ignored if specified.
 //
 // Português:
 //
@@ -33,9 +33,9 @@ import (
 // valores de string e booleanos. Para atributos que podem ser razoavelmente interpolados, o <animate> geralmente é
 // preferido.
 //
-//   Notas:
-//     * O elemento <set> não é aditivo. Os atributos aditivo e acumular não são permitidos e serão ignorados se
-//       especificados.
+//	Notas:
+//	  * O elemento <set> não é aditivo. Os atributos aditivo e acumular não são permitidos e serão ignorados se
+//	    especificados.
 type TagSvgSet struct {
 
 	// id
@@ -175,11 +175,11 @@ type TagSvgSet struct {
 //
 // English:
 //
-//  Initializes the object correctly.
+//	Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+//	Inicializa o objeto corretamente.
 func (e *TagSvgSet) Init() (ref *TagSvgSet) {
 	e.listener = new(sync.Map)
 
@@ -246,13 +246,18 @@ func (e *TagSvgSet) Get() (el js.Value) {
 //
 // English:
 //
-//  The id attribute assigns a unique name to an element.
+//	The id attribute assigns a unique name to an element.
 //
 // Portuguese
 //
-//  O atributo id atribui um nome exclusivo a um elemento.
+//	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgSet) Id(id string) (ref *TagSvgSet) {
 	e.selfElement.Call("setAttribute", "id", id)
+
+	// Saves the element reference with ID for later use.
+	// Salva a referência dos elementos com ID para uso posterior.
+	htmlGlobalAllElementsList.Delete(id)
+	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -263,10 +268,10 @@ func (e *TagSvgSet) Id(id string) (ref *TagSvgSet) {
 // The lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language used in contents
-//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language used in contents
+//	    const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//	    any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -282,10 +287,10 @@ func (e *TagSvgSet) Id(id string) (ref *TagSvgSet) {
 // O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal usado no conteúdo
-//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal usado no conteúdo
+//	    const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//	    qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -313,22 +318,22 @@ func (e *TagSvgSet) Lang(value interface{}) (ref *TagSvgSet) {
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
-//   Input:
-//     value: control whether an element is focusable
-//       int: focus order
-//       nil: focus disabled
-//       any other type: interface{}
+//	Input:
+//	  value: control whether an element is focusable
+//	    int: focus order
+//	    nil: focus disabled
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
 //
-//   Input:
-//     value: controlar se um elemento é focalizável
-//       int: ordem do foco
-//       nil: disabilita o foco
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: controlar se um elemento é focalizável
+//	    int: ordem do foco
+//	    nil: disabilita o foco
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgSet) Tabindex(value interface{}) (ref *TagSvgSet) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -341,10 +346,10 @@ func (e *TagSvgSet) Tabindex(value interface{}) (ref *TagSvgSet) {
 // The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language
-//       const: KLanguage... (e.g. KLanguageEnglish)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language
+//	    const: KLanguage... (e.g. KLanguageEnglish)
+//	    any other type: interface{}
 //
 // It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
 // contains.
@@ -357,10 +362,10 @@ func (e *TagSvgSet) Tabindex(value interface{}) (ref *TagSvgSet) {
 // O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal
-//       const: KLanguage... (e.g. KLanguagePortuguese)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal
+//	    const: KLanguage... (e.g. KLanguagePortuguese)
+//	    qualquer outro tipo: interface{}
 //
 // É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
 // contém.
@@ -388,12 +393,12 @@ func (e *TagSvgSet) XmlLang(value interface{}) (ref *TagSvgSet) {
 // Assigns a class name or set of class names to an element. You may assign the same class name or names to any number
 // of elements, however, multiple class names must be separated by whitespace characters.
 //
-//   Input:
-//     class: Assigns a class name or set of class names to an element
+//	Input:
+//	  class: Assigns a class name or set of class names to an element
 //
 // An element's class name serves two key roles:
-//   * As a style sheet selector, for when an author assigns style information to a set of elements.
-//   * For general use by the browser.
+//   - As a style sheet selector, for when an author assigns style information to a set of elements.
+//   - For general use by the browser.
 //
 // Português:
 //
@@ -401,13 +406,13 @@ func (e *TagSvgSet) XmlLang(value interface{}) (ref *TagSvgSet) {
 // de classe a qualquer número de elementos, no entanto, vários nomes de classe devem ser separados por caracteres de
 // espaço em branco.
 //
-//   Entrada:
-//     class: Atribui um nome de classe ou um conjunto de nomes de classe à um elemento.
+//	Entrada:
+//	  class: Atribui um nome de classe ou um conjunto de nomes de classe à um elemento.
 //
 // O nome de classe de um elemento tem duas funções principais:
-//   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
+//   - Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
 //     elementos.
-//   * Para uso geral pelo navegador.
+//   - Para uso geral pelo navegador.
 func (e *TagSvgSet) Class(class string) (ref *TagSvgSet) {
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
@@ -419,8 +424,8 @@ func (e *TagSvgSet) Class(class string) (ref *TagSvgSet) {
 //
 // The style attribute allows to style an element using CSS declarations.
 //
-//   Input:
-//     value: allows to style an element using CSS declarations
+//	Input:
+//	  value: allows to style an element using CSS declarations
 //
 // It functions identically to the style attribute in HTML.
 //
@@ -428,8 +433,8 @@ func (e *TagSvgSet) Class(class string) (ref *TagSvgSet) {
 //
 // O atributo style permite estilizar um elemento usando declarações CSS.
 //
-//   Entrada:
-//     value: permite estilizar um elemento usando declarações CSS
+//	Entrada:
+//	  value: permite estilizar um elemento usando declarações CSS
 //
 // Funciona de forma idêntica ao atributo style em HTML.
 func (e *TagSvgSet) Style(value string) (ref *TagSvgSet) {
@@ -445,17 +450,17 @@ func (e *TagSvgSet) Style(value string) (ref *TagSvgSet) {
 //
 // The to attribute indicates the final value of the attribute that will be modified during the animation.
 //
-//   Input:
-//     value: final value of the attribute
-//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
-//       []float32: []float64{0.0, 0.1} = "0%, 10%"
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
-//       time.Duration: time.Second = "1s"
-//       float32: 0.1 = "10%"
-//       float64: 10.0 = "10"
-//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
-//       any other type: interface{}
+//	Input:
+//	  value: final value of the attribute
+//	    []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//	    []float32: []float64{0.0, 0.1} = "0%, 10%"
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//	    time.Duration: time.Second = "1s"
+//	    float32: 0.1 = "10%"
+//	    float64: 10.0 = "10"
+//	    color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//	    any other type: interface{}
 //
 // The value of the attribute will change between the from attribute value and this value.
 //
@@ -463,17 +468,17 @@ func (e *TagSvgSet) Style(value string) (ref *TagSvgSet) {
 //
 // O atributo to indica o valor final do atributo que será modificado durante a animação.
 //
-//   Entrada:
-//     value: valor final do atributo
-//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
-//       []float32: []float64{0.0, 0.1} = "0%, 10%"
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
-//       time.Duration: time.Second = "1s"
-//       float32: 0.1 = "10%"
-//       float64: 10.0 = "10"
-//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: valor final do atributo
+//	    []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//	    []float32: []float64{0.0, 0.1} = "0%, 10%"
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//	    time.Duration: time.Second = "1s"
+//	    float32: 0.1 = "10%"
+//	    float64: 10.0 = "10"
+//	    color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//	    qualquer outro tipo: interface{}
 //
 // O valor do atributo mudará entre o valor do atributo from e este valor.
 func (e *TagSvgSet) To(value interface{}) (ref *TagSvgSet) {
@@ -485,48 +490,48 @@ func (e *TagSvgSet) To(value interface{}) (ref *TagSvgSet) {
 //
 // English:
 //
-//  The begin attribute defines when an animation should begin or when an element should be discarded.
+//	The begin attribute defines when an animation should begin or when an element should be discarded.
 //
-//   Input:
-//     begin: defines when an animation should begin or when an element should be discarded.
-//       offset-value: This value defines a clock-value that represents a point in time relative to the beginning of the
-//         SVG document (usually the load or DOMContentLoaded event). Negative values are valid.
-//         (e.g. time.Second*5 or "5s")
-//       syncbase-value: This value defines a syncbase and an optional offset from that syncbase. The element's
-//         animation start time is defined relative to the begin or active end of another animation.
-//         A valid syncbase-value consists of an ID reference to another animation element followed by a dot and either
-//         begin or end to identify whether to synchronize with the beginning or active end of the referenced animation
-//         element. An optional offset value as defined in <offset-value> can be appended.
-//         (e.g. "0s;third.end", "first.end" or "second.end")
-//       event-value: This value defines an event and an optional offset that determines the time at which the element's
-//         animation should begin. The animation start time is defined relative to the time that the specified event is
-//         fired.
-//         A valid event-value consists of an element ID followed by a dot and one of the supported events for that
-//         element. All valid events (not necessarily supported by all elements) are defined by the DOM and HTML
-//         specifications. Those are: 'focus', 'blur', 'focusin', 'focusout', 'activate', 'auxclick', 'click',
-//         'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
-//         'wheel', 'beforeinput', 'input', 'keydown', 'keyup', 'compositionstart', 'compositionupdate',
-//         'compositionend', 'load', 'unload', 'abort', 'error', 'select', 'resize', 'scroll', 'beginEvent', 'endEvent',
-//         and 'repeatEvent'. An optional offset value as defined in <offset-value> can be appended.
-//         (e.g. "startButton.click")
-//       repeat-value: This value defines a qualified repeat event. The element animation start time is defined relative
-//         to the time that the repeat event is raised with the specified iteration value.
-//         A valid repeat value consists of an element ID followed by a dot and the function repeat() with an integer
-//         value specifying the number of repetitions as parameter. An optional offset value as defined in
-//         <offset-value> can be appended.
-//         (e.g. "0s;myLoop.end", "myLoop.begin", "myLoop.repeat(1)" or "myLoop.repeat(2)")
-//       accessKey-value: This value defines an access key that should trigger the animation. The element animation will
-//         begin when the user presses the specified key.
-//         A valid accessKey-value consists of the function accessKey() with the character to be input as parameter. An
-//         optional offset value as defined in <offset-value> can be appended.
-//         (e.g. "accessKey(s)")
-//       wallclock-sync-value: This value defines the animation start time as a real-world clock time.
-//         A valid wallclock-sync-value consists of the function wallclock() with a time value as parameter. The time
-//         syntax is based upon the syntax defined in ISO 8601.
-//         (e.g. time.Now() )
-//       indefinite: The begin of the animation will be determined by a beginElement() method call or a hyperlink
-//         targeted to the element.
-//         (e.g. "infinite")
+//	 Input:
+//	   begin: defines when an animation should begin or when an element should be discarded.
+//	     offset-value: This value defines a clock-value that represents a point in time relative to the beginning of the
+//	       SVG document (usually the load or DOMContentLoaded event). Negative values are valid.
+//	       (e.g. time.Second*5 or "5s")
+//	     syncbase-value: This value defines a syncbase and an optional offset from that syncbase. The element's
+//	       animation start time is defined relative to the begin or active end of another animation.
+//	       A valid syncbase-value consists of an ID reference to another animation element followed by a dot and either
+//	       begin or end to identify whether to synchronize with the beginning or active end of the referenced animation
+//	       element. An optional offset value as defined in <offset-value> can be appended.
+//	       (e.g. "0s;third.end", "first.end" or "second.end")
+//	     event-value: This value defines an event and an optional offset that determines the time at which the element's
+//	       animation should begin. The animation start time is defined relative to the time that the specified event is
+//	       fired.
+//	       A valid event-value consists of an element ID followed by a dot and one of the supported events for that
+//	       element. All valid events (not necessarily supported by all elements) are defined by the DOM and HTML
+//	       specifications. Those are: 'focus', 'blur', 'focusin', 'focusout', 'activate', 'auxclick', 'click',
+//	       'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
+//	       'wheel', 'beforeinput', 'input', 'keydown', 'keyup', 'compositionstart', 'compositionupdate',
+//	       'compositionend', 'load', 'unload', 'abort', 'error', 'select', 'resize', 'scroll', 'beginEvent', 'endEvent',
+//	       and 'repeatEvent'. An optional offset value as defined in <offset-value> can be appended.
+//	       (e.g. "startButton.click")
+//	     repeat-value: This value defines a qualified repeat event. The element animation start time is defined relative
+//	       to the time that the repeat event is raised with the specified iteration value.
+//	       A valid repeat value consists of an element ID followed by a dot and the function repeat() with an integer
+//	       value specifying the number of repetitions as parameter. An optional offset value as defined in
+//	       <offset-value> can be appended.
+//	       (e.g. "0s;myLoop.end", "myLoop.begin", "myLoop.repeat(1)" or "myLoop.repeat(2)")
+//	     accessKey-value: This value defines an access key that should trigger the animation. The element animation will
+//	       begin when the user presses the specified key.
+//	       A valid accessKey-value consists of the function accessKey() with the character to be input as parameter. An
+//	       optional offset value as defined in <offset-value> can be appended.
+//	       (e.g. "accessKey(s)")
+//	     wallclock-sync-value: This value defines the animation start time as a real-world clock time.
+//	       A valid wallclock-sync-value consists of the function wallclock() with a time value as parameter. The time
+//	       syntax is based upon the syntax defined in ISO 8601.
+//	       (e.g. time.Now() )
+//	     indefinite: The begin of the animation will be determined by a beginElement() method call or a hyperlink
+//	       targeted to the element.
+//	       (e.g. "infinite")
 //
 // The attribute value is a semicolon separated list of values. The interpretation of a list of start times is detailed
 // in the SMIL specification in "Evaluation of begin and end time lists". Each individual value can be one of the
@@ -535,51 +540,51 @@ func (e *TagSvgSet) To(value interface{}) (ref *TagSvgSet) {
 //
 // Português:
 //
-//  O atributo begin define quando uma animação deve começar ou quando um elemento deve ser descartado.
+//	O atributo begin define quando uma animação deve começar ou quando um elemento deve ser descartado.
 //
-//   Entrada:
-//     begin: define quando uma animação deve começar ou quando um elemento deve ser descartado.
-//       offset-value: Esse valor define um valor de relógio que representa um ponto no tempo relativo ao início do
-//         documento SVG (geralmente o evento load ou DOMContentLoaded). Valores negativos são válidos.
-//         (e.g. time.Second*5 or "5s")
-//       syncbase-value: Esse valor define uma base de sincronização e um deslocamento opcional dessa base de
-//         sincronização. A hora de início da animação do elemento é definida em relação ao início ou fim ativo de outra
-//         animação.
-//         Um valor syncbase válido consiste em uma referência de ID para outro elemento de animação seguido por um
-//         ponto e um início ou fim para identificar se deve ser sincronizado com o início ou o final ativo do elemento
-//         de animação referenciado. Um valor de deslocamento opcional conforme definido em <offset-value> pode ser
-//         anexado.
-//         (e.g. "0s;third.end", "first.end" or "second.end")
-//       event-value: Esse valor define um evento e um deslocamento opcional que determina a hora em que a animação do
-//         elemento deve começar. A hora de início da animação é definida em relação à hora em que o evento especificado
-//         é acionado.
-//         Um valor de evento válido consiste em um ID de elemento seguido por um ponto e um dos eventos com suporte
-//         para esse elemento. Todos os eventos válidos (não necessariamente suportados por todos os elementos) são
-//         definidos pelas especificações DOM e HTML. Esses valores são: 'focus', 'blur', 'focusin', 'focusout',
-//         'activate', 'auxclick', 'click', 'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove',
-//         'mouseout', 'mouseover', 'mouseup', 'wheel', 'beforeinput', 'input', 'keydown', 'keyup', 'compositionstart',
-//         'compositionupdate', 'compositionend', 'load', 'unload', 'abort', 'error', 'select', 'resize', 'scroll',
-//         'beginEvent', 'endEvent', e 'repeatEvent'. Um valor de deslocamento opcional conforme definido em
-//         <offset-value> pode ser anexado.
-//         (e.g. "startButton.click")
-//       repeat-value: Esse valor define um evento de repetição qualificado. A hora de início da animação do elemento é
-//         definida em relação à hora em que o evento de repetição é gerado com o valor de iteração especificado.
-//         Um valor de repetição válido consiste em um ID de elemento seguido por um ponto e a função repeat() com um
-//         valor inteiro especificando o número de repetições como parâmetro. Um valor de deslocamento opcional conforme
-//         definido em <offset-value> pode ser anexado.
-//         (e.g. "0s;myLoop.end", "myLoop.begin", "myLoop.repeat(1)" or "myLoop.repeat(2)")
-//       accessKey-value: Este valor define uma chave de acesso que deve acionar a animação. A animação do elemento
-//         começará quando o usuário pressionar a tecla especificada.
-//         Um valor válido de accessKey consiste na função accessKey() com o caractere a ser inserido como parâmetro.
-//         Um valor de deslocamento opcional conforme definido em <valor de deslocamento> pode ser anexado.
-//         (e.g. "accessKey(s)")
-//       wallclock-sync-value: Esse valor define a hora de início da animação como uma hora do relógio do mundo real.
-//         Um valor wallclock-sync válido consiste na função wallclock() com um valor de tempo como parâmetro. A sintaxe
-//         de tempo é baseada na sintaxe definida na ISO 8601.
-//         (e.g. time.Now() )
-//       indefinite: O início da animação será determinado por uma chamada de método beginElement() ou um hiperlink
-//         direcionado ao elemento.
-//         (e.g. "infinite")
+//	 Entrada:
+//	   begin: define quando uma animação deve começar ou quando um elemento deve ser descartado.
+//	     offset-value: Esse valor define um valor de relógio que representa um ponto no tempo relativo ao início do
+//	       documento SVG (geralmente o evento load ou DOMContentLoaded). Valores negativos são válidos.
+//	       (e.g. time.Second*5 or "5s")
+//	     syncbase-value: Esse valor define uma base de sincronização e um deslocamento opcional dessa base de
+//	       sincronização. A hora de início da animação do elemento é definida em relação ao início ou fim ativo de outra
+//	       animação.
+//	       Um valor syncbase válido consiste em uma referência de ID para outro elemento de animação seguido por um
+//	       ponto e um início ou fim para identificar se deve ser sincronizado com o início ou o final ativo do elemento
+//	       de animação referenciado. Um valor de deslocamento opcional conforme definido em <offset-value> pode ser
+//	       anexado.
+//	       (e.g. "0s;third.end", "first.end" or "second.end")
+//	     event-value: Esse valor define um evento e um deslocamento opcional que determina a hora em que a animação do
+//	       elemento deve começar. A hora de início da animação é definida em relação à hora em que o evento especificado
+//	       é acionado.
+//	       Um valor de evento válido consiste em um ID de elemento seguido por um ponto e um dos eventos com suporte
+//	       para esse elemento. Todos os eventos válidos (não necessariamente suportados por todos os elementos) são
+//	       definidos pelas especificações DOM e HTML. Esses valores são: 'focus', 'blur', 'focusin', 'focusout',
+//	       'activate', 'auxclick', 'click', 'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove',
+//	       'mouseout', 'mouseover', 'mouseup', 'wheel', 'beforeinput', 'input', 'keydown', 'keyup', 'compositionstart',
+//	       'compositionupdate', 'compositionend', 'load', 'unload', 'abort', 'error', 'select', 'resize', 'scroll',
+//	       'beginEvent', 'endEvent', e 'repeatEvent'. Um valor de deslocamento opcional conforme definido em
+//	       <offset-value> pode ser anexado.
+//	       (e.g. "startButton.click")
+//	     repeat-value: Esse valor define um evento de repetição qualificado. A hora de início da animação do elemento é
+//	       definida em relação à hora em que o evento de repetição é gerado com o valor de iteração especificado.
+//	       Um valor de repetição válido consiste em um ID de elemento seguido por um ponto e a função repeat() com um
+//	       valor inteiro especificando o número de repetições como parâmetro. Um valor de deslocamento opcional conforme
+//	       definido em <offset-value> pode ser anexado.
+//	       (e.g. "0s;myLoop.end", "myLoop.begin", "myLoop.repeat(1)" or "myLoop.repeat(2)")
+//	     accessKey-value: Este valor define uma chave de acesso que deve acionar a animação. A animação do elemento
+//	       começará quando o usuário pressionar a tecla especificada.
+//	       Um valor válido de accessKey consiste na função accessKey() com o caractere a ser inserido como parâmetro.
+//	       Um valor de deslocamento opcional conforme definido em <valor de deslocamento> pode ser anexado.
+//	       (e.g. "accessKey(s)")
+//	     wallclock-sync-value: Esse valor define a hora de início da animação como uma hora do relógio do mundo real.
+//	       Um valor wallclock-sync válido consiste na função wallclock() com um valor de tempo como parâmetro. A sintaxe
+//	       de tempo é baseada na sintaxe definida na ISO 8601.
+//	       (e.g. time.Now() )
+//	     indefinite: O início da animação será determinado por uma chamada de método beginElement() ou um hiperlink
+//	       direcionado ao elemento.
+//	       (e.g. "infinite")
 //
 // O valor do atributo é uma lista de valores separados por ponto e vírgula. A interpretação de uma lista de horários de
 // início é detalhada na especificação SMIL em "Avaliação de listas de horários de início e término". Cada valor
@@ -610,29 +615,29 @@ func (e *TagSvgSet) Begin(begin interface{}) (ref *TagSvgSet) {
 //
 // English:
 //
-//  The dur attribute indicates the simple duration of an animation.
+//	The dur attribute indicates the simple duration of an animation.
 //
-//   Input:
-//     dur: indicates the simple duration of an animation.
-//       KSvgDur... (e.g. KSvgDurIndefinite)
-//       time.Duration (e.g. time.Second * 5)
+//	 Input:
+//	   dur: indicates the simple duration of an animation.
+//	     KSvgDur... (e.g. KSvgDurIndefinite)
+//	     time.Duration (e.g. time.Second * 5)
 //
-//   Notes:
-//     * The interpolation will not work if the simple duration is indefinite (although this may still be useful for
-//       <set> elements).
+//	 Notes:
+//	   * The interpolation will not work if the simple duration is indefinite (although this may still be useful for
+//	     <set> elements).
 //
 // Português:
 //
-//  O atributo dur indica a duração simples de uma animação.
+//	O atributo dur indica a duração simples de uma animação.
 //
-//   Entrada:
-//     dur: indica a duração simples de uma animação.
-//       KSvgDur... (ex. KSvgDurIndefinite)
-//       time.Duration (ex. time.Second * 5)
+//	 Entrada:
+//	   dur: indica a duração simples de uma animação.
+//	     KSvgDur... (ex. KSvgDurIndefinite)
+//	     time.Duration (ex. time.Second * 5)
 //
-//   Notas:
-//     * A interpolação não funcionará se a duração simples for indefinida (embora isso ainda possa ser útil para
-//       elementos <set>).
+//	 Notas:
+//	   * A interpolação não funcionará se a duração simples for indefinida (embora isso ainda possa ser útil para
+//	     elementos <set>).
 func (e *TagSvgSet) Dur(dur interface{}) (ref *TagSvgSet) {
 	switch converted := dur.(type) {
 	case time.Duration:
@@ -650,98 +655,96 @@ func (e *TagSvgSet) Dur(dur interface{}) (ref *TagSvgSet) {
 //
 // English:
 //
-//  The end attribute defines an end value for the animation that can constrain the active duration.
+//	The end attribute defines an end value for the animation that can constrain the active duration.
 //
-//   Input:
-//     end: defines an end value for the animation
-//       offset-value: This value defines a clock-value that represents a point in time relative to the beginning of the
-//         SVG document (usually the load or DOMContentLoaded event). Negative values are valid.
-//         (e.g. time.Second*5 or "5s")
-//       syncbase-value: This value defines a syncbase and an optional offset from that syncbase. The element's
-//         animation start time is defined relative to the begin or active end of another animation.
-//         A valid syncbase-value consists of an ID reference to another animation element followed by a dot and either
-//         begin or end to identify whether to synchronize with the beginning or active end of the referenced animation
-//         element. An optional offset value as defined in <offset-value> can be appended.
-//         (e.g. "0s;third.end", "first.end" or "second.end")
-//       event-value: This value defines an event and an optional offset that determines the time at which the element's
-//         animation should begin. The animation start time is defined relative to the time that the specified event is
-//         fired.
-//         A valid event-value consists of an element ID followed by a dot and one of the supported events for that
-//         element. All valid events (not necessarily supported by all elements) are defined by the DOM and HTML
-//         specifications. Those are: 'focus', 'blur', 'focusin', 'focusout', 'activate', 'auxclick', 'click',
-//         'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
-//         'wheel', 'beforeinput', 'input', 'keydown', 'keyup', 'compositionstart', 'compositionupdate',
-//         'compositionend', 'load', 'unload', 'abort', 'error', 'select', 'resize', 'scroll', 'beginEvent', 'endEvent',
-//         and 'repeatEvent'. An optional offset value as defined in <offset-value> can be appended.
-//         (e.g. "startButton.click")
-//       repeat-value: This value defines a qualified repeat event. The element animation start time is defined relative
-//         to the time that the repeat event is raised with the specified iteration value.
-//         A valid repeat value consists of an element ID followed by a dot and the function repeat() with an integer
-//         value specifying the number of repetitions as parameter. An optional offset value as defined in
-//         <offset-value> can be appended.
-//         (e.g. "0s;myLoop.end", "myLoop.begin", "myLoop.repeat(1)" or "myLoop.repeat(2)")
-//       accessKey-value: This value defines an access key that should trigger the animation. The element animation will
-//         begin when the user presses the specified key.
-//         A valid accessKey-value consists of the function accessKey() with the character to be input as parameter. An
-//         optional offset value as defined in <offset-value> can be appended.
-//         (e.g. "accessKey(s)")
-//       wallclock-sync-value: This value defines the animation start time as a real-world clock time.
-//         A valid wallclock-sync-value consists of the function wallclock() with a time value as parameter. The time
-//         syntax is based upon the syntax defined in ISO 8601.
-//         (e.g. time.Now() )
-//       indefinite: The begin of the animation will be determined by a beginElement() method call or a hyperlink
-//         targeted to the element.
-//         (e.g. "infinite")
+//	 Input:
+//	   end: defines an end value for the animation
+//	     offset-value: This value defines a clock-value that represents a point in time relative to the beginning of the
+//	       SVG document (usually the load or DOMContentLoaded event). Negative values are valid.
+//	       (e.g. time.Second*5 or "5s")
+//	     syncbase-value: This value defines a syncbase and an optional offset from that syncbase. The element's
+//	       animation start time is defined relative to the begin or active end of another animation.
+//	       A valid syncbase-value consists of an ID reference to another animation element followed by a dot and either
+//	       begin or end to identify whether to synchronize with the beginning or active end of the referenced animation
+//	       element. An optional offset value as defined in <offset-value> can be appended.
+//	       (e.g. "0s;third.end", "first.end" or "second.end")
+//	     event-value: This value defines an event and an optional offset that determines the time at which the element's
+//	       animation should begin. The animation start time is defined relative to the time that the specified event is
+//	       fired.
+//	       A valid event-value consists of an element ID followed by a dot and one of the supported events for that
+//	       element. All valid events (not necessarily supported by all elements) are defined by the DOM and HTML
+//	       specifications. Those are: 'focus', 'blur', 'focusin', 'focusout', 'activate', 'auxclick', 'click',
+//	       'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
+//	       'wheel', 'beforeinput', 'input', 'keydown', 'keyup', 'compositionstart', 'compositionupdate',
+//	       'compositionend', 'load', 'unload', 'abort', 'error', 'select', 'resize', 'scroll', 'beginEvent', 'endEvent',
+//	       and 'repeatEvent'. An optional offset value as defined in <offset-value> can be appended.
+//	       (e.g. "startButton.click")
+//	     repeat-value: This value defines a qualified repeat event. The element animation start time is defined relative
+//	       to the time that the repeat event is raised with the specified iteration value.
+//	       A valid repeat value consists of an element ID followed by a dot and the function repeat() with an integer
+//	       value specifying the number of repetitions as parameter. An optional offset value as defined in
+//	       <offset-value> can be appended.
+//	       (e.g. "0s;myLoop.end", "myLoop.begin", "myLoop.repeat(1)" or "myLoop.repeat(2)")
+//	     accessKey-value: This value defines an access key that should trigger the animation. The element animation will
+//	       begin when the user presses the specified key.
+//	       A valid accessKey-value consists of the function accessKey() with the character to be input as parameter. An
+//	       optional offset value as defined in <offset-value> can be appended.
+//	       (e.g. "accessKey(s)")
+//	     wallclock-sync-value: This value defines the animation start time as a real-world clock time.
+//	       A valid wallclock-sync-value consists of the function wallclock() with a time value as parameter. The time
+//	       syntax is based upon the syntax defined in ISO 8601.
+//	       (e.g. time.Now() )
+//	     indefinite: The begin of the animation will be determined by a beginElement() method call or a hyperlink
+//	       targeted to the element.
+//	       (e.g. "infinite")
 //
 // Portuguese
 //
-//  O atributo final define um valor final para a animação que pode restringir a duração ativa.
+//	O atributo final define um valor final para a animação que pode restringir a duração ativa.
 //
-//   Entrada:
-//     end: define um valor final para a animação
-//       offset-value: Esse valor define um valor de relógio que representa um ponto no tempo relativo ao início do
-//         documento SVG (geralmente o evento load ou DOMContentLoaded). Valores negativos são válidos.
-//         (e.g. time.Second*5 or "5s")
-//       syncbase-value: Esse valor define uma base de sincronização e um deslocamento opcional dessa base de
-//         sincronização. A hora de início da animação do elemento é definida em relação ao início ou fim ativo de outra
-//         animação.
-//         Um valor syncbase válido consiste em uma referência de ID para outro elemento de animação seguido por um
-//         ponto e um início ou fim para identificar se deve ser sincronizado com o início ou o final ativo do elemento
-//         de animação referenciado. Um valor de deslocamento opcional conforme definido em <offset-value> pode ser
-//         anexado.
-//         (e.g. "0s;third.end", "first.end" or "second.end")
-//       event-value: Esse valor define um evento e um deslocamento opcional que determina a hora em que a animação do
-//         elemento deve começar. A hora de início da animação é definida em relação à hora em que o evento especificado
-//         é acionado.
-//         Um valor de evento válido consiste em um ID de elemento seguido por um ponto e um dos eventos com suporte
-//         para esse elemento. Todos os eventos válidos (não necessariamente suportados por todos os elementos) são
-//         definidos pelas especificações DOM e HTML. Esses valores são: 'focus', 'blur', 'focusin', 'focusout',
-//         'activate', 'auxclick', 'click', 'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove',
-//         'mouseout', 'mouseover', 'mouseup', 'wheel', 'beforeinput', 'input', 'keydown', 'keyup', 'compositionstart',
-//         'compositionupdate', 'compositionend', 'load', 'unload', 'abort', 'error', 'select', 'resize', 'scroll',
-//         'beginEvent', 'endEvent', e 'repeatEvent'. Um valor de deslocamento opcional conforme definido em
-//         <offset-value> pode ser anexado.
-//         (e.g. "startButton.click")
-//       repeat-value: Esse valor define um evento de repetição qualificado. A hora de início da animação do elemento é
-//         definida em relação à hora em que o evento de repetição é gerado com o valor de iteração especificado.
-//         Um valor de repetição válido consiste em um ID de elemento seguido por um ponto e a função repeat() com um
-//         valor inteiro especificando o número de repetições como parâmetro. Um valor de deslocamento opcional conforme
-//         definido em <offset-value> pode ser anexado.
-//         (e.g. "0s;myLoop.end", "myLoop.begin", "myLoop.repeat(1)" or "myLoop.repeat(2)")
-//       accessKey-value: Este valor define uma chave de acesso que deve acionar a animação. A animação do elemento
-//         começará quando o usuário pressionar a tecla especificada.
-//         Um valor válido de accessKey consiste na função accessKey() com o caractere a ser inserido como parâmetro.
-//         Um valor de deslocamento opcional conforme definido em <valor de deslocamento> pode ser anexado.
-//         (e.g. "accessKey(s)")
-//       wallclock-sync-value: Esse valor define a hora de início da animação como uma hora do relógio do mundo real.
-//         Um valor wallclock-sync válido consiste na função wallclock() com um valor de tempo como parâmetro. A sintaxe
-//         de tempo é baseada na sintaxe definida na ISO 8601.
-//         (e.g. time.Now() )
-//       indefinite: O início da animação será determinado por uma chamada de método beginElement() ou um hiperlink
-//         direcionado ao elemento.
-//         (e.g. "infinite")
-//
-//
+//	 Entrada:
+//	   end: define um valor final para a animação
+//	     offset-value: Esse valor define um valor de relógio que representa um ponto no tempo relativo ao início do
+//	       documento SVG (geralmente o evento load ou DOMContentLoaded). Valores negativos são válidos.
+//	       (e.g. time.Second*5 or "5s")
+//	     syncbase-value: Esse valor define uma base de sincronização e um deslocamento opcional dessa base de
+//	       sincronização. A hora de início da animação do elemento é definida em relação ao início ou fim ativo de outra
+//	       animação.
+//	       Um valor syncbase válido consiste em uma referência de ID para outro elemento de animação seguido por um
+//	       ponto e um início ou fim para identificar se deve ser sincronizado com o início ou o final ativo do elemento
+//	       de animação referenciado. Um valor de deslocamento opcional conforme definido em <offset-value> pode ser
+//	       anexado.
+//	       (e.g. "0s;third.end", "first.end" or "second.end")
+//	     event-value: Esse valor define um evento e um deslocamento opcional que determina a hora em que a animação do
+//	       elemento deve começar. A hora de início da animação é definida em relação à hora em que o evento especificado
+//	       é acionado.
+//	       Um valor de evento válido consiste em um ID de elemento seguido por um ponto e um dos eventos com suporte
+//	       para esse elemento. Todos os eventos válidos (não necessariamente suportados por todos os elementos) são
+//	       definidos pelas especificações DOM e HTML. Esses valores são: 'focus', 'blur', 'focusin', 'focusout',
+//	       'activate', 'auxclick', 'click', 'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove',
+//	       'mouseout', 'mouseover', 'mouseup', 'wheel', 'beforeinput', 'input', 'keydown', 'keyup', 'compositionstart',
+//	       'compositionupdate', 'compositionend', 'load', 'unload', 'abort', 'error', 'select', 'resize', 'scroll',
+//	       'beginEvent', 'endEvent', e 'repeatEvent'. Um valor de deslocamento opcional conforme definido em
+//	       <offset-value> pode ser anexado.
+//	       (e.g. "startButton.click")
+//	     repeat-value: Esse valor define um evento de repetição qualificado. A hora de início da animação do elemento é
+//	       definida em relação à hora em que o evento de repetição é gerado com o valor de iteração especificado.
+//	       Um valor de repetição válido consiste em um ID de elemento seguido por um ponto e a função repeat() com um
+//	       valor inteiro especificando o número de repetições como parâmetro. Um valor de deslocamento opcional conforme
+//	       definido em <offset-value> pode ser anexado.
+//	       (e.g. "0s;myLoop.end", "myLoop.begin", "myLoop.repeat(1)" or "myLoop.repeat(2)")
+//	     accessKey-value: Este valor define uma chave de acesso que deve acionar a animação. A animação do elemento
+//	       começará quando o usuário pressionar a tecla especificada.
+//	       Um valor válido de accessKey consiste na função accessKey() com o caractere a ser inserido como parâmetro.
+//	       Um valor de deslocamento opcional conforme definido em <valor de deslocamento> pode ser anexado.
+//	       (e.g. "accessKey(s)")
+//	     wallclock-sync-value: Esse valor define a hora de início da animação como uma hora do relógio do mundo real.
+//	       Um valor wallclock-sync válido consiste na função wallclock() com um valor de tempo como parâmetro. A sintaxe
+//	       de tempo é baseada na sintaxe definida na ISO 8601.
+//	       (e.g. time.Now() )
+//	     indefinite: O início da animação será determinado por uma chamada de método beginElement() ou um hiperlink
+//	       direcionado ao elemento.
+//	       (e.g. "infinite")
 func (e *TagSvgSet) End(end interface{}) (ref *TagSvgSet) {
 	if converted, ok := end.(time.Duration); ok {
 		e.selfElement.Call("setAttribute", "end", converted.String())
@@ -763,25 +766,25 @@ func (e *TagSvgSet) End(end interface{}) (ref *TagSvgSet) {
 //
 // The min attribute specifies the minimum value of the active animation duration.
 //
-//   Input:
-//     value: specifies the minimum value
-//       float32: 1.0 = "100%"
-//       time.Duration: 5*time.Second = "5s"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the minimum value
+//	    float32: 1.0 = "100%"
+//	    time.Duration: 5*time.Second = "5s"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo min especifica o valor mínimo da duração da animação ativa.
 //
-//   Input:
-//     value: especifica o valor mínimo
-//       float32: 1.0 = "100%"
-//       time.Duration: 5*time.Second = "5s"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: especifica o valor mínimo
+//	    float32: 1.0 = "100%"
+//	    time.Duration: 5*time.Second = "5s"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgSet) Min(value interface{}) (ref *TagSvgSet) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "min", RGBAToJs(converted))
@@ -809,25 +812,25 @@ func (e *TagSvgSet) Min(value interface{}) (ref *TagSvgSet) {
 //
 // The max attribute specifies the maximum value of the active animation duration.
 //
-//   Input:
-//     value: specifies the maximum value
-//       float32: 1.0 = "100%"
-//       time.Duration: 5*time.Second = "5s"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the maximum value
+//	    float32: 1.0 = "100%"
+//	    time.Duration: 5*time.Second = "5s"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo max especifica o valor máximo da duração da animação ativa.
 //
-//   Entrada:
-//     value: especifica o valor máximo
-//       float32: 1.0 = "100%"
-//       time.Duration: 5*time.Second = "5s"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o valor máximo
+//	    float32: 1.0 = "100%"
+//	    time.Duration: 5*time.Second = "5s"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgSet) Max(value interface{}) (ref *TagSvgSet) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "max", RGBAToJs(converted))
@@ -855,19 +858,19 @@ func (e *TagSvgSet) Max(value interface{}) (ref *TagSvgSet) {
 //
 // The restart attribute specifies whether or not an animation can restart.
 //
-//   Input:
-//     value: especifica se uma animação pode ou não reiniciar
-//       const: KSvgAnimationRestart... (e.g. KSvgAnimationRestartAlways)
-//       any other type: interface{}
+//	Input:
+//	  value: especifica se uma animação pode ou não reiniciar
+//	    const: KSvgAnimationRestart... (e.g. KSvgAnimationRestartAlways)
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo restart especifica se uma animação pode ou não reiniciar.
 //
-//   Entrada:
-//     value: especifica se uma animação pode ou não reiniciar
-//       const: KSvgAnimationRestart... (ex. KSvgAnimationRestartAlways)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica se uma animação pode ou não reiniciar
+//	    const: KSvgAnimationRestart... (ex. KSvgAnimationRestartAlways)
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgSet) Restart(value interface{}) (ref *TagSvgSet) {
 	if converted, ok := value.(SvgAnimationRestart); ok {
 		e.selfElement.Call("setAttribute", "restart", converted.String())
@@ -884,21 +887,21 @@ func (e *TagSvgSet) Restart(value interface{}) (ref *TagSvgSet) {
 //
 // The repeatCount attribute indicates the number of times an animation will take place.
 //
-//   Input:
-//     value: indicates the number of times an animation will take place
-//       int: number of times
-//       const: KSvgDurIndefinite
-//       any other type: interface{}
+//	Input:
+//	  value: indicates the number of times an animation will take place
+//	    int: number of times
+//	    const: KSvgDurIndefinite
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo repeatCount indica o número de vezes que uma animação ocorrerá.
 //
-//   Input:
-//     value: indica o número de vezes que uma animação ocorrerá
-//       int: número de vezes
-//       const: KSvgDurIndefinite
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: indica o número de vezes que uma animação ocorrerá
+//	    int: número de vezes
+//	    const: KSvgDurIndefinite
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgSet) RepeatCount(value interface{}) (ref *TagSvgSet) {
 	if converted, ok := value.(SvgDur); ok {
 		e.selfElement.Call("setAttribute", "repeatCount", converted.String())
@@ -915,23 +918,23 @@ func (e *TagSvgSet) RepeatCount(value interface{}) (ref *TagSvgSet) {
 //
 // The repeatDur attribute specifies the total duration for repeating an animation.
 //
-//   Input:
-//     value: specifies the total duration for repeating an animation
-//       string: "5s"
-//       time.Duration: 5*time.Second = "5s"
-//       const: KSvgDurIndefinite
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the total duration for repeating an animation
+//	    string: "5s"
+//	    time.Duration: 5*time.Second = "5s"
+//	    const: KSvgDurIndefinite
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo repeatDur especifica a duração total para repetir uma animação.
 //
-//   Entrada:
-//     value: especifica a duração total para repetir uma animação
-//       string: "5s"
-//       time.Duration: 5*time.Second = "5s"
-//       const: KSvgDurIndefinite
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica a duração total para repetir uma animação
+//	    string: "5s"
+//	    time.Duration: 5*time.Second = "5s"
+//	    const: KSvgDurIndefinite
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgSet) RepeatDur(value interface{}) (ref *TagSvgSet) {
 	if converted, ok := value.(time.Duration); ok {
 		e.selfElement.Call("setAttribute", "repeatDur", converted.String())
@@ -951,13 +954,13 @@ func (e *TagSvgSet) RepeatDur(value interface{}) (ref *TagSvgSet) {
 //
 // for animation it defines the final state of the animation.
 //
-//   Input:
-//     value: the fill value
-//       nil: fill="none"
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	Input:
+//	  value: the fill value
+//	    nil: fill="none"
+//	    string: e.g. "black"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    any other type: interface{}
 //
 // Português:
 //
@@ -966,13 +969,13 @@ func (e *TagSvgSet) RepeatDur(value interface{}) (ref *TagSvgSet) {
 //
 // para animação, define o estado final da animação.
 //
-//   Input:
-//     value: the fill value
-//       nil: fill="none"
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: the fill value
+//	    nil: fill="none"
+//	    string: e.g. "black"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgSet) Fill(value interface{}) (ref *TagSvgSet) {
 	if value == nil {
 		e.selfElement.Call("setAttribute", "fill", "none")
@@ -992,26 +995,26 @@ func (e *TagSvgSet) Fill(value interface{}) (ref *TagSvgSet) {
 //
 // English:
 //
-//  The href attribute defines a link to a resource as a reference URL. The exact meaning of that link depends on the
-//  context of each element using it.
+//	The href attribute defines a link to a resource as a reference URL. The exact meaning of that link depends on the
+//	context of each element using it.
 //
-//   Notes:
-//     * Specifications before SVG 2 defined an xlink:href attribute, which is now rendered obsolete by the href
-//       attribute.
-//       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
-//       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
+//	 Notes:
+//	   * Specifications before SVG 2 defined an xlink:href attribute, which is now rendered obsolete by the href
+//	     attribute.
+//	     If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
+//	     in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
 //
 // Português:
 //
-//  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
-//  contexto de cada elemento que o utiliza.
+//	O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
+//	contexto de cada elemento que o utiliza.
 //
-//   Notas:
-//     * As especificações anteriores ao SVG 2 definiam um atributo xlink:href, que agora se torna obsoleto pelo
-//       atributo href.
-//       Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
-//       usado como um substituto além do atributo href, por exemplo,
-//       <use href="some-id" xlink:href="some-id x="5" y="5" />.
+//	 Notas:
+//	   * As especificações anteriores ao SVG 2 definiam um atributo xlink:href, que agora se torna obsoleto pelo
+//	     atributo href.
+//	     Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
+//	     usado como um substituto além do atributo href, por exemplo,
+//	     <use href="some-id" xlink:href="some-id x="5" y="5" />.
 func (e *TagSvgSet) HRef(href string) (ref *TagSvgSet) {
 	e.selfElement.Call("setAttribute", "href", href)
 	return e
@@ -1021,21 +1024,21 @@ func (e *TagSvgSet) HRef(href string) (ref *TagSvgSet) {
 //
 // English:
 //
-//  The attributeName attribute indicates the name of the CSS property or attribute of the target element that is going
-//  to be changed during an animation.
+//	The attributeName attribute indicates the name of the CSS property or attribute of the target element that is going
+//	to be changed during an animation.
 //
-//   Input:
-//     attributeName: indicates the name of the CSS property or attribute of the target element
-//       const: KAttribute... (e.g. KAttributeSeed = "seed")
+//	 Input:
+//	   attributeName: indicates the name of the CSS property or attribute of the target element
+//	     const: KAttribute... (e.g. KAttributeSeed = "seed")
 //
 // Português:
 //
-//  O atributo attributeName indica o nome da propriedade CSS ou atributo do elemento de destino que será alterado
-//  durante uma animação.
+//	O atributo attributeName indica o nome da propriedade CSS ou atributo do elemento de destino que será alterado
+//	durante uma animação.
 //
-//   Entrada:
-//     attributeName: indica o nome da propriedade CSS ou atributo do elemento de destino
-//       const: KAttribute... (ex. KAttributeSeed = "seed")
+//	 Entrada:
+//	   attributeName: indica o nome da propriedade CSS ou atributo do elemento de destino
+//	     const: KAttribute... (ex. KAttributeSeed = "seed")
 func (e *TagSvgSet) AttributeName(attributeName string) (ref *TagSvgSet) {
 	e.selfElement.Call("setAttribute", "attributeName", attributeName)
 	return e
@@ -1045,43 +1048,43 @@ func (e *TagSvgSet) AttributeName(attributeName string) (ref *TagSvgSet) {
 //
 // English:
 //
-//  The calcMode attribute specifies the interpolation mode for the animation.
+//	The calcMode attribute specifies the interpolation mode for the animation.
 //
-//   Input:
-//     KSvgCalcModeDiscrete: This specifies that the animation function will jump from one value to the next without
-//       any interpolation.
-//     KSvgCalcModeLinear: Simple linear interpolation between values is used to calculate the animation function.
-//       Except for <animateMotion>, this is the default value.
-//     KSvgCalcModePaced: Defines interpolation to produce an even pace of change across the animation.
-//     KSvgCalcModeSpline: Interpolates from one value in the values list to the next according to a time function
-//       defined by a cubic Bézier spline. The points of the spline are defined in the keyTimes attribute, and the
-//       control points for each interval are defined in the keySplines attribute.
+//	 Input:
+//	   KSvgCalcModeDiscrete: This specifies that the animation function will jump from one value to the next without
+//	     any interpolation.
+//	   KSvgCalcModeLinear: Simple linear interpolation between values is used to calculate the animation function.
+//	     Except for <animateMotion>, this is the default value.
+//	   KSvgCalcModePaced: Defines interpolation to produce an even pace of change across the animation.
+//	   KSvgCalcModeSpline: Interpolates from one value in the values list to the next according to a time function
+//	     defined by a cubic Bézier spline. The points of the spline are defined in the keyTimes attribute, and the
+//	     control points for each interval are defined in the keySplines attribute.
 //
 // The default mode is linear, however if the attribute does not support linear interpolation (e.g. for strings), the
 // calcMode attribute is ignored and discrete interpolation is used.
 //
-//   Notes:
-//     Default value: KSvgCalcModePaced
+//	Notes:
+//	  Default value: KSvgCalcModePaced
 //
 // Português:
 //
-//  O atributo calcMode especifica o modo de interpolação para a animação.
+//	O atributo calcMode especifica o modo de interpolação para a animação.
 //
-//   Entrada:
-//     KSvgCalcModeDiscrete: Isso especifica que a função de animação saltará de um valor para o próximo sem qualquer
-//       interpolação.
-//     KSvgCalcModeLinear: A interpolação linear simples entre valores é usada para calcular a função de animação.
-//       Exceto para <animateMotion>, este é o valor padrão.
-//     KSvgCalcModePaced: Define a interpolação para produzir um ritmo uniforme de mudança na animação.
-//     KSvgCalcModeSpline: Interpola de um valor na lista de valores para o próximo de acordo com uma função de tempo
-//       definida por uma spline de Bézier cúbica. Os pontos do spline são definidos no atributo keyTimes e os pontos
-//       de controle para cada intervalo são definidos no atributo keySplines.
+//	 Entrada:
+//	   KSvgCalcModeDiscrete: Isso especifica que a função de animação saltará de um valor para o próximo sem qualquer
+//	     interpolação.
+//	   KSvgCalcModeLinear: A interpolação linear simples entre valores é usada para calcular a função de animação.
+//	     Exceto para <animateMotion>, este é o valor padrão.
+//	   KSvgCalcModePaced: Define a interpolação para produzir um ritmo uniforme de mudança na animação.
+//	   KSvgCalcModeSpline: Interpola de um valor na lista de valores para o próximo de acordo com uma função de tempo
+//	     definida por uma spline de Bézier cúbica. Os pontos do spline são definidos no atributo keyTimes e os pontos
+//	     de controle para cada intervalo são definidos no atributo keySplines.
 //
 // O modo padrão é linear, no entanto, se o atributo não suportar interpolação linear (por exemplo, para strings), o
 // atributo calcMode será ignorado e a interpolação discreta será usada.
 //
-//   Notas:
-//     * Valor padrão: KSvgCalcModePaced
+//	Notas:
+//	  * Valor padrão: KSvgCalcModePaced
 func (e *TagSvgSet) CalcMode(value interface{}) (ref *TagSvgSet) {
 	if converted, ok := value.(SvgCalcMode); ok {
 		e.selfElement.Call("setAttribute", "calcMode", converted.String())
@@ -1100,17 +1103,17 @@ func (e *TagSvgSet) CalcMode(value interface{}) (ref *TagSvgSet) {
 // of values used over the course of an animation, or it's a list of numbers for a color matrix, which is interpreted
 // differently depending on the type of color change to be performed.
 //
-//   Input:
-//     value: list of values
-//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
-//       []float32: []float64{0.0, 0.1} = "0%, 10%"
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
-//       time.Duration: time.Second = "1s"
-//       float32: 0.1 = "10%"
-//       float64: 10.0 = "10"
-//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
-//       any other type: interface{}
+//	Input:
+//	  value: list of values
+//	    []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//	    []float32: []float64{0.0, 0.1} = "0%, 10%"
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//	    time.Duration: time.Second = "1s"
+//	    float32: 0.1 = "10%"
+//	    float64: 10.0 = "10"
+//	    color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//	    any other type: interface{}
 //
 // Português:
 //
@@ -1118,17 +1121,17 @@ func (e *TagSvgSet) CalcMode(value interface{}) (ref *TagSvgSet) {
 // valores usados ao longo de uma animação, ou é uma lista de números para uma matriz de cores, que é interpretada de
 // forma diferente dependendo do tipo de mudança de cor a ser executada.
 //
-//   Input:
-//     value: lista de valores
-//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
-//       []float32: []float64{0.0, 0.1} = "0%, 10%"
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
-//       time.Duration: time.Second = "1s"
-//       float32: 0.1 = "10%"
-//       float64: 10.0 = "10"
-//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
-//       any other type: interface{}
+//	Input:
+//	  value: lista de valores
+//	    []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//	    []float32: []float64{0.0, 0.1} = "0%, 10%"
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//	    time.Duration: time.Second = "1s"
+//	    float32: 0.1 = "10%"
+//	    float64: 10.0 = "10"
+//	    color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//	    any other type: interface{}
 func (e *TagSvgSet) Values(value interface{}) (ref *TagSvgSet) {
 	e.selfElement.Call("setAttribute", "values", TypeToString(value, ";", ";"))
 	return e
@@ -1140,9 +1143,9 @@ func (e *TagSvgSet) Values(value interface{}) (ref *TagSvgSet) {
 //
 // The keyTimes attribute represents a list of time values used to control the pacing of the animation.
 //
-//   Input:
-//     value: list of time values used to control
-//       []float64{0.0, 0.5, 1.0}: values="0; 0.5; 1"
+//	Input:
+//	  value: list of time values used to control
+//	    []float64{0.0, 0.5, 1.0}: values="0; 0.5; 1"
 //
 // Each time in the list corresponds to a value in the values attribute list, and defines when the value is used in the
 // animation.
@@ -1154,9 +1157,9 @@ func (e *TagSvgSet) Values(value interface{}) (ref *TagSvgSet) {
 //
 // O atributo keyTimes representa uma lista de valores de tempo usados para controlar o ritmo da animação.
 //
-//   Entrada:
-//     value: lista de valores de tempo usados para controle
-//       []float64{0.0, 0.5, 1.0}: values="0; 0.5; 1"
+//	Entrada:
+//	  value: lista de valores de tempo usados para controle
+//	    []float64{0.0, 0.5, 1.0}: values="0; 0.5; 1"
 //
 // Cada vez na lista corresponde a um valor na lista de atributos de valores e define quando o valor é usado na
 // animação.
@@ -1175,9 +1178,9 @@ func (e *TagSvgSet) KeyTimes(value interface{}) (ref *TagSvgSet) {
 // The keySplines attribute defines a set of Bézier curve control points associated with the keyTimes list, defining a
 // cubic Bézier function that controls interval pacing.
 //
-//   Input:
-//     value: set of Bézier curve control points associated with the keyTimes list
-//       [][]float64: [][]float64{{0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}}
+//	Input:
+//	  value: set of Bézier curve control points associated with the keyTimes list
+//	    [][]float64: [][]float64{{0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}}
 //
 // This attribute is ignored unless the calcMode attribute is set to spline.
 //
@@ -1189,9 +1192,9 @@ func (e *TagSvgSet) KeyTimes(value interface{}) (ref *TagSvgSet) {
 // O atributo keySplines define um conjunto de pontos de controle da curva Bézier associados à lista keyTimes,
 // definindo uma função Bézier cúbica que controla o ritmo do intervalo.
 //
-//   Entrada:
-//     value: conjunto de pontos de controle da curva Bézier associados à lista keyTimes
-//       [][]float64: [][]float64{{0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}}
+//	Entrada:
+//	  value: conjunto de pontos de controle da curva Bézier associados à lista keyTimes
+//	    [][]float64: [][]float64{{0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}, {0.5, 0, 0.5, 1}}
 //
 // Esse atributo é ignorado, a menos que o atributo calcMode seja definido como spline.
 //
@@ -1208,17 +1211,17 @@ func (e *TagSvgSet) KeySplines(value interface{}) (ref *TagSvgSet) {
 //
 // The from attribute indicates the initial value of the attribute that will be modified during the animation.
 //
-//   Input:
-//     value: initial value of the attribute
-//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
-//       []float32: []float64{0.0, 0.1} = "0%, 10%"
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
-//       time.Duration: time.Second = "1s"
-//       float32: 0.1 = "10%"
-//       float64: 10.0 = "10"
-//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
-//       any other type: interface{}
+//	Input:
+//	  value: initial value of the attribute
+//	    []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//	    []float32: []float64{0.0, 0.1} = "0%, 10%"
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//	    time.Duration: time.Second = "1s"
+//	    float32: 0.1 = "10%"
+//	    float64: 10.0 = "10"
+//	    color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//	    any other type: interface{}
 //
 // When used with the to attribute, the animation will change the modified attribute from the from value to the to
 // value. When used with the by attribute, the animation will change the attribute relatively from the from value by
@@ -1228,17 +1231,17 @@ func (e *TagSvgSet) KeySplines(value interface{}) (ref *TagSvgSet) {
 //
 // O atributo from indica o valor inicial do atributo que será modificado durante a animação.
 //
-//   Entrada:
-//     value: valor inicial do atributo
-//       []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
-//       []float32: []float64{0.0, 0.1} = "0%, 10%"
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
-//       time.Duration: time.Second = "1s"
-//       float32: 0.1 = "10%"
-//       float64: 10.0 = "10"
-//       color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: valor inicial do atributo
+//	    []color.RGBA{factoryColor.NewBlack(),factoryColor.NewRed()} = "rgba(0,0,0,1),rgba(255,0,0,1)"
+//	    []float32: []float64{0.0, 0.1} = "0%, 10%"
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []time.Duration: []time.Duration{0, time.Second} = "0s, 1s"
+//	    time.Duration: time.Second = "1s"
+//	    float32: 0.1 = "10%"
+//	    float64: 10.0 = "10"
+//	    color.RGBA: factoryColor.NewRed() = "rgba(255,0,0,1)"
+//	    qualquer outro tipo: interface{}
 //
 // Quando usado com o atributo to, a animação mudará o atributo modificado do valor from para o valor to. Quando usado
 // com o atributo by, a animação mudará o atributo relativamente do valor from pelo valor especificado em by.
@@ -1251,21 +1254,21 @@ func (e *TagSvgSet) From(value interface{}) (ref *TagSvgSet) {
 //
 // English:
 //
-//  The by attribute specifies a relative offset value for an attribute that will be modified during an animation.
+//	The by attribute specifies a relative offset value for an attribute that will be modified during an animation.
 //
-//   Input:
-//     by: specifies a relative offset value for an attribute
+//	 Input:
+//	   by: specifies a relative offset value for an attribute
 //
 // The starting value for the attribute is either indicated by specifying it as value for the attribute given in the
 // attributeName or the from attribute.
 //
 // Português:
 //
-//  O atributo by especifica um valor de deslocamento relativo para um atributo que será modificado durante uma
-//  animação.
+//	O atributo by especifica um valor de deslocamento relativo para um atributo que será modificado durante uma
+//	animação.
 //
-//   Entrada:
-//     by: especifica um valor de deslocamento relativo para um atributo
+//	 Entrada:
+//	   by: especifica um valor de deslocamento relativo para um atributo
 //
 // O valor inicial para o atributo é indicado especificando-o como valor para o atributo fornecido no attributeName ou
 // no atributo from.
@@ -1278,24 +1281,24 @@ func (e *TagSvgSet) By(by float64) (ref *TagSvgSet) {
 //
 // English:
 //
-//  The additive attribute controls whether or not an animation is additive.
+//	The additive attribute controls whether or not an animation is additive.
 //
-//   Input:
-//     value: controls whether or not an animation is additive
-//       const: KSvgAdditive... (e.g. KSvgAdditiveSum)
-//       any other type: interface{}
+//	 Input:
+//	   value: controls whether or not an animation is additive
+//	     const: KSvgAdditive... (e.g. KSvgAdditiveSum)
+//	     any other type: interface{}
 //
 // It is frequently useful to define animation as an offset or delta to an attribute's value, rather than as
 // absolute values.
 //
 // Português:
 //
-//  O atributo aditivo controla se uma animação é ou não aditiva.
+//	O atributo aditivo controla se uma animação é ou não aditiva.
 //
-//   Entrada:
-//     value: controla se uma animação é aditiva ou não
-//       const: KSvgAdditive... (ex. KSvgAdditiveSum)
-//       qualquer outro tipo: interface{}
+//	 Entrada:
+//	   value: controla se uma animação é aditiva ou não
+//	     const: KSvgAdditive... (ex. KSvgAdditiveSum)
+//	     qualquer outro tipo: interface{}
 //
 // É frequentemente útil definir a animação como um deslocamento ou delta para o valor de um atributo, em vez de
 // valores absolutos.
@@ -1313,38 +1316,38 @@ func (e *TagSvgSet) Additive(value interface{}) (ref *TagSvgSet) {
 //
 // English:
 //
-//  The accumulate attribute controls whether or not an animation is cumulative.
+//	The accumulate attribute controls whether or not an animation is cumulative.
 //
-//   Input:
-//     value: controls whether or not an animation is cumulative
-//       const: KSvgAccumulate... (e.g. KSvgAccumulateSum)
-//       any other type: interface{}
+//	 Input:
+//	   value: controls whether or not an animation is cumulative
+//	     const: KSvgAccumulate... (e.g. KSvgAccumulateSum)
+//	     any other type: interface{}
 //
 // It is frequently useful for repeated animations to build upon the previous results, accumulating with each iteration.
 // This attribute said to the animation if the value is added to the previous animated attribute's value on each
 // iteration.
 //
-//   Notes:
-//     * This attribute is ignored if the target attribute value does not support addition, or if the animation element
-//       does not repeat;
-//     * This attribute will be ignored if the animation function is specified with only the to attribute.
+//	Notes:
+//	  * This attribute is ignored if the target attribute value does not support addition, or if the animation element
+//	    does not repeat;
+//	  * This attribute will be ignored if the animation function is specified with only the to attribute.
 //
 // Português:
 //
-//  O atributo acumular controla se uma animação é cumulativa ou não.
+//	O atributo acumular controla se uma animação é cumulativa ou não.
 //
-//   Entrada:
-//     value: controla se uma animação é cumulativa ou não
-//       const: KSvgAccumulate... (ex. KSvgAccumulateSum)
-//       qualquer outro tipo: interface{}
+//	 Entrada:
+//	   value: controla se uma animação é cumulativa ou não
+//	     const: KSvgAccumulate... (ex. KSvgAccumulateSum)
+//	     qualquer outro tipo: interface{}
 //
 // Frequentemente, é útil que as animações repetidas se baseiem nos resultados anteriores, acumulando a cada iteração.
 // Este atributo é dito à animação se o valor for adicionado ao valor do atributo animado anterior em cada iteração.
 //
-//   Notas:
-//     * Esse atributo será ignorado se o valor do atributo de destino não suportar adição ou se o elemento de animação
-//       não se repetir;
-//     * Este atributo será ignorado se a função de animação for especificada apenas com o atributo to.
+//	Notas:
+//	  * Esse atributo será ignorado se o valor do atributo de destino não suportar adição ou se o elemento de animação
+//	    não se repetir;
+//	  * Este atributo será ignorado se a função de animação for especificada apenas com o atributo to.
 func (e *TagSvgSet) Accumulate(value interface{}) (ref *TagSvgSet) {
 	if converted, ok := value.(SvgAccumulate); ok {
 		e.selfElement.Call("setAttribute", "accumulate", converted.String())
@@ -1364,10 +1367,10 @@ func (e *TagSvgSet) Accumulate(value interface{}) (ref *TagSvgSet) {
 // The xlink:href attribute defines a reference to a resource as a reference IRI. The exact meaning of that link depends
 // on the context of each element using it.
 //
-//   Notes:
-//     * SVG 2 removed the need for the xlink namespace, so instead of xlink:href you should use href. If you need to
-//       support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback in addition to
-//       the href attribute, e.g. <use href="some-id" xlink:href="some-id" x="5" y="5" />.
+//	Notes:
+//	  * SVG 2 removed the need for the xlink namespace, so instead of xlink:href you should use href. If you need to
+//	    support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback in addition to
+//	    the href attribute, e.g. <use href="some-id" xlink:href="some-id" x="5" y="5" />.
 //
 // Português:
 //
@@ -1376,10 +1379,10 @@ func (e *TagSvgSet) Accumulate(value interface{}) (ref *TagSvgSet) {
 // O atributo xlink:href define uma referência a um recurso como um IRI de referência. O significado exato desse link
 // depende do contexto de cada elemento que o utiliza.
 //
-//   Notas:
-//     * O SVG 2 removeu a necessidade do namespace xlink, então ao invés de xlink:href você deve usar href. Se você
-//       precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser usado como
-//       um substituto além do atributo href, por exemplo, <use href="some-id" xlink:href="some-id" x="5" y="5" >.
+//	Notas:
+//	  * O SVG 2 removeu a necessidade do namespace xlink, então ao invés de xlink:href você deve usar href. Se você
+//	    precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser usado como
+//	    um substituto além do atributo href, por exemplo, <use href="some-id" xlink:href="some-id" x="5" y="5" >.
 func (e *TagSvgSet) XLinkHRef(value interface{}) (ref *TagSvgSet) {
 	e.selfElement.Call("setAttribute", "xlink:href", value)
 	return e
@@ -1423,10 +1426,10 @@ func (e *TagSvgSet) Html(value string) (ref *TagSvgSet) {
 //
 // Passa a referencia do objeto para uma variável externa.
 //
-//   Example: / Exemplo:
-//     var circle *html.TagSvgCircle
-//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
-//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgSet) Reference(reference **TagSvgSet) (ref *TagSvgSet) {
 	*reference = e
 	return e

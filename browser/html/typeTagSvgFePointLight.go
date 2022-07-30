@@ -160,11 +160,11 @@ type TagSvgFePointLight struct {
 //
 // English:
 //
-//  Initializes the object correctly.
+//	Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+//	Inicializa o objeto corretamente.
 func (e *TagSvgFePointLight) Init() (ref *TagSvgFePointLight) {
 	e.listener = new(sync.Map)
 
@@ -231,13 +231,18 @@ func (e *TagSvgFePointLight) Get() (el js.Value) {
 //
 // English:
 //
-//  The id attribute assigns a unique name to an element.
+//	The id attribute assigns a unique name to an element.
 //
 // Portuguese
 //
-//  O atributo id atribui um nome exclusivo a um elemento.
+//	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgFePointLight) Id(id string) (ref *TagSvgFePointLight) {
 	e.selfElement.Call("setAttribute", "id", id)
+
+	// Saves the element reference with ID for later use.
+	// Salva a referência dos elementos com ID para uso posterior.
+	htmlGlobalAllElementsList.Delete(id)
+	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -248,10 +253,10 @@ func (e *TagSvgFePointLight) Id(id string) (ref *TagSvgFePointLight) {
 // The lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language used in contents
-//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language used in contents
+//	    const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//	    any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -267,10 +272,10 @@ func (e *TagSvgFePointLight) Id(id string) (ref *TagSvgFePointLight) {
 // O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal usado no conteúdo
-//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal usado no conteúdo
+//	    const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//	    qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -298,22 +303,22 @@ func (e *TagSvgFePointLight) Lang(value interface{}) (ref *TagSvgFePointLight) {
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
-//   Input:
-//     value: control whether an element is focusable
-//       int: focus order
-//       nil: focus disabled
-//       any other type: interface{}
+//	Input:
+//	  value: control whether an element is focusable
+//	    int: focus order
+//	    nil: focus disabled
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
 //
-//   Input:
-//     value: controlar se um elemento é focalizável
-//       int: ordem do foco
-//       nil: disabilita o foco
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: controlar se um elemento é focalizável
+//	    int: ordem do foco
+//	    nil: disabilita o foco
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgFePointLight) Tabindex(value interface{}) (ref *TagSvgFePointLight) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -326,10 +331,10 @@ func (e *TagSvgFePointLight) Tabindex(value interface{}) (ref *TagSvgFePointLigh
 // The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language
-//       const: KLanguage... (e.g. KLanguageEnglish)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language
+//	    const: KLanguage... (e.g. KLanguageEnglish)
+//	    any other type: interface{}
 //
 // It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
 // contains.
@@ -342,10 +347,10 @@ func (e *TagSvgFePointLight) Tabindex(value interface{}) (ref *TagSvgFePointLigh
 // O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal
-//       const: KLanguage... (e.g. KLanguagePortuguese)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal
+//	    const: KLanguage... (e.g. KLanguagePortuguese)
+//	    qualquer outro tipo: interface{}
 //
 // É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
 // contém.
@@ -370,23 +375,23 @@ func (e *TagSvgFePointLight) XmlLang(value interface{}) (ref *TagSvgFePointLight
 //
 // The x attribute defines an x-axis coordinate in the user coordinate system.
 //
-//   Input:
-//     value: defines an x-axis coordinate
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 0.1} = "0%, 10%"
-//       float32: 0.1 = "10%"
-//       any other type: interface{}
+//	Input:
+//	  value: defines an x-axis coordinate
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []float32: []float64{0.0, 0.1} = "0%, 10%"
+//	    float32: 0.1 = "10%"
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo x define uma coordenada do eixo x no sistema de coordenadas do usuário.
 //
-//   Entrada:
-//     value: define uma coordenada do eixo x
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 0.1} = "0%, 10%"
-//       float32: 0.1 = "10%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define uma coordenada do eixo x
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []float32: []float64{0.0, 0.1} = "0%, 10%"
+//	    float32: 0.1 = "10%"
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgFePointLight) X(value interface{}) (ref *TagSvgFePointLight) {
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
@@ -428,23 +433,23 @@ func (e *TagSvgFePointLight) X(value interface{}) (ref *TagSvgFePointLight) {
 //
 // The y attribute defines an y-axis coordinate in the user coordinate system.
 //
-//   Input:
-//     value: defines an y-axis coordinate
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float32{0.0, 0.1} = "0%, 10%"
-//       float32: 0.1 = "10%"
-//       any other type: interface{}
+//	Input:
+//	  value: defines an y-axis coordinate
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []float32: []float32{0.0, 0.1} = "0%, 10%"
+//	    float32: 0.1 = "10%"
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo y define uma coordenada do eixo y no sistema de coordenadas do usuário.
 //
-//   Entrada:
-//     value: define uma coordenada do eixo y
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float32{0.0, 0.1} = "0%, 10%"
-//       float32: 0.1 = "10%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define uma coordenada do eixo y
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []float32: []float32{0.0, 0.1} = "0%, 10%"
+//	    float32: 0.1 = "10%"
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgFePointLight) Y(value interface{}) (ref *TagSvgFePointLight) {
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
@@ -489,10 +494,10 @@ func (e *TagSvgFePointLight) Y(value interface{}) (ref *TagSvgFePointLight) {
 // z-axis comes out towards the person viewing the content and assuming that one unit along the z-axis equals one unit
 // in x and y.
 //
-//   Input:
-//     value: defines the location along the z-axis
-//       float32: 0.1 = "10%"
-//       any other type: interface{}
+//	Input:
+//	  value: defines the location along the z-axis
+//	    float32: 0.1 = "10%"
+//	    any other type: interface{}
 //
 // Português:
 //
@@ -501,10 +506,10 @@ func (e *TagSvgFePointLight) Y(value interface{}) (ref *TagSvgFePointLight) {
 // positivo sai em direção à pessoa visualizar o conteúdo e assumir que uma unidade ao longo do eixo z é igual a uma
 // unidade em x e y.
 //
-//   Entrada:
-//     value: define a localização ao longo do eixo z
-//       float32: 0.1 = "10%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define a localização ao longo do eixo z
+//	    float32: 0.1 = "10%"
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgFePointLight) Z(value interface{}) (ref *TagSvgFePointLight) {
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
@@ -578,10 +583,10 @@ func (e *TagSvgFePointLight) Html(value string) (ref *TagSvgFePointLight) {
 //
 // Passa a referencia do objeto para uma variável externa.
 //
-//   Example: / Exemplo:
-//     var circle *html.TagSvgCircle
-//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
-//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgFePointLight) Reference(reference **TagSvgFePointLight) (ref *TagSvgFePointLight) {
 	*reference = e
 	return e

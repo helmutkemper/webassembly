@@ -157,11 +157,11 @@ type TagSvgFeMergeNode struct {
 //
 // English:
 //
-//  Initializes the object correctly.
+//	Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+//	Inicializa o objeto corretamente.
 func (e *TagSvgFeMergeNode) Init() (ref *TagSvgFeMergeNode) {
 	e.listener = new(sync.Map)
 
@@ -228,13 +228,18 @@ func (e *TagSvgFeMergeNode) Get() (el js.Value) {
 //
 // English:
 //
-//  The id attribute assigns a unique name to an element.
+//	The id attribute assigns a unique name to an element.
 //
 // Portuguese
 //
-//  O atributo id atribui um nome exclusivo a um elemento.
+//	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgFeMergeNode) Id(id string) (ref *TagSvgFeMergeNode) {
 	e.selfElement.Call("setAttribute", "id", id)
+
+	// Saves the element reference with ID for later use.
+	// Salva a referência dos elementos com ID para uso posterior.
+	htmlGlobalAllElementsList.Delete(id)
+	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -245,10 +250,10 @@ func (e *TagSvgFeMergeNode) Id(id string) (ref *TagSvgFeMergeNode) {
 // The lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language used in contents
-//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language used in contents
+//	    const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//	    any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -264,10 +269,10 @@ func (e *TagSvgFeMergeNode) Id(id string) (ref *TagSvgFeMergeNode) {
 // O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal usado no conteúdo
-//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal usado no conteúdo
+//	    const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//	    qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -295,22 +300,22 @@ func (e *TagSvgFeMergeNode) Lang(value interface{}) (ref *TagSvgFeMergeNode) {
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
-//   Input:
-//     value: control whether an element is focusable
-//       int: focus order
-//       nil: focus disabled
-//       any other type: interface{}
+//	Input:
+//	  value: control whether an element is focusable
+//	    int: focus order
+//	    nil: focus disabled
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
 //
-//   Input:
-//     value: controlar se um elemento é focalizável
-//       int: ordem do foco
-//       nil: disabilita o foco
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: controlar se um elemento é focalizável
+//	    int: ordem do foco
+//	    nil: disabilita o foco
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgFeMergeNode) Tabindex(value interface{}) (ref *TagSvgFeMergeNode) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -323,10 +328,10 @@ func (e *TagSvgFeMergeNode) Tabindex(value interface{}) (ref *TagSvgFeMergeNode)
 // The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language
-//       const: KLanguage... (e.g. KLanguageEnglish)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language
+//	    const: KLanguage... (e.g. KLanguageEnglish)
+//	    any other type: interface{}
 //
 // It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
 // contains.
@@ -339,10 +344,10 @@ func (e *TagSvgFeMergeNode) Tabindex(value interface{}) (ref *TagSvgFeMergeNode)
 // O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal
-//       const: KLanguage... (e.g. KLanguagePortuguese)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal
+//	    const: KLanguage... (e.g. KLanguagePortuguese)
+//	    qualquer outro tipo: interface{}
 //
 // É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
 // contém.
@@ -365,12 +370,12 @@ func (e *TagSvgFeMergeNode) XmlLang(value interface{}) (ref *TagSvgFeMergeNode) 
 //
 // English:
 //
-//  The in attribute identifies input for the given filter primitive.
+//	The in attribute identifies input for the given filter primitive.
 //
-//   Input:
-//     in: identifies input for the given filter primitive.
-//       KSvgIn... (e.g. KSvgInSourceAlpha)
-//       any other type: interface{}
+//	 Input:
+//	   in: identifies input for the given filter primitive.
+//	     KSvgIn... (e.g. KSvgInSourceAlpha)
+//	     any other type: interface{}
 //
 // The value can be either one of the six keywords defined below, or a string which matches a previous result attribute
 // value within the same <filter> element. If no value is provided and this is the first filter primitive, then this
@@ -382,12 +387,12 @@ func (e *TagSvgFeMergeNode) XmlLang(value interface{}) (ref *TagSvgFeMergeNode) 
 //
 // Portuguese
 //
-//  O atributo in identifica à entrada para a primitiva de filtro fornecida.
+//	O atributo in identifica à entrada para a primitiva de filtro fornecida.
 //
-//   Entrada:
-//     in: identifica à entrada para a primitiva de filtro fornecida.
-//       KSvgIn... (e.g. KSvgInSourceAlpha)
-//       qualquer outro tipo: interface{}
+//	 Entrada:
+//	   in: identifica à entrada para a primitiva de filtro fornecida.
+//	     KSvgIn... (e.g. KSvgInSourceAlpha)
+//	     qualquer outro tipo: interface{}
 //
 // O valor pode ser uma das seis palavras-chave definidas abaixo ou uma string que corresponda a um valor de atributo
 // de resultado anterior dentro do mesmo elemento <filter>. Se nenhum valor for fornecido e esta for a primeira
@@ -445,10 +450,10 @@ func (e *TagSvgFeMergeNode) Html(value string) (ref *TagSvgFeMergeNode) {
 //
 // Passa a referencia do objeto para uma variável externa.
 //
-//   Example: / Exemplo:
-//     var circle *html.TagSvgCircle
-//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
-//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgFeMergeNode) Reference(reference **TagSvgFeMergeNode) (ref *TagSvgFeMergeNode) {
 	*reference = e
 	return e

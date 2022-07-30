@@ -15,17 +15,17 @@ import (
 //
 // The SVG <style> element allows style sheets to be embedded directly within SVG content.
 //
-//   Notes:
-//     * SVG's style element has the same attributes as the corresponding element in HTML
-//       (see HTML's <style> element).
+//	Notes:
+//	  * SVG's style element has the same attributes as the corresponding element in HTML
+//	    (see HTML's <style> element).
 //
 // Português:
 //
 // O elemento SVG <style> permite que as folhas de estilo sejam incorporadas diretamente no conteúdo SVG.
 //
-//   Notas:
-//     * O elemento de estilo SVG tem os mesmos atributos que o elemento correspondente em HTML
-//       (definir elemento HTML <style>).
+//	Notas:
+//	  * O elemento de estilo SVG tem os mesmos atributos que o elemento correspondente em HTML
+//	    (definir elemento HTML <style>).
 type TagSvgStyle struct {
 
 	// id
@@ -165,11 +165,11 @@ type TagSvgStyle struct {
 //
 // English:
 //
-//  Initializes the object correctly.
+//	Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+//	Inicializa o objeto corretamente.
 func (e *TagSvgStyle) Init() (ref *TagSvgStyle) {
 	e.listener = new(sync.Map)
 
@@ -236,13 +236,18 @@ func (e *TagSvgStyle) Get() (el js.Value) {
 //
 // English:
 //
-//  The id attribute assigns a unique name to an element.
+//	The id attribute assigns a unique name to an element.
 //
 // Portuguese
 //
-//  O atributo id atribui um nome exclusivo a um elemento.
+//	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgStyle) Id(id string) (ref *TagSvgStyle) {
 	e.selfElement.Call("setAttribute", "id", id)
+
+	// Saves the element reference with ID for later use.
+	// Salva a referência dos elementos com ID para uso posterior.
+	htmlGlobalAllElementsList.Delete(id)
+	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -253,10 +258,10 @@ func (e *TagSvgStyle) Id(id string) (ref *TagSvgStyle) {
 // The lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language used in contents
-//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language used in contents
+//	    const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//	    any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -272,10 +277,10 @@ func (e *TagSvgStyle) Id(id string) (ref *TagSvgStyle) {
 // O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal usado no conteúdo
-//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal usado no conteúdo
+//	    const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//	    qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -303,22 +308,22 @@ func (e *TagSvgStyle) Lang(value interface{}) (ref *TagSvgStyle) {
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
-//   Input:
-//     value: control whether an element is focusable
-//       int: focus order
-//       nil: focus disabled
-//       any other type: interface{}
+//	Input:
+//	  value: control whether an element is focusable
+//	    int: focus order
+//	    nil: focus disabled
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
 //
-//   Input:
-//     value: controlar se um elemento é focalizável
-//       int: ordem do foco
-//       nil: disabilita o foco
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: controlar se um elemento é focalizável
+//	    int: ordem do foco
+//	    nil: disabilita o foco
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgStyle) Tabindex(value interface{}) (ref *TagSvgStyle) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -331,10 +336,10 @@ func (e *TagSvgStyle) Tabindex(value interface{}) (ref *TagSvgStyle) {
 // The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language
-//       const: KLanguage... (e.g. KLanguageEnglish)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language
+//	    const: KLanguage... (e.g. KLanguageEnglish)
+//	    any other type: interface{}
 //
 // It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
 // contains.
@@ -347,10 +352,10 @@ func (e *TagSvgStyle) Tabindex(value interface{}) (ref *TagSvgStyle) {
 // O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal
-//       const: KLanguage... (e.g. KLanguagePortuguese)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal
+//	    const: KLanguage... (e.g. KLanguagePortuguese)
+//	    qualquer outro tipo: interface{}
 //
 // É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
 // contém.
@@ -378,12 +383,12 @@ func (e *TagSvgStyle) XmlLang(value interface{}) (ref *TagSvgStyle) {
 // Assigns a class name or set of class names to an element. You may assign the same class name or names to any number
 // of elements, however, multiple class names must be separated by whitespace characters.
 //
-//   Input:
-//     class: Assigns a class name or set of class names to an element
+//	Input:
+//	  class: Assigns a class name or set of class names to an element
 //
 // An element's class name serves two key roles:
-//   * As a style sheet selector, for when an author assigns style information to a set of elements.
-//   * For general use by the browser.
+//   - As a style sheet selector, for when an author assigns style information to a set of elements.
+//   - For general use by the browser.
 //
 // Português:
 //
@@ -391,13 +396,13 @@ func (e *TagSvgStyle) XmlLang(value interface{}) (ref *TagSvgStyle) {
 // de classe a qualquer número de elementos, no entanto, vários nomes de classe devem ser separados por caracteres de
 // espaço em branco.
 //
-//   Entrada:
-//     class: Atribui um nome de classe ou um conjunto de nomes de classe à um elemento.
+//	Entrada:
+//	  class: Atribui um nome de classe ou um conjunto de nomes de classe à um elemento.
 //
 // O nome de classe de um elemento tem duas funções principais:
-//   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
+//   - Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
 //     elementos.
-//   * Para uso geral pelo navegador.
+//   - Para uso geral pelo navegador.
 func (e *TagSvgStyle) Class(class string) (ref *TagSvgStyle) {
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
@@ -409,8 +414,8 @@ func (e *TagSvgStyle) Class(class string) (ref *TagSvgStyle) {
 //
 // The style attribute allows to style an element using CSS declarations.
 //
-//   Input:
-//     value: allows to style an element using CSS declarations
+//	Input:
+//	  value: allows to style an element using CSS declarations
 //
 // It functions identically to the style attribute in HTML.
 //
@@ -418,8 +423,8 @@ func (e *TagSvgStyle) Class(class string) (ref *TagSvgStyle) {
 //
 // O atributo style permite estilizar um elemento usando declarações CSS.
 //
-//   Entrada:
-//     value: permite estilizar um elemento usando declarações CSS
+//	Entrada:
+//	  value: permite estilizar um elemento usando declarações CSS
 //
 // Funciona de forma idêntica ao atributo style em HTML.
 func (e *TagSvgStyle) Style(value string) (ref *TagSvgStyle) {
@@ -435,17 +440,17 @@ func (e *TagSvgStyle) Style(value string) (ref *TagSvgStyle) {
 //
 // Defines the content type of the element
 //
-//   Input:
-//     value: content type of the element
-//       any other type: interface{}
+//	Input:
+//	  value: content type of the element
+//	    any other type: interface{}
 //
 // Português:
 //
 // Define o tipo de conteúdo do elemento.
 //
-//   Input:
-//     value: tipo de conteúdo do elemento.
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: tipo de conteúdo do elemento.
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgStyle) Type(value interface{}) (ref *TagSvgStyle) {
 	e.selfElement.Call("setAttribute", "type", value)
 	return e
@@ -457,18 +462,18 @@ func (e *TagSvgStyle) Type(value interface{}) (ref *TagSvgStyle) {
 //
 // The media attribute specifies a media query that must be matched for a style sheet to apply.
 //
-//   Input:
-//     value: specifies a media query that must be matched for a style sheet to apply
-//       string: e.g. "all and (min-width: 600px)"
+//	Input:
+//	  value: specifies a media query that must be matched for a style sheet to apply
+//	    string: e.g. "all and (min-width: 600px)"
 //
 // Português:
 //
 // O atributo de mídia especifica uma consulta de mídia que deve ser correspondida para que uma folha de estilo seja
 // aplicada.
 //
-//   Entrada:
-//     value: especifica uma consulta de mídia que deve ser correspondida para que uma folha de estilo seja aplicada
-//       string: e.g. "all and (min-width: 600px)"
+//	Entrada:
+//	  value: especifica uma consulta de mídia que deve ser correspondida para que uma folha de estilo seja aplicada
+//	    string: e.g. "all and (min-width: 600px)"
 func (e *TagSvgStyle) Media(value interface{}) (ref *TagSvgStyle) {
 	e.selfElement.Call("setAttribute", "media", value)
 	return e
@@ -512,10 +517,10 @@ func (e *TagSvgStyle) Html(value string) (ref *TagSvgStyle) {
 //
 // Passa a referencia do objeto para uma variável externa.
 //
-//   Example: / Exemplo:
-//     var circle *html.TagSvgCircle
-//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
-//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgStyle) Reference(reference **TagSvgStyle) (ref *TagSvgStyle) {
 	*reference = e
 	return e

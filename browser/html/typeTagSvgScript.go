@@ -15,21 +15,21 @@ import (
 //
 // The SVG script element allows to add scripts to an SVG document.
 //
-//   Notes:
-//     * While SVG's script element is equivalent to the HTML <script> element, it has some discrepancies, like it uses
-//       the href attribute instead of src and it doesn't support ECMAScript modules so far (See browser compatibility
-//       below for details)
-//     * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - didn't work in tests (07/2022)
+//	Notes:
+//	  * While SVG's script element is equivalent to the HTML <script> element, it has some discrepancies, like it uses
+//	    the href attribute instead of src and it doesn't support ECMAScript modules so far (See browser compatibility
+//	    below for details)
+//	  * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - didn't work in tests (07/2022)
 //
 // Português:
 //
 // O elemento script SVG permite adicionar scripts a um documento SVG.
 //
-//   Notas:
-//     * Embora o elemento script do SVG seja equivalente ao elemento HTML <script>, ele tem algumas discrepâncias, como
-//       usar o atributo href em vez de src e não suportar módulos ECMAScript até agora (consulte a compatibilidade do
-//       navegador abaixo para obter detalhes)
-//     * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - não funcionou nos testes (07/2022)
+//	Notas:
+//	  * Embora o elemento script do SVG seja equivalente ao elemento HTML <script>, ele tem algumas discrepâncias, como
+//	    usar o atributo href em vez de src e não suportar módulos ECMAScript até agora (consulte a compatibilidade do
+//	    navegador abaixo para obter detalhes)
+//	  * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - não funcionou nos testes (07/2022)
 type TagSvgScript struct {
 
 	// id
@@ -169,11 +169,11 @@ type TagSvgScript struct {
 //
 // English:
 //
-//  Initializes the object correctly.
+//	Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+//	Inicializa o objeto corretamente.
 func (e *TagSvgScript) Init() (ref *TagSvgScript) {
 	e.listener = new(sync.Map)
 
@@ -240,13 +240,18 @@ func (e *TagSvgScript) Get() (el js.Value) {
 //
 // English:
 //
-//  The id attribute assigns a unique name to an element.
+//	The id attribute assigns a unique name to an element.
 //
 // Portuguese
 //
-//  O atributo id atribui um nome exclusivo a um elemento.
+//	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgScript) Id(id string) (ref *TagSvgScript) {
 	e.selfElement.Call("setAttribute", "id", id)
+
+	// Saves the element reference with ID for later use.
+	// Salva a referência dos elementos com ID para uso posterior.
+	htmlGlobalAllElementsList.Delete(id)
+	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -257,10 +262,10 @@ func (e *TagSvgScript) Id(id string) (ref *TagSvgScript) {
 // The lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language used in contents
-//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language used in contents
+//	    const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//	    any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -276,10 +281,10 @@ func (e *TagSvgScript) Id(id string) (ref *TagSvgScript) {
 // O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal usado no conteúdo
-//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal usado no conteúdo
+//	    const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//	    qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -307,22 +312,22 @@ func (e *TagSvgScript) Lang(value interface{}) (ref *TagSvgScript) {
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
-//   Input:
-//     value: control whether an element is focusable
-//       int: focus order
-//       nil: focus disabled
-//       any other type: interface{}
+//	Input:
+//	  value: control whether an element is focusable
+//	    int: focus order
+//	    nil: focus disabled
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
 //
-//   Input:
-//     value: controlar se um elemento é focalizável
-//       int: ordem do foco
-//       nil: disabilita o foco
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: controlar se um elemento é focalizável
+//	    int: ordem do foco
+//	    nil: disabilita o foco
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgScript) Tabindex(value interface{}) (ref *TagSvgScript) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -335,10 +340,10 @@ func (e *TagSvgScript) Tabindex(value interface{}) (ref *TagSvgScript) {
 // The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language
-//       const: KLanguage... (e.g. KLanguageEnglish)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language
+//	    const: KLanguage... (e.g. KLanguageEnglish)
+//	    any other type: interface{}
 //
 // It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
 // contains.
@@ -351,10 +356,10 @@ func (e *TagSvgScript) Tabindex(value interface{}) (ref *TagSvgScript) {
 // O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal
-//       const: KLanguage... (e.g. KLanguagePortuguese)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal
+//	    const: KLanguage... (e.g. KLanguagePortuguese)
+//	    qualquer outro tipo: interface{}
 //
 // É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
 // contém.
@@ -382,12 +387,12 @@ func (e *TagSvgScript) XmlLang(value interface{}) (ref *TagSvgScript) {
 // Assigns a class name or set of class names to an element. You may assign the same class name or names to any number
 // of elements, however, multiple class names must be separated by whitespace characters.
 //
-//   Input:
-//     class: Assigns a class name or set of class names to an element
+//	Input:
+//	  class: Assigns a class name or set of class names to an element
 //
 // An element's class name serves two key roles:
-//   * As a style sheet selector, for when an author assigns style information to a set of elements.
-//   * For general use by the browser.
+//   - As a style sheet selector, for when an author assigns style information to a set of elements.
+//   - For general use by the browser.
 //
 // Português:
 //
@@ -395,13 +400,13 @@ func (e *TagSvgScript) XmlLang(value interface{}) (ref *TagSvgScript) {
 // de classe a qualquer número de elementos, no entanto, vários nomes de classe devem ser separados por caracteres de
 // espaço em branco.
 //
-//   Entrada:
-//     class: Atribui um nome de classe ou um conjunto de nomes de classe à um elemento.
+//	Entrada:
+//	  class: Atribui um nome de classe ou um conjunto de nomes de classe à um elemento.
 //
 // O nome de classe de um elemento tem duas funções principais:
-//   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
+//   - Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
 //     elementos.
-//   * Para uso geral pelo navegador.
+//   - Para uso geral pelo navegador.
 func (e *TagSvgScript) Class(class string) (ref *TagSvgScript) {
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
@@ -413,8 +418,8 @@ func (e *TagSvgScript) Class(class string) (ref *TagSvgScript) {
 //
 // The style attribute allows to style an element using CSS declarations.
 //
-//   Input:
-//     value: allows to style an element using CSS declarations
+//	Input:
+//	  value: allows to style an element using CSS declarations
 //
 // It functions identically to the style attribute in HTML.
 //
@@ -422,8 +427,8 @@ func (e *TagSvgScript) Class(class string) (ref *TagSvgScript) {
 //
 // O atributo style permite estilizar um elemento usando declarações CSS.
 //
-//   Entrada:
-//     value: permite estilizar um elemento usando declarações CSS
+//	Entrada:
+//	  value: permite estilizar um elemento usando declarações CSS
 //
 // Funciona de forma idêntica ao atributo style em HTML.
 func (e *TagSvgScript) Style(value string) (ref *TagSvgScript) {
@@ -440,10 +445,10 @@ func (e *TagSvgScript) Style(value string) (ref *TagSvgScript) {
 // The crossorigin attribute, valid on the <image> element, provides support for CORS, defining how the element handles
 // crossorigin requests, thereby enabling the configuration of the CORS requests for the element's fetched data.
 //
-//   Input:
-//     value: provides support for CORS, defining how the element handles crossorigin requests
-//       const: KSvgCrossOrigin... (e.g.: KSvgCrossOriginUseCredentials)
-//       any other type: interface{}
+//	Input:
+//	  value: provides support for CORS, defining how the element handles crossorigin requests
+//	    const: KSvgCrossOrigin... (e.g.: KSvgCrossOriginUseCredentials)
+//	    any other type: interface{}
 //
 // Português:
 //
@@ -451,10 +456,10 @@ func (e *TagSvgScript) Style(value string) (ref *TagSvgScript) {
 // requisições de origem cruzada, permitindo assim a configuração das requisições CORS para os dados buscados do
 // elemento.
 //
-//   Entrada:
-//     value: fornece suporte para CORS, definindo como o elemento lida com solicitações de origem cruzada
-//       const: KSvgCrossOrigin... (ex.: KSvgCrossOriginUseCredentials)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: fornece suporte para CORS, definindo como o elemento lida com solicitações de origem cruzada
+//	    const: KSvgCrossOrigin... (ex.: KSvgCrossOriginUseCredentials)
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgScript) CrossOrigin(value interface{}) (ref *TagSvgScript) {
 	if converted, ok := value.(SvgCrossOrigin); ok {
 		e.selfElement.Call("setAttribute", "crossorigin", converted.String())
@@ -469,26 +474,26 @@ func (e *TagSvgScript) CrossOrigin(value interface{}) (ref *TagSvgScript) {
 //
 // English:
 //
-//  The href attribute defines a link to a resource as a reference URL. The exact meaning of that link depends on the
-//  context of each element using it.
+//	The href attribute defines a link to a resource as a reference URL. The exact meaning of that link depends on the
+//	context of each element using it.
 //
-//   Notes:
-//     * Specifications before SVG 2 defined an xlink:href attribute, which is now rendered obsolete by the href
-//       attribute.
-//       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
-//       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
+//	 Notes:
+//	   * Specifications before SVG 2 defined an xlink:href attribute, which is now rendered obsolete by the href
+//	     attribute.
+//	     If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
+//	     in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
 //
 // Português:
 //
-//  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
-//  contexto de cada elemento que o utiliza.
+//	O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
+//	contexto de cada elemento que o utiliza.
 //
-//   Notas:
-//     * As especificações anteriores ao SVG 2 definiam um atributo xlink:href, que agora se torna obsoleto pelo
-//       atributo href.
-//       Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
-//       usado como um substituto além do atributo href, por exemplo,
-//       <use href="some-id" xlink:href="some-id x="5" y="5" />.
+//	 Notas:
+//	   * As especificações anteriores ao SVG 2 definiam um atributo xlink:href, que agora se torna obsoleto pelo
+//	     atributo href.
+//	     Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
+//	     usado como um substituto além do atributo href, por exemplo,
+//	     <use href="some-id" xlink:href="some-id x="5" y="5" />.
 func (e *TagSvgScript) HRef(href string) (ref *TagSvgScript) {
 	e.selfElement.Call("setAttribute", "href", href)
 	return e
@@ -500,15 +505,15 @@ func (e *TagSvgScript) HRef(href string) (ref *TagSvgScript) {
 //
 // Defines the content type of the element.
 //
-//   Input:
-//     value: type of the element
+//	Input:
+//	  value: type of the element
 //
 // Português:
 //
 // Define o tipo de conteúdo do elemento.
 //
-//   Input:
-//     value: tipo de conteúdo do elemento
+//	Input:
+//	  value: tipo de conteúdo do elemento
 func (e *TagSvgScript) Type(value interface{}) (ref *TagSvgScript) {
 	e.selfElement.Call("setAttribute", "type", value)
 	return e
@@ -523,13 +528,10 @@ func (e *TagSvgScript) Type(value interface{}) (ref *TagSvgScript) {
 // The xlink:href attribute defines a reference to a resource as a reference IRI. The exact meaning of that link depends
 // on the context of each element using it.
 //
-//   Notes:
-//     * SVG 2 removed the need for the xlink namespace, so instead of xlink:href you should use href. If you need to
-//       support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback in addition to
-//       the href attribute, e.g. <use href="some-id" xlink:href="some-id" x="5" y="5" />.
-//
-//
-//
+//	Notes:
+//	  * SVG 2 removed the need for the xlink namespace, so instead of xlink:href you should use href. If you need to
+//	    support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback in addition to
+//	    the href attribute, e.g. <use href="some-id" xlink:href="some-id" x="5" y="5" />.
 //
 // Português:
 //
@@ -538,10 +540,10 @@ func (e *TagSvgScript) Type(value interface{}) (ref *TagSvgScript) {
 // O atributo xlink:href define uma referência a um recurso como um IRI de referência. O significado exato desse link
 // depende do contexto de cada elemento que o utiliza.
 //
-//   Notas:
-//     * O SVG 2 removeu a necessidade do namespace xlink, então ao invés de xlink:href você deve usar href. Se você
-//       precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser usado como
-//       um substituto além do atributo href, por exemplo, <use href="some-id" xlink:href="some-id" x="5" y="5" >.
+//	Notas:
+//	  * O SVG 2 removeu a necessidade do namespace xlink, então ao invés de xlink:href você deve usar href. Se você
+//	    precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser usado como
+//	    um substituto além do atributo href, por exemplo, <use href="some-id" xlink:href="some-id" x="5" y="5" >.
 func (e *TagSvgScript) XLinkHRef(value interface{}) (ref *TagSvgScript) {
 	e.selfElement.Call("setAttribute", "xlink:href", value)
 	return e
@@ -553,16 +555,15 @@ func (e *TagSvgScript) XLinkHRef(value interface{}) (ref *TagSvgScript) {
 //
 // Adds plain text to the tag's content.
 //
-//   Notes:
-//     * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - didn't work in tests (07/2022)
+//	Notes:
+//	  * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - didn't work in tests (07/2022)
 //
 // Text:
 //
 // Adiciona um texto simples ao conteúdo da tag.
 //
-//   Notras:
-//     * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - não funcionou nos testes (07/2022)
-//
+//	Notras:
+//	  * document/window.addEventListener("DOMContentLoaded", (e) => {...}); - não funcionou nos testes (07/2022)
 func (e *TagSvgScript) Script(value string) (ref *TagSvgScript) {
 	e.selfElement.Set("textContent", value)
 	return e
@@ -578,10 +579,10 @@ func (e *TagSvgScript) Script(value string) (ref *TagSvgScript) {
 //
 // Passa a referencia do objeto para uma variável externa.
 //
-//   Example: / Exemplo:
-//     var circle *html.TagSvgCircle
-//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
-//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgScript) Reference(reference **TagSvgScript) (ref *TagSvgScript) {
 	*reference = e
 	return e

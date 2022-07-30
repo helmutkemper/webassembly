@@ -236,7 +236,6 @@ func (e *Geolocation) GetPosition(chCoordinate *chan Coordinate) {
 	})
 
 	js.Global().Get("navigator").Get("geolocation").Call("getCurrentPosition", onSuccess, onError, options)
-	return
 }
 
 // WatchPosition

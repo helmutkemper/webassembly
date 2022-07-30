@@ -159,11 +159,11 @@ type TagSvgMPath struct {
 //
 // English:
 //
-//  Initializes the object correctly.
+//	Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+//	Inicializa o objeto corretamente.
 func (e *TagSvgMPath) Init() (ref *TagSvgMPath) {
 	e.listener = new(sync.Map)
 
@@ -230,13 +230,18 @@ func (e *TagSvgMPath) Get() (el js.Value) {
 //
 // English:
 //
-//  The id attribute assigns a unique name to an element.
+//	The id attribute assigns a unique name to an element.
 //
 // Portuguese
 //
-//  O atributo id atribui um nome exclusivo a um elemento.
+//	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgMPath) Id(id string) (ref *TagSvgMPath) {
 	e.selfElement.Call("setAttribute", "id", id)
+
+	// Saves the element reference with ID for later use.
+	// Salva a referência dos elementos com ID para uso posterior.
+	htmlGlobalAllElementsList.Delete(id)
+	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -247,10 +252,10 @@ func (e *TagSvgMPath) Id(id string) (ref *TagSvgMPath) {
 // The lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language used in contents
-//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language used in contents
+//	    const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//	    any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -266,10 +271,10 @@ func (e *TagSvgMPath) Id(id string) (ref *TagSvgMPath) {
 // O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal usado no conteúdo
-//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal usado no conteúdo
+//	    const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//	    qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -297,22 +302,22 @@ func (e *TagSvgMPath) Lang(value interface{}) (ref *TagSvgMPath) {
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
-//   Input:
-//     value: control whether an element is focusable
-//       int: focus order
-//       nil: focus disabled
-//       any other type: interface{}
+//	Input:
+//	  value: control whether an element is focusable
+//	    int: focus order
+//	    nil: focus disabled
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
 //
-//   Input:
-//     value: controlar se um elemento é focalizável
-//       int: ordem do foco
-//       nil: disabilita o foco
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: controlar se um elemento é focalizável
+//	    int: ordem do foco
+//	    nil: disabilita o foco
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgMPath) Tabindex(value interface{}) (ref *TagSvgMPath) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -325,10 +330,10 @@ func (e *TagSvgMPath) Tabindex(value interface{}) (ref *TagSvgMPath) {
 // The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language
-//       const: KLanguage... (e.g. KLanguageEnglish)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language
+//	    const: KLanguage... (e.g. KLanguageEnglish)
+//	    any other type: interface{}
 //
 // It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
 // contains.
@@ -341,10 +346,10 @@ func (e *TagSvgMPath) Tabindex(value interface{}) (ref *TagSvgMPath) {
 // O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal
-//       const: KLanguage... (e.g. KLanguagePortuguese)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal
+//	    const: KLanguage... (e.g. KLanguagePortuguese)
+//	    qualquer outro tipo: interface{}
 //
 // É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
 // contém.
@@ -367,26 +372,26 @@ func (e *TagSvgMPath) XmlLang(value interface{}) (ref *TagSvgMPath) {
 //
 // English:
 //
-//  The href attribute defines a link to a resource as a reference URL. The exact meaning of that link depends on the
-//  context of each element using it.
+//	The href attribute defines a link to a resource as a reference URL. The exact meaning of that link depends on the
+//	context of each element using it.
 //
-//   Notes:
-//     * Specifications before SVG 2 defined an xlink:href attribute, which is now rendered obsolete by the href
-//       attribute.
-//       If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
-//       in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
+//	 Notes:
+//	   * Specifications before SVG 2 defined an xlink:href attribute, which is now rendered obsolete by the href
+//	     attribute.
+//	     If you need to support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback
+//	     in addition to the href attribute, e.g. <use href="some-id" xlink:href="some-id x="5" y="5" />.
 //
 // Português:
 //
-//  O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
-//  contexto de cada elemento que o utiliza.
+//	O atributo href define um link para um recurso como um URL de referência. O significado exato desse link depende do
+//	contexto de cada elemento que o utiliza.
 //
-//   Notas:
-//     * As especificações anteriores ao SVG 2 definiam um atributo xlink:href, que agora se torna obsoleto pelo
-//       atributo href.
-//       Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
-//       usado como um substituto além do atributo href, por exemplo,
-//       <use href="some-id" xlink:href="some-id x="5" y="5" />.
+//	 Notas:
+//	   * As especificações anteriores ao SVG 2 definiam um atributo xlink:href, que agora se torna obsoleto pelo
+//	     atributo href.
+//	     Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
+//	     usado como um substituto além do atributo href, por exemplo,
+//	     <use href="some-id" xlink:href="some-id x="5" y="5" />.
 func (e *TagSvgMPath) HRef(href string) (ref *TagSvgMPath) {
 	e.selfElement.Call("setAttribute", "href", href)
 	return e
@@ -401,10 +406,10 @@ func (e *TagSvgMPath) HRef(href string) (ref *TagSvgMPath) {
 // The xlink:href attribute defines a reference to a resource as a reference IRI. The exact meaning of that link depends
 // on the context of each element using it.
 //
-//   Notes:
-//     * SVG 2 removed the need for the xlink namespace, so instead of xlink:href you should use href. If you need to
-//       support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback in addition to
-//       the href attribute, e.g. <use href="some-id" xlink:href="some-id" x="5" y="5" />.
+//	Notes:
+//	  * SVG 2 removed the need for the xlink namespace, so instead of xlink:href you should use href. If you need to
+//	    support earlier browser versions, the deprecated xlink:href attribute can be used as a fallback in addition to
+//	    the href attribute, e.g. <use href="some-id" xlink:href="some-id" x="5" y="5" />.
 //
 // Português:
 //
@@ -413,10 +418,10 @@ func (e *TagSvgMPath) HRef(href string) (ref *TagSvgMPath) {
 // O atributo xlink:href define uma referência a um recurso como um IRI de referência. O significado exato desse link
 // depende do contexto de cada elemento que o utiliza.
 //
-//   Notas:
-//     * O SVG 2 removeu a necessidade do namespace xlink, então ao invés de xlink:href você deve usar href. Se você
-//       precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser usado como
-//       um substituto além do atributo href, por exemplo, <use href="some-id" xlink:href="some-id" x="5" y="5" >.
+//	Notas:
+//	  * O SVG 2 removeu a necessidade do namespace xlink, então ao invés de xlink:href você deve usar href. Se você
+//	    precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser usado como
+//	    um substituto além do atributo href, por exemplo, <use href="some-id" xlink:href="some-id" x="5" y="5" >.
 func (e *TagSvgMPath) XLinkHRef(value interface{}) (ref *TagSvgMPath) {
 	e.selfElement.Call("setAttribute", "xlink:href", value)
 	return e
@@ -454,11 +459,11 @@ func (e *TagSvgMPath) Html(value string) (ref *TagSvgMPath) {
 //
 // English:
 //
-//  Returns the X and Y axes in pixels.
+//	Returns the X and Y axes in pixels.
 //
 // Português:
 //
-//  Retorna os eixos X e Y em pixels.
+//	Retorna os eixos X e Y em pixels.
 func (e *TagSvgMPath) GetXY() (x, y float64) {
 	x = e.GetX()
 	y = e.GetY()
@@ -470,11 +475,11 @@ func (e *TagSvgMPath) GetXY() (x, y float64) {
 //
 // English:
 //
-//  Returns the X axe in pixels.
+//	Returns the X axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo X em pixels.
+//	Retorna o eixo X em pixels.
 func (e *TagSvgMPath) GetX() (x float64) {
 	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
 		return
@@ -490,11 +495,11 @@ func (e *TagSvgMPath) GetX() (x float64) {
 //
 // English:
 //
-//  Returns the Y axe in pixels.
+//	Returns the Y axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo Y em pixels.
+//	Retorna o eixo Y em pixels.
 func (e *TagSvgMPath) GetY() (y float64) {
 	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
 		return
@@ -509,11 +514,11 @@ func (e *TagSvgMPath) GetY() (y float64) {
 //
 // English:
 //
-//  Same as GetX() function, returns the x position of the element.
+//	Same as GetX() function, returns the x position of the element.
 //
 // Português:
 //
-//  O mesmo que a função GetX(), retorna a posição x do elemento.
+//	O mesmo que a função GetX(), retorna a posição x do elemento.
 func (e *TagSvgMPath) GetTop() (top float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	top = coordinate.Get("top").Float()
@@ -524,11 +529,11 @@ func (e *TagSvgMPath) GetTop() (top float64) {
 //
 // English:
 //
-//  It is the same as x + width.
+//	It is the same as x + width.
 //
 // Português:
 //
-//  É o mesmo que x + width.
+//	É o mesmo que x + width.
 func (e *TagSvgMPath) GetRight() (right float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	right = coordinate.Get("right").Float()
@@ -539,11 +544,11 @@ func (e *TagSvgMPath) GetRight() (right float64) {
 //
 // English:
 //
-//  It is the same as y + height.
+//	It is the same as y + height.
 //
 // Português:
 //
-//  É o mesmo que y + Height.
+//	É o mesmo que y + Height.
 func (e *TagSvgMPath) GetBottom() (bottom float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	bottom = coordinate.Get("bottom").Float()
@@ -554,11 +559,11 @@ func (e *TagSvgMPath) GetBottom() (bottom float64) {
 //
 // English:
 //
-//  Same as GetY() function, returns the y position of the element.
+//	Same as GetY() function, returns the y position of the element.
 //
 // Português:
 //
-//  O mesmo que a função GetY(), retorna a posição y do elemento.
+//	O mesmo que a função GetY(), retorna a posição y do elemento.
 func (e *TagSvgMPath) GetLeft() (left float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	left = coordinate.Get("left").Float()
@@ -575,10 +580,10 @@ func (e *TagSvgMPath) GetLeft() (left float64) {
 //
 // Passa a referencia do objeto para uma variável externa.
 //
-//   Example: / Exemplo:
-//     var circle *html.TagSvgCircle
-//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
-//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgMPath) Reference(reference **TagSvgMPath) (ref *TagSvgMPath) {
 	*reference = e
 	return e

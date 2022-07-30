@@ -159,11 +159,11 @@ type TagSvgFeDistantLight struct {
 //
 // English:
 //
-//  Initializes the object correctly.
+//	Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+//	Inicializa o objeto corretamente.
 func (e *TagSvgFeDistantLight) Init() (ref *TagSvgFeDistantLight) {
 	e.listener = new(sync.Map)
 
@@ -230,13 +230,18 @@ func (e *TagSvgFeDistantLight) Get() (el js.Value) {
 //
 // English:
 //
-//  The id attribute assigns a unique name to an element.
+//	The id attribute assigns a unique name to an element.
 //
 // Portuguese
 //
-//  O atributo id atribui um nome exclusivo a um elemento.
+//	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgFeDistantLight) Id(id string) (ref *TagSvgFeDistantLight) {
 	e.selfElement.Call("setAttribute", "id", id)
+
+	// Saves the element reference with ID for later use.
+	// Salva a referência dos elementos com ID para uso posterior.
+	htmlGlobalAllElementsList.Delete(id)
+	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -247,10 +252,10 @@ func (e *TagSvgFeDistantLight) Id(id string) (ref *TagSvgFeDistantLight) {
 // The lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language used in contents
-//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language used in contents
+//	    const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//	    any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -266,10 +271,10 @@ func (e *TagSvgFeDistantLight) Id(id string) (ref *TagSvgFeDistantLight) {
 // O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal usado no conteúdo
-//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal usado no conteúdo
+//	    const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//	    qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -297,22 +302,22 @@ func (e *TagSvgFeDistantLight) Lang(value interface{}) (ref *TagSvgFeDistantLigh
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
-//   Input:
-//     value: control whether an element is focusable
-//       int: focus order
-//       nil: focus disabled
-//       any other type: interface{}
+//	Input:
+//	  value: control whether an element is focusable
+//	    int: focus order
+//	    nil: focus disabled
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
 //
-//   Input:
-//     value: controlar se um elemento é focalizável
-//       int: ordem do foco
-//       nil: disabilita o foco
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: controlar se um elemento é focalizável
+//	    int: ordem do foco
+//	    nil: disabilita o foco
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgFeDistantLight) Tabindex(value interface{}) (ref *TagSvgFeDistantLight) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -325,10 +330,10 @@ func (e *TagSvgFeDistantLight) Tabindex(value interface{}) (ref *TagSvgFeDistant
 // The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language
-//       const: KLanguage... (e.g. KLanguageEnglish)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language
+//	    const: KLanguage... (e.g. KLanguageEnglish)
+//	    any other type: interface{}
 //
 // It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
 // contains.
@@ -341,10 +346,10 @@ func (e *TagSvgFeDistantLight) Tabindex(value interface{}) (ref *TagSvgFeDistant
 // O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal
-//       const: KLanguage... (e.g. KLanguagePortuguese)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal
+//	    const: KLanguage... (e.g. KLanguagePortuguese)
+//	    qualquer outro tipo: interface{}
 //
 // É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
 // contém.
@@ -367,19 +372,19 @@ func (e *TagSvgFeDistantLight) XmlLang(value interface{}) (ref *TagSvgFeDistantL
 //
 // English:
 //
-//  The azimuth attribute specifies the direction angle for the light source on the XY plane (clockwise), in degrees
-//  from the x axis.
+//	The azimuth attribute specifies the direction angle for the light source on the XY plane (clockwise), in degrees
+//	from the x axis.
 //
-//   Input:
-//     azimuth: specifies the direction angle for the light source on the XY plane
+//	 Input:
+//	   azimuth: specifies the direction angle for the light source on the XY plane
 //
 // Português:
 //
-//  O atributo azimute especifica o ângulo de direção da fonte de luz no plano XY (sentido horário), em graus a partir
-//  do eixo x.
+//	O atributo azimute especifica o ângulo de direção da fonte de luz no plano XY (sentido horário), em graus a partir
+//	do eixo x.
 //
-//   Entrada:
-//     azimuth: especifica o ângulo de direção para a fonte de luz no plano XY
+//	 Entrada:
+//	   azimuth: especifica o ângulo de direção para a fonte de luz no plano XY
 func (e *TagSvgFeDistantLight) Azimuth(azimuth float64) (ref *TagSvgFeDistantLight) {
 	e.selfElement.Call("setAttribute", "azimuth", azimuth)
 	return e
@@ -389,19 +394,19 @@ func (e *TagSvgFeDistantLight) Azimuth(azimuth float64) (ref *TagSvgFeDistantLig
 //
 // English:
 //
-//  The elevation attribute specifies the direction angle for the light source from the XY plane towards the Z-axis, in
-//  degrees. Note that the positive Z-axis points towards the viewer of the content.
+//	The elevation attribute specifies the direction angle for the light source from the XY plane towards the Z-axis, in
+//	degrees. Note that the positive Z-axis points towards the viewer of the content.
 //
-//   Input:
-//     elevation: specifies the direction angle for the light source
+//	 Input:
+//	   elevation: specifies the direction angle for the light source
 //
 // Portuguese
 //
-//  O atributo de elevação especifica o ângulo de direção da fonte de luz do plano XY em direção ao eixo Z, em graus.
-//  Observe que o eixo Z positivo aponta para o visualizador do conteúdo.
+//	O atributo de elevação especifica o ângulo de direção da fonte de luz do plano XY em direção ao eixo Z, em graus.
+//	Observe que o eixo Z positivo aponta para o visualizador do conteúdo.
 //
-//   Entrada:
-//     elevation: especifica o ângulo de direção para a fonte de luz
+//	 Entrada:
+//	   elevation: especifica o ângulo de direção para a fonte de luz
 func (e *TagSvgFeDistantLight) Elevation(elevation float64) (ref *TagSvgFeDistantLight) {
 	e.selfElement.Call("setAttribute", "elevation", elevation)
 	return e
@@ -445,10 +450,10 @@ func (e *TagSvgFeDistantLight) Html(value string) (ref *TagSvgFeDistantLight) {
 //
 // Passa a referencia do objeto para uma variável externa.
 //
-//   Example: / Exemplo:
-//     var circle *html.TagSvgCircle
-//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
-//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgFeDistantLight) Reference(reference **TagSvgFeDistantLight) (ref *TagSvgFeDistantLight) {
 	*reference = e
 	return e

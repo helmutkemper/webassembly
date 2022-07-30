@@ -183,11 +183,11 @@ type TagSvgForeignObject struct {
 //
 // English:
 //
-//  Initializes the object correctly.
+//	Initializes the object correctly.
 //
 // Português:
 //
-//  Inicializa o objeto corretamente.
+//	Inicializa o objeto corretamente.
 func (e *TagSvgForeignObject) Init() (ref *TagSvgForeignObject) {
 	e.listener = new(sync.Map)
 
@@ -254,13 +254,18 @@ func (e *TagSvgForeignObject) Get() (el js.Value) {
 //
 // English:
 //
-//  The id attribute assigns a unique name to an element.
+//	The id attribute assigns a unique name to an element.
 //
 // Portuguese
 //
-//  O atributo id atribui um nome exclusivo a um elemento.
+//	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgForeignObject) Id(id string) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "id", id)
+
+	// Saves the element reference with ID for later use.
+	// Salva a referência dos elementos com ID para uso posterior.
+	htmlGlobalAllElementsList.Delete(id)
+	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -271,10 +276,10 @@ func (e *TagSvgForeignObject) Id(id string) (ref *TagSvgForeignObject) {
 // The lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language used in contents
-//       const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language used in contents
+//	    const: KLanguage... (e.g. KLanguageEnglishGreatBritain)
+//	    any other type: interface{}
 //
 // There is also an xml:lang attribute (with namespace). If both of them are defined, the one with namespace is used and
 // the one without is ignored.
@@ -290,10 +295,10 @@ func (e *TagSvgForeignObject) Id(id string) (ref *TagSvgForeignObject) {
 // O atributo lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal usado no conteúdo
-//       const: KLanguage... (e.g. KLanguagePortugueseBrazil)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal usado no conteúdo
+//	    const: KLanguage... (e.g. KLanguagePortugueseBrazil)
+//	    qualquer outro tipo: interface{}
 //
 // Há também um atributo xml:lang (com namespace). Se ambos estiverem definidos, aquele com namespace será usado e o
 // sem namespace será ignorado.
@@ -321,22 +326,22 @@ func (e *TagSvgForeignObject) Lang(value interface{}) (ref *TagSvgForeignObject)
 // The tabindex attribute allows you to control whether an element is focusable and to define the relative order of the
 // element for the purposes of sequential focus navigation.
 //
-//   Input:
-//     value: control whether an element is focusable
-//       int: focus order
-//       nil: focus disabled
-//       any other type: interface{}
+//	Input:
+//	  value: control whether an element is focusable
+//	    int: focus order
+//	    nil: focus disabled
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo tabindex permite controlar se um elemento é focalizável e definir à ordem relativa do elemento para fins
 // de navegação de foco sequencial.
 //
-//   Input:
-//     value: controlar se um elemento é focalizável
-//       int: ordem do foco
-//       nil: disabilita o foco
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: controlar se um elemento é focalizável
+//	    int: ordem do foco
+//	    nil: disabilita o foco
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) Tabindex(value interface{}) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "tabindex", value)
 	return e
@@ -349,10 +354,10 @@ func (e *TagSvgForeignObject) Tabindex(value interface{}) (ref *TagSvgForeignObj
 // The xml:lang attribute specifies the primary language used in contents and attributes containing text content of
 // particular elements.
 //
-//   Input:
-//     value: specifies the primary language
-//       const: KLanguage... (e.g. KLanguageEnglish)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the primary language
+//	    const: KLanguage... (e.g. KLanguageEnglish)
+//	    any other type: interface{}
 //
 // It is a universal attribute allowed in all XML dialects to mark up the natural human language that an element
 // contains.
@@ -365,10 +370,10 @@ func (e *TagSvgForeignObject) Tabindex(value interface{}) (ref *TagSvgForeignObj
 // O atributo xml:lang especifica o idioma principal usado em conteúdos e atributos que contêm conteúdo de texto de
 // elementos específicos.
 //
-//   Entrada:
-//     value: especifica o idioma principal
-//       const: KLanguage... (e.g. KLanguagePortuguese)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o idioma principal
+//	    const: KLanguage... (e.g. KLanguagePortuguese)
+//	    qualquer outro tipo: interface{}
 //
 // É um atributo universal permitido em todos os dialetos XML para marcar a linguagem humana natural que um elemento
 // contém.
@@ -393,35 +398,35 @@ func (e *TagSvgForeignObject) XmlLang(value interface{}) (ref *TagSvgForeignObje
 //
 // English:
 //
-//  The baseline-shift attribute allows repositioning of the dominant-baseline relative to the dominant-baseline of the
-//  parent text content element. The shifted object might be a sub- or superscript.
+//	The baseline-shift attribute allows repositioning of the dominant-baseline relative to the dominant-baseline of the
+//	parent text content element. The shifted object might be a sub- or superscript.
 //
-//   Input:
-//     baselineShift: allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text
-//     content element.
-//       float32: 0.05 = "5%"
-//       string: "5%"
-//       consts KSvgBaselineShift... (e.g. KSvgBaselineShiftAuto)
+//	 Input:
+//	   baselineShift: allows repositioning of the dominant-baseline relative to the dominant-baseline of the parent text
+//	   content element.
+//	     float32: 0.05 = "5%"
+//	     string: "5%"
+//	     consts KSvgBaselineShift... (e.g. KSvgBaselineShiftAuto)
 //
-//   Notes:
-//     * As a presentation attribute baseline-shift can be used as a CSS property.
-//     * This property is going to be deprecated and authors are advised to use vertical-align instead.
+//	 Notes:
+//	   * As a presentation attribute baseline-shift can be used as a CSS property.
+//	   * This property is going to be deprecated and authors are advised to use vertical-align instead.
 //
 // Português:
 //
-//  O atributo baseline-shift permite o reposicionamento da linha de base dominante em relação à linha de base dominante
-//  do elemento de conteúdo de texto pai. O objeto deslocado pode ser um sub ou sobrescrito.
+//	O atributo baseline-shift permite o reposicionamento da linha de base dominante em relação à linha de base dominante
+//	do elemento de conteúdo de texto pai. O objeto deslocado pode ser um sub ou sobrescrito.
 //
-//   Input:
-//     baselineShift: permite o reposicionamento da linha de base dominante em relação à linha de base dominante do
-//     elemento de conteúdo de texto pai.
-//       float32: 0.05 = "5%"
-//       string: "5%"
-//       consts KSvgBaselineShift... (ex. KSvgBaselineShiftAuto)
+//	 Input:
+//	   baselineShift: permite o reposicionamento da linha de base dominante em relação à linha de base dominante do
+//	   elemento de conteúdo de texto pai.
+//	     float32: 0.05 = "5%"
+//	     string: "5%"
+//	     consts KSvgBaselineShift... (ex. KSvgBaselineShiftAuto)
 //
-//   Notas:
-//     * Como atributo de apresentação, baseline-shift pode ser usado como propriedade CSS.
-//     * Essa propriedade será preterida e os autores são aconselhados a usar alinhamento vertical.
+//	 Notas:
+//	   * Como atributo de apresentação, baseline-shift pode ser usado como propriedade CSS.
+//	   * Essa propriedade será preterida e os autores são aconselhados a usar alinhamento vertical.
 func (e *TagSvgForeignObject) BaselineShift(baselineShift interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := baselineShift.(SvgBaselineShift); ok {
 		e.selfElement.Call("setAttribute", "baseline-shift", converted.String())
@@ -442,19 +447,19 @@ func (e *TagSvgForeignObject) BaselineShift(baselineShift interface{}) (ref *Tag
 //
 // English:
 //
-//  It binds the element it is applied to with a given <clipPath> element.
+//	It binds the element it is applied to with a given <clipPath> element.
 //
-//   Input:
-//     clipPath: the element it is applied
-//       (e.g. "url(#myClip)", "circle() fill-box", "circle() stroke-box" or "circle() view-box")
+//	 Input:
+//	   clipPath: the element it is applied
+//	     (e.g. "url(#myClip)", "circle() fill-box", "circle() stroke-box" or "circle() view-box")
 //
 // Português:
 //
-//  Ele associa o elemento ao qual é aplicado a um determinado elemento <clipPath>.
+//	Ele associa o elemento ao qual é aplicado a um determinado elemento <clipPath>.
 //
-//   Entrada:
-//     clipPath: elemento ao qual é aplicado
-//       (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
+//	 Entrada:
+//	   clipPath: elemento ao qual é aplicado
+//	     (ex. "url(#myClip)", "circle() fill-box", "circle() stroke-box" ou "circle() view-box")
 func (e *TagSvgForeignObject) ClipPath(clipPath string) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "clip-path", clipPath)
 	return e
@@ -464,23 +469,23 @@ func (e *TagSvgForeignObject) ClipPath(clipPath string) (ref *TagSvgForeignObjec
 //
 // English:
 //
-//  It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
-//  its target.
+//	It indicates how to determine what side of a path is inside a shape in order to know how a <clipPath> should clip
+//	its target.
 //
-//   Input:
-//     value: side of a path
-//       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
-//       any other type: interface{}
+//	 Input:
+//	   value: side of a path
+//	     const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
+//	     any other type: interface{}
 //
 // Português:
 //
-//  Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
-//  recortar seu destino.
+//	Ele indica como determinar qual lado de um caminho está dentro de uma forma para saber como um <clipPath> deve
+//	recortar seu destino.
 //
-//   Input:
-//     value: lado de um caminho
-//       const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
-//       qualquer outro tipo: interface{}
+//	 Input:
+//	   value: lado de um caminho
+//	     const: KSvgClipRule... (e.g. KSvgClipRuleNonzero)
+//	     qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) ClipRule(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgClipRule); ok {
 		e.selfElement.Call("setAttribute", "clip-rule", converted.String())
@@ -495,33 +500,33 @@ func (e *TagSvgForeignObject) ClipRule(value interface{}) (ref *TagSvgForeignObj
 //
 // English:
 //
-//  It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
-//  lighting-color presentation attributes.
+//	It provides a potential indirect value (currentcolor) for the fill, stroke, stop-color, flood-color and
+//	lighting-color presentation attributes.
 //
-//   Input:
-//     value: potential indirect value of color
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	 Input:
+//	   value: potential indirect value of color
+//	     string: e.g. "black"
+//	     factory: e.g. factoryColor.NewYellow()
+//	     RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	     any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, color can be used as a CSS property. See CSS color for further information.
+//	 Notes:
+//	   * As a presentation attribute, color can be used as a CSS property. See CSS color for further information.
 //
 // Português:
 //
-//  Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
-//  cor de parada, cor de inundação e cor de iluminação.
+//	Ele fornece um valor indireto potencial (currentcolor) para os atributos de apresentação de preenchimento, traçado,
+//	cor de parada, cor de inundação e cor de iluminação.
 //
-//   Entrada:
-//     value: valor indireto potencial da cor
-//       string: ex. "black"
-//       factory: ex. factoryColor.NewYellow()
-//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	 Entrada:
+//	   value: valor indireto potencial da cor
+//	     string: ex. "black"
+//	     factory: ex. factoryColor.NewYellow()
+//	     RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	     qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
+//	 Notas:
+//	   * Como atributo de apresentação, a cor pode ser usada como propriedade CSS. Veja cor CSS para mais informações.
 func (e *TagSvgForeignObject) Color(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color", RGBAToJs(converted))
@@ -539,12 +544,12 @@ func (e *TagSvgForeignObject) Color(value interface{}) (ref *TagSvgForeignObject
 // The color-interpolation attribute specifies the color space for gradient interpolations, color animations, and alpha
 // compositing.
 //
-//   Input:
-//     value: specifies the color space for gradient interpolations
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the color space for gradient interpolations
+//	    string: e.g. "black"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    any other type: interface{}
 //
 // The color-interpolation property chooses between color operations occurring in the sRGB color space or in a (light
 // energy linear) linearized RGB color space. Having chosen the appropriate color space, component-wise linear
@@ -557,21 +562,21 @@ func (e *TagSvgForeignObject) Color(value interface{}) (ref *TagSvgForeignObject
 // property. When animating colors, color interpolation is performed according to the value of the color-interpolation
 // property on the element being animated.
 //
-//   Notes:
-//     * For filter effects, the color-interpolation-filters property controls which color space is used.
-//     * As a presentation attribute, color-interpolation can be used as a CSS property.
+//	Notes:
+//	  * For filter effects, the color-interpolation-filters property controls which color space is used.
+//	  * As a presentation attribute, color-interpolation can be used as a CSS property.
 //
 // Português:
 //
 // O atributo color-interpolation especifica o espaço de cores para interpolações de gradiente, animações de cores e
 // composição alfa.
 //
-//   Entrada:
-//     value: especifica o espaço de cores para interpolações de gradiente
-//       string: ex. "black"
-//       factory: ex. factoryColor.NewYellow()
-//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o espaço de cores para interpolações de gradiente
+//	    string: ex. "black"
+//	    factory: ex. factoryColor.NewYellow()
+//	    RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    qualquer outro tipo: interface{}
 //
 // A propriedade de interpolação de cores escolhe entre operações de cores que ocorrem no espaço de cores sRGB ou em um
 // espaço de cores RGB linearizado (energia de luz linear). Tendo escolhido o espaço de cor apropriado, a interpolação
@@ -584,9 +589,9 @@ func (e *TagSvgForeignObject) Color(value interface{}) (ref *TagSvgForeignObject
 // Ao animar cores, à interpolação de cores é executada de acordo com o valor da propriedade color-interpolation no
 // elemento que está sendo animado.
 //
-//   Notas:
-//     * Para efeitos de filtro, a propriedade color-interpolation-filters controla qual espaço de cor é usado.
-//     * Como atributo de apresentação, a interpolação de cores pode ser usada como uma propriedade CSS.
+//	Notas:
+//	  * Para efeitos de filtro, a propriedade color-interpolation-filters controla qual espaço de cor é usado.
+//	  * Como atributo de apresentação, a interpolação de cores pode ser usada como uma propriedade CSS.
 func (e *TagSvgForeignObject) ColorInterpolation(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation", RGBAToJs(converted))
@@ -604,44 +609,44 @@ func (e *TagSvgForeignObject) ColorInterpolation(value interface{}) (ref *TagSvg
 // The color-interpolation-filters attribute specifies the color space for imaging operations performed via filter
 // effects.
 //
-//   Input:
-//     value: specifies the color space for imaging operations
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the color space for imaging operations
+//	    string: e.g. "black"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    any other type: interface{}
 //
-//   Notes:
-//     * This property just has an affect on filter operations. Therefore, it has no effect on filter primitives like
-//       <feOffset>, <feImage>, <feTile> or <feFlood>;
-//     * color-interpolation-filters has a different initial value than color-interpolation. color-interpolation-filters
-//       has an initial value of linearRGB, whereas color-interpolation has an initial value of sRGB. Thus, in the
-//       default case, filter effects operations occur in the linearRGB color space, whereas all other color
-//       interpolations occur by default in the sRGB color space;
-//     * It has no affect on filter functions, which operate in the sRGB color space;
-//     * As a presentation attribute, color-interpolation-filters can be used as a CSS property.
+//	Notes:
+//	  * This property just has an affect on filter operations. Therefore, it has no effect on filter primitives like
+//	    <feOffset>, <feImage>, <feTile> or <feFlood>;
+//	  * color-interpolation-filters has a different initial value than color-interpolation. color-interpolation-filters
+//	    has an initial value of linearRGB, whereas color-interpolation has an initial value of sRGB. Thus, in the
+//	    default case, filter effects operations occur in the linearRGB color space, whereas all other color
+//	    interpolations occur by default in the sRGB color space;
+//	  * It has no affect on filter functions, which operate in the sRGB color space;
+//	  * As a presentation attribute, color-interpolation-filters can be used as a CSS property.
 //
 // Português:
 //
 // O atributo color-interpolation-filters especifica o espaço de cores para operações de imagem realizadas por meio de
 // efeitos de filtro.
 //
-//   Entrada:
-//     value: especifica o espaço de cores para operações de imagem
-//       string: ex. "black"
-//       factory: ex. factoryColor.NewYellow()
-//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o espaço de cores para operações de imagem
+//	    string: ex. "black"
+//	    factory: ex. factoryColor.NewYellow()
+//	    RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Esta propriedade afeta apenas as operações de filtro. Portanto, não tem efeito em primitivos de filtro como
-//       <feOffset>, <feImage>, <feTile> ou <feFlood>.
-//     * color-interpolation-filters tem um valor inicial diferente de color-interpolation. color-interpolation-filters
-//       tem um valor inicial de linearRGB, enquanto color-interpolation tem um valor inicial de sRGB. Assim, no caso
-//       padrão, as operações de efeitos de filtro ocorrem no espaço de cores linearRGB, enquanto todas as outras
-//       interpolações de cores ocorrem por padrão no espaço de cores sRGB.
-//     * Não afeta as funções de filtro, que operam no espaço de cores sRGB.
-//     * Como atributo de apresentação, os filtros de interpolação de cores podem ser usados como uma propriedade CSS.
+//	Notas:
+//	  * Esta propriedade afeta apenas as operações de filtro. Portanto, não tem efeito em primitivos de filtro como
+//	    <feOffset>, <feImage>, <feTile> ou <feFlood>.
+//	  * color-interpolation-filters tem um valor inicial diferente de color-interpolation. color-interpolation-filters
+//	    tem um valor inicial de linearRGB, enquanto color-interpolation tem um valor inicial de sRGB. Assim, no caso
+//	    padrão, as operações de efeitos de filtro ocorrem no espaço de cores linearRGB, enquanto todas as outras
+//	    interpolações de cores ocorrem por padrão no espaço de cores sRGB.
+//	  * Não afeta as funções de filtro, que operam no espaço de cores sRGB.
+//	  * Como atributo de apresentação, os filtros de interpolação de cores podem ser usados como uma propriedade CSS.
 func (e *TagSvgForeignObject) ColorInterpolationFilters(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "color-interpolation-filters", RGBAToJs(converted))
@@ -658,10 +663,10 @@ func (e *TagSvgForeignObject) ColorInterpolationFilters(value interface{}) (ref 
 //
 // The cursor attribute specifies the mouse cursor displayed when the mouse pointer is over an element.
 //
-//   Input:
-//     value: specifies the mouse cursor displayed when the mouse pointer is over an element
-//       const: KSvgCursor... (e.g.: KSvgCursorMove)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the mouse cursor displayed when the mouse pointer is over an element
+//	    const: KSvgCursor... (e.g.: KSvgCursorMove)
+//	    any other type: interface{}
 //
 // This attribute behaves exactly like the css cursor property except that if the browser supports the <cursor> element,
 // you should be able to use it with the <funciri> notation.
@@ -673,10 +678,10 @@ func (e *TagSvgForeignObject) ColorInterpolationFilters(value interface{}) (ref 
 //
 // O atributo cursor especifica o cursor do mouse exibido quando o ponteiro do mouse está sobre um elemento.
 //
-//   Entrada:
-//     value: especifica o cursor do mouse exibido quando o ponteiro do mouse está sobre um elemento
-//       const: KSvgCursor... (ex.: KSvgCursorMove)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o cursor do mouse exibido quando o ponteiro do mouse está sobre um elemento
+//	    const: KSvgCursor... (ex.: KSvgCursorMove)
+//	    qualquer outro tipo: interface{}
 //
 // Este atributo se comporta exatamente como a propriedade cursor css, exceto que, se o navegador suportar o elemento
 // <cursor>, você poderá usá-lo com a notação <funciri>.
@@ -701,10 +706,10 @@ func (e *TagSvgForeignObject) Cursor(value interface{}) (ref *TagSvgForeignObjec
 // and end points of a line of text as used by the text-anchor and inline-size properties. It also may affect the
 // direction in which characters are positioned if the unicode-bidi property's value is either embed or bidi-override.
 //
-//   Input:
-//     value: specifies the inline-base direction of a <text> or <tspan> element
-//       const: KSvgDirection... (e.g. KSvgDirectionRtl)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the inline-base direction of a <text> or <tspan> element
+//	    const: KSvgDirection... (e.g. KSvgDirectionRtl)
+//	    any other type: interface{}
 //
 // It applies only to glyphs oriented perpendicular to the inline-base direction, which includes the usual case of
 // horizontally-oriented Latin or Arabic text and the case of narrow-cell Latin or Arabic characters rotated 90 degrees
@@ -715,9 +720,9 @@ func (e *TagSvgForeignObject) Cursor(value interface{}) (ref *TagSvgForeignObjec
 // sufficient to add the direction attribute to the outermost <svg> element, and allow that direction to inherit to all
 // text elements:
 //
-//   Notes:
-//     * As a presentation attribute, direction can be used as a CSS property. See css direction for further
-//       information.
+//	Notes:
+//	  * As a presentation attribute, direction can be used as a CSS property. See css direction for further
+//	    information.
 //
 // Português:
 //
@@ -726,10 +731,10 @@ func (e *TagSvgForeignObject) Cursor(value interface{}) (ref *TagSvgForeignObjec
 // Também pode afetar a direção na qual os caracteres são posicionados se o valor da propriedade unicode-bidi for
 // incorporado ou substituído por bidi.
 //
-//   Input:
-//     value: especifica a direção da base inline de um elemento <text> ou <tspan>
-//       const: KSvgDirection... (e.g. KSvgDirectionRtl)
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: especifica a direção da base inline de um elemento <text> ou <tspan>
+//	    const: KSvgDirection... (e.g. KSvgDirectionRtl)
+//	    qualquer outro tipo: interface{}
 //
 // Aplica-se apenas a glifos orientados perpendicularmente à direção da base em linha, que inclui o caso usual de texto
 // latino ou árabe orientado horizontalmente e o caso de caracteres latinos ou árabes de célula estreita girados 90
@@ -740,9 +745,9 @@ func (e *TagSvgForeignObject) Cursor(value interface{}) (ref *TagSvgForeignObjec
 // esquerda, pode ser suficiente adicionar o atributo direction ao elemento <svg> mais externo e permitir que essa
 // direção herde todos os elementos de texto:
 //
-//   Notas:
-//     * Como atributo de apresentação, a direção pode ser usada como uma propriedade CSS. Veja a direção do CSS para
-//       mais informações.
+//	Notas:
+//	  * Como atributo de apresentação, a direção pode ser usada como uma propriedade CSS. Veja a direção do CSS para
+//	    mais informações.
 func (e *TagSvgForeignObject) Direction(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgDirection); ok {
 		e.selfElement.Call("setAttribute", "direction", converted.String())
@@ -757,13 +762,13 @@ func (e *TagSvgForeignObject) Direction(value interface{}) (ref *TagSvgForeignOb
 //
 // English:
 //
-//  The display attribute lets you control the rendering of graphical or container elements.
+//	The display attribute lets you control the rendering of graphical or container elements.
 //
-//   Input:
-//     value: control the rendering of graphical or container elements
-//       nil: display="none"
-//       const: KSvgDisplay... (e.g. KSvgDisplayBlock)
-//       any other type: interface{}
+//	 Input:
+//	   value: control the rendering of graphical or container elements
+//	     nil: display="none"
+//	     const: KSvgDisplay... (e.g. KSvgDisplayBlock)
+//	     any other type: interface{}
 //
 // A value of display="none" indicates that the given element and its children will not be rendered. Any value other
 // than none or inherit indicates that the given element will be rendered by the browser.
@@ -776,10 +781,10 @@ func (e *TagSvgForeignObject) Direction(value interface{}) (ref *TagSvgForeignOb
 // implications for the <tspan>, <tref>, and <altGlyph> elements, event processing, for bounding box calculations and
 // for calculation of clipping paths:
 //
-//   * If display is set to none on a <tspan>, <tref>, or <altGlyph> element, then the text string is ignored for the
+//   - If display is set to none on a <tspan>, <tref>, or <altGlyph> element, then the text string is ignored for the
 //     purposes of text layout.
-//   * Regarding events, if display is set to none, the element receives no events.
-//   * The geometry of a graphics element with display set to none is not included in bounding box and clipping paths
+//   - Regarding events, if display is set to none, the element receives no events.
+//   - The geometry of a graphics element with display set to none is not included in bounding box and clipping paths
 //     calculations.
 //
 // The display attribute only affects the direct rendering of a given element, whereas it does not prevent elements
@@ -793,18 +798,18 @@ func (e *TagSvgForeignObject) Direction(value interface{}) (ref *TagSvgForeignOb
 // mask. Similarly, setting display="none" on a child of a <clipPath> element will prevent the given child element from
 // contributing to the clipping path.
 //
-//  Notes:
-//    * As a presentation attribute, display can be used as a CSS property. See css display for further information.
+//	Notes:
+//	  * As a presentation attribute, display can be used as a CSS property. See css display for further information.
 //
 // Português:
 //
-//  O atributo display permite controlar a renderização de elementos gráficos ou de contêiner.
+//	O atributo display permite controlar a renderização de elementos gráficos ou de contêiner.
 //
-//   Entrada:
-//     value: controlar a renderização de elementos gráficos ou de contêiner
-//       nil: display="none"
-//       const: KSvgDisplay... (ex. KSvgDisplayBlock)
-//       qualquer outro tipo: interface{}
+//	 Entrada:
+//	   value: controlar a renderização de elementos gráficos ou de contêiner
+//	     nil: display="none"
+//	     const: KSvgDisplay... (ex. KSvgDisplayBlock)
+//	     qualquer outro tipo: interface{}
 //
 // Um valor de display="none" indica que o elemento fornecido e seus filhos não serão renderizados. Qualquer valor
 // diferente de none ou herdar indica que o elemento fornecido será renderizado pelo navegador.
@@ -816,10 +821,10 @@ func (e *TagSvgForeignObject) Direction(value interface{}) (ref *TagSvgForeignOb
 // Quando o atributo display é definido como none, o elemento fornecido não se torna parte da árvore de renderização.
 // Tem implicações para os elementos <tspan>, <tref> e <altGlyph>, processamento de eventos, para cálculos de caixa
 // delimitadora e para cálculo de caminhos de recorte:
-//   * Se display for definido como none em um elemento <tspan>, <tref> ou <altGlyph>, a string de texto será ignorada
+//   - Se display for definido como none em um elemento <tspan>, <tref> ou <altGlyph>, a string de texto será ignorada
 //     para fins de layout de texto.
-//   * Com relação aos eventos, se display estiver definido como none, o elemento não recebe eventos.
-//   * A geometria de um elemento gráfico com exibição definida como nenhum não é incluída nos cálculos da caixa
+//   - Com relação aos eventos, se display estiver definido como none, o elemento não recebe eventos.
+//   - A geometria de um elemento gráfico com exibição definida como nenhum não é incluída nos cálculos da caixa
 //     delimitadora e dos caminhos de recorte.
 //
 // O atributo display afeta apenas a renderização direta de um determinado elemento, mas não impede que os elementos
@@ -833,9 +838,9 @@ func (e *TagSvgForeignObject) Direction(value interface{}) (ref *TagSvgForeignOb
 // renderizado como parte da máscara. Da mesma forma, definir display="none" em um filho de um elemento <clipPath>
 // impedirá que o elemento filho fornecido contribua para o caminho de recorte.
 //
-//  Notas:
-//    * Como atributo de apresentação, display pode ser usado como propriedade CSS. Consulte a exibição css para obter
-//      mais informações.
+//	Notas:
+//	  * Como atributo de apresentação, display pode ser usado como propriedade CSS. Consulte a exibição css para obter
+//	    mais informações.
 func (e *TagSvgForeignObject) Display(value interface{}) (ref *TagSvgForeignObject) {
 	if value == nil {
 		e.selfElement.Call("setAttribute", "display", "none")
@@ -859,17 +864,17 @@ func (e *TagSvgForeignObject) Display(value interface{}) (ref *TagSvgForeignObje
 // and inline-level contents. It also indicates the default alignment baseline of any boxes participating in baseline
 // alignment in the box's alignment context.
 //
-//   Input:
-//     value: is the baseline used to align the box's text and inline-level contents
-//       const: KSvgDominantBaseline... (e.g. KSvgDominantBaselineHanging)
-//       any other type: interface{}
+//	Input:
+//	  value: is the baseline used to align the box's text and inline-level contents
+//	    const: KSvgDominantBaseline... (e.g. KSvgDominantBaselineHanging)
+//	    any other type: interface{}
 //
 // It is used to determine or re-determine a scaled-baseline-table. A scaled-baseline-table is a compound value with
 // three components:
 //
-//   1. a baseline-identifier for the dominant-baseline,
-//   2. a baseline-table, and
-//   3. a baseline-table font-size.
+//  1. a baseline-identifier for the dominant-baseline,
+//  2. a baseline-table, and
+//  3. a baseline-table font-size.
 //
 // Some values of the property re-determine all three values. Others only re-establish the baseline-table font-size.
 // When the initial value, auto, would give an undesired result, this property can be used to explicitly set the desired
@@ -878,8 +883,8 @@ func (e *TagSvgForeignObject) Display(value interface{}) (ref *TagSvgForeignObje
 // If there is no baseline table in the nominal font, or if the baseline table lacks an entry for the desired baseline,
 // then the browser may use heuristics to determine the position of the desired baseline.
 //
-//   Notes:
-//     * As a presentation attribute, dominant-baseline can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute, dominant-baseline can be used as a CSS property.
 //
 // Português:
 //
@@ -887,17 +892,17 @@ func (e *TagSvgForeignObject) Display(value interface{}) (ref *TagSvgForeignObje
 // texto da caixa e o conteúdo do nível embutido. Também indica a linha de base de alinhamento padrão de todas as caixas
 // que participam do alinhamento da linha de base no contexto de alinhamento da caixa.
 //
-//   Entrada:
-//     value: é a linha de base usada para alinhar o texto da caixa e o conteúdo embutido
-//       const: KSvgDominantBaseline... (ex. KSvgDominantBaselineHanging)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: é a linha de base usada para alinhar o texto da caixa e o conteúdo embutido
+//	    const: KSvgDominantBaseline... (ex. KSvgDominantBaselineHanging)
+//	    qualquer outro tipo: interface{}
 //
 // Ele é usado para determinar ou re-determinar uma tabela de linha de base dimensionada. Uma tabela de linha de base
 // dimensionada é um valor composto com três componentes:
 //
-//   1. um identificador de linha de base para a linha de base dominante,
-//   2. uma tabela de linha de base, e
-//   3. um tamanho de fonte da tabela de linha de base.
+//  1. um identificador de linha de base para a linha de base dominante,
+//  2. uma tabela de linha de base, e
+//  3. um tamanho de fonte da tabela de linha de base.
 //
 // Alguns valores da propriedade redeterminam todos os três valores. Outros apenas restabelecem o tamanho da fonte da
 // tabela de linha de base. Quando o valor inicial, auto, daria um resultado indesejado, essa propriedade pode ser usada
@@ -907,8 +912,8 @@ func (e *TagSvgForeignObject) Display(value interface{}) (ref *TagSvgForeignObje
 // para a linha de base desejada, o navegador poderá usar heurística para determinar a posição da linha de base
 // desejada.
 //
-//   Notas:
-//     * Como atributo de apresentação, a linha de base dominante pode ser usada como uma propriedade CSS.
+//	Notas:
+//	  * Como atributo de apresentação, a linha de base dominante pode ser usada como uma propriedade CSS.
 func (e *TagSvgForeignObject) DominantBaseline(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgDominantBaseline); ok {
 		e.selfElement.Call("setAttribute", "dominant-baseline", converted.String())
@@ -928,13 +933,13 @@ func (e *TagSvgForeignObject) DominantBaseline(value interface{}) (ref *TagSvgFo
 //
 // for animation it defines the final state of the animation.
 //
-//   Input:
-//     value: the fill value
-//       nil: fill="none"
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	Input:
+//	  value: the fill value
+//	    nil: fill="none"
+//	    string: e.g. "black"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    any other type: interface{}
 //
 // Português:
 //
@@ -943,13 +948,13 @@ func (e *TagSvgForeignObject) DominantBaseline(value interface{}) (ref *TagSvgFo
 //
 // para animação, define o estado final da animação.
 //
-//   Input:
-//     value: the fill value
-//       nil: fill="none"
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: the fill value
+//	    nil: fill="none"
+//	    string: e.g. "black"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) Fill(value interface{}) (ref *TagSvgForeignObject) {
 	if value == nil {
 		e.selfElement.Call("setAttribute", "fill", "none")
@@ -969,29 +974,29 @@ func (e *TagSvgForeignObject) Fill(value interface{}) (ref *TagSvgForeignObject)
 //
 // English:
 //
-//  The fill-opacity attribute is a presentation attribute defining the opacity of the paint server (color, gradient,
-//  pattern, etc) applied to a shape.
+//	The fill-opacity attribute is a presentation attribute defining the opacity of the paint server (color, gradient,
+//	pattern, etc) applied to a shape.
 //
-//   Input:
-//     value: defining the opacity of the paint
-//       float32: 1.0 = "100%"
-//       any other type: interface{}
+//	 Input:
+//	   value: defining the opacity of the paint
+//	     float32: 1.0 = "100%"
+//	     any other type: interface{}
 //
-//   Notes:
-//     *As a presentation attribute fill-opacity can be used as a CSS property.
+//	 Notes:
+//	   *As a presentation attribute fill-opacity can be used as a CSS property.
 //
 // Portuguese
 //
-//  O atributo fill-opacity é um atributo de apresentação que define a opacidade do servidor de pintura (cor, gradiente,
-//  padrão etc.) aplicado a uma forma.
+//	O atributo fill-opacity é um atributo de apresentação que define a opacidade do servidor de pintura (cor, gradiente,
+//	padrão etc.) aplicado a uma forma.
 //
-//   Entrada:
-//     value: definindo a opacidade da tinta
-//       float32: 1.0 = "100%"
-//       qualquer outro tipo: interface{}
+//	 Entrada:
+//	   value: definindo a opacidade da tinta
+//	     float32: 1.0 = "100%"
+//	     qualquer outro tipo: interface{}
 //
-//   Notes:
-//     *As a presentation attribute fill-opacity can be used as a CSS property.
+//	 Notes:
+//	   *As a presentation attribute fill-opacity can be used as a CSS property.
 func (e *TagSvgForeignObject) FillOpacity(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
@@ -1007,29 +1012,29 @@ func (e *TagSvgForeignObject) FillOpacity(value interface{}) (ref *TagSvgForeign
 //
 // English:
 //
-//  The fill-rule attribute is a presentation attribute defining the algorithm to use to determine the inside part of
-//  a shape.
+//	The fill-rule attribute is a presentation attribute defining the algorithm to use to determine the inside part of
+//	a shape.
 //
-//   Input:
-//     value: defining the algorithm to use to determine the inside part of a shape.
-//       const: KSvgFillRule... (e.g. KSvgFillRuleEvenOdd)
-//       any other type: interface{}
+//	 Input:
+//	   value: defining the algorithm to use to determine the inside part of a shape.
+//	     const: KSvgFillRule... (e.g. KSvgFillRuleEvenOdd)
+//	     any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, fill-rule can be used as a CSS property.
+//	 Notes:
+//	   * As a presentation attribute, fill-rule can be used as a CSS property.
 //
 // Portuguese
 //
-//  O atributo fill-rule é um atributo de apresentação que define o algoritmo a ser usado para determinar a parte
-//  interna de uma forma.
+//	O atributo fill-rule é um atributo de apresentação que define o algoritmo a ser usado para determinar a parte
+//	interna de uma forma.
 //
-//   Input:
-//     value: define o algoritmo a ser usado para determinar a parte interna de uma forma.
-//       const: KSvgFillRule... (eg. KSvgFillRuleEvenOdd)
-//       qualquer outro tipo: interface{}
+//	 Input:
+//	   value: define o algoritmo a ser usado para determinar a parte interna de uma forma.
+//	     const: KSvgFillRule... (eg. KSvgFillRuleEvenOdd)
+//	     qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, fill-rule pode ser usado como uma propriedade CSS.
+//	 Notas:
+//	   * Como atributo de apresentação, fill-rule pode ser usado como uma propriedade CSS.
 func (e *TagSvgForeignObject) FillRule(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgFillRule); ok {
 		e.selfElement.Call("setAttribute", "fill-rule", converted.String())
@@ -1044,26 +1049,26 @@ func (e *TagSvgForeignObject) FillRule(value interface{}) (ref *TagSvgForeignObj
 //
 // English:
 //
-//  The filter attribute specifies the filter effects defined by the <filter> element that shall be applied to its
-//  element.
+//	The filter attribute specifies the filter effects defined by the <filter> element that shall be applied to its
+//	element.
 //
-//   Input:
-//     filter: specifies the filter effects
+//	 Input:
+//	   filter: specifies the filter effects
 //
-//   Notes:
-//     * As a presentation attribute, filter can be used as a CSS property. See css filter for further information.
+//	 Notes:
+//	   * As a presentation attribute, filter can be used as a CSS property. See css filter for further information.
 //
 // Portuguese
 //
-//  O atributo filter especifica os efeitos de filtro definidos pelo elemento <filter> que devem ser aplicados ao seu
-//  elemento.
+//	O atributo filter especifica os efeitos de filtro definidos pelo elemento <filter> que devem ser aplicados ao seu
+//	elemento.
 //
-//   Entrada:
-//     filter: especifica os efeitos do filtro
+//	 Entrada:
+//	   filter: especifica os efeitos do filtro
 //
-//   Notas:
-//     * Como atributo de apresentação, o filtro pode ser usado como propriedade CSS. Veja filtro css para mais
-//       informações.
+//	 Notas:
+//	   * Como atributo de apresentação, o filtro pode ser usado como propriedade CSS. Veja filtro css para mais
+//	     informações.
 func (e *TagSvgForeignObject) Filter(filter string) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "filter", filter)
 	return e
@@ -1073,31 +1078,31 @@ func (e *TagSvgForeignObject) Filter(filter string) (ref *TagSvgForeignObject) {
 //
 // English:
 //
-//  The flood-color attribute indicates what color to use to flood the current filter primitive subregion.
+//	The flood-color attribute indicates what color to use to flood the current filter primitive subregion.
 //
-//   Input:
-//     floodColor: indicates what color to use to flood the current filter primitive subregion
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	 Input:
+//	   floodColor: indicates what color to use to flood the current filter primitive subregion
+//	     string: e.g. "black"
+//	     factory: e.g. factoryColor.NewYellow()
+//	     RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	     any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, flood-color can be used as a CSS property.
+//	 Notes:
+//	   * As a presentation attribute, flood-color can be used as a CSS property.
 //
 // Portuguese
 //
-//  O atributo flood-color indica qual cor usar para inundar a sub-região primitiva do filtro atual.
+//	O atributo flood-color indica qual cor usar para inundar a sub-região primitiva do filtro atual.
 //
-//   Entrada:
-//     floodColor: indica qual cor usar para inundar a sub-região primitiva do filtro atual
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	 Entrada:
+//	   floodColor: indica qual cor usar para inundar a sub-região primitiva do filtro atual
+//	     string: e.g. "black"
+//	     factory: e.g. factoryColor.NewYellow()
+//	     RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	     qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, a cor de inundação pode ser usada como uma propriedade CSS.
+//	 Notas:
+//	   * Como atributo de apresentação, a cor de inundação pode ser usada como uma propriedade CSS.
 func (e *TagSvgForeignObject) FloodColor(floodColor interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := floodColor.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "flood-color", RGBAToJs(converted))
@@ -1112,23 +1117,23 @@ func (e *TagSvgForeignObject) FloodColor(floodColor interface{}) (ref *TagSvgFor
 //
 // English:
 //
-//  The flood-opacity attribute indicates the opacity value to use across the current filter primitive subregion.
+//	The flood-opacity attribute indicates the opacity value to use across the current filter primitive subregion.
 //
-//   Input:
-//     floodOpacity: indicates the opacity value
+//	 Input:
+//	   floodOpacity: indicates the opacity value
 //
-//   Notes:
-//     * As a presentation attribute, flood-opacity can be used as a CSS property.
+//	 Notes:
+//	   * As a presentation attribute, flood-opacity can be used as a CSS property.
 //
 // Portuguese
 //
-//  O atributo flood-opacity indica o valor de opacidade a ser usado na sub-região primitiva de filtro atual.
+//	O atributo flood-opacity indica o valor de opacidade a ser usado na sub-região primitiva de filtro atual.
 //
-//   Entrada:
-//     floodOpacity: indica o valor da opacidade
+//	 Entrada:
+//	   floodOpacity: indica o valor da opacidade
 //
-//   Notas:
-//     * Como atributo de apresentação, a opacidade de inundação pode ser usada como uma propriedade CSS.
+//	 Notas:
+//	   * Como atributo de apresentação, a opacidade de inundação pode ser usada como uma propriedade CSS.
 func (e *TagSvgForeignObject) FloodOpacity(floodOpacity float64) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "flood-opacity", floodOpacity)
 	return e
@@ -1141,28 +1146,28 @@ func (e *TagSvgForeignObject) FloodOpacity(floodOpacity float64) (ref *TagSvgFor
 // The font-family attribute indicates which font family will be used to render the text, specified as a prioritized
 // list of font family names and/or generic family names.
 //
-//   Input:
-//     fontFamily: indicates which font family will be used
-//       string: e.g. "Verdana, sans-serif"
-//       factory: e.g. factoryFontFamily.NewArial()
+//	Input:
+//	  fontFamily: indicates which font family will be used
+//	    string: e.g. "Verdana, sans-serif"
+//	    factory: e.g. factoryFontFamily.NewArial()
 //
-//   Notes:
-//     * As a presentation attribute, font-family can be used as a CSS property. See the css font-family property for
-//       more information.
+//	Notes:
+//	  * As a presentation attribute, font-family can be used as a CSS property. See the css font-family property for
+//	    more information.
 //
-// Portuguese
+// # Portuguese
 //
 // O atributo font-family indica qual família de fontes será usada para renderizar o texto, especificada como uma lista
 // priorizada de nomes de famílias de fontes e ou nomes de famílias genéricos.
 //
-//   Entrada:
-//     fontFamily: indica qual família de fontes será usada
-//       string: ex. "Verdana, sans-serif"
-//       factory: ex. factoryFontFamily.NewArial()
+//	Entrada:
+//	  fontFamily: indica qual família de fontes será usada
+//	    string: ex. "Verdana, sans-serif"
+//	    factory: ex. factoryFontFamily.NewArial()
 //
-//   Notas:
-//     * Como atributo de apresentação, font-family pode ser usada como propriedade CSS. Consulte a propriedade CSS
-//       font-family para obter mais informações.
+//	Notas:
+//	  * Como atributo de apresentação, font-family pode ser usada como propriedade CSS. Consulte a propriedade CSS
+//	    font-family para obter mais informações.
 func (e *TagSvgForeignObject) FontFamily(fontFamily string) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "font-family", fontFamily)
 	return e
@@ -1175,28 +1180,28 @@ func (e *TagSvgForeignObject) FontFamily(fontFamily string) (ref *TagSvgForeignO
 // The font-size attribute refers to the size of the font from baseline to baseline when multiple lines of text are set
 // solid in a multiline layout environment.
 //
-//   Input:
-//     fontSize: size of the font
-//       string: e.g. "10px","2em"
-//       any other type: interface{}
+//	Input:
+//	  fontSize: size of the font
+//	    string: e.g. "10px","2em"
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, font-size can be used as a CSS property. See the css font-size property for more
-//       information.
+//	Notes:
+//	  * As a presentation attribute, font-size can be used as a CSS property. See the css font-size property for more
+//	    information.
 //
-// Portuguese
+// # Portuguese
 //
 // O atributo font-size refere-se ao tamanho da fonte da linha de base a linha de base quando várias linhas de texto
 // são definidas como sólidas em um ambiente de layout de várias linhas.
 //
-//   Entrada:
-//     fontSize: tamanho da fonte
-//       string: ex. "10px","2em"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  fontSize: tamanho da fonte
+//	    string: ex. "10px","2em"
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, font-size pode ser usado como uma propriedade CSS. Consulte a propriedade CSS
-//       font-size para obter mais informações.
+//	Notas:
+//	  * Como atributo de apresentação, font-size pode ser usado como uma propriedade CSS. Consulte a propriedade CSS
+//	    font-size para obter mais informações.
 func (e *TagSvgForeignObject) FontSize(fontSize interface{}) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "font-size", fontSize)
 	return e
@@ -1206,21 +1211,21 @@ func (e *TagSvgForeignObject) FontSize(fontSize interface{}) (ref *TagSvgForeign
 //
 // English:
 //
-//  The font-size-adjust attribute allows authors to specify an aspect value for an element that will preserve the
-//  x-height of the first choice font in a substitute font.
+//	The font-size-adjust attribute allows authors to specify an aspect value for an element that will preserve the
+//	x-height of the first choice font in a substitute font.
 //
-//   Notes:
-//     * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
-//       property for more information.
+//	 Notes:
+//	   * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
+//	     property for more information.
 //
 // Portuguese
 //
-//  O atributo font-size-adjust permite que os autores especifiquem um valor de aspecto para um elemento que preservará
-//  a altura x da fonte de primeira escolha em uma fonte substituta.
+//	O atributo font-size-adjust permite que os autores especifiquem um valor de aspecto para um elemento que preservará
+//	a altura x da fonte de primeira escolha em uma fonte substituta.
 //
-//   Notes:
-//     * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
-//       property for more information.
+//	 Notes:
+//	   * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
+//	     property for more information.
 func (e *TagSvgForeignObject) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "font-size-adjust", fontSizeAdjust)
 	return e
@@ -1230,31 +1235,31 @@ func (e *TagSvgForeignObject) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSv
 //
 // English:
 //
-//  The font-stretch attribute indicates the desired amount of condensing or expansion in the glyphs used to render
-//  the text.
+//	The font-stretch attribute indicates the desired amount of condensing or expansion in the glyphs used to render
+//	the text.
 //
-//   Input:
-//     fontStretch: indicates the desired amount of condensing or expansion
-//       KSvgFontStretch... (e.g. KSvgFontStretchUltraCondensed)
-//       percentage (e.g. "50%")
+//	 Input:
+//	   fontStretch: indicates the desired amount of condensing or expansion
+//	     KSvgFontStretch... (e.g. KSvgFontStretchUltraCondensed)
+//	     percentage (e.g. "50%")
 //
-//   Notes:
-//     * As a presentation attribute, font-stretch can be used as a CSS property. See the css font-stretch property for
-//       more information.
+//	 Notes:
+//	   * As a presentation attribute, font-stretch can be used as a CSS property. See the css font-stretch property for
+//	     more information.
 //
 // Portuguese
 //
-//  O atributo font-stretch indica a quantidade desejada de condensação ou expansão nos glifos usados para renderizar
-//  o texto.
+//	O atributo font-stretch indica a quantidade desejada de condensação ou expansão nos glifos usados para renderizar
+//	o texto.
 //
-//   Entrada:
-//     fontStretch: indica a quantidade desejada de condensação ou expansão
-//       KSvgFontStretch... (e.g. KSvgFontStretchUltraCondensed)
-//       percentage (e.g. "50%")
+//	 Entrada:
+//	   fontStretch: indica a quantidade desejada de condensação ou expansão
+//	     KSvgFontStretch... (e.g. KSvgFontStretchUltraCondensed)
+//	     percentage (e.g. "50%")
 //
-//   Notas:
-//     * Como atributo de apresentação, font-stretch pode ser usado como uma propriedade CSS. Consulte a propriedade
-//       CSS font-stretch para obter mais informações.
+//	 Notas:
+//	   * Como atributo de apresentação, font-stretch pode ser usado como uma propriedade CSS. Consulte a propriedade
+//	     CSS font-stretch para obter mais informações.
 func (e *TagSvgForeignObject) FontStretch(fontStretch interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := fontStretch.(SvgFontStretch); ok {
 		e.selfElement.Call("setAttribute", "font-stretch", converted.String())
@@ -1271,27 +1276,27 @@ func (e *TagSvgForeignObject) FontStretch(fontStretch interface{}) (ref *TagSvgF
 //
 // The font-style attribute specifies whether the text is to be rendered using a normal, italic, or oblique face.
 //
-//   Input:
-//     value: specifies whether the text is to be rendered using a normal, italic, or oblique face
-//       const: KFontStyleRule... (e.g. KFontStyleRuleItalic)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies whether the text is to be rendered using a normal, italic, or oblique face
+//	    const: KFontStyleRule... (e.g. KFontStyleRuleItalic)
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, font-style can be used as a CSS property. See the css font-style property for
-//       more information.
+//	Notes:
+//	  * As a presentation attribute, font-style can be used as a CSS property. See the css font-style property for
+//	    more information.
 //
-// Portuguese
+// # Portuguese
 //
 // O atributo font-style especifica se o texto deve ser renderizado usando uma face normal, itálica ou oblíqua.
 //
-//   Entrada:
-//     value: especifica se o texto deve ser renderizado usando uma face normal, itálica ou oblíqua
-//       const: KFontStyleRule... (ex. KFontStyleRuleItalic)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica se o texto deve ser renderizado usando uma face normal, itálica ou oblíqua
+//	    const: KFontStyleRule... (ex. KFontStyleRuleItalic)
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, font-style pode ser usado como propriedade CSS. Consulte a propriedade CSS
-//       font-style para obter mais informações.
+//	Notas:
+//	  * Como atributo de apresentação, font-style pode ser usado como propriedade CSS. Consulte a propriedade CSS
+//	    font-style para obter mais informações.
 func (e *TagSvgForeignObject) FontStyle(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(FontStyleRule); ok {
 		e.selfElement.Call("setAttribute", "font-style", converted.String())
@@ -1306,29 +1311,29 @@ func (e *TagSvgForeignObject) FontStyle(value interface{}) (ref *TagSvgForeignOb
 //
 // English:
 //
-//  The font-variant attribute indicates whether the text is to be rendered using variations of the font's glyphs.
+//	The font-variant attribute indicates whether the text is to be rendered using variations of the font's glyphs.
 //
-//   Input:
-//     value: indicates whether the text is to be rendered
-//       const: KFontVariantRule... (e.g. KFontVariantRuleSmallCaps)
-//       any other type: interface{}
+//	 Input:
+//	   value: indicates whether the text is to be rendered
+//	     const: KFontVariantRule... (e.g. KFontVariantRuleSmallCaps)
+//	     any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, font-variant can be used as a CSS property. See the css font-variant property
-//       for more information.
+//	 Notes:
+//	   * As a presentation attribute, font-variant can be used as a CSS property. See the css font-variant property
+//	     for more information.
 //
 // Portuguese
 //
-//  O atributo font-variant indica se o texto deve ser renderizado usando variações dos glifos da fonte.
+//	O atributo font-variant indica se o texto deve ser renderizado usando variações dos glifos da fonte.
 //
-//   Entrada:
-//     value: indica onde o texto vai ser renderizado.
-//       const: KFontVariantRule... (ex. KFontVariantRuleSmallCaps)
-//       qualquer outro tipo: interface{}
+//	 Entrada:
+//	   value: indica onde o texto vai ser renderizado.
+//	     const: KFontVariantRule... (ex. KFontVariantRuleSmallCaps)
+//	     qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, font-variant pode ser usado como uma propriedade CSS. Consulte a propriedade
-//       CSS font-variant para obter mais informações.
+//	 Notas:
+//	   * Como atributo de apresentação, font-variant pode ser usado como uma propriedade CSS. Consulte a propriedade
+//	     CSS font-variant para obter mais informações.
 func (e *TagSvgForeignObject) FontVariant(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(FontVariantRule); ok {
 		e.selfElement.Call("setAttribute", "font-variant", converted.String())
@@ -1343,31 +1348,31 @@ func (e *TagSvgForeignObject) FontVariant(value interface{}) (ref *TagSvgForeign
 //
 // English:
 //
-//  The font-weight attribute refers to the boldness or lightness of the glyphs used to render the text, relative to
-//  other fonts in the same font family.
+//	The font-weight attribute refers to the boldness or lightness of the glyphs used to render the text, relative to
+//	other fonts in the same font family.
 //
-//   Input:
-//     value: refers to the boldness or lightness of the glyphs used to render the text
-//       const: KFontWeightRule... (e.g. KFontWeightRuleBold)
-//       any other type: interface{}
+//	 Input:
+//	   value: refers to the boldness or lightness of the glyphs used to render the text
+//	     const: KFontWeightRule... (e.g. KFontWeightRuleBold)
+//	     any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, font-weight can be used as a CSS property. See the css font-weight property for
-//       more information.
+//	 Notes:
+//	   * As a presentation attribute, font-weight can be used as a CSS property. See the css font-weight property for
+//	     more information.
 //
 // Portuguese
 //
-//  O atributo font-weight refere-se ao negrito ou leveza dos glifos usados para renderizar o texto, em relação a
-//  outras fontes na mesma família de fontes.
+//	O atributo font-weight refere-se ao negrito ou leveza dos glifos usados para renderizar o texto, em relação a
+//	outras fontes na mesma família de fontes.
 //
-//   Entrada:
-//     value: refere-se ao negrito ou leveza dos glifos usados para renderizar o texto
-//       const: KFontWeightRule... (ex. KFontWeightRuleBold)
-//       qualquer outro tipo: interface{}
+//	 Entrada:
+//	   value: refere-se ao negrito ou leveza dos glifos usados para renderizar o texto
+//	     const: KFontWeightRule... (ex. KFontWeightRuleBold)
+//	     qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, o peso da fonte pode ser usado como uma propriedade CSS. Consulte a propriedade
-//       CSS font-weight para obter mais informações.
+//	 Notas:
+//	   * Como atributo de apresentação, o peso da fonte pode ser usado como uma propriedade CSS. Consulte a propriedade
+//	     CSS font-weight para obter mais informações.
 func (e *TagSvgForeignObject) FontWeight(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(FontWeightRule); ok {
 		e.selfElement.Call("setAttribute", "font-weight", converted.String())
@@ -1382,27 +1387,27 @@ func (e *TagSvgForeignObject) FontWeight(value interface{}) (ref *TagSvgForeignO
 //
 // English:
 //
-//  The image-rendering attribute provides a hint to the browser about how to make speed vs. quality tradeoffs as it
-//  performs image processing.
+//	The image-rendering attribute provides a hint to the browser about how to make speed vs. quality tradeoffs as it
+//	performs image processing.
 //
 // The resampling is always done in a truecolor (e.g., 24-bit) color space even if the original data and/or the target
 // device is indexed color.
 //
-//   Notes:
-//     * As a presentation attribute, image-rendering can be used as a CSS property. See the css image-rendering
-//       property for more information.
+//	Notes:
+//	  * As a presentation attribute, image-rendering can be used as a CSS property. See the css image-rendering
+//	    property for more information.
 //
 // Portuguese
 //
-//  O atributo de renderização de imagem fornece uma dica ao navegador sobre como fazer compensações de velocidade
-//  versus qualidade enquanto executa o processamento de imagem.
+//	O atributo de renderização de imagem fornece uma dica ao navegador sobre como fazer compensações de velocidade
+//	versus qualidade enquanto executa o processamento de imagem.
 //
 // A reamostragem é sempre feita em um espaço de cores truecolor (por exemplo, 24 bits), mesmo que os dados originais e
 // ou o dispositivo de destino sejam cores indexadas.
 //
-//   Notas:
-//     * Como um atributo de apresentação, a renderização de imagem pode ser usada como uma propriedade CSS. Consulte
-//       a propriedade de renderização de imagem css para obter mais informações.
+//	Notas:
+//	  * Como um atributo de apresentação, a renderização de imagem pode ser usada como uma propriedade CSS. Consulte
+//	    a propriedade de renderização de imagem css para obter mais informações.
 func (e *TagSvgForeignObject) ImageRendering(imageRendering string) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "image-rendering", imageRendering)
 	return e
@@ -1415,8 +1420,8 @@ func (e *TagSvgForeignObject) ImageRendering(imageRendering string) (ref *TagSvg
 // The letter-spacing attribute controls spacing between text characters, in addition to any spacing from the kerning
 // attribute.
 //
-//   Input:
-//     value: controls spacing between text characters
+//	Input:
+//	  value: controls spacing between text characters
 //
 // If the attribute value is a unitless number (like 128), the browser processes it as a <length> in the current user
 // coordinate system.
@@ -1425,7 +1430,7 @@ func (e *TagSvgForeignObject) ImageRendering(imageRendering string) (ref *TagSvg
 // corresponding value in the current user coordinate system.
 //
 // Notes:
-//   * As a presentation attribute, letter-spacing can be used as a CSS property.
+//   - As a presentation attribute, letter-spacing can be used as a CSS property.
 //     See the css letter-spacing property for more information.
 //
 // Português:
@@ -1433,8 +1438,8 @@ func (e *TagSvgForeignObject) ImageRendering(imageRendering string) (ref *TagSvg
 // O atributo letter-spacing controla o espaçamento entre caracteres de texto, além de qualquer espaçamento do atributo
 // kerning.
 //
-//   Input:
-//     value: controla o espaçamento entre caracteres de texto
+//	Input:
+//	  value: controla o espaçamento entre caracteres de texto
 //
 // Se o valor do atributo for um número sem unidade (como 128), o navegador o processará como um <comprimento> no
 // sistema de coordenadas do usuário atual.
@@ -1443,7 +1448,7 @@ func (e *TagSvgForeignObject) ImageRendering(imageRendering string) (ref *TagSvg
 // em seu valor correspondente no sistema de coordenadas do usuário atual.
 //
 // Notas:
-//   * Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
+//   - Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
 //     Consulte a propriedade de espaçamento entre letras do CSS para obter mais informações.
 func (e *TagSvgForeignObject) LetterSpacing(value float64) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "letter-spacing", value)
@@ -1456,23 +1461,23 @@ func (e *TagSvgForeignObject) LetterSpacing(value float64) (ref *TagSvgForeignOb
 //
 // The lighting-color attribute defines the color of the light source for lighting filter primitives.
 //
-//   Input:
-//     value: defines the color of the light source
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	Input:
+//	  value: defines the color of the light source
+//	    string: e.g. "black"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo lighting-color define a cor da fonte de luz para as primitivas do filtro de iluminação.
 //
-//   Input:
-//     value: define a cor da fonte de luz
-//       string: ex. "black"
-//       factory: ex. factoryColor.NewYellow()
-//       RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: define a cor da fonte de luz
+//	    string: ex. "black"
+//	    factory: ex. factoryColor.NewYellow()
+//	    RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) LightingColor(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "lighting-color", RGBAToJs(converted))
@@ -1490,9 +1495,9 @@ func (e *TagSvgForeignObject) LightingColor(value interface{}) (ref *TagSvgForei
 // The marker-end attribute defines the arrowhead or polymarker that will be drawn at the final vertex of the given
 // shape.
 //
-//   Input:
-//     value: the arrowhead or polymarker that will be drawn
-//       string: (e.g. "url(#triangle)")
+//	Input:
+//	  value: the arrowhead or polymarker that will be drawn
+//	    string: (e.g. "url(#triangle)")
 //
 // For all shape elements, except <polyline> and <path>, the last vertex is the same as the first vertex. In this case,
 // if the value of marker-start and marker-end are both not none, then two markers will be rendered on that final
@@ -1501,15 +1506,15 @@ func (e *TagSvgForeignObject) LightingColor(value interface{}) (ref *TagSvgForei
 // rendered on the final vertex of the path data.
 //
 // Notes:
-//   * As a presentation attribute, marker-end can be used as a CSS property.
+//   - As a presentation attribute, marker-end can be used as a CSS property.
 //
 // Português:
 //
 // O atributo marker-end define a ponta de seta ou polimarcador que será desenhado no vértice final da forma dada.
 //
-//   Entrada:
-//     value: a ponta de seta ou polimarcador que será desenhado
-//       string: (e.g. "url(#triangle)")
+//	Entrada:
+//	  value: a ponta de seta ou polimarcador que será desenhado
+//	    string: (e.g. "url(#triangle)")
 //
 // Para todos os elementos de forma, exceto <polyline> e <path>, o último vértice é o mesmo que o primeiro vértice.
 // Nesse caso, se o valor de marker-start e marker-end não for nenhum, então dois marcadores serão renderizados nesse
@@ -1518,7 +1523,7 @@ func (e *TagSvgForeignObject) LightingColor(value interface{}) (ref *TagSvgForei
 // O final do marcador é renderizado apenas no vértice final dos dados do caminho.
 //
 // Notas:
-//   * Como atributo de apresentação, o marker-end pode ser usado como uma propriedade CSS.
+//   - Como atributo de apresentação, o marker-end pode ser usado como uma propriedade CSS.
 func (e *TagSvgForeignObject) MarkerEnd(value interface{}) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "marker-end", value)
 	return e
@@ -1531,28 +1536,28 @@ func (e *TagSvgForeignObject) MarkerEnd(value interface{}) (ref *TagSvgForeignOb
 // The marker-mid attribute defines the arrowhead or polymarker that will be drawn at all interior vertices of the
 // given shape.
 //
-//   Input:
-//     value: defines the arrowhead or polymarker that will be drawn
-//       string: e.g. "url(#circle)"
+//	Input:
+//	  value: defines the arrowhead or polymarker that will be drawn
+//	    string: e.g. "url(#circle)"
 //
 // The marker is rendered on every vertex other than the first and last vertices of the path data.
 //
 // Notes:
-//   * As a presentation attribute, marker-mid can be used as a CSS property.
+//   - As a presentation attribute, marker-mid can be used as a CSS property.
 //
 // Português:
 //
 // O atributo marker-mid define a ponta de seta ou polimarcador que será desenhado em todos os vértices internos da
 // forma dada.
 //
-//   Input:
-//     value: define a ponta de seta ou polimarcador que será desenhado
-//       string: ex. "url(#circle)"
+//	Input:
+//	  value: define a ponta de seta ou polimarcador que será desenhado
+//	    string: ex. "url(#circle)"
 //
 // O marcador é renderizado em todos os vértices, exceto no primeiro e no último vértice dos dados do caminho.
 //
 // Notas:
-//   * Como atributo de apresentação, o marker-mid pode ser usado como uma propriedade CSS.
+//   - Como atributo de apresentação, o marker-mid pode ser usado como uma propriedade CSS.
 func (e *TagSvgForeignObject) MarkerMid(value interface{}) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "marker-mid", value)
 	return e
@@ -1565,9 +1570,9 @@ func (e *TagSvgForeignObject) MarkerMid(value interface{}) (ref *TagSvgForeignOb
 // The marker-start attribute defines the arrowhead or polymarker that will be drawn at the first vertex of the given
 // shape.
 //
-//   Input:
-//     value: defines the arrowhead or polymarker that will be drawn
-//       string: e.g. "url(#triangle)"
+//	Input:
+//	  value: defines the arrowhead or polymarker that will be drawn
+//	    string: e.g. "url(#triangle)"
 //
 // For all shape elements, except <polyline> and <path>, the last vertex is the same as the first vertex. In this case,
 // if the value of marker-start and marker-end are both not none, then two markers will be rendered on that final
@@ -1576,15 +1581,15 @@ func (e *TagSvgForeignObject) MarkerMid(value interface{}) (ref *TagSvgForeignOb
 // rendered on the first vertex of the path data.
 //
 // Notes:
-//   * As a presentation attribute, marker-start can be used as a CSS property.
+//   - As a presentation attribute, marker-start can be used as a CSS property.
 //
 // Português:
 //
 // O atributo marker-start define a ponta de seta ou polimarcador que será desenhado no primeiro vértice da forma dada.
 //
-//   Entrada:
-//     value: define a ponta de seta ou polimarcador que será desenhado
-//       string: e.g. "url(#triangle)"
+//	Entrada:
+//	  value: define a ponta de seta ou polimarcador que será desenhado
+//	    string: e.g. "url(#triangle)"
 //
 // Para todos os elementos de forma, exceto <polyline> e <path>, o último vértice é o mesmo que o primeiro vértice.
 // Nesse caso, se o valor de marker-start e marker-end não for nenhum, então dois marcadores serão renderizados nesse
@@ -1593,7 +1598,7 @@ func (e *TagSvgForeignObject) MarkerMid(value interface{}) (ref *TagSvgForeignOb
 // marcador é renderizado apenas no primeiro vértice dos dados do caminho.
 //
 // Notas:
-//   * Como atributo de apresentação, o início do marcador pode ser usado como uma propriedade CSS.
+//   - Como atributo de apresentação, o início do marcador pode ser usado como uma propriedade CSS.
 func (e *TagSvgForeignObject) MarkerStart(value interface{}) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "marker-start", value)
 	return e
@@ -1606,24 +1611,24 @@ func (e *TagSvgForeignObject) MarkerStart(value interface{}) (ref *TagSvgForeign
 // The mask attribute is a presentation attribute mainly used to bind a given <mask> element with the element the
 // attribute belongs to.
 //
-//   Input:
-//     value: attribute mainly used to bind a given <mask> element
-//       string: "url(#myMask)"
+//	Input:
+//	  value: attribute mainly used to bind a given <mask> element
+//	    string: "url(#myMask)"
 //
 // Notes:
-//   * As a presentation attribute mask can be used as a CSS property.
+//   - As a presentation attribute mask can be used as a CSS property.
 //
 // Português:
 //
 // O atributo mask é um atributo de apresentação usado principalmente para vincular um determinado elemento <mask> ao
 // elemento ao qual o atributo pertence.
 //
-//   Entrada:
-//     value: atributo usado principalmente para vincular um determinado elemento <mask>
-//       string: "url(#myMask)"
+//	Entrada:
+//	  value: atributo usado principalmente para vincular um determinado elemento <mask>
+//	    string: "url(#myMask)"
 //
 // Notas:
-//   * Como uma máscara de atributo de apresentação pode ser usada como uma propriedade CSS.
+//   - Como uma máscara de atributo de apresentação pode ser usada como uma propriedade CSS.
 func (e *TagSvgForeignObject) Mask(value interface{}) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "mask", value)
 	return e
@@ -1636,29 +1641,28 @@ func (e *TagSvgForeignObject) Mask(value interface{}) (ref *TagSvgForeignObject)
 // The opacity attribute specifies the transparency of an object or of a group of objects, that is, the degree to which
 // the background behind the element is overlaid.
 //
-//   Input:
-//     value: specifies the transparency of an object
-//       float32: 1.0 = "100%"
-//       any other type: interface{}
+//	Input:
+//	  value: specifies the transparency of an object
+//	    float32: 1.0 = "100%"
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, opacity can be used as a CSS property. See the css opacity property for more
-//       information.
-//
+//	Notes:
+//	  * As a presentation attribute, opacity can be used as a CSS property. See the css opacity property for more
+//	    information.
 //
 // Português:
 //
 // O atributo opacity especifica a transparência de um objeto ou de um grupo de objetos, ou seja, o grau em que o fundo
 // atrás do elemento é sobreposto.
 //
-//   Entrada:
-//     value: especifica a transparência de um objeto
-//       float32: 1.0 = "100%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica a transparência de um objeto
+//	    float32: 1.0 = "100%"
+//	    qualquer outro tipo: interface{}
 //
-//   Notes:
-//     * Como atributo de apresentação, a opacidade pode ser usada como uma propriedade CSS. Consulte a propriedade de
-//       opacidade do CSS para obter mais informações.
+//	Notes:
+//	  * Como atributo de apresentação, a opacidade pode ser usada como uma propriedade CSS. Consulte a propriedade de
+//	    opacidade do CSS para obter mais informações.
 func (e *TagSvgForeignObject) Opacity(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
@@ -1676,54 +1680,66 @@ func (e *TagSvgForeignObject) Opacity(value interface{}) (ref *TagSvgForeignObje
 //
 // The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context.
 //
-//   Input:
-//     value: sets what to do when an element's content is too big to fit in its block formatting context
-//       const: KOverflow... (e.g. KOverflowHidden)
-//       any other type: interface{}
+//	Input:
+//	  value: sets what to do when an element's content is too big to fit in its block formatting context
+//	    const: KOverflow... (e.g. KOverflowHidden)
+//	    any other type: interface{}
 //
 // This attribute has the same parameter values and meaning as the css overflow property, however, the following
 // additional points apply:
-//   * If it has a value of visible, the attribute has no effect (i.e., a clipping rectangle is not created).
-//   * If the overflow property has the value hidden or scroll, a clip of the exact size of the SVG viewport is applied.
-//   * When scroll is specified on an <svg> element, a scrollbar or panner is normally shown for the SVG viewport
+//
+//   - If it has a value of visible, the attribute has no effect (i.e., a clipping rectangle is not created).
+//
+//   - If the overflow property has the value hidden or scroll, a clip of the exact size of the SVG viewport is applied.
+//
+//   - When scroll is specified on an <svg> element, a scrollbar or panner is normally shown for the SVG viewport
 //     whether or not any of its content is clipped.
-//   * Within SVG content, the value auto implies that all rendered content for child elements must be visible, either
+//
+//   - Within SVG content, the value auto implies that all rendered content for child elements must be visible, either
 //     through a scrolling mechanism, or by rendering with no clip.
 //
-//   Notes:
-//     * Although the initial value for overflow is auto, it is overwritten in the User Agent style sheet for the <svg>
-//       element when it is not the root element of a stand-alone document, the <pattern> element, and the <marker>
-//       element to be hidden by default.
-//     * As a presentation attribute, overflow can be used as a CSS property. See the CSS overflow property for more
-//       information.
+//     Notes:
+//
+//   - Although the initial value for overflow is auto, it is overwritten in the User Agent style sheet for the <svg>
+//     element when it is not the root element of a stand-alone document, the <pattern> element, and the <marker>
+//     element to be hidden by default.
+//
+//   - As a presentation attribute, overflow can be used as a CSS property. See the CSS overflow property for more
+//     information.
 //
 // Português:
 //
 // O atributo overflow define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto
 // de formatação de bloco.
 //
-//   Entrada:
-//     value: define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto de
-//         formatação de bloco
-//       const: KOverflow... (e.g. KOverflowHidden)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define o que fazer quando o conteúdo de um elemento é muito grande para caber em seu contexto de
+//	      formatação de bloco
+//	    const: KOverflow... (e.g. KOverflowHidden)
+//	    qualquer outro tipo: interface{}
 //
 // Este atributo tem os mesmos valores de parâmetro e significado que a propriedade CSS overflow, no entanto, os
 // seguintes pontos adicionais se aplicam:
-//   * Se tiver um valor de visible, o atributo não terá efeito (ou seja, um retângulo de recorte não será criado).
-//   * Se a propriedade overflow tiver o valor oculto ou rolar, um clipe do tamanho exato da janela de visualização SVG
+//
+//   - Se tiver um valor de visible, o atributo não terá efeito (ou seja, um retângulo de recorte não será criado).
+//
+//   - Se a propriedade overflow tiver o valor oculto ou rolar, um clipe do tamanho exato da janela de visualização SVG
 //     será aplicado.
-//   * Quando a rolagem é especificada em um elemento <svg>, uma barra de rolagem ou panner normalmente é mostrado para
+//
+//   - Quando a rolagem é especificada em um elemento <svg>, uma barra de rolagem ou panner normalmente é mostrado para
 //     a janela de visualização SVG, independentemente de seu conteúdo estar ou não recortado.
-//   * No conteúdo SVG, o valor auto implica que o conteúdo renderizado para elementos filho deve ser visível por
+//
+//   - No conteúdo SVG, o valor auto implica que o conteúdo renderizado para elementos filho deve ser visível por
 //     completo, seja por meio de um mecanismo de rolagem ou renderizando sem clipe.
 //
-//   Notas:
-//     * Embora o valor inicial para estouro seja auto, ele é substituído na folha de estilo do User Agent para o
-//       elemento <svg> quando não é o elemento raiz de um documento autônomo, o elemento <pattern> e o elemento
-//       <marker> para ser ocultado por padrão.
-//     * Como atributo de apresentação, overflow pode ser usado como propriedade CSS. Consulte a propriedade CSS
-//       overflow para obter mais informações.
+//     Notas:
+//
+//   - Embora o valor inicial para estouro seja auto, ele é substituído na folha de estilo do User Agent para o
+//     elemento <svg> quando não é o elemento raiz de um documento autônomo, o elemento <pattern> e o elemento
+//     <marker> para ser ocultado por padrão.
+//
+//   - Como atributo de apresentação, overflow pode ser usado como propriedade CSS. Consulte a propriedade CSS
+//     overflow para obter mais informações.
 func (e *TagSvgForeignObject) Overflow(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(Overflow); ok {
 		e.selfElement.Call("setAttribute", "overflow", converted.String())
@@ -1741,26 +1757,26 @@ func (e *TagSvgForeignObject) Overflow(value interface{}) (ref *TagSvgForeignObj
 // The pointer-events attribute is a presentation attribute that allows defining whether or when an element may be the
 // target of a mouse event.
 //
-//   Input:
-//     value: defining whether or when an element may be the target of a mouse event
-//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
-//       any other type: interface{}
+//	Input:
+//	  value: defining whether or when an element may be the target of a mouse event
+//	    const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute pointer-events can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute pointer-events can be used as a CSS property.
 //
 // Português:
 //
 // O atributo pointer-events é um atributo de apresentação que permite definir se ou quando um elemento pode ser alvo
 // de um evento de mouse.
 //
-//   Entrada:
-//     value: define se ou quando um elemento pode ser alvo de um evento de mouse.
-//       const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define se ou quando um elemento pode ser alvo de um evento de mouse.
+//	    const: KSvgPointerEvents... (e.g. KSvgPointerEventsVisibleStroke)
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
+//	Notas:
+//	  * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
 func (e *TagSvgForeignObject) PointerEvents(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgPointerEvents); ok {
 		e.selfElement.Call("setAttribute", "pointer-events", converted.String())
@@ -1778,26 +1794,26 @@ func (e *TagSvgForeignObject) PointerEvents(value interface{}) (ref *TagSvgForei
 // The shape-rendering attribute provides hints to the renderer about what tradeoffs to make when rendering shapes like
 // paths, circles, or rectangles.
 //
-//   Input:
-//     value: provides hints to the renderer
-//       const: KSvgShapeRendering... (e.g. KSvgShapeRenderingAuto)
-//       any other type: interface{}
+//	Input:
+//	  value: provides hints to the renderer
+//	    const: KSvgShapeRendering... (e.g. KSvgShapeRenderingAuto)
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, shape-rendering can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute, shape-rendering can be used as a CSS property.
 //
 // Português:
 //
 // O atributo shape-rendering fornece dicas ao renderizador sobre quais compensações fazer ao renderizar formas como
 // caminhos, círculos ou retângulos.
 //
-//   Entrada:
-//     value: fornece dicas para o renderizador
-//       const: KSvgShapeRendering... (ex. KSvgShapeRenderingAuto)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: fornece dicas para o renderizador
+//	    const: KSvgShapeRendering... (ex. KSvgShapeRenderingAuto)
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.
+//	Notas:
+//	  * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.
 func (e *TagSvgForeignObject) ShapeRendering(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgShapeRendering); ok {
 		e.selfElement.Call("setAttribute", "shape-rendering", converted.String())
@@ -1812,37 +1828,37 @@ func (e *TagSvgForeignObject) ShapeRendering(value interface{}) (ref *TagSvgFore
 //
 // English:
 //
-//  The stop-color attribute indicates what color to use at a gradient stop.
+//	The stop-color attribute indicates what color to use at a gradient stop.
 //
-//   Input:
-//     value: indicates what color to use at a gradient stop
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	 Input:
+//	   value: indicates what color to use at a gradient stop
+//	     string: e.g. "black"
+//	     factory: e.g. factoryColor.NewYellow()
+//	     RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //
-//   Notes:
-//     * With respect to gradients, SVG treats the transparent keyword differently than CSS. SVG does not calculate
-//       gradients in pre-multiplied space, so transparent really means transparent black. So, specifying a stop-color
-//       with the value transparent is equivalent to specifying a stop-color with the value black and a stop-opacity
-//       with the value 0.
-//     * As a presentation attribute, stop-color can be used as a CSS property.
+//	 Notes:
+//	   * With respect to gradients, SVG treats the transparent keyword differently than CSS. SVG does not calculate
+//	     gradients in pre-multiplied space, so transparent really means transparent black. So, specifying a stop-color
+//	     with the value transparent is equivalent to specifying a stop-color with the value black and a stop-opacity
+//	     with the value 0.
+//	   * As a presentation attribute, stop-color can be used as a CSS property.
 //
 // Português:
 //
-//  O atributo stop-color indica qual cor usar em uma parada de gradiente.
+//	O atributo stop-color indica qual cor usar em uma parada de gradiente.
 //
-//   Entrada:
-//     value: indica qual cor usar em um fim de gradiente
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	 Entrada:
+//	   value: indica qual cor usar em um fim de gradiente
+//	     string: e.g. "black"
+//	     factory: e.g. factoryColor.NewYellow()
+//	     RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //
-//   Notss:
-//     * Com relação aos gradientes, o SVG trata a palavra-chave transparente de maneira diferente do CSS. O SVG não
-//       calcula gradientes no espaço pré-multiplicado, portanto, transparente realmente significa preto transparente.
-//       Assim, especificar uma stop-color com o valor transparente é equivalente a especificar uma stop-color com o
-//       valor black e uma stop-opacity com o valor 0.
-//     * Como atributo de apresentação, stop-color pode ser usado como propriedade CSS.
+//	 Notss:
+//	   * Com relação aos gradientes, o SVG trata a palavra-chave transparente de maneira diferente do CSS. O SVG não
+//	     calcula gradientes no espaço pré-multiplicado, portanto, transparente realmente significa preto transparente.
+//	     Assim, especificar uma stop-color com o valor transparente é equivalente a especificar uma stop-color com o
+//	     valor black e uma stop-opacity com o valor 0.
+//	   * Como atributo de apresentação, stop-color pode ser usado como propriedade CSS.
 func (e *TagSvgForeignObject) StopColor(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stop-color", RGBAToJs(converted))
@@ -1859,33 +1875,33 @@ func (e *TagSvgForeignObject) StopColor(value interface{}) (ref *TagSvgForeignOb
 //
 // The stop-opacity attribute defines the opacity of a given color gradient stop.
 //
-//   Input:
-//     value: defines the opacity of a given color gradient stop
-//       float32: 1.0 = "100%"
-//       any other type: interface{}
+//	Input:
+//	  value: defines the opacity of a given color gradient stop
+//	    float32: 1.0 = "100%"
+//	    any other type: interface{}
 //
 // The opacity value used for the gradient calculation is the product of the value of stop-opacity and the opacity of
 // the value of the stop-color attribute. For stop-color values that don't include explicit opacity information, the
 // opacity is treated as 1.
 //
-//   Notes:
-//     * As a presentation attribute, stop-opacity can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute, stop-opacity can be used as a CSS property.
 //
 // Português:
 //
 // O atributo stop-opacity define a opacidade de uma determinada parada de gradiente de cor.
 //
-//   Entrada:
-//     value: define a opacidade de uma determinada parada de gradiente de cor
-//       float32: 1.0 = "100%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define a opacidade de uma determinada parada de gradiente de cor
+//	    float32: 1.0 = "100%"
+//	    qualquer outro tipo: interface{}
 //
 // O valor de opacidade usado para o cálculo do gradiente é o produto do valor de stop-opacity e a opacidade do valor
 // do atributo stop-color. Para valores de stop-color que não incluem informações explícitas de opacidade, a opacidade
 // é tratada como 1.
 //
-//   Notas:
-//     * Como atributo de apresentação, stop-opacity pode ser usado como uma propriedade CSS.
+//	Notas:
+//	  * Como atributo de apresentação, stop-opacity pode ser usado como uma propriedade CSS.
 func (e *TagSvgForeignObject) StopOpacity(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
@@ -1904,30 +1920,30 @@ func (e *TagSvgForeignObject) StopOpacity(value interface{}) (ref *TagSvgForeign
 // The stroke attribute is a presentation attribute defining the color (or any SVG paint servers like gradients or
 // patterns) used to paint the outline of the shape
 //
-//   Input:
-//     value: presentation attribute defining the color
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	Input:
+//	  value: presentation attribute defining the color
+//	    string: e.g. "black"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute stroke can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute stroke can be used as a CSS property.
 //
 // Português:
 //
 // O atributo de traço é um atributo de apresentação que define a cor (ou qualquer servidor de pintura SVG, como
 // gradientes ou padrões) usado para pintar o contorno da forma
 //
-//   Entrada:
-//     value: atributo de apresentação que define a cor
-//       string: e.g. "black"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: atributo de apresentação que define a cor
+//	    string: e.g. "black"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como um traço de atributo de apresentação pode ser usado como uma propriedade CSS.
+//	Notas:
+//	  * Como um traço de atributo de apresentação pode ser usado como uma propriedade CSS.
 func (e *TagSvgForeignObject) Stroke(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stroke", RGBAToJs(converted))
@@ -1945,26 +1961,26 @@ func (e *TagSvgForeignObject) Stroke(value interface{}) (ref *TagSvgForeignObjec
 // The stroke-dasharray attribute is a presentation attribute defining the pattern of dashes and gaps used to paint the
 // outline of the shape
 //
-//   Input:
-//     value: presentation attribute defining the pattern of dashes
-//       []float64: (e.g. []float64{4, 1, 2}) = "4 1 2"
-//       any other type: interface{}
+//	Input:
+//	  value: presentation attribute defining the pattern of dashes
+//	    []float64: (e.g. []float64{4, 1, 2}) = "4 1 2"
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, stroke-dasharray can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute, stroke-dasharray can be used as a CSS property.
 //
 // Português:
 //
 // O atributo stroke-dasharray é um atributo de apresentação que define o padrão de traços e lacunas usados para pintar
 // o contorno da forma
 //
-//   Entrada:
-//     value: atributo de apresentação que define o padrão de traços
-//       []float64: (e.g. []float64{4, 1, 2}) = "4 1 2"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: atributo de apresentação que define o padrão de traços
+//	    []float64: (e.g. []float64{4, 1, 2}) = "4 1 2"
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
+//	Notas:
+//	  * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
 func (e *TagSvgForeignObject) StrokeDasharray(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.([]float64); ok {
 		str := ""
@@ -1988,26 +2004,26 @@ func (e *TagSvgForeignObject) StrokeDasharray(value interface{}) (ref *TagSvgFor
 // The stroke-linecap attribute is a presentation attribute defining the shape to be used at the end of open subpaths
 // when they are stroked.
 //
-//   Input:
-//     value: presentation attribute defining the shape to be used at the end of open subpaths
-//       const: KSvgStrokeLinecap... (e.g. KSvgStrokeLinecapRound)
-//       any other type: interface{}
+//	Input:
+//	  value: presentation attribute defining the shape to be used at the end of open subpaths
+//	    const: KSvgStrokeLinecap... (e.g. KSvgStrokeLinecapRound)
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute stroke-linecap can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute stroke-linecap can be used as a CSS property.
 //
 // Português:
 //
 // O atributo stroke-linecap é um atributo de apresentação que define a forma a ser usada no final de subcaminhos
 // abertos quando eles são traçados.
 //
-//   Input:
-//     value: atributo de apresentação que define a forma a ser usada no final de subcaminhos
-//       const: KSvgStrokeLinecap... (e.g. KSvgStrokeLinecapRound)
-//       qualquer outro tipo: interface{}
+//	Input:
+//	  value: atributo de apresentação que define a forma a ser usada no final de subcaminhos
+//	    const: KSvgStrokeLinecap... (e.g. KSvgStrokeLinecapRound)
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
+//	Notas:
+//	  * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
 func (e *TagSvgForeignObject) StrokeLineCap(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
@@ -2025,16 +2041,16 @@ func (e *TagSvgForeignObject) StrokeLineCap(value interface{}) (ref *TagSvgForei
 // The stroke-linejoin attribute is a presentation attribute defining the shape to be used at the corners of paths when
 // they are stroked.
 //
-//   Notes:
-//     * As a presentation attribute stroke-linejoin can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute stroke-linejoin can be used as a CSS property.
 //
 // Português:
 //
 // O atributo stroke-linejoin é um atributo de apresentação que define a forma a ser usada nos cantos dos caminhos
 // quando eles são traçados.
 //
-//   Notas:
-//     * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
+//	Notas:
+//	  * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
 func (e *TagSvgForeignObject) StrokeLineJoin(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
@@ -2052,11 +2068,11 @@ func (e *TagSvgForeignObject) StrokeLineJoin(value interface{}) (ref *TagSvgFore
 // The stroke-miterlimit attribute is a presentation attribute defining a limit on the ratio of the miter length to the
 // stroke-width used to draw a miter join. When the limit is exceeded, the join is converted from a miter to a bevel.
 //
-//   Input:
-//     value: defining a limit on the ratio of the miter length
+//	Input:
+//	  value: defining a limit on the ratio of the miter length
 //
-//   Notes:
-//     * As a presentation attribute stroke-miterlimit can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute stroke-miterlimit can be used as a CSS property.
 //
 // Português:
 //
@@ -2064,11 +2080,11 @@ func (e *TagSvgForeignObject) StrokeLineJoin(value interface{}) (ref *TagSvgFore
 // para a largura do traço usado para desenhar uma junção de mitra. Quando o limite é excedido, a junção é convertida
 // de uma mitra para um chanfro.
 //
-//   Entrada:
-//     value: definindo um limite na proporção do comprimento da mitra
+//	Entrada:
+//	  value: definindo um limite na proporção do comprimento da mitra
 //
-//   Notas:
-//     * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
+//	Notas:
+//	  * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
 func (e *TagSvgForeignObject) StrokeMiterLimit(value float64) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
@@ -2081,26 +2097,26 @@ func (e *TagSvgForeignObject) StrokeMiterLimit(value float64) (ref *TagSvgForeig
 // The stroke-opacity attribute is a presentation attribute defining the opacity of the paint server (color, gradient,
 // pattern, etc) applied to the stroke of a shape.
 //
-//   Input:
-//     value: defining the opacity of the paint
-//       float32: 1.0 = "100%"
-//       any other type: interface{}
+//	Input:
+//	  value: defining the opacity of the paint
+//	    float32: 1.0 = "100%"
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute stroke-opacity can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute stroke-opacity can be used as a CSS property.
 //
 // Português:
 //
 // O atributo de opacidade do traçado é um atributo de apresentação que define a opacidade do servidor de pintura (cor,
 // gradiente, padrão etc.) aplicado ao traçado de uma forma.
 //
-//   Entrada:
-//     value: definindo a opacidade da tinta
-//       float32: 1.0 = "100%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: definindo a opacidade da tinta
+//	    float32: 1.0 = "100%"
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, a opacidade do traço pode ser usada como uma propriedade CSS.
+//	Notas:
+//	  * Como atributo de apresentação, a opacidade do traço pode ser usada como uma propriedade CSS.
 func (e *TagSvgForeignObject) StrokeOpacity(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
@@ -2118,19 +2134,19 @@ func (e *TagSvgForeignObject) StrokeOpacity(value interface{}) (ref *TagSvgForei
 //
 // The stroke-width attribute is a presentation attribute defining the width of the stroke to be applied to the shape.
 //
-//   Input:
-//     value: defining the width of the stroke
-//       float32: 1.0 = "100%"
-//       any other type: interface{}
+//	Input:
+//	  value: defining the width of the stroke
+//	    float32: 1.0 = "100%"
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo stroke-width é um atributo de apresentação que define a largura do traço a ser aplicado à forma.
 //
-//   Entrada:
-//     value: definindo a largura do traço
-//       float32: 1.0 = "100%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: definindo a largura do traço
+//	    float32: 1.0 = "100%"
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) StrokeWidth(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
@@ -2149,10 +2165,10 @@ func (e *TagSvgForeignObject) StrokeWidth(value interface{}) (ref *TagSvgForeign
 // The text-anchor attribute is used to align (start-, middle- or end-alignment) a string of pre-formatted text or
 // auto-wrapped text where the wrapping area is determined from the inline-size property relative to a given point.
 //
-//   Input:
-//     value: used to align a string
-//       const: KSvgTextAnchor... (e.g. KSvgTextAnchorStart)
-//       any other type: interface{}
+//	Input:
+//	  value: used to align a string
+//	    const: KSvgTextAnchor... (e.g. KSvgTextAnchorStart)
+//	    any other type: interface{}
 //
 // This attribute is not applicable to other types of auto-wrapped text. For those cases you should use text-align.
 // For multi-line text, the alignment takes place for each line.
@@ -2163,8 +2179,8 @@ func (e *TagSvgForeignObject) StrokeWidth(value interface{}) (ref *TagSvgForeign
 // <tspan>, <tref> or <altGlyph> element assigned explicitly to the first rendered character in a text chunk, or
 // determination of the initial current text position for a <textPath> element.
 //
-//   Notes:
-//     * As a presentation attribute, text-anchor can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute, text-anchor can be used as a CSS property.
 //
 // Português:
 //
@@ -2172,10 +2188,10 @@ func (e *TagSvgForeignObject) StrokeWidth(value interface{}) (ref *TagSvgForeign
 // pré-formatado ou texto com quebra automática onde a área de quebra é determinada a partir da propriedade inline-size
 // relativa a um determinado ponto.
 //
-//   Entrada:
-//     value: usado para alinhar uma string
-//       const: KSvgTextAnchor... (e.g. KSvgTextAnchorStart)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: usado para alinhar uma string
+//	    const: KSvgTextAnchor... (e.g. KSvgTextAnchorStart)
+//	    qualquer outro tipo: interface{}
 //
 // Este atributo não se aplica a outros tipos de texto com quebra automática. Para esses casos, você deve usar
 // text-align. Para texto de várias linhas, o alinhamento ocorre para cada linha.
@@ -2186,8 +2202,8 @@ func (e *TagSvgForeignObject) StrokeWidth(value interface{}) (ref *TagSvgForeign
 // de atributo x ou y em um <tspan >, elemento <tref> ou <altGlyph> atribuído explicitamente ao primeiro caractere
 // renderizado em um pedaço de texto, ou determinação da posição inicial do texto atual para um elemento <textPath>.
 //
-//   Notes:
-//     * As a presentation attribute, text-anchor can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute, text-anchor can be used as a CSS property.
 func (e *TagSvgForeignObject) TextAnchor(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgTextAnchor); ok {
 		e.selfElement.Call("setAttribute", "text-anchor", converted.String())
@@ -2205,14 +2221,14 @@ func (e *TagSvgForeignObject) TextAnchor(value interface{}) (ref *TagSvgForeignO
 // The text-decoration attribute defines whether text is decorated with an underline, overline and/or strike-through.
 // It is a shorthand for the text-decoration-line and text-decoration-style properties.
 //
-//   Input:
-//     value: defines whether text is decorated
-//       const: KSvgTextDecorationLine... (e.g. KSvgTextDecorationLineUnderline)
-//       const: KSvgTextDecorationStyle... (e.g. KSvgTextDecorationStyleDouble)
-//       string: e.g. "black", "line-through"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       any other type: interface{}
+//	Input:
+//	  value: defines whether text is decorated
+//	    const: KSvgTextDecorationLine... (e.g. KSvgTextDecorationLineUnderline)
+//	    const: KSvgTextDecorationStyle... (e.g. KSvgTextDecorationStyleDouble)
+//	    string: e.g. "black", "line-through"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    any other type: interface{}
 //
 // The fill and stroke of the text decoration are given by the fill and stroke of the text at the point where the text
 // decoration is declared.
@@ -2220,23 +2236,23 @@ func (e *TagSvgForeignObject) TextAnchor(value interface{}) (ref *TagSvgForeignO
 // The paint order of the text decoration, i.e. the fill and stroke, is determined by the value of the paint-order
 // attribute at the point where the text decoration is declared.
 //
-//   Notes:
-//     * As a presentation attribute, text-decoration can be used as a CSS property. See the css text-decoration
-//       property for more information.
+//	Notes:
+//	  * As a presentation attribute, text-decoration can be used as a CSS property. See the css text-decoration
+//	    property for more information.
 //
 // Português:
 //
 // O atributo text-decoration define se o texto é decorado com sublinhado, overline e ou tachado.
 // É um atalho para as propriedades text-decoration-line e text-decoration-style.
 //
-//   Entrada:
-//     value: define se o texto é decorado
-//       const: KSvgTextDecorationLine... (ex. KSvgTextDecorationLineUnderline)
-//       const: KSvgTextDecorationStyle... (ex. KSvgTextDecorationStyleDouble)
-//       string: e.g. "black", "line-through"
-//       factory: e.g. factoryColor.NewYellow()
-//       RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define se o texto é decorado
+//	    const: KSvgTextDecorationLine... (ex. KSvgTextDecorationLineUnderline)
+//	    const: KSvgTextDecorationStyle... (ex. KSvgTextDecorationStyleDouble)
+//	    string: e.g. "black", "line-through"
+//	    factory: e.g. factoryColor.NewYellow()
+//	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
+//	    qualquer outro tipo: interface{}
 //
 // O preenchimento e o traçado da decoração de texto são dados pelo preenchimento e traçado do texto no ponto em que a
 // decoração de texto é declarada.
@@ -2244,9 +2260,9 @@ func (e *TagSvgForeignObject) TextAnchor(value interface{}) (ref *TagSvgForeignO
 // A ordem de pintura da decoração do texto, ou seja, o preenchimento e o traço, é determinada pelo valor do atributo
 // paint-order no ponto em que a decoração do texto é declarada.
 //
-//   Notas:
-//     * Como atributo de apresentação, a decoração de texto pode ser usada como uma propriedade CSS. Consulte a
-//       propriedade CSS text-decoration para obter mais informações.
+//	Notas:
+//	  * Como atributo de apresentação, a decoração de texto pode ser usada como uma propriedade CSS. Consulte a
+//	    propriedade CSS text-decoration para obter mais informações.
 func (e *TagSvgForeignObject) TextDecoration(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "text-decoration", RGBAToJs(converted))
@@ -2273,17 +2289,17 @@ func (e *TagSvgForeignObject) TextDecoration(value interface{}) (ref *TagSvgFore
 //
 // The text-rendering attribute provides hints to the renderer about what tradeoffs to make when rendering text.
 //
-//   Notes:
-//     * As a presentation attribute, text-rendering can be used as a CSS property.
-//       See the css text-rendering property for more information.
+//	Notes:
+//	  * As a presentation attribute, text-rendering can be used as a CSS property.
+//	    See the css text-rendering property for more information.
 //
 // Português:
 //
 // O atributo text-rendering fornece dicas ao renderizador sobre quais compensações fazer ao renderizar o texto.
 //
-//   Notas:
-//     * Como um atributo de apresentação, a renderização de texto pode ser usada como uma propriedade CSS.
-//       Consulte a propriedade de renderização de texto css para obter mais informações.
+//	Notas:
+//	  * Como um atributo de apresentação, a renderização de texto pode ser usada como uma propriedade CSS.
+//	    Consulte a propriedade de renderização de texto css para obter mais informações.
 func (e *TagSvgForeignObject) TextRendering(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgTextRendering); ok {
 		e.selfElement.Call("setAttribute", "text-rendering", converted.String())
@@ -2301,33 +2317,33 @@ func (e *TagSvgForeignObject) TextRendering(value interface{}) (ref *TagSvgForei
 // The transform attribute defines a list of transform definitions that are applied to an element and the element's
 // children.
 //
-//   Input:
-//     value: defines a list of transform definitions
-//       factory: e.g. factoryBrowser.NewTransform().Translate(100, 0).Scale(4, 1)
-//       string: e.g. "translate(300,0) scale(4,1)"
-//       any other type: interface{}
+//	Input:
+//	  value: defines a list of transform definitions
+//	    factory: e.g. factoryBrowser.NewTransform().Translate(100, 0).Scale(4, 1)
+//	    string: e.g. "translate(300,0) scale(4,1)"
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As of SVG2, transform is a presentation attribute, meaning it can be used as a CSS property. However, be aware
-//       that there are some differences in syntax between the CSS property and the attribute. See the documentation for
-//       the CSS property transform for the specific syntax to use in that case.
+//	Notes:
+//	  * As of SVG2, transform is a presentation attribute, meaning it can be used as a CSS property. However, be aware
+//	    that there are some differences in syntax between the CSS property and the attribute. See the documentation for
+//	    the CSS property transform for the specific syntax to use in that case.
 //
 // Português:
 //
 // O atributo transform define uma lista de definições de transformação que são aplicadas a um elemento e aos filhos do
 // elemento.
 //
-//   Entrada:
-//     value: define uma lista de definições de transformação
-//       factory: ex. factoryBrowser.NewTransform().Translate(100, 0).Scale(4, 1)
-//       string: ex. "translate(300,0) scale(4,1)"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define uma lista de definições de transformação
+//	    factory: ex. factoryBrowser.NewTransform().Translate(100, 0).Scale(4, 1)
+//	    string: ex. "translate(300,0) scale(4,1)"
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * A partir do SVG2, transform é um atributo de apresentação, o que significa que pode ser usado como uma
-//       propriedade CSS. No entanto, esteja ciente de que existem algumas diferenças na sintaxe entre a propriedade CSS
-//       e o atributo. Consulte a documentação da transformação da propriedade CSS para obter a sintaxe específica a ser
-//       usada nesse caso.
+//	Notas:
+//	  * A partir do SVG2, transform é um atributo de apresentação, o que significa que pode ser usado como uma
+//	    propriedade CSS. No entanto, esteja ciente de que existem algumas diferenças na sintaxe entre a propriedade CSS
+//	    e o atributo. Consulte a documentação da transformação da propriedade CSS para obter a sintaxe específica a ser
+//	    usada nesse caso.
 func (e *TagSvgForeignObject) Transform(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(*TransformFunctions); ok {
 		e.selfElement.Call("setAttribute", "transform", converted.String())
@@ -2349,27 +2365,27 @@ func (e *TagSvgForeignObject) Transform(value interface{}) (ref *TagSvgForeignOb
 //
 // The unicode-bidi attribute specifies how the accumulation of the background image is managed.
 //
-//   Input:
-//     value: specifies how the accumulation of the background image is managed
-//       const: KSvgTransformOrigin... (e.g. KSvgTransformOriginLeft)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies how the accumulation of the background image is managed
+//	    const: KSvgTransformOrigin... (e.g. KSvgTransformOriginLeft)
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, unicode-bidi can be used as a CSS property. See the CSS unicode-bidi property for
-//       more information.
+//	Notes:
+//	  * As a presentation attribute, unicode-bidi can be used as a CSS property. See the CSS unicode-bidi property for
+//	    more information.
 //
 // Português:
 //
 // O atributo unicode-bidi especifica como o acúmulo da imagem de fundo é gerenciado.
 //
-//   Entrada:
-//     value: especifica como o acúmulo da imagem de fundo é gerenciado
-//       const: KSvgTransformOrigin... (e.g. KSvgTransformOriginLeft)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica como o acúmulo da imagem de fundo é gerenciado
+//	    const: KSvgTransformOrigin... (e.g. KSvgTransformOriginLeft)
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, o unicode-bidi pode ser usado como uma propriedade CSS. Consulte a propriedade
-//       CSS unicode-bidi para obter mais informações.
+//	Notas:
+//	  * Como atributo de apresentação, o unicode-bidi pode ser usado como uma propriedade CSS. Consulte a propriedade
+//	    CSS unicode-bidi para obter mais informações.
 func (e *TagSvgForeignObject) UnicodeBidi(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgTransformOrigin); ok {
 		e.selfElement.Call("setAttribute", "unicode-bidi", converted.String())
@@ -2386,28 +2402,28 @@ func (e *TagSvgForeignObject) UnicodeBidi(value interface{}) (ref *TagSvgForeign
 //
 // The vector-effect property specifies the vector effect to use when drawing an object.
 //
-//   Input:
-//     value: specifies the vector effect
-//       const: KSvgVectorEffect... (e.g. KSvgVectorEffectNonScalingStroke)
+//	Input:
+//	  value: specifies the vector effect
+//	    const: KSvgVectorEffect... (e.g. KSvgVectorEffectNonScalingStroke)
 //
 // Vector effects are applied before any of the other compositing operations, i.e. filters, masks and clips.
 //
-//   Notes:
-//     * As a presentation attribute, vector-effect can be used as a CSS property.
+//	Notes:
+//	  * As a presentation attribute, vector-effect can be used as a CSS property.
 //
 // Português:
 //
 // A propriedade vector-effect especifica o efeito vetorial a ser usado ao desenhar um objeto.
 //
-//   Entrada:
-//     value: especifica o efeito vetorial
-//       const: KSvgVectorEffect... (ex. KSvgVectorEffectNonScalingStroke)
+//	Entrada:
+//	  value: especifica o efeito vetorial
+//	    const: KSvgVectorEffect... (ex. KSvgVectorEffectNonScalingStroke)
 //
 // Os efeitos vetoriais são aplicados antes de qualquer outra operação de composição, ou seja, filtros, máscaras e
 // clipes.
 //
-//   Notas:
-//     * Como atributo de apresentação, o efeito vetorial pode ser usado como uma propriedade CSS.
+//	Notas:
+//	  * Como atributo de apresentação, o efeito vetorial pode ser usado como uma propriedade CSS.
 func (e *TagSvgForeignObject) VectorEffect(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgVectorEffect); ok {
 		e.selfElement.Call("setAttribute", "vector-effect", converted.String())
@@ -2424,41 +2440,41 @@ func (e *TagSvgForeignObject) VectorEffect(value interface{}) (ref *TagSvgForeig
 //
 // The visibility attribute lets you control the visibility of graphical elements.
 //
-//   Input:
-//     value: lets you control the visibility
-//       const: KSvgVisibility... (e.g. KSvgVisibilityHidden)
-//       any other type: interface{}
+//	Input:
+//	  value: lets you control the visibility
+//	    const: KSvgVisibility... (e.g. KSvgVisibilityHidden)
+//	    any other type: interface{}
 //
 // With a value of hidden or collapse the current graphics element is invisible.
 //
 // Depending on the value of attribute pointer-events, graphics elements which have their visibility attribute set to
 // hidden still might receive events.
 //
-//   Notes:
-//     * If the visibility attribute is set to hidden on a text element, then the text is invisible but still takes up
-//       space in text layout calculations;
-//     * As a presentation attribute, visibility can be used as a CSS property. See the css visibility property for
-//       more information.
+//	Notes:
+//	  * If the visibility attribute is set to hidden on a text element, then the text is invisible but still takes up
+//	    space in text layout calculations;
+//	  * As a presentation attribute, visibility can be used as a CSS property. See the css visibility property for
+//	    more information.
 //
 // Português:
 //
 // O atributo de visibilidade permite controlar a visibilidade dos elementos gráficos.
 //
-//   Entrada:
-//     value: permite controlar a visibilidade
-//       const: KSvgVisibility... (e.g. KSvgVisibilityHidden)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: permite controlar a visibilidade
+//	    const: KSvgVisibility... (e.g. KSvgVisibilityHidden)
+//	    qualquer outro tipo: interface{}
 //
 // Com um valor oculto ou recolhido, o elemento gráfico atual fica invisível.
 //
 // Dependendo do valor do atributo pointer-events, os elementos gráficos que têm seu atributo de visibilidade definido
 // como oculto ainda podem receber eventos.
 //
-//   Notas:
-//     * Se o atributo de visibilidade estiver definido como oculto em um elemento de texto, o texto ficará invisível,
-//       mas ainda ocupará espaço nos cálculos de layout de texto;
-//     * Como atributo de apresentação, a visibilidade pode ser usada como propriedade CSS. Consulte a propriedade de
-//       visibilidade do CSS para obter mais informações.
+//	Notas:
+//	  * Se o atributo de visibilidade estiver definido como oculto em um elemento de texto, o texto ficará invisível,
+//	    mas ainda ocupará espaço nos cálculos de layout de texto;
+//	  * Como atributo de apresentação, a visibilidade pode ser usada como propriedade CSS. Consulte a propriedade de
+//	    visibilidade do CSS para obter mais informações.
 func (e *TagSvgForeignObject) Visibility(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgVisibility); ok {
 		e.selfElement.Call("setAttribute", "visibility", converted.String())
@@ -2475,10 +2491,10 @@ func (e *TagSvgForeignObject) Visibility(value interface{}) (ref *TagSvgForeignO
 //
 // The word-spacing attribute specifies spacing behavior between words.
 //
-//   Input:
-//     value: specifies spacing behavior between words
-//       float32: 1.0 = "100%"
-//       any other type: interface{}
+//	Input:
+//	  value: specifies spacing behavior between words
+//	    float32: 1.0 = "100%"
+//	    any other type: interface{}
 //
 // If a <length> is provided without a unit identifier (e.g. an unqualified number such as 128), the browser processes
 // the <length> as a width value in the current user coordinate system.
@@ -2486,18 +2502,18 @@ func (e *TagSvgForeignObject) Visibility(value interface{}) (ref *TagSvgForeignO
 // If a <length> is provided with one of the unit identifiers (e.g. .25em or 1%), then the browser converts the <length>
 // into a corresponding value in the current user coordinate system.
 //
-//   Notes:
-//     * As a presentation attribute, word-spacing can be used as a CSS property. See the css word-spacing property for
-//       more information.
+//	Notes:
+//	  * As a presentation attribute, word-spacing can be used as a CSS property. See the css word-spacing property for
+//	    more information.
 //
 // Português:
 //
 // O atributo word-spacing especifica o comportamento do espaçamento entre as palavras.
 //
-//   Entrada:
-//     value: especifica o comportamento de espaçamento entre palavras
-//       float32: 1.0 = "100%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica o comportamento de espaçamento entre palavras
+//	    float32: 1.0 = "100%"
+//	    qualquer outro tipo: interface{}
 //
 // Se um <comprimento> for fornecido sem um identificador de unidade (por exemplo, um número não qualificado como 128),
 // o navegador processará o <comprimento> como um valor de largura no sistema de coordenadas do usuário atual.
@@ -2505,9 +2521,9 @@ func (e *TagSvgForeignObject) Visibility(value interface{}) (ref *TagSvgForeignO
 // Se um <comprimento> for fornecido com um dos identificadores de unidade (por exemplo, .25em ou 1%), o navegador
 // converterá o <comprimento> em um valor correspondente no sistema de coordenadas do usuário atual.
 //
-//   Notas:
-//     * Como atributo de apresentação, o espaçamento entre palavras pode ser usado como uma propriedade CSS.
-//       Consulte a propriedade de espaçamento entre palavras do CSS para obter mais informações.
+//	Notas:
+//	  * Como atributo de apresentação, o espaçamento entre palavras pode ser usado como uma propriedade CSS.
+//	    Consulte a propriedade de espaçamento entre palavras do CSS para obter mais informações.
 func (e *TagSvgForeignObject) WordSpacing(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
@@ -2529,14 +2545,14 @@ func (e *TagSvgForeignObject) WordSpacing(value interface{}) (ref *TagSvgForeign
 // inline-progression-direction can change within a <text> element due to the Unicode bidirectional algorithm and
 // properties direction and unicode-bidi.)
 //
-//   Input:
-//     value: specifies whether the initial inline-progression-direction
-//       const: KSvgWritingMode... (e.g. KSvgWritingModeHorizontalTb)
-//       any other type: interface{}
+//	Input:
+//	  value: specifies whether the initial inline-progression-direction
+//	    const: KSvgWritingMode... (e.g. KSvgWritingModeHorizontalTb)
+//	    any other type: interface{}
 //
-//   Notes:
-//     * As a presentation attribute, writing-mode can be used as a CSS property. See the CSS writing-mode property for
-//       more information.
+//	Notes:
+//	  * As a presentation attribute, writing-mode can be used as a CSS property. See the CSS writing-mode property for
+//	    more information.
 //
 // Português:
 //
@@ -2546,14 +2562,14 @@ func (e *TagSvgForeignObject) WordSpacing(value interface{}) (ref *TagSvgForeign
 // (Observe que a direção de progressão em linha pode mudar dentro de um elemento <text> devido ao algoritmo
 // bidirecional Unicode e direção de propriedades e unicode-bidi.)
 //
-//   Entrada:
-//     value: especifica se a direção de progressão em linha inicial
-//       const: KSvgWritingMode... (ex. KSvgWritingModeHorizontalTb)
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: especifica se a direção de progressão em linha inicial
+//	    const: KSvgWritingMode... (ex. KSvgWritingModeHorizontalTb)
+//	    qualquer outro tipo: interface{}
 //
-//   Notas:
-//     * Como atributo de apresentação, o modo de escrita pode ser usado como uma propriedade CSS. Consulte a
-//       propriedade do modo de gravação CSS para obter mais informações.
+//	Notas:
+//	  * Como atributo de apresentação, o modo de escrita pode ser usado como uma propriedade CSS. Consulte a
+//	    propriedade do modo de gravação CSS para obter mais informações.
 func (e *TagSvgForeignObject) WritingMode(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(SvgWritingMode); ok {
 		e.selfElement.Call("setAttribute", "writing-mode", converted.String())
@@ -2575,12 +2591,12 @@ func (e *TagSvgForeignObject) WritingMode(value interface{}) (ref *TagSvgForeign
 // Assigns a class name or set of class names to an element. You may assign the same class name or names to any number
 // of elements, however, multiple class names must be separated by whitespace characters.
 //
-//   Input:
-//     class: Assigns a class name or set of class names to an element
+//	Input:
+//	  class: Assigns a class name or set of class names to an element
 //
 // An element's class name serves two key roles:
-//   * As a style sheet selector, for when an author assigns style information to a set of elements.
-//   * For general use by the browser.
+//   - As a style sheet selector, for when an author assigns style information to a set of elements.
+//   - For general use by the browser.
 //
 // Português:
 //
@@ -2588,13 +2604,13 @@ func (e *TagSvgForeignObject) WritingMode(value interface{}) (ref *TagSvgForeign
 // de classe a qualquer número de elementos, no entanto, vários nomes de classe devem ser separados por caracteres de
 // espaço em branco.
 //
-//   Entrada:
-//     class: Atribui um nome de classe ou um conjunto de nomes de classe à um elemento.
+//	Entrada:
+//	  class: Atribui um nome de classe ou um conjunto de nomes de classe à um elemento.
 //
 // O nome de classe de um elemento tem duas funções principais:
-//   * Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
+//   - Como um seletor de folha de estilo, para quando um autor atribui informações de estilo a um conjunto de
 //     elementos.
-//   * Para uso geral pelo navegador.
+//   - Para uso geral pelo navegador.
 func (e *TagSvgForeignObject) Class(class string) (ref *TagSvgForeignObject) {
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
@@ -2606,8 +2622,8 @@ func (e *TagSvgForeignObject) Class(class string) (ref *TagSvgForeignObject) {
 //
 // The style attribute allows to style an element using CSS declarations.
 //
-//   Input:
-//     value: allows to style an element using CSS declarations
+//	Input:
+//	  value: allows to style an element using CSS declarations
 //
 // It functions identically to the style attribute in HTML.
 //
@@ -2615,8 +2631,8 @@ func (e *TagSvgForeignObject) Class(class string) (ref *TagSvgForeignObject) {
 //
 // O atributo style permite estilizar um elemento usando declarações CSS.
 //
-//   Entrada:
-//     value: permite estilizar um elemento usando declarações CSS
+//	Entrada:
+//	  value: permite estilizar um elemento usando declarações CSS
 //
 // Funciona de forma idêntica ao atributo style em HTML.
 func (e *TagSvgForeignObject) Style(value string) (ref *TagSvgForeignObject) {
@@ -2630,15 +2646,15 @@ func (e *TagSvgForeignObject) Style(value string) (ref *TagSvgForeignObject) {
 //
 // English:
 //
-//  The height attribute defines the vertical length of an element in the user coordinate system.
-//       float32: 1.0 = "100%"
-//       any other type: interface{}
+//	The height attribute defines the vertical length of an element in the user coordinate system.
+//	     float32: 1.0 = "100%"
+//	     any other type: interface{}
 //
 // Português:
 //
-//  O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
-//       float32: 1.0 = "100%"
-//       qualquer outro tipo: interface{}
+//	O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
+//	     float32: 1.0 = "100%"
+//	     qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) Height(height interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := height.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
@@ -2656,19 +2672,19 @@ func (e *TagSvgForeignObject) Height(height interface{}) (ref *TagSvgForeignObje
 //
 // The width attribute defines the horizontal length of an element in the user coordinate system.
 //
-//   Input:
-//     value: the horizontal length of an element
-//       float32: 1.0 = "100%"
-//       any other type: interface{}
+//	Input:
+//	  value: the horizontal length of an element
+//	    float32: 1.0 = "100%"
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo largura define o comprimento horizontal de um elemento no sistema de coordenadas do usuário.
 //
-//   Entrada:
-//     value: o comprimento horizontal de um elemento
-//       float32: 1.0 = "100%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: o comprimento horizontal de um elemento
+//	    float32: 1.0 = "100%"
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) Width(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
@@ -2686,23 +2702,23 @@ func (e *TagSvgForeignObject) Width(value interface{}) (ref *TagSvgForeignObject
 //
 // The x attribute defines an x-axis coordinate in the user coordinate system.
 //
-//   Input:
-//     value: defines an x-axis coordinate
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 0.1} = "0%, 10%"
-//       float32: 0.1 = "10%"
-//       any other type: interface{}
+//	Input:
+//	  value: defines an x-axis coordinate
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []float32: []float64{0.0, 0.1} = "0%, 10%"
+//	    float32: 0.1 = "10%"
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo x define uma coordenada do eixo x no sistema de coordenadas do usuário.
 //
-//   Entrada:
-//     value: define uma coordenada do eixo x
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float64{0.0, 0.1} = "0%, 10%"
-//       float32: 0.1 = "10%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define uma coordenada do eixo x
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []float32: []float64{0.0, 0.1} = "0%, 10%"
+//	    float32: 0.1 = "10%"
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) X(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
@@ -2744,23 +2760,23 @@ func (e *TagSvgForeignObject) X(value interface{}) (ref *TagSvgForeignObject) {
 //
 // The y attribute defines an y-axis coordinate in the user coordinate system.
 //
-//   Input:
-//     value: defines an y-axis coordinate
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float32{0.0, 0.1} = "0%, 10%"
-//       float32: 0.1 = "10%"
-//       any other type: interface{}
+//	Input:
+//	  value: defines an y-axis coordinate
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []float32: []float32{0.0, 0.1} = "0%, 10%"
+//	    float32: 0.1 = "10%"
+//	    any other type: interface{}
 //
 // Português:
 //
 // O atributo y define uma coordenada do eixo y no sistema de coordenadas do usuário.
 //
-//   Entrada:
-//     value: define uma coordenada do eixo y
-//       []float64: []float64{0.0, 10.0} = "0, 10"
-//       []float32: []float32{0.0, 0.1} = "0%, 10%"
-//       float32: 0.1 = "10%"
-//       qualquer outro tipo: interface{}
+//	Entrada:
+//	  value: define uma coordenada do eixo y
+//	    []float64: []float64{0.0, 10.0} = "0, 10"
+//	    []float32: []float32{0.0, 0.1} = "0%, 10%"
+//	    float32: 0.1 = "10%"
+//	    qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) Y(value interface{}) (ref *TagSvgForeignObject) {
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
@@ -2828,11 +2844,11 @@ func (e *TagSvgForeignObject) Html(value string) (ref *TagSvgForeignObject) {
 //
 // English:
 //
-//  Returns the X and Y axes in pixels.
+//	Returns the X and Y axes in pixels.
 //
 // Português:
 //
-//  Retorna os eixos X e Y em pixels.
+//	Retorna os eixos X e Y em pixels.
 func (e *TagSvgForeignObject) GetXY() (x, y float64) {
 	x = e.GetX()
 	y = e.GetY()
@@ -2844,11 +2860,11 @@ func (e *TagSvgForeignObject) GetXY() (x, y float64) {
 //
 // English:
 //
-//  Returns the X axe in pixels.
+//	Returns the X axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo X em pixels.
+//	Retorna o eixo X em pixels.
 func (e *TagSvgForeignObject) GetX() (x float64) {
 	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
 		return
@@ -2864,11 +2880,11 @@ func (e *TagSvgForeignObject) GetX() (x float64) {
 //
 // English:
 //
-//  Returns the Y axe in pixels.
+//	Returns the Y axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo Y em pixels.
+//	Retorna o eixo Y em pixels.
 func (e *TagSvgForeignObject) GetY() (y float64) {
 	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
 		return
@@ -2883,11 +2899,11 @@ func (e *TagSvgForeignObject) GetY() (y float64) {
 //
 // English:
 //
-//  Same as GetX() function, returns the x position of the element.
+//	Same as GetX() function, returns the x position of the element.
 //
 // Português:
 //
-//  O mesmo que a função GetX(), retorna a posição x do elemento.
+//	O mesmo que a função GetX(), retorna a posição x do elemento.
 func (e *TagSvgForeignObject) GetTop() (top float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	top = coordinate.Get("top").Float()
@@ -2898,11 +2914,11 @@ func (e *TagSvgForeignObject) GetTop() (top float64) {
 //
 // English:
 //
-//  It is the same as x + width.
+//	It is the same as x + width.
 //
 // Português:
 //
-//  É o mesmo que x + width.
+//	É o mesmo que x + width.
 func (e *TagSvgForeignObject) GetRight() (right float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	right = coordinate.Get("right").Float()
@@ -2913,11 +2929,11 @@ func (e *TagSvgForeignObject) GetRight() (right float64) {
 //
 // English:
 //
-//  It is the same as y + height.
+//	It is the same as y + height.
 //
 // Português:
 //
-//  É o mesmo que y + Height.
+//	É o mesmo que y + Height.
 func (e *TagSvgForeignObject) GetBottom() (bottom float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	bottom = coordinate.Get("bottom").Float()
@@ -2928,11 +2944,11 @@ func (e *TagSvgForeignObject) GetBottom() (bottom float64) {
 //
 // English:
 //
-//  Same as GetY() function, returns the y position of the element.
+//	Same as GetY() function, returns the y position of the element.
 //
 // Português:
 //
-//  O mesmo que a função GetY(), retorna a posição y do elemento.
+//	O mesmo que a função GetY(), retorna a posição y do elemento.
 func (e *TagSvgForeignObject) GetLeft() (left float64) {
 	var coordinate = e.selfElement.Call("getBoundingClientRect")
 	left = coordinate.Get("left").Float()
@@ -2949,10 +2965,10 @@ func (e *TagSvgForeignObject) GetLeft() (left float64) {
 //
 // Passa a referencia do objeto para uma variável externa.
 //
-//   Example: / Exemplo:
-//     var circle *html.TagSvgCircle
-//     factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
-//     log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
+//	Example: / Exemplo:
+//	  var circle *html.TagSvgCircle
+//	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
+//	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgForeignObject) Reference(reference **TagSvgForeignObject) (ref *TagSvgForeignObject) {
 	*reference = e
 	return e
@@ -2964,65 +2980,65 @@ func (e *TagSvgForeignObject) Reference(reference **TagSvgForeignObject) (ref *T
 //
 // Adds a mouse click event listener equivalent to the JavaScript command addEventListener('click',fn).
 //
-//   Input:
-//     mouseEvet: pointer to channel mouse.Data
+//	Input:
+//	  mouseEvet: pointer to channel mouse.Data
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de click do mouse, equivalente ao comando JavaScript addEventListener('click',fn).
 //
-//   Entrada:
-//     mouseEvet: ponteiro para o channel mouse.Data
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvgForeignObject) {
 	var fn js.Func
 
@@ -3055,55 +3071,55 @@ func (e *TagSvgForeignObject) AddListenerClick(mouseEvet *chan mouse.Data) (ref 
 //
 // Remove um ouvinte de evento de click do mouse, equivalente ao comando JavaScript RemoveEventListener('click',fn).
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) RemoveListenerClick() (ref *TagSvgForeignObject) {
 	if e.fnClick == nil {
 		return e
@@ -3124,71 +3140,71 @@ func (e *TagSvgForeignObject) RemoveListenerClick() (ref *TagSvgForeignObject) {
 //
 // Adds a mouse over event listener equivalent to the JavaScript command addEventListener('mouseover',fn).
 //
-//   Input:
-//     mouseEvet: pointer to channel mouse.Data
+//	Input:
+//	  mouseEvet: pointer to channel mouse.Data
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de mouse sobre, equivalente ao comando JavaScript addEventListener('mouseover',fn).
 //
-//   Entrada:
-//     mouseEvet: ponteiro para o channel mouse.Data
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagSvgForeignObject) {
 	var fn js.Func
 
@@ -3221,55 +3237,55 @@ func (e *TagSvgForeignObject) AddListenerMouseOver(mouseEvet *chan mouse.Data) (
 //
 // Remove um ouvinte de evento de mouse sobre, equivalente ao comando JavaScript RemoveEventListener('mouseover',fn).
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) RemoveListenerMouseOver() (ref *TagSvgForeignObject) {
 	if e.fnMouseOver == nil {
 		return e
@@ -3290,71 +3306,71 @@ func (e *TagSvgForeignObject) RemoveListenerMouseOver() (ref *TagSvgForeignObjec
 //
 // Adds a mouse out event listener equivalent to the JavaScript command addEventListener('mouseout',fn).
 //
-//   Input:
-//     mouseEvet: pointer to channel mouse.Data
+//	Input:
+//	  mouseEvet: pointer to channel mouse.Data
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de mouse fora, equivalente ao comando JavaScript addEventListener('mouseout',fn).
 //
-//   Entrada:
-//     mouseEvet: ponteiro para o channel mouse.Data
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagSvgForeignObject) {
 	var fn js.Func
 
@@ -3387,55 +3403,55 @@ func (e *TagSvgForeignObject) AddListenerMouseOut(mouseEvet *chan mouse.Data) (r
 //
 // Remove um ouvinte de evento de mouse fora, equivalente ao comando JavaScript RemoveEventListener('mouseout',fn).
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) RemoveListenerMouseOut() (ref *TagSvgForeignObject) {
 	if e.fnMouseOut == nil {
 		return e
@@ -3456,71 +3472,71 @@ func (e *TagSvgForeignObject) RemoveListenerMouseOut() (ref *TagSvgForeignObject
 //
 // Adds a mouse move event listener equivalent to the JavaScript command addEventListener('mousemove',fn).
 //
-//   Input:
-//     mouseEvet: pointer to channel mouse.Data
+//	Input:
+//	  mouseEvet: pointer to channel mouse.Data
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de mouse move, equivalente ao comando JavaScript addEventListener('mousemove',fn).
 //
-//   Entrada:
-//     mouseEvet: ponteiro para o channel mouse.Data
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagSvgForeignObject) {
 	var fn js.Func
 
@@ -3553,55 +3569,55 @@ func (e *TagSvgForeignObject) AddListenerMouseMove(mouseEvet *chan mouse.Data) (
 //
 // Remove um ouvinte de evento de mouse move, equivalente ao comando JavaScript RemoveEventListener('mousemove',fn).
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) RemoveListenerMouseMove() (ref *TagSvgForeignObject) {
 	if e.fnMouseMove == nil {
 		return e
@@ -3622,71 +3638,71 @@ func (e *TagSvgForeignObject) RemoveListenerMouseMove() (ref *TagSvgForeignObjec
 //
 // Adds a mouse leave event listener equivalent to the JavaScript command addEventListener('mouseleave',fn).
 //
-//   Input:
-//     mouseEvet: pointer to channel mouse.Data
+//	Input:
+//	  mouseEvet: pointer to channel mouse.Data
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de mouse saiu, equivalente ao comando JavaScript addEventListener('mouseleave',fn).
 //
-//   Entrada:
-//     mouseEvet: ponteiro para o channel mouse.Data
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *TagSvgForeignObject) {
 	var fn js.Func
 
@@ -3719,55 +3735,55 @@ func (e *TagSvgForeignObject) AddListenerMouseLeave(mouseEvet *chan mouse.Data) 
 //
 // Remove um ouvinte de evento de mouse saiu, equivalente ao comando JavaScript RemoveEventListener('mouseleave',fn).
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) RemoveListenerMouseLeave() (ref *TagSvgForeignObject) {
 	if e.fnMouseLeave == nil {
 		return e
@@ -3788,71 +3804,71 @@ func (e *TagSvgForeignObject) RemoveListenerMouseLeave() (ref *TagSvgForeignObje
 //
 // Adds a mouse enter event listener equivalent to the JavaScript command addEventListener('mouseenter',fn).
 //
-//   Input:
-//     mouseEvet: pointer to channel mouse.Data
+//	Input:
+//	  mouseEvet: pointer to channel mouse.Data
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de mouse entrou, equivalente ao comando JavaScript addEventListener('mouseenter',fn).
 //
-//   Entrada:
-//     mouseEvet: ponteiro para o channel mouse.Data
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *TagSvgForeignObject) {
 	var fn js.Func
 
@@ -3885,55 +3901,55 @@ func (e *TagSvgForeignObject) AddListenerMouseEnter(mouseEvet *chan mouse.Data) 
 //
 // Remove um ouvinte de evento de mouse entrou, equivalente ao comando JavaScript RemoveEventListener('mouseenter',fn).
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) RemoveListenerMouseEnter() (ref *TagSvgForeignObject) {
 	if e.fnMouseEnter == nil {
 		return e
@@ -3954,72 +3970,72 @@ func (e *TagSvgForeignObject) RemoveListenerMouseEnter() (ref *TagSvgForeignObje
 //
 // Adds a mouse down event listener equivalent to the JavaScript command addEventListener('mousedown',fn).
 //
-//   Input:
-//     mouseEvet: pointer to channel mouse.Data
+//	Input:
+//	  mouseEvet: pointer to channel mouse.Data
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de botão do mouse precionado, equivalente ao comando JavaScript
 // addEventListener('mousedown',fn).
 //
-//   Entrada:
-//     mouseEvet: ponteiro para o channel mouse.Data
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagSvgForeignObject) {
 	var fn js.Func
 
@@ -4052,55 +4068,55 @@ func (e *TagSvgForeignObject) AddListenerMouseDown(mouseEvet *chan mouse.Data) (
 //
 // Remove um ouvinte de evento de botão do mouse precionado, equivalente ao comando JavaScript RemoveEventListener('mousedown',fn).
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) RemoveListenerMouseDown() (ref *TagSvgForeignObject) {
 	if e.fnMouseDown == nil {
 		return e
@@ -4121,72 +4137,72 @@ func (e *TagSvgForeignObject) RemoveListenerMouseDown() (ref *TagSvgForeignObjec
 //
 // Adds a mouse uo event listener equivalent to the JavaScript command addEventListener('mouseup',fn).
 //
-//   Input:
-//     mouseEvet: pointer to channel mouse.Data
+//	Input:
+//	  mouseEvet: pointer to channel mouse.Data
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de botão do mouse liberado, equivalente ao comando JavaScript
 // addEventListener('mouseup',fn).
 //
-//   Entrada:
-//     mouseEvet: ponteiro para o channel mouse.Data
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagSvgForeignObject) {
 	var fn js.Func
 
@@ -4219,55 +4235,55 @@ func (e *TagSvgForeignObject) AddListenerMouseUp(mouseEvet *chan mouse.Data) (re
 //
 // Remove um ouvinte de evento de botão do mouse liberado, equivalente ao comando JavaScript RemoveEventListener('mouseup',fn).
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) RemoveListenerMouseUp() (ref *TagSvgForeignObject) {
 	if e.fnMouseUp == nil {
 		return e
@@ -4288,71 +4304,71 @@ func (e *TagSvgForeignObject) RemoveListenerMouseUp() (ref *TagSvgForeignObject)
 //
 // Adds a mouse wheel event listener equivalent to the JavaScript command addEventListener('mousewheel',fn).
 //
-//   Input:
-//     mouseEvet: pointer to channel mouse.Data
+//	Input:
+//	  mouseEvet: pointer to channel mouse.Data
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de roda do mouse equivalente ao comando JavaScript addEventListener('mousewheel',fn).
 //
-//   Entrada:
-//     mouseEvet: ponteiro para o channel mouse.Data
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *TagSvgForeignObject) {
 	var fn js.Func
 
@@ -4385,55 +4401,55 @@ func (e *TagSvgForeignObject) AddListenerMouseWheel(mouseEvet *chan mouse.Data) 
 //
 // Remove um ouvinte de evento de roda do mouse, equivalente ao comando JavaScript RemoveEventListener('mousewheel',fn).
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) RemoveListenerMouseWheel() (ref *TagSvgForeignObject) {
 	if e.fnMouseWheel == nil {
 		return e
@@ -4454,72 +4470,72 @@ func (e *TagSvgForeignObject) RemoveListenerMouseWheel() (ref *TagSvgForeignObje
 //
 // Adds a mouse double click event listener equivalent to the JavaScript command addEventListener('dblclick',fn).
 //
-//   Input:
-//     mouseEvet: pointer to channel mouse.Data
+//	Input:
+//	  mouseEvet: pointer to channel mouse.Data
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de click duplo do mouse equivalente ao comando JavaScript
 // addEventListener('dblclick',fn).
 //
-//   Entrada:
-//     mouseEvet: ponteiro para o channel mouse.Data
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel mouse.Data
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagSvgForeignObject) {
 	var fn js.Func
 
@@ -4552,55 +4568,55 @@ func (e *TagSvgForeignObject) AddListenerDoubleClick(mouseEvet *chan mouse.Data)
 //
 // Remove um ouvinte de evento de click duplo, equivalente ao comando JavaScript RemoveEventListener('dblclick',fn).
 //
-//   Example: / Exemplo:
-//     tagCircle := &html.TagSvgCircle{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: Remove the addEventListener('click') from the three elements
-//           // Português: Remove o addEventListener('click') dos três elementos
-//           tagCircle.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 //
-//   Example: / Exemplo:
-//     tagUse := &html.TagSvgUse{}
-//     mouseEvent := make(chan mouse.Data)
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
 //
-//     stage := factoryBrowser.NewStage()
+//	  stage := factoryBrowser.NewStage()
 //
-//     s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//       factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//       factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//     )
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-mouseEvent:
-//           log.Printf("click")
-//           // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//           //   the command does not work.
-//           // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
-//           //   inválida e o comando não funciona.
-//           tagUse.RemoveListenerClick()
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) RemoveListenerDoubleClick() (ref *TagSvgForeignObject) {
 	if e.fnDoubleClick == nil {
 		return e
@@ -4621,34 +4637,34 @@ func (e *TagSvgForeignObject) RemoveListenerDoubleClick() (ref *TagSvgForeignObj
 //
 // Adds a focus event listener equivalent to the JavaScript command addEventListener('focusin',fn).
 //
-//   Input:
-//     focusEvent: pointer to channel struct{}
+//	Input:
+//	  focusEvent: pointer to channel struct{}
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de evento de foco equivalente ao comando JavaScript addEventListener('focusin',fn).
 //
-//   Entrada:
-//     focusEvent: ponteiro para o channel struct{}
+//	Entrada:
+//	  focusEvent: ponteiro para o channel struct{}
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     focusEvent := make(chan struct{})
-//     factoryBrowser.NewTagSvgCircle().AddListenerFocusIn(&focusEvent) ...
+//	Example: / Exemplo:
+//	  focusEvent := make(chan struct{})
+//	  factoryBrowser.NewTagSvgCircle().AddListenerFocusIn(&focusEvent) ...
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-focusEvent:
-//           log.Printf("focus in")
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-focusEvent:
+//	        log.Printf("focus in")
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerFocusIn(focusEvent *chan struct{}) (ref *TagSvgForeignObject) {
 	e.selfElement.Call(
 		"addEventListener",
@@ -4669,34 +4685,34 @@ func (e *TagSvgForeignObject) AddListenerFocusIn(focusEvent *chan struct{}) (ref
 //
 // Adds a focus out event listener equivalent to the JavaScript command addEventListener('focusout',fn).
 //
-//   Input:
-//     focusEvent: pointer to channel struct{}
+//	Input:
+//	  focusEvent: pointer to channel struct{}
 //
-//   Notes:
-//     * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notes:
+//	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
 // Português:
 //
 // Adiciona um ouvinte de perda de foco equivalente ao comando JavaScript addEventListener('focusout',fn).
 //
-//   Entrada:
-//     focusEvent: ponteiro para o channel struct{}
+//	Entrada:
+//	  focusEvent: ponteiro para o channel struct{}
 //
-//   Notas:
-//     * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+//	Notas:
+//	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 //
-//   Example: / Exemplo:
-//     focusEvent := make(chan struct{})
-//     factoryBrowser.NewTagSvgCircle().AddListenerFocusOut(&focusEvent) ...
+//	Example: / Exemplo:
+//	  focusEvent := make(chan struct{})
+//	  factoryBrowser.NewTagSvgCircle().AddListenerFocusOut(&focusEvent) ...
 //
-//     go func() {
-//       for {
-//         select {
-//         case <-focusEvent:
-//           log.Printf("focus out")
-//         }
-//       }
-//     }()
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-focusEvent:
+//	        log.Printf("focus out")
+//	      }
+//	    }
+//	  }()
 func (e *TagSvgForeignObject) AddListenerFocusOut(focusEvent *chan struct{}) (ref *TagSvgForeignObject) {
 	e.selfElement.Call(
 		"addEventListener",

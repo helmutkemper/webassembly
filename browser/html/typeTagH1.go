@@ -571,11 +571,6 @@ func (e *TagH1) Hidden() (ref *TagH1) {
 func (e *TagH1) Id(id string) (ref *TagH1) {
 	e.id = id
 	e.selfElement.Set("id", id)
-
-	// Saves the element reference with ID for later use.
-	// Salva a referência dos elementos com ID para uso posterior.
-	htmlGlobalAllElementsList.Delete(id)
-	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 

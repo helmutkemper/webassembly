@@ -415,11 +415,6 @@ func (e *TagA) Hidden() (ref *TagA) {
 func (e *TagA) Id(id string) (ref *TagA) {
 	e.id = id
 	e.selfElement.Set("id", id)
-
-	// Saves the element reference with ID for later use.
-	// Salva a referência dos elementos com ID para uso posterior.
-	htmlGlobalAllElementsList.Delete(id)
-	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -1203,4 +1198,36 @@ func (e *TagA) GetY() (y int) {
 	y = e.selfElement.Get("style").Get("top").Int()
 
 	return
+}
+
+func (e *TagA) Get() (el js.Value) {
+	return e.selfElement
+}
+
+// Text
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagA) Text(value string) (ref *TagA) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagA) Html(value string) (ref *TagA) {
+	e.selfElement.Set("innerHTML", value)
+	return e
 }

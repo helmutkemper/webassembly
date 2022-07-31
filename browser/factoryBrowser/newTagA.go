@@ -6,7 +6,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // English:
 //
-//  Create the Anchor element.
+//	Create the Anchor element.
 //
 // The <a> HTML element (or anchor element), with its href attribute, creates a hyperlink to web
 // pages, files, email addresses, locations in the same page, or anything else a URL can address.
@@ -16,7 +16,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Português:
 //
-//  Cria o elemento Âncora.
+//	Cria o elemento Âncora.
 //
 // O elemento HTML <a> (ou elemento âncora), com seu atributo href, cria um hiperlink para páginas
 // da web, arquivos, endereços de e-mail, locais na mesma página ou qualquer outra coisa que um URL
@@ -24,10 +24,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // O conteúdo de cada <a> deve indicar o destino do link. Se o atributo href estiver presente,
 // pressionar a tecla enter enquanto estiver focado no elemento <a> irá ativá-lo.
-func NewTagA(id string) (ref *html.TagA) {
+func NewTagA() (ref *html.TagA) {
 	ref = &html.TagA{}
 	ref.CreateElement(html.KTagA)
-	ref.Id(id)
 
 	return ref
 }

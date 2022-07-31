@@ -239,11 +239,6 @@ func (e *TagSvgFeFlood) Get() (el js.Value) {
 //	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgFeFlood) Id(id string) (ref *TagSvgFeFlood) {
 	e.selfElement.Call("setAttribute", "id", id)
-
-	// Saves the element reference with ID for later use.
-	// Salva a referência dos elementos com ID para uso posterior.
-	htmlGlobalAllElementsList.Delete(id)
-	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 

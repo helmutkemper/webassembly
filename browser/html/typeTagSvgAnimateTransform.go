@@ -260,11 +260,6 @@ func (e *TagSvgAnimateTransform) Get() (el js.Value) {
 //	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgAnimateTransform) Id(id string) (ref *TagSvgAnimateTransform) {
 	e.selfElement.Call("setAttribute", "id", id)
-
-	// Saves the element reference with ID for later use.
-	// Salva a referência dos elementos com ID para uso posterior.
-	htmlGlobalAllElementsList.Delete(id)
-	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 

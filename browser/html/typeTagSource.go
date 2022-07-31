@@ -559,11 +559,6 @@ func (e *TagSource) Hidden() (ref *TagSource) {
 func (e *TagSource) Id(id string) (ref *TagSource) {
 	e.id = id
 	e.selfElement.Set("id", id)
-
-	// Saves the element reference with ID for later use.
-	// Salva a referência dos elementos com ID para uso posterior.
-	htmlGlobalAllElementsList.Delete(id)
-	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 

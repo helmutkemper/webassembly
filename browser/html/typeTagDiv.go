@@ -622,11 +622,6 @@ func (e *TagDiv) Hidden() (ref *TagDiv) {
 func (e *TagDiv) Id(id string) (ref *TagDiv) {
 	e.id = id
 	e.selfElement.Set("id", id)
-
-	// Saves the element reference with ID for later use.
-	// Salva a referência dos elementos com ID para uso posterior.
-	htmlGlobalAllElementsList.Delete(id)
-	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -1921,4 +1916,32 @@ func (e *TagDiv) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenTh
 	}
 
 	return
+}
+
+// Text #replicar
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagDiv) Text(value string) (ref *TagDiv) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+// Html #replicar
+//
+// English:
+//
+// Adds HTML to the tag's content.
+//
+// Text:
+//
+// Adiciona HTML ao conteúdo da tag.
+func (e *TagDiv) Html(value string) (ref *TagDiv) {
+	e.selfElement.Set("innerHTML", value)
+	return e
 }

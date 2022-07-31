@@ -301,11 +301,6 @@ func (e *TagSvgFeComposite) Get() (el js.Value) {
 //	O atributo id atribui um nome exclusivo a um elemento.
 func (e *TagSvgFeComposite) Id(id string) (ref *TagSvgFeComposite) {
 	e.selfElement.Call("setAttribute", "id", id)
-
-	// Saves the element reference with ID for later use.
-	// Salva a referência dos elementos com ID para uso posterior.
-	htmlGlobalAllElementsList.Delete(id)
-	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -688,7 +683,7 @@ func (e *TagSvgFeComposite) ColorInterpolation(value interface{}) (ref *TagSvgFe
 //	  * Não afeta as funções de filtro, que operam no espaço de cores sRGB.
 //	  * Como atributo de apresentação, os filtros de interpolação de cores podem ser usados como uma propriedade CSS.
 //
-// ColorInterpolationFilters
+// # ColorInterpolationFilters
 //
 // English:
 //

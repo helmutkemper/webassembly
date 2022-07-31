@@ -386,11 +386,6 @@ func (e *TagInputPassword) Hidden() (ref *TagInputPassword) {
 func (e *TagInputPassword) Id(id string) (ref *TagInputPassword) {
 	e.id = id
 	e.selfElement.Set("id", id)
-
-	// Saves the element reference with ID for later use.
-	// Salva a referência dos elementos com ID para uso posterior.
-	htmlGlobalAllElementsList.Delete(id)
-	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 

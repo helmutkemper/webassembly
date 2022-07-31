@@ -386,11 +386,6 @@ func (e *TagInputText) Hidden() (ref *TagInputText) {
 func (e *TagInputText) Id(id string) (ref *TagInputText) {
 	e.id = id
 	e.selfElement.Set("id", id)
-
-	// Saves the element reference with ID for later use.
-	// Salva a referência dos elementos com ID para uso posterior.
-	htmlGlobalAllElementsList.Delete(id)
-	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 

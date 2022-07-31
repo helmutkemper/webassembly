@@ -14,6 +14,11 @@ import (
 	"syscall/js"
 )
 
+// https://www.twilio.com/blog/play-video-files-twilio-video-call
+
+// todo: https://developer.mozilla.org/en-US/docs/Web/API/SourceBuffer
+// todo: fazer exemplos: https://developer.mozilla.org/en-US/docs/Web/API/AudioTrack
+
 // TagVideo
 //
 // English:
@@ -559,11 +564,6 @@ func (e *TagVideo) Hidden() (ref *TagVideo) {
 func (e *TagVideo) Id(id string) (ref *TagVideo) {
 	e.id = id
 	e.selfElement.Set("id", id)
-
-	// Saves the element reference with ID for later use.
-	// Salva a referência dos elementos com ID para uso posterior.
-	htmlGlobalAllElementsList.Delete(id)
-	htmlGlobalAllElementsList.Store(id, e)
 	return e
 }
 
@@ -919,7 +919,7 @@ func (e *TagVideo) Controls(controls bool) (ref *TagVideo) {
 // adicionais.
 func (e *TagVideo) Crossorigin(value interface{}) (ref *TagVideo) {
 	if converted, ok := value.(CrossOrigin); ok {
-		e.selfElement.Set("crossorigin", converted.String())
+		e.selfElement.Call("setAttribute", "crossorigin", converted.String())
 		return e
 	}
 
@@ -4529,3 +4529,6 @@ func (e *TagVideo) EasingTweenWalkingAndRotateIntoPoints() (function func(forTen
 
 	return
 }
+
+// #media - start ------------------------------------------------------------------------------------------------------
+// https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement

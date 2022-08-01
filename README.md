@@ -294,6 +294,8 @@ js.Global().Call("test", value)
 
 ### How to use constructor
 
+Native golang to javascript types:
+
 | Go                     | JavaScript  |
 |------------------------|-------------|
 | js.Value               | [its value] |

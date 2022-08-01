@@ -316,9 +316,13 @@ Golang code:
   done := make(chan struct{}, 0)
 	
   // use native golang to work!
-  b := js.Global().Get("Blob").New([]interface{}{"<a id=\"a\"><b id=\"b\">hey!</b></a>"}, map[string]interface{}{"type": "text/html"})
-  log.Printf("%v", b.Get("size"))
-  log.Printf("%v", b.Get("type"))
+  aFileParts := []interface{}{"<a id=\"a\"><b id=\"b\">hey!</b></a>"}
+  fType := map[string]interface{}{"type": "text/html"}
+  oMyBlob := js.Global().Get("Blob").New(aFileParts, fType)
+	
+  log.Printf("%v", oMyBlob.Get("size"))
+  log.Printf("%v", oMyBlob.Get("type"))
 	
   <-done
 ```
+

@@ -31,7 +31,7 @@ func main() {
 
 	tagVideo := &html.TagVideo{}
 
-	s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).AddListenerPlaying(&videoEvent).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
+	s1 := factoryBrowser.NewTagVideo().Reference(&tagVideo).Id("preview").AddListenerPlaying(&videoEvent).AddListenerEnded(&videoEvent).Controls(true).Width(250).Append(
 		factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm").Type("video/webm"),
 		factoryBrowser.NewTagSource().Src("https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4").Type("video/mp4"),
 	)

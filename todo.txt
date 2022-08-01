@@ -40,3 +40,5 @@ end: 3.0165460109710693 seconds
 desempenho - fim
 
 dimiantoni
+
+https://withblue.ink/2020/10/03/go-webassembly-http-requests-and-promises.html

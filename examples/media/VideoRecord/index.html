@@ -84,7 +84,6 @@
 <body>
 </body>
 </html>
-
 <!--script>
     let preview = document.getElementById("preview");
     let recording = document.getElementById("recording");
@@ -134,15 +133,20 @@
       stream.getTracks().forEach((track) => track.stop());
     }
 
-    startButton.addEventListener("click", function () {
+    startButton.addEventListener(
+    "click",
+    function () {
+      // capture user media
       navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true
       }).then((stream) => {
+        // capture user media promise
         preview.srcObject = stream;
         downloadButton.href = stream;
         preview.captureStream = preview.captureStream || preview.mozCaptureStream;
         return new Promise((resolve) => preview.onplaying = resolve);
+        // onPlaying promise
       }).then(() => startRecording(preview.captureStream(), recordingTimeMS))
               .then((recordedChunks) => {
                 let recordedBlob = new Blob(recordedChunks, {type: "video/webm"});

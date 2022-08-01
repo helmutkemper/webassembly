@@ -112,9 +112,9 @@ Enquanto o site de documentação atual não fica pronta, use a documentação e
 
 ![documentation](documentation/image/screen.png)
 
-### Golnag JS Tips
+## Golnag JS Tips
 
-#### How to create a new `js.Value{}`:
+### How to create a new `js.Value{}`:
 ```go
 newObject := js.Global().Get("Object")
 newArray  := js.Global().Get("Array")
@@ -124,7 +124,7 @@ test.Set("test", "I'm alive!")
 log.Printf("test: %v", test.Get("test"))
 ```
 
-#### How to create a callback (of hell) function:
+### How to create a callback (of hell) function:
 
 Javascript Example:
 ```javascript
@@ -234,7 +234,7 @@ var err = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 js.Global().Get("navigator").Get("geolocation").Call("getCurrentPosition", success, err, options)
 ```
 
-#### How to get a promise, real example:
+### How to get a promise, real example:
 ```go
 type Data struct {
   DeviceId string
@@ -276,7 +276,7 @@ js.Global().Get("navigator").Get("mediaDevices").Call("enumerateDevices").Call("
 log.Printf("list: %+v", list)
 ```
 
-#### How to call javascript function:
+### How to call javascript function:
 
 Javascript:
 ```html
@@ -290,4 +290,35 @@ Javascript:
 Golang:
 ```go
 js.Global().Call("test", value)
+```
+
+### How to use constructor
+
+| Go                     | JavaScript  |
+|------------------------|-------------|
+| js.Value               | [its value] |
+| js.Func                | function    |
+| nil                    | null        |
+| bool                   | boolean     |
+| integers and floats    | number      |
+| string                 | string      |
+| []interface{}          | new array   |
+| map[string]interface{} | new object  |
+
+Javascript code:
+```javascript
+  var aFileParts = ['<a id="a"><b id="b">hey!</b></a>'];
+  var oMyBlob = new Blob(aFileParts, {type : 'text/html'}); // o blob
+```
+
+Golang code:
+```go
+  done := make(chan struct{}, 0)
+	
+  // use native golang to work!
+  b := js.Global().Get("Blob").New([]interface{}{"<a id=\"a\"><b id=\"b\">hey!</b></a>"}, map[string]interface{}{"type": "text/html"})
+  log.Printf("%v", b.Get("size"))
+  log.Printf("%v", b.Get("type"))
+	
+  <-done
 ```

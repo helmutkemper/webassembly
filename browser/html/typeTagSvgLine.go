@@ -155,15 +155,114 @@ type TagSvgLine struct {
 
 	rotateDelta float64
 
-	fnClick       *js.Func
-	fnMouseOver   *js.Func
-	fnMouseOut    *js.Func
-	fnMouseMove   *js.Func
-	fnMouseLeave  *js.Func
-	fnMouseEnter  *js.Func
-	fnMouseDown   *js.Func
-	fnMouseUp     *js.Func
-	fnMouseWheel  *js.Func
+	// fnClick
+	//
+	// English:
+	//
+	// Fired when the user clicks the primary pointer button.
+	//
+	// Português:
+	//
+	// Acionado quando o usuário clica no botão do ponteiro principal.
+	fnClick *js.Func
+
+	// fnMouseOver
+	//
+	// English:
+	//
+	// Fired when a mouse or other pointing device is moved outside the element.
+	//
+	// Português:
+	//
+	// Acionado quando um mouse ou outro dispositivo apontador é movido para fora do elemento.
+	fnMouseOver *js.Func
+
+	// fnMouseOut
+	//
+	// English:
+	//
+	// Fired when a mouse or other pointing device is moved outside the boundary of the element.
+	//
+	// Português:
+	//
+	// Acionado quando um mouse ou outro dispositivo apontador é movido para fora do limite do elemento.
+	fnMouseOut *js.Func
+
+	// fnMouseMove
+	//
+	// English:
+	//
+	// Fired when a mouse or other pointing device is moved while over an element.
+	//
+	// Português:
+	//
+	// Acionado quando um mouse ou outro dispositivo apontador é movido sobre um elemento.
+	fnMouseMove *js.Func
+
+	// fnMouseLeave
+	//
+	// English:
+	//
+	// Fired when a mouse or other pointing device is moved outside the boundary of the element and all of its descendants.
+	//
+	// Português:
+	//
+	// Acionado quando um mouse ou outro dispositivo apontador é movido para fora do limite do elemento e de todos os seus descendentes.
+	fnMouseLeave *js.Func
+
+	// fnMouseEnter
+	//
+	// English:
+	//
+	// Fired when a mouse or other pointing device is moved inside the boundary of the element or one of its descendants.
+	//
+	// Português:
+	//
+	// Acionado quando um mouse ou outro dispositivo apontador é movido para dentro do limite do elemento ou de um de seus descendentes.
+	fnMouseEnter *js.Func
+
+	// fnMouseDown
+	//
+	// English:
+	//
+	// Fired when the user presses a button on a mouse or other pointing device, while the pointer is over the element.
+	//
+	// Português:
+	//
+	// Acionado quando o usuário pressiona um botão em um mouse ou outro dispositivo apontador, enquanto o ponteiro está sobre o elemento.
+	fnMouseDown *js.Func
+
+	// fnMouseUp
+	//
+	// English:
+	//
+	// Fired when the user releases a button on a mouse or other pointing device, while the pointer is over the element.
+	//
+	// Português:
+	//
+	// Acionado quando o usuário libera um botão em um mouse ou outro dispositivo apontador, enquanto o ponteiro está sobre o elemento.
+	fnMouseUp *js.Func
+
+	// fnMouseWheel
+	//
+	// English:
+	//
+	// Fired when the user rotates a mouse wheel or similar user interface component such as a touchpad.
+	//
+	// Português:
+	//
+	// Acionado quando o usuário gira a roda do mouse ou um componente de interface de usuário semelhante, como um touchpad.
+	fnMouseWheel *js.Func
+
+	// fnDoubleClick
+	//
+	// English:
+	//
+	// Fired when the user double-clicks the primary pointer button.
+	//
+	// Português:
+	//
+	// Acionado quando o usuário clica duas vezes no botão do ponteiro principal.
 	fnDoubleClick *js.Func
 }
 
@@ -3065,12 +3164,14 @@ func (e *TagSvgLine) Reference(reference **TagSvgLine) (ref *TagSvgLine) {
 
 // AddListenerClick
 //
-// Enclish:
+// English:
 //
 // Adds a mouse click event listener equivalent to the JavaScript command addEventListener('click',fn).
 //
 //	Input:
 //	  mouseEvet: pointer to channel mouse.Data
+//
+// Fired when the user clicks the primary pointer button.
 //
 // Português:
 //
@@ -3078,6 +3179,8 @@ func (e *TagSvgLine) Reference(reference **TagSvgLine) (ref *TagSvgLine) {
 //
 //	Entrada:
 //	  mouseEvet: ponteiro para o channel mouse.Data
+//
+// Acionado quando o usuário clica no botão do ponteiro principal.
 //
 //	Example: / Exemplo:
 //	  tagCircle := &html.TagSvgCircle{}
@@ -3156,9 +3259,13 @@ func (e *TagSvgLine) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvgLi
 //
 // Removes a mouse click event listener, equivalent to the JavaScript command RemoveEventListener('click',fn).
 //
+// Fired when the user clicks the primary pointer button.
+//
 // Português:
 //
 // Remove um ouvinte de evento de click do mouse, equivalente ao comando JavaScript RemoveEventListener('click',fn).
+//
+// Acionado quando o usuário clica no botão do ponteiro principal.
 //
 //	Example: / Exemplo:
 //	  tagCircle := &html.TagSvgCircle{}
@@ -3224,12 +3331,14 @@ func (e *TagSvgLine) RemoveListenerClick() (ref *TagSvgLine) {
 
 // AddListenerMouseOver
 //
-// Enclish:
+// English:
 //
 // Adds a mouse over event listener equivalent to the JavaScript command addEventListener('mouseover',fn).
 //
 //	Input:
 //	  mouseEvet: pointer to channel mouse.Data
+//
+// Fired when a mouse or other pointing device is moved outside the element.
 //
 //	Notes:
 //	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -3237,6 +3346,8 @@ func (e *TagSvgLine) RemoveListenerClick() (ref *TagSvgLine) {
 // Português:
 //
 // Adiciona um ouvinte de evento de mouse sobre, equivalente ao comando JavaScript addEventListener('mouseover',fn).
+//
+// Acionado quando um mouse ou outro dispositivo apontador é movido para fora do elemento.
 //
 //	Entrada:
 //	  mouseEvet: ponteiro para o channel mouse.Data
@@ -3389,7 +3500,7 @@ func (e *TagSvgLine) RemoveListenerMouseOver() (ref *TagSvgLine) {
 
 // AddListenerMouseOut
 //
-// Enclish:
+// English:
 //
 // Adds a mouse out event listener equivalent to the JavaScript command addEventListener('mouseout',fn).
 //
@@ -3554,7 +3665,7 @@ func (e *TagSvgLine) RemoveListenerMouseOut() (ref *TagSvgLine) {
 
 // AddListenerMouseMove
 //
-// Enclish:
+// English:
 //
 // Adds a mouse move event listener equivalent to the JavaScript command addEventListener('mousemove',fn).
 //
@@ -3719,7 +3830,7 @@ func (e *TagSvgLine) RemoveListenerMouseMove() (ref *TagSvgLine) {
 
 // AddListenerMouseLeave
 //
-// Enclish:
+// English:
 //
 // Adds a mouse leave event listener equivalent to the JavaScript command addEventListener('mouseleave',fn).
 //
@@ -3884,7 +3995,7 @@ func (e *TagSvgLine) RemoveListenerMouseLeave() (ref *TagSvgLine) {
 
 // AddListenerMouseEnter
 //
-// Enclish:
+// English:
 //
 // Adds a mouse enter event listener equivalent to the JavaScript command addEventListener('mouseenter',fn).
 //
@@ -4049,7 +4160,7 @@ func (e *TagSvgLine) RemoveListenerMouseEnter() (ref *TagSvgLine) {
 
 // AddListenerMouseDown
 //
-// Enclish:
+// English:
 //
 // Adds a mouse down event listener equivalent to the JavaScript command addEventListener('mousedown',fn).
 //
@@ -4215,7 +4326,7 @@ func (e *TagSvgLine) RemoveListenerMouseDown() (ref *TagSvgLine) {
 
 // AddListenerMouseUp
 //
-// Enclish:
+// English:
 //
 // Adds a mouse uo event listener equivalent to the JavaScript command addEventListener('mouseup',fn).
 //
@@ -4381,7 +4492,7 @@ func (e *TagSvgLine) RemoveListenerMouseUp() (ref *TagSvgLine) {
 
 // AddListenerMouseWheel
 //
-// Enclish:
+// English:
 //
 // Adds a mouse wheel event listener equivalent to the JavaScript command addEventListener('mousewheel',fn).
 //
@@ -4546,7 +4657,7 @@ func (e *TagSvgLine) RemoveListenerMouseWheel() (ref *TagSvgLine) {
 
 // AddListenerDoubleClick
 //
-// Enclish:
+// English:
 //
 // Adds a mouse double click event listener equivalent to the JavaScript command addEventListener('dblclick',fn).
 //
@@ -4712,7 +4823,7 @@ func (e *TagSvgLine) RemoveListenerDoubleClick() (ref *TagSvgLine) {
 
 // AddListenerFocusIn
 //
-// Enclish:
+// English:
 //
 // Adds a focus event listener equivalent to the JavaScript command addEventListener('focusin',fn).
 //
@@ -4760,7 +4871,7 @@ func (e *TagSvgLine) AddListenerFocusIn(focusEvent *chan struct{}) (ref *TagSvgL
 
 // AddListenerFocusOut
 //
-// Enclish:
+// English:
 //
 // Adds a focus out event listener equivalent to the JavaScript command addEventListener('focusout',fn).
 //

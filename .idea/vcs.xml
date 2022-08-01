@@ -7,6 +7,7 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/examples/media/VideoRecord/webaudio-examples" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/examples/media/clone/webaudio-examples" vcs="Git" />
   </component>
 </project>

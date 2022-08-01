@@ -1099,7 +1099,7 @@ func (e *TagVideo) Preload(value interface{}) (ref *TagVideo) {
 //
 //	Entrada:
 //	 value: O URL do vídeo a ser incorporado.
-func (e *TagVideo) Src(value string) (ref *TagVideo) {
+func (e *TagVideo) Src(value interface{}) (ref *TagVideo) {
 	e.selfElement.Set("src", value)
 	return e
 }
@@ -1120,7 +1120,7 @@ func (e *TagVideo) Width(value float64) (ref *TagVideo) {
 
 // AddListenerAbort
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener abort, equivalent to the JavaScript command addEventListener('abort',fn).
 //
@@ -1241,7 +1241,7 @@ func (e *TagVideo) RemoveListenerAbort() (ref *TagVideo) {
 
 // AddListenerCanPlay
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener can play, equivalent to the JavaScript command addEventListener('canplay',fn).
 //
@@ -1366,7 +1366,7 @@ func (e *TagVideo) RemoveListenerCanPlay() (ref *TagVideo) {
 
 // AddListenerCanPlayThrough
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener can play through, equivalent to the JavaScript command addEventListener('canplaythrough',fn).
 //
@@ -1491,7 +1491,7 @@ func (e *TagVideo) RemoveListenerCanPlayThrough() (ref *TagVideo) {
 
 // AddListenerDurationChange
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener duration change, equivalent to the JavaScript command addEventListener('durationchange',fn).
 //
@@ -1612,7 +1612,7 @@ func (e *TagVideo) RemoveListenerDurationChange() (ref *TagVideo) {
 
 // AddListenerEmptied
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener emptied, equivalent to the JavaScript command addEventListener('emptied',fn).
 //
@@ -1737,7 +1737,7 @@ func (e *TagVideo) RemoveListenerEmptied() (ref *TagVideo) {
 
 // AddListenerEnded
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener ended, equivalent to the JavaScript command addEventListener('ended',fn).
 //
@@ -1862,7 +1862,7 @@ func (e *TagVideo) RemoveListenerEnded() (ref *TagVideo) {
 
 // AddListenerError
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener error, equivalent to the JavaScript command addEventListener('error',fn).
 //
@@ -1983,7 +1983,7 @@ func (e *TagVideo) RemoveListenerError() (ref *TagVideo) {
 
 // AddListenerLoadedData
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener loaded data, equivalent to the JavaScript command addEventListener('loadeddata',fn).
 //
@@ -2104,7 +2104,7 @@ func (e *TagVideo) RemoveListenerLoadedData() (ref *TagVideo) {
 
 // AddListenerLoadedMetadata
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener loaded metadata, equivalent to the JavaScript command addEventListener('loadedmetadata',fn).
 //
@@ -2225,7 +2225,7 @@ func (e *TagVideo) RemoveListenerLoadedMetadata() (ref *TagVideo) {
 
 // AddListenerLoadStart
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener load start, equivalent to the JavaScript command addEventListener('loadstart',fn).
 //
@@ -2346,7 +2346,7 @@ func (e *TagVideo) RemoveListenerLoadStart() (ref *TagVideo) {
 
 // AddListenerPause
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener pause, equivalent to the JavaScript command addEventListener('pause',fn).
 //
@@ -2471,7 +2471,7 @@ func (e *TagVideo) RemoveListenerPause() (ref *TagVideo) {
 
 // AddListenerPlay
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener play, equivalent to the JavaScript command addEventListener('play',fn).
 //
@@ -2596,7 +2596,7 @@ func (e *TagVideo) RemoveListenerPlay() (ref *TagVideo) {
 
 // AddListenerPlaying
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener playing, equivalent to the JavaScript command addEventListener('playing',fn).
 //
@@ -2717,7 +2717,7 @@ func (e *TagVideo) RemoveListenerPlaying() (ref *TagVideo) {
 
 // AddListenerProgress
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener progress, equivalent to the JavaScript command addEventListener('progress',fn).
 //
@@ -2838,7 +2838,7 @@ func (e *TagVideo) RemoveListenerProgress() (ref *TagVideo) {
 
 // AddListenerRateChange
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener rate change, equivalent to the JavaScript command addEventListener('ratechange',fn).
 //
@@ -2959,7 +2959,7 @@ func (e *TagVideo) RemoveListenerRateChange() (ref *TagVideo) {
 
 // AddListenerSeeked
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener seeked, equivalent to the JavaScript command addEventListener('seeked',fn).
 //
@@ -3080,7 +3080,7 @@ func (e *TagVideo) RemoveListenerSeeked() (ref *TagVideo) {
 
 // AddListenerSeeking
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener seeking, equivalent to the JavaScript command addEventListener('seeking',fn).
 //
@@ -3201,7 +3201,7 @@ func (e *TagVideo) RemoveListenerSeeking() (ref *TagVideo) {
 
 // AddListenerStalled
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener stalled, equivalent to the JavaScript command addEventListener('stalled',fn).
 //
@@ -3324,7 +3324,7 @@ func (e *TagVideo) RemoveListenerStalled() (ref *TagVideo) {
 
 // AddListenerSuspend
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener suspend, equivalent to the JavaScript command addEventListener('suspend',fn).
 //
@@ -3445,7 +3445,7 @@ func (e *TagVideo) RemoveListenerSuspend() (ref *TagVideo) {
 
 // AddListenerTimeUpdate
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener time update, equivalent to the JavaScript command addEventListener('timeupdate',fn).
 //
@@ -3566,7 +3566,7 @@ func (e *TagVideo) RemoveListenerTimeUpdate() (ref *TagVideo) {
 
 // AddListenerVolumeChange
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener volume change, equivalent to the JavaScript command addEventListener('volumechange',fn).
 //
@@ -3687,7 +3687,7 @@ func (e *TagVideo) RemoveListenerVolumeChange() (ref *TagVideo) {
 
 // AddListenerWaiting
 //
-// Enclish:
+// English:
 //
 // Adds a video event litener waiting, equivalent to the JavaScript command addEventListener('waiting',fn).
 //
@@ -4532,3 +4532,8 @@ func (e *TagVideo) EasingTweenWalkingAndRotateIntoPoints() (function func(forTen
 
 // #media - start ------------------------------------------------------------------------------------------------------
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
+
+func (e *TagVideo) GetSrcObject() {
+	d := e.selfElement.Get("srcObject")
+	log.Printf("srcObject: %v", d)
+}

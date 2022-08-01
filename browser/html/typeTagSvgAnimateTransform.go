@@ -1331,7 +1331,7 @@ func (e *TagSvgAnimateTransform) Reference(reference **TagSvgAnimateTransform) (
 
 // AddListenerBegin
 //
-// Enclish:
+// English:
 //
 // Adds an animation begin event listener equivalent to the JavaScript command addEventListener('beginEvent',fn).
 //
@@ -1465,7 +1465,7 @@ func (e *TagSvgAnimateTransform) RemoveListenerBegin() (ref *TagSvgAnimateTransf
 
 // AddListenerRepeat
 //
-// Enclish:
+// English:
 //
 // Adds an animation repeat event listener equivalent to the JavaScript command addEventListener('repeatEvent',fn).
 //
@@ -1600,7 +1600,7 @@ func (e *TagSvgAnimateTransform) RemoveListenerRepeat() (ref *TagSvgAnimateTrans
 
 // AddListenerEnd
 //
-// Enclish:
+// English:
 //
 // Adds an animation end event listener equivalent to the JavaScript command addEventListener('endEvent',fn).
 //
@@ -1734,7 +1734,7 @@ func (e *TagSvgAnimateTransform) RemoveListenerEnd() (ref *TagSvgAnimateTransfor
 
 // AddListenerMotion
 //
-// Enclish:
+// English:
 //
 // Adds an animation motion event listener equivalent to the JavaScript command addEventListener('motionEvent',fn).
 //

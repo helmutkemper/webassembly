@@ -811,7 +811,7 @@ func (e *TagA) Download(download string) (ref *TagA) {
 //	  * Endereços de e-mail com mailto: URLs;
 //	  * Embora os navegadores da Web possam não suportar outros esquemas de URL, os sites da Web podem
 //	    com registerProtocolHandler().
-func (e *TagA) HRef(href string) (ref *TagA) {
+func (e *TagA) HRef(href interface{}) (ref *TagA) {
 	e.selfElement.Set("href", href)
 	return e
 }

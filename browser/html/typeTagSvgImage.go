@@ -2942,7 +2942,7 @@ func (e *TagSvgImage) Height(height interface{}) (ref *TagSvgImage) {
 //	     Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
 //	     usado como um substituto além do atributo href, por exemplo,
 //	     <use href="some-id" xlink:href="some-id x="5" y="5" />.
-func (e *TagSvgImage) HRef(href string) (ref *TagSvgImage) {
+func (e *TagSvgImage) HRef(href interface{}) (ref *TagSvgImage) {
 	e.selfElement.Call("setAttribute", "href", href)
 	return e
 }

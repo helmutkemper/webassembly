@@ -2870,7 +2870,7 @@ func (e *TagSvgFilter) PrimitiveUnits(value interface{}) (ref *TagSvgFilter) {
 //	     Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
 //	     usado como um substituto além do atributo href, por exemplo,
 //	     <use href="some-id" xlink:href="some-id x="5" y="5" />.
-func (e *TagSvgFilter) HRef(href string) (ref *TagSvgFilter) {
+func (e *TagSvgFilter) HRef(href interface{}) (ref *TagSvgFilter) {
 	e.selfElement.Call("setAttribute", "href", href)
 	return e
 }

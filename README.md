@@ -234,6 +234,12 @@ var err = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 js.Global().Get("navigator").Get("geolocation").Call("getCurrentPosition", success, err, options)
 ```
 
+### Hoow to make a promise
+
+```go
+
+```
+
 ### How to get a promise, real example:
 ```go
 type Data struct {

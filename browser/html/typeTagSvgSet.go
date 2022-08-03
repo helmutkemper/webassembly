@@ -1010,7 +1010,7 @@ func (e *TagSvgSet) Fill(value interface{}) (ref *TagSvgSet) {
 //	     Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
 //	     usado como um substituto além do atributo href, por exemplo,
 //	     <use href="some-id" xlink:href="some-id x="5" y="5" />.
-func (e *TagSvgSet) HRef(href string) (ref *TagSvgSet) {
+func (e *TagSvgSet) HRef(href interface{}) (ref *TagSvgSet) {
 	e.selfElement.Call("setAttribute", "href", href)
 	return e
 }

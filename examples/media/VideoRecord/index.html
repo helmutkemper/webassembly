@@ -82,6 +82,23 @@
   </script>
 </head>
 <body>
+  <!--div class="left">
+    <div id="startButton" class="button">
+      Start Recording
+    </div>
+    <h2>Preview</h2>
+    <video id="preview" width="160" height="120" autoplay muted></video>
+  </div>
+  <div class="right">
+    <div id="stopButton" class="button">
+      Stop Recording
+    </div>
+    <h2>Recording</h2>
+    <video id="recording" width="160" height="120" controls></video>
+    <a id="downloadButton" class="button">
+      Download
+    </a>
+  </div-->
 </body>
 </html>
 <!--script>
@@ -133,23 +150,20 @@
       stream.getTracks().forEach((track) => track.stop());
     }
 
-    startButton.addEventListener(
-    "click",
-    function () {
-      // capture user media
-      navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      }).then((stream) => {
-        // capture user media promise
+    startButton.addEventListener("click", function() {
+      navigator.mediaDevices.getUserMedia(
+        {
+          video: true,
+          audio: true
+        }
+      ).then((stream) => {
         preview.srcObject = stream;
         downloadButton.href = stream;
         preview.captureStream = preview.captureStream || preview.mozCaptureStream;
         return new Promise((resolve) => preview.onplaying = resolve);
-        // onPlaying promise
       }).then(() => startRecording(preview.captureStream(), recordingTimeMS))
-              .then((recordedChunks) => {
-                let recordedBlob = new Blob(recordedChunks, {type: "video/webm"});
+              .then ((recordedChunks) => {
+                let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
                 recording.src = URL.createObjectURL(recordedBlob);
                 downloadButton.href = recording.src;
                 downloadButton.download = "RecordedVideo.webm";

@@ -1,6 +1,8 @@
 package html
 
 import (
+	"context"
+	"errors"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
@@ -12,6 +14,7 @@ import (
 	"strings"
 	"sync"
 	"syscall/js"
+	"time"
 )
 
 // https://www.twilio.com/blog/play-video-files-twilio-video-call
@@ -191,6 +194,16 @@ type TagVideo struct {
 	fnTimeUpdate     *js.Func
 	fnVolumeChange   *js.Func
 	fnWaiting        *js.Func
+
+	streamStatus    chan struct{}
+	streamObj       js.Value
+	streamRecorder  js.Value
+	streamData      []interface{}
+	streamRecording bool
+	streamCapture   bool
+
+	streamEventOnDataAvailable bool
+	streamEventPlaying         bool
 }
 
 // Reference
@@ -4533,7 +4546,184 @@ func (e *TagVideo) EasingTweenWalkingAndRotateIntoPoints() (function func(forTen
 // #media - start ------------------------------------------------------------------------------------------------------
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
 
-func (e *TagVideo) GetSrcObject() {
-	d := e.selfElement.Get("srcObject")
-	log.Printf("srcObject: %v", d)
+// GetSrcObject
+//
+// English:
+//
+// Returns the object which serves as the source of the media associated with the HTMLMediaElement.
+//
+// Português:
+//
+// Retorna o objeto que serve como fonte da mídia associada ao HTMLMediaElement.
+func (e *TagVideo) GetSrcObject() (srcObject js.Value) {
+	return e.selfElement.Get("srcObject")
 }
+
+// SrcObject
+//
+// English:
+//
+// Set the object which serves as the source of the media associated with the HTMLMediaElement.
+//
+// Português:
+//
+// Define o objeto que serve como fonte da mídia associada ao HTMLMediaElement.
+func (e *TagVideo) SrcObject(value interface{}) (ref *TagVideo) {
+	e.selfElement.Set("srcObject", value)
+	return e
+}
+
+func (e *TagVideo) recorderStart() {
+	options := js.Global().Get("Object")
+	options.Set("once", true)
+
+	e.streamRecorder = js.Global().Get("MediaRecorder").New(e.streamObj)
+	e.streamRecorder.Call(
+		"addEventListener",
+		"dataavailable",
+		js.FuncOf(func(this js.Value, args []js.Value) any {
+			e.streamData[0] = args[0].Get("data")
+			e.streamStatus <- struct{}{}
+			return nil
+		}),
+		options,
+	)
+
+	e.streamRecorder.Call("start")
+}
+
+func (e *TagVideo) setRecordingFalse() {
+	e.streamRecording = false
+}
+
+func (e *TagVideo) recorderStop() (recording bool) {
+	defer e.setRecordingFalse()
+
+	if e.streamRecorder.IsUndefined() == true {
+		return
+	}
+
+	if e.streamRecorder.IsNull() == true {
+		return
+	}
+
+	if e.streamRecorder.Get("state").String() != "recording" {
+		return
+	}
+
+	tracks := e.streamObj.Call("getTracks")
+	tracks.Call("forEach", js.FuncOf(func(this js.Value, args []js.Value) any {
+		args[0].Call("stop")
+		return nil
+	}))
+	e.streamRecorder.Call("stop")
+	return true
+}
+
+func (e *TagVideo) GetRecordingSrcData() (data js.Value, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*1000*time.Millisecond)
+	select {
+	case <-e.streamStatus:
+		cancel()
+	case <-ctx.Done():
+		cancel()
+		err = errors.New("aborted: get archive recording timeout")
+		return
+	}
+
+	options := js.Global().Get("Object")
+	options.Set("type", "video/webm")
+	recordedBlob := js.Global().Get("Blob").New(e.streamData, options)
+	data = js.Global().Get("URL").Call("createObjectURL", recordedBlob)
+	return
+}
+
+func (e *TagVideo) RecordingUserMediaStop() (recording bool) {
+	return e.recorderStop()
+}
+
+func (e *TagVideo) RecordingUserMedia() (ref *TagVideo) {
+	if e.streamRecording == true {
+		return
+	}
+	e.streamRecording = true
+
+	e.streamData = make([]interface{}, 1)
+	e.streamStatus = make(chan struct{}, 0)
+
+	mediaDevicesSuccess := js.FuncOf(func(_ js.Value, args []js.Value) any {
+		e.streamObj = args[0]
+		e.recorderStart()
+		e.streamStatus <- struct{}{}
+		return nil
+	})
+
+	mediaDevicesFailure := js.FuncOf(func(_ js.Value, _ []js.Value) any {
+		log.Printf("video tag id `%v` fail to get video source", e.id)
+		e.streamStatus <- struct{}{}
+		return nil
+	})
+
+	// https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
+	// https://developer.mozilla.org/en-US/docs/Web/API/Media_Streams_API/Constraints
+	// https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+	options := js.Global().Get("Object")
+	options.Set("video", false)
+	options.Set("audio", true)
+	js.Global().Get("navigator").Get("mediaDevices").Call(
+		"getUserMedia",
+		options,
+	).Call("then", mediaDevicesSuccess, mediaDevicesFailure)
+
+	<-e.streamStatus
+
+	if e.streamEventPlaying == false {
+		e.selfElement.Call(
+			"addEventListener",
+			"playing",
+			js.FuncOf(func(_ js.Value, _ []js.Value) any {
+				e.streamStatus <- struct{}{}
+				return nil
+			}),
+		)
+		e.streamEventPlaying = true
+	}
+	e.selfElement.Set("srcObject", e.streamObj)
+
+	<-e.streamStatus
+
+	if e.streamCapture == false {
+		if !(e.selfElement.Get("captureStream").IsNull() || e.selfElement.Get("captureStream").IsUndefined()) {
+			e.selfElement.Set("captureStream", e.selfElement.Get("captureStream"))
+		} else {
+			e.selfElement.Set("captureStream", e.selfElement.Get("mozCaptureStream"))
+		}
+
+		e.streamCapture = true
+	}
+
+	return e
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//

@@ -3628,7 +3628,7 @@ func (e *TagSvgAnimateMotion) Path(value interface{}) (ref *TagSvgAnimateMotion)
 //	     Se você precisar oferecer suporte a versões anteriores do navegador, o atributo obsoleto xlink:href pode ser
 //	     usado como um substituto além do atributo href, por exemplo,
 //	     <use href="some-id" xlink:href="some-id x="5" y="5" />.
-func (e *TagSvgAnimateMotion) HRef(href string) (ref *TagSvgAnimateMotion) {
+func (e *TagSvgAnimateMotion) HRef(href interface{}) (ref *TagSvgAnimateMotion) {
 	e.selfElement.Call("setAttribute", "href", href)
 	return e
 }

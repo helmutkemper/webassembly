@@ -1,0 +1,37 @@
+const result = document.getElementById("result");
+const settings = document.getElementById("settings");
+
+const buttons = document.querySelectorAll("button");
+buttons.forEach((button) =>
+  button.addEventListener("click", async () => {
+    let stream = await navigator.mediaDevices
+      .getDisplayMedia({ video: { displaySurface: button.id } })
+      .catch((e) => {
+        result.innerText = e;
+        console.error(e);
+      });
+    // let label = stream.getVideoTracks()[0].label.split(':')[0];
+    let displaySurface = stream.getVideoTracks()[0].getSettings();
+    console.log(stream.getTracks());
+    console.log(displaySurface);
+
+    result.innerHTML = `You asked for <strong>${button.id}</strong> and got <strong>${displaySurface.displaySurface}</strong>`;
+    settings.innerText = JSON.stringify(displaySurface, null, "\t").replace(
+      /["{},]/g,
+      ""
+    );
+  })
+);
+
+<p>Pick which <em>displaySurface</em> constraint to apply to <em>getDisplayMedia</em></p>
+<button id="display">Display</button>
+<button id="application">Application</button>
+<button id="window">Window</button>
+<button id="browser">Browser</button>
+<h3>Result</h3>
+<p id="result"></p>
+<h3>Display Surface Settings</h3>
+<p id="settings"></p>
+
+https://codepen.io/chadwallacehart/pen/GRoNgrE
+

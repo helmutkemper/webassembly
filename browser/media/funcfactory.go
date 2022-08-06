@@ -1780,6 +1780,520 @@ func (e *FactoryConfig) ImageTorchIdeal(value bool) (ref *FactoryConfig) {
 	return e
 }
 
+// ImageAspectRatio
+//
+// English:
+//
+// Specify the video aspect ratio or range of aspect ratios which are acceptable and/or required.
+//
+//	Input:
+//	  value: the video aspect ratio
+//
+// Português:
+//
+// Especifica a proporção do vídeo ou o intervalo de proporções do vídeo que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  value: a proporção do vídeo
+func (e *FactoryConfig) ImageAspectRatio(value float64) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	e.config["image"].(map[string]any)["aspectRatio"] = value
+
+	return e
+}
+
+// ImageAspectRatioExact
+//
+// English:
+//
+// Specify the video aspect ratio or range of aspect ratios which are acceptable and/or required.
+//
+//	Input:
+//	  value: the video aspect ratio
+//
+// Português:
+//
+// Especifica a proporção do vídeo ou o intervalo de proporções do vídeo que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  value: a proporção do vídeo
+func (e *FactoryConfig) ImageAspectRatioExact(value float64) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	e.config["image"].(map[string]any)["aspectRatio"] = map[string]any{"exact": value}
+
+	return e
+}
+
+// ImageAspectRatioOptions
+//
+// English:
+//
+// Specify the video aspect ratio or range of aspect ratios which are acceptable and/or required.
+//
+//	Input:
+//	  min: The smallest permissible value. If the value cannot remain equal to or greater than this value, matching
+//	    will fail.
+//	  max: The largest permissible value.  If the value cannot remain equal to or less than this value, matching
+//	    will fail.
+//	  ideal: An ideal value. If possible, this value will be used, but if it's not possible, the user agent will use
+//	    the closest possible match.
+//
+//	Notes:
+//	  * Use -1 to ignore the property.
+//
+// Português:
+//
+// Especifica a proporção do vídeo ou o intervalo de proporções do vídeo que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  min: O menor valor permitido. Se o valor não puder permanecer igual ou maior que esse valor, a correspondência
+//	    falhará.
+//	  max: O maior valor permitido. Se o valor não puder permanecer igual ou menor que esse valor, a correspondência
+//	    falhará.
+//	  ideal: Um valor ideal. Se possível, esse valor será usado, mas se não for possível, o agente do usuário usará a
+//	    correspondência mais próxima possível.
+//
+//	Notas:
+//	  * Use o valor -1 para ignorar a propriedade.
+func (e *FactoryConfig) ImageAspectRatioOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	options := make(map[string]any)
+	if min > -1 {
+		options["min"] = min
+	}
+
+	if max > -1 {
+		options["max"] = max
+	}
+
+	if ideal > -1 {
+		options["ideal"] = ideal
+	}
+
+	e.config["image"].(map[string]any)["aspectRatio"] = options
+
+	return e
+}
+
+// ImageFacingModeExact
+//
+// English:
+//
+// Specify the video aspect ratio or range of aspect ratios which are acceptable and/or required.
+//
+//	Input:
+//	  value: the video aspect ratio
+//
+// Português:
+//
+// Especifica a proporção do vídeo ou o intervalo de proporções do vídeo que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  value: a proporção do vídeo
+func (e *FactoryConfig) ImageFacingModeExact(value FacingMode) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	e.config["image"].(map[string]any)["facingMode"] = map[string]any{"exact": value.String()}
+
+	return e
+}
+
+// ImageFacingModeIdeal
+//
+// English:
+//
+// Specify the video aspect ratio or range of aspect ratios which are acceptable and/or required.
+//
+//	Input:
+//	  value: the video aspect ratio
+//
+// Português:
+//
+// Especifica a proporção do vídeo ou o intervalo de proporções do vídeo que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  value: a proporção do vídeo
+func (e *FactoryConfig) ImageFacingModeIdeal(value FacingMode) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	e.config["image"].(map[string]any)["facingMode"] = map[string]any{"ideal": value.String()}
+
+	return e
+}
+
+// ImageFrameRate
+//
+// English:
+//
+// Specify the frame rate or range of frame rates which are acceptable and/or required.
+//
+//	Input:
+//	  value: the frame rate
+//
+// Português:
+//
+// Especifica a taxa de quadros ou intervalo de taxas de quadros que são aceitáveis e/ou necessários.
+//
+//	Entrada:
+//	  value: a taxa de quadros
+func (e *FactoryConfig) ImageFrameRate(value float64) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	e.config["image"].(map[string]any)["frameRate"] = value
+
+	return e
+}
+
+// ImageFrameRateExact
+//
+// English:
+//
+// Specify the frame rate or range of frame rates which are acceptable and/or required.
+//
+//	Input:
+//	  value: the exact value of frame rate
+//
+// Português:
+//
+// Especifica a taxa de quadros ou intervalo de taxas de quadros que são aceitáveis e/ou necessários.
+//
+//	Entrada:
+//	  value: o valor exato da taxa de quadros
+func (e *FactoryConfig) ImageFrameRateExact(value float64) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	e.config["image"].(map[string]any)["frameRate"] = map[string]any{"exact": value}
+
+	return e
+}
+
+// ImageFrameRateOptions
+//
+// English:
+//
+// Specify the frame rate or range of frame rates which are acceptable and/or required.
+//
+//	Input:
+//	  min: The smallest permissible value. If the value cannot remain equal to or greater than this value, matching
+//	    will fail.
+//	  max: The largest permissible value.  If the value cannot remain equal to or less than this value, matching
+//	    will fail.
+//	  ideal: An ideal value. If possible, this value will be used, but if it's not possible, the user agent will use
+//	    the closest possible match.
+//
+//	Notes:
+//	  * Use -1 to ignore the property.
+//
+// Português:
+//
+// Especifica a taxa de quadros ou intervalo de taxas de quadros que são aceitáveis e/ou necessários.
+//
+//	Entrada:
+//	  min: O menor valor permitido. Se o valor não puder permanecer igual ou maior que esse valor, a correspondência
+//	    falhará.
+//	  max: O maior valor permitido. Se o valor não puder permanecer igual ou menor que esse valor, a correspondência
+//	    falhará.
+//	  ideal: Um valor ideal. Se possível, esse valor será usado, mas se não for possível, o agente do usuário usará a
+//	    correspondência mais próxima possível.
+//
+//	Notas:
+//	  * Use o valor -1 para ignorar a propriedade.
+func (e *FactoryConfig) ImageFrameRateOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	options := make(map[string]any)
+	if min > -1 {
+		options["min"] = min
+	}
+
+	if max > -1 {
+		options["max"] = max
+	}
+
+	if ideal > -1 {
+		options["ideal"] = ideal
+	}
+
+	e.config["image"].(map[string]any)["frameRate"] = options
+
+	return e
+}
+
+// ImageHeight
+//
+// English:
+//
+// Specify the video height or range of heights which are acceptable and/or required.
+//
+//	Input:
+//	  value: video height
+//
+// Português:
+//
+// Especifica à altura do vídeo ou o intervalo de alturas que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  value: altura do vídeo
+func (e *FactoryConfig) ImageHeight(value int) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	e.config["image"].(map[string]any)["height"] = value
+
+	return e
+}
+
+// ImageHeightExact
+//
+// English:
+//
+// Specify the video height or range of heights which are acceptable and/or required.
+//
+//	Input:
+//	  value: video height
+//
+// Português:
+//
+// Especifica à altura do vídeo ou o intervalo de alturas que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  value: altura do vídeo
+func (e *FactoryConfig) ImageHeightExact(value int) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	e.config["image"].(map[string]any)["height"] = map[string]any{"exact": value}
+
+	return e
+}
+
+// ImageHeightOptions
+//
+// English:
+//
+// Specify the video height or range of heights which are acceptable and/or required.
+//
+//	Input:
+//	  value: video height
+//
+// Português:
+//
+// Especifica à altura do vídeo ou o intervalo de alturas que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  value: altura do vídeo
+func (e *FactoryConfig) ImageHeightOptions(min, max, ideal int) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	options := make(map[string]any)
+	if min > -1 {
+		options["min"] = min
+	}
+
+	if max > -1 {
+		options["max"] = max
+	}
+
+	if ideal > -1 {
+		options["ideal"] = ideal
+	}
+
+	e.config["image"].(map[string]any)["height"] = options
+
+	return e
+}
+
+// ImageWidth
+//
+// English:
+//
+// Specify the video width or range of widths which are acceptable and/or required.
+//
+//	Input:
+//	  value: the video width
+//
+// Português:
+//
+// Especifica a largura do vídeo ou o intervalo de larguras que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  value: largura do vídeo
+func (e *FactoryConfig) ImageWidth(value int) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	e.config["image"].(map[string]any)["width"] = value
+
+	return e
+}
+
+// ImageWidthExact
+//
+// English:
+//
+// Specify the video width or range of widths which are acceptable and/or required.
+//
+//	Input:
+//	  value: the exact value of video width
+//
+// Português:
+//
+// Especifica a largura do vídeo ou o intervalo de larguras que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  value: o valor exato da largura do vídeo
+func (e *FactoryConfig) ImageWidthExact(value int) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	e.config["image"].(map[string]any)["width"] = map[string]any{"exact": value}
+
+	return e
+}
+
+// ImageWidthOptions
+//
+// English:
+//
+// Specify the video width or range of widths which are acceptable and/or required.
+//
+//	Input:
+//	  value: the exact value of video width
+//
+// Português:
+//
+// Especifica a largura do vídeo ou o intervalo de larguras que são aceitáveis e/ou obrigatórios.
+//
+//	Entrada:
+//	  value: o valor exato da largura do vídeo
+func (e *FactoryConfig) ImageWidthOptions(min, max, ideal int) (ref *FactoryConfig) {
+	if e.config["image"] == nil {
+		e.config["image"] = make(map[string]any)
+	}
+
+	options := make(map[string]any)
+	if min > -1 {
+		options["min"] = min
+	}
+
+	if max > -1 {
+		options["max"] = max
+	}
+
+	if ideal > -1 {
+		options["ideal"] = ideal
+	}
+
+	e.config["image"].(map[string]any)["width"] = options
+
+	return e
+}
+
+// DeviceIdExact
+//
+// English:
+//
+// Specify a device ID or an array of device IDs which are acceptable and/or required.
+//
+// Português:
+//
+// Especifica um ID de dispositivo ou uma matriz de IDs de dispositivo que são aceitáveis e/ou obrigatórios.
+// https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/deviceId
+func (e *FactoryConfig) DeviceIdExact(value any) (ref *FactoryConfig) {
+	if e.config["media"] == nil {
+		e.config["media"] = make(map[string]any)
+	}
+
+	e.config["media"].(map[string]any)["deviceId"] = map[string]any{"exact": value}
+
+	return e
+}
+
+// DeviceIdIdeal
+//
+// English:
+//
+// Specify a device ID or an array of device IDs which are acceptable and/or required.
+//
+// Português:
+//
+// Especifica um ID de dispositivo ou uma matriz de IDs de dispositivo que são aceitáveis e/ou obrigatórios.
+// https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/deviceId
+func (e *FactoryConfig) DeviceIdIdeal(value any) (ref *FactoryConfig) {
+	if e.config["media"] == nil {
+		e.config["media"] = make(map[string]any)
+	}
+
+	e.config["media"].(map[string]any)["deviceId"] = map[string]any{"ideal": value}
+
+	return e
+}
+
+// GroupIdExact
+//
+// English:
+//
+// Specify a group ID or an array of group IDs which are acceptable and/or required.
+//
+// Português:
+//
+// Especifica um ID de grupo ou uma matriz de IDs de grupo que são aceitáveis e/ou obrigatórios.
+// https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/groupId
+func (e *FactoryConfig) GroupIdExact(value any) (ref *FactoryConfig) {
+	if e.config["media"] == nil {
+		e.config["media"] = make(map[string]any)
+	}
+
+	e.config["media"].(map[string]any)["groupId"] = map[string]any{"exact": value}
+
+	return e
+}
+
+// GroupIdIdeal
+//
+// English:
+//
+// Specify a group ID or an array of group IDs which are acceptable and/or required.
+//
+// Português:
+//
+// Especifica um ID de grupo ou uma matriz de IDs de grupo que são aceitáveis e/ou obrigatórios.
+// https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/groupId
+func (e *FactoryConfig) GroupIdIdeal(value any) (ref *FactoryConfig) {
+	if e.config["media"] == nil {
+		e.config["media"] = make(map[string]any)
+	}
+
+	e.config["media"].(map[string]any)["groupId"] = map[string]any{"ideal": value}
+
+	return e
+}
+
 //
 //
 //

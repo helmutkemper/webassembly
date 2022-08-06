@@ -45,7 +45,9 @@ func main() {
 			select {
 			case <-clickStart:
 				config := media.NewFactory().
-					DefaultVideo().
+					ImageWidth(800).
+					ImageHeight(600).
+					ImageBrightness(50).
 					AudioAutoGainControl(true).
 					AudioChannelCount(2).
 					AudioVolumeOptions(-1, -1, 50).

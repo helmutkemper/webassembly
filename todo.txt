@@ -2,7 +2,8 @@ https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute#animation_attributes
 
 https://github.com/tetratelabs/wazero
 
-
+https://developer.mozilla.org/en-US/docs/Web/API
+https://developer.mozilla.org/en-US/docs/Web/API/Document
 
 fazer o exemplo https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/pointer-events
 

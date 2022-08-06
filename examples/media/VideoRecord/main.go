@@ -6,6 +6,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/media"
 	"log"
 )
 
@@ -43,7 +44,24 @@ func main() {
 		for {
 			select {
 			case <-clickStart:
-				videoPreview.RecordingUserMedia()
+				config := media.NewFactory().
+					DefaultVideo().
+					AudioAutoGainControl(true).
+					AudioChannelCount(2).
+					AudioVolumeOptions(-1, -1, 50).
+					ImagePointsOfInterest(
+						[]any{
+							map[string]any{
+								"x": 20,
+								"y": 20,
+							},
+							map[string]any{
+								"x": 40,
+								"y": 40,
+							},
+						},
+					)
+				videoPreview.RecordingUserMedia(config)
 			case <-clickStop:
 				recording := videoPreview.RecordingUserMediaStop()
 				if recording == false {

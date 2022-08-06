@@ -6,6 +6,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/media"
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"log"
@@ -4589,6 +4590,7 @@ func (e *TagVideo) recorderStart() {
 		options,
 	)
 
+	// passar um valor faz o evento `dataavailable` funcionar de imediato
 	e.streamRecorder.Call("start")
 }
 
@@ -4642,7 +4644,37 @@ func (e *TagVideo) RecordingUserMediaStop() (recording bool) {
 	return e.recorderStop()
 }
 
-func (e *TagVideo) RecordingUserMedia() (ref *TagVideo) {
+// RecordingUserMedia
+//
+// English:
+//
+// Português:
+//
+//	   Example / Exemplo
+//
+//	   map[string]interface{}{
+//				"video": map[string]interface{}{
+//					"width": map[string]interface{}{
+//						"min":   640,
+//						"ideal": 1280,
+//					},
+//					"height": map[string]interface{}{
+//						"min":   480,
+//						"ideal": 720,
+//					},
+//					"advanced": []interface{}{
+//						map[string]interface{}{
+//							"width":  1920,
+//							"height": 1280,
+//						},
+//						map[string]interface{}{
+//							"aspectRatio": 1.333,
+//						},
+//					},
+//				},
+//				"audio": true,
+//			}
+func (e *TagVideo) RecordingUserMedia(config *media.FactoryConfig) (ref *TagVideo) {
 	if e.streamRecording == true {
 		return
 	}
@@ -4670,9 +4702,14 @@ func (e *TagVideo) RecordingUserMedia() (ref *TagVideo) {
 	options := js.Global().Get("Object")
 	options.Set("video", false)
 	options.Set("audio", true)
+
+	if config == nil {
+		config = media.NewFactory().DefaultAudio().DefaultVideo()
+	}
+
 	js.Global().Get("navigator").Get("mediaDevices").Call(
 		"getUserMedia",
-		options,
+		config.Get(),
 	).Call("then", mediaDevicesSuccess, mediaDevicesFailure)
 
 	<-e.streamStatus

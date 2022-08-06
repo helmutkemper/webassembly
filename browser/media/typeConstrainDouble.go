@@ -47,8 +47,7 @@ type ConstrainDouble struct {
 	//
 	// Português:
 	//
-	// Um número decimal que especifica um valor específico e obrigatório que a propriedade deve ter para ser
-	// considerada aceitável.
+	// Um número decimal que especifica um valor específico e obrigatório que a propriedade deve ter para ser considerada aceitável.
 	Exact interface{} `js:"exact"`
 
 	// Ideal

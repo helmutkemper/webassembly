@@ -76,3 +76,7 @@ desempenho - fim
 dimiantoni
 
 https://withblue.ink/2020/10/03/go-webassembly-http-requests-and-promises.html
+
+
+https://products.aspose.app/barcode/pt/recognize/qr#/recognized
+https://www.qrcodefacil.com/

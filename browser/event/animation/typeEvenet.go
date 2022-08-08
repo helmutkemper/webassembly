@@ -59,15 +59,15 @@ func (e Event) GetClientX() (clientX float64) {
 //
 // Capture event information and format to Golang
 //
-//   Output:
-//     data: list with all the information provided by the browser.
+//	Output:
+//	  data: list with all the information provided by the browser.
 //
 // Português:
 //
 // Captura as informações do evento e formata para o Golang
 //
-//   Saída:
-//     data: lista com todas as informações fornecidas pelo navegador.
+//	Saída:
+//	  data: lista com todas as informações fornecidas pelo navegador.
 func EventManager(name EventName, this js.Value) (data Data) {
 	var event = Event{}
 	event.Object = this
@@ -111,7 +111,7 @@ type Data struct {
 	//
 	// English:
 	//
-	// Name o event
+	// Name of event
 	//
 	// Português:
 	//

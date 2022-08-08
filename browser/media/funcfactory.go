@@ -739,7 +739,7 @@ func (e *FactoryConfig) AudioVolumeOptions(min, max, ideal float64) (ref *Factor
 	return e
 }
 
-// ImageWhiteBalanceMode
+// VideoWhiteBalanceMode
 //
 // English:
 //
@@ -750,17 +750,17 @@ func (e *FactoryConfig) AudioVolumeOptions(min, max, ideal float64) (ref *Factor
 //
 // Uma constante especificando KWhiteBalanceModeNone, KWhiteBalanceModeManual, KWhiteBalanceModeSingleShot ou
 // KWhiteBalanceModeContinuous.
-func (e *FactoryConfig) ImageWhiteBalanceMode(value WhiteBalanceMode) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoWhiteBalanceMode(value WhiteBalanceMode) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["whiteBalanceMode"] = value.String()
+	e.config["video"].(map[string]any)["whiteBalanceMode"] = value.String()
 
 	return e
 }
 
-// ImageExposureMode
+// VideoExposureMode
 //
 // English:
 //
@@ -771,17 +771,17 @@ func (e *FactoryConfig) ImageWhiteBalanceMode(value WhiteBalanceMode) (ref *Fact
 //
 // Uma constante especificando um de KExposureModeNone, KExposureModeManual, KExposureModeSingleShot ou
 // KExposureModeContinuous.
-func (e *FactoryConfig) ImageExposureMode(value ExposureMode) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoExposureMode(value ExposureMode) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["exposureMode"] = value.String()
+	e.config["video"].(map[string]any)["exposureMode"] = value.String()
 
 	return e
 }
 
-// ImageFocusMode
+// VideoFocusMode
 //
 // English:
 //
@@ -790,17 +790,17 @@ func (e *FactoryConfig) ImageExposureMode(value ExposureMode) (ref *FactoryConfi
 // Português:
 //
 // Uma constante especificando um de KFocusModeNone, KFocusModeManual, KFocusModeSingleShot ou KFocusModeContinuous.
-func (e *FactoryConfig) ImageFocusMode(value FocusMode) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoFocusMode(value FocusMode) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["focusMode"] = value.String()
+	e.config["video"].(map[string]any)["focusMode"] = value.String()
 
 	return e
 }
 
-// ImagePointsOfInterest
+// VideoPointsOfInterest
 //
 // English:
 //
@@ -825,17 +825,17 @@ func (e *FactoryConfig) ImageFocusMode(value FocusMode) (ref *FactoryConfig) {
 //
 // Este é um objeto no formato { x:value, y:value } ou uma matriz de tais objetos, onde value é um inteiro de precisão
 // dupla.
-func (e *FactoryConfig) ImagePointsOfInterest(value any) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoPointsOfInterest(value any) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["pointsOfInterest"] = value
+	e.config["video"].(map[string]any)["pointsOfInterest"] = value
 
 	return e
 }
 
-// ImageExposureCompensation
+// VideoExposureCompensation
 //
 // English:
 //
@@ -850,17 +850,17 @@ func (e *FactoryConfig) ImagePointsOfInterest(value any) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: ajuste f-stop em até ±3.
-func (e *FactoryConfig) ImageExposureCompensation(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoExposureCompensation(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["exposureCompensation"] = value
+	e.config["video"].(map[string]any)["exposureCompensation"] = value
 
 	return e
 }
 
-// ImageExposureCompensationExact
+// VideoExposureCompensationExact
 //
 // English:
 //
@@ -875,17 +875,17 @@ func (e *FactoryConfig) ImageExposureCompensation(value float64) (ref *FactoryCo
 //
 //	Entrada:
 //	  value: ajuste f-stop em até ±3, valor exato.
-func (e *FactoryConfig) ImageExposureCompensationExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoExposureCompensationExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["exposureCompensation"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["exposureCompensation"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageExposureCompensationOptions
+// VideoExposureCompensationOptions
 //
 // English:
 //
@@ -916,9 +916,9 @@ func (e *FactoryConfig) ImageExposureCompensationExact(value float64) (ref *Fact
 //
 //	Notas:
 //	  * Use o valor -1 para ignorar a propriedade.
-func (e *FactoryConfig) ImageExposureCompensationOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoExposureCompensationOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -934,12 +934,12 @@ func (e *FactoryConfig) ImageExposureCompensationOptions(min, max, ideal float64
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["exposureCompensation"] = options
+	e.config["video"].(map[string]any)["exposureCompensation"] = options
 
 	return e
 }
 
-// ImageColorTemperature
+// VideoColorTemperature
 //
 // English:
 //
@@ -954,17 +954,17 @@ func (e *FactoryConfig) ImageExposureCompensationOptions(min, max, ideal float64
 //
 //	Entrada:
 //	  value: temperatura de cor desejada em graus kelvin.
-func (e *FactoryConfig) ImageColorTemperature(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoColorTemperature(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["colorTemperature"] = value
+	e.config["video"].(map[string]any)["colorTemperature"] = value
 
 	return e
 }
 
-// ImageColorTemperatureExact
+// VideoColorTemperatureExact
 //
 // English:
 //
@@ -979,17 +979,17 @@ func (e *FactoryConfig) ImageColorTemperature(value float64) (ref *FactoryConfig
 //
 //	Entrada:
 //	  value: Valor exato da temperatura de cor desejada em graus kelvin.
-func (e *FactoryConfig) ImageColorTemperatureExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoColorTemperatureExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["colorTemperature"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["colorTemperature"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageColorTemperatureOptions
+// VideoColorTemperatureOptions
 //
 // English:
 //
@@ -1020,9 +1020,9 @@ func (e *FactoryConfig) ImageColorTemperatureExact(value float64) (ref *FactoryC
 //
 //	Notas:
 //	  * Use o valor -1 para ignorar a propriedade.
-func (e *FactoryConfig) ImageColorTemperatureOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoColorTemperatureOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -1038,12 +1038,12 @@ func (e *FactoryConfig) ImageColorTemperatureOptions(min, max, ideal float64) (r
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["colorTemperature"] = options
+	e.config["video"].(map[string]any)["colorTemperature"] = options
 
 	return e
 }
 
-// ImageIso
+// VideoIso
 //
 // English:
 //
@@ -1058,7 +1058,7 @@ func (e *FactoryConfig) ImageColorTemperatureOptions(min, max, ideal float64) (r
 //
 //	Entrada:
 //	  value: uma configuração iso desejada.
-func (e *FactoryConfig) ImageIso(value float64) (ref *FactoryConfig) {
+func (e *FactoryConfig) VideoIso(value float64) (ref *FactoryConfig) {
 	if e.config["image"] == nil {
 		e.config["image"] = make(map[string]any)
 	}
@@ -1068,7 +1068,7 @@ func (e *FactoryConfig) ImageIso(value float64) (ref *FactoryConfig) {
 	return e
 }
 
-// ImageIsoExact
+// VideoIsoExact
 //
 // English:
 //
@@ -1083,17 +1083,17 @@ func (e *FactoryConfig) ImageIso(value float64) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: um valor exato da configuração iso desejada.
-func (e *FactoryConfig) ImageIsoExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoIsoExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["iso"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["iso"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageIsoOptions
+// VideoIsoOptions
 //
 // English:
 //
@@ -1124,9 +1124,9 @@ func (e *FactoryConfig) ImageIsoExact(value float64) (ref *FactoryConfig) {
 //
 //	Notas:
 //	  * Use o valor -1 para ignorar a propriedade.
-func (e *FactoryConfig) ImageIsoOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoIsoOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -1142,12 +1142,12 @@ func (e *FactoryConfig) ImageIsoOptions(min, max, ideal float64) (ref *FactoryCo
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["iso"] = options
+	e.config["video"].(map[string]any)["iso"] = options
 
 	return e
 }
 
-// ImageBrightness
+// VideoBrightness
 //
 // English:
 //
@@ -1162,17 +1162,17 @@ func (e *FactoryConfig) ImageIsoOptions(min, max, ideal float64) (ref *FactoryCo
 //
 //	Entrada:
 //	  value: a configuração de brilho desejada.
-func (e *FactoryConfig) ImageBrightness(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoBrightness(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["brightness"] = value
+	e.config["video"].(map[string]any)["brightness"] = value
 
 	return e
 }
 
-// ImageBrightnessExact
+// VideoBrightnessExact
 //
 // English:
 //
@@ -1187,17 +1187,17 @@ func (e *FactoryConfig) ImageBrightness(value float64) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: o valor exato da configuração de brilho desejada.
-func (e *FactoryConfig) ImageBrightnessExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoBrightnessExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["brightness"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["brightness"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageBrightnessOptions
+// VideoBrightnessOptions
 //
 // English:
 //
@@ -1228,9 +1228,9 @@ func (e *FactoryConfig) ImageBrightnessExact(value float64) (ref *FactoryConfig)
 //
 //	Notas:
 //	  * Use o valor -1 para ignorar a propriedade.
-func (e *FactoryConfig) ImageBrightnessOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoBrightnessOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -1246,12 +1246,12 @@ func (e *FactoryConfig) ImageBrightnessOptions(min, max, ideal float64) (ref *Fa
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["brightness"] = options
+	e.config["video"].(map[string]any)["brightness"] = options
 
 	return e
 }
 
-// ImageContrast
+// VideoContrast
 //
 // English:
 //
@@ -1266,17 +1266,17 @@ func (e *FactoryConfig) ImageBrightnessOptions(min, max, ideal float64) (ref *Fa
 //
 //	Entrada:
 //	  value: o grau de diferença entre claro e escuro.
-func (e *FactoryConfig) ImageContrast(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoContrast(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["contrast"] = value
+	e.config["video"].(map[string]any)["contrast"] = value
 
 	return e
 }
 
-// ImageContrastExact
+// VideoContrastExact
 //
 // English:
 //
@@ -1291,17 +1291,17 @@ func (e *FactoryConfig) ImageContrast(value float64) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: o grau de diferença entre claro e escuro.
-func (e *FactoryConfig) ImageContrastExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoContrastExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["contrast"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["contrast"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageContrastOptions
+// VideoContrastOptions
 //
 // English:
 //
@@ -1332,9 +1332,9 @@ func (e *FactoryConfig) ImageContrastExact(value float64) (ref *FactoryConfig) {
 //
 //	Notas:
 //	  * Use o valor -1 para ignorar a propriedade.
-func (e *FactoryConfig) ImageContrastOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoContrastOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -1350,12 +1350,12 @@ func (e *FactoryConfig) ImageContrastOptions(min, max, ideal float64) (ref *Fact
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["contrast"] = options
+	e.config["video"].(map[string]any)["contrast"] = options
 
 	return e
 }
 
-// ImageSaturation
+// VideoSaturation
 //
 // English:
 //
@@ -1370,17 +1370,17 @@ func (e *FactoryConfig) ImageContrastOptions(min, max, ideal float64) (ref *Fact
 //
 //	Entrada:
 //	  value: o grau de intensidade da cor.
-func (e *FactoryConfig) ImageSaturation(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoSaturation(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["saturation"] = value
+	e.config["video"].(map[string]any)["saturation"] = value
 
 	return e
 }
 
-// ImageSaturationExact
+// VideoSaturationExact
 //
 // English:
 //
@@ -1395,17 +1395,17 @@ func (e *FactoryConfig) ImageSaturation(value float64) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: o grau exato de intensidade da cor.
-func (e *FactoryConfig) ImageSaturationExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoSaturationExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["saturation"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["saturation"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageSaturationOptions
+// VideoSaturationOptions
 //
 // English:
 //
@@ -1436,9 +1436,9 @@ func (e *FactoryConfig) ImageSaturationExact(value float64) (ref *FactoryConfig)
 //
 //	Notas:
 //	  * Use o valor -1 para ignorar a propriedade.
-func (e *FactoryConfig) ImageSaturationOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoSaturationOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -1454,12 +1454,12 @@ func (e *FactoryConfig) ImageSaturationOptions(min, max, ideal float64) (ref *Fa
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["saturation"] = options
+	e.config["video"].(map[string]any)["saturation"] = options
 
 	return e
 }
 
-// ImageSharpness
+// VideoSharpness
 //
 // English:
 //
@@ -1474,17 +1474,17 @@ func (e *FactoryConfig) ImageSaturationOptions(min, max, ideal float64) (ref *Fa
 //
 //	Entrada:
 //	  value: à intensidade das arestas.
-func (e *FactoryConfig) ImageSharpness(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoSharpness(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["sharpness"] = value
+	e.config["video"].(map[string]any)["sharpness"] = value
 
 	return e
 }
 
-// ImageSharpnessExact
+// VideoSharpnessExact
 //
 // English:
 //
@@ -1499,17 +1499,17 @@ func (e *FactoryConfig) ImageSharpness(value float64) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: à intensidade das arestas.
-func (e *FactoryConfig) ImageSharpnessExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoSharpnessExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["sharpness"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["sharpness"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageSharpnessOptions
+// VideoSharpnessOptions
 //
 // English:
 //
@@ -1524,9 +1524,9 @@ func (e *FactoryConfig) ImageSharpnessExact(value float64) (ref *FactoryConfig) 
 //
 //	Entrada:
 //	  value: à intensidade das arestas.
-func (e *FactoryConfig) ImageSharpnessOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoSharpnessOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -1542,12 +1542,12 @@ func (e *FactoryConfig) ImageSharpnessOptions(min, max, ideal float64) (ref *Fac
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["sharpness"] = options
+	e.config["video"].(map[string]any)["sharpness"] = options
 
 	return e
 }
 
-// ImageFocusDistance
+// VideoFocusDistance
 //
 // English:
 //
@@ -1562,17 +1562,17 @@ func (e *FactoryConfig) ImageSharpnessOptions(min, max, ideal float64) (ref *Fac
 //
 //	Entrada:
 //	  value: distância para um objeto focado.
-func (e *FactoryConfig) ImageFocusDistance(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoFocusDistance(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["focusDistance"] = value
+	e.config["video"].(map[string]any)["focusDistance"] = value
 
 	return e
 }
 
-// ImageFocusDistanceExact
+// VideoFocusDistanceExact
 //
 // English:
 //
@@ -1587,17 +1587,17 @@ func (e *FactoryConfig) ImageFocusDistance(value float64) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: distância para um objeto focado.
-func (e *FactoryConfig) ImageFocusDistanceExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoFocusDistanceExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["focusDistance"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["focusDistance"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageFocusDistanceOptions
+// VideoFocusDistanceOptions
 //
 // English:
 //
@@ -1612,9 +1612,9 @@ func (e *FactoryConfig) ImageFocusDistanceExact(value float64) (ref *FactoryConf
 //
 //	Entrada:
 //	  value: distância para um objeto focado.
-func (e *FactoryConfig) ImageFocusDistanceOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoFocusDistanceOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -1630,12 +1630,12 @@ func (e *FactoryConfig) ImageFocusDistanceOptions(min, max, ideal float64) (ref 
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["focusDistance"] = options
+	e.config["video"].(map[string]any)["focusDistance"] = options
 
 	return e
 }
 
-// ImageZoom
+// VideoZoom
 //
 // English:
 //
@@ -1650,17 +1650,17 @@ func (e *FactoryConfig) ImageFocusDistanceOptions(min, max, ideal float64) (ref 
 //
 //	Entrada:
 //	  value: distância focal desejada.
-func (e *FactoryConfig) ImageZoom(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoZoom(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["zoom"] = value
+	e.config["video"].(map[string]any)["zoom"] = value
 
 	return e
 }
 
-// ImageZoomExact
+// VideoZoomExact
 //
 // English:
 //
@@ -1675,17 +1675,17 @@ func (e *FactoryConfig) ImageZoom(value float64) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: o valor exato da distância focal desejada.
-func (e *FactoryConfig) ImageZoomExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoZoomExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["zoom"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["zoom"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageZoomOptions
+// VideoZoomOptions
 //
 // English:
 //
@@ -1700,9 +1700,9 @@ func (e *FactoryConfig) ImageZoomExact(value float64) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: distância focal desejada.
-func (e *FactoryConfig) ImageZoomOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoZoomOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -1718,12 +1718,12 @@ func (e *FactoryConfig) ImageZoomOptions(min, max, ideal float64) (ref *FactoryC
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["zoom"] = options
+	e.config["video"].(map[string]any)["zoom"] = options
 
 	return e
 }
 
-// ImageTorch
+// VideoTorch
 //
 // English:
 //
@@ -1733,16 +1733,16 @@ func (e *FactoryConfig) ImageZoomOptions(min, max, ideal float64) (ref *FactoryC
 //
 // Define se a luz de preenchimento está continuamente conectada, o que significa que permanece acesa enquanto a trilha
 // estiver ativa.
-func (e *FactoryConfig) ImageTorch(value bool) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoTorch(value bool) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["torch"] = value
+	e.config["video"].(map[string]any)["torch"] = value
 	return e
 }
 
-// ImageTorchExact
+// VideoTorchExact
 //
 // English:
 //
@@ -1752,16 +1752,16 @@ func (e *FactoryConfig) ImageTorch(value bool) (ref *FactoryConfig) {
 //
 // Define se a luz de preenchimento está continuamente conectada, o que significa que permanece acesa enquanto a trilha
 // estiver ativa.
-func (e *FactoryConfig) ImageTorchExact(value bool) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoTorchExact(value bool) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["torch"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["torch"] = map[string]any{"exact": value}
 	return e
 }
 
-// ImageTorchIdeal
+// VideoTorchIdeal
 //
 // English:
 //
@@ -1771,16 +1771,16 @@ func (e *FactoryConfig) ImageTorchExact(value bool) (ref *FactoryConfig) {
 //
 // Define se a luz de preenchimento está continuamente conectada, o que significa que permanece acesa enquanto a trilha
 // estiver ativa.
-func (e *FactoryConfig) ImageTorchIdeal(value bool) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoTorchIdeal(value bool) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["torch"] = map[string]any{"ideal": value}
+	e.config["video"].(map[string]any)["torch"] = map[string]any{"ideal": value}
 	return e
 }
 
-// ImageAspectRatio
+// VideoAspectRatio
 //
 // English:
 //
@@ -1795,17 +1795,17 @@ func (e *FactoryConfig) ImageTorchIdeal(value bool) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: a proporção do vídeo
-func (e *FactoryConfig) ImageAspectRatio(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoAspectRatio(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["aspectRatio"] = value
+	e.config["video"].(map[string]any)["aspectRatio"] = value
 
 	return e
 }
 
-// ImageAspectRatioExact
+// VideoAspectRatioExact
 //
 // English:
 //
@@ -1820,17 +1820,17 @@ func (e *FactoryConfig) ImageAspectRatio(value float64) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: a proporção do vídeo
-func (e *FactoryConfig) ImageAspectRatioExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoAspectRatioExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["aspectRatio"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["aspectRatio"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageAspectRatioOptions
+// VideoAspectRatioOptions
 //
 // English:
 //
@@ -1861,9 +1861,9 @@ func (e *FactoryConfig) ImageAspectRatioExact(value float64) (ref *FactoryConfig
 //
 //	Notas:
 //	  * Use o valor -1 para ignorar a propriedade.
-func (e *FactoryConfig) ImageAspectRatioOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoAspectRatioOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -1879,12 +1879,12 @@ func (e *FactoryConfig) ImageAspectRatioOptions(min, max, ideal float64) (ref *F
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["aspectRatio"] = options
+	e.config["video"].(map[string]any)["aspectRatio"] = options
 
 	return e
 }
 
-// ImageFacingModeExact
+// VideoFacingModeExact
 //
 // English:
 //
@@ -1899,17 +1899,17 @@ func (e *FactoryConfig) ImageAspectRatioOptions(min, max, ideal float64) (ref *F
 //
 //	Entrada:
 //	  value: a proporção do vídeo
-func (e *FactoryConfig) ImageFacingModeExact(value FacingMode) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoFacingModeExact(value FacingMode) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["facingMode"] = map[string]any{"exact": value.String()}
+	e.config["video"].(map[string]any)["facingMode"] = map[string]any{"exact": value.String()}
 
 	return e
 }
 
-// ImageFacingModeIdeal
+// VideoFacingModeIdeal
 //
 // English:
 //
@@ -1924,17 +1924,17 @@ func (e *FactoryConfig) ImageFacingModeExact(value FacingMode) (ref *FactoryConf
 //
 //	Entrada:
 //	  value: a proporção do vídeo
-func (e *FactoryConfig) ImageFacingModeIdeal(value FacingMode) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoFacingModeIdeal(value FacingMode) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["facingMode"] = map[string]any{"ideal": value.String()}
+	e.config["video"].(map[string]any)["facingMode"] = map[string]any{"ideal": value.String()}
 
 	return e
 }
 
-// ImageFrameRate
+// VideoFrameRate
 //
 // English:
 //
@@ -1949,17 +1949,17 @@ func (e *FactoryConfig) ImageFacingModeIdeal(value FacingMode) (ref *FactoryConf
 //
 //	Entrada:
 //	  value: a taxa de quadros
-func (e *FactoryConfig) ImageFrameRate(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoFrameRate(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["frameRate"] = value
+	e.config["video"].(map[string]any)["frameRate"] = value
 
 	return e
 }
 
-// ImageFrameRateExact
+// VideoFrameRateExact
 //
 // English:
 //
@@ -1974,17 +1974,17 @@ func (e *FactoryConfig) ImageFrameRate(value float64) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: o valor exato da taxa de quadros
-func (e *FactoryConfig) ImageFrameRateExact(value float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoFrameRateExact(value float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["frameRate"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["frameRate"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageFrameRateOptions
+// VideoFrameRateOptions
 //
 // English:
 //
@@ -2015,9 +2015,9 @@ func (e *FactoryConfig) ImageFrameRateExact(value float64) (ref *FactoryConfig) 
 //
 //	Notas:
 //	  * Use o valor -1 para ignorar a propriedade.
-func (e *FactoryConfig) ImageFrameRateOptions(min, max, ideal float64) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoFrameRateOptions(min, max, ideal float64) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -2033,12 +2033,12 @@ func (e *FactoryConfig) ImageFrameRateOptions(min, max, ideal float64) (ref *Fac
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["frameRate"] = options
+	e.config["video"].(map[string]any)["frameRate"] = options
 
 	return e
 }
 
-// ImageHeight
+// VideoHeight
 //
 // English:
 //
@@ -2053,17 +2053,17 @@ func (e *FactoryConfig) ImageFrameRateOptions(min, max, ideal float64) (ref *Fac
 //
 //	Entrada:
 //	  value: altura do vídeo
-func (e *FactoryConfig) ImageHeight(value int) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoHeight(value int) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["height"] = value
+	e.config["video"].(map[string]any)["height"] = value
 
 	return e
 }
 
-// ImageHeightExact
+// VideoHeightExact
 //
 // English:
 //
@@ -2078,17 +2078,17 @@ func (e *FactoryConfig) ImageHeight(value int) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: altura do vídeo
-func (e *FactoryConfig) ImageHeightExact(value int) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoHeightExact(value int) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["height"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["height"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageHeightOptions
+// VideoHeightOptions
 //
 // English:
 //
@@ -2103,9 +2103,9 @@ func (e *FactoryConfig) ImageHeightExact(value int) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: altura do vídeo
-func (e *FactoryConfig) ImageHeightOptions(min, max, ideal int) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoHeightOptions(min, max, ideal int) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -2121,12 +2121,12 @@ func (e *FactoryConfig) ImageHeightOptions(min, max, ideal int) (ref *FactoryCon
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["height"] = options
+	e.config["video"].(map[string]any)["height"] = options
 
 	return e
 }
 
-// ImageWidth
+// VideoWidth
 //
 // English:
 //
@@ -2141,17 +2141,17 @@ func (e *FactoryConfig) ImageHeightOptions(min, max, ideal int) (ref *FactoryCon
 //
 //	Entrada:
 //	  value: largura do vídeo
-func (e *FactoryConfig) ImageWidth(value int) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoWidth(value int) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["width"] = value
+	e.config["video"].(map[string]any)["width"] = value
 
 	return e
 }
 
-// ImageWidthExact
+// VideoWidthExact
 //
 // English:
 //
@@ -2166,17 +2166,17 @@ func (e *FactoryConfig) ImageWidth(value int) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: o valor exato da largura do vídeo
-func (e *FactoryConfig) ImageWidthExact(value int) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoWidthExact(value int) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
-	e.config["image"].(map[string]any)["width"] = map[string]any{"exact": value}
+	e.config["video"].(map[string]any)["width"] = map[string]any{"exact": value}
 
 	return e
 }
 
-// ImageWidthOptions
+// VideoWidthOptions
 //
 // English:
 //
@@ -2191,9 +2191,9 @@ func (e *FactoryConfig) ImageWidthExact(value int) (ref *FactoryConfig) {
 //
 //	Entrada:
 //	  value: o valor exato da largura do vídeo
-func (e *FactoryConfig) ImageWidthOptions(min, max, ideal int) (ref *FactoryConfig) {
-	if e.config["image"] == nil {
-		e.config["image"] = make(map[string]any)
+func (e *FactoryConfig) VideoWidthOptions(min, max, ideal int) (ref *FactoryConfig) {
+	if e.config["video"] == nil {
+		e.config["video"] = make(map[string]any)
 	}
 
 	options := make(map[string]any)
@@ -2209,7 +2209,7 @@ func (e *FactoryConfig) ImageWidthOptions(min, max, ideal int) (ref *FactoryConf
 		options["ideal"] = ideal
 	}
 
-	e.config["image"].(map[string]any)["width"] = options
+	e.config["video"].(map[string]any)["width"] = options
 
 	return e
 }

@@ -126,24 +126,24 @@ type Navigator struct {
 //
 // Boolean value that indicates whether cookies are enabled or not.
 //
-//   Notes:
-//    * When the browser is configured to block third-party cookies, and navigator.cookieEnabled is invoked inside a
-//      third-party iframe, it returns true in Safari, Edge Spartan and IE (while trying to set a cookie in such
-//      scenario would fail). It returns false in Firefox and Chromium-based browsers.
-//    * Web browsers may prevent writing certain cookies in certain scenarios. For example, Chrome 80+ does not allow
-//      creating cookies with SameSite=None attribute, unless they are created over HTTPS and with Secure attribute.
+//	Notes:
+//	 * When the browser is configured to block third-party cookies, and navigator.cookieEnabled is invoked inside a
+//	   third-party iframe, it returns true in Safari, Edge Spartan and IE (while trying to set a cookie in such
+//	   scenario would fail). It returns false in Firefox and Chromium-based browsers.
+//	 * Web browsers may prevent writing certain cookies in certain scenarios. For example, Chrome 80+ does not allow
+//	   creating cookies with SameSite=None attribute, unless they are created over HTTPS and with Secure attribute.
 //
 // Português:
 //
 // Valor booleano que indica se os cookies estão habilitados ou não.
 //
-//   Notas:
-//    * Quando o navegador está configurado para bloquear cookies de terceiros e o navigator.cookieEnabled é invocado
-//      dentro de um iframe de terceiros, ele retorna true no Safari, Edge Spartan e IE (enquanto tentar definir um
-//      cookie nesse cenário falharia). Ele retorna false em navegadores baseados em Firefox e Chromium.
-//    * Os navegadores da Web podem impedir a gravação de determinados cookies em determinados cenários. Por exemplo,
-//      o Chrome 80+ não permite a criação de cookies com o atributo SameSite=None, a menos que sejam criados em HTTPS
-//      e com o atributo Secure.
+//	Notas:
+//	 * Quando o navegador está configurado para bloquear cookies de terceiros e o navigator.cookieEnabled é invocado
+//	   dentro de um iframe de terceiros, ele retorna true no Safari, Edge Spartan e IE (enquanto tentar definir um
+//	   cookie nesse cenário falharia). Ele retorna false em navegadores baseados em Firefox e Chromium.
+//	 * Os navegadores da Web podem impedir a gravação de determinados cookies em determinados cenários. Por exemplo,
+//	   o Chrome 80+ não permite a criação de cookies com o atributo SameSite=None, a menos que sejam criados em HTTPS
+//	   e com o atributo Secure.
 func (e Navigator) GetCookieEnabled() (enabled bool) {
 	return e.Object.Get("cookieEnabled").Bool()
 }
@@ -192,8 +192,8 @@ func (e Navigator) GetHardwareConcurrency() (concurrency int) {
 // Languages (also known as BCP 47). Examples of valid language codes include "en", "en-US", "fr", "fr-FR", "es-ES",
 // etc.
 //
-//   Notes:
-//     * Safari on iOS prior to 10.2, the country code returned is lowercase: "en-us", "fr-fr" etc.
+//	Notes:
+//	  * Safari on iOS prior to 10.2, the country code returned is lowercase: "en-us", "fr-fr" etc.
 //
 // Português:
 //
@@ -204,8 +204,8 @@ func (e Navigator) GetHardwareConcurrency() (concurrency int) {
 // Identification Languages (também conhecido como BCP 47). Exemplos de códigos de idioma válidos incluem "en",
 // "en-US", "fr", "fr-FR", "es-ES", etc.
 //
-//   Notas:
-//     * Safari no iOS anterior a 10.2, o código do país retornado é minúsculo: "en-us", "fr-fr" etc.
+//	Notas:
+//	  * Safari no iOS anterior a 10.2, o código do país retornado é minúsculo: "en-us", "fr-fr" etc.
 func (e Navigator) GetLanguage() (language string) {
 	return e.Object.Get("language").String()
 }
@@ -226,7 +226,8 @@ func (e Navigator) GetMaxTouchPoints() (maxTouchPoints int) {
 }
 
 // todo: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/mediaDevices
-//       https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices
+//
+//	https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices
 func (e Navigator) GetMediaDevices() (maxTouchPoints int) {
 	return e.Object.Get("mediaDevices").Int()
 }
@@ -246,7 +247,7 @@ type Data struct {
 	//
 	// English:
 	//
-	// Name o event
+	// Name of event
 	//
 	// Português:
 	//
@@ -592,8 +593,8 @@ func (e Data) Blur() {
 // was not opened by a script, an error similar to this one appears in the console: Scripts may not close windows that
 // were not opened by script.
 //
-//   Notes
-//    * Close() has no effect when called on Window objects returned by HTMLIFrameElement.contentWindow.
+//	Notes
+//	 * Close() has no effect when called on Window objects returned by HTMLIFrameElement.contentWindow.
 //
 // Português:
 //
@@ -603,8 +604,8 @@ func (e Data) Blur() {
 // não foi aberta por um script, um erro semelhante a este aparece no console: Scripts não podem fechar janelas que não
 // foram abertas por script.
 //
-//   Notas
-//    * Close() não tem efeito quando chamado em objetos Window retornados por HTMLIFrameElement.contentWindow.
+//	Notas
+//	 * Close() não tem efeito quando chamado em objetos Window retornados por HTMLIFrameElement.contentWindow.
 func (e Data) Close() {
 	e.Object.Call("close")
 }
@@ -630,23 +631,23 @@ func (e Data) Focus() {
 //
 // Moves the window to the specified coordinates.
 //
-//   Input:
-//     x: is the horizontal coordinate to be moved to.
-//     y: is the vertical coordinate to be moved to.
+//	Input:
+//	  x: is the horizontal coordinate to be moved to.
+//	  y: is the vertical coordinate to be moved to.
 //
-//   Notes:
-//    * This function moves the window to an absolute location. In contrast, window.moveBy() moves the window relative to its current location.
+//	Notes:
+//	 * This function moves the window to an absolute location. In contrast, window.moveBy() moves the window relative to its current location.
 //
 // Português:
 //
 // Move a janela para as coordenadas especificadas.
 //
-//   Entrada:
-//     x: é a coordenada horizontal a ser movida.
-//     y: é a coordenada vertical a ser movida.
+//	Entrada:
+//	  x: é a coordenada horizontal a ser movida.
+//	  y: é a coordenada vertical a ser movida.
 //
-//   Notes:
-//    * This function moves the window to an absolute location. In contrast, window.moveBy() moves the window relative to its current location.
+//	Notes:
+//	 * This function moves the window to an absolute location. In contrast, window.moveBy() moves the window relative to its current location.
 func (e Data) MoveTo(x, y float64) {
 	e.Object.Call("moveTo", x, y)
 }
@@ -657,29 +658,29 @@ func (e Data) MoveTo(x, y float64) {
 //
 // The moveBy() method of the Window interface moves the current window by a specified amount.
 //
-//   Input:
-//     deltaX: is the amount of pixels to move the window horizontally. Positive values are to the right, while negative
-//       values are to the left.
-//     deltaY: is the amount of pixels to move the window vertically. Positive values are down, while negative values
-//       are up.
+//	Input:
+//	  deltaX: is the amount of pixels to move the window horizontally. Positive values are to the right, while negative
+//	    values are to the left.
+//	  deltaY: is the amount of pixels to move the window vertically. Positive values are down, while negative values
+//	    are up.
 //
-//   Notes:
-//    * This function moves the window relative to its current location. In contrast, window.moveTo() moves the window
-//      to an absolute location.
+//	Notes:
+//	 * This function moves the window relative to its current location. In contrast, window.moveTo() moves the window
+//	   to an absolute location.
 //
 // Português:
 //
 // O método moveBy() da interface Window move a janela atual por um valor especificado.
 //
-//   Entrada:
-//     deltaX: é a quantidade de pixels para mover a janela horizontalmente. Os valores positivos estão à direita,
-//       enquanto os valores negativos estão à esquerda.
-//     deltaY: é a quantidade de pixels para mover a janela verticalmente. Os valores positivos estão em baixa, enquanto
-//       os valores negativos estão em alta.
+//	Entrada:
+//	  deltaX: é a quantidade de pixels para mover a janela horizontalmente. Os valores positivos estão à direita,
+//	    enquanto os valores negativos estão à esquerda.
+//	  deltaY: é a quantidade de pixels para mover a janela verticalmente. Os valores positivos estão em baixa, enquanto
+//	    os valores negativos estão em alta.
 //
-//   Notas:
-//    * Esta função move a janela em relação à sua localização atual. Em contraste, window.moveTo() move a janela para
-//      um local absoluto.
+//	Notas:
+//	 * Esta função move a janela em relação à sua localização atual. Em contraste, window.moveTo() move a janela para
+//	   um local absoluto.
 func (e Data) MoveBy(deltaX, deltaY float64) {
 	e.Object.Call("moveBy", deltaX, deltaY)
 }
@@ -690,17 +691,17 @@ func (e Data) MoveBy(deltaX, deltaY float64) {
 //
 // The Window.resizeBy() method resizes the current window by a specified amount.
 //
-//   Input:
-//     xDelta: Number of pixels to grow the window horizontally.
-//     yDelta: Number of pixels to grow the window vertically.
+//	Input:
+//	  xDelta: Number of pixels to grow the window horizontally.
+//	  yDelta: Number of pixels to grow the window vertically.
 //
 // Português:
 //
 // O método Window.resizeBy() redimensiona a janela atual em um valor especificado.
 //
-//   Entrada:
-//     xDelta: Número de pixels para aumentar a janela horizontalmente.
-//     yDelta: Número de pixels para aumentar a janela verticalmente.
+//	Entrada:
+//	  xDelta: Número de pixels para aumentar a janela horizontalmente.
+//	  yDelta: Número de pixels para aumentar a janela verticalmente.
 func (e Data) ResizeBy(deltaX, deltaY float64) {
 	e.Object.Call("resizeBy", deltaX, deltaY)
 }
@@ -711,18 +712,18 @@ func (e Data) ResizeBy(deltaX, deltaY float64) {
 //
 // The Window.resizeTo() method dynamically resizes the window.
 //
-//   Input:
-//     width: An integer representing the new outerWidth in pixels (including scroll bars, title bars, etc).
-//     height: An integer value representing the new outerHeight in pixels (including scroll bars, title bars, etc).
+//	Input:
+//	  width: An integer representing the new outerWidth in pixels (including scroll bars, title bars, etc).
+//	  height: An integer value representing the new outerHeight in pixels (including scroll bars, title bars, etc).
 //
 // Português:
 //
 // O método Window.resizeTo() redimensiona dinamicamente a janela.
 //
-//   Entrada:
-//     width: Um inteiro que representa o novo outerWidth em pixels (incluindo barras de rolagem, barras de título etc.)
-//     height: Um valor inteiro que representa o novo outerHeight em pixels (incluindo barras de rolagem, barras de
-//       título etc.)
+//	Entrada:
+//	  width: Um inteiro que representa o novo outerWidth em pixels (incluindo barras de rolagem, barras de título etc.)
+//	  height: Um valor inteiro que representa o novo outerHeight em pixels (incluindo barras de rolagem, barras de
+//	    título etc.)
 func (e Data) ResizeTo(width, height float64) {
 	e.Object.Call("resizeTo", width, height)
 }
@@ -733,17 +734,17 @@ func (e Data) ResizeTo(width, height float64) {
 //
 // Scrolls the window to a particular place in the document.
 //
-//   Input:
-//     x: Is the pixel along the horizontal axis of the document that you want displayed in the upper left.
-//     y: is the pixel along the vertical axis of the document that you want displayed in the upper left.
+//	Input:
+//	  x: Is the pixel along the horizontal axis of the document that you want displayed in the upper left.
+//	  y: is the pixel along the vertical axis of the document that you want displayed in the upper left.
 //
 // Português:
 //
 // Rola a janela para um local específico no documento.
 //
-//   Entrada:
-//     x: É o pixel ao longo do eixo horizontal do documento que você deseja exibir no canto superior esquerdo.
-//     y: é o pixel ao longo do eixo vertical do documento que você deseja exibir no canto superior esquerdo.
+//	Entrada:
+//	  x: É o pixel ao longo do eixo horizontal do documento que você deseja exibir no canto superior esquerdo.
+//	  y: é o pixel ao longo do eixo vertical do documento que você deseja exibir no canto superior esquerdo.
 func (e Data) Scroll(x, y float64) {
 	e.Object.Call("scroll", x, y)
 }
@@ -754,17 +755,17 @@ func (e Data) Scroll(x, y float64) {
 //
 // Scrolls the document in the window by the given amount.
 //
-//   Input:
-//     x: Is the horizontal pixel value that you want to scroll by.
-//     y: Is the vertical pixel value that you want to scroll by.
+//	Input:
+//	  x: Is the horizontal pixel value that you want to scroll by.
+//	  y: Is the vertical pixel value that you want to scroll by.
 //
 // Português:
 //
 // Rola o documento na janela pela quantidade especificada.
 //
-//   Entrada:
-//     x: É o valor de pixel horizontal pelo qual você deseja rolar.
-//     y: É o valor de pixel vertical pelo qual você deseja rolar.
+//	Entrada:
+//	  x: É o valor de pixel horizontal pelo qual você deseja rolar.
+//	  y: É o valor de pixel vertical pelo qual você deseja rolar.
 func (e Data) ScrollBy(x, y float64) {
 	e.Object.Call("scrollBy", x, y)
 }
@@ -775,17 +776,17 @@ func (e Data) ScrollBy(x, y float64) {
 //
 // Scrolls to a particular set of coordinates in the document.
 //
-//   Input:
-//     x: Is the pixel along the horizontal axis of the document that you want displayed in the upper left.
-//     y: Is the pixel along the vertical axis of the document that you want displayed in the upper left.
+//	Input:
+//	  x: Is the pixel along the horizontal axis of the document that you want displayed in the upper left.
+//	  y: Is the pixel along the vertical axis of the document that you want displayed in the upper left.
 //
 // Português:
 //
 // Rola para um determinado conjunto de coordenadas no documento.
 //
-//   Entrada:
-//     x: É o pixel ao longo do eixo horizontal do documento que você deseja exibir no canto superior esquerdo.
-//     y: É o pixel ao longo do eixo vertical do documento que você deseja exibir no canto superior esquerdo.
+//	Entrada:
+//	  x: É o pixel ao longo do eixo horizontal do documento que você deseja exibir no canto superior esquerdo.
+//	  y: É o pixel ao longo do eixo vertical do documento que você deseja exibir no canto superior esquerdo.
 func (e Data) ScrollTo(x, y float64) {
 	e.Object.Call("scrollTo", x, y)
 }

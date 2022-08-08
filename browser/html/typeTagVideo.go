@@ -4685,6 +4685,17 @@ func (e *TagVideo) RecordingUserMedia(config *media.FactoryConfig) (ref *TagVide
 
 	mediaDevicesSuccess := js.FuncOf(func(_ js.Value, args []js.Value) any {
 		e.streamObj = args[0]
+
+		// a forma correta de applyConstraints ?
+		//tracks := e.streamObj.Call("getTracks")
+		//tracks.Call("forEach", js.FuncOf(func(this js.Value, args []js.Value) any {
+		//	args[0].Call(
+		//		"applyConstraints",
+		//		map[string]any{"colorTemperature": 650000},
+		//	)
+		//	return nil
+		//}))
+
 		e.recorderStart()
 		e.streamStatus <- struct{}{}
 		return nil

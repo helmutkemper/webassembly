@@ -462,7 +462,7 @@ type Data struct {
 	//
 	// English:
 	//
-	// Name o event
+	// Name of event
 	//
 	// Português:
 	//

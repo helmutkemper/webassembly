@@ -2,11 +2,11 @@
 
 ### English:
 
-This example shows how to get the device's position when it changes location.
+This example shows how to get the device's position when the location changes.
 
 ### Português:
 
-Este exemplo mostra como pegar a posição do dispositivo quando ela muda de local.
+Este exemplo mostra como pegar a posição do dispositivo quando a localização muda.
 
 ### Makefile
 

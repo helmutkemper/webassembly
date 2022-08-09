@@ -23,7 +23,7 @@ buildandrun:
 
 
 .PHONY: build
-## build this example
+## build main.wasm file to run this example
 build:
 	$(GO) mod tidy
 	GOARCH=wasm GOOS=js $(GO) build -o main.wasm

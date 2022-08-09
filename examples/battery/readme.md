@@ -11,8 +11,9 @@ Este exemplo mostra como monitorar a bateria do dispositivo em tempo real.
 ### Makefile
 
 ```shell
+make help         ## This help command
 make buildandrun  ## build this example and run local server
-make build        ## build this example
+make build        ## build main.wasm file to run this example
 make server       ## run local server
 ```
 

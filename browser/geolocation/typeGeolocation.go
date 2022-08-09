@@ -5,7 +5,7 @@ import "syscall/js"
 // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
 // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/watchPosition
 
-// Geolocation
+// GeoLocation
 //
 // English:
 //
@@ -35,7 +35,7 @@ import "syscall/js"
 //	   notificado e solicitado a conceder permissão. Esteja ciente de que cada navegador tem suas próprias políticas e
 //	   métodos para solicitar essa permissão.
 //	 * Este recurso está disponível apenas em contextos seguros (HTTPS), em alguns ou em todos os navegadores compatíveis.
-type Geolocation struct {
+type GeoLocation struct {
 
 	// enableHighAccuracy
 	//
@@ -125,7 +125,7 @@ type Geolocation struct {
 // posição atual real.
 // Se definido como -1, o dispositivo deve retornar uma posição em cache, independentemente de sua idade.
 // Padrão: 0.
-func (e *Geolocation) MaximumAge(maximumAge int) {
+func (e *GeoLocation) MaximumAge(maximumAge int) {
 	e.maximumAge = maximumAge
 }
 
@@ -151,7 +151,7 @@ func (e *Geolocation) MaximumAge(maximumAge int) {
 //
 // O valor padrão é Infinity, o que significa que getCurrentPosition() não retornará até que a posição esteja
 // disponível.
-func (e *Geolocation) Timeout(timeout int) {
+func (e *GeoLocation) Timeout(timeout int) {
 	e.timeout = timeout
 }
 
@@ -184,7 +184,7 @@ func (e *Geolocation) Timeout(timeout int) {
 // rapidamente e ou usando menos energia.
 //
 // Padrão: falso.
-func (e *Geolocation) EnableHighAccuracy(enableHighAccuracy bool) {
+func (e *GeoLocation) EnableHighAccuracy(enableHighAccuracy bool) {
 	e.enableHighAccuracy = enableHighAccuracy
 }
 
@@ -211,7 +211,7 @@ func (e *Geolocation) EnableHighAccuracy(enableHighAccuracy bool) {
 //	Notas:
 //	  * Accuracy é em metros.
 //	  * Esse recurso está disponível apenas em contextos seguros (HTTPS).
-func (e *Geolocation) GetPosition(chCoordinate *chan Coordinate) {
+func (e *GeoLocation) GetPosition(chCoordinate *chan Coordinate) {
 	var coordinate Coordinate
 	var options = e.prepareOptions()
 
@@ -266,7 +266,7 @@ func (e *Geolocation) GetPosition(chCoordinate *chan Coordinate) {
 //
 //	Notas:
 //	  * Este recurso está disponível apenas em contextos seguros (HTTPS).
-func (e *Geolocation) WatchPosition(chCoordinate *chan Coordinate) (id int) {
+func (e *GeoLocation) WatchPosition(chCoordinate *chan Coordinate) (id int) {
 	var coordinate Coordinate
 	var options = e.prepareOptions()
 
@@ -311,7 +311,7 @@ func (e *Geolocation) WatchPosition(chCoordinate *chan Coordinate) (id int) {
 //
 //	Entrada:
 //	  id: Número retornado pela função WatchPosition() ao instalar o manipulador que você deseja remover.
-func (e *Geolocation) ClearWatch(id int) {
+func (e *GeoLocation) ClearWatch(id int) {
 	js.Global().Get("navigator").Get("geolocation").Call("watchPosition", id)
 }
 
@@ -328,7 +328,7 @@ func (e *Geolocation) ClearWatch(id int) {
 // Um objeto opcional de Geolocation.getCurrentPosition()
 //
 // Veja https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
-func (e *Geolocation) prepareOptions() (options js.Value) {
+func (e *GeoLocation) prepareOptions() (options js.Value) {
 	options = js.Global().Get("Object")
 
 	if e.maximumAge < 0 {

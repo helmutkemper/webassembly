@@ -229,6 +229,53 @@ func (e *Battery) AddListenerChargingTimeChange(batteryData *chan Data) (ref *Ba
 	return e
 }
 
+// RemoveListenerChargingTimeChange
+//
+// English:
+//
+// Remove a battery charging time change event listener equivalent to the JavaScript command removeEventListener('chargingtimechange',fn).
+//
+// Fired when the battery charging time (the chargingTime property) is updated.
+//
+// Português:
+//
+// Remove um ouvinte de evento de tempo de carga da bateria mudou, equivalente ao comando JavaScript addEventListener('chargingtimechange',fn).
+//
+// Acionado quando o tempo de carregamento da bateria (propriedade loadingTime) é atualizado.
+func (e *Battery) RemoveListenerChargingTimeChange() (ref *Battery) {
+	if e.fnChargingTimeChange == nil {
+		return e
+	}
+
+	objectBactery.Call(
+		"removeEventListener",
+		"chargingtimechange",
+		*e.fnChargingTimeChange,
+	)
+
+	e.fnChargingTimeChange = nil
+	return e
+}
+
+// AddListenerDischargingTimeChange
+//
+// English:
+//
+// Adds a battery discharging time change event listener equivalent to the JavaScript command addEventListener('dischargingtimechange',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel battery.Data
+//
+// Fired when the battery discharging time (the dischargingTime property) is updated.
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de tempo de descarga da bateria mudou, equivalente ao comando JavaScript addEventListener('dischargingtimechange',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel battery.Data
+//
+// Acionado quando o tempo de descarga da bateria (propriedade dischargingTime) é atualizado.
 func (e *Battery) AddListenerDischargingTimeChange(batteryData *chan Data) (ref *Battery) {
 	var fn js.Func
 
@@ -252,6 +299,53 @@ func (e *Battery) AddListenerDischargingTimeChange(batteryData *chan Data) (ref 
 	return e
 }
 
+// RemoveListenerDischargingTimeChange
+//
+// English:
+//
+// Remove a battery discharging time change event listener equivalent to the JavaScript command removeEventListener('dischargingtimechange',fn).
+//
+// Fired when the battery discharging time (the dischargingTime property) is updated.
+//
+// Português:
+//
+// Remove um ouvinte de evento de tempo de descarga da bateria mudou, equivalente ao comando JavaScript addEventListener('dischargingtimechange',fn).
+//
+// Acionado quando o tempo de descarga da bateria (propriedade dischargingTime) é atualizado.
+func (e *Battery) RemoveListenerDischargingTimeChange() (ref *Battery) {
+	if e.fnDischargingTimeChange == nil {
+		return e
+	}
+
+	objectBactery.Call(
+		"removeEventListener",
+		"dischargingtimechange",
+		*e.fnDischargingTimeChange,
+	)
+
+	e.fnDischargingTimeChange = nil
+	return e
+}
+
+// AddListenerLevelChange
+//
+// English:
+//
+// Adds a battery level change event listener equivalent to the JavaScript command addEventListener('levelchange',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel battery.Data
+//
+// Fired when the battery level (the level property) is updated.
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de nível da bateria mudou, equivalente ao comando JavaScript addEventListener('levelchange',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel battery.Data
+//
+// Acionado quando o nível da bateria (a propriedade de nível) é atualizado.
 func (e *Battery) AddListenerLevelChange(batteryData *chan Data) (ref *Battery) {
 	var fn js.Func
 
@@ -272,6 +366,34 @@ func (e *Battery) AddListenerLevelChange(batteryData *chan Data) (ref *Battery) 
 		"levelchange",
 		*e.fnLevelChange,
 	)
+	return e
+}
+
+// RemoveListenerLevelChange
+//
+// English:
+//
+// Remove a battery level change event listener equivalent to the JavaScript command removeEventListener('levelchange',fn).
+//
+// Fired when the battery level (the level property) is updated.
+//
+// Português:
+//
+// Remove um ouvinte de evento de nível da bateria mudou, equivalente ao comando JavaScript removeEventListener('levelchange',fn).
+//
+// Acionado quando o nível da bateria (a propriedade de nível) é atualizado.
+func (e *Battery) RemoveListenerLevelChange() (ref *Battery) {
+	if e.fnLevelChange == nil {
+		return e
+	}
+
+	objectBactery.Call(
+		"removeEventListener",
+		"levelchange",
+		*e.fnLevelChange,
+	)
+
+	e.fnLevelChange = nil
 	return e
 }
 

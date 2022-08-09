@@ -22,6 +22,33 @@ make server       ## run local server
 
 ### Code:
 
+##### HTML
+
+```html
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+      body {
+          margin: 0 !important;
+          padding: 0 !important;
+      }
+  </style>
+  <script src="../support/wasm_exec.js"></script>
+  <script>
+    const go = new Go();
+    WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+      go.run(result.instance);
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>
+```
+
+##### Golang
+
 ```go
 //go:build js
 package main

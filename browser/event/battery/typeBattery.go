@@ -64,6 +64,15 @@ type Battery struct {
 	fnLevelChange *js.Func
 }
 
+// Now
+//
+// English:
+//
+// Returns the device's current battery status.
+//
+// Português:
+//
+// Retorna o status atual da bateria do dispositivo.
 func (e *Battery) Now() (data Data) {
 	var event = Event{}
 	event.Object = objectBactery
@@ -78,6 +87,15 @@ func (e *Battery) Now() (data Data) {
 	return
 }
 
+// Init
+//
+// English:
+//
+// Correctly initialize the battery object.
+//
+// Português:
+//
+// Inicializa o objeto battery de forma correta.
 func (e *Battery) Init() {
 	var wait = make(chan struct{})
 	var success js.Func
@@ -141,6 +159,19 @@ func (e *Battery) AddListenerChargingChange(batteryData *chan Data) (ref *Batter
 	return e
 }
 
+// RemoveListenerChargingChange
+//
+// English:
+//
+// Remove a battery charging change event listener equivalent to the JavaScript command removeEventListener('chargingchange',fn).
+//
+// Fired when the battery charging state (the charging property) is updated.
+//
+// Português:
+//
+// Remove um ouvinte de evento de carga da bateria mudou, equivalente ao comando JavaScript removeEventListener('chargingchange',fn).
+//
+// Acionado quando o estado de carregamento da bateria (a propriedade de carregamento) é atualizado.
 func (e *Battery) RemoveListenerChargingChange() (ref *Battery) {
 	if e.fnChargingChange == nil {
 		return e
@@ -156,6 +187,25 @@ func (e *Battery) RemoveListenerChargingChange() (ref *Battery) {
 	return e
 }
 
+// AddListenerChargingTimeChange
+//
+// English:
+//
+// Adds a battery charging time change event listener equivalent to the JavaScript command addEventListener('chargingtimechange',fn).
+//
+//	Input:
+//	  mouseEvet: pointer to channel battery.Data
+//
+// Fired when the battery charging time (the chargingTime property) is updated.
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de tempo de carga da bateria mudou, equivalente ao comando JavaScript addEventListener('chargingtimechange',fn).
+//
+//	Entrada:
+//	  mouseEvet: ponteiro para o channel battery.Data
+//
+// Acionado quando o tempo de carregamento da bateria (propriedade loadingTime) é atualizado.
 func (e *Battery) AddListenerChargingTimeChange(batteryData *chan Data) (ref *Battery) {
 	var fn js.Func
 

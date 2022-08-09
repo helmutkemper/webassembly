@@ -17,12 +17,6 @@ func main() {
 
 	var batteryEvent = make(chan battery.Data)
 
-	bat := factoryBrowser.NewBattery()
-	bat.AddListenerChargingChange(&batteryEvent)
-	bat.AddListenerDischargingTimeChange(&batteryEvent)
-	bat.AddListenerChargingTimeChange(&batteryEvent)
-	bat.AddListenerLevelChange(&batteryEvent)
-
 	go func() {
 		for {
 			select {
@@ -41,6 +35,12 @@ func main() {
 			}
 		}
 	}()
+
+	bat := factoryBrowser.NewBattery()
+	bat.AddListenerChargingChange(&batteryEvent)
+	bat.AddListenerDischargingTimeChange(&batteryEvent)
+	bat.AddListenerChargingTimeChange(&batteryEvent)
+	bat.AddListenerLevelChange(&batteryEvent)
 
 	batteryEvent <- bat.Now()
 

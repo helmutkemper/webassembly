@@ -64,6 +64,20 @@ type Battery struct {
 	fnLevelChange *js.Func
 }
 
+func (e *Battery) Now() (data Data) {
+	var event = Event{}
+	event.Object = objectBactery
+	data.EventName = "battery now"
+	data.This = js.Value{}
+
+	data.Charging = event.GetIsCharging()
+	data.ChargingTime = event.GetChargingTime()
+	data.DischargingTime = event.GetDischargingTime()
+	data.Level = event.GetLevel()
+
+	return
+}
+
 func (e *Battery) Init() {
 	var wait = make(chan struct{})
 	var success js.Func

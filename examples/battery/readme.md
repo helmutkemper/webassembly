@@ -1,5 +1,29 @@
-//go:build js
+# battery event
 
+### English:
+
+This example shows how to monitor the device battery in real time.
+
+### Português:
+
+Este exemplo mostra como monitorar a bateria do dispositivo em tempo real.
+
+### Makefile
+
+```shell
+make buildandrun  ## build this example and run local server
+make build        ## build this example
+make server       ## run local server
+```
+
+### Local server
+
+[https://localhost/examples/battery/](https://localhost/examples/battery/)
+
+### Code:
+
+```go
+//go:build js
 package main
 
 import (
@@ -47,18 +71,4 @@ func main() {
 	done := make(chan struct{})
 	<-done
 }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+```

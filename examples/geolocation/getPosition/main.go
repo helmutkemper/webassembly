@@ -11,7 +11,6 @@ import (
 func main() {
 
 	div1 := factoryBrowser.NewTagDiv().Html("loading ...")
-
 	stage := factoryBrowser.NewStage()
 	stage.Append(div1)
 

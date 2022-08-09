@@ -1,7 +1,7 @@
 GO ?= go
 
 .PHONY: help
-## Este comando de ajuda
+## This help command
 help:
 	@printf "Opções de comandos\n\n"
 	@awk '/^[a-zA-Z\-\_0-9]+:/ { \
@@ -18,12 +18,12 @@ help:
 ## build this example and run local server
 buildandrun:
 	@$(GO) mod tidy
-	@GOARCH=wasm GOOS=js $(GO) build -o main.wasm
-	@$(MAKE) -C ../../server build
+	@$(MAKE) build
+	@$(MAKE) server
 
 
 .PHONY: build
-## build this example
+## build main.wasm file to run this example
 build:
 	$(GO) mod tidy
 	GOARCH=wasm GOOS=js $(GO) build -o main.wasm

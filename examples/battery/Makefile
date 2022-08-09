@@ -17,9 +17,8 @@ help:
 .PHONY: buildandrun
 ## build this example and run local server
 buildandrun:
-	@$(GO) mod tidy
-	@GOARCH=wasm GOOS=js $(GO) build -o main.wasm
-	@$(MAKE) -C ../server build
+	@$(MAKE) build
+	@$(MAKE) server
 
 
 .PHONY: build
@@ -33,4 +32,4 @@ build:
 ## run local server
 server:
 	@$(GO) mod tidy
-	@$(MAKE) -C ../../server build
+	@$(MAKE) -C ../server build

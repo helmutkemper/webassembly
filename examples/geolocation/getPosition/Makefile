@@ -17,7 +17,6 @@ help:
 .PHONY: buildandrun
 ## build this example and run local server
 buildandrun:
-	@$(GO) mod tidy
 	@$(MAKE) build
 	@$(MAKE) server
 

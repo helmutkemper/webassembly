@@ -21,10 +21,10 @@ func main() {
 			case data := <-batteryEvent:
 				text := ""
 				text += fmt.Sprintf("event name: %v<br>", data.EventName)
-				text += fmt.Sprintf("level: %v", data.Level)
-				text += fmt.Sprintf("charging: %v", data.Charging)
-				text += fmt.Sprintf("charging time: %v", data.ChargingTime)
-				text += fmt.Sprintf("discharging time: %v", data.DischargingTime)
+				text += fmt.Sprintf("level: %v<br>", data.Level)
+				text += fmt.Sprintf("charging: %v<br>", data.Charging)
+				text += fmt.Sprintf("charging time: %v<br>", data.ChargingTime)
+				text += fmt.Sprintf("discharging time: %v<br>", data.DischargingTime)
 				div.Html(text)
 			}
 		}

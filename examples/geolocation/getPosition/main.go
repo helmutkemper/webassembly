@@ -24,6 +24,7 @@ func main() {
 			text += fmt.Sprintf("Longitude: %v<br>", converted.Longitude)
 			text += fmt.Sprintf("Accuracy: %v meters<br>", converted.Accuracy)
 			text += fmt.Sprintf("Error: %v<br>", converted.ErrorMessage)
+			text += fmt.Sprintf("Link: <a href='https://www.google.com.br/maps/@%v,%v,17z'>Google maps</a>", converted.Latitude, converted.Longitude)
 			div1.Html(text)
 		}
 	}()

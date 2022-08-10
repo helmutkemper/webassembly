@@ -50,9 +50,9 @@ type TagCanvas struct {
 //	  var circle *html.TagSvgCircle
 //	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
 //	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
-func (e *TagCanvas) Reference(reference **TagCanvas) (ref *TagCanvas) {
-	*reference = e
-	return e
+func (el *TagCanvas) Reference(reference **TagCanvas) (ref *TagCanvas) {
+	*reference = el
+	return el
 }
 
 // Init
@@ -64,27 +64,11 @@ func (e *TagCanvas) Reference(reference **TagCanvas) (ref *TagCanvas) {
 // Português:
 //
 //	Inicializa o objeto corretamente.
-func (el *TagCanvas) Init() (ref *TagCanvas) {
+func (el *TagCanvas) Init(width, height int) (ref *TagCanvas) {
 	//e.listener = new(sync.Map)
-
-	//e.CreateElement(KTagDiv)
-	el.prepareStageReference()
-	//e.Id(id)
+	el.CreateElement("canvas", width, height)
 
 	return el
-}
-
-// prepareStageReference
-//
-// English:
-//
-//	Prepares the stage reference at initialization.
-//
-// Português:
-//
-//	Prepara à referencia do stage na inicialização.
-func (el *TagCanvas) prepareStageReference() {
-	el.stage = js.Global().Get("document").Get("body")
 }
 
 // Id
@@ -141,6 +125,10 @@ func (el *TagCanvas) CreateElement(tag Tag, width, height int) (ref *TagCanvas) 
 	el.height = height
 
 	return el
+}
+
+func (e *TagCanvas) Get() (el js.Value) {
+	return e.selfElement
 }
 
 // DrawImage
@@ -247,11 +235,6 @@ func (el *TagCanvas) Append(append interface{}) (ref *TagCanvas) {
 		toAppend.Call("appendChild", el.selfElement)
 	}
 
-	return el
-}
-
-func (el *TagCanvas) AppendToStage() (ref *TagCanvas) {
-	el.stage.Call("appendChild", el.selfElement)
 	return el
 }
 

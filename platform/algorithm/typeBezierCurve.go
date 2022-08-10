@@ -2,13 +2,13 @@ package algorithm
 
 // BezierCurve
 //
-//  The Bézier curve is a polynomial curve expressed as the linear interpolation between some
-//  representative points, called control points.
+//	The Bézier curve is a polynomial curve expressed as the linear interpolation between some
+//	representative points, called control points.
 //
 // Português:
 //
-//  A curva de Bézier é uma curva polinomial expressa como a interpolação linear entre alguns pontos
-//  representativos, chamados pontos de controle.
+//	A curva de Bézier é uma curva polinomial expressa como a interpolação linear entre alguns pontos
+//	representativos, chamados pontos de controle.
 type BezierCurve struct {
 	Geometry
 	ripple  *ripple
@@ -62,8 +62,8 @@ func (e *BezierCurve) getPercent(n1, n2 float64, percent float64) float64 {
 	return n1 + (diff * percent)
 }
 
-func (e *BezierCurve) Process(step float64) (ref *BezierCurve) {
-	e.step = step
+func (e *BezierCurve) Process(nPoints float64) (ref *BezierCurve) {
+	e.step = 1 / (nPoints - 1)
 	if len(e.original) < 3 {
 		e.processed = make([]Point, len(e.original))
 		copy(e.processed, e.original)
@@ -84,6 +84,8 @@ func (e *BezierCurve) Process(step float64) (ref *BezierCurve) {
 		p3 = e.original[i+2]
 		e.subProcess(p1, p2, p3)
 	}
+
+	e.processed = append(e.processed, e.original[len(e.original)-1])
 
 	return e
 }
@@ -108,20 +110,20 @@ func (e *BezierCurve) subProcess(p1 Point, p2 Point, p3 Point) {
 //
 // English:
 //
-//  Generates a sine ripple in the list of processed points, losing the original points
+//	Generates a sine ripple in the list of processed points, losing the original points
 //
-//   Input:
-//     distance: maximum ripple distance, wavelength;
-//     ripples: amounts of ripples;
+//	 Input:
+//	   distance: maximum ripple distance, wavelength;
+//	   ripples: amounts of ripples;
 //
 // Português:
 //
-//  Gera uma ondulação senoidal na lista de pontos processados, perdendo os pontos originais
+//	Gera uma ondulação senoidal na lista de pontos processados, perdendo os pontos originais
 //
-//   Entrada:
-//     distance: distância máxima da ondulação, ou comprimento de onda;
-//     ripples: quantidades de ondulações;
-//     processed: ponteiro da lista de pontos processados.
+//	 Entrada:
+//	   distance: distância máxima da ondulação, ou comprimento de onda;
+//	   ripples: quantidades de ondulações;
+//	   processed: ponteiro da lista de pontos processados.
 func (e *BezierCurve) GenerateRipple(distance float64, ripples int) {
 	e.ripple.generateRipple(distance, ripples, &e.processed)
 }
@@ -130,25 +132,25 @@ func (e *BezierCurve) GenerateRipple(distance float64, ripples int) {
 //
 // English:
 //
-//  Increases the number of segments between points, in a straight line.
+//	Increases the number of segments between points, in a straight line.
 //
-//   Input:
-//     lineSegments: number of line segments to be added between points.
+//	 Input:
+//	   lineSegments: number of line segments to be added between points.
 //
-//   Notes:
-//     * Use this function when the stitch density is low when using easing tween functions, so the movement is more
-//       fluid.
+//	 Notes:
+//	   * Use this function when the stitch density is low when using easing tween functions, so the movement is more
+//	     fluid.
 //
 // Português:
 //
-//  Aumenta a quantidade de segmentos entre os pontos, em linha reta.
+//	Aumenta a quantidade de segmentos entre os pontos, em linha reta.
 //
-//   Entrada:
-//     lineSegments: quantidade de seguimentos de reta a serem adicionados entre os pontos.
+//	 Entrada:
+//	   lineSegments: quantidade de seguimentos de reta a serem adicionados entre os pontos.
 //
-//   Nota:
-//     * Use esta função quando a densidade de pontos for baixa durante o uso das funções easing tween, para que o
-//       movimento fique mais fluido.
+//	 Nota:
+//	   * Use esta função quando a densidade de pontos for baixa durante o uso das funções easing tween, para que o
+//	     movimento fique mais fluido.
 func (e *BezierCurve) IncreaseDensityBetweenPoints(lineSegments int) {
 	e.density.increaseDensityBetweenPoints(lineSegments, &e.processed)
 }
@@ -157,7 +159,7 @@ func (e *BezierCurve) IncreaseDensityBetweenPoints(lineSegments int) {
 //
 // English:
 //
-//  Adjusts the number of line segments that make up the curve.
+//	Adjusts the number of line segments that make up the curve.
 //
 // Every curve is formed by N straight segments, where a curve with many segments of irregular sizes makes the movement
 // of objects unstable, so adjusting the number of segments when generating a curve makes the movement more uniform,
@@ -165,7 +167,7 @@ func (e *BezierCurve) IncreaseDensityBetweenPoints(lineSegments int) {
 //
 // Português:
 //
-//  Ajusta a quantidade de segmentos de reta que formam a curva.
+//	Ajusta a quantidade de segmentos de reta que formam a curva.
 //
 // Toda curva é formada N segmentos de reta, onde uma curva com muitos seguimentos de tamanhos irregulares deixam o
 // movimento de objetos instável, por isto, ajustar o número de segmentos ao gerar uma curva, deixa o movimento mais

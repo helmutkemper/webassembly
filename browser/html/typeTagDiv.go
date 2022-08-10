@@ -2023,6 +2023,7 @@ func (e *TagDiv) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenTh
 
 		e.Rotate(angle)
 		e.SetXY(int((*e.points)[pCalc].X), int((*e.points)[pCalc].Y))
+		e.Data(map[string]string{"angle": strconv.FormatFloat(angle, 'g', 10, 64)})
 	}
 
 	return

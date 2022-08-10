@@ -307,3 +307,17 @@ Golang code:
   <-done
 ```
 -->
+
+### List of examples:
+
+| Example                                                                                                                |
+|------------------------------------------------------------------------------------------------------------------------|
+| [battery](https://github.com/helmutkemper/webassembly/tree/examples/battery)                                           |
+| [BezierCurve/1_addCurve](https://github.com/helmutkemper/webassembly/tree/examples/BezierCurve/1_addCurve)             |
+| [BezierCurve/2_addEasingTween](https://github.com/helmutkemper/webassembly/tree/examples/BezierCurve/2_addEasingTween) |
+| [BezierCurve/3_addRipple](https://github.com/helmutkemper/webassembly/tree/examples/BezierCurve/3_addRipple)           |
+| [event/animateMotion](https://github.com/helmutkemper/webassembly/tree/examples/event/animateMotion)                   |
+| [event/feDisplacementMap](https://github.com/helmutkemper/webassembly/tree/examples/event/feDisplacementMap)           |
+| [event/use](https://github.com/helmutkemper/webassembly/tree/examples/event/use)                                       |
+| [geolocation/getPosition](https://github.com/helmutkemper/webassembly/tree/examples/geolocation/getPosition)           |
+| [geolocation/watchPosition](https://github.com/helmutkemper/webassembly/tree/examples/geolocation/watchPosition)       |

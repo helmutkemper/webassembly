@@ -71,7 +71,13 @@ func main() {
 		RotateDelta(-math.Pi / 2)
 	stage.Append(div)
 
-	wasm := factoryBrowser.NewTagDiv().Style("font-size:40px;color:#555555").SetXY(200, 400).Html("golang = wasm = fast javascript")
+	wasm := factoryBrowser.NewTagDiv().
+		Style("font-size:40px;color:#555555").
+		SetXY(200, 360).
+		Html("golang = wasm = fast javascript<br>" +
+			"<br>" +
+			"&nbsp;&nbsp;This rocket is the background<br>" +
+			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of a simple html div")
 	stage.Append(wasm)
 
 	factoryEasingTween.NewLinear(

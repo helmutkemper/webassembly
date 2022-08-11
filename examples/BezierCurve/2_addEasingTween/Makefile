@@ -32,4 +32,4 @@ build:
 ## run local server
 server:
 	@$(GO) mod tidy
-	@$(MAKE) -C ../server build
+	@$(MAKE) -C ../../server build

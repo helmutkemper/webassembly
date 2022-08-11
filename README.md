@@ -312,15 +312,15 @@ Golang code:
 
 | Example                                                                                                                         | Date         |
 |---------------------------------------------------------------------------------------------------------------------------------|--------------|
-| [battery](https://github.com/helmutkemper/webassembly/tree/examples/battery)                                                    | 07/august/22 |
-| [BezierCurve/1_addCurve](https://github.com/helmutkemper/webassembly/tree/examples/BezierCurve/1_addCurve)                      | 07/august/22 |
-| [BezierCurve/2_addEasingTween](https://github.com/helmutkemper/webassembly/tree/examples/BezierCurve/2_addEasingTween)          | 07/august/22 |
-| [BezierCurve/3_addRipple](https://github.com/helmutkemper/webassembly/tree/examples/BezierCurve/3_addRipple)                    | 07/august/22 |
-| [event/animateMotion](https://github.com/helmutkemper/webassembly/tree/examples/event/animateMotion)                            | 07/august/22 |
-| [event/feDisplacementMap](https://github.com/helmutkemper/webassembly/tree/examples/event/feDisplacementMap)                    | 07/august/22 |
-| [event/use](https://github.com/helmutkemper/webassembly/tree/examples/event/use)                                                | 07/august/22 |
-| [geolocation/getPosition](https://github.com/helmutkemper/webassembly/tree/examples/geolocation/getPosition)                    | 07/august/22 |
-| [geolocation/watchPosition](https://github.com/helmutkemper/webassembly/tree/examples/geolocation/watchPosition)                | 07/august/22 |
-| [examples/BezierCurve/1_addCurve](https://github.com/helmutkemper/webassembly/tree/examples/BezierCurve/1_addCurve)             | 08/august/22 |
-| [examples/BezierCurve/2_addEasingTween](https://github.com/helmutkemper/webassembly/tree/examples/BezierCurve/2_addEasingTween) | 08/august/22 |
-| [examples/BezierCurve/3_addRipple](https://github.com/helmutkemper/webassembly/tree/examples/BezierCurve/3_addRipple)           | 08/august/22 |
+| [battery](https://github.com/helmutkemper/webassembly/tree/master/examples/battery)                                                    | 07/august/22 |
+| [BezierCurve/1_addCurve](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/1_addCurve)                      | 07/august/22 |
+| [BezierCurve/2_addEasingTween](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/2_addEasingTween)          | 07/august/22 |
+| [BezierCurve/3_addRipple](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/3_addRipple)                    | 07/august/22 |
+| [event/animateMotion](https://github.com/helmutkemper/webassembly/tree/master/examples/event/animateMotion)                            | 07/august/22 |
+| [event/feDisplacementMap](https://github.com/helmutkemper/webassembly/tree/master/examples/event/feDisplacementMap)                    | 07/august/22 |
+| [event/use](https://github.com/helmutkemper/webassembly/tree/master/examples/event/use)                                                | 07/august/22 |
+| [geolocation/getPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/geolocation/getPosition)                    | 07/august/22 |
+| [geolocation/watchPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/geolocation/watchPosition)                | 07/august/22 |
+| [examples/BezierCurve/1_addCurve](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/1_addCurve)             | 08/august/22 |
+| [examples/BezierCurve/2_addEasingTween](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/2_addEasingTween) | 08/august/22 |
+| [examples/BezierCurve/3_addRipple](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/3_addRipple)           | 08/august/22 |

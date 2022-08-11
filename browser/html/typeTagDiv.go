@@ -1191,7 +1191,7 @@ func (e *TagDiv) AppendToStage() (ref *TagDiv) {
 	return e
 }
 
-// SetXY
+// SetXY #replicar
 //
 // English:
 //
@@ -1217,6 +1217,7 @@ func (e *TagDiv) SetXY(x, y int) (ref *TagDiv) {
 
 	e.selfElement.Get("style").Set("left", px)
 	e.selfElement.Get("style").Set("top", py)
+	e.selfElement.Get("style").Set("position", "absolute")
 
 	return e
 }

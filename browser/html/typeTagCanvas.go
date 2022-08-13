@@ -4,6 +4,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"image/color"
 	"log"
+	"strconv"
 	"syscall/js"
 )
 
@@ -127,27 +128,116 @@ func (el *TagCanvas) CreateElement(tag Tag, width, height int) (ref *TagCanvas) 
 	return el
 }
 
-func (e *TagCanvas) Get() (el js.Value) {
-	return e.selfElement
+func (el *TagCanvas) Get() (element js.Value) {
+	return el.selfElement
 }
 
 // DrawImage
 //
 // English:
 //
-//	Draws a preloaded image on the canvas element.
+//		Draws a preloaded image on the canvas element.
 //
-//	 Input:
-//	   image: js.Value object with a preloaded image.
+//		 Input:
+//		   image: js.Value object with a preloaded image.
+//
+//	 Notes:
+//	   * Make sure the image is preloaded before calling this function.
 //
 // Português:
 //
-//	Desenha uma imagem pre carregada no elemento canvas.
+//		Desenha uma imagem pre carregada no elemento canvas.
 //
-//	 Entrada:
-//	   image: objeto js.Value com uma imagem pré carregada.
+//		 Entrada:
+//		   image: objeto js.Value com uma imagem pré carregada.
+//
+//	 Notas:
+//	   * Garanta o pré carregamento da imagem antes de chamar esta função.
 func (el *TagCanvas) DrawImage(image interface{}) (ref *TagCanvas) {
+	if converted, ok := image.(Compatible); ok {
+		el.context.Call("drawImage", converted.Get(), 0, 0, el.width, el.height)
+		return el
+	}
+
 	el.context.Call("drawImage", image, 0, 0, el.width, el.height)
+	return el
+}
+
+// DrawImageResize
+//
+// English:
+//
+//		Draws a preloaded image on the canvas element.
+//
+//		 Input:
+//		   image: js.Value object with a preloaded image.
+//	    x: Point x of the image to be copied;
+//	    y: Point y of the image to be copied;
+//	    width: Horizontal size of the image to be copied;
+//	    height: Vertical size of the image to be copied;
+//
+//	 Notes:
+//	   * Make sure the image is preloaded before calling this function.
+//
+// Português:
+//
+//		Desenha uma imagem pre carregada no elemento canvas.
+//
+//		 Entrada:
+//		   image: objeto js.Value com uma imagem pré carregada;
+//	    x: Ponto x da imagem a ser copiada;
+//	    y: Ponto y da imagem a ser copiada;
+//	    width: Tamanho horizontal da imagem a ser copiada;
+//	    height: Tamanho vertical da imagem a ser copiada;
+//
+//	 Notas:
+//	   * Garanta o pré carregamento da imagem antes de chamar esta função.
+func (el *TagCanvas) DrawImageResize(image interface{}, x, y, width, height int) (ref *TagCanvas) {
+	if converted, ok := image.(Compatible); ok {
+		el.context.Call("drawImage", converted.Get(), x, y, width, height)
+		return el
+	}
+
+	el.context.Call("drawImage", image, x, y, width, height)
+	return el
+}
+
+// DrawImageTile
+//
+// English:
+//
+//		Draws a preloaded image on the canvas element.
+//
+//		 Input:
+//		   image: js.Value object with a preloaded image.
+//	    x: Point x of the image to be copied;
+//	    y: Point y of the image to be copied;
+//	    width: Horizontal size of the image to be copied;
+//	    height: Vertical size of the image to be copied;
+//
+//	 Notes:
+//	   * Make sure the image is preloaded before calling this function.
+//
+// Português:
+//
+//		Desenha uma imagem pre carregada no elemento canvas.
+//
+//		 Entrada:
+//		   image: objeto js.Value com uma imagem pré carregada;
+//	    x: Ponto x da imagem a ser copiada;
+//	    y: Ponto y da imagem a ser copiada;
+//	    width: Tamanho horizontal da imagem a ser copiada;
+//	    height: Tamanho vertical da imagem a ser copiada;
+//
+//	 Notas:
+//	   * Garanta o pré carregamento da imagem antes de chamar esta função.
+func (el *TagCanvas) DrawImageTile(image interface{}, dx, dy, x, y, width, height int) (ref *TagCanvas) {
+	if converted, ok := image.(Compatible); ok {
+		el.context.Call("drawImage", converted.Get(), dx, dy, width, height, x, y, width, height)
+		return el
+	}
+
+	el.context.Call("drawImage", image, dx, dy, width, height, x, y, width, height)
 	return el
 }
 
@@ -2894,5 +2984,26 @@ func (el *TagCanvas) FillStylePattern() (ref *TagCanvas) {
 //	     AppendToStage()
 func (el *TagCanvas) Fill() (ref *TagCanvas) {
 	el.context.Call("fill")
+	return el
+}
+
+// SetXY #replicar
+//
+// English:
+//
+//	Sets the X and Y axes in pixels.
+//
+// Português:
+//
+//	Define os eixos X e Y em pixels.
+func (el *TagCanvas) SetXY(x, y int) (ref *TagCanvas) {
+	// fixme: copiado parcialmente da tag div
+	px := strconv.FormatInt(int64(x), 10) + "px"
+	py := strconv.FormatInt(int64(y), 10) + "px"
+
+	el.selfElement.Get("style").Set("left", px)
+	el.selfElement.Get("style").Set("top", py)
+	el.selfElement.Get("style").Set("position", "absolute")
+
 	return el
 }

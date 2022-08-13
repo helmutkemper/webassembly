@@ -24,7 +24,6 @@
 //fixme: bug. Filter doesn't seem to work as expected
 
 //go:build js
-// +build js
 
 package main
 

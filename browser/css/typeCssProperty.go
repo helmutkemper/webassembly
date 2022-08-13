@@ -546,6 +546,61 @@ const (
 	//      cascata anterior, se houver. Se nenhuma outra camada em cascata existir, as propriedades do elemento serão
 	//      revertidas para a regra de correspondência, se existir, na camada atual ou em uma origem de estilo anterior.
 	KPropertyAll Property = "all"
+
+	// KPropertyAngle
+	//
+	//  https://developer.mozilla.org/en-US/docs/Web/CSS/angle
+	//
+	// English:
+	//
+	// Data type represents an angle value expressed in degrees, gradians, radians, or turns. It is used, for example,
+	// in <gradient>s and in some transform functions.
+	//
+	// The <angle> data type consists of a <number> followed by one of the units listed below. As with all dimensions,
+	// there is no space between the unit literal and the number. The angle unit is optional after the number 0.
+	//
+	// Optionally, it may be preceded by a single + or - sign. Positive numbers represent clockwise angles, while negative
+	// numbers represent counterclockwise angles. For static properties of a given unit, any angle can be represented by
+	// various equivalent values. For example, 90deg equals -270deg, and 1turn equals 4turn. For dynamic properties, like
+	// when applying an animation or transition, the effect will nevertheless be different.
+	//
+	//  Units:
+	//
+	//    deg: Represents an angle in degrees. One full circle is 360deg. Examples: 0deg, 90deg, 14.23deg.
+	//
+	//    grad: Represents an angle in gradians. One full circle is 400grad. Examples: 0grad, 100grad, 38.8grad.
+	//
+	//    rad: Represents an angle in radians. One full circle is 2π radians which approximates to 6.2832rad. 1rad is
+	//      180/π degrees. Examples: 0rad, 1.0708rad, 6.2832rad.
+	//
+	//    turn: Represents an angle in a number of turns. One full circle is 1turn. Examples: 0turn, 0.25turn, 1.2turn.
+	//
+	// Português:
+	//
+	// O tipo de dados representa um valor de ângulo expresso em graus, gradianos, radianos ou voltas. É usado, por
+	// exemplo, em <gradient>s e em algumas funções de transformação.
+	//
+	// O tipo de dados <angle> consiste em um <number> seguido por uma das unidades listadas abaixo. Como em todas as
+	// dimensões, não há espaço entre o literal da unidade e o número. A unidade angular é opcional após o número 0.
+	//
+	// Opcionalmente, pode ser precedido por um único sinal + ou -. Números positivos representam ângulos no sentido
+	// horário, enquanto números negativos representam ângulos no sentido anti-horário. Para propriedades estáticas de
+	// uma determinada unidade, qualquer ângulo pode ser representado por vários valores equivalentes. Por exemplo,
+	// 90 graus é igual a -270 graus e 1 volta é igual a 4 voltas. Para propriedades dinâmicas, como ao aplicar uma
+	// animação ou transição, o efeito será diferente.
+	//
+	//  Unidades:
+	//
+	//    deg: Representa um ângulo em graus. Um círculo completo é 360deg. Exemplos: 0 graus, 90 graus, 14,23 graus.
+	//
+	//    grad: Representa um ângulo em gradianos. Um círculo completo é 400 grad. Exemplos: 0 grad, 100 grad, 38,8 grad.
+	//
+	//    rad: Representa um ângulo em radianos. Um círculo completo é 2π radianos que se aproxima de 6,2832rad. 1rad é
+	//      180π graus. Exemplos: 0rad, 1,0708rad, 6,2832rad.
+	//
+	//    turn: Representa um ângulo em um número de voltas. Um círculo completo é 1 volta. Exemplos: 0 volta,
+	//      0,25 volta, 1,2 volta.
+	KPropertyAngle Property = "angle"
 )
 
 //

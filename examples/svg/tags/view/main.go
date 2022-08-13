@@ -20,7 +20,6 @@
 //  </svg>
 
 //go:build js
-// +build js
 
 // fixme: bug. este exemplo procura um arquivo svg?
 
@@ -49,7 +48,7 @@ func main() {
 		factoryBrowser.NewTagSvgCircle().Cx(250).Cy(50).R(40).Fill(factoryColor.NewGreen()),
 	)
 
-	stage.Append(s1).Append("<img src=\"url(#svgImg)\" alt=\"three circles\" width=\"300\" height=\"100\" />\n<br />\n<img src=\"#three\" alt=\"blue circle\" width=\"100\" height=\"100\" />")
+	stage.Append(s1)
 
 	<-done
 }

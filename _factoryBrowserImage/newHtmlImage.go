@@ -1,41 +1,20 @@
 package factoryBrowserImage
 
 import (
-	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
-	iotmaker_platform_IDraw "github.com/helmutkemper/iotmaker.webassembly/platform/IDraw"
-	"html"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 )
 
-// fixme:
-
-func NewImage(
-	width int,
-	height int,
-	propertiesList map[string]interface{},
-	waitLoad,
-	append bool,
-) html.Image {
-
-	var platform iotmaker_platform_IDraw.IHtml = global.Global.Html
-	var parent interface{} = global.Global.Document.selfDocument
-
-	densityCalc := global.Global.DensityManager
-	densityCalc.SetDensityFactor(global.Global.Density)
-
-	densityCalc.SetInt(width)
-	width = densityCalc.Int()
-
-	densityCalc.SetInt(height)
-	height = densityCalc.Int()
-
-	propertiesList["width"] = width
-	propertiesList["height"] = height
-
-	img := platform.NewImage(parent, propertiesList, waitLoad)
-
-	if append == true {
-		platform.Append(parent, img.Get())
-	}
-
-	return img
+// NewTagImg
+//
+// English:
+//
+// The <img> HTML element embeds an image into the document.
+//
+// Português:
+//
+// O elemento HTML <img> incorpora uma imagem no documento.
+func NewTagImg() (ref *html.TagImg) {
+	ref = new(html.TagImg)
+	ref.Init()
+	return
 }

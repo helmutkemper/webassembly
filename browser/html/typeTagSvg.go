@@ -59,8 +59,12 @@ type TagSvg struct {
 
 	cssClass *css.Class
 
-	x int
-	y int
+	x          int //#replicar
+	y          int //#replicar
+	width      int //#replicar
+	height     int //#replicar
+	heightBBox int //#replicar
+	bottom     int //#replicar
 
 	// listener
 	//
@@ -2750,6 +2754,8 @@ func (e *TagSvg) Style(value string) (ref *TagSvg) {
 //	     float32: 1.0 = "100%"
 //	     qualquer outro tipo: interface{}
 func (e *TagSvg) Height(height interface{}) (ref *TagSvg) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := height.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "height", p)
@@ -2882,6 +2888,7 @@ func (e *TagSvg) ViewBox(value interface{}) (ref *TagSvg) {
 //	    float32: 1.0 = "100%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvg) Width(value interface{}) (ref *TagSvg) {
+	defer e.UpdateBoundingClientRect()
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "width", p)
@@ -2916,6 +2923,8 @@ func (e *TagSvg) Width(value interface{}) (ref *TagSvg) {
 //	    float32: 0.1 = "10%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvg) X(value interface{}) (ref *TagSvg) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
 		for _, v := range converted {
@@ -2974,6 +2983,8 @@ func (e *TagSvg) X(value interface{}) (ref *TagSvg) {
 //	    float32: 0.1 = "10%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvg) Y(value interface{}) (ref *TagSvg) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
 		for _, v := range converted {
@@ -3043,7 +3054,7 @@ func (e *TagSvg) Html(value string) (ref *TagSvg) {
 
 // todo: functions de div
 
-// GetXY
+// GetXY #replicar
 //
 // English:
 //
@@ -3052,14 +3063,16 @@ func (e *TagSvg) Html(value string) (ref *TagSvg) {
 // Português:
 //
 //	Retorna os eixos X e Y em pixels.
-func (e *TagSvg) GetXY() (x, y float64) {
-	x = e.GetX()
-	y = e.GetY()
+func (e *TagSvg) GetXY() (x, y int) {
+	x = e.x
+	y = e.y
 
+	x = x - e.deltaMovieX
+	y = y - e.deltaMovieY
 	return
 }
 
-// GetX
+// GetX #replicar
 //
 // English:
 //
@@ -3068,18 +3081,11 @@ func (e *TagSvg) GetXY() (x, y float64) {
 // Português:
 //
 //	Retorna o eixo X em pixels.
-func (e *TagSvg) GetX() (x float64) {
-	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
-		return
-	}
-
-	//rect.top, rect.right, rect.bottom, rect.left
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	x = coordinate.Get("left").Float()
-	return
+func (e *TagSvg) GetX() (x int) {
+	return e.x - e.deltaMovieX
 }
 
-// GetY
+// GetY #replicar
 //
 // English:
 //
@@ -3088,17 +3094,11 @@ func (e *TagSvg) GetX() (x float64) {
 // Português:
 //
 //	Retorna o eixo Y em pixels.
-func (e *TagSvg) GetY() (y float64) {
-	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
-		return
-	}
-
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	y = coordinate.Get("top").Float()
-	return
+func (e *TagSvg) GetY() (y int) {
+	return e.y - e.deltaMovieY
 }
 
-// GetTop
+// GetTop #replicar
 //
 // English:
 //
@@ -3107,13 +3107,11 @@ func (e *TagSvg) GetY() (y float64) {
 // Português:
 //
 //	O mesmo que a função GetX(), retorna a posição x do elemento.
-func (e *TagSvg) GetTop() (top float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	top = coordinate.Get("top").Float()
-	return
+func (e *TagSvg) GetTop() (top int) {
+	return e.x - e.deltaMovieX
 }
 
-// GetRight
+// GetRight #replicar
 //
 // English:
 //
@@ -3122,13 +3120,11 @@ func (e *TagSvg) GetTop() (top float64) {
 // Português:
 //
 //	É o mesmo que x + width.
-func (e *TagSvg) GetRight() (right float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	right = coordinate.Get("right").Float()
-	return
+func (e *TagSvg) GetRight() (right int) {
+	return e.x + e.width - e.deltaMovieX
 }
 
-// GetBottom
+// GetBottom #replicar
 //
 // English:
 //
@@ -3137,13 +3133,11 @@ func (e *TagSvg) GetRight() (right float64) {
 // Português:
 //
 //	É o mesmo que y + Height.
-func (e *TagSvg) GetBottom() (bottom float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	bottom = coordinate.Get("bottom").Float()
-	return
+func (e *TagSvg) GetBottom() (bottom int) {
+	return e.y + e.height - e.deltaMovieY
 }
 
-// GetLeft
+// GetLeft #replicar
 //
 // English:
 //
@@ -3152,10 +3146,39 @@ func (e *TagSvg) GetBottom() (bottom float64) {
 // Português:
 //
 //	O mesmo que a função GetY(), retorna a posição y do elemento.
-func (e *TagSvg) GetLeft() (left float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	left = coordinate.Get("left").Float()
-	return
+func (e *TagSvg) GetLeft() (left int) {
+	return e.y - e.deltaMovieY
+}
+
+// GetBoundingBox #replicar
+//
+// English:
+//
+// Returns the last update of the element's bounding box.
+//
+// Português:
+//
+// Retorna a última atualização do bounding box do elemnto.
+func (e *TagSvg) GetBoundingBox() (x, y, width, height int) {
+	return e.x - e.deltaMovieX, e.y - e.deltaMovieY, e.width, e.height
+}
+
+// Collision #replicar
+//
+// English:
+//
+// Detect collision between two bounding boxes.
+//
+// Português:
+//
+// Detecta colisão entre dois bounding box.
+func (e *TagSvg) Collision(elemnt Collision) (collision bool) {
+	x, y, width, height := elemnt.GetBoundingBox()
+	if e.x-e.deltaMovieX < x+width && e.x-e.deltaMovieX+e.width > x && e.y-e.deltaMovieY < y+height && e.y-e.deltaMovieY+e.height > y {
+		return true
+	}
+
+	return false
 }
 
 // Reference
@@ -4940,6 +4963,41 @@ func (e *TagSvg) AddListenerFocusOut(focusEvent *chan struct{}) (ref *TagSvg) {
 		),
 	)
 	return e
+}
+
+// UpdateBoundingClientRect #replicar
+//
+// English:
+//
+// Updates the coordinates and dimensions of the element's bounds box.
+//
+// Português:
+//
+// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
+func (e *TagSvg) UpdateBoundingClientRect() {
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+	//
+	//                    ⋀                ⋀
+	//                    |                |
+	//                  y/top            bottom
+	//                    |                |
+	//                    ⋁                |
+	// <---- x/left ----> +--------------+ | ---
+	//                    |              | |   ⋀
+	//                    |              | | width
+	//                    |              | ⋁   ⋁
+	//                    +--------------+ -----
+	//                    | <- right ->  |
+	// <--------- right bbox ----------> |
+
+	bbox := e.selfElement.Call("getBoundingClientRect")
+	e.x = bbox.Get("left").Int()
+	e.y = bbox.Get("top").Int()
+	e.heightBBox = bbox.Get("right").Int()
+	e.bottom = bbox.Get("bottom").Int()
+
+	e.height = e.heightBBox - e.x
+	e.width = e.bottom - e.y
 }
 
 //

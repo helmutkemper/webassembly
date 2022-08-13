@@ -28,7 +28,6 @@
 //  </svg>
 
 //go:build js
-// +build js
 
 // fixme: bug
 // document.addEventListener("DOMContentLoaded", (e) => {...});

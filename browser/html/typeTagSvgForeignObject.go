@@ -343,6 +343,14 @@ func (e *TagSvgForeignObject) Append(elements ...Compatible) (ref *TagSvgForeign
 	return e
 }
 
+func (e *TagSvgForeignObject) Remove(elements ...Compatible) (ref *TagSvgForeignObject) {
+	for _, element := range elements {
+		e.selfElement.Call("removeChild", element)
+	}
+
+	return e
+}
+
 func (e *TagSvgForeignObject) Get() (el js.Value) {
 	return e.selfElement
 }

@@ -11,6 +11,15 @@ import (
 	"syscall/js"
 )
 
+// TagImg
+//
+// English:
+//
+// The <img> HTML element embeds an image into the document.
+//
+// Português:
+//
+// O elemento HTML <img> incorpora uma imagem no documento.
 type TagImg struct {
 
 	// id
@@ -169,11 +178,11 @@ func (e *TagImg) Reference(reference **TagImg) (ref *TagImg) {
 //
 // English:
 //
-//	Initializes the object correctly.
+// Initializes the object correctly.
 //
 // Português:
 //
-//	Inicializa o objeto corretamente.
+// Inicializa o objeto corretamente.
 func (e *TagImg) Init() (ref *TagImg) {
 	e.listener = new(sync.Map)
 	e.tween = make(map[string]interfaces.TweenInterface)
@@ -188,11 +197,11 @@ func (e *TagImg) Init() (ref *TagImg) {
 //
 // English:
 //
-//	Prepares the stage reference at initialization.
+// Prepares the stage reference at initialization.
 //
 // Português:
 //
-//	Prepara à referencia do stage na inicialização.
+// Prepara à referencia do stage na inicialização.
 func (e *TagImg) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
@@ -205,40 +214,40 @@ func (e *TagImg) Get() (el js.Value) {
 //
 // English:
 //
-//	Specifies a shortcut key to activate/focus an element.
+// Specifies a shortcut key to activate/focus an element.
 //
-//	 Input:
-//	   character: A single character that specifies the shortcut key to activate/focus the element.
+//	Input:
+//	  character: A single character that specifies the shortcut key to activate/focus the element.
 //
-//	 Note:
-//	   * The accessKey attribute value must be a single character (a letter or a digit).
-//	   * Adapting accessKeys to all international languages are difficult.
-//	   * The accessKey value may not be present on all keyboards.
+//	Note:
+//	  * The accessKey attribute value must be a single character (a letter or a digit).
+//	  * Adapting accessKeys to all international languages are difficult.
+//	  * The accessKey value may not be present on all keyboards.
 //
 //
-//	 Warning:
-//	   Using accessKeys is difficult because they may conflict with other key standards in the
-//	   browser;
-//	   To avoid this problem, most browsers will use accessKeys only if pressed together with the Alt
-//	   key.
+//	Warning:
+//	  Using accessKeys is difficult because they may conflict with other key standards in the
+//	  browser;
+//	  To avoid this problem, most browsers will use accessKeys only if pressed together with the Alt
+//	  key.
 //
 // Português:
 //
-//	Especifica uma tecla de atalho para ativar o foco de um elemento.
+// Especifica uma tecla de atalho para ativar o foco de um elemento.
 //
 //	 Entrada:
-//	   character: Um único caractere que especifica a tecla de atalho para ativar o foco do elemento.
+//		   character: Um único caractere que especifica a tecla de atalho para ativar o foco do elemento.
 //
-//	 Nota:
-//	   * O valor do atributo accessKey deve ser um único caractere (uma letra ou um dígito).
-//	   * Adaptar as teclas de acesso a todos os idiomas internacionais é difícil.
-//	   * O valor accessKey pode não estar presente em todos os teclados.
+//		 Nota:
+//		   * O valor do atributo accessKey deve ser um único caractere (uma letra ou um dígito).
+//		   * Adaptar as teclas de acesso a todos os idiomas internacionais é difícil.
+//		   * O valor accessKey pode não estar presente em todos os teclados.
 //
-//	 Aviso:
-//	   O uso de accessKeys é difícil porque eles podem entrar em conflito com outros padrões
-//	   importantes no navegador;
-//	   Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
-//	   pressionadas junto com a tecla Alt.
+//		 Aviso:
+//		   O uso de accessKeys é difícil porque eles podem entrar em conflito com outros padrões
+//		   importantes no navegador;
+//		   Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
+//		   pressionadas junto com a tecla Alt.
 func (e *TagImg) AccessKey(key string) (ref *TagImg) {
 	e.selfElement.Set("accesskey", key)
 	return e
@@ -248,13 +257,13 @@ func (e *TagImg) AccessKey(key string) (ref *TagImg) {
 //
 // English:
 //
-//	This Boolean attribute specifies that the button should have input focus when the page loads.
-//	Only one element in a document can have this attribute.
+// This Boolean attribute specifies that the button should have input focus when the page loads.
+// Only one element in a document can have this attribute.
 //
 // Português:
 //
-//	Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
-//	carregada. Apenas um elemento em um documento pode ter esse atributo.
+// Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
+// carregada. Apenas um elemento em um documento pode ter esse atributo.
 func (e *TagImg) Autofocus(autofocus bool) (ref *TagImg) {
 	e.selfElement.Set("autofocus", autofocus)
 	return e
@@ -264,35 +273,35 @@ func (e *TagImg) Autofocus(autofocus bool) (ref *TagImg) {
 //
 // English:
 //
-//	The class attribute specifies one or more class names for an element.
+// The class attribute specifies one or more class names for an element.
 //
 //	 Input:
-//	   classname: Specifies one or more class names for an element. To specify multiple classes,
-//	              separate the class names with a space, e.g. <span class="left important">.
-//	              This allows you to combine several CSS classes for one HTML element.
+//		   classname: Specifies one or more class names for an element. To specify multiple classes,
+//		              separate the class names with a space, e.g. <span class="left important">.
+//		              This allows you to combine several CSS classes for one HTML element.
 //
-//	              Naming rules:
-//	                Must begin with a letter A-Z or a-z;
-//	                Can be followed by: letters (A-Za-z), digits (0-9), hyphens ("-"), and
-//	                underscores ("_").
+//		              Naming rules:
+//		                Must begin with a letter A-Z or a-z;
+//		                Can be followed by: letters (A-Za-z), digits (0-9), hyphens ("-"), and
+//		                underscores ("_").
 //
 // The class attribute is mostly used to point to a class in a style sheet. However, it can also be
 // used by a JavaScript (via the HTML DOM) to make changes to HTML elements with a specified class.
 //
 // Português:
 //
-//	O atributo class especifica um ou mais nomes de classe para um elemento.
+// O atributo class especifica um ou mais nomes de classe para um elemento.
 //
-//	 Entrada:
-//	   classname: Especifica um ou mais nomes de classe para um elemento. Para especificar várias
-//	              classes, separe os nomes das classes com um espaço, por exemplo <span class="left
-//	              important">.
-//	              Isso permite combinar várias classes CSS para um elemento HTML.
+//	Entrada:
+//	  classname: Especifica um ou mais nomes de classe para um elemento. Para especificar várias
+//	             classes, separe os nomes das classes com um espaço, por exemplo <span class="left
+//	             important">.
+//	             Isso permite combinar várias classes CSS para um elemento HTML.
 //
-//	              Regras de nomenclatura:
-//	                Deve começar com uma letra A-Z ou a-z;
-//	                Pode ser seguido por: letras (A-Za-z), dígitos (0-9), hífens ("-") e
-//	                sublinhados ("_").
+//	             Regras de nomenclatura:
+//	               Deve começar com uma letra A-Z ou a-z;
+//	               Pode ser seguido por: letras (A-Za-z), dígitos (0-9), hífens ("-") e
+//	               sublinhados ("_").
 //
 // O atributo class é usado principalmente para apontar para uma classe em uma folha de estilo.
 // No entanto, também pode ser usado por um JavaScript (através do HTML DOM) para fazer alterações
@@ -306,25 +315,25 @@ func (e *TagImg) Class(class ...string) (ref *TagImg) {
 //
 // English:
 //
-//	The contentEditable attribute specifies whether the content of an element is editable or not.
+// The contentEditable attribute specifies whether the content of an element is editable or not.
 //
-//	 Input:
-//	   contentEditable: specifies whether the content of an element is editable or not
+//	Input:
+//	  contentEditable: specifies whether the content of an element is editable or not
 //
-//	 Note:
-//	   When the contentEditable attribute is not set on an element, the element will inherit it from
-//	   its parent.
+//	Note:
+//	  When the contentEditable attribute is not set on an element, the element will inherit it from
+//	  its parent.
 //
 // Português:
 //
-//	O atributo contentEditable especifica se o conteúdo de um elemento é editável ou não.
+// O atributo contentEditable especifica se o conteúdo de um elemento é editável ou não.
 //
-//	 Entrada:
-//	   contentEditable: especifica se o conteúdo de um elemento é editável ou não.
+//	Entrada:
+//	  contentEditable: especifica se o conteúdo de um elemento é editável ou não.
 //
-//	 Nota:
-//	   Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
-//	   seu pai.
+//	Nota:
+//	  Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
+//	  seu pai.
 func (e *TagImg) ContentEditable(editable bool) (ref *TagImg) {
 	e.selfElement.Set("contenteditable", editable)
 	return e
@@ -334,10 +343,10 @@ func (e *TagImg) ContentEditable(editable bool) (ref *TagImg) {
 //
 // English:
 //
-//	Used to store custom data private to the page or application.
+// Used to store custom data private to the page or application.
 //
-//	 Input:
-//	   data: custom data private to the page or application.
+//	Input:
+//	  data: custom data private to the page or application.
 //
 // The data-* attributes is used to store custom data private to the page or application.
 // The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
@@ -346,19 +355,19 @@ func (e *TagImg) ContentEditable(editable bool) (ref *TagImg) {
 //
 // The data-* attributes consist of two parts:
 //
-//	The attribute name should not contain any uppercase letters, and must be at least one character
-//	long after the prefix "data-";
-//	The attribute value can be any string.
+// The attribute name should not contain any uppercase letters, and must be at least one character
+// long after the prefix "data-";
+// The attribute value can be any string.
 //
 //	Note:
 //	  * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
 //
 // Português:
 //
-//	Usado para armazenar dados personalizados privados para a página ou aplicativo.
+// Usado para armazenar dados personalizados privados para a página ou aplicativo.
 //
-//	 Entrada:
-//	   data: dados personalizados privados para a página ou aplicativo.
+//	Entrada:
+//	  data: dados personalizados privados para a página ou aplicativo.
 //
 // Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
 // aplicativo;
@@ -370,9 +379,9 @@ func (e *TagImg) ContentEditable(editable bool) (ref *TagImg) {
 //
 // Os atributos de dados consistem em duas partes:
 //
-//	O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
-//	prefixo "data-";
-//	O valor do atributo pode ser qualquer string.
+// O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+// prefixo "data-";
+// O valor do atributo pode ser qualquer string.
 //
 //	Nota:
 //	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
@@ -388,18 +397,18 @@ func (e *TagImg) Data(data map[string]string) (ref *TagImg) {
 //
 // English:
 //
-//	Specifies the text direction for the content in an element.
+// Specifies the text direction for the content in an element.
 //
-//	 Input:
-//	   dir: direction for the content in an element. [ KDirLeftToRight | KDirRightToLeft | KDirAuto ]
+//	Input:
+//	  dir: direction for the content in an element. [ KDirLeftToRight | KDirRightToLeft | KDirAuto ]
 //
 // Português:
 //
-//	Especifica a direção do texto para o conteúdo em um elemento.
+// Especifica a direção do texto para o conteúdo em um elemento.
 //
-//	 Entrada:
-//	   dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
-//	        KDirAuto ]
+//	Entrada:
+//	  dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
+//	       KDirAuto ]
 func (e *TagImg) Dir(dir Dir) (ref *TagImg) {
 	e.selfElement.Set("dir", dir.String())
 	return e
@@ -1446,6 +1455,20 @@ func (e *TagImg) SrcSet(srcSet string) (ref *TagImg) {
 //	A largura intrínseca da imagem em pixels. Deve ser um número inteiro sem uma unidade.
 func (e *TagImg) Width(width int) (ref *TagImg) {
 	e.selfElement.Set("width", width)
+	return e
+}
+
+// Height
+//
+// English:
+//
+//	The intrinsic height of the image, in pixels. Must be an integer without a unit.
+//
+// Português:
+//
+//	A altura intrínseca da imagem, em pixels. Deve ser um número inteiro sem uma unidade.
+func (e *TagImg) Height(height int) (ref *TagImg) {
+	e.selfElement.Set("height", height)
 	return e
 }
 

@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
-	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"image/color"
 	"log"
 	"strconv"
@@ -89,87 +87,6 @@ type TagSvg struct {
 	//
 	//  Referencia do documento principal do navegador capturado na inicialização.
 	stage js.Value
-
-	// isDragging
-	//
-	// English:
-	//
-	//  Indicates the process of dragging the element.
-	//
-	// Português:
-	//
-	//  Indica o processo de arrasto do elemento.
-	isDragging bool
-
-	// dragDifX
-	//
-	// English:
-	//
-	//  Used in calculating element drag.
-	//
-	// Português:
-	//
-	//  Usado no cálculo do arrasto de elemento.
-	dragDifX int
-
-	// dragDifX
-	//
-	// English:
-	//
-	//  Used in calculating element drag.
-	//
-	// Português:
-	//
-	//  Usado no cálculo do arrasto de elemento.
-	dragDifY int
-
-	// deltaMovieX
-	//
-	// English:
-	//
-	//  Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
-	//  GetX() function: (x = x - deltaMovieX).
-	//
-	// Português:
-	//
-	//  Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
-	//  GetX(): (x = x - deltaMovieX).
-	deltaMovieX int
-
-	// deltaMovieY
-	//
-	// English:
-	//
-	//  Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
-	//  GetY() function: (y = y - deltaMovieY).
-	//
-	// Português:
-	//
-	//  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
-	//  GetY(): (y = y - deltaMovieY).
-	deltaMovieY int
-
-	// tween
-	//
-	// English:
-	//
-	//  Easing tween.
-	//
-	// Receives an identifier and a pointer of the tween object to be used in case of multiple
-	// functions.
-	//
-	// Português:
-	//
-	//  Facilitador de interpolação.
-	//
-	// Recebe um identificador e um ponteiro do objeto tween para ser usado em caso de múltiplas
-	// funções.
-	tween map[string]interfaces.TweenInterface
-
-	points    *[]algorithm.Point
-	pointsLen int
-
-	rotateDelta float64
 
 	// fnClick
 	//
@@ -3066,9 +2983,6 @@ func (e *TagSvg) Html(value string) (ref *TagSvg) {
 func (e *TagSvg) GetXY() (x, y int) {
 	x = e.x
 	y = e.y
-
-	x = x - e.deltaMovieX
-	y = y - e.deltaMovieY
 	return
 }
 
@@ -3082,7 +2996,7 @@ func (e *TagSvg) GetXY() (x, y int) {
 //
 //	Retorna o eixo X em pixels.
 func (e *TagSvg) GetX() (x int) {
-	return e.x - e.deltaMovieX
+	return e.x
 }
 
 // GetY #replicar
@@ -3095,20 +3009,7 @@ func (e *TagSvg) GetX() (x int) {
 //
 //	Retorna o eixo Y em pixels.
 func (e *TagSvg) GetY() (y int) {
-	return e.y - e.deltaMovieY
-}
-
-// GetTop #replicar
-//
-// English:
-//
-//	Same as GetX() function, returns the x position of the element.
-//
-// Português:
-//
-//	O mesmo que a função GetX(), retorna a posição x do elemento.
-func (e *TagSvg) GetTop() (top int) {
-	return e.x - e.deltaMovieX
+	return e.y
 }
 
 // GetRight #replicar
@@ -3121,33 +3022,7 @@ func (e *TagSvg) GetTop() (top int) {
 //
 //	É o mesmo que x + width.
 func (e *TagSvg) GetRight() (right int) {
-	return e.x + e.width - e.deltaMovieX
-}
-
-// GetBottom #replicar
-//
-// English:
-//
-//	It is the same as y + height.
-//
-// Português:
-//
-//	É o mesmo que y + Height.
-func (e *TagSvg) GetBottom() (bottom int) {
-	return e.y + e.height - e.deltaMovieY
-}
-
-// GetLeft #replicar
-//
-// English:
-//
-//	Same as GetY() function, returns the y position of the element.
-//
-// Português:
-//
-//	O mesmo que a função GetY(), retorna a posição y do elemento.
-func (e *TagSvg) GetLeft() (left int) {
-	return e.y - e.deltaMovieY
+	return e.x + e.width
 }
 
 // GetBoundingBox #replicar
@@ -3160,7 +3035,7 @@ func (e *TagSvg) GetLeft() (left int) {
 //
 // Retorna a última atualização do bounding box do elemnto.
 func (e *TagSvg) GetBoundingBox() (x, y, width, height int) {
-	return e.x - e.deltaMovieX, e.y - e.deltaMovieY, e.width, e.height
+	return e.x, e.y, e.width, e.height
 }
 
 // Collision #replicar
@@ -3174,11 +3049,48 @@ func (e *TagSvg) GetBoundingBox() (x, y, width, height int) {
 // Detecta colisão entre dois bounding box.
 func (e *TagSvg) Collision(elemnt Collision) (collision bool) {
 	x, y, width, height := elemnt.GetBoundingBox()
-	if e.x-e.deltaMovieX < x+width && e.x-e.deltaMovieX+e.width > x && e.y-e.deltaMovieY < y+height && e.y-e.deltaMovieY+e.height > y {
+	if e.x < x+width && e.x+e.width > x && e.y < y+height && e.y+e.height > y {
 		return true
 	}
 
 	return false
+}
+
+// UpdateBoundingClientRect #replicar
+//
+// English:
+//
+// Updates the coordinates and dimensions of the element's bounds box.
+//
+// Português:
+//
+// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
+func (e *TagSvg) UpdateBoundingClientRect() (ref *TagSvg) {
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+	//
+	//                    ⋀                ⋀
+	//                    |                |
+	//                  y/top            bottom
+	//                    |                |
+	//                    ⋁                |
+	// <---- x/left ----> +--------------+ | ---
+	//                    |              | |   ⋀
+	//                    |              | | width
+	//                    |              | ⋁   ⋁
+	//                    +--------------+ -----
+	//                    | <- right ->  |
+	// <--------- right bbox ----------> |
+
+	bbox := e.selfElement.Call("getBoundingClientRect")
+	e.x = bbox.Get("left").Int()
+	e.y = bbox.Get("top").Int()
+	e.heightBBox = bbox.Get("right").Int()
+	e.bottom = bbox.Get("bottom").Int()
+
+	e.height = e.heightBBox - e.x
+	e.width = e.bottom - e.y
+
+	return e
 }
 
 // Reference
@@ -4963,41 +4875,6 @@ func (e *TagSvg) AddListenerFocusOut(focusEvent *chan struct{}) (ref *TagSvg) {
 		),
 	)
 	return e
-}
-
-// UpdateBoundingClientRect #replicar
-//
-// English:
-//
-// Updates the coordinates and dimensions of the element's bounds box.
-//
-// Português:
-//
-// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
-func (e *TagSvg) UpdateBoundingClientRect() {
-	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
-	//
-	//                    ⋀                ⋀
-	//                    |                |
-	//                  y/top            bottom
-	//                    |                |
-	//                    ⋁                |
-	// <---- x/left ----> +--------------+ | ---
-	//                    |              | |   ⋀
-	//                    |              | | width
-	//                    |              | ⋁   ⋁
-	//                    +--------------+ -----
-	//                    | <- right ->  |
-	// <--------- right bbox ----------> |
-
-	bbox := e.selfElement.Call("getBoundingClientRect")
-	e.x = bbox.Get("left").Int()
-	e.y = bbox.Get("top").Int()
-	e.heightBBox = bbox.Get("right").Int()
-	e.bottom = bbox.Get("bottom").Int()
-
-	e.height = e.heightBBox - e.x
-	e.width = e.bottom - e.y
 }
 
 //

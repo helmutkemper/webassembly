@@ -13,6 +13,50 @@ type TagInputButton struct {
 	id          string
 	selfElement js.Value
 	cssClass    *css.Class
+
+	x          int //#replicar
+	y          int //#replicar
+	width      int //#replicar
+	height     int //#replicar
+	heightBBox int //#replicar
+	bottom     int //#replicar
+
+	// deltaMovieX
+	//
+	// English:
+	//
+	//  Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
+	//  GetX() function: (x = x - deltaMovieX).
+	//
+	// Português:
+	//
+	//  Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
+	//  GetX(): (x = x - deltaMovieX).
+	deltaMovieX int
+
+	// deltaMovieY
+	//
+	// English:
+	//
+	//  Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
+	//  GetY() function: (y = y - deltaMovieY).
+	//
+	// Português:
+	//
+	//  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
+	//  GetY(): (y = y - deltaMovieY).
+	deltaMovieY int
+
+	// isDragging
+	//
+	// English:
+	//
+	//  Indicates the process of dragging the element.
+	//
+	// Português:
+	//
+	//  Indica o processo de arrasto do elemento.
+	isDragging bool
 }
 
 // Reference
@@ -1043,7 +1087,171 @@ func (e *TagInputButton) Value(value string) (ref *TagInputButton) {
 	return e
 }
 
-// SetXY
+// GetXY #replicar
+//
+// English:
+//
+//	Returns the X and Y axes in pixels.
+//
+// Português:
+//
+//	Retorna os eixos X e Y em pixels.
+func (e *TagInputButton) GetXY() (x, y int) {
+	x = e.x
+	y = e.y
+
+	x = x - e.deltaMovieX
+	y = y - e.deltaMovieY
+	return
+}
+
+// GetX #replicar
+//
+// English:
+//
+//	Returns the X axe in pixels.
+//
+// Português:
+//
+//	Retorna o eixo X em pixels.
+func (e *TagInputButton) GetX() (x int) {
+	return e.x - e.deltaMovieX
+}
+
+// GetY #replicar
+//
+// English:
+//
+//	Returns the Y axe in pixels.
+//
+// Português:
+//
+//	Retorna o eixo Y em pixels.
+func (e *TagInputButton) GetY() (y int) {
+	return e.y - e.deltaMovieY
+}
+
+// GetTop #replicar
+//
+// English:
+//
+//	Same as GetX() function, returns the x position of the element.
+//
+// Português:
+//
+//	O mesmo que a função GetX(), retorna a posição x do elemento.
+func (e *TagInputButton) GetTop() (top int) {
+	return e.x - e.deltaMovieX
+}
+
+// GetRight #replicar
+//
+// English:
+//
+//	It is the same as x + width.
+//
+// Português:
+//
+//	É o mesmo que x + width.
+func (e *TagInputButton) GetRight() (right int) {
+	return e.x + e.width - e.deltaMovieX
+}
+
+// GetBottom #replicar
+//
+// English:
+//
+//	It is the same as y + height.
+//
+// Português:
+//
+//	É o mesmo que y + Height.
+func (e *TagInputButton) GetBottom() (bottom int) {
+	return e.y + e.height - e.deltaMovieY
+}
+
+// GetLeft #replicar
+//
+// English:
+//
+//	Same as GetY() function, returns the y position of the element.
+//
+// Português:
+//
+//	O mesmo que a função GetY(), retorna a posição y do elemento.
+func (e *TagInputButton) GetLeft() (left int) {
+	return e.y - e.deltaMovieY
+}
+
+// GetBoundingBox #replicar
+//
+// English:
+//
+// Returns the last update of the element's bounding box.
+//
+// Português:
+//
+// Retorna a última atualização do bounding box do elemnto.
+func (e *TagInputButton) GetBoundingBox() (x, y, width, height int) {
+	return e.x - e.deltaMovieX, e.y - e.deltaMovieY, e.width, e.height
+}
+
+// Collision #replicar
+//
+// English:
+//
+// Detect collision between two bounding boxes.
+//
+// Português:
+//
+// Detecta colisão entre dois bounding box.
+func (e *TagInputButton) Collision(elemnt Collision) (collision bool) {
+	x, y, width, height := elemnt.GetBoundingBox()
+	if e.x-e.deltaMovieX < x+width && e.x-e.deltaMovieX+e.width > x && e.y-e.deltaMovieY < y+height && e.y-e.deltaMovieY+e.height > y {
+		return true
+	}
+
+	return false
+}
+
+// UpdateBoundingClientRect #replicar
+//
+// English:
+//
+// Updates the coordinates and dimensions of the element's bounds box.
+//
+// Português:
+//
+// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
+func (e *TagInputButton) UpdateBoundingClientRect() (ref *TagInputButton) {
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+	//
+	//                    ⋀                ⋀
+	//                    |                |
+	//                  y/top            bottom
+	//                    |                |
+	//                    ⋁                |
+	// <---- x/left ----> +--------------+ | ---
+	//                    |              | |   ⋀
+	//                    |              | | width
+	//                    |              | ⋁   ⋁
+	//                    +--------------+ -----
+	//                    | <- right ->  |
+	// <--------- right bbox ----------> |
+
+	bbox := e.selfElement.Call("getBoundingClientRect")
+	e.x = bbox.Get("left").Int()
+	e.y = bbox.Get("top").Int()
+	e.heightBBox = bbox.Get("right").Int()
+	e.bottom = bbox.Get("bottom").Int()
+
+	e.height = e.heightBBox - e.x
+	e.width = e.bottom - e.y
+
+	return e
+}
+
+// SetXY #replicar
 //
 // English:
 //
@@ -1053,12 +1261,58 @@ func (e *TagInputButton) Value(value string) (ref *TagInputButton) {
 //
 //	Define os eixos X e Y em pixels.
 func (e *TagInputButton) SetXY(x, y int) (ref *TagInputButton) {
-	px := strconv.FormatInt(int64(x), 10) + "px"
-	py := strconv.FormatInt(int64(y), 10) + "px"
+
+	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
+	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
+	if e.isDragging == true {
+		e.x = x
+		e.y = y
+	} else {
+		e.x = x + e.deltaMovieX
+		e.y = y + e.deltaMovieY
+	}
+
+	px := strconv.FormatInt(int64(e.x), 10) + "px"
+	py := strconv.FormatInt(int64(e.y), 10) + "px"
 
 	e.selfElement.Get("style").Set("left", px)
 	e.selfElement.Get("style").Set("top", py)
+	e.selfElement.Get("style").Set("position", "absolute")
 
+	e.UpdateBoundingClientRect()
+
+	return e
+}
+
+// SetDeltaX
+//
+// English:
+//
+//	Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
+//	GetX() function: (x = x - deltaMovieX).
+//
+// Português:
+//
+//	Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
+//	GetX(): (x = x - deltaMovieX).
+func (e *TagInputButton) SetDeltaX(delta int) (ref *TagInputButton) {
+	e.deltaMovieX = delta
+	return e
+}
+
+// SetDeltaY
+//
+// English:
+//
+//	Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
+//	GetY() function: (y = y - deltaMovieY).
+//
+// Português:
+//
+//	Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
+//	GetX(): (y = y - deltaMovieY).
+func (e *TagInputButton) SetDeltaY(delta int) (ref *TagInputButton) {
+	e.deltaMovieY = delta
 	return e
 }
 
@@ -1072,8 +1326,20 @@ func (e *TagInputButton) SetXY(x, y int) (ref *TagInputButton) {
 //
 //	Define o eixo X em pixels.
 func (e *TagInputButton) SetX(x int) (ref *TagInputButton) {
-	px := strconv.FormatInt(int64(x), 10) + "px"
+
+	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
+	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
+	if e.isDragging == true {
+		e.x = x
+	} else {
+		e.x = x + e.deltaMovieX
+	}
+
+	px := strconv.FormatInt(int64(e.x), 10) + "px"
 	e.selfElement.Get("style").Set("left", px)
+	e.selfElement.Get("style").Set("position", "absolute")
+
+	e.UpdateBoundingClientRect()
 
 	return e
 }
@@ -1088,54 +1354,20 @@ func (e *TagInputButton) SetX(x int) (ref *TagInputButton) {
 //
 //	Define o eixo Y em pixels.
 func (e *TagInputButton) SetY(y int) (ref *TagInputButton) {
-	py := strconv.FormatInt(int64(y), 10) + "px"
+
+	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
+	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
+	if e.isDragging == true {
+		e.y = y
+	} else {
+		e.y = y + e.deltaMovieY
+	}
+
+	py := strconv.FormatInt(int64(e.y), 10) + "px"
 	e.selfElement.Get("style").Set("top", py)
+	e.selfElement.Get("style").Set("position", "absolute")
+
+	e.UpdateBoundingClientRect()
 
 	return e
-}
-
-// GetXY
-//
-// English:
-//
-//	Returns the X and Y axes in pixels.
-//
-// Português:
-//
-//	Retorna os eixos X e Y em pixels.
-func (e *TagInputButton) GetXY() (x, y int) {
-	x = e.selfElement.Get("style").Get("left").Int()
-	y = e.selfElement.Get("style").Get("top").Int()
-
-	return
-}
-
-// GetX
-//
-// English:
-//
-//	Returns the X axe in pixels.
-//
-// Português:
-//
-//	Retorna o eixo X em pixels.
-func (e *TagInputButton) GetX() (x int) {
-	x = e.selfElement.Get("style").Get("left").Int()
-
-	return
-}
-
-// GetY
-//
-// English:
-//
-//	Returns the Y axe in pixels.
-//
-// Português:
-//
-//	Retorna o eixo Y em pixels.
-func (e *TagInputButton) GetY() (y int) {
-	y = e.selfElement.Get("style").Get("top").Int()
-
-	return
 }

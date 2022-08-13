@@ -2794,10 +2794,12 @@ func (e *TagSvgClipPath) Html(value string) (ref *TagSvgClipPath) {
 // Português:
 //
 //	Retorna os eixos X e Y em pixels.
-func (e *TagSvgClipPath) GetXY() (x, y float64) {
-	x = e.GetX()
-	y = e.GetY()
+func (e *TagSvgClipPath) GetXY() (x, y int) {
+	x = e.x
+	y = e.y
 
+	x = x - e.deltaMovieX
+	y = y - e.deltaMovieY
 	return
 }
 
@@ -2810,15 +2812,8 @@ func (e *TagSvgClipPath) GetXY() (x, y float64) {
 // Português:
 //
 //	Retorna o eixo X em pixels.
-func (e *TagSvgClipPath) GetX() (x float64) {
-	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
-		return
-	}
-
-	//rect.top, rect.right, rect.bottom, rect.left
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	x = coordinate.Get("left").Float()
-	return
+func (e *TagSvgClipPath) GetX() (x int) {
+	return e.x - e.deltaMovieX
 }
 
 // GetY
@@ -2830,14 +2825,8 @@ func (e *TagSvgClipPath) GetX() (x float64) {
 // Português:
 //
 //	Retorna o eixo Y em pixels.
-func (e *TagSvgClipPath) GetY() (y float64) {
-	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
-		return
-	}
-
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	y = coordinate.Get("top").Float()
-	return
+func (e *TagSvgClipPath) GetY() (y int) {
+	return e.y - e.deltaMovieY
 }
 
 // GetTop

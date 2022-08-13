@@ -72,8 +72,12 @@ type TagFigure struct {
 
 	cssClass *css.Class
 
-	x int
-	y int
+	x          int //#replicar
+	y          int //#replicar
+	width      int //#replicar
+	height     int //#replicar
+	heightBBox int //#replicar
+	bottom     int //#replicar
 
 	// listener
 	//
@@ -987,227 +991,8 @@ func (e *TagFigure) AppendToStage() (ref *TagFigure) {
 	return e
 }
 
-// SetXY
-//
-// English:
-//
-//	Sets the X and Y axes in pixels.
-//
-// Português:
-//
-//	Define os eixos X e Y em pixels.
-func (e *TagFigure) SetXY(x, y int) (ref *TagFigure) {
-
-	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
-	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
-	if e.isDragging == true {
-		e.x = x
-		e.y = y
-	} else {
-		e.x = x + e.deltaMovieX
-		e.y = y + e.deltaMovieY
-	}
-
-	px := strconv.FormatInt(int64(e.x), 10) + "px"
-	py := strconv.FormatInt(int64(e.y), 10) + "px"
-
-	e.selfElement.Get("style").Set("left", px)
-	e.selfElement.Get("style").Set("top", py)
-
-	return e
-}
-
-// SetDeltaX
-//
-// English:
-//
-//	Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
-//	GetX() function: (x = x - deltaMovieX).
-//
-// Português:
-//
-//	Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
-//	GetX(): (x = x - deltaMovieX).
-func (e *TagFigure) SetDeltaX(delta int) (ref *TagFigure) {
-	e.deltaMovieX = delta
-	return e
-}
-
-// SetDeltaY
-//
-// English:
-//
-//	Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
-//	GetY() function: (y = y - deltaMovieY).
-//
-// Português:
-//
-//	Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
-//	GetX(): (y = y - deltaMovieY).
-func (e *TagFigure) SetDeltaY(delta int) (ref *TagFigure) {
-	e.deltaMovieY = delta
-	return e
-}
-
-// SetX
-//
-// English:
-//
-//	Sets the X axe in pixels.
-//
-// Português:
-//
-//	Define o eixo X em pixels.
-func (e *TagFigure) SetX(x int) (ref *TagFigure) {
-
-	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
-	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
-	if e.isDragging == true {
-		e.x = x
-	} else {
-		e.x = x + e.deltaMovieX
-	}
-
-	px := strconv.FormatInt(int64(e.x), 10) + "px"
-	e.selfElement.Get("style").Set("left", px)
-
-	return e
-}
-
-// SetY
-//
-// English:
-//
-//	Sets the Y axe in pixels.
-//
-// Português:
-//
-//	Define o eixo Y em pixels.
-func (e *TagFigure) SetY(y int) (ref *TagFigure) {
-
-	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
-	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
-	if e.isDragging == true {
-		e.y = y
-	} else {
-		e.y = y + e.deltaMovieY
-	}
-
-	py := strconv.FormatInt(int64(e.y), 10) + "px"
-	e.selfElement.Get("style").Set("top", py)
-
-	return e
-}
-
 func (e *TagFigure) Get() (el js.Value) {
 	return e.selfElement
-}
-
-// GetXY
-//
-// English:
-//
-//	Returns the X and Y axes in pixels.
-//
-// Português:
-//
-//	Retorna os eixos X e Y em pixels.
-func (e *TagFigure) GetXY() (x, y int) {
-	x = e.GetX()
-	y = e.GetY()
-
-	return
-}
-
-// GetX
-//
-// English:
-//
-//	Returns the X axe in pixels.
-//
-// Português:
-//
-//	Retorna o eixo X em pixels.
-func (e *TagFigure) GetX() (x int) {
-	//rect.top, rect.right, rect.bottom, rect.left
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	x = coordinate.Get("left").Int()
-	return
-}
-
-// GetY
-//
-// English:
-//
-//	Returns the Y axe in pixels.
-//
-// Português:
-//
-//	Retorna o eixo Y em pixels.
-func (e *TagFigure) GetY() (y int) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	y = coordinate.Get("top").Int()
-	return
-}
-
-// GetTop
-//
-// English:
-//
-//	Same as GetX() function, returns the x position of the element.
-//
-// Português:
-//
-//	O mesmo que a função GetX(), retorna a posição x do elemento.
-func (e *TagFigure) GetTop() (top int) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	top = coordinate.Get("top").Int()
-	return
-}
-
-// GetRight
-//
-// English:
-//
-//	It is the same as x + width.
-//
-// Português:
-//
-//	É o mesmo que x + width.
-func (e *TagFigure) GetRight() (right int) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	right = coordinate.Get("right").Int()
-	return
-}
-
-// GetBottom
-//
-// English:
-//
-//	It is the same as y + height.
-//
-// Português:
-//
-//	É o mesmo que y + Height.
-func (e *TagFigure) GetBottom() (bottom int) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	bottom = coordinate.Get("bottom").Int()
-	return
-}
-
-// GetLeft
-//
-// English:
-//
-//	Same as GetY() function, returns the y position of the element.
-//
-// Português:
-//
-//	O mesmo que a função GetY(), retorna a posição y do elemento.
-func (e *TagFigure) GetLeft() (left int) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	left = coordinate.Get("left").Int()
-	return
 }
 
 // Rotate
@@ -1849,5 +1634,290 @@ func (e *TagFigure) Text(value string) (ref *TagFigure) {
 // Adiciona HTML ao conteúdo da tag.
 func (e *TagFigure) Html(value string) (ref *TagFigure) {
 	e.selfElement.Set("innerHTML", value)
+	return e
+}
+
+// GetXY #replicar
+//
+// English:
+//
+//	Returns the X and Y axes in pixels.
+//
+// Português:
+//
+//	Retorna os eixos X e Y em pixels.
+func (e *TagFigure) GetXY() (x, y int) {
+	x = e.x
+	y = e.y
+
+	x = x - e.deltaMovieX
+	y = y - e.deltaMovieY
+	return
+}
+
+// GetX #replicar
+//
+// English:
+//
+//	Returns the X axe in pixels.
+//
+// Português:
+//
+//	Retorna o eixo X em pixels.
+func (e *TagFigure) GetX() (x int) {
+	return e.x - e.deltaMovieX
+}
+
+// GetY #replicar
+//
+// English:
+//
+//	Returns the Y axe in pixels.
+//
+// Português:
+//
+//	Retorna o eixo Y em pixels.
+func (e *TagFigure) GetY() (y int) {
+	return e.y - e.deltaMovieY
+}
+
+// GetTop #replicar
+//
+// English:
+//
+//	Same as GetX() function, returns the x position of the element.
+//
+// Português:
+//
+//	O mesmo que a função GetX(), retorna a posição x do elemento.
+func (e *TagFigure) GetTop() (top int) {
+	return e.x - e.deltaMovieX
+}
+
+// GetRight #replicar
+//
+// English:
+//
+//	It is the same as x + width.
+//
+// Português:
+//
+//	É o mesmo que x + width.
+func (e *TagFigure) GetRight() (right int) {
+	return e.x + e.width - e.deltaMovieX
+}
+
+// GetBottom #replicar
+//
+// English:
+//
+//	It is the same as y + height.
+//
+// Português:
+//
+//	É o mesmo que y + Height.
+func (e *TagFigure) GetBottom() (bottom int) {
+	return e.y + e.height - e.deltaMovieY
+}
+
+// GetLeft #replicar
+//
+// English:
+//
+//	Same as GetY() function, returns the y position of the element.
+//
+// Português:
+//
+//	O mesmo que a função GetY(), retorna a posição y do elemento.
+func (e *TagFigure) GetLeft() (left int) {
+	return e.y - e.deltaMovieY
+}
+
+// GetBoundingBox #replicar
+//
+// English:
+//
+// Returns the last update of the element's bounding box.
+//
+// Português:
+//
+// Retorna a última atualização do bounding box do elemnto.
+func (e *TagFigure) GetBoundingBox() (x, y, width, height int) {
+	return e.x - e.deltaMovieX, e.y - e.deltaMovieY, e.width, e.height
+}
+
+// Collision #replicar
+//
+// English:
+//
+// Detect collision between two bounding boxes.
+//
+// Português:
+//
+// Detecta colisão entre dois bounding box.
+func (e *TagFigure) Collision(elemnt Collision) (collision bool) {
+	x, y, width, height := elemnt.GetBoundingBox()
+	if e.x-e.deltaMovieX < x+width && e.x-e.deltaMovieX+e.width > x && e.y-e.deltaMovieY < y+height && e.y-e.deltaMovieY+e.height > y {
+		return true
+	}
+
+	return false
+}
+
+// UpdateBoundingClientRect #replicar
+//
+// English:
+//
+// Updates the coordinates and dimensions of the element's bounds box.
+//
+// Português:
+//
+// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
+func (e *TagFigure) UpdateBoundingClientRect() (ref *TagFigure) {
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+	//
+	//                    ⋀                ⋀
+	//                    |                |
+	//                  y/top            bottom
+	//                    |                |
+	//                    ⋁                |
+	// <---- x/left ----> +--------------+ | ---
+	//                    |              | |   ⋀
+	//                    |              | | width
+	//                    |              | ⋁   ⋁
+	//                    +--------------+ -----
+	//                    | <- right ->  |
+	// <--------- right bbox ----------> |
+
+	bbox := e.selfElement.Call("getBoundingClientRect")
+	e.x = bbox.Get("left").Int()
+	e.y = bbox.Get("top").Int()
+	e.heightBBox = bbox.Get("right").Int()
+	e.bottom = bbox.Get("bottom").Int()
+
+	e.height = e.heightBBox - e.x
+	e.width = e.bottom - e.y
+
+	return e
+}
+
+// SetXY #replicar
+//
+// English:
+//
+//	Sets the X and Y axes in pixels.
+//
+// Português:
+//
+//	Define os eixos X e Y em pixels.
+func (e *TagFigure) SetXY(x, y int) (ref *TagFigure) {
+
+	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
+	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
+	if e.isDragging == true {
+		e.x = x
+		e.y = y
+	} else {
+		e.x = x + e.deltaMovieX
+		e.y = y + e.deltaMovieY
+	}
+
+	px := strconv.FormatInt(int64(e.x), 10) + "px"
+	py := strconv.FormatInt(int64(e.y), 10) + "px"
+
+	e.selfElement.Get("style").Set("left", px)
+	e.selfElement.Get("style").Set("top", py)
+	e.selfElement.Get("style").Set("position", "absolute")
+
+	e.UpdateBoundingClientRect()
+
+	return e
+}
+
+// SetDeltaX
+//
+// English:
+//
+//	Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
+//	GetX() function: (x = x - deltaMovieX).
+//
+// Português:
+//
+//	Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
+//	GetX(): (x = x - deltaMovieX).
+func (e *TagFigure) SetDeltaX(delta int) (ref *TagFigure) {
+	e.deltaMovieX = delta
+	return e
+}
+
+// SetDeltaY
+//
+// English:
+//
+//	Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
+//	GetY() function: (y = y - deltaMovieY).
+//
+// Português:
+//
+//	Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
+//	GetX(): (y = y - deltaMovieY).
+func (e *TagFigure) SetDeltaY(delta int) (ref *TagFigure) {
+	e.deltaMovieY = delta
+	return e
+}
+
+// SetX
+//
+// English:
+//
+//	Sets the X axe in pixels.
+//
+// Português:
+//
+//	Define o eixo X em pixels.
+func (e *TagFigure) SetX(x int) (ref *TagFigure) {
+
+	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
+	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
+	if e.isDragging == true {
+		e.x = x
+	} else {
+		e.x = x + e.deltaMovieX
+	}
+
+	px := strconv.FormatInt(int64(e.x), 10) + "px"
+	e.selfElement.Get("style").Set("left", px)
+	e.selfElement.Get("style").Set("position", "absolute")
+
+	e.UpdateBoundingClientRect()
+
+	return e
+}
+
+// SetY
+//
+// English:
+//
+//	Sets the Y axe in pixels.
+//
+// Português:
+//
+//	Define o eixo Y em pixels.
+func (e *TagFigure) SetY(y int) (ref *TagFigure) {
+
+	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
+	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
+	if e.isDragging == true {
+		e.y = y
+	} else {
+		e.y = y + e.deltaMovieY
+	}
+
+	py := strconv.FormatInt(int64(e.y), 10) + "px"
+	e.selfElement.Get("style").Set("top", py)
+	e.selfElement.Get("style").Set("position", "absolute")
+
+	e.UpdateBoundingClientRect()
+
 	return e
 }

@@ -2865,10 +2865,12 @@ func (e *TagSvgView) Html(value string) (ref *TagSvgView) {
 // Português:
 //
 //	Retorna os eixos X e Y em pixels.
-func (e *TagSvgView) GetXY() (x, y float64) {
-	x = e.GetX()
-	y = e.GetY()
+func (e *TagSvgView) GetXY() (x, y int) {
+	x = e.x
+	y = e.y
 
+	x = x - e.deltaMovieX
+	y = y - e.deltaMovieY
 	return
 }
 
@@ -2881,15 +2883,8 @@ func (e *TagSvgView) GetXY() (x, y float64) {
 // Português:
 //
 //	Retorna o eixo X em pixels.
-func (e *TagSvgView) GetX() (x float64) {
-	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
-		return
-	}
-
-	//rect.top, rect.right, rect.bottom, rect.left
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	x = coordinate.Get("left").Float()
-	return
+func (e *TagSvgView) GetX() (x int) {
+	return e.x - e.deltaMovieX
 }
 
 // GetY
@@ -2901,14 +2896,8 @@ func (e *TagSvgView) GetX() (x float64) {
 // Português:
 //
 //	Retorna o eixo Y em pixels.
-func (e *TagSvgView) GetY() (y float64) {
-	if e.selfElement.IsUndefined() || e.selfElement.IsNull() {
-		return
-	}
-
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	y = coordinate.Get("top").Float()
-	return
+func (e *TagSvgView) GetY() (y int) {
+	return e.y - e.deltaMovieY
 }
 
 // GetTop

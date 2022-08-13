@@ -68,6 +68,17 @@ type TagA struct {
 	//  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
 	//  GetY(): (y = y - deltaMovieY).
 	deltaMovieY int
+
+	// isDragging
+	//
+	// English:
+	//
+	//  Indicates the process of dragging the element.
+	//
+	// Português:
+	//
+	//  Indica o processo de arrasto do elemento.
+	isDragging bool
 }
 
 // Reference
@@ -1136,57 +1147,6 @@ func (e *TagA) Append(append interface{}) (ref *TagA) {
 	return e
 }
 
-// SetXY
-//
-// English:
-//
-//	Sets the X and Y axes in pixels.
-//
-// Português:
-//
-//	Define os eixos X e Y em pixels.
-func (e *TagA) SetXY(x, y int) (ref *TagA) {
-	px := strconv.FormatInt(int64(x), 10) + "px"
-	py := strconv.FormatInt(int64(y), 10) + "px"
-
-	e.selfElement.Get("style").Set("left", px)
-	e.selfElement.Get("style").Set("top", py)
-
-	return e
-}
-
-// SetX
-//
-// English:
-//
-//	Sets the X axe in pixels.
-//
-// Português:
-//
-//	Define o eixo X em pixels.
-func (e *TagA) SetX(x int) (ref *TagA) {
-	px := strconv.FormatInt(int64(x), 10) + "px"
-	e.selfElement.Get("style").Set("left", px)
-
-	return e
-}
-
-// SetY
-//
-// English:
-//
-//	Sets the Y axe in pixels.
-//
-// Português:
-//
-//	Define o eixo Y em pixels.
-func (e *TagA) SetY(y int) (ref *TagA) {
-	py := strconv.FormatInt(int64(y), 10) + "px"
-	e.selfElement.Get("style").Set("top", py)
-
-	return e
-}
-
 // GetXY #replicar
 //
 // English:
@@ -1347,6 +1307,127 @@ func (e *TagA) UpdateBoundingClientRect() (ref *TagA) {
 
 	e.height = e.heightBBox - e.x
 	e.width = e.bottom - e.y
+
+	return e
+}
+
+// SetXY #replicar
+//
+// English:
+//
+//	Sets the X and Y axes in pixels.
+//
+// Português:
+//
+//	Define os eixos X e Y em pixels.
+func (e *TagA) SetXY(x, y int) (ref *TagA) {
+
+	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
+	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
+	if e.isDragging == true {
+		e.x = x
+		e.y = y
+	} else {
+		e.x = x + e.deltaMovieX
+		e.y = y + e.deltaMovieY
+	}
+
+	px := strconv.FormatInt(int64(e.x), 10) + "px"
+	py := strconv.FormatInt(int64(e.y), 10) + "px"
+
+	e.selfElement.Get("style").Set("left", px)
+	e.selfElement.Get("style").Set("top", py)
+	e.selfElement.Get("style").Set("position", "absolute")
+
+	e.UpdateBoundingClientRect()
+
+	return e
+}
+
+// SetDeltaX
+//
+// English:
+//
+//	Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
+//	GetX() function: (x = x - deltaMovieX).
+//
+// Português:
+//
+//	Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
+//	GetX(): (x = x - deltaMovieX).
+func (e *TagA) SetDeltaX(delta int) (ref *TagA) {
+	e.deltaMovieX = delta
+	return e
+}
+
+// SetDeltaY
+//
+// English:
+//
+//	Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
+//	GetY() function: (y = y - deltaMovieY).
+//
+// Português:
+//
+//	Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
+//	GetX(): (y = y - deltaMovieY).
+func (e *TagA) SetDeltaY(delta int) (ref *TagA) {
+	e.deltaMovieY = delta
+	return e
+}
+
+// SetX
+//
+// English:
+//
+//	Sets the X axe in pixels.
+//
+// Português:
+//
+//	Define o eixo X em pixels.
+func (e *TagA) SetX(x int) (ref *TagA) {
+
+	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
+	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
+	if e.isDragging == true {
+		e.x = x
+	} else {
+		e.x = x + e.deltaMovieX
+	}
+
+	px := strconv.FormatInt(int64(e.x), 10) + "px"
+	e.selfElement.Get("style").Set("left", px)
+	e.selfElement.Get("style").Set("position", "absolute")
+
+	e.UpdateBoundingClientRect()
+
+	return e
+}
+
+// SetY
+//
+// English:
+//
+//	Sets the Y axe in pixels.
+//
+// Português:
+//
+//	Define o eixo Y em pixels.
+func (e *TagA) SetY(y int) (ref *TagA) {
+
+	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
+	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
+	if e.isDragging == true {
+		e.y = y
+	} else {
+		e.y = y + e.deltaMovieY
+	}
+
+	py := strconv.FormatInt(int64(e.y), 10) + "px"
+	e.selfElement.Get("style").Set("top", py)
+	e.selfElement.Get("style").Set("position", "absolute")
+
+	e.UpdateBoundingClientRect()
 
 	return e
 }

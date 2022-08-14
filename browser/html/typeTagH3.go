@@ -1765,7 +1765,7 @@ func (e *TagH3) GetBoundingBox() (x, y, width, height int) {
 	return e.x - e.deltaMovieX, e.y - e.deltaMovieY, e.width, e.height
 }
 
-// Collision #replicar
+// CollisionBoundingBox #replicar
 //
 // English:
 //
@@ -1774,7 +1774,7 @@ func (e *TagH3) GetBoundingBox() (x, y, width, height int) {
 // Português:
 //
 // Detecta colisão entre dois bounding box.
-func (e *TagH3) Collision(elemnt Collision) (collision bool) {
+func (e *TagH3) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
 	x, y, width, height := elemnt.GetBoundingBox()
 	if e.x-e.deltaMovieX < x+width && e.x-e.deltaMovieX+e.width > x && e.y-e.deltaMovieY < y+height && e.y-e.deltaMovieY+e.height > y {
 		return true

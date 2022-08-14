@@ -1,13 +1,9 @@
 package html
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
-	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"image/color"
 	"log"
 	"strconv"
-	"sync"
 	"syscall/js"
 )
 
@@ -61,24 +57,6 @@ type TagSvgSwitch struct {
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
 
-	cssClass *css.Class
-
-	x int
-	y int
-
-	// listener
-	//
-	// English:
-	//
-	//  The javascript function removeEventListener needs to receive the function passed in addEventListener
-	//
-	// Português:
-	//
-	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
-	listener *sync.Map
-
-	// drag
-
 	// stage
 	//
 	// English:
@@ -89,87 +67,6 @@ type TagSvgSwitch struct {
 	//
 	//  Referencia do documento principal do navegador capturado na inicialização.
 	stage js.Value
-
-	// isDragging
-	//
-	// English:
-	//
-	//  Indicates the process of dragging the element.
-	//
-	// Português:
-	//
-	//  Indica o processo de arrasto do elemento.
-	isDragging bool
-
-	// dragDifX
-	//
-	// English:
-	//
-	//  Used in calculating element drag.
-	//
-	// Português:
-	//
-	//  Usado no cálculo do arrasto de elemento.
-	dragDifX int
-
-	// dragDifX
-	//
-	// English:
-	//
-	//  Used in calculating element drag.
-	//
-	// Português:
-	//
-	//  Usado no cálculo do arrasto de elemento.
-	dragDifY int
-
-	// deltaMovieX
-	//
-	// English:
-	//
-	//  Additional value added in the SetX() function: (x = x + deltaMovieX) and subtracted in the
-	//  GetX() function: (x = x - deltaMovieX).
-	//
-	// Português:
-	//
-	//  Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
-	//  GetX(): (x = x - deltaMovieX).
-	deltaMovieX int
-
-	// deltaMovieY
-	//
-	// English:
-	//
-	//  Additional value added in the SetY() function: (y = y + deltaMovieY) and subtracted in the
-	//  GetY() function: (y = y - deltaMovieY).
-	//
-	// Português:
-	//
-	//  Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
-	//  GetY(): (y = y - deltaMovieY).
-	deltaMovieY int
-
-	// tween
-	//
-	// English:
-	//
-	//  Easing tween.
-	//
-	// Receives an identifier and a pointer of the tween object to be used in case of multiple
-	// functions.
-	//
-	// Português:
-	//
-	//  Facilitador de interpolação.
-	//
-	// Recebe um identificador e um ponteiro do objeto tween para ser usado em caso de múltiplas
-	// funções.
-	tween map[string]interfaces.TweenInterface
-
-	points    *[]algorithm.Point
-	pointsLen int
-
-	rotateDelta float64
 }
 
 // Init
@@ -182,8 +79,6 @@ type TagSvgSwitch struct {
 //
 //	Inicializa o objeto corretamente.
 func (e *TagSvgSwitch) Init() (ref *TagSvgSwitch) {
-	e.listener = new(sync.Map)
-
 	e.CreateElement()
 	e.prepareStageReference()
 
@@ -2695,110 +2590,6 @@ func (e *TagSvgSwitch) Text(value string) (ref *TagSvgSwitch) {
 func (e *TagSvgSwitch) Html(value string) (ref *TagSvgSwitch) {
 	e.selfElement.Set("innerHTML", value)
 	return e
-}
-
-// GetXY
-//
-// English:
-//
-//	Returns the X and Y axes in pixels.
-//
-// Português:
-//
-//	Retorna os eixos X e Y em pixels.
-func (e *TagSvgSwitch) GetXY() (x, y int) {
-	x = e.x
-	y = e.y
-
-	x = x - e.deltaMovieX
-	y = y - e.deltaMovieY
-	return
-}
-
-// GetX
-//
-// English:
-//
-//	Returns the X axe in pixels.
-//
-// Português:
-//
-//	Retorna o eixo X em pixels.
-func (e *TagSvgSwitch) GetX() (x int) {
-	return e.x - e.deltaMovieX
-}
-
-// GetY
-//
-// English:
-//
-//	Returns the Y axe in pixels.
-//
-// Português:
-//
-//	Retorna o eixo Y em pixels.
-func (e *TagSvgSwitch) GetY() (y int) {
-	return e.y - e.deltaMovieY
-}
-
-// GetTop
-//
-// English:
-//
-//	Same as GetX() function, returns the x position of the element.
-//
-// Português:
-//
-//	O mesmo que a função GetX(), retorna a posição x do elemento.
-func (e *TagSvgSwitch) GetTop() (top float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	top = coordinate.Get("top").Float()
-	return
-}
-
-// GetRight
-//
-// English:
-//
-//	It is the same as x + width.
-//
-// Português:
-//
-//	É o mesmo que x + width.
-func (e *TagSvgSwitch) GetRight() (right float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	right = coordinate.Get("right").Float()
-	return
-}
-
-// GetBottom
-//
-// English:
-//
-//	It is the same as y + height.
-//
-// Português:
-//
-//	É o mesmo que y + Height.
-func (e *TagSvgSwitch) GetBottom() (bottom float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	bottom = coordinate.Get("bottom").Float()
-	return
-}
-
-// GetLeft
-//
-// English:
-//
-//	Same as GetY() function, returns the y position of the element.
-//
-// Português:
-//
-//	O mesmo que a função GetY(), retorna a posição y do elemento.
-func (e *TagSvgSwitch) GetLeft() (left float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	left = coordinate.Get("left").Float()
-	return
 }
 
 // Reference

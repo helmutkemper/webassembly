@@ -2,12 +2,10 @@ package html
 
 import (
 	"fmt"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
 	"image/color"
 	"log"
 	"strconv"
-	"sync"
 	"syscall/js"
 )
 
@@ -55,27 +53,12 @@ type TagSvg struct {
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
 
-	cssClass *css.Class
-
 	x          int //#replicar
 	y          int //#replicar
 	width      int //#replicar
 	height     int //#replicar
 	heightBBox int //#replicar
 	bottom     int //#replicar
-
-	// listener
-	//
-	// English:
-	//
-	//  The javascript function removeEventListener needs to receive the function passed in addEventListener
-	//
-	// Português:
-	//
-	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
-	listener *sync.Map
-
-	// drag
 
 	// stage
 	//
@@ -209,8 +192,6 @@ type TagSvg struct {
 //
 //	Inicializa o objeto corretamente.
 func (e *TagSvg) Init() (ref *TagSvg) {
-	e.listener = new(sync.Map)
-
 	e.CreateElement()
 	e.prepareStageReference()
 
@@ -3038,7 +3019,7 @@ func (e *TagSvg) GetBoundingBox() (x, y, width, height int) {
 	return e.x, e.y, e.width, e.height
 }
 
-// Collision #replicar
+// CollisionBoundingBox #replicar
 //
 // English:
 //
@@ -3047,7 +3028,7 @@ func (e *TagSvg) GetBoundingBox() (x, y, width, height int) {
 // Português:
 //
 // Detecta colisão entre dois bounding box.
-func (e *TagSvg) Collision(elemnt Collision) (collision bool) {
+func (e *TagSvg) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
 	x, y, width, height := elemnt.GetBoundingBox()
 	if e.x < x+width && e.x+e.width > x && e.y < y+height && e.y+e.height > y {
 		return true

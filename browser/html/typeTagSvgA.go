@@ -5,7 +5,6 @@ import (
 	"image/color"
 	"log"
 	"strconv"
-	"sync"
 	"syscall/js"
 )
 
@@ -58,17 +57,6 @@ type TagSvgA struct {
 	//
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
-
-	// listener
-	//
-	// English:
-	//
-	//  The javascript function removeEventListener needs to receive the function passed in addEventListener
-	//
-	// Português:
-	//
-	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
-	listener *sync.Map
 
 	x int
 	y int
@@ -205,8 +193,6 @@ type TagSvgA struct {
 //
 //	Inicializa o objeto corretamente.
 func (e *TagSvgA) Init() (ref *TagSvgA) {
-	e.listener = new(sync.Map)
-
 	e.CreateElement()
 	e.prepareStageReference()
 

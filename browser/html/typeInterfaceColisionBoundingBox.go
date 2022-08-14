@@ -1,6 +1,6 @@
 package html
 
-type Collision interface {
+type CollisionBoundingBox interface {
 	// GetBoundingBox
 	//
 	// English:

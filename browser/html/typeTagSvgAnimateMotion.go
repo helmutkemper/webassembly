@@ -1,13 +1,11 @@
 package html
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/animation"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
 	"image/color"
 	"log"
 	"strconv"
-	"sync"
 	"syscall/js"
 	"time"
 )
@@ -54,19 +52,6 @@ type TagSvgAnimateMotion struct {
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
 
-	cssClass *css.Class
-
-	// listener
-	//
-	// English:
-	//
-	//  The javascript function removeEventListener needs to receive the function passed in addEventListener
-	//
-	// Português:
-	//
-	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
-	listener *sync.Map
-
 	// stage
 	//
 	// English:
@@ -111,8 +96,6 @@ func (e *TagSvgAnimateMotion) Engine(engine engine.IEngine) {
 //
 //	Inicializa o objeto corretamente.
 func (e *TagSvgAnimateMotion) Init() (ref *TagSvgAnimateMotion) {
-	e.listener = new(sync.Map)
-
 	e.CreateElement()
 	e.prepareStageReference()
 

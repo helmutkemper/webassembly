@@ -1,7 +1,6 @@
 package html
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"log"
 	"strconv"
 	"strings"
@@ -49,10 +48,6 @@ type TagSource struct {
 	//
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
-
-	cssClass *css.Class
-
-	// drag
 
 	// stage
 	//

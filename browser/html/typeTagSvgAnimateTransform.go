@@ -6,7 +6,6 @@ import (
 	"image/color"
 	"log"
 	"strconv"
-	"sync"
 	"syscall/js"
 	"time"
 )
@@ -45,17 +44,6 @@ type TagSvgAnimateTransform struct {
 	//
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
-
-	// listener
-	//
-	// English:
-	//
-	//  The javascript function removeEventListener needs to receive the function passed in addEventListener
-	//
-	// Português:
-	//
-	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
-	listener *sync.Map
 
 	// stage
 	//
@@ -97,8 +85,6 @@ type TagSvgAnimateTransform struct {
 //
 //	Inicializa o objeto corretamente.
 func (e *TagSvgAnimateTransform) Init() (ref *TagSvgAnimateTransform) {
-	e.listener = new(sync.Map)
-
 	e.CreateElement()
 	e.prepareStageReference()
 

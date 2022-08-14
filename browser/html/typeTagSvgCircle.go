@@ -6,7 +6,6 @@ import (
 	"image/color"
 	"log"
 	"strconv"
-	"sync"
 	"syscall/js"
 )
 
@@ -51,19 +50,6 @@ type TagSvgCircle struct {
 	bottom     int
 	height     int
 	width      int
-
-	// listener
-	//
-	// English:
-	//
-	// The javascript function removeEventListener needs to receive the function passed in addEventListener
-	//
-	// Português:
-	//
-	// A função javascript removeEventListener necessitam receber a função passada em addEventListener
-	listener *sync.Map
-
-	// drag
 
 	// stage
 	//
@@ -197,8 +183,6 @@ type TagSvgCircle struct {
 //
 // Inicializa o objeto corretamente.
 func (e *TagSvgCircle) Init() (ref *TagSvgCircle) {
-	e.listener = new(sync.Map)
-
 	e.CreateElement()
 	e.prepareStageReference()
 
@@ -2670,6 +2654,8 @@ func (e *TagSvgCircle) Style(value string) (ref *TagSvgCircle) {
 //	    float32: 0.05 = "5%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgCircle) Cx(value interface{}) (ref *TagSvgCircle) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "cx", p)
@@ -2700,6 +2686,8 @@ func (e *TagSvgCircle) Cx(value interface{}) (ref *TagSvgCircle) {
 //	    float32: 0.05 = "5%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgCircle) Cy(value interface{}) (ref *TagSvgCircle) {
+	e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "cy", p)
@@ -2730,6 +2718,8 @@ func (e *TagSvgCircle) Cy(value interface{}) (ref *TagSvgCircle) {
 //	    float32: 1.0 = "100%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgCircle) R(value interface{}) (ref *TagSvgCircle) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "r", p)
@@ -4770,6 +4760,24 @@ func (e *TagSvgCircle) UpdateBoundingClientRect() (ref *TagSvgCircle) {
 // Retorna a última atualização do bounding box do elemnto.
 func (e *TagSvgCircle) GetBoundingBox() (x, y, width, height int) {
 	return e.x, e.y, e.width, e.height
+}
+
+// CollisionBoundingBox #replicar
+//
+// English:
+//
+// Detect collision between two bounding boxes.
+//
+// Português:
+//
+// Detecta colisão entre dois bounding box.
+func (e *TagSvgCircle) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
+	x, y, width, height := elemnt.GetBoundingBox()
+	if e.x < x+width && e.x+e.width > x && e.y < y+height && e.y+e.height > y {
+		return true
+	}
+
+	return false
 }
 
 //

@@ -48,8 +48,12 @@ type TagSvgMarker struct {
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
 
-	x int
-	y int
+	x          int //#replicar
+	y          int //#replicar
+	width      int //#replicar
+	height     int //#replicar
+	heightBBox int //#replicar
+	bottom     int //#replicar
 
 	// stage
 	//
@@ -2541,6 +2545,8 @@ func (e *TagSvgMarker) Style(value string) (ref *TagSvgMarker) {
 //	    float32: 1.0 = "100%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgMarker) MarkerHeight(value interface{}) (ref *TagSvgMarker) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "markerHeight", p)
@@ -2571,6 +2577,8 @@ func (e *TagSvgMarker) MarkerHeight(value interface{}) (ref *TagSvgMarker) {
 //	  value: define o sistema de coordenadas
 //	    const KSvgMarkerUnits... (ex. KSvgMarkerUnitsUserSpaceOnUse)
 func (e *TagSvgMarker) MarkerUnits(value interface{}) (ref *TagSvgMarker) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgMarkerUnits); ok {
 		e.selfElement.Call("setAttribute", "markerUnits", converted.String())
 		return e
@@ -2602,6 +2610,8 @@ func (e *TagSvgMarker) MarkerUnits(value interface{}) (ref *TagSvgMarker) {
 //	    float32: 1.0 = "100%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgMarker) MarkerWidth(value interface{}) (ref *TagSvgMarker) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "markerWidth", p)
@@ -2682,6 +2692,8 @@ func (e *TagSvgMarker) Orient(value interface{}) (ref *TagSvgMarker) {
 // Como a proporção de uma imagem SVG é definida pelo atributo viewBox, se esse atributo não estiver definido, o
 // atributo preserveAspectRatio não terá efeito (com uma exceção, o elemento <image>, conforme descrito abaixo).
 func (e *TagSvgMarker) PreserveAspectRatio(ratio, meet interface{}) (ref *TagSvgMarker) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := ratio.(Ratio); ok {
 		ratio = converted.String()
 	}
@@ -2716,6 +2728,8 @@ func (e *TagSvgMarker) PreserveAspectRatio(ratio, meet interface{}) (ref *TagSvg
 //	    const: KPositionHorizontal... (ex. KPositionHorizontalLeft)
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgMarker) RefX(value interface{}) (ref *TagSvgMarker) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "refX", p)
@@ -2753,6 +2767,8 @@ func (e *TagSvgMarker) RefX(value interface{}) (ref *TagSvgMarker) {
 //	    const: KPositionVertical... (ex. KPositionVerticalTop)
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgMarker) RefY(value interface{}) (ref *TagSvgMarker) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "refY", p)
@@ -2797,6 +2813,8 @@ func (e *TagSvgMarker) RefY(value interface{}) (ref *TagSvgMarker) {
 // mapeado para os limites da janela de visualização estabelecida para o elemento SVG associado (não a janela de
 // visualização do navegador).
 func (e *TagSvgMarker) ViewBox(value interface{}) (ref *TagSvgMarker) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
 		for _, v := range converted {
@@ -2958,5 +2976,73 @@ func (e *TagSvgMarker) GetLeft() (left float64) {
 //	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgMarker) Reference(reference **TagSvgMarker) (ref *TagSvgMarker) {
 	*reference = e
+	return e
+}
+
+// GetBoundingBox #replicar
+//
+// English:
+//
+// Returns the last update of the element's bounding box.
+//
+// Português:
+//
+// Retorna a última atualização do bounding box do elemnto.
+func (e *TagSvgMarker) GetBoundingBox() (x, y, width, height int) {
+	return e.x, e.y, e.width, e.height
+}
+
+// CollisionBoundingBox #replicar
+//
+// English:
+//
+// Detect collision between two bounding boxes.
+//
+// Português:
+//
+// Detecta colisão entre dois bounding box.
+func (e *TagSvgMarker) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
+	x, y, width, height := elemnt.GetBoundingBox()
+	if e.x < x+width && e.x+e.width > x && e.y < y+height && e.y+e.height > y {
+		return true
+	}
+
+	return false
+}
+
+// UpdateBoundingClientRect #replicar
+//
+// English:
+//
+// Updates the coordinates and dimensions of the element's bounds box.
+//
+// Português:
+//
+// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
+func (e *TagSvgMarker) UpdateBoundingClientRect() (ref *TagSvgMarker) {
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+	//
+	//                    ⋀                ⋀
+	//                    |                |
+	//                  y/top            bottom
+	//                    |                |
+	//                    ⋁                |
+	// <---- x/left ----> +--------------+ | ---
+	//                    |              | |   ⋀
+	//                    |              | | width
+	//                    |              | ⋁   ⋁
+	//                    +--------------+ -----
+	//                    | <- right ->  |
+	// <--------- right bbox ----------> |
+
+	bbox := e.selfElement.Call("getBoundingClientRect")
+	e.x = bbox.Get("left").Int()
+	e.y = bbox.Get("top").Int()
+	e.heightBBox = bbox.Get("right").Int()
+	e.bottom = bbox.Get("bottom").Int()
+
+	e.height = e.heightBBox - e.x
+	e.width = e.bottom - e.y
+
 	return e
 }

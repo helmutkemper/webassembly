@@ -9,13 +9,13 @@ import (
 //
 // English:
 //
-// The <metadata> SVG element adds metadata to SVG content. Metadata is structured information about data.
-// The contents of <metadata> should be elements from other XML namespaces such as RDF, FOAF, etc.
+// The <mpath> sub-element for the <animateMotion> element provides the ability to reference an external <path> element
+// as the definition of a motion path.
 //
 // Português:
 //
-// O elemento SVG <metadata> adiciona metadados ao conteúdo SVG. Metadados são informações estruturadas sobre dados.
-// O conteúdo de <metadata> deve ser elementos de outros namespaces XML, como RDF, FOAF, etc.
+// O subelemento <mpath> para o elemento <animateMotion> fornece a capacidade de referenciar um elemento <path> externo
+// como a definição de um caminho de movimento.
 type TagSvgMPath struct {
 
 	// id
@@ -39,9 +39,6 @@ type TagSvgMPath struct {
 	//
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
-
-	x int
-	y int
 
 	// stage
 	//
@@ -346,107 +343,6 @@ func (e *TagSvgMPath) Text(value string) (ref *TagSvgMPath) {
 func (e *TagSvgMPath) Html(value string) (ref *TagSvgMPath) {
 	e.selfElement.Set("innerHTML", value)
 	return e
-}
-
-// GetXY
-//
-// English:
-//
-//	Returns the X and Y axes in pixels.
-//
-// Português:
-//
-//	Retorna os eixos X e Y em pixels.
-func (e *TagSvgMPath) GetXY() (x, y int) {
-	x = e.x
-	y = e.y
-	return
-}
-
-// GetX
-//
-// English:
-//
-//	Returns the X axe in pixels.
-//
-// Português:
-//
-//	Retorna o eixo X em pixels.
-func (e *TagSvgMPath) GetX() (x int) {
-	return e.x
-}
-
-// GetY
-//
-// English:
-//
-//	Returns the Y axe in pixels.
-//
-// Português:
-//
-//	Retorna o eixo Y em pixels.
-func (e *TagSvgMPath) GetY() (y int) {
-	return e.y
-}
-
-// GetTop
-//
-// English:
-//
-//	Same as GetX() function, returns the x position of the element.
-//
-// Português:
-//
-//	O mesmo que a função GetX(), retorna a posição x do elemento.
-func (e *TagSvgMPath) GetTop() (top float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	top = coordinate.Get("top").Float()
-	return
-}
-
-// GetRight
-//
-// English:
-//
-//	It is the same as x + width.
-//
-// Português:
-//
-//	É o mesmo que x + width.
-func (e *TagSvgMPath) GetRight() (right float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	right = coordinate.Get("right").Float()
-	return
-}
-
-// GetBottom
-//
-// English:
-//
-//	It is the same as y + height.
-//
-// Português:
-//
-//	É o mesmo que y + Height.
-func (e *TagSvgMPath) GetBottom() (bottom float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	bottom = coordinate.Get("bottom").Float()
-	return
-}
-
-// GetLeft
-//
-// English:
-//
-//	Same as GetY() function, returns the y position of the element.
-//
-// Português:
-//
-//	O mesmo que a função GetY(), retorna a posição y do elemento.
-func (e *TagSvgMPath) GetLeft() (left float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	left = coordinate.Get("left").Float()
-	return
 }
 
 // Reference

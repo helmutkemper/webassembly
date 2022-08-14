@@ -42,8 +42,12 @@ type TagSvgPath struct {
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
 
-	x int
-	y int
+	x          int //#replicar
+	y          int //#replicar
+	width      int //#replicar
+	height     int //#replicar
+	heightBBox int //#replicar
+	bottom     int //#replicar
 
 	// stage
 	//
@@ -872,6 +876,8 @@ func (e *TagSvgPath) DominantBaseline(value interface{}) (ref *TagSvgPath) {
 //	    RGBA: e.g. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgPath) Fill(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if value == nil {
 		e.selfElement.Call("setAttribute", "fill", "none")
 		return e
@@ -914,6 +920,8 @@ func (e *TagSvgPath) Fill(value interface{}) (ref *TagSvgPath) {
 //	 Notes:
 //	   *As a presentation attribute fill-opacity can be used as a CSS property.
 func (e *TagSvgPath) FillOpacity(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "fill-opacity", p)
@@ -952,6 +960,8 @@ func (e *TagSvgPath) FillOpacity(value interface{}) (ref *TagSvgPath) {
 //	 Notas:
 //	   * Como atributo de apresentação, fill-rule pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) FillRule(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgFillRule); ok {
 		e.selfElement.Call("setAttribute", "fill-rule", converted.String())
 		return e
@@ -1214,6 +1224,8 @@ func (e *TagSvgPath) FontStretch(fontStretch interface{}) (ref *TagSvgPath) {
 //	  * Como atributo de apresentação, font-style pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //	    font-style para obter mais informações.
 func (e *TagSvgPath) FontStyle(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(FontStyleRule); ok {
 		e.selfElement.Call("setAttribute", "font-style", converted.String())
 		return e
@@ -1251,6 +1263,8 @@ func (e *TagSvgPath) FontStyle(value interface{}) (ref *TagSvgPath) {
 //	   * Como atributo de apresentação, font-variant pode ser usado como uma propriedade CSS. Consulte a propriedade
 //	     CSS font-variant para obter mais informações.
 func (e *TagSvgPath) FontVariant(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(FontVariantRule); ok {
 		e.selfElement.Call("setAttribute", "font-variant", converted.String())
 		return e
@@ -1290,6 +1304,8 @@ func (e *TagSvgPath) FontVariant(value interface{}) (ref *TagSvgPath) {
 //	   * Como atributo de apresentação, o peso da fonte pode ser usado como uma propriedade CSS. Consulte a propriedade
 //	     CSS font-weight para obter mais informações.
 func (e *TagSvgPath) FontWeight(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(FontWeightRule); ok {
 		e.selfElement.Call("setAttribute", "font-weight", converted.String())
 		return e
@@ -1325,6 +1341,8 @@ func (e *TagSvgPath) FontWeight(value interface{}) (ref *TagSvgPath) {
 //	  * Como um atributo de apresentação, a renderização de imagem pode ser usada como uma propriedade CSS. Consulte
 //	    a propriedade de renderização de imagem css para obter mais informações.
 func (e *TagSvgPath) ImageRendering(imageRendering string) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	e.selfElement.Call("setAttribute", "image-rendering", imageRendering)
 	return e
 }
@@ -1367,6 +1385,8 @@ func (e *TagSvgPath) ImageRendering(imageRendering string) (ref *TagSvgPath) {
 //   - Como atributo de apresentação, o espaçamento entre letras pode ser usado como uma propriedade CSS.
 //     Consulte a propriedade de espaçamento entre letras do CSS para obter mais informações.
 func (e *TagSvgPath) LetterSpacing(value float64) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	e.selfElement.Call("setAttribute", "letter-spacing", value)
 	return e
 }
@@ -1395,6 +1415,8 @@ func (e *TagSvgPath) LetterSpacing(value float64) (ref *TagSvgPath) {
 //	    RGBA: ex. color.RGBA{R: 0xff, G: 0xff, B: 0x00, A: 0xff}
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgPath) LightingColor(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "lighting-color", RGBAToJs(converted))
 		return e
@@ -1441,6 +1463,8 @@ func (e *TagSvgPath) LightingColor(value interface{}) (ref *TagSvgPath) {
 // Notas:
 //   - Como atributo de apresentação, o marker-end pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) MarkerEnd(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	e.selfElement.Call("setAttribute", "marker-end", value)
 	return e
 }
@@ -1475,6 +1499,8 @@ func (e *TagSvgPath) MarkerEnd(value interface{}) (ref *TagSvgPath) {
 // Notas:
 //   - Como atributo de apresentação, o marker-mid pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) MarkerMid(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	e.selfElement.Call("setAttribute", "marker-mid", value)
 	return e
 }
@@ -1516,6 +1542,8 @@ func (e *TagSvgPath) MarkerMid(value interface{}) (ref *TagSvgPath) {
 // Notas:
 //   - Como atributo de apresentação, o início do marcador pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) MarkerStart(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	e.selfElement.Call("setAttribute", "marker-start", value)
 	return e
 }
@@ -1546,6 +1574,8 @@ func (e *TagSvgPath) MarkerStart(value interface{}) (ref *TagSvgPath) {
 // Notas:
 //   - Como uma máscara de atributo de apresentação pode ser usada como uma propriedade CSS.
 func (e *TagSvgPath) Mask(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	e.selfElement.Call("setAttribute", "mask", value)
 	return e
 }
@@ -1580,6 +1610,8 @@ func (e *TagSvgPath) Mask(value interface{}) (ref *TagSvgPath) {
 //	  * Como atributo de apresentação, a opacidade pode ser usada como uma propriedade CSS. Consulte a propriedade de
 //	    opacidade do CSS para obter mais informações.
 func (e *TagSvgPath) Opacity(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "opacity", p)
@@ -1657,6 +1689,8 @@ func (e *TagSvgPath) Opacity(value interface{}) (ref *TagSvgPath) {
 //   - Como atributo de apresentação, overflow pode ser usado como propriedade CSS. Consulte a propriedade CSS
 //     overflow para obter mais informações.
 func (e *TagSvgPath) Overflow(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(Overflow); ok {
 		e.selfElement.Call("setAttribute", "overflow", converted.String())
 		return e
@@ -1694,6 +1728,8 @@ func (e *TagSvgPath) Overflow(value interface{}) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como um atributo de apresentação, os eventos de ponteiro podem ser usados como uma propriedade CSS.
 func (e *TagSvgPath) PointerEvents(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgPointerEvents); ok {
 		e.selfElement.Call("setAttribute", "pointer-events", converted.String())
 		return e
@@ -1731,6 +1767,8 @@ func (e *TagSvgPath) PointerEvents(value interface{}) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como um atributo de apresentação, a renderização de forma pode ser usada como uma propriedade CSS.
 func (e *TagSvgPath) ShapeRendering(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgShapeRendering); ok {
 		e.selfElement.Call("setAttribute", "shape-rendering", converted.String())
 		return e
@@ -1776,6 +1814,8 @@ func (e *TagSvgPath) ShapeRendering(value interface{}) (ref *TagSvgPath) {
 //	     valor black e uma stop-opacity com o valor 0.
 //	   * Como atributo de apresentação, stop-color pode ser usado como propriedade CSS.
 func (e *TagSvgPath) StopColor(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stop-color", RGBAToJs(converted))
 		return e
@@ -1819,6 +1859,8 @@ func (e *TagSvgPath) StopColor(value interface{}) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como atributo de apresentação, stop-opacity pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) StopOpacity(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stop-opacity", p)
@@ -1861,6 +1903,8 @@ func (e *TagSvgPath) StopOpacity(value interface{}) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como um traço de atributo de apresentação pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) Stroke(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "stroke", RGBAToJs(converted))
 		return e
@@ -1898,6 +1942,8 @@ func (e *TagSvgPath) Stroke(value interface{}) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) StrokeDasharray(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.([]float64); ok {
 		str := ""
 		for _, v := range converted {
@@ -1941,6 +1987,8 @@ func (e *TagSvgPath) StrokeDasharray(value interface{}) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como atributo de apresentação, o traço-linecap pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) StrokeLineCap(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgStrokeLinecap); ok {
 		e.selfElement.Call("setAttribute", "stroke-linecap", converted.String())
 		return e
@@ -1968,6 +2016,8 @@ func (e *TagSvgPath) StrokeLineCap(value interface{}) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como atributo de apresentação, stroke-linejoin pode ser usado como propriedade CSS.
 func (e *TagSvgPath) StrokeLineJoin(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgStrokeLinejoin); ok {
 		e.selfElement.Call("setAttribute", "stroke-linejoin", converted.String())
 		return e
@@ -2002,6 +2052,8 @@ func (e *TagSvgPath) StrokeLineJoin(value interface{}) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como atributo de apresentação, stroke-miterlimit pode ser usado como propriedade CSS.
 func (e *TagSvgPath) StrokeMiterLimit(value float64) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	e.selfElement.Call("setAttribute", "stroke-miterlimit", value)
 	return e
 }
@@ -2034,6 +2086,8 @@ func (e *TagSvgPath) StrokeMiterLimit(value float64) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como atributo de apresentação, a opacidade do traço pode ser usada como uma propriedade CSS.
 func (e *TagSvgPath) StrokeOpacity(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stroke-opacity", p)
@@ -2064,6 +2118,8 @@ func (e *TagSvgPath) StrokeOpacity(value interface{}) (ref *TagSvgPath) {
 //	    float32: 1.0 = "100%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgPath) StrokeWidth(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "stroke-width", p)
@@ -2121,6 +2177,8 @@ func (e *TagSvgPath) StrokeWidth(value interface{}) (ref *TagSvgPath) {
 //	Notes:
 //	  * As a presentation attribute, text-anchor can be used as a CSS property.
 func (e *TagSvgPath) TextAnchor(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgTextAnchor); ok {
 		e.selfElement.Call("setAttribute", "text-anchor", converted.String())
 		return e
@@ -2180,6 +2238,8 @@ func (e *TagSvgPath) TextAnchor(value interface{}) (ref *TagSvgPath) {
 //	  * Como atributo de apresentação, a decoração de texto pode ser usada como uma propriedade CSS. Consulte a
 //	    propriedade CSS text-decoration para obter mais informações.
 func (e *TagSvgPath) TextDecoration(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(color.RGBA); ok {
 		e.selfElement.Call("setAttribute", "text-decoration", RGBAToJs(converted))
 		return e
@@ -2217,6 +2277,8 @@ func (e *TagSvgPath) TextDecoration(value interface{}) (ref *TagSvgPath) {
 //	  * Como um atributo de apresentação, a renderização de texto pode ser usada como uma propriedade CSS.
 //	    Consulte a propriedade de renderização de texto css para obter mais informações.
 func (e *TagSvgPath) TextRendering(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgTextRendering); ok {
 		e.selfElement.Call("setAttribute", "text-rendering", converted.String())
 		return e
@@ -2261,6 +2323,8 @@ func (e *TagSvgPath) TextRendering(value interface{}) (ref *TagSvgPath) {
 //	    e o atributo. Consulte a documentação da transformação da propriedade CSS para obter a sintaxe específica a ser
 //	    usada nesse caso.
 func (e *TagSvgPath) Transform(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(*TransformFunctions); ok {
 		e.selfElement.Call("setAttribute", "transform", converted.String())
 		return e
@@ -2441,6 +2505,8 @@ func (e *TagSvgPath) Visibility(value interface{}) (ref *TagSvgPath) {
 //	  * Como atributo de apresentação, o espaçamento entre palavras pode ser usado como uma propriedade CSS.
 //	    Consulte a propriedade de espaçamento entre palavras do CSS para obter mais informações.
 func (e *TagSvgPath) WordSpacing(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "word-spacing", p)
@@ -2528,6 +2594,8 @@ func (e *TagSvgPath) WritingMode(value interface{}) (ref *TagSvgPath) {
 //     elementos.
 //   - Para uso geral pelo navegador.
 func (e *TagSvgPath) Class(class string) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	e.selfElement.Call("setAttribute", "class", class)
 	return e
 }
@@ -2552,6 +2620,8 @@ func (e *TagSvgPath) Class(class string) (ref *TagSvgPath) {
 //
 // Funciona de forma idêntica ao atributo style em HTML.
 func (e *TagSvgPath) Style(value string) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	e.selfElement.Call("setAttribute", "style", value)
 	return e
 }
@@ -2589,6 +2659,8 @@ func (e *TagSvgPath) Style(value string) (ref *TagSvgPath) {
 // e várias operações de traçado. Basicamente, todos os cálculos que exigem o comprimento do caminho. stroke-dasharray,
 // por exemplo, assumirá o início do caminho sendo 0 e o ponto final o valor definido no atributo pathLength.
 func (e *TagSvgPath) PathLength(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	e.selfElement.Call("setAttribute", "pathLength", value)
 	return e
 }
@@ -2649,6 +2721,8 @@ func (e *TagSvgPath) Html(value string) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como atributo de apresentação, paint-order pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) PaintOrder(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgPaintOrder); ok {
 		e.selfElement.Call("setAttribute", "paint-order", converted.String())
 		return e
@@ -2690,6 +2764,8 @@ func (e *TagSvgPath) PaintOrder(value interface{}) (ref *TagSvgPath) {
 //	Notas:
 //	  * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) StrokeDashOffset(value interface{}) (ref *TagSvgPath) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.([]float32); ok {
 		str := ""
 		for _, v := range converted {
@@ -2839,5 +2915,73 @@ func (e *TagSvgPath) GetLeft() (left float64) {
 //	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgPath) Reference(reference **TagSvgPath) (ref *TagSvgPath) {
 	*reference = e
+	return e
+}
+
+// GetBoundingBox #replicar
+//
+// English:
+//
+// Returns the last update of the element's bounding box.
+//
+// Português:
+//
+// Retorna a última atualização do bounding box do elemnto.
+func (e *TagSvgPath) GetBoundingBox() (x, y, width, height int) {
+	return e.x, e.y, e.width, e.height
+}
+
+// CollisionBoundingBox #replicar
+//
+// English:
+//
+// Detect collision between two bounding boxes.
+//
+// Português:
+//
+// Detecta colisão entre dois bounding box.
+func (e *TagSvgPath) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
+	x, y, width, height := elemnt.GetBoundingBox()
+	if e.x < x+width && e.x+e.width > x && e.y < y+height && e.y+e.height > y {
+		return true
+	}
+
+	return false
+}
+
+// UpdateBoundingClientRect #replicar
+//
+// English:
+//
+// Updates the coordinates and dimensions of the element's bounds box.
+//
+// Português:
+//
+// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
+func (e *TagSvgPath) UpdateBoundingClientRect() (ref *TagSvgPath) {
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+	//
+	//                    ⋀                ⋀
+	//                    |                |
+	//                  y/top            bottom
+	//                    |                |
+	//                    ⋁                |
+	// <---- x/left ----> +--------------+ | ---
+	//                    |              | |   ⋀
+	//                    |              | | width
+	//                    |              | ⋁   ⋁
+	//                    +--------------+ -----
+	//                    | <- right ->  |
+	// <--------- right bbox ----------> |
+
+	bbox := e.selfElement.Call("getBoundingClientRect")
+	e.x = bbox.Get("left").Int()
+	e.y = bbox.Get("top").Int()
+	e.heightBBox = bbox.Get("right").Int()
+	e.bottom = bbox.Get("bottom").Int()
+
+	e.height = e.heightBBox - e.x
+	e.width = e.bottom - e.y
+
 	return e
 }

@@ -48,8 +48,12 @@ type TagSvgG struct {
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
 
-	x int
-	y int
+	x          int //#replicar
+	y          int //#replicar
+	width      int //#replicar
+	height     int //#replicar
+	heightBBox int //#replicar
+	bottom     int //#replicar
 
 	// stage
 	//
@@ -4530,6 +4534,74 @@ func (e *TagSvgG) AddListenerFocusOut(focusEvent *chan struct{}) (ref *TagSvgG) 
 			},
 		),
 	)
+	return e
+}
+
+// GetBoundingBox #replicar
+//
+// English:
+//
+// Returns the last update of the element's bounding box.
+//
+// Português:
+//
+// Retorna a última atualização do bounding box do elemnto.
+func (e *TagSvgG) GetBoundingBox() (x, y, width, height int) {
+	return e.x, e.y, e.width, e.height
+}
+
+// CollisionBoundingBox #replicar
+//
+// English:
+//
+// Detect collision between two bounding boxes.
+//
+// Português:
+//
+// Detecta colisão entre dois bounding box.
+func (e *TagSvgG) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
+	x, y, width, height := elemnt.GetBoundingBox()
+	if e.x < x+width && e.x+e.width > x && e.y < y+height && e.y+e.height > y {
+		return true
+	}
+
+	return false
+}
+
+// UpdateBoundingClientRect #replicar
+//
+// English:
+//
+// Updates the coordinates and dimensions of the element's bounds box.
+//
+// Português:
+//
+// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
+func (e *TagSvgG) UpdateBoundingClientRect() (ref *TagSvgG) {
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+	//
+	//                    ⋀                ⋀
+	//                    |                |
+	//                  y/top            bottom
+	//                    |                |
+	//                    ⋁                |
+	// <---- x/left ----> +--------------+ | ---
+	//                    |              | |   ⋀
+	//                    |              | | width
+	//                    |              | ⋁   ⋁
+	//                    +--------------+ -----
+	//                    | <- right ->  |
+	// <--------- right bbox ----------> |
+
+	bbox := e.selfElement.Call("getBoundingClientRect")
+	e.x = bbox.Get("left").Int()
+	e.y = bbox.Get("top").Int()
+	e.heightBBox = bbox.Get("right").Int()
+	e.bottom = bbox.Get("bottom").Int()
+
+	e.height = e.heightBBox - e.x
+	e.width = e.bottom - e.y
+
 	return e
 }
 

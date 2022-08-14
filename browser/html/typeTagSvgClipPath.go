@@ -47,13 +47,6 @@ type TagSvgClipPath struct {
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
 
-	x          int
-	y          int
-	width      int
-	height     int
-	heightBBox int
-	bottom     int
-
 	// stage
 	//
 	// English:
@@ -2685,108 +2678,6 @@ func (e *TagSvgClipPath) Text(value string) (ref *TagSvgClipPath) {
 func (e *TagSvgClipPath) Html(value string) (ref *TagSvgClipPath) {
 	e.selfElement.Set("innerHTML", value)
 	return e
-}
-
-// GetXY
-//
-// English:
-//
-//	Returns the X and Y axes in pixels.
-//
-// Português:
-//
-//	Retorna os eixos X e Y em pixels.
-func (e *TagSvgClipPath) GetXY() (x, y int) {
-	x = e.x
-	y = e.y
-
-	return
-}
-
-// GetX
-//
-// English:
-//
-//	Returns the X axe in pixels.
-//
-// Português:
-//
-//	Retorna o eixo X em pixels.
-func (e *TagSvgClipPath) GetX() (x int) {
-	return e.x
-}
-
-// GetY
-//
-// English:
-//
-//	Returns the Y axe in pixels.
-//
-// Português:
-//
-//	Retorna o eixo Y em pixels.
-func (e *TagSvgClipPath) GetY() (y int) {
-	return e.y
-}
-
-// GetTop
-//
-// English:
-//
-//	Same as GetX() function, returns the x position of the element.
-//
-// Português:
-//
-//	O mesmo que a função GetX(), retorna a posição x do elemento.
-func (e *TagSvgClipPath) GetTop() (top float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	top = coordinate.Get("top").Float()
-	return
-}
-
-// GetRight
-//
-// English:
-//
-//	It is the same as x + width.
-//
-// Português:
-//
-//	É o mesmo que x + width.
-func (e *TagSvgClipPath) GetRight() (right float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	right = coordinate.Get("right").Float()
-	return
-}
-
-// GetBottom
-//
-// English:
-//
-//	It is the same as y + height.
-//
-// Português:
-//
-//	É o mesmo que y + Height.
-func (e *TagSvgClipPath) GetBottom() (bottom float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	bottom = coordinate.Get("bottom").Float()
-	return
-}
-
-// GetLeft
-//
-// English:
-//
-//	Same as GetY() function, returns the y position of the element.
-//
-// Português:
-//
-//	O mesmo que a função GetY(), retorna a posição y do elemento.
-func (e *TagSvgClipPath) GetLeft() (left float64) {
-	var coordinate = e.selfElement.Call("getBoundingClientRect")
-	left = coordinate.Get("left").Float()
-	return
 }
 
 // Reference

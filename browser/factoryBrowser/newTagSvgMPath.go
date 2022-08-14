@@ -6,13 +6,13 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // English:
 //
-// The <metadata> SVG element adds metadata to SVG content. Metadata is structured information about data.
-// The contents of <metadata> should be elements from other XML namespaces such as RDF, FOAF, etc.
+// The <mpath> sub-element for the <animateMotion> element provides the ability to reference an external <path> element
+// as the definition of a motion path.
 //
 // Português:
 //
-// O elemento SVG <metadata> adiciona metadados ao conteúdo SVG. Metadados são informações estruturadas sobre dados.
-// O conteúdo de <metadata> deve ser elementos de outros namespaces XML, como RDF, FOAF, etc.
+// O subelemento <mpath> para o elemento <animateMotion> fornece a capacidade de referenciar um elemento <path> externo
+// como a definição de um caminho de movimento.
 func NewTagSvgMPath() (ref *html.TagSvgMPath) {
 	ref = &html.TagSvgMPath{}
 	ref.Init()

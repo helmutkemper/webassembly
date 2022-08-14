@@ -53,8 +53,12 @@ type TagSvgForeignObject struct {
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
 
-	x int
-	y int
+	x          int //#replicar
+	y          int //#replicar
+	width      int //#replicar
+	height     int //#replicar
+	heightBBox int //#replicar
+	bottom     int //#replicar
 
 	// stage
 	//
@@ -2656,6 +2660,8 @@ func (e *TagSvgForeignObject) Style(value string) (ref *TagSvgForeignObject) {
 //	     float32: 1.0 = "100%"
 //	     qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) Height(height interface{}) (ref *TagSvgForeignObject) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := height.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "height", p)
@@ -2686,6 +2692,8 @@ func (e *TagSvgForeignObject) Height(height interface{}) (ref *TagSvgForeignObje
 //	    float32: 1.0 = "100%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) Width(value interface{}) (ref *TagSvgForeignObject) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "width", p)
@@ -2720,6 +2728,8 @@ func (e *TagSvgForeignObject) Width(value interface{}) (ref *TagSvgForeignObject
 //	    float32: 0.1 = "10%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) X(value interface{}) (ref *TagSvgForeignObject) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
 		for _, v := range converted {
@@ -2778,6 +2788,8 @@ func (e *TagSvgForeignObject) X(value interface{}) (ref *TagSvgForeignObject) {
 //	    float32: 0.1 = "10%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgForeignObject) Y(value interface{}) (ref *TagSvgForeignObject) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
 		for _, v := range converted {
@@ -4722,5 +4734,73 @@ func (e *TagSvgForeignObject) AddListenerFocusOut(focusEvent *chan struct{}) (re
 			},
 		),
 	)
+	return e
+}
+
+// GetBoundingBox #replicar
+//
+// English:
+//
+// Returns the last update of the element's bounding box.
+//
+// Português:
+//
+// Retorna a última atualização do bounding box do elemnto.
+func (e *TagSvgForeignObject) GetBoundingBox() (x, y, width, height int) {
+	return e.x, e.y, e.width, e.height
+}
+
+// CollisionBoundingBox #replicar
+//
+// English:
+//
+// Detect collision between two bounding boxes.
+//
+// Português:
+//
+// Detecta colisão entre dois bounding box.
+func (e *TagSvgForeignObject) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
+	x, y, width, height := elemnt.GetBoundingBox()
+	if e.x < x+width && e.x+e.width > x && e.y < y+height && e.y+e.height > y {
+		return true
+	}
+
+	return false
+}
+
+// UpdateBoundingClientRect #replicar
+//
+// English:
+//
+// Updates the coordinates and dimensions of the element's bounds box.
+//
+// Português:
+//
+// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
+func (e *TagSvgForeignObject) UpdateBoundingClientRect() (ref *TagSvgForeignObject) {
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+	//
+	//                    ⋀                ⋀
+	//                    |                |
+	//                  y/top            bottom
+	//                    |                |
+	//                    ⋁                |
+	// <---- x/left ----> +--------------+ | ---
+	//                    |              | |   ⋀
+	//                    |              | | width
+	//                    |              | ⋁   ⋁
+	//                    +--------------+ -----
+	//                    | <- right ->  |
+	// <--------- right bbox ----------> |
+
+	bbox := e.selfElement.Call("getBoundingClientRect")
+	e.x = bbox.Get("left").Int()
+	e.y = bbox.Get("top").Int()
+	e.heightBBox = bbox.Get("right").Int()
+	e.bottom = bbox.Get("bottom").Int()
+
+	e.height = e.heightBBox - e.x
+	e.width = e.bottom - e.y
+
 	return e
 }

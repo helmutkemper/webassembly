@@ -42,8 +42,12 @@ type TagSvgMask struct {
 	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
 
-	x int
-	y int
+	x          int //#replicar
+	y          int //#replicar
+	width      int //#replicar
+	height     int //#replicar
+	heightBBox int //#replicar
+	bottom     int //#replicar
 
 	// stage
 	//
@@ -2527,6 +2531,8 @@ func (e *TagSvgMask) Style(value string) (ref *TagSvgMask) {
 //	     float32: 1.0 = "100%"
 //	     qualquer outro tipo: interface{}
 func (e *TagSvgMask) Height(height interface{}) (ref *TagSvgMask) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := height.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "height", p)
@@ -2557,6 +2563,8 @@ func (e *TagSvgMask) Height(height interface{}) (ref *TagSvgMask) {
 //	    const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgMask) MaskContentUnits(value interface{}) (ref *TagSvgMask) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgUnits); ok {
 		e.selfElement.Call("setAttribute", "maskContentUnits", converted.String())
 		return e
@@ -2585,6 +2593,8 @@ func (e *TagSvgMask) MaskContentUnits(value interface{}) (ref *TagSvgMask) {
 //	    const KSvgUnits... (e.g. KSvgUnitsObjectBoundingBox)
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgMask) MaskUnits(value interface{}) (ref *TagSvgMask) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(SvgUnits); ok {
 		e.selfElement.Call("setAttribute", "maskUnits", converted.String())
 		return e
@@ -2618,6 +2628,8 @@ func (e *TagSvgMask) MaskUnits(value interface{}) (ref *TagSvgMask) {
 //	    float32: 0.1 = "10%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgMask) X(value interface{}) (ref *TagSvgMask) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
 		for _, v := range converted {
@@ -2676,6 +2688,8 @@ func (e *TagSvgMask) X(value interface{}) (ref *TagSvgMask) {
 //	    float32: 0.1 = "10%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgMask) Y(value interface{}) (ref *TagSvgMask) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.([]float64); ok {
 		var valueStr = ""
 		for _, v := range converted {
@@ -2730,6 +2744,8 @@ func (e *TagSvgMask) Y(value interface{}) (ref *TagSvgMask) {
 //	    float32: 1.0 = "100%"
 //	    qualquer outro tipo: interface{}
 func (e *TagSvgMask) Width(value interface{}) (ref *TagSvgMask) {
+	defer e.UpdateBoundingClientRect()
+
 	if converted, ok := value.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "width", p)
@@ -2885,5 +2901,73 @@ func (e *TagSvgMask) GetLeft() (left float64) {
 //	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgMask) Reference(reference **TagSvgMask) (ref *TagSvgMask) {
 	*reference = e
+	return e
+}
+
+// GetBoundingBox #replicar
+//
+// English:
+//
+// Returns the last update of the element's bounding box.
+//
+// Português:
+//
+// Retorna a última atualização do bounding box do elemnto.
+func (e *TagSvgMask) GetBoundingBox() (x, y, width, height int) {
+	return e.x, e.y, e.width, e.height
+}
+
+// CollisionBoundingBox #replicar
+//
+// English:
+//
+// Detect collision between two bounding boxes.
+//
+// Português:
+//
+// Detecta colisão entre dois bounding box.
+func (e *TagSvgMask) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
+	x, y, width, height := elemnt.GetBoundingBox()
+	if e.x < x+width && e.x+e.width > x && e.y < y+height && e.y+e.height > y {
+		return true
+	}
+
+	return false
+}
+
+// UpdateBoundingClientRect #replicar
+//
+// English:
+//
+// Updates the coordinates and dimensions of the element's bounds box.
+//
+// Português:
+//
+// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
+func (e *TagSvgMask) UpdateBoundingClientRect() (ref *TagSvgMask) {
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+	//
+	//                    ⋀                ⋀
+	//                    |                |
+	//                  y/top            bottom
+	//                    |                |
+	//                    ⋁                |
+	// <---- x/left ----> +--------------+ | ---
+	//                    |              | |   ⋀
+	//                    |              | | width
+	//                    |              | ⋁   ⋁
+	//                    +--------------+ -----
+	//                    | <- right ->  |
+	// <--------- right bbox ----------> |
+
+	bbox := e.selfElement.Call("getBoundingClientRect")
+	e.x = bbox.Get("left").Int()
+	e.y = bbox.Get("top").Int()
+	e.heightBBox = bbox.Get("right").Int()
+	e.bottom = bbox.Get("bottom").Int()
+
+	e.height = e.heightBBox - e.x
+	e.width = e.bottom - e.y
+
 	return e
 }

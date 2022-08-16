@@ -1,5 +1,4 @@
 //go:build js
-// +build js
 
 package main
 
@@ -12,14 +11,14 @@ import (
 )
 
 func main() {
-	
+
 	var density = 1.0
 	var densityManager coordinateManager.IDensity = &coordinateManager.Density{}
-	
+
 	done := make(chan struct{}, 0)
-	
+
 	browserDocument := factoryBrowserDocument.NewDocument()
-	
+
 	var htmlB = &html.Html{}
 	var stage = factoryBrowserStage.NewStage(
 		htmlB,
@@ -29,9 +28,9 @@ func main() {
 		density,
 		densityManager,
 	)
-	
+
 	factorySimpleBox.NewBoxWithRoundedCorners()
-	
+
 	//var gradientFilter iotmakerPlatformIDraw.IFilterGradientInterface
 	//
 	//var shadowFilter = shadow.NewShadowFilter(
@@ -42,11 +41,11 @@ func main() {
 	//	density,
 	//	densityManager,
 	//)
-	
+
 	//colorWhite := factoryColor.NewColorPosition(factoryColorNames.NewRed(), 0.5)
 	//colorBlack := factoryColor.NewColorPosition(factoryColorNames.NewBlack(), 1)
 	//colorList := factoryColor.NewColorList(colorBlack, colorWhite)
-	
+
 	//coordinateP0 := factoryPoint.NewPoint(0, 0, density, densityManager)
 	//coordinateP1 := factoryPoint.NewPoint(120, 150, density, densityManager)
 	//gradientFilter = factoryGradient.NewGradientLinearToFillAndStroke(coordinateP0, coordinateP1, colorList)
@@ -66,6 +65,6 @@ func main() {
 	//	density,
 	//	densityManager,
 	//)
-	
+
 	<-done
 }

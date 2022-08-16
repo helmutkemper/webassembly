@@ -236,6 +236,8 @@ func (e *TagSvgForeignObject) AppendToElement(el js.Value) (ref *TagSvgForeignOb
 }
 
 func (e *TagSvgForeignObject) Append(elements ...Compatible) (ref *TagSvgForeignObject) {
+	defer e.UpdateBoundingClientRect()
+
 	fragment := js.Global().Get("document").Call("createDocumentFragment")
 	for _, element := range elements {
 		fragment.Call("appendChild", element.Get())
@@ -4799,8 +4801,8 @@ func (e *TagSvgForeignObject) UpdateBoundingClientRect() (ref *TagSvgForeignObje
 	e.heightBBox = bbox.Get("right").Int()
 	e.bottom = bbox.Get("bottom").Int()
 
-	e.height = e.heightBBox - e.x
-	e.width = e.bottom - e.y
+	e.height = e.heightBBox
+	e.width = e.bottom
 
 	return e
 }

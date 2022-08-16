@@ -38,7 +38,6 @@
 //  </svg>
 
 //go:build js
-// +build js
 
 // fixme: bug. https://lists.w3.org/Archives/Public/www-svg/2006Jan/0490.html
 

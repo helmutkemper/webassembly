@@ -535,26 +535,31 @@ func (el *TagCanvas) PutImageData(imgData [][][]uint8, width, height int) (ref *
 //	 Example:
 //
 //	   	var fontA html.Font
-//	   	fontA.Family = factoryFontFamily.NewArial()
-//	   	fontA.Variant = factoryFontVariant.NewSmallCaps()
-//	   	fontA.Style = factoryFontStyle.NewItalic()
-//	   	fontA.Size = 20
+//	    fontA.Family = factoryFontFamily.NewArial()
+//	    fontA.Variant = factoryFontVariant.NewSmallCaps()
+//	    fontA.Style = factoryFontStyle.NewItalic()
+//	    fontA.Size = 20
 //
-//	   	var fontB html.Font
-//	   	fontB.Family = factoryFontFamily.NewVerdana()
-//	   	fontB.Size = 35
+//	    var fontB html.Font
+//	    fontB.Family = factoryFontFamily.NewVerdana()
+//	    fontB.Size = 35
 //
-//	   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	     Font(fontA).
-//	     FillText("Hello World!", 10, 50, 300).
-//	     CreateLinearGradient(0, 0, 160, 0).
-//	     AddColorStopPosition(0.0, factoryColor.NewMagenta()).
-//	     AddColorStopPosition(0.5, factoryColor.NewBlue()).
-//	     AddColorStopPosition(1.0, factoryColor.NewRed()).
-//	     FillStyleGradient().
-//	     Font(fontB).
-//	     FillText("Big smile!", 10, 90, 300).
-//	     AppendToStage()
+//	    canvas = factoryBrowser.NewTagCanvas(800, 600).
+//		    Font(fontA).
+//		    FillText("Hello World!", 10, 50, 300).
+//		    CreateLinearGradient(0, 0, 160, 0).
+//		    AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//		    AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//		    AddColorStopPosition(1.0, factoryColor.NewRed()).
+//		    FillStyleGradient().
+//		    Font(fontB).
+//		    FillText("Big smile!", 10, 90, 300)
+//
+//	    var stage = factoryBrowser.NewStage()
+//	    stage.Append(canvas)
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 //
 // Português:
 //
@@ -575,26 +580,31 @@ func (el *TagCanvas) PutImageData(imgData [][][]uint8, width, height int) (ref *
 //	 Exemplo:
 //
 //	   	var fontA html.Font
-//	   	fontA.Family = factoryFontFamily.NewArial()
-//	   	fontA.Variant = factoryFontVariant.NewSmallCaps()
-//	   	fontA.Style = factoryFontStyle.NewItalic()
-//	   	fontA.Size = 20
+//	    fontA.Family = factoryFontFamily.NewArial()
+//	    fontA.Variant = factoryFontVariant.NewSmallCaps()
+//	    fontA.Style = factoryFontStyle.NewItalic()
+//	    fontA.Size = 20
 //
-//	   	var fontB html.Font
-//	   	fontB.Family = factoryFontFamily.NewVerdana()
-//	   	fontB.Size = 35
+//	    var fontB html.Font
+//	    fontB.Family = factoryFontFamily.NewVerdana()
+//	    fontB.Size = 35
 //
-//	   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	     Font(fontA).
-//	     FillText("Hello World!", 10, 50, 300).
-//	     CreateLinearGradient(0, 0, 160, 0).
-//	     AddColorStopPosition(0.0, factoryColor.NewMagenta()).
-//	     AddColorStopPosition(0.5, factoryColor.NewBlue()).
-//	     AddColorStopPosition(1.0, factoryColor.NewRed()).
-//	     FillStyleGradient().
-//	     Font(fontB).
-//	     FillText("Big smile!", 10, 90, 300).
-//	     AppendToStage()
+//	    canvas = factoryBrowser.NewTagCanvas(800, 600).
+//		    Font(fontA).
+//		    FillText("Hello World!", 10, 50, 300).
+//		    CreateLinearGradient(0, 0, 160, 0).
+//		    AddColorStopPosition(0.0, factoryColor.NewMagenta()).
+//		    AddColorStopPosition(0.5, factoryColor.NewBlue()).
+//		    AddColorStopPosition(1.0, factoryColor.NewRed()).
+//		    FillStyleGradient().
+//		    Font(fontB).
+//		    FillText("Big smile!", 10, 90, 300)
+//
+//	    var stage = factoryBrowser.NewStage()
+//	    stage.Append(canvas)
+//
+//	    done := make(chan struct{}, 0)
+//	    <-done
 func (el *TagCanvas) AddColorStopPosition(stopPosition float64, color color.RGBA) (ref *TagCanvas) {
 	el.gradient.Call("addColorStop", stopPosition, RGBAToJs(color))
 	return el

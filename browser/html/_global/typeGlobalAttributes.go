@@ -10,11 +10,11 @@ import (
 //
 // English:
 //
-//  Sets the X and Y axes in pixels.
+//	Sets the X and Y axes in pixels.
 //
 // Português:
 //
-//  Define os eixos X e Y em pixels.
+//	Define os eixos X e Y em pixels.
 func (e *GlobalAttributes) SetXY(x, y int) (ref *GlobalAttributes) {
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	py := strconv.FormatInt(int64(y), 10) + "px"
@@ -29,11 +29,11 @@ func (e *GlobalAttributes) SetXY(x, y int) (ref *GlobalAttributes) {
 //
 // English:
 //
-//  Sets the X axe in pixels.
+//	Sets the X axe in pixels.
 //
 // Português:
 //
-//  Define o eixo X em pixels.
+//	Define o eixo X em pixels.
 func (e *GlobalAttributes) SetX(x int) (ref *GlobalAttributes) {
 	px := strconv.FormatInt(int64(x), 10) + "px"
 	e.selfElement.Get("style").Set("left", px)
@@ -45,11 +45,11 @@ func (e *GlobalAttributes) SetX(x int) (ref *GlobalAttributes) {
 //
 // English:
 //
-//  Sets the Y axe in pixels.
+//	Sets the Y axe in pixels.
 //
 // Português:
 //
-//  Define o eixo Y em pixels.
+//	Define o eixo Y em pixels.
 func (e *GlobalAttributes) SetY(y int) (ref *GlobalAttributes) {
 	py := strconv.FormatInt(int64(y), 10) + "px"
 	e.selfElement.Get("style").Set("top", py)
@@ -61,15 +61,17 @@ func (e *GlobalAttributes) SetY(y int) (ref *GlobalAttributes) {
 //
 // English:
 //
-//  Returns the X and Y axes in pixels.
+//	Returns the X and Y axes in pixels.
 //
 // Português:
 //
-//  Retorna os eixos X e Y em pixels.
+//	Retorna os eixos X e Y em pixels.
 func (e *GlobalAttributes) GetXY() (x, y int) {
-	x = e.selfElement.Get("style").Get("left").Int()
-	y = e.selfElement.Get("style").Get("top").Int()
+	x = e.x
+	y = e.y
 
+	x = x - e.deltaMovieX
+	y = y - e.deltaMovieY
 	return
 }
 
@@ -77,30 +79,26 @@ func (e *GlobalAttributes) GetXY() (x, y int) {
 //
 // English:
 //
-//  Returns the X axe in pixels.
+//	Returns the X axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo X em pixels.
+//	Retorna o eixo X em pixels.
 func (e *GlobalAttributes) GetX() (x int) {
-	x = e.selfElement.Get("style").Get("left").Int()
-
-	return
+	return e.x - e.deltaMovieX
 }
 
 // GetY
 //
 // English:
 //
-//  Returns the Y axe in pixels.
+//	Returns the Y axe in pixels.
 //
 // Português:
 //
-//  Retorna o eixo Y em pixels.
+//	Retorna o eixo Y em pixels.
 func (e *GlobalAttributes) GetY() (y int) {
-	y = e.selfElement.Get("style").Get("top").Int()
-
-	return
+	return e.y - e.deltaMovieY
 }
 
 const (

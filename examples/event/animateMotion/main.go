@@ -17,7 +17,6 @@
 //  </svg>
 
 //go:build js
-// +build js
 
 package main
 
@@ -111,7 +110,7 @@ func main() {
 				//data.Blur()
 
 			case <-animationEvent:
-				factor = (container.GetRight() - container.GetX()) / width
+				factor = float64(container.GetRight()-container.GetX()) / width
 				angle := math.Atan2(120-circle.GetY()/factor, 95-circle.GetX()/factor)
 				svgG.Transform(factoryBrowser.NewTransform().Rotate(angle*180/math.Pi-90, 25, 25))
 			}

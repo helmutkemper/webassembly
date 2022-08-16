@@ -4925,6 +4925,7 @@ func (e *TagSvgRect) GetBoundingBox() (x, y, width, height int) {
 // Detecta colisão entre dois bounding box.
 func (e *TagSvgRect) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
 	x, y, width, height := elemnt.GetBoundingBox()
+	log.Printf("x: %v, y: %v, width: %v, height: %v", x, y, width, height)
 	if e.x < x+width && e.x+e.width > x && e.y < y+height && e.y+e.height > y {
 		return true
 	}

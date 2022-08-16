@@ -1,5 +1,4 @@
 //go:build js
-// +build js
 
 package main
 
@@ -58,7 +57,7 @@ func main() {
 	bezier.Add(algorithm.Point{X: 0*wight + border, Y: 1*height + border})
 	bezier.Add(algorithm.Point{X: 0*wight + border + adjust, Y: 0*height + border + adjust})
 	bezier.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
-	bezier.Process(0.001)
+	bezier.Process(1000)
 
 	var decimatesCurve = factoryAlgorithm.NewBezierCurve()
 	decimatesCurve.Copy(bezier)
@@ -85,7 +84,7 @@ func main() {
 
 	var ripple = factoryAlgorithm.NewBezierCurve()
 	ripple.Copy(bezier)
-	ripple.GenerateRipple(10, 40)
+	ripple.GenerateRipple(20, 30)
 	for _, point := range *ripple.GetProcessed() {
 		AddDotPalegoldenrod(int(point.X), int(point.Y))
 	}
@@ -100,7 +99,7 @@ func main() {
 
 	// todo: AddPointsToEasingTween define de forma automática os valores start e end da interpolação.
 	factoryEasingTween.NewLinear(
-		20*time.Second,
+		30*time.Second,
 		0,
 		10000,
 		div.EasingTweenWalkingAndRotateIntoPoints,
@@ -117,14 +116,14 @@ func main() {
 func AddDotBlue(x, y int) {
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewBlueHalfTransparent()).
-		Arc(x, y, 0.4, 0, 2*math.Pi, false).
+		Arc(x, y, 0.6, 0, 2*math.Pi, false).
 		Fill()
 }
 
 func AddDotPalegoldenrod(x, y int) {
 	canvas.BeginPath().
 		FillStyle(factoryColor.NewPalegoldenrod()).
-		Arc(x, y, 0.35, 0, 2*math.Pi, false).
+		Arc(x, y, 1.0, 0, 2*math.Pi, false).
 		Fill()
 }
 

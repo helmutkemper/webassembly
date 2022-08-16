@@ -1,5 +1,4 @@
 //go:build js
-// +build js
 
 // GOARCH=wasm;GOOS=js
 // -o main.wasm

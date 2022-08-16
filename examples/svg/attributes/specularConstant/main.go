@@ -24,7 +24,6 @@
 //  </svg>
 
 //go:build js
-// +build js
 
 // bug: o original não apararece nada
 

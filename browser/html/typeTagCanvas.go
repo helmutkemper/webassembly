@@ -11,6 +11,15 @@ import (
 // todo: transformar em exemplo
 // https://github.com/mdn/content/blob/main/files/en-us/web/api/canvas_api/tutorial/compositing/example/index.md?plain=1
 
+// TagCanvas
+//
+// English:
+//
+// Use the HTML <canvas> element with either the canvas scripting API or the WebGL API to draw graphics and animations.
+//
+// Português:
+//
+// Use o elemento HTML <canvas> com a API de script de tela ou a API WebGL para desenhar gráficos e animações.
 type TagCanvas struct {
 	tag         Tag
 	id          string

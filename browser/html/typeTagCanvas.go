@@ -955,28 +955,6 @@ func (el *TagCanvas) FillRect(x, y, width, height int) (ref *TagCanvas) {
 //	    render the text in another color/gradient;
 //	  * The default color of the text is black.
 //
-//	Example:
-//	  	var fontA html.Font
-//	  	fontA.Family = factoryFontFamily.NewArial()
-//	  	fontA.Style = factoryFontStyle.NewItalic()
-//	  	fontA.Size = 20
-//
-//	  	var fontB html.Font
-//	  	fontB.Family = factoryFontFamily.NewVerdana()
-//	  	fontB.Size = 35
-//
-//	  	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	  	  Font(fontA).
-//	  	  FillText("Hello World!", 10, 50, 300).
-//	  	  CreateLinearGradient(0, 0, 160, 0).
-//	  	  AddColorStopPosition(0.0, factoryColor.NewMagenta()).
-//	  	  AddColorStopPosition(0.5, factoryColor.NewBlue()).
-//	  	  AddColorStopPosition(1.0, factoryColor.NewRed()).
-//	  	  FillStyleGradient().
-//	  	  Font(fontB).
-//	  	  FillText("Big smile!", 10, 90, 300).
-//	  	  AppendToStage()
-//
 // Português:
 //
 //	Desenha o texto "preenchido" no canvas.
@@ -993,28 +971,6 @@ func (el *TagCanvas) FillRect(x, y, width, height int) (ref *TagCanvas) {
 //	  * Use a função Font() para especificar a fonte e o tamanho da fonte e use a função FillStyle()
 //	    para renderizar o texto em outra cor/gradiente;
 //	  * A cor padrão do texto é preto.
-//
-//	Exemplo:
-//	  	var fontA html.Font
-//	  	fontA.Family = factoryFontFamily.NewArial()
-//	  	fontA.Style = factoryFontStyle.NewItalic()
-//	  	fontA.Size = 20
-//
-//	  	var fontB html.Font
-//	  	fontB.Family = factoryFontFamily.NewVerdana()
-//	  	fontB.Size = 35
-//
-//	  	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	  	  Font(fontA).
-//	  	  FillText("Hello World!", 10, 50, 300).
-//	  	  CreateLinearGradient(0, 0, 160, 0).
-//	  	  AddColorStopPosition(0.0, factoryColor.NewMagenta()).
-//	  	  AddColorStopPosition(0.5, factoryColor.NewBlue()).
-//	  	  AddColorStopPosition(1.0, factoryColor.NewRed()).
-//	  	  FillStyleGradient().
-//	  	  Font(fontB).
-//	  	  FillText("Big smile!", 10, 90, 300).
-//	  	  AppendToStage()
 func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) {
 	el.context.Call("fillText", text, x, y, maxWidth)
 	return el

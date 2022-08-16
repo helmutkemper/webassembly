@@ -2,11 +2,11 @@
 
 ### English:
 
-This example shows how to add color stop position on cavas element.
+This example shows how to use addColorStopPosition on cavas element.
 
 ### Português:
 
-Este exemplo mostra como adicionar uma posição color stop no elemnto canvas.
+Este exemplo mostra como usar addColorStopPosition no elemnto canvas.
 
 ### Makefile
 

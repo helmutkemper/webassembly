@@ -321,6 +321,10 @@ Golang code:
 | [BezierCurve/1_addCurve](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/1_addCurve)             | 08/august/22 |
 | [BezierCurve/2_addEasingTween](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/2_addEasingTween) | 08/august/22 |
 | [BezierCurve/3_addRipple](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/3_addRipple)           | 08/august/22 |
-| [canvas/bezierCurve](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/bezierCurve)                     | 16/august/22 |
 | [canvas/addColorStopPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/addColorStopPosition)   | 16/august/22 |
 | [canvas/arc](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/arc)                                     | 16/august/22 |
+| [canvas/arcTo](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/arcTo)                                 | 16/august/22 |
+| [canvas/beginPath](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/beginPath)                         | 16/august/22 |
+| [canvas/bezierCurveTo](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/bezierCurveTo)                 | 16/august/22 |
+| [canvas/clearRect](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/clearRect)                         | 16/august/22 |
+| [canvas/createLinearGradient](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createLinearGradient)   | 16/august/22 |

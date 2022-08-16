@@ -2,7 +2,7 @@
 
 ### English:
 
-This example shows some variations on how to use the Bezié curve
+This example shows some variations on how to use the Bezié curve.
 
 ### Português:
 

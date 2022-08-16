@@ -576,14 +576,6 @@ func (el *TagCanvas) AddColorStopPosition(stopPosition float64, color color.RGBA
 //	   anticlockwise: An optional Boolean. If true, draws the arc counter-clockwise between the start
 //	     and end angles. The default is false (clockwise).
 //
-//	   Example:
-//
-//	     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	       BeginPath().
-//	       Arc(100, 75, 50, 0, 2 * math.Pi, false).
-//	       Stroke().
-//	       AppendToStage()
-//
 // Português:
 //
 //	Creates an arc/curve (used to create circles, or parts of circles).
@@ -596,14 +588,6 @@ func (el *TagCanvas) AddColorStopPosition(stopPosition float64, color color.RGBA
 //	   endAngle: O ângulo no qual o arco termina em radianos, medido a partir do eixo x positivo;
 //	   anticlockwise: Um booleano opcional. Se true, desenha o arco no sentido anti-horário entre os
 //	     ângulos inicial e final. O padrão é false (sentido horário).
-//
-//	   Example:
-//
-//	     factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	       BeginPath().
-//	       Arc(100, 75, 50, 0, 2 * math.Pi, false).
-//	       Stroke().
-//	       AppendToStage()
 func (el *TagCanvas) Arc(x, y int, radius, startAngle, endAngle float64, anticlockwise bool) (ref *TagCanvas) {
 	el.context.Call("arc", x, y, radius, startAngle, endAngle, anticlockwise)
 	return el
@@ -613,43 +597,25 @@ func (el *TagCanvas) Arc(x, y int, radius, startAngle, endAngle float64, anticlo
 //
 // English:
 //
-//	 Creates an arc/curve between two tangents.
+//	Creates an arc/curve between two tangents.
 //
-//	  Input:
-//	    x1: The x-axis coordinate of the first control point.
-//	    y1: The y-axis coordinate of the first control point.
-//	    x2: The x-axis coordinate of the second control point.
-//	    y2: The y-axis coordinate of the second control point.
-//	    radius: The arc's radius. Must be non-negative.
-//
-//	  Example:
-//	    factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	      MoveTo(20, 20).
-//	      LineTo(100, 20).
-//	      ArcTo(150, 20, 150, 70, 50).
-//	      LineTo(150, 120).
-//	      Stroke().
-//			   AppendToStage()
+//	 Input:
+//	   x1: The x-axis coordinate of the first control point.
+//	   y1: The y-axis coordinate of the first control point.
+//	   x2: The x-axis coordinate of the second control point.
+//	   y2: The y-axis coordinate of the second control point.
+//	   radius: The arc's radius. Must be non-negative.
 //
 // Português:
 //
-//	 Cria um arco / curva entre duas tangentes.
+//	Cria um arco / curva entre duas tangentes.
 //
-//	  Input:
-//	    x1: A coordenada do eixo x do primeiro ponto de controle;
-//	    y1: A coordenada do eixo y do primeiro ponto de controle;
-//	    x2: A coordenada do eixo x do segundo ponto de controle;
-//	    y2: A coordenada do eixo y do segundo ponto de controle;
-//	    radius: O raio do arco. Deve ser não negativo.
-//
-//	  Example:
-//	    factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	      MoveTo(20, 20).
-//	      LineTo(100, 20).
-//	      ArcTo(150, 20, 150, 70, 50).
-//	      LineTo(150, 120).
-//	      Stroke().
-//			   AppendToStage()
+//	 Input:
+//	   x1: A coordenada do eixo x do primeiro ponto de controle;
+//	   y1: A coordenada do eixo y do primeiro ponto de controle;
+//	   x2: A coordenada do eixo x do segundo ponto de controle;
+//	   y2: A coordenada do eixo y do segundo ponto de controle;
+//	   radius: O raio do arco. Deve ser não negativo.
 func (el *TagCanvas) ArcTo(x1, y1, x2, y2 int, radius int) (ref *TagCanvas) {
 	el.context.Call("arcTo", x1, y1, x2, y2, radius)
 	return el
@@ -674,8 +640,6 @@ func (el *TagCanvas) ArcTo(x1, y1, x2, y2 int, radius int) (ref *TagCanvas) {
 //	   * Dica: Use MoveTo(), LineTo(), QuadricCurveTo(), BezierCurveTo(), ArcTo(), e Arc(), para
 //	     criar uma nova rota no desenho;
 //	   * Use o método Stroke() para desenhar a rota no elemento canvas.
-//
-// todo: fazer exemplo
 func (el *TagCanvas) BeginPath() (ref *TagCanvas) {
 	el.context.Call("beginPath")
 	return el
@@ -696,15 +660,6 @@ func (el *TagCanvas) BeginPath() (ref *TagCanvas) {
 //	   x: The x-axis coordinate of the end point;
 //	   y: The y-axis coordinate of the end point.
 //
-//	 Example:
-//
-//	   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	     BeginPath().
-//	     MoveTo(20, 20).
-//	     BezierCurveTo(20, 100, 200, 100, 200, 20).
-//	     Stroke().
-//	     AppendToStage()
-//
 // Português:
 //
 //	Cria uma curva de Bézier cúbica.
@@ -717,15 +672,6 @@ func (el *TagCanvas) BeginPath() (ref *TagCanvas) {
 //	   cp2y: A coordenada do eixo y do segundo ponto de controle;
 //	   x: A coordenada do eixo x do ponto final;
 //	   y: A coordenada do eixo y do ponto final.
-//
-//	 Exemplo:
-//
-//	   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	     BeginPath().
-//	     MoveTo(20, 20).
-//	     BezierCurveTo(20, 100, 200, 100, 200, 20).
-//	     Stroke().
-//	     AppendToStage()
 func (el *TagCanvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y int) (ref *TagCanvas) {
 	el.context.Call("bezierCurveTo", cp1x, cp1y, cp2x, cp2y, x, y)
 	return el
@@ -743,14 +689,6 @@ func (el *TagCanvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y int) (ref *TagCa
 //
 //	   The ClearRect() method clears the specified pixels within a given rectangle.
 //
-//	 Example:
-//
-//	   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	     FillStyle("red").
-//	     FillRect(0, 0, 300, 150).
-//	     ClearRect(20, 20, 100, 50).
-//	     AppendToStage()
-//
 // Português:
 //
 //	Limpa os pixels especificados em um determinado retângulo.
@@ -760,14 +698,6 @@ func (el *TagCanvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y int) (ref *TagCa
 //	   height: A altura do retângulo a ser limpo, em pixels.
 //
 //	   O método ClearRect() limpa os pixels especificados em um determinado retângulo.
-//
-//	 Example:
-//
-//	   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	     FillStyle("red").
-//	     FillRect(0, 0, 300, 150).
-//	     ClearRect(20, 20, 100, 50).
-//	     AppendToStage()
 func (el *TagCanvas) ClearRect(x, y, width, height int) (ref *TagCanvas) {
 	el.context.Call("clearRect", x, y, width, height)
 	return el
@@ -799,7 +729,8 @@ func (el *TagCanvas) ClearRect(x, y, width, height int) (ref *TagCanvas) {
 //	    atual usando o método Save() antes de usar o método Clip() e restaurá-la, com o método
 //	    Restore(), a qualquer momento no futuro.
 //
-// todo: fazer exemplo
+// todo: https://developer.mozilla.org/pt-BR/docs/Web/API/CanvasRenderingContext2D/clip
+// todo: https://developer.mozilla.org/pt-BR/docs/Web/API/Canvas_API/Tutorial/Compositing
 func (el *TagCanvas) Clip(x, y int) (ref *TagCanvas) {
 	el.context.Call("clip", x, y)
 	return el

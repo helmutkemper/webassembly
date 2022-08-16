@@ -331,3 +331,5 @@ Golang code:
 | [canvas/createPattern](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createPattern)                 | 16/august/22 |
 | [canvas/createRadialGradient](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createRadialGradient)   | 16/august/22 |
 | [canvas/fillRect](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/fillRect)                           | 16/august/22 |
+| [canvas/fillText](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/fillText)                           | 16/august/22 |
+| [canvas/font](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/font)                                   | 16/august/22 |

@@ -58,6 +58,7 @@ package main
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
 )
 
 var canvas *html.TagCanvas
@@ -65,10 +66,12 @@ var canvas *html.TagCanvas
 func main() {
 
 	canvas = factoryBrowser.NewTagCanvas(800, 600).
-		BeginPath().
-		MoveTo(20, 20).
-		BezierCurveTo(20, 100, 200, 100, 200, 20).
-		Stroke()
+		CreateLinearGradient(0, 0, 170, 0).
+		AddColorStopPosition(0.0, factoryColor.NewBlack()).
+		AddColorStopPosition(0.5, factoryColor.NewOrangered()).
+		AddColorStopPosition(1.0, factoryColor.NewWhite()).
+		FillStyleGradient().
+		FillRect(20, 20, 150, 100)
 
 	var stage = factoryBrowser.NewStage()
 	stage.Append(canvas)

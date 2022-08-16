@@ -328,3 +328,6 @@ Golang code:
 | [canvas/bezierCurveTo](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/bezierCurveTo)                 | 16/august/22 |
 | [canvas/clearRect](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/clearRect)                         | 16/august/22 |
 | [canvas/createLinearGradient](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createLinearGradient)   | 16/august/22 |
+| [canvas/createPattern](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createPattern)                 | 16/august/22 |
+| [canvas/createRadialGradient](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createRadialGradient)   | 16/august/22 |
+| [canvas/fillRect](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/fillRect)                           | 16/august/22 |

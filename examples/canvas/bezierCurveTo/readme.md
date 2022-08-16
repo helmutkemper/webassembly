@@ -19,7 +19,7 @@ make server       ## run local server
 
 ### Local server
 
-[https://localhost/examples/canvas/beginPath/](https://localhost/examples/canvas/beginPath/)
+[https://localhost/examples/canvas/bezierCurveTo/](https://localhost/examples/canvas/bezierCurveTo/)
 
 ### Code:
 

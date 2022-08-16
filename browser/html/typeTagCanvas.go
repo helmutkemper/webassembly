@@ -787,16 +787,6 @@ func (el *TagCanvas) ClosePath(x, y int) (ref *TagCanvas) {
 //	  * Use the AddColorStopPosition() method to specify different colors, and where to position the
 //	    colors in the gradient object.
 //
-//	Example:
-//	  factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	    CreateLinearGradient(0, 0, 170, 0).
-//	    AddColorStopPosition(0.0, factoryColor.NewBlack()).
-//	    AddColorStopPosition(0.5, factoryColor.NewOrangered()).
-//	    AddColorStopPosition(1.0, factoryColor.NewWhite()).
-//	    FillStyleGradient().
-//	    FillRect(20, 20, 150, 100).
-//	    AppendToStage()
-//
 // Português:
 //
 //	Cria um gradiente linear.
@@ -815,16 +805,6 @@ func (el *TagCanvas) ClosePath(x, y int) (ref *TagCanvas) {
 //	  * Use esta objeto como o valor para as propriedades StrokeStyle() ou FillStyle(); //todo: rever documentação
 //	  * Use o método AddColorStopPosition() para especificar cores diferentes e onde posicionar as
 //	    cores no objeto gradiente.
-//
-//	Exemplo:
-//	  factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	    CreateLinearGradient(0, 0, 170, 0).
-//	    AddColorStopPosition(0.0, factoryColor.NewBlack()).
-//	    AddColorStopPosition(0.5, factoryColor.NewOrangered()).
-//	    AddColorStopPosition(1.0, factoryColor.NewWhite()).
-//	    FillStyleGradient().
-//	    FillRect(20, 20, 150, 100).
-//	    AppendToStage()
 func (el *TagCanvas) CreateLinearGradient(x0, y0, x1, y1 int) (ref *TagCanvas) {
 	el.gradient = el.context.Call("createLinearGradient", x0, y0, x1, y1)
 	return el
@@ -849,22 +829,6 @@ func (el *TagCanvas) CreateLinearGradient(x0, y0, x1, y1 int) (ref *TagCanvas) {
 // The element can be an image, video, or another <canvas> element.
 // The repeated element can be used to draw/fill rectangles, circles, lines etc.
 //
-//	Example:
-//
-//	  var img = factoryBrowser.NewTagImage(
-//	    "spacecraft",
-//	    "./small.png",
-//	    29,
-//	    50,
-//	    true,
-//	  )
-//	  factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	    CreatePattern(img, html.KRepeatRuleRepeat).
-//	    Rect(0, 0, 300, 300).
-//	    FillStylePattern().
-//	    Fill().
-//	    AppendToStage()
-//
 // Português:
 //
 //	Repete um elemento especificado na direção especificada.
@@ -882,22 +846,6 @@ func (el *TagCanvas) CreateLinearGradient(x0, y0, x1, y1 int) (ref *TagCanvas) {
 // O elemento pode ser uma imagem, vídeo ou outro elemento <canvas>.
 //
 // O elemento repetido pode ser usado para desenhar retângulos, círculos, linhas etc.
-//
-//	Exemplo:
-//
-//	  var img = factoryBrowser.NewTagImage(
-//	    "spacecraft",
-//	    "./small.png",
-//	    29,
-//	    50,
-//	    true,
-//	  )
-//	  factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	    CreatePattern(img, html.KRepeatRuleRepeat).
-//	    Rect(0, 0, 300, 300).
-//	    FillStylePattern().
-//	    Fill().
-//	    AppendToStage()
 func (el *TagCanvas) CreatePattern(image interface{}, repeatRule CanvasRepeatRule) (ref *TagCanvas) {
 	if converted, ok := image.(*TagImg); ok {
 		el.pattern = el.context.Call("createPattern", converted.Get(), repeatRule.String())
@@ -922,16 +870,6 @@ func (el *TagCanvas) CreatePattern(image interface{}, repeatRule CanvasRepeatRul
 //	   y1: The y-coordinate of the ending circle of the gradient;
 //	   r1: The radius of the ending circle.
 //
-//	 Example:
-//
-//	   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	     CreateRadialGradient(75, 50, 5, 90, 60, 100).
-//	     AddColorStopPosition(0.0, factoryColor.NewRed()).
-//	     AddColorStopPosition(1.0, factoryColor.NewWhite()).
-//	     FillStyleGradient().
-//	     FillRect(10, 10, 150, 100).
-//	     AppendToStage()
-//
 // Português:
 //
 //	Cria um gradiente radial/circular (para usar no conteúdo do canvas)
@@ -943,16 +881,6 @@ func (el *TagCanvas) CreatePattern(image interface{}, repeatRule CanvasRepeatRul
 //	   x1: A coordenada x do círculo final do gradiente;
 //	   y1: A coordenada y do círculo final do gradiente;
 //	   r1: O raio do círculo final.
-//
-//	 Exemplo:
-//
-//	   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	     CreateRadialGradient(75, 50, 5, 90, 60, 100).
-//	     AddColorStopPosition(0.0, factoryColor.NewRed()).
-//	     AddColorStopPosition(1.0, factoryColor.NewWhite()).
-//	     FillStyleGradient().
-//	     FillRect(10, 10, 150, 100).
-//	     AppendToStage()
 func (el *TagCanvas) CreateRadialGradient(x0, y0, r0, x1, y1 int, r1 float64) (ref *TagCanvas) {
 	el.gradient = el.context.Call("createRadialGradient", x0, y0, r0, x1, y1, r1)
 	return el

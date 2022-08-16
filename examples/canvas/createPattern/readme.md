@@ -2,11 +2,11 @@
 
 ### English:
 
-This example shows how to use clearRect on cavas element.
+This example shows how to use createPattern on cavas element.
 
 ### Português:
 
-Este exemplo mostra como usar clearRect no elemnto canvas.
+Este exemplo mostra como usar createPattern no elemnto canvas.
 
 ### Makefile
 
@@ -19,7 +19,7 @@ make server       ## run local server
 
 ### Local server
 
-[https://localhost/examples/canvas/clearRect/](https://localhost/examples/canvas/clearRect/)
+[https://localhost/examples/canvas/createPattern/](https://localhost/examples/canvas/createPattern/)
 
 ### Code:
 
@@ -64,10 +64,17 @@ var canvas *html.TagCanvas
 
 func main() {
 
+	var img = factoryBrowser.NewTagImg().
+		Alt("spacecraft").
+		Src("./small.png", true).
+		Width(29).
+		Height(50)
+
 	canvas = factoryBrowser.NewTagCanvas(800, 600).
-		FillStyle("red").
-		FillRect(0, 0, 300, 150).
-		ClearRect(20, 20, 100, 50)
+		CreatePattern(img, html.KRepeatRuleRepeat).
+		Rect(0, 0, 300, 300).
+		FillStylePattern().
+		Fill()
 
 	var stage = factoryBrowser.NewStage()
 	stage.Append(canvas)

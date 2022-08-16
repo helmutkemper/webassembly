@@ -1,3 +1,64 @@
+# Variations in the use of the Bézier curve
+
+### English:
+
+This example shows some variations on how to use the Bezié curve
+
+### Português:
+
+Este exemplo mostra algumas variações na forma de usar a curva de Bézier.
+
+### Makefile
+
+```shell
+make help         ## This help command
+make buildandrun  ## build this example and run local server
+make build        ## build main.wasm file to run this example
+make server       ## run local server
+```
+
+### Local server
+
+[https://localhost/examples/canvas/bezierCurve/](https://localhost/examples/canvas/bezierCurve/)
+
+### Code:
+
+##### HTML
+
+```html
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <style>
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    </style>
+    <style>
+        .animate {
+            width: 29px;
+            height: 50px;
+            position: absolute;
+            background-image: url("./small.png");
+        }
+    </style>
+    <script src="../../support/wasm_exec.js"></script>
+    <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>
+```
+
+##### Golang
+
+```go
 //go:build js
 
 package main
@@ -193,3 +254,4 @@ func onInvert(_ float64, args interface{}) {
 		this.RotateDelta(math.Pi / 2)
 	}
 }
+```

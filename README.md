@@ -321,4 +321,5 @@ Golang code:
 | [BezierCurve/1_addCurve](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/1_addCurve)             | 08/august/22 |
 | [BezierCurve/2_addEasingTween](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/2_addEasingTween) | 08/august/22 |
 | [BezierCurve/3_addRipple](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/3_addRipple)           | 08/august/22 |
+| [canvas/bezierCurve](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/bezierCurve)                     | 16/august/22 |
 | [canvas/addColorStopPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/addColorStopPosition)   | 16/august/22 |

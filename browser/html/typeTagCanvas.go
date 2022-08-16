@@ -1073,21 +1073,6 @@ func (el *TagCanvas) GlobalAlpha(value float64) (ref *TagCanvas) {
 //	  * destination image = drawings that are already placed onto the canvas;
 //	  * Default value: source-over.
 //
-//	Example:
-//
-//	  factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	    FillStyle(factoryColor.NewRed()).
-//	    FillRect(20, 20, 75, 50).
-//	    GlobalCompositeOperation(html.KCompositeOperationsRuleSourceOver).
-//	    FillStyle(factoryColor.NewBlue()).
-//	    FillRect(50, 50, 75, 50).
-//	    FillStyle(factoryColor.NewRed()).
-//	    FillRect(150, 20, 75, 50).
-//	    GlobalCompositeOperation(html.KCompositeOperationsRuleDestinationOver).
-//	    FillStyle(factoryColor.NewBlue()).
-//	    FillRect(180, 50, 75, 50).
-//	    AppendToStage()
-//
 // Português:
 //
 //	Define como uma nova imagem é desenhada em uma imagem existente.
@@ -1102,21 +1087,6 @@ func (el *TagCanvas) GlobalAlpha(value float64) (ref *TagCanvas) {
 //	  * imagem de origem = desenhos que você está prestes a colocar no canvas;
 //	  * imagem de destino = desenhos que já estão colocados no canvas;
 //	  * Valor padrão: source-over.
-//
-//	Exemplo:
-//
-//	  factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	    FillStyle(factoryColor.NewRed()).
-//	    FillRect(20, 20, 75, 50).
-//	    GlobalCompositeOperation(html.KCompositeOperationsRuleSourceOver).
-//	    FillStyle(factoryColor.NewBlue()).
-//	    FillRect(50, 50, 75, 50).
-//	    FillStyle(factoryColor.NewRed()).
-//	    FillRect(150, 20, 75, 50).
-//	    GlobalCompositeOperation(html.KCompositeOperationsRuleDestinationOver).
-//	    FillStyle(factoryColor.NewBlue()).
-//	    FillRect(180, 50, 75, 50).
-//	    AppendToStage()
 func (el *TagCanvas) GlobalCompositeOperation(value CompositeOperationsRule) (ref *TagCanvas) {
 	el.context.Set("globalCompositeOperation", value.String())
 	return el

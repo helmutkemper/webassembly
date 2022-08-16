@@ -541,35 +541,6 @@ func (el *TagCanvas) PutImageData(imgData [][][]uint8, width, height int) (ref *
 //	     omit this method for gradient objects, the gradient will not be visible. You need to create
 //	     at least one color stop to have a visible gradient.
 //
-//	 Example:
-//
-//	   	var fontA html.Font
-//	    fontA.Family = factoryFontFamily.NewArial()
-//	    fontA.Variant = factoryFontVariant.NewSmallCaps()
-//	    fontA.Style = factoryFontStyle.NewItalic()
-//	    fontA.Size = 20
-//
-//	    var fontB html.Font
-//	    fontB.Family = factoryFontFamily.NewVerdana()
-//	    fontB.Size = 35
-//
-//	    canvas = factoryBrowser.NewTagCanvas(800, 600).
-//		    Font(fontA).
-//		    FillText("Hello World!", 10, 50, 300).
-//		    CreateLinearGradient(0, 0, 160, 0).
-//		    AddColorStopPosition(0.0, factoryColor.NewMagenta()).
-//		    AddColorStopPosition(0.5, factoryColor.NewBlue()).
-//		    AddColorStopPosition(1.0, factoryColor.NewRed()).
-//		    FillStyleGradient().
-//		    Font(fontB).
-//		    FillText("Big smile!", 10, 90, 300)
-//
-//	    var stage = factoryBrowser.NewStage()
-//	    stage.Append(canvas)
-//
-//	    done := make(chan struct{}, 0)
-//	    <-done
-//
 // Português:
 //
 //	Especifica a cor e a posição final para a cor dentro do gradiente
@@ -585,35 +556,6 @@ func (el *TagCanvas) PutImageData(imgData [][][]uint8, width, height int) (ref *
 //	   * Você pode chamar o método AddColorStopPosition() várias vezes para adicionar várias cores ao
 //	     gradiente, porém, se você omitir o método, o gradiente não será visível. Você tem à obrigação
 //	     de chamar o método pelo menos uma vez com uma cor para que o gradiente seja visível.
-//
-//	 Exemplo:
-//
-//	   	var fontA html.Font
-//	    fontA.Family = factoryFontFamily.NewArial()
-//	    fontA.Variant = factoryFontVariant.NewSmallCaps()
-//	    fontA.Style = factoryFontStyle.NewItalic()
-//	    fontA.Size = 20
-//
-//	    var fontB html.Font
-//	    fontB.Family = factoryFontFamily.NewVerdana()
-//	    fontB.Size = 35
-//
-//	    canvas = factoryBrowser.NewTagCanvas(800, 600).
-//		    Font(fontA).
-//		    FillText("Hello World!", 10, 50, 300).
-//		    CreateLinearGradient(0, 0, 160, 0).
-//		    AddColorStopPosition(0.0, factoryColor.NewMagenta()).
-//		    AddColorStopPosition(0.5, factoryColor.NewBlue()).
-//		    AddColorStopPosition(1.0, factoryColor.NewRed()).
-//		    FillStyleGradient().
-//		    Font(fontB).
-//		    FillText("Big smile!", 10, 90, 300)
-//
-//	    var stage = factoryBrowser.NewStage()
-//	    stage.Append(canvas)
-//
-//	    done := make(chan struct{}, 0)
-//	    <-done
 func (el *TagCanvas) AddColorStopPosition(stopPosition float64, color color.RGBA) (ref *TagCanvas) {
 	el.gradient.Call("addColorStop", stopPosition, RGBAToJs(color))
 	return el

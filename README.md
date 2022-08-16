@@ -323,3 +323,4 @@ Golang code:
 | [BezierCurve/3_addRipple](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/3_addRipple)           | 08/august/22 |
 | [canvas/bezierCurve](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/bezierCurve)                     | 16/august/22 |
 | [canvas/addColorStopPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/addColorStopPosition)   | 16/august/22 |
+| [canvas/arc](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/arc)                                     | 16/august/22 |

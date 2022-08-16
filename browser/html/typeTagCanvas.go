@@ -1003,28 +1003,6 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 //
 // Default value: 10px sans-serif
 //
-//	Example:
-//	  	var fontA html.Font
-//	  	fontA.Family = factoryFontFamily.NewArial()
-//	  	fontA.Style = factoryFontStyle.NewItalic()
-//	  	fontA.Size = 20
-//
-//	  	var fontB html.Font
-//	  	fontB.Family = factoryFontFamily.NewVerdana()
-//	  	fontB.Size = 35
-//
-//	  	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	  	  Font(fontA).
-//	  	  FillText("Hello World!", 10, 50, 300).
-//	  	  CreateLinearGradient(0, 0, 160, 0).
-//	  	  AddColorStopPosition(0.0, factoryColor.NewMagenta()).
-//	  	  AddColorStopPosition(0.5, factoryColor.NewBlue()).
-//	  	  AddColorStopPosition(1.0, factoryColor.NewRed()).
-//	  	  FillStyleGradient().
-//	  	  Font(fontB).
-//	  	  FillText("Big smile!", 10, 90, 300).
-//	  	  AppendToStage()
-//
 // Português:
 //
 //	Define as propriedades de fonte atuais para conteúdo de texto.
@@ -1051,28 +1029,6 @@ func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) 
 // A propriedade font usa a mesma sintaxe que a propriedade font CSS.
 //
 // Valor padrão: 10px sem serifa
-//
-//	Exemplo:
-//	  	var fontA html.Font
-//	  	fontA.Family = factoryFontFamily.NewArial()
-//	  	fontA.Style = factoryFontStyle.NewItalic()
-//	  	fontA.Size = 20
-//
-//	  	var fontB html.Font
-//	  	fontB.Family = factoryFontFamily.NewVerdana()
-//	  	fontB.Size = 35
-//
-//	  	factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	  	  Font(fontA).
-//	  	  FillText("Hello World!", 10, 50, 300).
-//	  	  CreateLinearGradient(0, 0, 160, 0).
-//	  	  AddColorStopPosition(0.0, factoryColor.NewMagenta()).
-//	  	  AddColorStopPosition(0.5, factoryColor.NewBlue()).
-//	  	  AddColorStopPosition(1.0, factoryColor.NewRed()).
-//	  	  FillStyleGradient().
-//	  	  Font(fontB).
-//	  	  FillText("Big smile!", 10, 90, 300).
-//	  	  AppendToStage()
 func (el *TagCanvas) Font(font Font) (ref *TagCanvas) {
 	el.context.Set("font", font.String())
 	return el
@@ -1088,17 +1044,6 @@ func (el *TagCanvas) Font(font Font) (ref *TagCanvas) {
 //
 //	   Default value: 1.0
 //
-//	 Example:
-//	   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	     FillStyle(factoryColor.NewRed()).
-//	     FillRect(20, 20, 75, 50).
-//	     GlobalAlpha(0.2).
-//	     FillStyle(factoryColor.NewBlue()).
-//	     FillRect(50, 50, 75, 50).
-//	     FillStyle(factoryColor.NewGreen()).
-//	     FillRect(80, 80, 75, 50).
-//	     AppendToStage()
-//
 // Português:
 //
 //	Define o valor alfa ou transparência atual do desenho
@@ -1106,17 +1051,6 @@ func (el *TagCanvas) Font(font Font) (ref *TagCanvas) {
 //	     1.0 (sem transparência)
 //
 //	   Valor padrão: 1.0
-//
-//	 Exemplo:
-//	   factoryBrowser.NewTagCanvas("canvas_0", 800, 600).
-//	     FillStyle(factoryColor.NewRed()).
-//	     FillRect(20, 20, 75, 50).
-//	     GlobalAlpha(0.2).
-//	     FillStyle(factoryColor.NewBlue()).
-//	     FillRect(50, 50, 75, 50).
-//	     FillStyle(factoryColor.NewGreen()).
-//	     FillRect(80, 80, 75, 50).
-//	     AppendToStage()
 func (el *TagCanvas) GlobalAlpha(value float64) (ref *TagCanvas) {
 	el.context.Set("globalAlpha", value)
 	return el

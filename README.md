@@ -310,26 +310,28 @@ Golang code:
 
 ### List of examples:
 
-| Example                                                                                                                       | Date         |
-|-------------------------------------------------------------------------------------------------------------------------------|--------------|
-| [battery](https://github.com/helmutkemper/webassembly/tree/master/examples/battery)                                           | 07/august/22 |
-| [event/animateMotion](https://github.com/helmutkemper/webassembly/tree/master/examples/event/animateMotion)                   | 07/august/22 |
-| [event/feDisplacementMap](https://github.com/helmutkemper/webassembly/tree/master/examples/event/feDisplacementMap)           | 07/august/22 |
-| [event/use](https://github.com/helmutkemper/webassembly/tree/master/examples/event/use)                                       | 07/august/22 |
-| [geolocation/getPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/geolocation/getPosition)           | 07/august/22 |
-| [geolocation/watchPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/geolocation/watchPosition)       | 07/august/22 |
-| [BezierCurve/1_addCurve](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/1_addCurve)             | 08/august/22 |
-| [BezierCurve/2_addEasingTween](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/2_addEasingTween) | 08/august/22 |
-| [BezierCurve/3_addRipple](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/3_addRipple)           | 08/august/22 |
-| [canvas/addColorStopPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/addColorStopPosition)   | 16/august/22 |
-| [canvas/arc](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/arc)                                     | 16/august/22 |
-| [canvas/arcTo](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/arcTo)                                 | 16/august/22 |
-| [canvas/beginPath](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/beginPath)                         | 16/august/22 |
-| [canvas/bezierCurveTo](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/bezierCurveTo)                 | 16/august/22 |
-| [canvas/clearRect](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/clearRect)                         | 16/august/22 |
-| [canvas/createLinearGradient](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createLinearGradient)   | 16/august/22 |
-| [canvas/createPattern](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createPattern)                 | 16/august/22 |
-| [canvas/createRadialGradient](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createRadialGradient)   | 16/august/22 |
-| [canvas/fillRect](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/fillRect)                           | 16/august/22 |
-| [canvas/fillText](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/fillText)                           | 16/august/22 |
-| [canvas/font](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/font)                                   | 16/august/22 |
+| Example                                                                                                                             | Date         |
+|-------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| [battery](https://github.com/helmutkemper/webassembly/tree/master/examples/battery)                                                 | 07/august/22 |
+| [event/animateMotion](https://github.com/helmutkemper/webassembly/tree/master/examples/event/animateMotion)                         | 07/august/22 |
+| [event/feDisplacementMap](https://github.com/helmutkemper/webassembly/tree/master/examples/event/feDisplacementMap)                 | 07/august/22 |
+| [event/use](https://github.com/helmutkemper/webassembly/tree/master/examples/event/use)                                             | 07/august/22 |
+| [geolocation/getPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/geolocation/getPosition)                 | 07/august/22 |
+| [geolocation/watchPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/geolocation/watchPosition)             | 07/august/22 |
+| [BezierCurve/1_addCurve](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/1_addCurve)                   | 08/august/22 |
+| [BezierCurve/2_addEasingTween](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/2_addEasingTween)       | 08/august/22 |
+| [BezierCurve/3_addRipple](https://github.com/helmutkemper/webassembly/tree/master/examples/BezierCurve/3_addRipple)                 | 08/august/22 |
+| [canvas/addColorStopPosition](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/addColorStopPosition)         | 16/august/22 |
+| [canvas/arc](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/arc)                                           | 16/august/22 |
+| [canvas/arcTo](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/arcTo)                                       | 16/august/22 |
+| [canvas/beginPath](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/beginPath)                               | 16/august/22 |
+| [canvas/bezierCurveTo](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/bezierCurveTo)                       | 16/august/22 |
+| [canvas/clearRect](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/clearRect)                               | 16/august/22 |
+| [canvas/createLinearGradient](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createLinearGradient)         | 16/august/22 |
+| [canvas/createPattern](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createPattern)                       | 16/august/22 |
+| [canvas/createRadialGradient](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/createRadialGradient)         | 16/august/22 |
+| [canvas/fillRect](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/fillRect)                                 | 16/august/22 |
+| [canvas/fillText](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/fillText)                                 | 16/august/22 |
+| [canvas/font](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/font)                                         | 16/august/22 |
+| [canvas/globalAlpha](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/globalAlpha)                           | 16/august/22 |
+| [canvas/globalCompositeOperation](https://github.com/helmutkemper/webassembly/tree/master/examples/canvas/globalCompositeOperation) | 16/august/22 |

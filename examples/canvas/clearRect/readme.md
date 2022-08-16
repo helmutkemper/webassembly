@@ -1,4 +1,4 @@
-# canvas: ArcTo
+# canvas: ClearRect
 
 ### English:
 

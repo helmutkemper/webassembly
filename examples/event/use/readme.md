@@ -1,23 +1,56 @@
-// English:
-//
-// This example was taken from https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use
-//
-// Português:
-//
-// Este exemplo foi retirado do site https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use
-//
-//  <svg viewBox="0 0 30 10" xmlns="http://www.w3.org/2000/svg">
-//    <circle id="myCircle" cx="5" cy="5" r="4" stroke="blue"/>
-//    <use href="#myCircle" x="10" fill="blue"/>
-//    <use href="#myCircle" x="20" fill="white" stroke="red"/>
-//    <!--
-//      stroke="red" will be ignored here, as stroke was already set on myCircle.
-//      Most attributes (except for x, y, width, height and (xlink:)href)
-//      do not override those set in the ancestor.
-//      That's why the circles have different x positions, but the same stroke value.
-//    -->
-//  </svg>
+# SVG Event
 
+### English:
+
+This example shows how to use event on SVG elements.
+
+### Português:
+
+Este exemplo mostra como usar evento em elementos SVG.
+
+### Makefile
+
+```shell
+make help         ## This help command
+make buildandrun  ## build this example and run local server
+make build        ## build main.wasm file to run this example
+make server       ## run local server
+```
+
+### Local server
+
+[https://localhost/examples/event/use/](https://localhost/examples/event/use/)
+
+### Code:
+
+##### HTML
+
+```html
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <style>
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    </style>
+    <script src="../../support/wasm_exec.js"></script>
+    <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>
+```
+
+##### Golang
+
+```go
 //go:build js
 
 package main
@@ -64,27 +97,4 @@ func main() {
 
 	<-done
 }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+```

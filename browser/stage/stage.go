@@ -2,6 +2,7 @@ package stage
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/document"
+	keyboard "github.com/helmutkemper/iotmaker.webassembly/browser/event/keyBoard"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
 	"log"
@@ -116,6 +117,28 @@ type Stage struct {
 	//
 	// Recebe o ponteiro da função de evento onUnLoad do stage.
 	fnUnload *js.Func
+
+	// fnKeyUp
+	//
+	// English:
+	//
+	// Gets the pointer of the stage's keyUp event function.
+	//
+	// Português:
+	//
+	// Recebe o ponteiro da função de evento keyUp do stage.
+	fnKeyUp *js.Func
+
+	// fnKeyDown
+	//
+	// English:
+	//
+	// Gets the pointer of the stage's keyDown event function.
+	//
+	// Português:
+	//
+	// Recebe o ponteiro da função de evento keyDown do stage.
+	fnKeyDown *js.Func
 }
 
 // Engine
@@ -809,6 +832,50 @@ func (e *Stage) DeleteDrawFunctions(UId string) {
 // Português:
 func (e *Stage) SetDrawZIndex(UId string, index int) int {
 	return e.engine.DrawSetZIndex(UId, index)
+}
+
+func (e *Stage) AddListenerKeyUp(keyBoardCh *chan keyboard.Data) (ref *Stage) {
+	var fn js.Func
+
+	if e.fnKeyUp == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*keyBoardCh <- keyboard.EventManager(keyboard.KEventKeyUp, this, args)
+			return nil
+		})
+		e.fnKeyUp = &fn
+	}
+
+	e.selfDocument.Call(
+		"addEventListener",
+		"keyup",
+		*e.fnKeyUp,
+	)
+	return e
+}
+
+func (e *Stage) AddListenerKeyDown(keyBoardCh *chan keyboard.Data) (ref *Stage) {
+	var fn js.Func
+
+	if e.fnKeyDown == nil {
+		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			if len(args) == 0 {
+				return nil
+			}
+			*keyBoardCh <- keyboard.EventManager(keyboard.KEventKeyDown, this, args)
+			return nil
+		})
+		e.fnKeyDown = &fn
+	}
+
+	e.selfDocument.Call(
+		"addEventListener",
+		"keydown",
+		*e.fnKeyDown,
+	)
+	return e
 }
 
 func (e *Stage) AddListenerResize(windowEvet *chan document.Data) (ref *Stage) {

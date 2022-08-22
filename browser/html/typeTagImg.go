@@ -859,6 +859,11 @@ func (e *TagImg) Title(title string) (ref *TagImg) {
 	return e
 }
 
+func (e *TagImg) Transform(transform string) (ref *TagImg) {
+	e.selfElement.Get("style").Set("transform", transform)
+	return e
+}
+
 // Translate
 //
 // English:
@@ -1324,6 +1329,10 @@ func (e *TagImg) Width(width int) (ref *TagImg) {
 	return e
 }
 
+func (e *TagImg) GetWidth() (width int) {
+	return e.selfElement.Get("width").Int()
+}
+
 // Height
 //
 // English:
@@ -1336,6 +1345,10 @@ func (e *TagImg) Width(width int) (ref *TagImg) {
 func (e *TagImg) Height(height int) (ref *TagImg) {
 	e.selfElement.Set("height", height)
 	return e
+}
+
+func (e *TagImg) GetHeight() (height int) {
+	return e.selfElement.Get("height").Int()
 }
 
 // UseMap

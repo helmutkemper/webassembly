@@ -113,6 +113,7 @@ type Sprite struct {
 	imageDataToDraw js.Value
 	running         bool
 	stopCh          chan struct{}
+	stoppedCh       chan struct{}
 }
 
 // Y
@@ -221,10 +222,15 @@ func (e *Sprite) Scene(name string) (ref *spriteScene) {
 // Inicia uma cena.
 func (e *Sprite) Start(name string) (err error) {
 
+	if e.sceneName == name {
+		return
+	}
+
 	e.sceneName = name
 
 	if e.running == true {
 		e.stopCh <- struct{}{}
+		<-e.stoppedCh
 	}
 
 	data, ok := e.scene[name]
@@ -239,7 +245,6 @@ func (e *Sprite) Start(name string) (err error) {
 	}
 
 	if len(data) == 1 {
-		e.stopCh = make(chan struct{})
 		return
 	}
 
@@ -254,6 +259,7 @@ func (e *Sprite) Start(name string) (err error) {
 			select {
 			case <-e.stopCh:
 				e.running = false
+				e.stoppedCh <- struct{}{}
 				return
 			case <-timer.C:
 				if i < l {
@@ -356,6 +362,7 @@ func (e *Sprite) Image(src string) (ref *Sprite) {
 func (e *Sprite) Init() {
 
 	e.stopCh = make(chan struct{})
+	e.stoppedCh = make(chan struct{})
 	e.init = true
 }
 

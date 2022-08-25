@@ -3664,19 +3664,21 @@ func (e *TagSvgAnimateMotion) Reference(reference **TagSvgAnimateMotion) (ref *T
 //	    }
 //	  }()
 func (e *TagSvgAnimateMotion) AddListenerBegin(animationEvent *chan animation.Data) (ref *TagSvgAnimateMotion) {
-	var fn js.Func
-
-	if e.fnBegin == nil {
-		fn = js.FuncOf(func(this js.Value, _ []js.Value) interface{} {
-			if this.IsNull() == true || this.IsUndefined() == true {
-				return nil
-			}
-
-			*animationEvent <- animation.EventManager(animation.KEventBegin, this)
-			return nil
-		})
-		e.fnBegin = &fn
+	if e.fnBegin != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, _ []js.Value) interface{} {
+		if this.IsNull() == true || this.IsUndefined() == true {
+			return nil
+		}
+
+		*animationEvent <- animation.EventManager(animation.KEventBegin, this)
+		return nil
+	})
+	e.fnBegin = &fn
+
 	e.selfElement.Call(
 		"addEventListener",
 		"beginEvent",
@@ -3798,19 +3800,21 @@ func (e *TagSvgAnimateMotion) RemoveListenerBegin() (ref *TagSvgAnimateMotion) {
 //	    }
 //	  }()
 func (e *TagSvgAnimateMotion) AddListenerRepeat(animationEvent *chan animation.Data) (ref *TagSvgAnimateMotion) {
-	var fn js.Func
-
-	if e.fnRepeat == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if this.IsNull() == true || this.IsUndefined() == true {
-				return nil
-			}
-
-			*animationEvent <- animation.EventManager(animation.KEventRepeat, this)
-			return nil
-		})
-		e.fnRepeat = &fn
+	if e.fnRepeat != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if this.IsNull() == true || this.IsUndefined() == true {
+			return nil
+		}
+
+		*animationEvent <- animation.EventManager(animation.KEventRepeat, this)
+		return nil
+	})
+	e.fnRepeat = &fn
+
 	e.selfElement.Call(
 		"addEventListener",
 		"repeatEvent",
@@ -3930,19 +3934,20 @@ func (e *TagSvgAnimateMotion) RemoveListenerRepeat() (ref *TagSvgAnimateMotion) 
 //	    }
 //	  }()
 func (e *TagSvgAnimateMotion) AddListenerEnd(animationEvent *chan animation.Data) (ref *TagSvgAnimateMotion) {
-	var fn js.Func
-
-	if e.fnEnd == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if this.IsNull() == true || this.IsUndefined() == true {
-				return nil
-			}
-
-			*animationEvent <- animation.EventManager(animation.KEventEnd, this)
-			return nil
-		})
-		e.fnEnd = &fn
+	if e.fnEnd != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if this.IsNull() == true || this.IsUndefined() == true {
+			return nil
+		}
+
+		*animationEvent <- animation.EventManager(animation.KEventEnd, this)
+		return nil
+	})
+	e.fnEnd = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -4061,28 +4066,30 @@ func (e *TagSvgAnimateMotion) RemoveListenerEnd() (ref *TagSvgAnimateMotion) {
 //	    }
 //	  }()
 func (e *TagSvgAnimateMotion) AddListenerMotion(animationEvent *chan animation.Data) (ref *TagSvgAnimateMotion) {
-	var fn js.Func
-
-	if e.fnMotion == nil {
-		fn = js.FuncOf(func(this js.Value, _ []js.Value) interface{} {
-			if this.IsNull() == true || this.IsUndefined() == true {
-				return nil
-			}
-			var create = time.Now()
-			e.fnMotionEngineId, _ = e.engine.DrawAddToFunctions(
-				func() {
-					var now = time.Now()
-					var data animation.Data
-					data.This = this
-					data.CurrentTime = float64(now.Sub(create).Milliseconds()) / 1000.0
-					data.EventName = animation.KEventMotion
-					*animationEvent <- data
-				},
-			)
-			return nil
-		})
-		e.fnMotion = &fn
+	if e.fnMotion != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, _ []js.Value) interface{} {
+		if this.IsNull() == true || this.IsUndefined() == true {
+			return nil
+		}
+		var create = time.Now()
+		e.fnMotionEngineId, _ = e.engine.DrawAddToFunctions(
+			func() {
+				var now = time.Now()
+				var data animation.Data
+				data.This = this
+				data.CurrentTime = float64(now.Sub(create).Milliseconds()) / 1000.0
+				data.EventName = animation.KEventMotion
+				*animationEvent <- data
+			},
+		)
+		return nil
+	})
+	e.fnMotion = &fn
+
 	e.selfElement.Call(
 		"addEventListener",
 		"beginEvent",

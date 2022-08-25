@@ -835,18 +835,19 @@ func (e *Stage) SetDrawZIndex(UId string, index int) int {
 }
 
 func (e *Stage) AddListenerKeyUp(keyBoardCh *chan keyboard.Data) (ref *Stage) {
-	var fn js.Func
-
-	if e.fnKeyUp == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*keyBoardCh <- keyboard.EventManager(keyboard.KEventKeyUp, this, args)
-			return nil
-		})
-		e.fnKeyUp = &fn
+	if e.fnKeyUp != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*keyBoardCh <- keyboard.EventManager(keyboard.KEventKeyUp, this, args)
+		return nil
+	})
+	e.fnKeyUp = &fn
 
 	e.selfDocument.Call(
 		"addEventListener",
@@ -857,18 +858,19 @@ func (e *Stage) AddListenerKeyUp(keyBoardCh *chan keyboard.Data) (ref *Stage) {
 }
 
 func (e *Stage) AddListenerKeyDown(keyBoardCh *chan keyboard.Data) (ref *Stage) {
-	var fn js.Func
-
-	if e.fnKeyDown == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*keyBoardCh <- keyboard.EventManager(keyboard.KEventKeyDown, this, args)
-			return nil
-		})
-		e.fnKeyDown = &fn
+	if e.fnKeyDown != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*keyBoardCh <- keyboard.EventManager(keyboard.KEventKeyDown, this, args)
+		return nil
+	})
+	e.fnKeyDown = &fn
 
 	e.selfDocument.Call(
 		"addEventListener",
@@ -879,18 +881,19 @@ func (e *Stage) AddListenerKeyDown(keyBoardCh *chan keyboard.Data) (ref *Stage) 
 }
 
 func (e *Stage) AddListenerResize(windowEvet *chan document.Data) (ref *Stage) {
-	var fn js.Func
-
-	if e.fnResize == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*windowEvet <- document.EventManager(document.KEventResize, this, args)
-			return nil
-		})
-		e.fnResize = &fn
+	if e.fnResize != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*windowEvet <- document.EventManager(document.KEventResize, this, args)
+		return nil
+	})
+	e.fnResize = &fn
 
 	e.selfWindow.Get("window").Call(
 		"addEventListener",
@@ -915,18 +918,19 @@ func (e *Stage) RemoveListenerResize() (ref *Stage) {
 }
 
 func (e *Stage) AddListenerLoad(windowEvet *chan document.Data) (ref *Stage) {
-	var fn js.Func
-
-	if e.fnLoad == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*windowEvet <- document.EventManager(document.KEventLoad, this, args)
-			return nil
-		})
-		e.fnLoad = &fn
+	if e.fnLoad != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*windowEvet <- document.EventManager(document.KEventLoad, this, args)
+		return nil
+	})
+	e.fnLoad = &fn
 
 	e.selfWindow.Get("window").Call(
 		"addEventListener",
@@ -937,18 +941,19 @@ func (e *Stage) AddListenerLoad(windowEvet *chan document.Data) (ref *Stage) {
 }
 
 func (e *Stage) AddListenerOnUnload(windowEvet *chan document.Data) (ref *Stage) {
-	var fn js.Func
-
-	if e.fnUnload == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*windowEvet <- document.EventManager(document.KEventUnLoad, this, args)
-			return nil
-		})
-		e.fnUnload = &fn
+	if e.fnUnload != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*windowEvet <- document.EventManager(document.KEventUnLoad, this, args)
+		return nil
+	})
+	e.fnUnload = &fn
 
 	e.selfWindow.Get("window").Call(
 		"addEventListener",

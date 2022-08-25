@@ -1182,19 +1182,20 @@ func (e *TagVideo) Width(value float64) (ref *TagVideo) {
 //	   done := make(chan struct{}, 0)
 //	   <-done
 func (e *TagVideo) AddListenerAbort(evet *chan event.Data) (ref *TagVideo) {
-	var fn js.Func
-
-	if e.fnAbort == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-
-			*evet <- event.EventManager(event.KEventAbort, this, args)
-			return nil
-		})
-		e.fnAbort = &fn
+	if e.fnAbort != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+
+		*evet <- event.EventManager(event.KEventAbort, this, args)
+		return nil
+	})
+	e.fnAbort = &fn
 
 	e.selfElement.Call(
 		"addEventListener",

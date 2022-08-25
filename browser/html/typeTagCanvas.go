@@ -163,12 +163,15 @@ func (el *TagCanvas) Get() (element js.Value) {
 //	 Notas:
 //	   * Garanta o pré carregamento da imagem antes de chamar esta função.
 func (el *TagCanvas) DrawImage(image interface{}) (ref *TagCanvas) {
-	if converted, ok := image.(Compatible); ok {
+	switch converted := image.(type) {
+	case Compatible:
 		el.context.Call("drawImage", converted.Get(), 0, 0, el.width, el.height)
-		return el
+	case js.Value:
+		el.context.Call("drawImage", converted, 0, 0, el.width, el.height)
+	default:
+		log.Printf("canvas.DrawImage(image).err: image must be a js.Value image or TagImg object.")
 	}
 
-	el.context.Call("drawImage", image, 0, 0, el.width, el.height)
 	return el
 }
 
@@ -463,7 +466,60 @@ func (el *TagCanvas) GetImageData(x, y, width, height int) (data [][][]uint8) {
 	return
 }
 
-// PutImageData
+func (el *TagCanvas) GetAverageGrayScale(x, y, width, height int) (gray [][][]uint8) {
+
+	dataInterface := el.context.Call("getImageData", x, y, width, height)
+	dataJs := dataInterface.Get("data")
+
+	var rgbaLength = 4
+	var data [][][]uint8
+	var i = 0
+	x = 0
+	y = 0
+
+	// [x][y][4-channel]
+	data = make([][][]uint8, width)
+	for x = 0; x != width; x += 1 {
+		data[x] = make([][]uint8, height)
+		for y = 0; y != height; y += 1 {
+			data[x][y] = make([]uint8, 4)
+
+			//Red:   uint8(dataJs.Index(i + 0).Int()),
+			//Green: uint8(dataJs.Index(i + 1).Int()),
+			//Blue:  uint8(dataJs.Index(i + 2).Int()),
+			//Alpha: uint8(dataJs.Index(i + 3).Int()),
+
+			data[x][y][0] = uint8(dataJs.Index(i + 0).Int())
+			data[x][y][1] = uint8(dataJs.Index(i + 1).Int())
+			data[x][y][2] = uint8(dataJs.Index(i + 2).Int())
+			data[x][y][3] = uint8(dataJs.Index(i + 3).Int())
+
+			i += rgbaLength
+		}
+	}
+
+	gray = make([][][]uint8, width)
+	for x = 0; x != width; x += 1 {
+		gray[x] = make([][]uint8, height)
+		for y = 0; y != height; y += 1 {
+			gray[x][y] = make([]uint8, 4)
+
+			//Red:   uint8(dataJs.Index(i + 0).Int()),
+			//Green: uint8(dataJs.Index(i + 1).Int()),
+			//Blue:  uint8(dataJs.Index(i + 2).Int()),
+			//Alpha: uint8(dataJs.Index(i + 3).Int()),
+
+			gray[x][y][0] = (data[x][y][0] + data[x][y][1] + data[x][y][2]) / 3
+			gray[x][y][1] = (data[x][y][0] + data[x][y][1] + data[x][y][2]) / 3
+			gray[x][y][2] = (data[x][y][0] + data[x][y][1] + data[x][y][2]) / 3
+			gray[x][y][3] = data[x][y][3]
+		}
+	}
+
+	return
+}
+
+// ImageData
 //
 // English:
 //
@@ -492,7 +548,7 @@ func (el *TagCanvas) GetImageData(x, y, width, height int) (data [][][]uint8) {
 //	   height: altura da imagem.
 //
 // todo: fazer exemplo
-func (el *TagCanvas) PutImageData(imgData [][][]uint8, width, height int) (ref *TagCanvas) {
+func (el *TagCanvas) ImageData(imgData [][][]uint8, width, height int) (ref *TagCanvas) {
 
 	dataJs := el.context.Call("createImageData", width, height)
 

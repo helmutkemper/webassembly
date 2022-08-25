@@ -1912,18 +1912,19 @@ func (e *TagDiv) Html(value string) (ref *TagDiv) {
 //	    }
 //	  }()
 func (e *TagDiv) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagDiv) {
-	var fn js.Func
-
-	if e.fnClick == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventClick, this, args)
-			return nil
-		})
-		e.fnClick = &fn
+	if e.fnClick != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventClick, this, args)
+		return nil
+	})
+	e.fnClick = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -2086,18 +2087,19 @@ func (e *TagDiv) RemoveListenerClick() (ref *TagDiv) {
 //	    }
 //	  }()
 func (e *TagDiv) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagDiv) {
-	var fn js.Func
-
-	if e.fnMouseOver == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseOver, this, args)
-			return nil
-		})
-		e.fnMouseOver = &fn
+	if e.fnMouseOver != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseOver, this, args)
+		return nil
+	})
+	e.fnMouseOver = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -2260,18 +2262,19 @@ func (e *TagDiv) RemoveListenerMouseOver() (ref *TagDiv) {
 //	    }
 //	  }()
 func (e *TagDiv) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagDiv) {
-	var fn js.Func
-
-	if e.fnMouseOut == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseOut, this, args)
-			return nil
-		})
-		e.fnMouseOut = &fn
+	if e.fnMouseOut != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseOut, this, args)
+		return nil
+	})
+	e.fnMouseOut = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -2434,18 +2437,19 @@ func (e *TagDiv) RemoveListenerMouseOut() (ref *TagDiv) {
 //	    }
 //	  }()
 func (e *TagDiv) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagDiv) {
-	var fn js.Func
-
-	if e.fnMouseMove == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseMove, this, args)
-			return nil
-		})
-		e.fnMouseMove = &fn
+	if e.fnMouseMove != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseMove, this, args)
+		return nil
+	})
+	e.fnMouseMove = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -2608,18 +2612,19 @@ func (e *TagDiv) RemoveListenerMouseMove() (ref *TagDiv) {
 //	    }
 //	  }()
 func (e *TagDiv) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *TagDiv) {
-	var fn js.Func
-
-	if e.fnMouseLeave == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
-			return nil
-		})
-		e.fnMouseLeave = &fn
+	if e.fnMouseLeave != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
+		return nil
+	})
+	e.fnMouseLeave = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -2782,18 +2787,19 @@ func (e *TagDiv) RemoveListenerMouseLeave() (ref *TagDiv) {
 //	    }
 //	  }()
 func (e *TagDiv) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *TagDiv) {
-	var fn js.Func
-
-	if e.fnMouseEnter == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
-			return nil
-		})
-		e.fnMouseEnter = &fn
+	if e.fnMouseEnter != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
+		return nil
+	})
+	e.fnMouseEnter = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -2957,18 +2963,19 @@ func (e *TagDiv) RemoveListenerMouseEnter() (ref *TagDiv) {
 //	    }
 //	  }()
 func (e *TagDiv) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagDiv) {
-	var fn js.Func
-
-	if e.fnMouseDown == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseDown, this, args)
-			return nil
-		})
-		e.fnMouseDown = &fn
+	if e.fnMouseDown != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseDown, this, args)
+		return nil
+	})
+	e.fnMouseDown = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -3132,18 +3139,19 @@ func (e *TagDiv) RemoveListenerMouseDown() (ref *TagDiv) {
 //	    }
 //	  }()
 func (e *TagDiv) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagDiv) {
-	var fn js.Func
-
-	if e.fnMouseUp == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseUp, this, args)
-			return nil
-		})
-		e.fnMouseUp = &fn
+	if e.fnMouseUp != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseUp, this, args)
+		return nil
+	})
+	e.fnMouseUp = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -3306,18 +3314,19 @@ func (e *TagDiv) RemoveListenerMouseUp() (ref *TagDiv) {
 //	    }
 //	  }()
 func (e *TagDiv) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *TagDiv) {
-	var fn js.Func
-
-	if e.fnMouseWheel == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
-			return nil
-		})
-		e.fnMouseWheel = &fn
+	if e.fnMouseWheel != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
+		return nil
+	})
+	e.fnMouseWheel = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -3481,18 +3490,19 @@ func (e *TagDiv) RemoveListenerMouseWheel() (ref *TagDiv) {
 //	    }
 //	  }()
 func (e *TagDiv) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagDiv) {
-	var fn js.Func
-
-	if e.fnDoubleClick == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
-			return nil
-		})
-		e.fnDoubleClick = &fn
+	if e.fnDoubleClick != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
+		return nil
+	})
+	e.fnDoubleClick = &fn
 
 	e.selfElement.Call(
 		"addEventListener",

@@ -135,20 +135,21 @@ func (e *Battery) Init() {
 //
 // Acionado quando o estado de carregamento da bateria (a propriedade de carregamento) é atualizado.
 func (e *Battery) AddListenerChargingChange(batteryData *chan Data) (ref *Battery) {
-	var fn js.Func
-
-	if e.fnChargingChange == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) any {
-			if len(args) == 0 {
-				return nil
-			}
-
-			*batteryData <- EventManager(KEventChargingChange, this, args)
-
-			return nil
-		})
-		e.fnChargingChange = &fn
+	if e.fnChargingChange != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) any {
+		if len(args) == 0 {
+			return nil
+		}
+
+		*batteryData <- EventManager(KEventChargingChange, this, args)
+
+		return nil
+	})
+	e.fnChargingChange = &fn
 
 	objectBactery.Call(
 		"addEventListener",
@@ -207,19 +208,20 @@ func (e *Battery) RemoveListenerChargingChange() (ref *Battery) {
 //
 // Acionado quando o tempo de carregamento da bateria (propriedade loadingTime) é atualizado.
 func (e *Battery) AddListenerChargingTimeChange(batteryData *chan Data) (ref *Battery) {
-	var fn js.Func
-
-	if e.fnChargingTimeChange == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) any {
-			if len(args) == 0 {
-				return nil
-			}
-
-			*batteryData <- EventManager(KEventChargingTimeChange, this, args)
-			return nil
-		})
-		e.fnChargingTimeChange = &fn
+	if e.fnChargingTimeChange != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) any {
+		if len(args) == 0 {
+			return nil
+		}
+
+		*batteryData <- EventManager(KEventChargingTimeChange, this, args)
+		return nil
+	})
+	e.fnChargingTimeChange = &fn
 
 	objectBactery.Call(
 		"addEventListener",
@@ -277,19 +279,20 @@ func (e *Battery) RemoveListenerChargingTimeChange() (ref *Battery) {
 //
 // Acionado quando o tempo de descarga da bateria (propriedade dischargingTime) é atualizado.
 func (e *Battery) AddListenerDischargingTimeChange(batteryData *chan Data) (ref *Battery) {
-	var fn js.Func
-
-	if e.fnDischargingTimeChange == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) any {
-			if len(args) == 0 {
-				return nil
-			}
-
-			*batteryData <- EventManager(KEventDischargingTimeChange, this, args)
-			return nil
-		})
-		e.fnDischargingTimeChange = &fn
+	if e.fnDischargingTimeChange != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) any {
+		if len(args) == 0 {
+			return nil
+		}
+
+		*batteryData <- EventManager(KEventDischargingTimeChange, this, args)
+		return nil
+	})
+	e.fnDischargingTimeChange = &fn
 
 	objectBactery.Call(
 		"addEventListener",
@@ -347,19 +350,20 @@ func (e *Battery) RemoveListenerDischargingTimeChange() (ref *Battery) {
 //
 // Acionado quando o nível da bateria (a propriedade de nível) é atualizado.
 func (e *Battery) AddListenerLevelChange(batteryData *chan Data) (ref *Battery) {
-	var fn js.Func
-
-	if e.fnLevelChange == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) any {
-			if len(args) == 0 {
-				return nil
-			}
-
-			*batteryData <- EventManager(KEventLevelChange, this, args)
-			return nil
-		})
-		e.fnLevelChange = &fn
+	if e.fnLevelChange != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) any {
+		if len(args) == 0 {
+			return nil
+		}
+
+		*batteryData <- EventManager(KEventLevelChange, this, args)
+		return nil
+	})
+	e.fnLevelChange = &fn
 
 	objectBactery.Call(
 		"addEventListener",

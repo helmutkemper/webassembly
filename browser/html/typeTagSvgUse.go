@@ -3131,18 +3131,19 @@ func (e *TagSvgUse) Reference(reference **TagSvgUse) (ref *TagSvgUse) {
 //	    }
 //	  }()
 func (e *TagSvgUse) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvgUse) {
-	var fn js.Func
-
-	if e.fnClick == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventClick, this, args)
-			return nil
-		})
-		e.fnClick = &fn
+	if e.fnClick != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventClick, this, args)
+		return nil
+	})
+	e.fnClick = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -3305,18 +3306,19 @@ func (e *TagSvgUse) RemoveListenerClick() (ref *TagSvgUse) {
 //	    }
 //	  }()
 func (e *TagSvgUse) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagSvgUse) {
-	var fn js.Func
-
-	if e.fnMouseOver == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseOver, this, args)
-			return nil
-		})
-		e.fnMouseOver = &fn
+	if e.fnMouseOver != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseOver, this, args)
+		return nil
+	})
+	e.fnMouseOver = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -3471,18 +3473,19 @@ func (e *TagSvgUse) RemoveListenerMouseOver() (ref *TagSvgUse) {
 //	    }
 //	  }()
 func (e *TagSvgUse) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagSvgUse) {
-	var fn js.Func
-
-	if e.fnMouseOut == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseOut, this, args)
-			return nil
-		})
-		e.fnMouseOut = &fn
+	if e.fnMouseOut != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseOut, this, args)
+		return nil
+	})
+	e.fnMouseOut = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -3637,18 +3640,19 @@ func (e *TagSvgUse) RemoveListenerMouseOut() (ref *TagSvgUse) {
 //	    }
 //	  }()
 func (e *TagSvgUse) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagSvgUse) {
-	var fn js.Func
-
-	if e.fnMouseMove == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseMove, this, args)
-			return nil
-		})
-		e.fnMouseMove = &fn
+	if e.fnMouseMove != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseMove, this, args)
+		return nil
+	})
+	e.fnMouseMove = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -3803,18 +3807,19 @@ func (e *TagSvgUse) RemoveListenerMouseMove() (ref *TagSvgUse) {
 //	    }
 //	  }()
 func (e *TagSvgUse) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *TagSvgUse) {
-	var fn js.Func
-
-	if e.fnMouseLeave == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
-			return nil
-		})
-		e.fnMouseLeave = &fn
+	if e.fnMouseLeave != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
+		return nil
+	})
+	e.fnMouseLeave = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -3969,18 +3974,19 @@ func (e *TagSvgUse) RemoveListenerMouseLeave() (ref *TagSvgUse) {
 //	    }
 //	  }()
 func (e *TagSvgUse) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *TagSvgUse) {
-	var fn js.Func
-
-	if e.fnMouseEnter == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
-			return nil
-		})
-		e.fnMouseEnter = &fn
+	if e.fnMouseEnter != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
+		return nil
+	})
+	e.fnMouseEnter = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -4136,18 +4142,19 @@ func (e *TagSvgUse) RemoveListenerMouseEnter() (ref *TagSvgUse) {
 //	    }
 //	  }()
 func (e *TagSvgUse) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagSvgUse) {
-	var fn js.Func
-
-	if e.fnMouseDown == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseDown, this, args)
-			return nil
-		})
-		e.fnMouseDown = &fn
+	if e.fnMouseDown != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseDown, this, args)
+		return nil
+	})
+	e.fnMouseDown = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -4303,18 +4310,19 @@ func (e *TagSvgUse) RemoveListenerMouseDown() (ref *TagSvgUse) {
 //	    }
 //	  }()
 func (e *TagSvgUse) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagSvgUse) {
-	var fn js.Func
-
-	if e.fnMouseUp == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseUp, this, args)
-			return nil
-		})
-		e.fnMouseUp = &fn
+	if e.fnMouseUp != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseUp, this, args)
+		return nil
+	})
+	e.fnMouseUp = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -4469,18 +4477,19 @@ func (e *TagSvgUse) RemoveListenerMouseUp() (ref *TagSvgUse) {
 //	    }
 //	  }()
 func (e *TagSvgUse) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *TagSvgUse) {
-	var fn js.Func
-
-	if e.fnMouseWheel == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
-			return nil
-		})
-		e.fnMouseWheel = &fn
+	if e.fnMouseWheel != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
+		return nil
+	})
+	e.fnMouseWheel = &fn
 
 	e.selfElement.Call(
 		"addEventListener",
@@ -4636,18 +4645,19 @@ func (e *TagSvgUse) RemoveListenerMouseWheel() (ref *TagSvgUse) {
 //	    }
 //	  }()
 func (e *TagSvgUse) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagSvgUse) {
-	var fn js.Func
-
-	if e.fnDoubleClick == nil {
-		fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			if len(args) == 0 {
-				return nil
-			}
-			*mouseEvet <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
-			return nil
-		})
-		e.fnDoubleClick = &fn
+	if e.fnDoubleClick != nil {
+		return e
 	}
+
+	var fn js.Func
+	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+		*mouseEvet <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
+		return nil
+	})
+	e.fnDoubleClick = &fn
 
 	e.selfElement.Call(
 		"addEventListener",

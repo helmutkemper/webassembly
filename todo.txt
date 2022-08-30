@@ -82,3 +82,7 @@ https://products.aspose.app/barcode/pt/recognize/qr#/recognized
 https://www.qrcodefacil.com/
 
 https://developer.mozilla.org/en-US/docs/Web/CSS/Reference#index
+
+https://codepen.io/nikhil8krishnan/pen/rVoXJa
+https://codepen.io/nikhil8krishnan/pen/dMEzGx
+https://codepen.io/nikhil8krishnan/pens/popular

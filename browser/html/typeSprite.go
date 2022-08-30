@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+type spriteConfig struct {
+	data   []spriteScene
+	sprite *Sprite
+}
+
 // SpriteScene
 //
 // English:
@@ -16,9 +21,10 @@ import (
 //
 // Arquiva cada sprite individualmente
 type spriteScene struct {
-	sprite    *Sprite
-	intervel  time.Duration
-	imageData js.Value
+	intervel      time.Duration
+	imageData     js.Value
+	collisionData [][]bool
+	collisionBox  Box
 }
 
 // Add
@@ -50,37 +56,27 @@ type spriteScene struct {
 //
 //	Notas:
 //	  * Use interval igual a zero para parar um movimento.
-func (e *spriteScene) Add(col, row int, interval time.Duration, flipHorizontal, flipVertical bool) (ref *spriteScene) {
+func (e *spriteConfig) Add(col, row int, interval time.Duration, flipHorizontal, flipVertical bool) (ref *spriteConfig) {
 	canvas := new(TagCanvas)
 	canvas.Init(e.sprite.spriteWidth, e.sprite.spriteHeight)
 
 	var imageData js.Value
-	var imageDataFlipped js.Value
 
-	canvas.context.Call("clearRect", 0, 0, e.sprite.spriteWidth, e.sprite.spriteHeight)
-	canvas.context.Call("drawImage", e.sprite.img.Get(), col*e.sprite.spriteWidth, row*e.sprite.spriteHeight, e.sprite.spriteWidth, e.sprite.spriteHeight, 0, 0, e.sprite.spriteWidth, e.sprite.spriteHeight)
-	imageData = canvas.context.Call("getImageData", 0, 0, e.sprite.spriteWidth, e.sprite.spriteHeight)
+	canvas.ClearRect(0, 0, e.sprite.spriteWidth, e.sprite.spriteHeight)
+	canvas.DrawImageComplete(e.sprite.img, col*e.sprite.spriteWidth, row*e.sprite.spriteHeight, e.sprite.spriteWidth, e.sprite.spriteHeight, 0, 0, e.sprite.spriteWidth, e.sprite.spriteHeight)
+	imageData = canvas.GetImageData(0, 0, e.sprite.spriteWidth, e.sprite.spriteHeight, flipVertical, flipHorizontal)
 
-	if flipHorizontal == false && flipVertical == false {
-		e.sprite.scene[e.sprite.sceneName] = append(e.sprite.scene[e.sprite.sceneName], spriteScene{imageData: imageData, intervel: interval})
-		return e
-	}
-
-	data1 := imageData.Get("data")
-
-	imageDataFlipped = canvas.context.Call("getImageData", 0, 0, e.sprite.spriteWidth, e.sprite.spriteHeight)
-	data2 := imageDataFlipped.Get("data")
-
-	if flipHorizontal == true && flipVertical == true {
-		e.sprite.flipData(data1, data2)
-	} else if flipHorizontal == true && flipVertical == false {
-		e.sprite.flipDataHorizontal(data1, data2)
-	} else if flipHorizontal == false && flipVertical == true {
-		e.sprite.flipDataVertival(data1, data2)
-	}
-
-	e.sprite.scene[e.sprite.sceneName] = append(e.sprite.scene[e.sprite.sceneName], spriteScene{imageData: imageDataFlipped, intervel: interval})
-
+	config := e.sprite.scene[e.sprite.sceneName]
+	config.data = append(
+		config.data,
+		spriteScene{
+			imageData:     imageData,
+			intervel:      interval,
+			collisionData: canvas.GetCollisionData(),
+			collisionBox:  canvas.GetCollisionBox(),
+		},
+	)
+	e.sprite.scene[e.sprite.sceneName] = config
 	return e
 }
 
@@ -108,12 +104,18 @@ type Sprite struct {
 	onChange             *chan struct{}
 	onEnd                *chan struct{}
 
-	scene           map[string][]spriteScene
-	sceneName       string
-	imageDataToDraw js.Value
-	running         bool
-	stopCh          chan struct{}
-	stoppedCh       chan struct{}
+	scene     map[string]spriteConfig
+	sceneName string
+
+	running   bool
+	stopCh    chan struct{}
+	stoppedCh chan struct{}
+
+	// draw and colision - start
+	imageData     js.Value
+	collisionData [][]bool
+	collisionBox  Box
+	// draw and colision - end
 }
 
 // Y
@@ -196,16 +198,21 @@ func (e *Sprite) GetScene() (name string) {
 // Português:
 //
 // Adiciona uma nova sena.
-func (e *Sprite) Scene(name string) (ref *spriteScene) {
+func (e *Sprite) Scene(name string) (ref *spriteConfig) {
 
 	if e.scene == nil {
-		e.scene = make(map[string][]spriteScene)
+		e.scene = make(map[string]spriteConfig)
 	}
 
 	e.sceneName = name
-	e.scene[e.sceneName] = make([]spriteScene, 0)
+	data := make([]spriteScene, 0)
+	config := spriteConfig{
+		sprite: e,
+		data:   data,
+	}
+	e.scene[e.sceneName] = config
 
-	ref = new(spriteScene)
+	ref = new(spriteConfig)
 	ref.sprite = e
 
 	return
@@ -221,7 +228,6 @@ func (e *Sprite) Scene(name string) (ref *spriteScene) {
 //
 // Inicia uma cena.
 func (e *Sprite) Start(name string) (err error) {
-
 	if e.sceneName == name {
 		return
 	}
@@ -233,24 +239,31 @@ func (e *Sprite) Start(name string) (err error) {
 		<-e.stoppedCh
 	}
 
-	data, ok := e.scene[name]
+	config, ok := e.scene[name]
 	if ok == false {
 		err = errors.New("scene name not found")
 		return
 	}
 
-	e.imageDataToDraw = data[0].imageData
+	e.imageData = config.data[0].imageData
+	e.collisionData = config.data[0].collisionData
+	e.collisionBox = config.data[0].collisionBox
+
 	if e.onChange != nil && len(*e.onChange) > 1 {
 		*e.onChange <- struct{}{}
 	}
 
-	if len(data) == 1 {
+	if len(config.data) == 1 {
 		return
 	}
 
 	e.running = true
 
-	go func() {
+	go func(data []spriteScene) {
+		defer func() {
+			e.stoppedCh <- struct{}{}
+		}()
+
 		var i = 0
 		var l = len(data) - 1
 
@@ -259,8 +272,8 @@ func (e *Sprite) Start(name string) (err error) {
 			select {
 			case <-e.stopCh:
 				e.running = false
-				e.stoppedCh <- struct{}{}
 				return
+
 			case <-timer.C:
 				if i < l {
 					i += 1
@@ -272,7 +285,9 @@ func (e *Sprite) Start(name string) (err error) {
 					i = 0
 				}
 
-				e.imageDataToDraw = data[i].imageData
+				e.imageData = data[i].imageData
+				e.collisionData = data[i].collisionData
+				e.collisionBox = data[i].collisionBox
 				if e.onChange != nil && len(*e.onChange) == 0 {
 					*e.onChange <- struct{}{}
 				}
@@ -285,7 +300,7 @@ func (e *Sprite) Start(name string) (err error) {
 				timer = time.NewTimer(data[i].intervel)
 			}
 		}
-	}()
+	}(config.data)
 
 	return
 }
@@ -376,121 +391,34 @@ func (e *Sprite) Init() {
 //
 // Função a ser adicionada a funçãp Draw() da engine.
 func (e *Sprite) Draw() {
-	if e.imageDataToDraw.IsUndefined() == true {
+	if e.imageData.IsUndefined() == true {
 		return
 	}
 
-	e.canvas.context.Call("putImageData", e.imageDataToDraw, e.x, e.y)
+	e.canvas.context.Call("putImageData", e.imageData, e.x, e.y)
+
+	cBox := e.GetCollisionBox()
+	e.canvas.StrokeRect(cBox.X, cBox.Y, cBox.Width, cBox.Height).Stroke()
 }
 
-// flipData
-//
-// English:
-//
-// Reverses the direction of the image, both vertically and horizontally.
-//
-// Português:
-//
-// Reverte o sentido da imagem, tanto na vertical quanto na horizontal.
-func (e *Sprite) flipData(dataJs, flipped js.Value) {
-	var x, y int
+func (e *Sprite) GetCollisionBox() (box Box) {
+	cBox := e.collisionBox
+	cBox.X += e.x
+	cBox.Y += e.y
 
-	var rgbaLength = 4
-
-	var i = 0
-	x = 0
-	y = 0
-
-	m := e.spriteHeight * e.spriteWidth * 4
-	for y = 0; y != e.spriteHeight; y += 1 {
-		for x = 0; x != e.spriteWidth; x += 1 {
-
-			//Red:   uint8(dataJs.Index(i + 0).Int()),
-			//Green: uint8(dataJs.Index(i + 1).Int()),
-			//Blue:  uint8(dataJs.Index(i + 2).Int()),
-			//Alpha: uint8(dataJs.Index(i + 3).Int()),
-
-			flipped.SetIndex(m-i+0, uint8(dataJs.Index(i+0).Int()))
-			flipped.SetIndex(m-i+1, uint8(dataJs.Index(i+1).Int()))
-			flipped.SetIndex(m-i+2, uint8(dataJs.Index(i+2).Int()))
-			flipped.SetIndex(m-i+3, uint8(dataJs.Index(i+3).Int()))
-
-			i += rgbaLength
-		}
-	}
+	return cBox
 }
 
-// flipDataHorizontal
-//
-// English:
-//
-// Reverses the direction of the image horizontally.
-//
-// Português:
-//
-// Inverte o sentido da imagem na horizontal.
-func (e *Sprite) flipDataHorizontal(dataJs, flipped js.Value) {
-	var x, y, m, i int
-
-	var rgbaLength = 4
-
-	for y = 0; y != e.spriteHeight; y += 1 {
-		for x = 0; x != e.spriteWidth; x += 1 {
-			//Red:   uint8(dataJs.Index(i + 0).Int()),
-			//Green: uint8(dataJs.Index(i + 1).Int()),
-			//Blue:  uint8(dataJs.Index(i + 2).Int()),
-			//Alpha: uint8(dataJs.Index(i + 3).Int()),
-
-			flipped.SetIndex(m+0+(e.spriteWidth-x-1)*4, uint8(dataJs.Index(i+0).Int()))
-			flipped.SetIndex(m+1+(e.spriteWidth-x-1)*4, uint8(dataJs.Index(i+1).Int()))
-			flipped.SetIndex(m+2+(e.spriteWidth-x-1)*4, uint8(dataJs.Index(i+2).Int()))
-			flipped.SetIndex(m+3+(e.spriteWidth-x-1)*4, uint8(dataJs.Index(i+3).Int()))
-
-			i += rgbaLength
-		}
-		m = m + e.spriteWidth*4
+func (e *Sprite) TestCollisionBox(element CollisionBox) (collision bool) {
+	thisCBox := e.collisionBox
+	elementCBox := element.GetCollisionBox()
+	if thisCBox.X < elementCBox.X+elementCBox.Width &&
+		thisCBox.X+thisCBox.Width > elementCBox.X &&
+		thisCBox.Y < elementCBox.Y+elementCBox.Height &&
+		thisCBox.Y+thisCBox.Height > elementCBox.Y {
+		return true
 	}
-}
-
-// flipDataVertival
-//
-// English:
-//
-// Reverses the direction of the image vertically.
-//
-// Português:
-//
-// Inverte o sentido da imagem na vertical.
-func (e *Sprite) flipDataVertival(dataJs, flipped js.Value) {
-	var x, y, m, i int
-
-	var rgbaLength = 4
-
-	for y = 0; y != e.spriteHeight; y += 1 {
-
-		// English: Shifts the data position in the matrix to an ordinary two-dimensional matrix.
-		// Português: Desloca a posição do dado na matriz para uma matriz bidimencional comum.
-		m = (e.spriteHeight*e.spriteWidth - e.spriteWidth*(y+1)) + 1
-
-		for x = 0; x != e.spriteWidth; x += 1 {
-			//Red:   uint8(dataJs.Index(i + 0).Int()),
-			//Green: uint8(dataJs.Index(i + 1).Int()),
-			//Blue:  uint8(dataJs.Index(i + 2).Int()),
-			//Alpha: uint8(dataJs.Index(i + 3).Int()),
-
-			// English:   +x shifts the data in the common matrix
-			//            *4 shifts the data in the js image array
-			// Português: +x desloca o dado na matriz comum
-			//            *4 desloca o dado na matriz de imagem js
-			flipped.SetIndex((m+x)*4+0, uint8(dataJs.Index(i+0).Int()))
-			flipped.SetIndex((m+x)*4+1, uint8(dataJs.Index(i+1).Int()))
-			flipped.SetIndex((m+x)*4+2, uint8(dataJs.Index(i+2).Int()))
-			flipped.SetIndex((m+x)*4+3, uint8(dataJs.Index(i+3).Int()))
-
-			i += rgbaLength
-		}
-
-	}
+	return false
 }
 
 //

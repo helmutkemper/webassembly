@@ -21,7 +21,7 @@ const kUIdSize = 10
 //
 // English:
 //
-// Sets the minimum amount of fps allowed for automatic engine tuning
+// # Sets the minimum amount of fps allowed for automatic engine tuning
 //
 // Português:
 //
@@ -34,22 +34,22 @@ const kFpsMin = 10
 //
 // Sets the maximum amount of fps allowed for automatic engine tuning
 //
-//   Notes:
-//    * Setting high fps crashes the browser in a test done on Mac M1 with 16GB of RAM
+//	Notes:
+//	 * Setting high fps crashes the browser in a test done on Mac M1 with 16GB of RAM
 //
 // Português:
 //
 // Define a quantidade máxima de fps permitida para o ajuste automático da engine
 //
-//   Notas:
-//    * Definir fps elevados travam o navegador em um teste feito no Mac M1 com 16GB de RAM
-const kFpsMax = 120
+//	Notas:
+//	 * Definir fps elevados travam o navegador em um teste feito no Mac M1 com 16GB de RAM
+const kFpsMax = 240
 
 // FuncList
 //
 // English:
 //
-// Gets the pointer of the system function to be executed and the ID
+// # Gets the pointer of the system function to be executed and the ID
 //
 // Português:
 //
@@ -169,7 +169,7 @@ type Engine struct {
 //
 // English:
 //
-// Start the engine
+// # Start the engine
 //
 // Português:
 //
@@ -245,8 +245,8 @@ func (el *Engine) GetSleepFrame() int {
 //
 // Define a quantidade máxima de FPS.
 //
-//   Notas:
-//     * A quantidade máxima de FPS pode fazer o navegador travar.
+//	Notas:
+//	  * A quantidade máxima de FPS pode fazer o navegador travar.
 func (el *Engine) SetFpsMax(value int) {
 	el.fpsMax = value
 }
@@ -257,15 +257,15 @@ func (el *Engine) SetFpsMax(value int) {
 //
 // Sets the minimum amount of FPS.
 //
-//   Notes:
-//     * The FPS value automatically drops when the system is very busy.
+//	Notes:
+//	  * The FPS value automatically drops when the system is very busy.
 //
 // Português:
 //
 // Define a quantidade mínima de FPS.
 //
-//   Notas:
-//     * O valor do FPS cai de forma automática quando o sistema está muito ocupado.
+//	Notas:
+//	  * O valor do FPS cai de forma automática quando o sistema está muito ocupado.
 func (el *Engine) SetFpsMin(value int) {
 	el.fpsMin = value
 }
@@ -276,15 +276,15 @@ func (el *Engine) SetFpsMin(value int) {
 //
 // Sets the maximum amount of FPS.
 //
-//   Notes:
-//     * The FPS value automatically goes up when the system is not overloaded.
+//	Notes:
+//	  * The FPS value automatically goes up when the system is not overloaded.
 //
 // Português:
 //
 // Define a quantidade máxima de FPS.
 //
-//   Notas:
-//     * O valor do FPS sobe de forma automática quando o sistema não está sobrecarregado.
+//	Notas:
+//	  * O valor do FPS sobe de forma automática quando o sistema não está sobrecarregado.
 func (el *Engine) SetFPS(value int) {
 	el.fps = value
 	el.stopTicker = true
@@ -336,29 +336,29 @@ func (el *Engine) CursorRemoveDrawFunction() {
 //
 // Adds a high latency function, a low execution priority function.
 //
-//   Input:
-//     runnerFunc: function to be performed.
+//	Input:
+//	  runnerFunc: function to be performed.
 //
-//   Output:
-//     UId: used to identify the function when removing.
-//     total: total number of functions running.
+//	Output:
+//	  UId: used to identify the function when removing.
+//	  total: total number of functions running.
 //
-//   Notes:
-//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//	Notes:
+//	  * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
 // Adiciona uma função de alta latencia, uma função de baixa prioridade de execussão.
 //
-//   Entrada:
-//     runnerFunc: função a ser executada.
+//	Entrada:
+//	  runnerFunc: função a ser executada.
 //
-//   Saída:
-//     UId da função, usado para identificar a função na hora de remover.
-//     total: quantidade total de funções em execução.
+//	Saída:
+//	  UId da função, usado para identificar a função na hora de remover.
+//	  total: quantidade total de funções em execução.
 //
-//   Notas:
-//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
+//	Notas:
+//	  * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (el *Engine) HighLatencyAddToFunctions(runnerFunc func()) (string, int) {
 	UId := el.getUId()
 	index := len(el.funcListToHighLatency)
@@ -373,21 +373,21 @@ func (el *Engine) HighLatencyAddToFunctions(runnerFunc func()) (string, int) {
 //
 // Removes a high latency function added by the HighLatencyAddToFunctions() function.
 //
-//   Input:
-//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//	Input:
+//	  UId: ID returned by the HighLatencyAddToFunctions() function.
 //
-//   Notes:
-//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//	Notes:
+//	  * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
 // Remove uma função de alta latencia adicionada pela função HighLatencyAddToFunctions().
 //
-//   Entrada:
-//     UId: ID retornado pela função HighLatencyAddToFunctions().
+//	Entrada:
+//	  UId: ID retornado pela função HighLatencyAddToFunctions().
 //
-//   Notas:
-//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
+//	Notas:
+//	  * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (el *Engine) HighLatencyDeleteFromFunctions(UId string) {
 	for k, runner := range el.funcListToHighLatency {
 		if runner.id == UId {
@@ -403,23 +403,23 @@ func (el *Engine) HighLatencyDeleteFromFunctions(UId string) {
 //
 // Allows you to change the order of execution of the function, in the execution list.
 //
-//   Input:
-//     UId: ID returned by the HighLatencyAddToFunctions() function.
-//     index: 0 for the first function in the list
+//	Input:
+//	  UId: ID returned by the HighLatencyAddToFunctions() function.
+//	  index: 0 for the first function in the list
 //
-//   Notes:
-//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//	Notes:
+//	  * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
 // Permite trocar a ordem de execução da função, na lista de execução.
 //
-//   Entrada:
-//     UId: ID retornado pela função HighLatencyAddToFunctions().
-//     index: 0 para a primeira função da lista
+//	Entrada:
+//	  UId: ID retornado pela função HighLatencyAddToFunctions().
+//	  index: 0 para a primeira função da lista
 //
-//   Notas:
-//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
+//	Notas:
+//	  * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (el *Engine) HighLatencySetZIndex(UId string, index int) int {
 	var function FuncList
 	var pass = false
@@ -476,27 +476,27 @@ func (el *Engine) HighLatencySetZIndex(UId string, index int) int {
 //
 // Returns the function execution index in the list, where 0 is the first function to be executed.
 //
-//   Input:
-//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//	Input:
+//	  UId: ID returned by the HighLatencyAddToFunctions() function.
 //
-//   Output:
-//     index: Function execution order.
+//	Output:
+//	  index: Function execution order.
 //
-//   Notes:
-//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//	Notes:
+//	  * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
 // Retorna o índice de execução da função na lista, onde 0 é a primera função a ser executada.
 //
-//   Entrada:
-//     UId: ID retornado pela função HighLatencyAddToFunctions().
+//	Entrada:
+//	  UId: ID retornado pela função HighLatencyAddToFunctions().
 //
-//   Saída:
-//     index: Ordem de execução da função.
+//	Saída:
+//	  index: Ordem de execução da função.
 //
-//   Notas:
-//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
+//	Notas:
+//	  * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (el *Engine) HighLatencyGetZIndex(UId string) int {
 	for k, runner := range el.funcListToHighLatency {
 		if runner.id == UId {
@@ -513,27 +513,27 @@ func (el *Engine) HighLatencyGetZIndex(UId string) int {
 //
 // Makes the function first on the execution list for high latency functions.
 //
-//   Input:
-//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//	Input:
+//	  UId: ID returned by the HighLatencyAddToFunctions() function.
 //
-//   Output:
-//     index: Function execution order.
+//	Output:
+//	  index: Function execution order.
 //
-//   Notes:
-//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//	Notes:
+//	  * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
 // Faz a função ser a primeira da lista de execuções para funções de alta latencia.
 //
-//   Entrada:
-//     UId: ID retornado pela função HighLatencyAddToFunctions().
+//	Entrada:
+//	  UId: ID retornado pela função HighLatencyAddToFunctions().
 //
-//   Saída:
-//     index: Ordem de execução da função.
+//	Saída:
+//	  index: Ordem de execução da função.
 //
-//   Notas:
-//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
+//	Notas:
+//	  * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (el *Engine) HighLatencySetAsFistFunctionToRun(UId string) int {
 	var function FuncList
 	var pass = false
@@ -565,27 +565,27 @@ func (el *Engine) HighLatencySetAsFistFunctionToRun(UId string) int {
 //
 // Makes the function last on the execution list for high latency functions.
 //
-//   Input:
-//     UId: ID returned by the HighLatencyAddToFunctions() function.
+//	Input:
+//	  UId: ID returned by the HighLatencyAddToFunctions() function.
 //
-//   Entrada:
-//     index: Function execution order.
+//	Entrada:
+//	  index: Function execution order.
 //
-//   Notes:
-//     * High latency functions are secondary functions designed to run at a lower FPS rate.
+//	Notes:
+//	  * High latency functions are secondary functions designed to run at a lower FPS rate.
 //
 // Português:
 //
 // Faz a função ser a útima da lista de execuções para funções de alta latencia.
 //
-//   Entrada:
-//     UId: ID retornado pela função HighLatencyAddToFunctions().
+//	Entrada:
+//	  UId: ID retornado pela função HighLatencyAddToFunctions().
 //
-//   Saída:
-//     index: Ordem de execução da função.
+//	Saída:
+//	  index: Ordem de execução da função.
 //
-//   Notas:
-//     * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
+//	Notas:
+//	  * Funções de alta latência são funções secundárias feitas para rodarem em uma taxa de FPS menor.
 func (el *Engine) HighLatencySetAsLastFunctionToRun(UId string) int {
 	var function FuncList
 	var pass = false
@@ -617,29 +617,29 @@ func (el *Engine) HighLatencySetAsLastFunctionToRun(UId string) int {
 //
 // Adds a function to the run list.
 //
-//   Input:
-//     runnerFunc: função a ser executada.
+//	Input:
+//	  runnerFunc: função a ser executada.
 //
-//   Output:
-//     UId: used to identify the function when removing.
-//     total: total number of functions running.
+//	Output:
+//	  UId: used to identify the function when removing.
+//	  total: total number of functions running.
 //
-//   Notes:
-//     * System functions are the first functions in the list of executions and should be the system usage function.
+//	Notes:
+//	  * System functions are the first functions in the list of executions and should be the system usage function.
 //
 // Português:
 //
 // Adiciona uma função a lista de execuções.
 //
-//   Entrada:
-//     runnerFunc: função a ser executada.
+//	Entrada:
+//	  runnerFunc: função a ser executada.
 //
-//   Saída:
-//     UId da função, usado para identificar a função na hora de remover.
-//     total: quantidade total de funções em execução.
+//	Saída:
+//	  UId da função, usado para identificar a função na hora de remover.
+//	  total: quantidade total de funções em execução.
 //
-//   Notas:
-//     * Funções de sistema são as primeiras funções da lista de execuções e devem ser as funções de uso do sistema.
+//	Notas:
+//	  * Funções de sistema são as primeiras funções da lista de execuções e devem ser as funções de uso do sistema.
 func (el *Engine) SystemAddToFunctions(runnerFunc func()) (string, int) {
 	UId := el.getUId()
 	index := len(el.funcListToSystem)
@@ -654,21 +654,21 @@ func (el *Engine) SystemAddToFunctions(runnerFunc func()) (string, int) {
 //
 // Removes a function from the system functions list, added by the SystemAddToFunctions() function.
 //
-//   Input:
-//     UId: ID returned by the SystemAddToFunctions() function.
+//	Input:
+//	  UId: ID returned by the SystemAddToFunctions() function.
 //
-//   Notes:
-//     * System functions are the first functions in the list of executions and should be the system usage functions.
+//	Notes:
+//	  * System functions are the first functions in the list of executions and should be the system usage functions.
 //
 // Português:
 //
 // Remove uma função da lista de funções do sistema, adicionada pela função SystemAddToFunctions().
 //
-//   Entrada:
-//     UId: ID retornado pela função SystemAddToFunctions().
+//	Entrada:
+//	  UId: ID retornado pela função SystemAddToFunctions().
 //
-//   Notas:
-//     * Funções de sistema são as primeiras funções da lista de execuções e devem ser as funções de uso do sistema.
+//	Notas:
+//	  * Funções de sistema são as primeiras funções da lista de execuções e devem ser as funções de uso do sistema.
 func (el *Engine) SystemDeleteFromFunctions(UId string) {
 	for k, runner := range el.funcListToSystem {
 		if runner.id == UId {
@@ -684,23 +684,23 @@ func (el *Engine) SystemDeleteFromFunctions(UId string) {
 //
 // Allows you to change the order of execution of the function, in the execution list.
 //
-//   Input:
-//     UId: ID returned by the SystemAddToFunctions() function.
-//     index: 0 for the first function in the list
+//	Input:
+//	  UId: ID returned by the SystemAddToFunctions() function.
+//	  index: 0 for the first function in the list
 //
-//   Notes:
-//     * System functions are the first functions in the list of executions and should be the system usage functions.
+//	Notes:
+//	  * System functions are the first functions in the list of executions and should be the system usage functions.
 //
 // Português:
 //
 // Permite trocar a ordem de execução da função, na lista de execução.
 //
-//   Entrada:
-//     UId: ID retornado pela função SystemAddToFunctions().
-//     index: 0 para a primeira função da lista
+//	Entrada:
+//	  UId: ID retornado pela função SystemAddToFunctions().
+//	  index: 0 para a primeira função da lista
 //
-//   Notas:
-//     * Funções de sistema são as primeiras funções da lista de execuções e devem ser as funções de uso do sistema.
+//	Notas:
+//	  * Funções de sistema são as primeiras funções da lista de execuções e devem ser as funções de uso do sistema.
 func (el *Engine) SystemSetZIndex(UId string, index int) int {
 	var function FuncList
 	var pass = false
@@ -757,21 +757,21 @@ func (el *Engine) SystemSetZIndex(UId string, index int) int {
 //
 // Returns the function execution index in the list, where 0 is the first function to be executed.
 //
-//   Input:
-//     UId: ID returned by the SystemAddToFunctions() function.
+//	Input:
+//	  UId: ID returned by the SystemAddToFunctions() function.
 //
-//   Entrada:
-//     index: Function execution order.
+//	Entrada:
+//	  index: Function execution order.
 //
 // Português:
 //
 // Retorna o índice de execução da função na lista, onde 0 é a primera função a ser executada.
 //
-//   Entrada:
-//     UId: ID retornado pela função SystemAddToFunctions().
+//	Entrada:
+//	  UId: ID retornado pela função SystemAddToFunctions().
 //
-//   Saída:
-//     index: Ordem de execução da função.
+//	Saída:
+//	  index: Ordem de execução da função.
 func (el *Engine) SystemGetZIndex(UId string) int {
 	for k, runner := range el.funcListToSystem {
 		if runner.id == UId {
@@ -782,12 +782,9 @@ func (el *Engine) SystemGetZIndex(UId string) int {
 	return math.MaxInt32
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) SystemSetAsFistFunctionToRun(UId string) int {
 	var function FuncList
 	var pass = false
@@ -813,12 +810,9 @@ func (el *Engine) SystemSetAsFistFunctionToRun(UId string) int {
 	return len(el.funcListToSystem) - 1
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) SystemSetAsLastFunctionToRun(UId string) int {
 	var function FuncList
 	var pass = false
@@ -844,12 +838,9 @@ func (el *Engine) SystemSetAsLastFunctionToRun(UId string) int {
 	return 0
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) AfterSystemAddToFunctions(runnerFunc func()) (string, int) {
 	UId := el.getUId()
 	index := len(el.funcListToAfterSystem)
@@ -858,12 +849,9 @@ func (el *Engine) AfterSystemAddToFunctions(runnerFunc func()) (string, int) {
 	return UId, index
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) AfterSystemDeleteFromFunctions(UId string) {
 	for k, runner := range el.funcListToAfterSystem {
 		if runner.id == UId {
@@ -873,12 +861,9 @@ func (el *Engine) AfterSystemDeleteFromFunctions(UId string) {
 	}
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) AfterSystemSetZIndex(UId string, index int) int {
 	var function FuncList
 	var pass = false
@@ -929,12 +914,9 @@ func (el *Engine) AfterSystemSetZIndex(UId string, index int) int {
 	return index
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) AfterSystemGetZIndex(UId string) int {
 	for k, runner := range el.funcListToAfterSystem {
 		if runner.id == UId {
@@ -945,12 +927,9 @@ func (el *Engine) AfterSystemGetZIndex(UId string) int {
 	return math.MaxInt32
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) AfterSystemSetAsFistFunctionToRun(UId string) int {
 	var function FuncList
 	var pass = false
@@ -976,12 +955,9 @@ func (el *Engine) AfterSystemSetAsFistFunctionToRun(UId string) int {
 	return len(el.funcListToAfterSystem) - 1
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) AfterSystemSetAsLastFunctionToRun(UId string) int {
 	var function FuncList
 	var pass = false
@@ -1007,12 +983,9 @@ func (el *Engine) AfterSystemSetAsLastFunctionToRun(UId string) int {
 	return 0
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) MathAddToFunctions(runnerFunc func()) (string, int) {
 	UId := el.getUId()
 	index := len(el.funcListToMath)
@@ -1021,12 +994,9 @@ func (el *Engine) MathAddToFunctions(runnerFunc func()) (string, int) {
 	return UId, index
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) MathDeleteFromFunctions(UId string) {
 	for k, runner := range el.funcListToMath {
 		if runner.id == UId {
@@ -1036,12 +1006,9 @@ func (el *Engine) MathDeleteFromFunctions(UId string) {
 	}
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) MathSetZIndex(UId string, index int) int {
 	var function FuncList
 	var pass = false
@@ -1092,12 +1059,9 @@ func (el *Engine) MathSetZIndex(UId string, index int) int {
 	return index
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) MathGetZIndex(UId string) int {
 	for k, runner := range el.funcListToMath {
 		if runner.id == UId {
@@ -1108,12 +1072,9 @@ func (el *Engine) MathGetZIndex(UId string) int {
 	return math.MaxInt32
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) MathSetAsFistFunctionToRun(UId string) int {
 	var function FuncList
 	var pass = false
@@ -1139,12 +1100,9 @@ func (el *Engine) MathSetAsFistFunctionToRun(UId string) int {
 	return len(el.funcListToMath) - 1
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) MathSetAsLastFunctionToRun(UId string) int {
 	var function FuncList
 	var pass = false
@@ -1170,12 +1128,9 @@ func (el *Engine) MathSetAsLastFunctionToRun(UId string) int {
 	return 0
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) DrawAddToFunctions(runnerFunc func()) (string, int) {
 	UId := el.getUId()
 	index := len(el.funcListToDraw)
@@ -1184,12 +1139,9 @@ func (el *Engine) DrawAddToFunctions(runnerFunc func()) (string, int) {
 	return UId, index
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) DrawDeleteFromFunctions(UId string) {
 	for k, runner := range el.funcListToDraw {
 		if runner.id == UId {
@@ -1199,12 +1151,9 @@ func (el *Engine) DrawDeleteFromFunctions(UId string) {
 	}
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) DrawSetZIndex(UId string, index int) int {
 	var function FuncList
 	var pass = false
@@ -1255,12 +1204,9 @@ func (el *Engine) DrawSetZIndex(UId string, index int) int {
 	return index
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) DrawGetZIndex(UId string) int {
 	for k, runner := range el.funcListToDraw {
 		if runner.id == UId {
@@ -1271,12 +1217,9 @@ func (el *Engine) DrawGetZIndex(UId string) int {
 	return math.MaxInt32
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) DrawSetAsFistFunctionToRun(UId string) int {
 	var function FuncList
 	var pass = false
@@ -1302,12 +1245,9 @@ func (el *Engine) DrawSetAsFistFunctionToRun(UId string) int {
 	return len(el.funcListToDraw) - 1
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) DrawSetAsLastFunctionToRun(UId string) int {
 	var function FuncList
 	var pass = false
@@ -1333,8 +1273,6 @@ func (el *Engine) DrawSetAsLastFunctionToRun(UId string) int {
 	return 0
 }
 
-//
-//
 // English:
 //
 // Português:
@@ -1349,12 +1287,9 @@ func (el *Engine) getUId() string {
 	return UId
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) tickerStart() {
 	el.ticker = time.NewTicker(time.Second / time.Duration(el.fps))
 	el.tickerLowLatency = time.NewTicker(time.Second / time.Duration(el.fpsLowLatency))
@@ -1364,12 +1299,9 @@ func (el *Engine) tickerStart() {
 	go func() { el.tickerRunner() }()
 }
 
-//
-//
 // English:
 //
 // Português:
-//
 func (el *Engine) tickerRunner() {
 	defer el.tickerStart()
 	for {

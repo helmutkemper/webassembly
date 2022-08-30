@@ -4,6 +4,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"image/color"
 	"log"
+	"math"
 	"strconv"
 	"syscall/js"
 )
@@ -44,6 +45,8 @@ type TagCanvas struct {
 	gradient  js.Value
 	pattern   js.Value
 	transform js.Value
+
+	colisionDataFunction func(red, green, blue, alpha uint8) bool
 }
 
 // Reference
@@ -77,6 +80,14 @@ func (el *TagCanvas) Reference(reference **TagCanvas) (ref *TagCanvas) {
 func (el *TagCanvas) Init(width, height int) (ref *TagCanvas) {
 	//e.listener = new(sync.Map)
 	el.CreateElement("canvas", width, height)
+
+	el.colisionDataFunction = func(r, g, b, a uint8) bool {
+		if a != 0 {
+			return true
+		}
+
+		return false
+	}
 
 	return el
 }
@@ -253,6 +264,52 @@ func (el *TagCanvas) DrawImageTile(image interface{}, dx, dy, x, y, width, heigh
 	return el
 }
 
+// DrawImageComplete
+//
+// English:
+//
+// Draws a preloaded image on the canvas element.
+//
+//	Input:
+//	  sx: The x-axis coordinate of the top left corner of the sub-rectangle of the source image to draw into the
+//	    destination context.
+//	  sy: The y-axis coordinate of the top left corner of the sub-rectangle of the source image to draw into the
+//	    destination context.
+//	  sWidth: The width of the sub-rectangle of the source image to draw into the destination context.
+//	  sHeight: The height of the sub-rectangle of the source image to draw into the destination context.
+//	    A negative value will flip the image.
+//	  dx: The x-axis coordinate in the destination canvas at which to place the top-left corner of the source image.
+//	  dy: The y-axis coordinate in the destination canvas at which to place the top-left corner of the source image.
+//	  dWidth: The width to draw the image in the destination canvas. This allows scaling of the drawn image.
+//	  dHeight: The height to draw the image in the destination canvas. This allows scaling of the drawn image.
+//
+// Português:
+//
+// Desenha uma imagem pré-carregada no elemento canvas.
+//
+//	Entrada:
+//	  sx: A coordenada do eixo x do canto superior esquerdo do sub-retângulo da imagem de origem para desenhar no
+//	    contexto de destino.
+//	  sy: A coordenada do eixo y do canto superior esquerdo do sub-retângulo da imagem de origem para desenhar no
+//	    contexto de destino.
+//	  sWidth: A largura do sub-retângulo da imagem de origem a ser desenhada no contexto de destino. Um valor negativo
+//	    inverterá à imagem.
+//	  sHeight: A altura do sub-retângulo da imagem de origem a ser desenhada no contexto de destino. Um valor negativo
+//	    inverterá à imagem.
+//	  dx: A coordenada do eixo x na tela de destino na qual colocar o canto superior esquerdo da imagem de origem.
+//	  dy: A coordenada do eixo y na tela de destino na qual colocar o canto superior esquerdo da imagem de origem.
+//	  dWidth: A largura para desenhar à imagem na tela de destino. Isso permite dimensionar à imagem desenhada.
+//	  dHeight: A altura para desenhar à imagem na tela de destino. Isso permite dimensionar à imagem desenhada.
+func (el *TagCanvas) DrawImageComplete(image interface{}, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight int) (ref *TagCanvas) {
+	if converted, ok := image.(Compatible); ok {
+		el.context.Call("drawImage", converted.Get(), sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+		return el
+	}
+
+	el.context.Call("drawImage", image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+	return el
+}
+
 // AppendById
 //
 // English:
@@ -340,6 +397,20 @@ func (el *TagCanvas) Append(append interface{}) (ref *TagCanvas) {
 	return el
 }
 
+// CollisionDataFunction
+//
+// English:
+//
+// Determines a new function for calculating the default collision matrix, return ALPHA != 0
+//
+// Português:
+//
+// Determina uma nova função para o cálculo da matriz de colisão padrão, return ALPHA != 0
+func (el *TagCanvas) CollisionDataFunction(f func(red, green, blue, alpha uint8) bool) (ref *TagCanvas) {
+	el.colisionDataFunction = f
+	return ref
+}
+
 // GetCollisionData
 //
 // English:
@@ -352,6 +423,17 @@ func (el *TagCanvas) Append(append interface{}) (ref *TagCanvas) {
 //	Output:
 //	  data: [x][y]transparent
 //
+// The collision matrix is a Boolean map of (x,y) coordinates based on the image box, where (0,0) represents the (0,0)
+// coordinate of the image box, like this:
+//
+//	, , , , , , , , , , ,
+//	, , , , ,1,1, , , , ,
+//	, , ,1,1,1,1,1,1, , ,
+//	, , ,1,1,1,1,1,1, , ,
+//	,1,1,1,1,1,1,1,1,1,1,
+//	,1,1,1,1,1,1,1,1,1,1,
+//	, , , , , , , , , , ,
+//
 // Português:
 //
 //	Retorna uma array (x,y) com um booleano indicando transparência.
@@ -361,6 +443,17 @@ func (el *TagCanvas) Append(append interface{}) (ref *TagCanvas) {
 //
 //	Saída:
 //	  data: [x][y]transparente
+//
+// A matrix de colisão é um mapa booleano de coordenadas (x,y) baseado na caixa da imagem, onde (0,0) representa a
+// coordenada (0,0) da caixa da imagem, assim:
+//
+//	, , , , , , , , , , ,
+//	, , , , ,1,1, , , , ,
+//	, , ,1,1,1,1,1,1, , ,
+//	, , ,1,1,1,1,1,1, , ,
+//	,1,1,1,1,1,1,1,1,1,1,
+//	,1,1,1,1,1,1,1,1,1,1,
+//	, , , , , , , , , , ,
 //
 // todo: fazer exemplo
 func (el *TagCanvas) GetCollisionData() (data [][]bool) {
@@ -374,18 +467,23 @@ func (el *TagCanvas) GetCollisionData() (data [][]bool) {
 	var x int
 	var y int
 
+	var red uint8
+	var green uint8
+	var blue uint8
+	var alpha uint8
+
 	// [x][y]bool
-	data = make([][]bool, el.width)
-	for x = 0; x != el.width; x += 1 {
-		data[x] = make([]bool, el.height)
-		for y = 0; y != el.height; y += 1 {
+	data = make([][]bool, el.height)
+	for y = 0; y != el.height; y += 1 {
+		data[y] = make([]bool, el.width)
+		for x = 0; x != el.width; x += 1 {
 
-			//Red:   uint8(dataJs.Index(i + 0).Int()),
-			//Green: uint8(dataJs.Index(i + 1).Int()),
-			//Blue:  uint8(dataJs.Index(i + 2).Int()),
-			//Alpha: uint8(dataJs.Index(i + 3).Int()),
+			red = uint8(dataJs.Index(i + 0).Int())
+			green = uint8(dataJs.Index(i + 1).Int())
+			blue = uint8(dataJs.Index(i + 2).Int())
+			alpha = uint8(dataJs.Index(i + 3).Int())
 
-			data[x][y] = dataJs.Index(i+3).Int() != 0
+			data[y][x] = el.colisionDataFunction(red, green, blue, alpha)
 
 			i += rgbaLength
 		}
@@ -394,7 +492,179 @@ func (el *TagCanvas) GetCollisionData() (data [][]bool) {
 	return
 }
 
+func (el *TagCanvas) GetCollisionBox() (box Box) {
+
+	var xMin = math.MaxInt
+	var yMin = math.MaxInt
+	var xMax = math.MinInt
+	var yMax = math.MinInt
+
+	collisionData := el.GetCollisionData()
+	for y, dataY := range collisionData {
+		for x, value := range dataY {
+			if value == true {
+				xMin = el.min(xMin, x+1)
+				yMin = el.min(yMin, y+1)
+				xMax = el.max(xMax, x)
+				yMax = el.max(yMax, y)
+			}
+		}
+	}
+
+	return Box{
+		X:      xMin,
+		Y:      yMin,
+		Width:  xMax - xMin,
+		Height: yMax - yMin,
+	}
+}
+
+// flipData
+//
+// English:
+//
+// Reverses the direction of the image, both vertically and horizontally.
+//
+// Português:
+//
+// Reverte o sentido da imagem, tanto na vertical quanto na horizontal.
+func (el *TagCanvas) flipData(dataJs, flipped js.Value, width, height int) {
+	var x, y int
+
+	var rgbaLength = 4
+
+	var i = 0
+	x = 0
+	y = 0
+
+	m := height * width * 4
+	for y = 0; y != height; y += 1 {
+		for x = 0; x != width; x += 1 {
+
+			//Red:   uint8(dataJs.Index(i + 0).Int()),
+			//Green: uint8(dataJs.Index(i + 1).Int()),
+			//Blue:  uint8(dataJs.Index(i + 2).Int()),
+			//Alpha: uint8(dataJs.Index(i + 3).Int()),
+
+			flipped.SetIndex(m-i+0, uint8(dataJs.Index(i+0).Int()))
+			flipped.SetIndex(m-i+1, uint8(dataJs.Index(i+1).Int()))
+			flipped.SetIndex(m-i+2, uint8(dataJs.Index(i+2).Int()))
+			flipped.SetIndex(m-i+3, uint8(dataJs.Index(i+3).Int()))
+
+			i += rgbaLength
+		}
+	}
+}
+
+// flipDataHorizontal
+//
+// English:
+//
+// Reverses the direction of the image horizontally.
+//
+// Português:
+//
+// Inverte o sentido da imagem na horizontal.
+func (el *TagCanvas) flipDataHorizontal(dataJs, flipped js.Value, width, height int) {
+	var x, y, m, i int
+
+	var rgbaLength = 4
+
+	for y = 0; y != height; y += 1 {
+		for x = 0; x != width; x += 1 {
+			//Red:   uint8(dataJs.Index(i + 0).Int()),
+			//Green: uint8(dataJs.Index(i + 1).Int()),
+			//Blue:  uint8(dataJs.Index(i + 2).Int()),
+			//Alpha: uint8(dataJs.Index(i + 3).Int()),
+
+			flipped.SetIndex(m+0+(width-x-1)*4, uint8(dataJs.Index(i+0).Int()))
+			flipped.SetIndex(m+1+(width-x-1)*4, uint8(dataJs.Index(i+1).Int()))
+			flipped.SetIndex(m+2+(width-x-1)*4, uint8(dataJs.Index(i+2).Int()))
+			flipped.SetIndex(m+3+(width-x-1)*4, uint8(dataJs.Index(i+3).Int()))
+
+			i += rgbaLength
+		}
+		m = m + width*4
+	}
+}
+
+// flipDataVertival
+//
+// English:
+//
+// Reverses the direction of the image vertically.
+//
+// Português:
+//
+// Inverte o sentido da imagem na vertical.
+func (el *TagCanvas) flipDataVertival(dataJs, flipped js.Value, width, height int) {
+	var x, y, m, i int
+
+	var rgbaLength = 4
+
+	for y = 0; y != height; y += 1 {
+
+		// English: Shifts the data position in the matrix to an ordinary two-dimensional matrix.
+		// Português: Desloca a posição do dado na matriz para uma matriz bidimencional comum.
+		m = (height*el.width - el.width*(y+1)) + 1
+
+		for x = 0; x != width; x += 1 {
+			//Red:   uint8(dataJs.Index(i + 0).Int()),
+			//Green: uint8(dataJs.Index(i + 1).Int()),
+			//Blue:  uint8(dataJs.Index(i + 2).Int()),
+			//Alpha: uint8(dataJs.Index(i + 3).Int()),
+
+			// English:   +x shifts the data in the common matrix
+			//            *4 shifts the data in the js image array
+			// Português: +x desloca o dado na matriz comum
+			//            *4 desloca o dado na matriz de imagem js
+			flipped.SetIndex((m+x)*4+0, uint8(dataJs.Index(i+0).Int()))
+			flipped.SetIndex((m+x)*4+1, uint8(dataJs.Index(i+1).Int()))
+			flipped.SetIndex((m+x)*4+2, uint8(dataJs.Index(i+2).Int()))
+			flipped.SetIndex((m+x)*4+3, uint8(dataJs.Index(i+3).Int()))
+
+			i += rgbaLength
+		}
+
+	}
+}
+
 // GetImageData
+//
+// English:
+//
+// Returns the image data in raw js format.
+//
+// Português:
+//
+// Retorna os dados da imagem no formato js bruto.
+func (el *TagCanvas) GetImageData(x, y, width, height int, flipVertical, flipHorizontal bool) (data js.Value) {
+	imageData := el.context.Call("getImageData", x, y, width, height)
+
+	if flipVertical == false && flipHorizontal == false {
+		return imageData
+	}
+
+	data1 := imageData.Get("data")
+
+	var imageDataFlipped = el.context.Call("getImageData", x, y, width, height)
+	data2 := imageDataFlipped.Get("data")
+
+	if flipVertical == false && flipHorizontal == true {
+		el.flipDataHorizontal(data1, data2, width, height)
+		return imageDataFlipped
+
+	} else if flipVertical == true && flipHorizontal == false {
+		el.flipDataVertival(data1, data2, width, height)
+		return imageDataFlipped
+
+	} else { //flipVertical == true && flipHorizontal == true
+		el.flipData(data1, data2, width, height)
+		return imageDataFlipped
+	}
+}
+
+// GetImageDataMatrix
 //
 // English:
 //
@@ -431,7 +701,7 @@ func (el *TagCanvas) GetCollisionData() (data [][]bool) {
 //	     [x][y][3]: valor da cor alpha entre 0 e 255
 //
 // todo: fazer exemplo
-func (el *TagCanvas) GetImageData(x, y, width, height int) (data [][][]uint8) {
+func (el *TagCanvas) GetImageDataMatrix(x, y, width, height int) (data [][][]uint8) {
 
 	dataInterface := el.context.Call("getImageData", x, y, width, height)
 	dataJs := dataInterface.Get("data")
@@ -2742,4 +3012,18 @@ func (el *TagCanvas) SetXY(x, y int) (ref *TagCanvas) {
 	el.selfElement.Get("style").Set("position", "absolute")
 
 	return el
+}
+
+func (el *TagCanvas) max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func (el *TagCanvas) min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }

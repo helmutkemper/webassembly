@@ -118,11 +118,6 @@ func (e *SpriteTiles) Draw(canvas *TagCanvas, sceneName string) (err error) {
 			}
 
 			canvas.context.Call("putImageData", data.Draw[spriteId], col*data.Width, row*data.Height)
-
-			if sceneName == "groundPositive" {
-				cBox := data.Box[row][col]
-				canvas.StrokeRect(cBox.X, cBox.Y, cBox.Width, cBox.Height).Stroke()
-			}
 		}
 	}
 

@@ -396,9 +396,6 @@ func (e *Sprite) Draw() {
 	}
 
 	e.canvas.context.Call("putImageData", e.imageData, e.x, e.y)
-
-	cBox := e.GetCollisionBox()
-	e.canvas.StrokeRect(cBox.X, cBox.Y, cBox.Width, cBox.Height).Stroke()
 }
 
 func (e *Sprite) GetCollisionBox() (box Box) {

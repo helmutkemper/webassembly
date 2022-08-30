@@ -4,7 +4,6 @@ import (
 	keyboard "github.com/helmutkemper/iotmaker.webassembly/browser/event/keyBoard"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
 	"log"
 	"time"
 )
@@ -33,10 +32,7 @@ func main() {
 	// image and another for the character.
 	// Português: Quando trabalhar com canvas, é uma boa prática, usar camadas, por exemplo, uma camada para a imagem de
 	// fundo e outra para o personargem.
-	backgroundCanvas := factoryBrowser.NewTagCanvas(stage.GetWidth(), stage.GetHeight()).
-		StrokeStyle(factoryColor.NewRed()).
-		StrokeRect(0, 0, mainWidth, mainHeight).
-		SetXY(0, 0)
+	backgroundCanvas := factoryBrowser.NewTagCanvas(stage.GetWidth(), stage.GetHeight())
 
 	playerCanvas := factoryBrowser.NewTagCanvas(stage.GetWidth(), stage.GetHeight()).
 		SetXY(0, 0).

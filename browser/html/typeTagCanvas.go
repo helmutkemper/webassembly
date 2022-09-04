@@ -678,10 +678,10 @@ func (el *TagCanvas) GetImageData(x, y, width, height int, flipVertical, flipHor
 //
 //	 Output:
 //	   data: image in matrix format.
-//	     [x][y][0]: red color value between 0 and 255
-//	     [x][y][1]: green color value between 0 and 255
-//	     [x][y][2]: blue color value between 0 and 255
-//	     [x][y][3]: alpha color value between 0 and 255
+//	     [y][x][0]: red color value between 0 and 255
+//	     [y][x][1]: green color value between 0 and 255
+//	     [y][x][2]: blue color value between 0 and 255
+//	     [y][x][3]: alpha color value between 0 and 255
 //
 // Português:
 //
@@ -695,10 +695,10 @@ func (el *TagCanvas) GetImageData(x, y, width, height int, flipVertical, flipHor
 //
 //	 Saída:
 //	   data: imagem em formato matricial.
-//	     [x][y][0]: valor da cor vermelha entre 0 e 255
-//	     [x][y][1]: valor da cor verde entre 0 e 255
-//	     [x][y][2]: valor da cor azul entre 0 e 255
-//	     [x][y][3]: valor da cor alpha entre 0 e 255
+//	     [y][x][0]: valor da cor vermelha entre 0 e 255
+//	     [y][x][1]: valor da cor verde entre 0 e 255
+//	     [y][x][2]: valor da cor azul entre 0 e 255
+//	     [y][x][3]: valor da cor alpha entre 0 e 255
 //
 // todo: fazer exemplo
 func (el *TagCanvas) GetImageDataMatrix(x, y, width, height int) (data [][][]uint8) {
@@ -748,41 +748,41 @@ func (el *TagCanvas) GetAverageGrayScale(x, y, width, height int) (gray [][][]ui
 	y = 0
 
 	// [x][y][4-channel]
-	data = make([][][]uint8, width)
-	for x = 0; x != width; x += 1 {
-		data[x] = make([][]uint8, height)
-		for y = 0; y != height; y += 1 {
-			data[x][y] = make([]uint8, 4)
+	data = make([][][]uint8, height)
+	for y = 0; y != height; y += 1 {
+		data[y] = make([][]uint8, width)
+		for x = 0; x != width; x += 1 {
+			data[y][x] = make([]uint8, 4)
 
 			//Red:   uint8(dataJs.Index(i + 0).Int()),
 			//Green: uint8(dataJs.Index(i + 1).Int()),
 			//Blue:  uint8(dataJs.Index(i + 2).Int()),
 			//Alpha: uint8(dataJs.Index(i + 3).Int()),
 
-			data[x][y][0] = uint8(dataJs.Index(i + 0).Int())
-			data[x][y][1] = uint8(dataJs.Index(i + 1).Int())
-			data[x][y][2] = uint8(dataJs.Index(i + 2).Int())
-			data[x][y][3] = uint8(dataJs.Index(i + 3).Int())
+			data[y][x][0] = uint8(dataJs.Index(i + 0).Int())
+			data[y][x][1] = uint8(dataJs.Index(i + 1).Int())
+			data[y][x][2] = uint8(dataJs.Index(i + 2).Int())
+			data[y][x][3] = uint8(dataJs.Index(i + 3).Int())
 
 			i += rgbaLength
 		}
 	}
 
-	gray = make([][][]uint8, width)
-	for x = 0; x != width; x += 1 {
-		gray[x] = make([][]uint8, height)
-		for y = 0; y != height; y += 1 {
-			gray[x][y] = make([]uint8, 4)
+	gray = make([][][]uint8, height)
+	for y = 0; y != height; y += 1 {
+		gray[y] = make([][]uint8, width)
+		for x = 0; x != width; x += 1 {
+			gray[y][x] = make([]uint8, 4)
 
 			//Red:   uint8(dataJs.Index(i + 0).Int()),
 			//Green: uint8(dataJs.Index(i + 1).Int()),
 			//Blue:  uint8(dataJs.Index(i + 2).Int()),
 			//Alpha: uint8(dataJs.Index(i + 3).Int()),
 
-			gray[x][y][0] = (data[x][y][0] + data[x][y][1] + data[x][y][2]) / 3
-			gray[x][y][1] = (data[x][y][0] + data[x][y][1] + data[x][y][2]) / 3
-			gray[x][y][2] = (data[x][y][0] + data[x][y][1] + data[x][y][2]) / 3
-			gray[x][y][3] = data[x][y][3]
+			gray[y][x][0] = (data[y][x][0] + data[y][x][1] + data[y][x][2]) / 3
+			gray[y][x][1] = (data[y][x][0] + data[y][x][1] + data[y][x][2]) / 3
+			gray[y][x][2] = (data[y][x][0] + data[y][x][1] + data[y][x][2]) / 3
+			gray[y][x][3] = data[y][x][3]
 		}
 	}
 
@@ -797,10 +797,10 @@ func (el *TagCanvas) GetAverageGrayScale(x, y, width, height int) (gray [][][]ui
 //
 //	 Input:
 //	   imgData: data array with the new image;
-//	     [x][y][0]: red color value between 0 and 255;
-//	     [x][y][1]: green color value between 0 and 255;
-//	     [x][y][2]: blue color value between 0 and 255;
-//	     [x][y][3]: alpha color value between 0 and 255.
+//	     [y][x][0]: red color value between 0 and 255;
+//	     [y][x][1]: green color value between 0 and 255;
+//	     [y][x][2]: blue color value between 0 and 255;
+//	     [y][x][3]: alpha color value between 0 and 255.
 //	   width: image width;
 //	   height: image height.
 //
@@ -810,10 +810,10 @@ func (el *TagCanvas) GetAverageGrayScale(x, y, width, height int) (gray [][][]ui
 //
 //	 Entrada:
 //	   imgData: array de dados com o a nova imagem;
-//	     [x][y][0]: valor da cor vermelha entre 0 e 255;
-//	     [x][y][1]: valor da cor verde entre 0 e 255;
-//	     [x][y][2]: valor da cor azul entre 0 e 255;
-//	     [x][y][3]: valor da cor alpha entre 0 e 255.
+//	     [y][x][0]: valor da cor vermelha entre 0 e 255;
+//	     [y][x][1]: valor da cor verde entre 0 e 255;
+//	     [y][x][2]: valor da cor azul entre 0 e 255;
+//	     [y][x][3]: valor da cor alpha entre 0 e 255.
 //	   width: comprimento da imagem;
 //	   height: altura da imagem.
 //

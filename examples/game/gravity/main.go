@@ -68,10 +68,10 @@ func main() {
 
 	ctr := contour.Contour{}
 	ctr.VerifyFunction(func(pMatrix *[][]any, x, y int) bool {
-		return (*pMatrix)[y][x].(color.RGBA).A > 10
+		return (*pMatrix)[y][x].(color.RGBA).A > 50
 	})
 	ctr.PopulateFunction(func(pMatrix *[][]any, x, y int) {
-		(*pMatrix)[y][x] = color.RGBA{R: 255, G: 0, B: 0, A: 255}
+		(*pMatrix)[y][x] = color.RGBA{R: 0, G: 0, B: 0, A: 255}
 	})
 	_ = ctr.Init(&dataMatrix)
 

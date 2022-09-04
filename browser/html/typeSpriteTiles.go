@@ -132,9 +132,10 @@ func (e *SpriteTiles) TestCollisionBox(element CollisionBox, sceneName string) (
 
 	elementCBox := element.GetCollisionBox()
 
+	var thisCBox Box
 	for row, rowData := range data.Csv {
 		for col := range rowData {
-			thisCBox := data.Box[row][col]
+			thisCBox = data.Box[row][col]
 			if thisCBox.X < elementCBox.X+elementCBox.Width &&
 				thisCBox.X+thisCBox.Width > elementCBox.X &&
 				thisCBox.Y < elementCBox.Y+elementCBox.Height &&

@@ -64,6 +64,14 @@ func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath st
 	return e
 }
 
+func (e *SpritePlayer) X(x int) {
+	e.x = float64(x)
+}
+
+func (e *SpritePlayer) Y(y int) {
+	e.y = float64(y)
+}
+
 func (e *SpritePlayer) Draw() {
 	e.spt.Draw()
 }
@@ -275,6 +283,7 @@ func (e *SpritePlayer) Gravity() {
 		return
 	}
 
+	e.deltaGravity = 0
 	if e.lastLeftSide == false {
 		e.StartFallRightSide()
 	} else {

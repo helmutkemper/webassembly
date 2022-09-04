@@ -86,3 +86,5 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Reference#index
 https://codepen.io/nikhil8krishnan/pen/rVoXJa
 https://codepen.io/nikhil8krishnan/pen/dMEzGx
 https://codepen.io/nikhil8krishnan/pens/popular
+
+https://www.jetbrains.com/community/opensource/#support

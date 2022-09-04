@@ -713,21 +713,21 @@ func (el *TagCanvas) GetImageDataMatrix(x, y, width, height int) (data [][][]uin
 	y = 0
 
 	// [x][y][4-channel]
-	data = make([][][]uint8, width)
-	for x = 0; x != width; x += 1 {
-		data[x] = make([][]uint8, height)
-		for y = 0; y != height; y += 1 {
-			data[x][y] = make([]uint8, 4)
+	data = make([][][]uint8, height)
+	for y = 0; y != height; y += 1 {
+		data[y] = make([][]uint8, width)
+		for x = 0; x != width; x += 1 {
+			data[y][x] = make([]uint8, 4)
 
 			//Red:   uint8(dataJs.Index(i + 0).Int()),
 			//Green: uint8(dataJs.Index(i + 1).Int()),
 			//Blue:  uint8(dataJs.Index(i + 2).Int()),
 			//Alpha: uint8(dataJs.Index(i + 3).Int()),
 
-			data[x][y][0] = uint8(dataJs.Index(i + 0).Int())
-			data[x][y][1] = uint8(dataJs.Index(i + 1).Int())
-			data[x][y][2] = uint8(dataJs.Index(i + 2).Int())
-			data[x][y][3] = uint8(dataJs.Index(i + 3).Int())
+			data[y][x][0] = uint8(dataJs.Index(i + 0).Int())
+			data[y][x][1] = uint8(dataJs.Index(i + 1).Int())
+			data[y][x][2] = uint8(dataJs.Index(i + 2).Int())
+			data[y][x][3] = uint8(dataJs.Index(i + 3).Int())
 
 			i += rgbaLength
 		}
@@ -827,18 +827,18 @@ func (el *TagCanvas) ImageData(imgData [][][]uint8, width, height int) (ref *Tag
 	var i = 0
 	var x int
 	var y int
-	for x = 0; x != width; x += 1 {
-		for y = 0; y != height; y += 1 {
+	for y = 0; y != height; y += 1 {
+		for x = 0; x != width; x += 1 {
 
 			//Red:   uint8(dataJs.Index(i + 0).Int()),
 			//Green: uint8(dataJs.Index(i + 1).Int()),
 			//Blue:  uint8(dataJs.Index(i + 2).Int()),
 			//Alpha: uint8(dataJs.Index(i + 3).Int()),
 
-			dataJs.Get("data").SetIndex(i+0, imgData[x][y][0])
-			dataJs.Get("data").SetIndex(i+1, imgData[x][y][1])
-			dataJs.Get("data").SetIndex(i+2, imgData[x][y][2])
-			dataJs.Get("data").SetIndex(i+3, imgData[x][y][3])
+			dataJs.Get("data").SetIndex(i+0, imgData[y][x][0])
+			dataJs.Get("data").SetIndex(i+1, imgData[y][x][1])
+			dataJs.Get("data").SetIndex(i+2, imgData[y][x][2])
+			dataJs.Get("data").SetIndex(i+3, imgData[y][x][3])
 
 			i += rgbaLength
 		}

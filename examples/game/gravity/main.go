@@ -4,6 +4,8 @@ import (
 	keyboard "github.com/helmutkemper/iotmaker.webassembly/browser/event/keyBoard"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm/contour"
+	"image/color"
 	"log"
 	"time"
 )
@@ -45,6 +47,53 @@ func main() {
 	stage.Append(backgroundCanvas, playerCanvas)
 
 	img1 := factoryBrowser.NewTagImg().Src("./platformPack_tilesheet.png", true)
+	img1W := 12 * 64
+	img1H := 7 * 64
+	cv := factoryBrowser.NewTagCanvas(img1.GetWidth(), img1.GetHeight()).
+		DrawImageTile(img1, 0*64, 0*64, 0, 0, img1W, img1H)
+	data := cv.GetImageDataMatrix(0, 0, img1W, img1H)
+
+	dataMatrix := make([][]any, len(data))
+	for y := 0; y != len(data); y += 1 {
+		dataMatrix[y] = make([]any, len(data[y]))
+		for x := 0; x != len(data[y]); x += 1 {
+			dataMatrix[y][x] = color.RGBA{
+				R: data[y][x][0],
+				G: data[y][x][1],
+				B: data[y][x][2],
+				A: data[y][x][3],
+			}
+		}
+	}
+
+	ctr := contour.Contour{}
+	ctr.VerifyFunction(func(pMatrix *[][]any, x, y int) bool {
+		return (*pMatrix)[y][x].(color.RGBA).A > 10
+	})
+	ctr.PopulateFunction(func(pMatrix *[][]any, x, y int) {
+		(*pMatrix)[y][x] = color.RGBA{R: 255, G: 0, B: 0, A: 255}
+	})
+	_ = ctr.Init(&dataMatrix)
+
+	ctr.Verify()
+
+	dataMatrix = ctr.GetData()
+	for y := 0; y != len(dataMatrix); y += 1 {
+		for x := 0; x != len(dataMatrix[y]); x += 1 {
+			if dataMatrix[y][x] == nil {
+				continue
+			}
+
+			data[y][x][0] = dataMatrix[y][x].(color.RGBA).R
+			data[y][x][1] = dataMatrix[y][x].(color.RGBA).G
+			data[y][x][2] = dataMatrix[y][x].(color.RGBA).B
+			data[y][x][3] = dataMatrix[y][x].(color.RGBA).A
+		}
+	}
+
+	cv.ImageData(data, img1W, img1H)
+	stage.Append(cv)
+
 	csvGround := `-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
@@ -55,6 +104,7 @@ func main() {
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,3,3,3
 -1,-1,-1,-1,-1,-1,-1,0,0,0,0,3,3,3,3,3,3,3
 -1,-1,-1,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3`
+
 	csvWather := `-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
@@ -65,6 +115,7 @@ func main() {
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 4,4,4,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1`
+
 	cvsPositive := `-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
@@ -75,6 +126,7 @@ func main() {
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1`
+
 	csvNegative := `-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
@@ -189,9 +241,22 @@ func main() {
 	// Português: Adiciona a função de desenho do sprite a função de desenho do canvas.
 	stage.AddDrawFunctions(spt.Draw)
 
+	var gravity = false
 	stage.AddMathFunctions(func() {
 		if sptTiles.TestCollisionBox(spt, "groundPositive") == true {
-			log.Printf("groundPositive")
+			//log.Printf("groundPositive")
+		}
+
+		if sptTiles.TestCollisionBox(spt, "ground") == true {
+			if gravity == true {
+				gravity = false
+				spt.GravityStop()
+			}
+		} else {
+			if gravity == false {
+				gravity = true
+				spt.Gravity()
+			}
 		}
 	})
 
@@ -266,6 +331,7 @@ func main() {
 		}
 	}()
 
+	spt.X(300)
 	spt.StartStoppedRightSide()
 
 	// English: Add keyboard events in the form of channel.

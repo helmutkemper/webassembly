@@ -6,11 +6,6 @@ import (
 	"time"
 )
 
-type spriteConfig struct {
-	data   []spriteScene
-	sprite *Sprite
-}
-
 // SpriteScene
 //
 // English:
@@ -25,6 +20,11 @@ type spriteScene struct {
 	imageData     js.Value
 	collisionData [][]bool
 	collisionBox  Box
+}
+
+type spriteConfig struct {
+	data   []spriteScene
+	sprite *Sprite
 }
 
 // Add

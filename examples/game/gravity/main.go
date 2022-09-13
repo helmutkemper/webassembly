@@ -56,15 +56,7 @@ func main() {
 		60,
 	).
 		X(300).
-		GravityFunc(
-			func(x, y float64, t int64) (dx, dy float64) {
-				dy = 0.0000015*float64(t*t) + 0.5
-				if dy > 20 {
-					dy = 20
-				}
-				return
-			},
-		).
+		//DefineFloorVerySlippery().
 		Corners(-1, mainWidth-48, -1, mainHeight-60)
 
 	// English: Pointer to the event channel informing the sprite frame change.
@@ -176,7 +168,7 @@ func main() {
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,-1,0,0,0,0,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,3,3,3
 -1,-1,-1,-1,-1,-1,-1,0,0,0,0,3,3,3,3,3,3,3
@@ -193,51 +185,16 @@ func main() {
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 4,4,4,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1`
 
-	cvsPositive := `-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,52,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,66,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1`
-
-	csvNegative := `-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,25,-1,-1,25,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1`
-
 	sptTiles := html.SpriteTiles{}
 	sptTiles.Init(stage)
 	sptTiles.AddNoEvent(spt, spt.Gravity)
-	sptTiles.AddNoEvent(spt, spt.Fall)
+	//sptTiles.AddNoEvent(spt, spt.Fall)
 	stage.AddMathFunctions(sptTiles.Proccess)
 
-	err := sptTiles.AddCsv("groundPositive", cvsPositive, img1, true, true, 64, 64).
-		GetError()
-
-	if err != nil {
-		log.Printf("SpriteTiles.AddCsv().error: %v", err)
-		panic(nil)
-	}
-	err = sptTiles.AddCsv("groundNegative", csvNegative, img1, true, true, 64, 64).
-		GetError()
-	if err != nil {
-		log.Printf("SpriteTiles.AddCsv().error: %v", err)
-		panic(nil)
-	}
-	err = sptTiles.AddCsv("ground", csvGround, img1, true, true, 64, 64).
+	err := sptTiles.AddCsv("ground", csvGround, img1, true, true, 64, 64).
 		AddColision(spt, spt.GravityStop).
-		AddKeyboard("ArrowRight", spt.PlayerRightStart, spt.PlayerRightStop).
-		AddKeyboard("ArrowLeft", spt.PlayerLeftStart, spt.PlayerLeftStop).
+		AddKeyboard("ArrowRight", spt.RunningRightStart, spt.RunningRightStop).
+		AddKeyboard("ArrowLeft", spt.RunningLeftStart, spt.RunningLeftStop).
 		GetError()
 	if err != nil {
 		log.Printf("SpriteTiles.AddCsv().error: %v", err)

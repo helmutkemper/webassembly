@@ -11,19 +11,43 @@ type SpritePlayer struct {
 	spt   *Sprite
 	stage stage.Functions
 
-	deltaGravity   float64
 	x              float64
 	y              float64
-	deltaLeft      float64
-	deltaRight     float64
 	deltaY         float64
-	lastLeftSide   bool
-	validKeyHDelta int
 	validKeyVDelta int
 
-	xFactor float64
 	yFactor float64
 
+	velocityX float64
+	velocityY float64
+
+	// runningStart
+	//
+	// English:
+	//
+	// Receives the starting time of the race to be used in the acceleration formula, both in the character's sprint and
+	// braking.
+	//
+	// Português:
+	//
+	// Recebe o tempo inicial da corrida para ser usado na fórmula de aceleração, tanto na arrancada quanto no freio do
+	// personagem.
+	runningStart time.Time
+
+	// runningStopSlip
+	//
+	// English:
+	//
+	// When set to false, the character decelerates with the running movie clip, when true, decelerates with the stopped
+	// movie clip.
+	//
+	// Português:
+	//
+	// Quando definido como false, o personagem desacelera com o movie clip de corrida, quando true, desacelera com o
+	// movie clip de parado.
+	runningStopSlip bool
+
+	gravityDelta   float64
 	gravityStart   time.Time
 	gravityMathId  string
 	gravityStarted bool
@@ -38,17 +62,176 @@ type SpritePlayer struct {
 	stagePlayerLeftStartSupport  string
 	stagePlayerLeftStopSupport   string
 
-	gravityFunction func(x, y float64, t int64) (dx, dy float64)
+	runningLeftStartFunction  func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)
+	runningLeftStopFunction   func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)
+	runningRightStartFunction func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)
+	runningRightStopFunction  func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)
+	gravityFunction           func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)
+
+	//stateMachine []func()
 }
 
-func (e *SpritePlayer) GravityFunc(f func(x, y float64, t int64) (dx, dy float64)) (ref *SpritePlayer) {
+// StopSlip
+//
+// English:
+//
+// When set to false, the character decelerates with the running movie clip, when true, decelerates with the stopped
+// movie clip.
+//
+// Português:
+//
+// Quando definido como false, o personagem desacelera com o movie clip de corrida, quando true, desacelera com o
+// movie clip de parado.
+func (e *SpritePlayer) StopSlip(slip bool) (ref *SpritePlayer) {
+	e.runningStopSlip = slip
+
+	return e
+}
+
+// GravityFunc
+//
+// English:
+//
+// Defines the formula used to calculate gravity.
+//
+// Português:
+//
+// Define a fórmula usada para cálcular a gravidade.
+//
+// Default / Padrão:
+//
+//	func(x, y float64, t int64) (dx, dy float64) {
+//	  dy = 0.0000015*float64(t*t) + 0.5
+//	  if dy > 20 {
+//	    dy = 20
+//	  }
+//	  return
+//	}
+func (e *SpritePlayer) GravityFunc(f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) (ref *SpritePlayer) {
 	e.gravityFunction = f
 
 	return e
 }
 
+func (e *SpritePlayer) RunningLeftStartFunc(f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) (ref *SpritePlayer) {
+	e.runningLeftStartFunction = f
+
+	return e
+}
+
+func (e *SpritePlayer) RunningLeftStopFunc(f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) (ref *SpritePlayer) {
+	e.runningLeftStopFunction = f
+
+	return e
+}
+
+func (e *SpritePlayer) RunningRightStartFunc(f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) (ref *SpritePlayer) {
+	e.runningRightStartFunction = f
+
+	return e
+}
+
+func (e *SpritePlayer) RunningRightStopFunc(f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) (ref *SpritePlayer) {
+	e.runningRightStopFunction = f
+
+	return e
+}
+
+func (e *SpritePlayer) DefineFloorVerySlippery() (ref *SpritePlayer) {
+	e.StopSlip(true)
+	e.RunningRightStartFunc(e.GetFormulaFloorVerySlipperyStart())
+	e.RunningLeftStartFunc(e.GetFormulaFloorVerySlipperyStart())
+	e.RunningRightStopFunc(e.GetFormulaFloorVerySlipperyStop())
+	e.RunningLeftStopFunc(e.GetFormulaFloorVerySlipperyStop())
+
+	return e
+}
+
+func (e *SpritePlayer) DefineFloorLittleSlippery() (ref *SpritePlayer) {
+	e.StopSlip(true)
+	e.RunningRightStartFunc(e.GetFormulaFloorLittleSlipperyStart())
+	e.RunningLeftStartFunc(e.GetFormulaFloorLittleSlipperyStart())
+	e.RunningRightStopFunc(e.GetFormulaFloorLittleSlipperyStop())
+	e.RunningLeftStopFunc(e.GetFormulaFloorLittleSlipperyStop())
+
+	return e
+}
+
+func (e *SpritePlayer) GetFormulaFloorVerySlipperyStart() (f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) {
+	return func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64) {
+		dx = 0.000001 * float64(t*t)
+		if dx > 2 {
+			dx = 2
+		}
+		return
+	}
+}
+
+func (e *SpritePlayer) GetFormulaFloorVerySlipperyStop() (f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) {
+	return func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64) {
+		dx = velocityX - (0.00000025 * float64(t*t))
+		if dx < 0 {
+			dx = 0
+		}
+		return
+	}
+}
+
+func (e *SpritePlayer) GetFormulaFloorLittleSlipperyStart() (f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) {
+	return func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64) {
+		dx = 0.000005 * float64(t*t)
+		if dx > 2 {
+			dx = 2
+		}
+		return
+	}
+}
+
+func (e *SpritePlayer) GetFormulaFloorLittleSlipperyStop() (f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) {
+	return func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64) {
+		dx = velocityX - (0.000005 * float64(t*t))
+		if dx < 0 {
+			dx = 0
+		}
+		return
+	}
+}
+
+func (e *SpritePlayer) GetFormulaFloorDefaultStart() (f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) {
+	return func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64) {
+		dx = 0.00001*float64(t*t) + 0.5
+		if dx > 2 {
+			dx = 2
+		}
+		return
+	}
+}
+
+func (e *SpritePlayer) GetFormulaFloorDefaultStop() (f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) {
+	return func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64) {
+		dx = velocityX - (0.00002 * float64(t*t))
+		if dx < 0 {
+			dx = 0
+		}
+		return
+	}
+}
+
+func (e *SpritePlayer) GetFormulaGravityDefault() (f func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64)) {
+	return func(velocityX, velocityY, x, y float64, t int64) (dx, dy float64) {
+		dy = 0.0000015*float64(t*t) + 0.5
+		if dy > 20 {
+			dy = 20
+		}
+		return
+	}
+}
+
 func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath string, width, height int) (ref *SpritePlayer) {
 	e.stage = stage
+
+	//e.stateMachine = make([]func(), 0)
+	//e.stage.AddMathFunctions(e.stateMachineExecute)
 
 	e.spt = new(Sprite)
 	e.spt.Canvas(canvas)
@@ -57,10 +240,16 @@ func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath st
 	e.spt.SpriteHeight(height)
 	e.spt.Init()
 
+	e.gravityFunction = e.GetFormulaGravityDefault()
+	e.runningRightStartFunction = e.GetFormulaFloorDefaultStart()
+	e.runningLeftStartFunction = e.GetFormulaFloorDefaultStart()
+	e.runningRightStopFunction = e.GetFormulaFloorDefaultStop()
+	e.runningLeftStopFunction = e.GetFormulaFloorDefaultStop()
+
 	//e.stage.AddDrawFunctions(e.spt.Draw)
 
 	// andar direita/esquerda
-	e.xFactor = 1.0
+	//e.xFactor = 1.0
 	// subir/descer
 	e.yFactor = 1.0
 
@@ -187,13 +376,27 @@ func (e *SpritePlayer) KeyVerticalUp() {
 	e.validKeyVDelta -= 1
 }
 
-func (e *SpritePlayer) KeyHorizontalUp() {
-	e.validKeyHDelta -= 1
+//func (e *SpritePlayer) KeyHorizontalUp() {
+//	e.validKeyHDelta -= 1
+//}
+
+func (e *SpritePlayer) ControlX() {
+	//e.x = e.x + e.deltaX
+
+	// English: space width - sprite width
+	// Português: comprimento do espaço - comprimento da sprite
+	if e.limitXMax != -1 && e.x > e.limitXMax {
+		e.x = e.limitXMax
+	}
+
+	if e.limitXMin != -1 && e.x < e.limitXMin {
+		e.x = e.limitXMin
+	}
+
+	e.spt.X(mathUtil.FloatToInt(e.x))
 }
 
 func (e *SpritePlayer) ControlY() {
-	e.y = e.y + e.deltaY
-
 	// English: space heght - sprite height
 	// Português: altura do espaço - altura da sprite
 	if e.limitYMax != -1 && e.y > e.limitYMax {
@@ -214,23 +417,23 @@ func (e *SpritePlayer) ControlDelta() {
 	}
 }
 
-func (e *SpritePlayer) PlayerStop() /*(cont bool)*/ {
-	var err error
-	if e.validKeyHDelta <= 0 && e.validKeyVDelta <= 0 {
-		if e.lastLeftSide == false {
-			err = e.spt.Start("stoppedRightSide")
-		} else {
-			err = e.spt.Start("stoppedLeftSide")
-		}
-		if err != nil {
-			log.Printf("error: %v", err)
-		}
-
-		//return true
-	}
-
-	//return false
-}
+//func (e *SpritePlayer) PlayerStop() /*(cont bool)*/ {
+//	var err error
+//	if e.validKeyHDelta <= 0 && e.validKeyVDelta <= 0 {
+//		if e.lastLeftSide == false {
+//			err = e.spt.Start("stoppedRightSide")
+//		} else {
+//			err = e.spt.Start("stoppedLeftSide")
+//		}
+//		if err != nil {
+//			log.Printf("error: %v", err)
+//		}
+//
+//		//return true
+//	}
+//
+//	//return false
+//}
 
 func (e *SpritePlayer) PlayerUp() (cont bool) {
 	if e.validKeyVDelta > 0 {
@@ -252,99 +455,32 @@ func (e *SpritePlayer) PlayerDown() (cont bool) {
 	return false
 }
 
-func (e *SpritePlayer) PlayerLeftStop() {
-	if e.gravityStarted == true {
+func (e *SpritePlayer) RunningLeftStop() {
+	if e.stagePlayerLeftStartSupport == "" || e.stagePlayerLeftStopSupport != "" {
 		return
 	}
 
-	e.StartStoppedLeftSide()
-	e.stage.DeleteMathFunctions(e.stagePlayerLeftStartSupport)
-	e.stagePlayerLeftStopSupport, _ = e.stage.AddMathFunctions(e.playerLeftStopSupport)
-}
-
-func (e *SpritePlayer) playerLeftStopSupport() {
-	if e.deltaLeft == 0 {
-		e.stage.DeleteMathFunctions(e.stagePlayerLeftStopSupport)
-		return
+	if e.stagePlayerRightStartSupport != "" {
+		e.stage.DeleteMathFunctions(e.stagePlayerRightStartSupport)
+		e.stagePlayerRightStartSupport = ""
 	}
-
-	e.x = e.x - e.deltaLeft
-
-	if e.deltaLeft > 0 {
-		e.deltaLeft -= 0.025
-	} else if e.deltaLeft < 0 {
-		e.deltaLeft = 0
-	}
-
-	e.spt.X(mathUtil.FloatToInt(e.x))
-}
-
-func (e *SpritePlayer) PlayerLeftStart() /*(cont bool)*/ {
-	e.lastLeftSide = true
-	e.StartWalkingLeftSide()
-	e.stagePlayerLeftStartSupport, _ = e.stage.AddMathFunctions(e.playerLeftStartSupport)
-}
-
-func (e *SpritePlayer) playerLeftStartSupport() /*(cont bool)*/ {
-	e.x = e.x - e.deltaLeft
-
-	if e.deltaLeft < 1.5 {
-		e.deltaLeft += 0.025
-	}
-
-	// English: space width - sprite width
-	// Português: comprimento do espaço - comprimento da sprite
-	if e.limitXMax != -1 && e.x > e.limitXMax {
-		e.x = e.limitXMax
-	}
-
-	if e.limitXMin != -1 && e.x < e.limitXMin {
-		e.x = e.limitXMin
-	}
-
-	e.spt.X(mathUtil.FloatToInt(e.x))
-}
-
-func (e *SpritePlayer) PlayerRightStop() {
-	if e.gravityStarted == true {
-		return
-	}
-
-	e.StartStoppedRightSide()
-	e.stage.DeleteMathFunctions(e.stagePlayerRightStartSupport)
-	e.stagePlayerRightStopSupport, _ = e.stage.AddMathFunctions(e.playerRightStopSupport)
-}
-
-func (e *SpritePlayer) playerRightStopSupport() {
-	if e.deltaRight == 0 {
+	if e.stagePlayerRightStopSupport != "" {
 		e.stage.DeleteMathFunctions(e.stagePlayerRightStopSupport)
-		return
+		e.stagePlayerRightStopSupport = ""
 	}
 
-	e.x = e.x + e.deltaRight
-
-	if e.deltaRight > 0 {
-		e.deltaRight -= 0.025
-	} else if e.deltaRight < 0 {
-		e.deltaRight = 0
+	if e.runningStopSlip == true {
+		e.StartStoppedLeftSide()
 	}
 
-	e.spt.X(mathUtil.FloatToInt(e.x))
+	e.stage.DeleteMathFunctions(e.stagePlayerLeftStartSupport)
+	e.stagePlayerLeftStartSupport = ""
+
+	e.runningStart = time.Now()
+	e.stagePlayerLeftStopSupport, _ = e.stage.AddMathFunctions(e.runningLeftStopSupport)
 }
 
-func (e *SpritePlayer) PlayerRightStart() {
-	e.lastLeftSide = false
-	e.StartWalkingRightSide()
-	e.stagePlayerRightStartSupport, _ = e.stage.AddMathFunctions(e.playerRightStartSupport)
-}
-
-func (e *SpritePlayer) playerRightStartSupport() {
-	e.x = e.x + e.deltaRight
-
-	if e.deltaRight < 1.5 {
-		e.deltaRight += 0.025
-	}
-
+func (e *SpritePlayer) runningLeftStopSupport() {
 	// English: space width - sprite width
 	// Português: comprimento do espaço - comprimento da sprite
 	if e.limitXMax != -1 && e.x > e.limitXMax {
@@ -353,6 +489,173 @@ func (e *SpritePlayer) playerRightStartSupport() {
 
 	if e.limitXMin != -1 && e.x < e.limitXMin {
 		e.x = e.limitXMin
+	}
+
+	t := time.Since(e.runningStart).Milliseconds()
+	if e.runningLeftStopFunction != nil {
+		e.velocityX, e.velocityY = e.runningLeftStopFunction(e.velocityX, e.velocityY, e.x, e.y, t)
+		e.x -= e.velocityX
+		//e.y -= e.velocityY todo: testar
+
+		if e.velocityX == 0 {
+			if e.runningStopSlip == false {
+				e.StartStoppedLeftSide()
+			}
+
+			e.stage.DeleteMathFunctions(e.stagePlayerLeftStopSupport)
+			e.stagePlayerLeftStopSupport = ""
+		}
+	}
+
+	e.spt.X(mathUtil.FloatToInt(e.x))
+}
+
+func (e *SpritePlayer) RunningLeftStart() {
+	if e.stagePlayerLeftStartSupport != "" {
+		return
+	}
+
+	//stop left
+	if e.stagePlayerLeftStopSupport != "" {
+		e.stage.DeleteMathFunctions(e.stagePlayerLeftStopSupport)
+		e.stagePlayerLeftStopSupport = ""
+	}
+	//start right
+	if e.stagePlayerRightStartSupport != "" {
+		e.stage.DeleteMathFunctions(e.stagePlayerRightStartSupport)
+		e.stagePlayerRightStartSupport = ""
+	}
+	//stop right
+	if e.stagePlayerRightStopSupport != "" {
+		e.stage.DeleteMathFunctions(e.stagePlayerRightStopSupport)
+		e.stagePlayerRightStopSupport = ""
+	}
+
+	//e.lastLeftSide = true
+	e.runningStart = time.Now()
+	e.StartWalkingLeftSide()
+	e.stagePlayerLeftStartSupport, _ = e.stage.AddMathFunctions(e.runningLeftStartSupport)
+}
+
+func (e *SpritePlayer) runningLeftStartSupport() {
+	// English: space width - sprite width
+	// Português: comprimento do espaço - comprimento da sprite
+	if e.limitXMax != -1 && e.x > e.limitXMax {
+		e.x = e.limitXMax
+	}
+
+	if e.limitXMin != -1 && e.x < e.limitXMin {
+		e.x = e.limitXMin
+	}
+
+	t := time.Since(e.runningStart).Milliseconds()
+	if e.runningLeftStartFunction != nil {
+		e.velocityX, e.velocityY = e.runningLeftStartFunction(e.velocityX, e.velocityY, e.x, e.y, t)
+		e.x -= e.velocityX
+		//e.y -= e.velocityY //todo testar
+	}
+
+	e.spt.X(mathUtil.FloatToInt(e.x))
+}
+
+func (e *SpritePlayer) RunningRightStop() {
+	if e.stagePlayerRightStartSupport == "" || e.stagePlayerRightStopSupport != "" {
+		return
+	}
+
+	if e.stagePlayerLeftStartSupport != "" {
+		e.stage.DeleteMathFunctions(e.stagePlayerLeftStartSupport)
+		e.stagePlayerLeftStartSupport = ""
+	}
+	if e.stagePlayerLeftStopSupport != "" {
+		e.stage.DeleteMathFunctions(e.stagePlayerLeftStopSupport)
+		e.stagePlayerLeftStopSupport = ""
+	}
+
+	if e.runningStopSlip == true {
+		e.StartStoppedRightSide()
+	}
+
+	e.stage.DeleteMathFunctions(e.stagePlayerRightStartSupport)
+	e.stagePlayerRightStartSupport = ""
+
+	e.runningStart = time.Now()
+	e.stagePlayerRightStopSupport, _ = e.stage.AddMathFunctions(e.runningRightStopSupport)
+}
+
+func (e *SpritePlayer) runningRightStopSupport() {
+	// English: space width - sprite width
+	// Português: comprimento do espaço - comprimento da sprite
+	if e.limitXMax != -1 && e.x > e.limitXMax {
+		e.x = e.limitXMax
+	}
+
+	if e.limitXMin != -1 && e.x < e.limitXMin {
+		e.x = e.limitXMin
+	}
+
+	t := time.Since(e.runningStart).Milliseconds()
+	if e.runningRightStopFunction != nil {
+		e.velocityX, e.velocityY = e.runningRightStopFunction(e.velocityX, e.velocityY, e.x, e.y, t)
+		e.x += e.velocityX
+		//e.y += e.velocityY //todo testar
+
+		if e.velocityX == 0 {
+			if e.runningStopSlip == false {
+				e.StartStoppedRightSide()
+			}
+
+			e.stage.DeleteMathFunctions(e.stagePlayerRightStopSupport)
+			e.stagePlayerRightStopSupport = ""
+		}
+	}
+
+	e.spt.X(mathUtil.FloatToInt(e.x))
+}
+
+func (e *SpritePlayer) RunningRightStart() {
+	if e.stagePlayerRightStartSupport != "" {
+		return
+	}
+
+	//stop right
+	if e.stagePlayerRightStopSupport != "" {
+		e.stage.DeleteMathFunctions(e.stagePlayerRightStopSupport)
+		e.stagePlayerRightStopSupport = ""
+	}
+	//start left
+	if e.stagePlayerLeftStartSupport != "" {
+		e.stage.DeleteMathFunctions(e.stagePlayerLeftStartSupport)
+		e.stagePlayerLeftStartSupport = ""
+	}
+	//stop left
+	if e.stagePlayerLeftStopSupport != "" {
+		e.stage.DeleteMathFunctions(e.stagePlayerLeftStopSupport)
+		e.stagePlayerLeftStopSupport = ""
+	}
+
+	//e.lastLeftSide = false
+	e.runningStart = time.Now()
+	e.StartWalkingRightSide()
+	e.stagePlayerRightStartSupport, _ = e.stage.AddMathFunctions(e.runningRightStartSupport)
+}
+
+func (e *SpritePlayer) runningRightStartSupport() {
+	// English: space width - sprite width
+	// Português: comprimento do espaço - comprimento da sprite
+	if e.limitXMax != -1 && e.x > e.limitXMax {
+		e.x = e.limitXMax
+	}
+
+	if e.limitXMin != -1 && e.x < e.limitXMin {
+		e.x = e.limitXMin
+	}
+
+	t := time.Since(e.runningStart).Milliseconds()
+	if e.runningRightStartFunction != nil {
+		e.velocityX, e.velocityY = e.runningRightStartFunction(e.velocityX, e.velocityY, e.x, e.y, t)
+		e.x += e.velocityX
+		//e.y += e.velocityY
 	}
 
 	e.spt.X(mathUtil.FloatToInt(e.x))
@@ -374,28 +677,28 @@ func (e *SpritePlayer) WalkingRight() {
 	}
 }
 
-func (e *SpritePlayer) PlayerImageToUse() {
-	var err error
-	if e.lastLeftSide == true {
-		err = e.spt.Start("walkingLeftSide")
-		if err != nil {
-			log.Printf("error: %v", err)
-		}
-	} else {
-		err = e.spt.Start("walkingRightSide")
-		if err != nil {
-			log.Printf("error: %v", err)
-		}
-	}
-}
+//func (e *SpritePlayer) PlayerImageToUse() {
+//	var err error
+//	if e.lastLeftSide == true {
+//		err = e.spt.Start("walkingLeftSide")
+//		if err != nil {
+//			log.Printf("error: %v", err)
+//		}
+//	} else {
+//		err = e.spt.Start("walkingRightSide")
+//		if err != nil {
+//			log.Printf("error: %v", err)
+//		}
+//	}
+//}
 
-func (e *SpritePlayer) Fall() {
-	if e.lastLeftSide == false {
-		e.StartFallRightSide()
-	} else {
-		e.StartFallLeftSide()
-	}
-}
+//func (e *SpritePlayer) Fall() {
+//	if e.lastLeftSide == false {
+//		e.StartFallRightSide()
+//	} else {
+//		e.StartFallLeftSide()
+//	}
+//}
 
 func (e *SpritePlayer) Gravity() {
 	if e.gravityStarted == true {
@@ -408,7 +711,7 @@ func (e *SpritePlayer) Gravity() {
 		return
 	}
 
-	e.deltaGravity = 0
+	e.gravityDelta = 0
 
 	e.gravityStart = time.Now()
 	e.gravityMathId, _ = e.stage.AddMathFunctions(e.gravitySupport)
@@ -418,17 +721,12 @@ func (e *SpritePlayer) gravitySupport() {
 	if e.limitYMax != -1 && e.y >= e.limitYMax {
 		return
 	}
-	e.y += e.deltaGravity
+	e.y += e.gravityDelta
 
-	// todo: fazer e eliminar constantes
 	t := time.Since(e.gravityStart).Milliseconds()
 	if e.gravityFunction != nil {
-		_, e.deltaGravity = e.gravityFunction(e.x, e.y, t)
+		_, e.gravityDelta = e.gravityFunction(0, 0, e.x, e.y, t)
 	}
-	//e.deltaGravity = 0.00001*float64(t*t) + 1.0
-	//if e.deltaGravity > 20 {
-	//	e.deltaGravity = 20
-	//}
 
 	e.ControlY()
 

@@ -102,8 +102,11 @@ func (e *SpriteTiles) GetError() (err error) {
 	return e.error
 }
 
-func (e *SpriteTiles) AddNoEvent(element CollisionBox, event func()) (ref *SpriteTiles) {
-	e.NoEvents[e.getUId()] = Event{Element: element, Event: event}
+func (e *SpriteTiles) AddNoEvent(element CollisionBox, eventList ...func()) (ref *SpriteTiles) {
+	for _, event := range eventList {
+		e.NoEvents[e.getUId()] = Event{Element: element, Event: event}
+	}
+
 	return e
 }
 

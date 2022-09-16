@@ -287,7 +287,7 @@ func (e *Sprite) Start(name string) (err error) {
 
 				e.imageData = data[i].imageData
 				e.collisionData = data[i].collisionData
-				e.collisionBox = data[i].collisionBox
+				//e.collisionBox = data[i].collisionBox//fixme: descomentar
 				if e.onChange != nil && len(*e.onChange) == 0 {
 					*e.onChange <- struct{}{}
 				}

@@ -3036,7 +3036,7 @@ func (e *TagSvg) GetRight() (right int) {
 //
 // Português:
 //
-// Retorna a última atualização do bounding box do elemnto.
+// Retorna a última atualização do bounding box do elemento.
 func (e *TagSvg) GetBoundingBox() (x, y, width, height int) {
 	return e.x, e.y, e.width, e.height
 }
@@ -3178,7 +3178,7 @@ func (e *TagSvg) Reference(reference **TagSvg) (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -3264,7 +3264,7 @@ func (e *TagSvg) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -3353,7 +3353,7 @@ func (e *TagSvg) RemoveListenerClick() (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -3435,7 +3435,7 @@ func (e *TagSvg) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagSvg) 
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -3520,7 +3520,7 @@ func (e *TagSvg) RemoveListenerMouseOver() (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -3602,7 +3602,7 @@ func (e *TagSvg) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -3687,7 +3687,7 @@ func (e *TagSvg) RemoveListenerMouseOut() (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -3769,7 +3769,7 @@ func (e *TagSvg) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagSvg) 
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -3854,7 +3854,7 @@ func (e *TagSvg) RemoveListenerMouseMove() (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -3936,7 +3936,7 @@ func (e *TagSvg) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *TagSvg)
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -4021,7 +4021,7 @@ func (e *TagSvg) RemoveListenerMouseLeave() (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -4103,7 +4103,7 @@ func (e *TagSvg) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *TagSvg)
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -4189,7 +4189,7 @@ func (e *TagSvg) RemoveListenerMouseEnter() (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -4271,7 +4271,7 @@ func (e *TagSvg) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagSvg) 
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -4357,7 +4357,7 @@ func (e *TagSvg) RemoveListenerMouseDown() (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -4439,7 +4439,7 @@ func (e *TagSvg) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -4524,7 +4524,7 @@ func (e *TagSvg) RemoveListenerMouseUp() (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -4606,7 +4606,7 @@ func (e *TagSvg) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *TagSvg)
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
@@ -4692,13 +4692,13 @@ func (e *TagSvg) RemoveListenerMouseWheel() (ref *TagSvg) {
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagSvg) {
+func (e *TagSvg) AddListenerDoubleClick(mouseEvent *chan mouse.Data) (ref *TagSvg) {
 	if e.fnDoubleClick != nil {
 		return e
 	}
@@ -4708,7 +4708,7 @@ func (e *TagSvg) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagSvg
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
 		return nil
 	})
 	e.fnDoubleClick = &fn
@@ -4774,7 +4774,7 @@ func (e *TagSvg) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagSvg
 //	        log.Printf("click")
 //	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
 //	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a refereência é
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
 //	        //   inválida e o comando não funciona.
 //	        tagUse.RemoveListenerClick()
 //	      }

@@ -14,6 +14,7 @@ import (
 type Event struct {
 	Element CollisionBox
 	Event   func()
+	TimeOut time.Duration
 }
 
 type SpriteKeyboard struct {
@@ -25,35 +26,35 @@ type SpriteKeyboard struct {
 }
 
 type SpriteData struct {
-	Csv      [][]int
-	Draw     map[int]js.Value
-	Colision map[int][][]bool
-	Box      [][]Box
-	Events   map[int]Event
-	Keyboard map[int]SpriteKeyboard
-	Trigged  map[int]time.Time
-	Width    int
-	Height   int
-	Visible  bool
-	Proccess bool
+	Csv       [][]int
+	Draw      map[int]js.Value
+	Collision map[int][][]bool
+	Box       [][]Box
+	Events    map[int]Event
+	Keyboard  map[int]SpriteKeyboard
+	Triggered map[int]time.Time
+	Width     int
+	Height    int
+	Visible   bool
+	Process   bool
 }
 
 func (e *SpriteData) Init(width, height int) {
 	e.Draw = make(map[int]js.Value)
-	e.Colision = make(map[int][][]bool)
+	e.Collision = make(map[int][][]bool)
 	e.Width = width
 	e.Height = height
 }
 
 type SpriteTiles struct {
-	name     string
-	frame    map[string]SpriteData
-	error    error
-	NoEvents map[int]Event
-	Trigged  map[int]time.Time
-	uId      int
-
-	KeyCode map[string]bool
+	name            string
+	frame           map[string]SpriteData
+	error           error
+	NoEvents        map[int]Event
+	Trigger         map[int]time.Time
+	uId             int
+	KeyCode         map[string]bool
+	noCollisionTime time.Time
 
 	eventOnKeyData chan keyboard.Data
 }
@@ -69,8 +70,10 @@ func (e *SpriteTiles) getUId() int {
 func (e *SpriteTiles) Init(stage *stage.Stage) {
 	e.frame = make(map[string]SpriteData)
 	e.NoEvents = make(map[int]Event)
-	e.Trigged = make(map[int]time.Time)
+	e.Trigger = make(map[int]time.Time)
 	e.KeyCode = make(map[string]bool)
+
+	e.noCollisionTime = time.Now()
 
 	e.eventOnKeyData = make(chan keyboard.Data)
 
@@ -102,9 +105,9 @@ func (e *SpriteTiles) GetError() (err error) {
 	return e.error
 }
 
-func (e *SpriteTiles) AddNoEvent(element CollisionBox, eventList ...func()) (ref *SpriteTiles) {
+func (e *SpriteTiles) AddNoEvent(element CollisionBox, timeOut time.Duration, eventList ...func()) (ref *SpriteTiles) {
 	for _, event := range eventList {
-		e.NoEvents[e.getUId()] = Event{Element: element, Event: event}
+		e.NoEvents[e.getUId()] = Event{Element: element, Event: event, TimeOut: timeOut}
 	}
 
 	return e
@@ -114,7 +117,7 @@ func (e *SpriteTiles) AddColision(element CollisionBox, event func()) (ref *Spri
 	data := e.frame[e.name]
 	if data.Events == nil {
 		data.Events = make(map[int]Event)
-		data.Trigged = make(map[int]time.Time)
+		data.Triggered = make(map[int]time.Time)
 	}
 
 	data.Events[e.getUId()] = Event{Element: element, Event: event}
@@ -144,7 +147,7 @@ func (e *SpriteTiles) AddCsv(sceneName, csv string, img *TagImg, visible, procce
 	data := SpriteData{}
 	data.Init(width, height)
 	data.Visible = visible
-	data.Proccess = proccess
+	data.Process = proccess
 
 	var tile int64
 	var imageData js.Value
@@ -205,7 +208,7 @@ func (e *SpriteTiles) AddCsv(sceneName, csv string, img *TagImg, visible, procce
 			}
 
 			data.Draw[int(tile)] = imageData
-			data.Colision[int(tile)] = canvas.GetCollisionData()
+			data.Collision[int(tile)] = canvas.GetCollisionData()
 		}
 	}
 
@@ -239,13 +242,13 @@ func (e *SpriteTiles) Draw(canvas *TagCanvas, sceneName string) (err error) {
 	return
 }
 
-func (e *SpriteTiles) Proccess() {
+func (e *SpriteTiles) Process() {
 
 	var thisCBox Box
 	var pass = false
 	for name, data := range e.frame {
 		_ = name //fixme
-		if data.Proccess == false {
+		if data.Process == false {
 			continue
 		}
 
@@ -285,9 +288,10 @@ func (e *SpriteTiles) Proccess() {
 						pass = true
 						//collision
 
+						e.noCollisionTime = time.Now()
 						if v.Event != nil {
 							v.Event()
-							data.Trigged[eventID] = time.Now()
+							data.Triggered[eventID] = time.Now()
 						}
 
 						break
@@ -295,7 +299,7 @@ func (e *SpriteTiles) Proccess() {
 				}
 			}
 
-			if pass == true {
+			if pass == true { //fixme: eu posso querer usar as teclas em queda livre
 				for k := range data.Keyboard {
 					keyOn, keyFound := e.KeyCode[data.Keyboard[k].Key]
 					if keyFound == true && keyOn == true && data.Keyboard[k].DownExec == false {
@@ -320,11 +324,17 @@ func (e *SpriteTiles) Proccess() {
 				}
 			}
 
+			// collision
 			if pass == false {
+
 				for eventID, v := range e.NoEvents {
+					if v.TimeOut != 0 && time.Now().Sub(e.noCollisionTime) < v.TimeOut {
+						continue
+					}
+
 					if v.Event != nil {
 						v.Event()
-						e.Trigged[eventID] = time.Now()
+						e.Trigger[eventID] = time.Now()
 					}
 				}
 			}

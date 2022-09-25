@@ -104,7 +104,7 @@ func main() {
 	spt.CreateStoppedLeftSide().
 		Add(8, 0, 0, true, false)
 
-	spt.StartStoppedRightSide()
+	spt.MovieClipStopped()
 
 	// English: Adds a function to clear the canvas before drawing.
 	// Português: Adiciona uma função para limpar o canvas antes do desenho.
@@ -164,7 +164,7 @@ func main() {
 	//stage.Append(cv)
 
 	csvGround := `-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,-1,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
@@ -188,15 +188,20 @@ func main() {
 	sptTiles := html.SpriteTiles{}
 	sptTiles.Init(stage)
 	sptTiles.AddNoEvent(
-		spt, spt.Gravity,
+		spt, 0, spt.FreeFallEnable,
+	)
+	sptTiles.AddNoEvent(
+		spt, 500*time.Millisecond, spt.JumppingDisable,
 	)
 	//sptTiles.AddNoEvent(spt, spt.Fall)
-	stage.AddMathFunctions(sptTiles.Proccess)
+	stage.AddMathFunctions(sptTiles.Process)
 
 	err := sptTiles.AddCsv("ground", csvGround, img1, true, true, 64, 64).
-		AddColision(spt, spt.GravityStop).
+		AddColision(spt, spt.FreeFallDisable).
+		AddColision(spt, spt.JumppingEnable).
 		AddKeyboard("ArrowRight", spt.RunningRightStart, spt.RunningRightStop).
 		AddKeyboard("ArrowLeft", spt.RunningLeftStart, spt.RunningLeftStop).
+		AddKeyboard("ArrowUp", spt.JumppingStart, spt.JumppingStop).
 		GetError()
 	if err != nil {
 		log.Printf("SpriteTiles.AddCsv().error: %v", err)

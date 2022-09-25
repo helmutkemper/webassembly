@@ -666,6 +666,19 @@ func (e *Stage) GetFPS() (fps int) {
 	return e.engine.GetFPS()
 }
 
+// SetFPS
+//
+// English:
+//
+// Sets the total FPS used in calculations and moves.
+//
+// Português:
+//
+// Define o total de FPS usado nos cálculos e movimentos.
+func (e *Stage) SetFPS(value int) {
+	e.engine.SetFPS(value)
+}
+
 // AddCursorDrawFunction
 //
 // English:

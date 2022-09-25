@@ -2,105 +2,54 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/eventQueue"
 	"log"
-	"sync"
 	"time"
 )
 
-type SpriteStatus string
-
 const (
-	KSpriteStatusRightDown                SpriteStatus = "rightDown"
-	KSpriteStatusRightUp                  SpriteStatus = "rightUp"
-	KSpriteStatusRightUpFirst             SpriteStatus = "rightUpFirst"
-	KSpriteStatusLeftDown                 SpriteStatus = "leftDown"
-	KSpriteStatusLeftUp                   SpriteStatus = "leftUp"
-	KSpriteStatusLeftUpFirst              SpriteStatus = "leftUpFirst"
-	KSpriteStatusPlayerRunningHorizontal  SpriteStatus = "runningHorizonatl"
-	KSpriteStatusPlayerStoppingHorizontal SpriteStatus = "stoppingHorizonatl"
-	KSpriteStatusPlayerRunningVertical    SpriteStatus = "runningVertical"
-	KSpriteStatusPlayerStoppingVertical   SpriteStatus = "stoppingVertical"
+	moveRight                                       = "moveRight"
+	moveRightConfig                                 = "moveRightConfig"
+	moveRightStop                                   = "moveRightStop"
+	moveLeft                                        = "moveLeft"
+	moveLeftConfig                                  = "moveLeftConfig"
+	KSpriteStatusLeftDownConfigured                 = "KSpriteStatusLeftDownConfigured"
+	moveLeftStop                                    = "moveLeftStop"
+	playerRunningHorizontal                         = "playerRunningHorizontal"
+	playerStoppingHorizontal                        = "playerStoppingHorizontal"
+	KSpriteStatusPlayerStoppingHorizontal           = "KSpriteStatusPlayerStoppingHorizontal"
+	KSpriteStatusPlayerStoppingHorizontalConfigured = "KSpriteStatusPlayerStoppingHorizontalConfigured"
+	KSpriteStatusPlayerRunningVertical              = "KSpriteStatusPlayerRunningVertical"
+	KSpriteStatusPlayerStoppingVertical             = "KSpriteStatusPlayerStoppingVertical"
+	SpriteStatusFreeFallStart                       = "SpriteStatusFreeFallStart"
+	SpriteStatusFreeFall                            = "SpriteStatusFreeFall"
+	KSpriteStatusFreeFallImpact                     = "KSpriteStatusFreeFallImpact"
 
-	KSpriteStatusGravityStart SpriteStatus = "gravityStart"
-	KSpriteStatusGravityStop  SpriteStatus = "gravityStop"
+	KSpriteStatusJumpingStart      = "KSpriteStatusJumpingStart"
+	KSpriteStatusJumpingStop       = "KSpriteStatusJumpingStop"
+	KSpriteStatusJumpingInProgress = "KSpriteStatusJumpingInProgress"
+	KSpriteStatusJumpingEnable     = "KSpriteStatusJumpingEnable"
+	KSpriteStatusJumpingDisable    = "KSpriteStatusJumpingDisable"
+
+	// KSpriteStatusMovieClipStop
+	//
+	// Indica quando o movie clip do player parado deve ser usado pela configuração determinada pelo desenvolvedor.
+	// e.runningStopSlip == true: Define o uso do movie clip de parado mesmo quando a velocidade de x difere de zero
+	// e.runningStopSlip == false: Define o uso do movie clip de parado apenas quando a velocidade de x for zero
+	KSpriteStatusMovieClipStop = "KSpriteStatusMovieClipStop"
 )
 
-type SpriteStatusList struct {
-	sync sync.Mutex
-	list []SpriteStatus
-}
-
-func (e *SpriteStatusList) Debug() {
-	e.sync.Lock()
-	defer e.sync.Unlock()
-
-	log.Printf("%v", e.list)
-}
-
-func (e *SpriteStatusList) Init() {
-	e.sync.Lock()
-	defer e.sync.Unlock()
-
-	e.list = make([]SpriteStatus, 0)
-}
-
-func (e *SpriteStatusList) Verify(statusList ...SpriteStatus) (ok bool) {
-	e.sync.Lock()
-	defer e.sync.Unlock()
-
-	if len(e.list) == 0 || len(statusList) == 0 {
-		return false
-	}
-
-	for _, status := range statusList {
-		pass := false
-		for k := range e.list {
-			if e.list[k] == status {
-				pass = true
-				break
-			}
-		}
-		if pass == true {
-			continue
-		}
-		return false
-	}
-
-	return true
-}
-
-func (e *SpriteStatusList) Add(statusList ...SpriteStatus) {
-	e.sync.Lock()
-	defer e.sync.Unlock()
-
-	for _, status := range statusList {
-		for k := range e.list {
-			if e.list[k] == status {
-				return
-			}
-		}
-
-		e.list = append(e.list, status)
-	}
-}
-
-func (e *SpriteStatusList) Remove(statusList ...SpriteStatus) {
-	e.sync.Lock()
-	defer e.sync.Unlock()
-
-	for _, status := range statusList {
-		for k := range e.list {
-			if e.list[k] == status {
-				e.list = append(e.list[:k], e.list[k+1:]...)
-				break
-			}
-		}
-	}
-}
-
-type AccelerationFunction func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector DirectionHorizontal, yVector DirectionVertical) (dx, dy float64)
+type AccelerationFunction func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64)
 
 type DirectionHorizontal bool
+
+func (e DirectionHorizontal) String() string {
+	if e == KRight {
+		return "right"
+	}
+
+	return "left"
+}
 
 const (
 	KRight DirectionHorizontal = true
@@ -108,6 +57,14 @@ const (
 )
 
 type DirectionVertical bool
+
+func (e DirectionVertical) String() string {
+	if e == KUp {
+		return "up"
+	}
+
+	return "down"
+}
 
 const (
 	KUp   DirectionVertical = true
@@ -118,7 +75,8 @@ type SpritePlayer struct {
 	spt   *Sprite
 	stage stage.Functions
 
-	status SpriteStatusList
+	status     eventQueue.EventQueue
+	statusPrev map[string]bool
 
 	x                 float64
 	y                 float64
@@ -158,30 +116,33 @@ type SpritePlayer struct {
 	// movie clip de parado.
 	runningStopSlip bool
 
-	gravityStart   time.Time
-	gravityMathId  string
-	gravityStarted bool
+	freeFallRegistered bool
+	freeFallStart      time.Time
+
+	jumpingEnabled bool
+	jumpingStart   time.Time
+	jumpingStop    time.Time
 
 	limitXMin float64
 	limitXMax float64
 	limitYMin float64
 	limitYMax float64
 
-	stagePlayerRightStartSupport string
-	stagePlayerRightStopSupport  string
-	stagePlayerLeftStartSupport  string
-	stagePlayerLeftStopSupport   string
+	horizontalTmpFunction AccelerationFunction
+	horizontalFunction    AccelerationFunction
+	verticalFunction      AccelerationFunction
 
-	horizontalFunction AccelerationFunction
-	verticalFunction   AccelerationFunction
+	runningLeftStartFunction   AccelerationFunction
+	runningLeftStopFunction    AccelerationFunction
+	runningRightStartFunction  AccelerationFunction
+	runningRightStopFunction   AccelerationFunction
+	freeFallFunction           AccelerationFunction
+	gravityFunctionAirFriction AccelerationFunction
 
-	runningLeftStartFunction  AccelerationFunction
-	runningLeftStopFunction   AccelerationFunction
-	runningRightStartFunction AccelerationFunction
-	runningRightStopFunction  AccelerationFunction
-	gravityFunction           AccelerationFunction
-
-	//stateMachine []func()
+	onRunningRightStopConfigure              bool
+	onRunningLeftStopConfigure               bool
+	onRunningRightConfigBeforeStartConfigure bool
+	onRunningLeftConfigBeforeStartConfigure  bool
 }
 
 // StopSlip
@@ -209,7 +170,7 @@ func (e *SpritePlayer) StopSlip(slip bool) (ref *SpritePlayer) {
 //
 // Português:
 //
-// Define a fórmula usada para cálcular a gravidade.
+// Define a fórmula usada para calcular a gravidade.
 //
 // Default / Padrão:
 //
@@ -221,7 +182,13 @@ func (e *SpritePlayer) StopSlip(slip bool) (ref *SpritePlayer) {
 //	  return
 //	}
 func (e *SpritePlayer) GravityFunc(f AccelerationFunction) (ref *SpritePlayer) {
-	e.gravityFunction = f
+	e.freeFallFunction = f
+
+	return e
+}
+
+func (e *SpritePlayer) GravityAirFrictionFunc(f AccelerationFunction) (ref *SpritePlayer) {
+	e.gravityFunctionAirFriction = f
 
 	return e
 }
@@ -271,49 +238,80 @@ func (e *SpritePlayer) DefineFloorLittleSlippery() (ref *SpritePlayer) {
 }
 
 func (e *SpritePlayer) GetFormulaFloorVerySlipperyStart() (f AccelerationFunction) {
-	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector DirectionHorizontal, yVector DirectionVertical) (dx, dy float64) {
-		dx = 0.000001*float64(tRunning*tRunning) - inertialSpeedX/2
-		if dx > 2 {
-			dx = 2
+	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
+		// English: if the player is moving in the opposite direction, it moves less. more friction with the floor.
+		// This rule is here to facilitate the exchange of formulas.
+		// Português: Caso o player esteja mudando para direção oposta, ele se desloca menos. mais atrito com o chão.
+		// Esta regra fica aqui para facilitar a troca de fórmulas.
+		if xVector != xVectorDesired {
+			inertialSpeedX /= 2
 		}
 
-		dy = 0.0000015*float64(tRunning*tRunning) + 0.5
-		if dy > 20 {
-			dy = 20
+		dx = inertialSpeedX + 0.000001*float64(tRunning*tRunning)
+
+		if xVectorDesired == KLeft {
+			dx *= -1.0
 		}
+		if dx > 2.0 {
+			dx = 2.0
+		} else if dx < -2.0 {
+			dx = -2.0
+		}
+
 		return
 	}
 }
 
 func (e *SpritePlayer) GetFormulaFloorVerySlipperyStop() (f AccelerationFunction) {
-	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector DirectionHorizontal, yVector DirectionVertical) (dx, dy float64) {
-		dx = velocityX - (0.00000007 * float64(tRunning*tRunning))
-		if dx < 0 {
+	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
+		dx = inertialSpeedX - 0.0000007*float64(tRunning*tRunning)
+		if xVectorDesired == KLeft {
+			dx *= -1.0
+			if dx > 0 {
+				dx = 0
+			}
+		} else if dx < 0 {
 			dx = 0
-		}
-
-		dy = 0.0000015*float64(tRunning*tRunning) + 0.5
-		if dy > 20 {
-			dy = 20
 		}
 		return
 	}
 }
 
 func (e *SpritePlayer) GetFormulaFloorLittleSlipperyStart() (f AccelerationFunction) {
-	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector DirectionHorizontal, yVector DirectionVertical) (dx, dy float64) {
+	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
 		dx = 0.000002 * float64(tRunning*tRunning)
-		if dx > 2 {
-			dx = 2
+
+		// English: if the player is moving in the opposite direction, it moves less. more friction with the floor.
+		// This rule is here to facilitate the exchange of formulas.
+		// Português: Caso o player esteja mudando para direção oposta, ele se desloca menos. mais atrito com o chão.
+		// Esta regra fica aqui para facilitar a troca de fórmulas.
+		if xVector != xVectorDesired {
+			inertialSpeedX /= 2
+		}
+
+		dx = inertialSpeedX + 0.000002*float64(tRunning*tRunning)
+
+		if xVectorDesired == KLeft {
+			dx *= -1.0
+		}
+		if dx > 2.0 {
+			dx = 2.0
+		} else if dx < -2.0 {
+			dx = -2.0
 		}
 		return
 	}
 }
 
 func (e *SpritePlayer) GetFormulaFloorLittleSlipperyStop() (f AccelerationFunction) {
-	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector DirectionHorizontal, yVector DirectionVertical) (dx, dy float64) {
-		dx = velocityX - (0.000005 * float64(tRunning*tRunning))
-		if dx < 0 {
+	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
+		dx = inertialSpeedX - 0.000005*float64(tRunning*tRunning)
+		if xVectorDesired == KLeft {
+			dx *= -1.0
+			if dx > 0 {
+				dx = 0
+			}
+		} else if dx < 0 {
 			dx = 0
 		}
 		return
@@ -321,19 +319,35 @@ func (e *SpritePlayer) GetFormulaFloorLittleSlipperyStop() (f AccelerationFuncti
 }
 
 func (e *SpritePlayer) GetFormulaFloorDefaultStart() (f AccelerationFunction) {
-	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector DirectionHorizontal, yVector DirectionVertical) (dx, dy float64) {
-		dx = 0.00001*float64(tRunning*tRunning) + 0.5
-		if dx > 2 {
-			dx = 2
+	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
+
+		// English: When the player is moving in the opposite direction, not using inertialSpeedX makes the movement more pleasant
+		// Português: Quando o player está se movendo na direção oposta, não usar inertialSpeedX deixa o movimento mais agradável
+		dx = 0.000008*float64(tRunning*tRunning) + 0.5
+
+		if xVectorDesired == KLeft {
+			dx *= -1.0
+		}
+		if dx > 2.0 {
+			dx = 2.0
+		} else if dx < -2.0 {
+			dx = -2.0
 		}
 		return
 	}
 }
 
 func (e *SpritePlayer) GetFormulaFloorDefaultStop() (f AccelerationFunction) {
-	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector DirectionHorizontal, yVector DirectionVertical) (dx, dy float64) {
-		dx = velocityX - (0.00002 * float64(tRunning*tRunning))
-		if dx < 0 {
+	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
+
+		dx = (inertialSpeedX / 8) - 0.00002*float64(tRunning*tRunning)
+		dx += 0.5
+		if xVectorDesired == KLeft {
+			dx *= -1.0
+			if dx > 0 {
+				dx = 0
+			}
+		} else if dx < 0 {
 			dx = 0
 		}
 		return
@@ -341,14 +355,20 @@ func (e *SpritePlayer) GetFormulaFloorDefaultStop() (f AccelerationFunction) {
 }
 
 func (e *SpritePlayer) GetFormulaGravityDefault() (f AccelerationFunction) {
-	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector DirectionHorizontal, yVector DirectionVertical) (dx, dy float64) {
-		dx = inertialSpeedX - 0.003*float64(tGravity)
-		if dx < 0 {
-			dx = 0
-		}
-		dy = 0.0000015*float64(tRunning*tRunning) + 0.5
+	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
+		dy = 0.0000005*float64(tRunning*tRunning) + 0.5
 		if dy > 20 {
 			dy = 20
+		}
+		return
+	}
+}
+
+func (e *SpritePlayer) GetFormulaAirFriction() (f AccelerationFunction) {
+	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
+		dx = inertialSpeedX - (0.0000002*float64(tRunning*tRunning) + 0.0)
+		if dx < 0 {
+			dx = 0
 		}
 		return
 	}
@@ -357,12 +377,13 @@ func (e *SpritePlayer) GetFormulaGravityDefault() (f AccelerationFunction) {
 func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath string, width, height int) (ref *SpritePlayer) {
 	e.stage = stage
 
-	//e.stateMachine = make([]func(), 0)
-	//e.stage.AddMathFunctions(e.stateMachineExecute)
-
 	e.status.Init()
+	e.status.AddOppositeEvent(moveRight, moveLeft)
+	e.status.AddOppositeEvent(moveRightStop, moveLeftStop)
 
-	e.gravityStart = time.Now()
+	e.statusPrev = make(map[string]bool)
+
+	e.freeFallStart = time.Now()
 	e.runningStart = time.Now()
 
 	e.spt = new(Sprite)
@@ -372,7 +393,8 @@ func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath st
 	e.spt.SpriteHeight(height)
 	e.spt.Init()
 
-	e.gravityFunction = e.GetFormulaGravityDefault()
+	e.freeFallFunction = e.GetFormulaGravityDefault()
+	e.gravityFunctionAirFriction = e.GetFormulaAirFriction()
 	e.runningRightStartFunction = e.GetFormulaFloorDefaultStart()
 	e.runningLeftStartFunction = e.GetFormulaFloorDefaultStart()
 	e.runningRightStopFunction = e.GetFormulaFloorDefaultStop()
@@ -385,6 +407,11 @@ func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath st
 	e.limitYMin = -1.0
 	e.limitYMax = -1.0
 
+	e.xVector = KRight
+	e.xVectorDesired = KRight
+
+	e.MovieClipStopped()
+
 	e.stage.AddMathFunctions(e.statusVerify)
 
 	return e
@@ -392,105 +419,378 @@ func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath st
 
 func (e *SpritePlayer) statusVerify() {
 
-	// sanitização - início
+	_, empty, list := e.status.GetStatus()
 
-	// Teclas UP removem o status de teclas DOWN e vice-versa.
-	if e.status.Verify(KSpriteStatusRightUp) == true {
-		e.status.Remove(KSpriteStatusRightDown)
-	}
-	if e.status.Verify(KSpriteStatusLeftUp) == true {
-		e.status.Remove(KSpriteStatusLeftDown)
-	}
-	if e.status.Verify(KSpriteStatusRightDown) == true {
-		e.status.Remove(KSpriteStatusRightUp)
-	}
-	if e.status.Verify(KSpriteStatusLeftDown) == true {
-		e.status.Remove(KSpriteStatusLeftUp)
+	if empty == true {
+		return
 	}
 
-	// Tecla de movimentação DOWN remove a tecla de movimentação UP oposta.
-	if e.status.Verify(KSpriteStatusLeftDown, KSpriteStatusRightUp) == true {
-		e.status.Remove(KSpriteStatusRightUp)
+	var activeList = make(map[string]bool)
+	for _, v := range list {
+		activeList[v.GetLabel()] = true
 	}
-	if e.status.Verify(KSpriteStatusRightDown, KSpriteStatusLeftUp) == true {
-		e.status.Remove(KSpriteStatusLeftUp)
-	}
-
-	// sanitização - fim
 
 	//e.status.Debug()
 
-	// Teclas UP não são mais usadas depois deste ponto.
-	if e.status.Verify(KSpriteStatusRightUp) == true {
-		e.status.Remove(KSpriteStatusRightUp)
-		e.onRunningRightStop()
-	}
-	if e.status.Verify(KSpriteStatusLeftUp) == true {
-		e.status.Remove(KSpriteStatusLeftUp)
-		e.onRunningLeftStop()
+	if activeList[SpriteStatusFreeFallStart] {
+		e.status.AddEvent(SpriteStatusFreeFallStart, false)
+		e.status.AddEvent(SpriteStatusFreeFall, true)
+		e.onFreeFall()
 	}
 
-	// Caso uma tecla horizontal esteja precionada, o player anda
-	if e.status.Verify(KSpriteStatusRightDown) == true {
-		e.status.Add(KSpriteStatusPlayerRunningHorizontal)
-	}
-	if e.status.Verify(KSpriteStatusLeftDown) == true {
-		e.status.Add(KSpriteStatusPlayerRunningHorizontal)
-	}
-
-	// inicio da gravidade
-	if e.status.Verify(KSpriteStatusGravityStart) == true {
-		e.status.Remove(KSpriteStatusGravityStart)
-		e.onGravityStart()
-		e.status.Add(KSpriteStatusPlayerRunningVertical)
-	}
-
-	if e.status.Verify(KSpriteStatusGravityStop) == true {
-		e.status.Remove(KSpriteStatusGravityStop, KSpriteStatusPlayerRunningVertical)
-	}
-	// fim da gravidade
-
-	if e.status.Verify(KSpriteStatusPlayerRunningHorizontal) == true {
-		if e.horizontalFunction != nil {
-			tRunning := time.Since(e.runningStart).Milliseconds()
-			tGravity := time.Since(e.gravityStart).Milliseconds()
-			e.velocityX, e.velocityY = e.horizontalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.yVector)
-			if e.xVectorDesired == KRight {
-				e.DX(e.velocityX)
-			} else {
-				e.DX(-e.velocityX)
-			}
-
-			if e.status.Verify(KSpriteStatusPlayerStoppingHorizontal) == true {
-				if e.velocityX == 0 {
-					e.status.Remove(KSpriteStatusPlayerRunningHorizontal, KSpriteStatusPlayerStoppingHorizontal)
-
-					if e.runningStopSlip == false {
-						e.StartStoppedRightSide()
-					}
-				}
-			}
-		}
-	}
-
-	if e.status.Verify(KSpriteStatusPlayerRunningVertical) == true {
+	if activeList[SpriteStatusFreeFall] {
 		if e.verticalFunction != nil {
 			tRunning := time.Since(e.runningStart).Milliseconds()
-			tGravity := time.Since(e.gravityStart).Milliseconds()
-			e.velocityX, e.velocityY = e.verticalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.yVector)
+			tGravity := time.Since(e.freeFallStart).Milliseconds()
+			e.velocityX, e.velocityY = e.verticalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.xVectorDesired, e.yVector, e.yVectorDesired)
+
 			if e.yVectorDesired == KUp {
 				e.DY(-e.velocityY)
 			} else {
 				e.DY(e.velocityY)
 			}
+		} else {
+			log.Print("bug: vertical function is nil")
+		}
+	}
 
-			if e.status.Verify(KSpriteStatusPlayerStoppingVertical) == true {
-				if e.velocityY == 0 {
-					e.status.Remove(KSpriteStatusPlayerRunningVertical, KSpriteStatusPlayerStoppingVertical)
-				}
+	if activeList[moveRight] && !activeList[moveRightConfig] {
+		e.status.AddEvent(moveRightConfig, true)
+		e.status.AddEvent(playerRunningHorizontal, true)
+
+		// English: This block configures when right movement starts
+		// Português: Este bloco configura quando o movimento para a direita começa
+		e.velocityXInertial = e.velocityX
+		e.xVectorDesired = KRight
+		e.horizontalFunction = e.runningRightStartFunction
+		e.runningStart = time.Now()
+		e.MovieClipRunning()
+	}
+
+	if activeList[moveRightConfig] && !activeList[moveRight] {
+		delete(activeList, moveRightConfig)
+		e.status.AddEvent(moveRightConfig, false)
+
+		// English: This block removes the configuration flag
+		// Português: Este bloco remove o flag indicativo de configuração
+	}
+
+	if activeList[moveLeft] && !activeList[moveLeftConfig] {
+		e.status.AddEvent(moveLeftConfig, true)
+		e.status.AddEvent(playerRunningHorizontal, true)
+
+		// English: This block configures when left movement starts
+		// Português: Este bloco configura quando o movimento para a esquerda começa
+		e.velocityXInertial = -e.velocityX
+		e.xVectorDesired = KLeft
+		e.horizontalFunction = e.runningLeftStartFunction
+		e.runningStart = time.Now()
+		e.MovieClipRunning()
+	}
+
+	if activeList[moveLeftConfig] && !activeList[moveLeft] {
+		delete(activeList, moveLeftConfig)
+		e.status.AddEvent(moveLeftConfig, false)
+
+		// English: This block removes the configuration flag
+		// Português: Este bloco remove o flag indicativo de configuração
+	}
+
+	if e.statusPrev[moveLeft] && activeList[moveRight] {
+		log.Print("o sentido mudou da esquerda para a direita") // ✔︎
+	} else if e.statusPrev[moveRight] && activeList[moveLeft] {
+		log.Print("o sentido mudou da direita para a esquerda") // ✔︎
+	} else if e.statusPrev[moveLeft] && activeList[moveLeftStop] {
+		log.Print("mudou de andar para parar em direção a esquerda") // ✔︎
+		e.horizontalFunction = e.runningRightStopFunction
+		e.velocityXInertial = -e.velocityX
+		e.runningStart = time.Now()
+	} else if e.statusPrev[moveRight] && activeList[moveRightStop] {
+		log.Print("mudou de andar para parar em direção a direita") // ✔︎
+		e.horizontalFunction = e.runningRightStopFunction
+		e.velocityXInertial = e.velocityX
+		e.runningStart = time.Now()
+	} else if e.statusPrev[moveLeftStop] && activeList[moveLeft] {
+		log.Print("mudou de parar para andar em direção a esquerda") // ✔︎
+	} else if e.statusPrev[playerStoppingHorizontal] && activeList[moveRight] && !activeList[moveRightConfig] {
+		log.Print("mudou de parar para andar em direção a direita") // ✔︎
+	} else if e.statusPrev[playerStoppingHorizontal] && activeList[moveRight] && !activeList[moveRightConfig] {
+		log.Print("mudou de parar esquerda para andar direita") // ✔︎
+	} else if e.statusPrev[moveRightStop] && activeList[moveLeft] {
+		log.Print("mudou de parar direita para andar esquerda") // ✔︎
+	}
+
+	// English: Happens when player is moving with mc stopped and user triggers movement again (slippery floor)
+	// Português: Acontece quando o player está se deslocando com mc de parado e usuário aciona movimento novamente (chão escorregadio)
+	if (activeList[moveRight] || activeList[moveLeft]) && activeList[KSpriteStatusMovieClipStop] {
+		delete(activeList, KSpriteStatusMovieClipStop)
+
+		e.status.AddEvent(KSpriteStatusMovieClipStop, false)
+	}
+
+	if !activeList[moveRight] && !activeList[moveLeft] &&
+		activeList[playerStoppingHorizontal] {
+
+		if e.runningStopSlip == true && !activeList[KSpriteStatusMovieClipStop] {
+			e.status.AddEvent(KSpriteStatusMovieClipStop, true)
+		}
+	}
+
+	if activeList[moveRightStop] {
+		delete(activeList, moveRight)
+
+		e.status.AddEvent(playerStoppingHorizontal, true)
+		e.status.AddEvent(moveRight, false)
+		e.status.AddEvent(moveRightStop, false)
+
+		//e.onRunningRightStop()
+	}
+
+	//if activeList[moveRight] {
+	//	e.onRunningRightConfigBeforeStart()
+	//}
+
+	if activeList[moveLeftStop] {
+		delete(activeList, moveLeft)
+
+		e.status.AddEvent(playerStoppingHorizontal, true)
+		e.status.AddEvent(moveLeft, false)
+		e.status.AddEvent(moveLeftStop, false)
+
+		//e.onRunningLeftStop()
+	}
+
+	//if activeList[moveLeft] {
+	//	e.onRunningLeftConfigBeforeStart()
+	//}
+
+	if activeList[playerStoppingHorizontal] {
+		if e.velocityX == 0 {
+			e.status.AddEvent(playerRunningHorizontal, false)
+			e.status.AddEvent(playerStoppingHorizontal, false)
+
+			if e.runningStopSlip == false {
+				e.status.AddEvent(KSpriteStatusMovieClipStop, true)
 			}
 		}
 	}
+
+	if activeList[playerRunningHorizontal] {
+		if e.horizontalFunction != nil {
+			tRunning := time.Since(e.runningStart).Milliseconds()
+			tGravity := time.Since(e.freeFallStart).Milliseconds()
+			e.velocityX, e.velocityY = e.horizontalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.xVectorDesired, e.yVector, e.yVectorDesired)
+			e.DX(e.velocityX)
+			//if e.xVectorDesired == KRight {
+			//	e.DX(e.velocityX)
+			//} else {
+			//	e.DX(-e.velocityX)
+			//}
+		} else {
+			log.Print("bug: horizontal function is nil")
+		}
+	}
+
+	if activeList[KSpriteStatusMovieClipStop] {
+		e.status.AddEvent(KSpriteStatusMovieClipStop, false)
+		e.MovieClipStopped()
+	}
+
+	e.statusPrev = make(map[string]bool)
+	for k, v := range activeList {
+		e.statusPrev[k] = v
+	}
+
+	return
+
+	//if !e.status.Verify(moveRight) && !e.status.Verify(moveLeft) {
+	//	e.status.Add(KSpriteStatusPlayerStoppingHorizontal)
+	//	if e.runningStopSlip == true {
+	//		e.status.Add(KSpriteStatusMovieClipStop)
+	//		//e.MovieClipStopped()
+	//	}
+	//}
+
+	// Teclas UP não são mais usadas depois deste ponto.
+	//if e.status.Verify(moveRightStop) {
+	//	e.status.Remove(moveRightStop)
+	//	//if e.runningStopSlip == false {
+	//	//	e.status.Add(KSpriteStatusMovieClipStop)
+	//	//	//e.MovieClipStopped()
+	//	//}
+	//
+	//	e.onRunningRightStop()
+	//}
+	//if e.status.Verify(moveLeftStop) {
+	//	e.status.Remove(moveLeftStop)
+	//	//if e.runningStopSlip == false {
+	//	//	e.status.Add(KSpriteStatusMovieClipStop)
+	//	//	//e.MovieClipStopped()
+	//	//}
+	//
+	//	e.onRunningLeftStop()
+	//}
+
+	// Caso uma tecla horizontal esteja pressionada, o player anda
+	//if e.status.Verify(moveRight) {
+	//	if !e.status.Verify(KSpriteStatusRightDownConfigured) {
+	//		e.onRunningRightConfigBeforeStart()
+	//		//e.MovieClipWalkingRightSide()
+	//		e.status.Add(KSpriteStatusRightDownConfigured)
+	//		e.status.Add(playerRunningHorizontal)
+	//	}
+	//}
+	//if e.status.Verify(moveLeft) {
+	//	if !e.status.Verify(KSpriteStatusLeftDownConfigured) {
+	//		e.onRunningLeftConfigBeforeStart()
+	//		//e.MovieClipWalkingLeftSide()
+	//		e.status.Add(KSpriteStatusLeftDownConfigured)
+	//		e.status.Add(playerRunningHorizontal)
+	//	}
+	//}
+
+	// inicio da gravidade
+	//if e.status.Verify(kSpriteStatusFreeFallStart) {
+	//	e.status.Remove(kSpriteStatusFreeFallStart)
+	//	e.onFreeFall()
+	//	e.status.Add(KSpriteStatusPlayerRunningVertical)
+	//	//e.horizontalTmpFunction = e.horizontalFunction
+	//	e.horizontalFunction = e.gravityFunctionAirFriction
+	//
+	//	//e.MovieClipFall()
+	//}
+	//
+	//if e.status.Verify(KSpriteStatusFreeFallStop) {
+	//	e.status.Remove(
+	//		KSpriteStatusFreeFallStop,
+	//		KSpriteStatusPlayerRunningVertical,
+	//	)
+	//	//e.horizontalFunction = e.horizontalTmpFunction
+	//}
+	// fim da gravidade
+
+	//if e.status.Verify(playerRunningHorizontal) {
+	//	if e.horizontalFunction != nil {
+	//		tRunning := time.Since(e.runningStart).Milliseconds()
+	//		tGravity := time.Since(e.freeFallStart).Milliseconds()
+	//		e.velocityX, e.velocityY = e.horizontalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.yVector)
+	//
+	//		if e.xVectorDesired == KRight {
+	//			e.DX(e.velocityX)
+	//		} else {
+	//			e.DX(-e.velocityX)
+	//		}
+	//
+	//		if e.velocityX == 0 {
+	//			if e.runningStopSlip == false {
+	//				e.status.Add(KSpriteStatusMovieClipStop)
+	//				//e.MovieClipStopped()
+	//			}
+	//		}
+	//	} else {
+	//		log.Print("bug: horizontal function is nil")
+	//	}
+	//}
+
+	//if e.status.Verify(KSpriteStatusPlayerRunningVertical) {
+	//	if e.verticalFunction != nil {
+	//		tRunning := time.Since(e.runningStart).Milliseconds()
+	//		tGravity := time.Since(e.freeFallStart).Milliseconds()
+	//		e.velocityX, e.velocityY = e.verticalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.yVector)
+	//
+	//		if e.yVectorDesired == KUp {
+	//			e.DY(-e.velocityY)
+	//		} else {
+	//			e.DY(e.velocityY)
+	//		}
+	//	} else {
+	//		log.Print("bug: vertical function is nil")
+	//	}
+	//}
+
+	// Quando não há teclas horizontais e houve uma queda, é necessário colocar a fórmula de parar.
+	//if e.status.Verify(KSpriteStatusPlayerStoppingHorizontal) && !e.status.Verify(KSpriteStatusPlayerStoppingHorizontalConfigured) && !e.status.Verify(moveRight) && !e.status.Verify(moveLeft) {
+	//	e.status.Add(KSpriteStatusPlayerStoppingHorizontalConfigured)
+	//
+	//	if e.xVector == KRight {
+	//		e.onRunningRightStop()
+	//	} else {
+	//		e.onRunningLeftStop()
+	//	}
+	//
+	//	if e.runningStopSlip == false {
+	//		e.status.Add(KSpriteStatusMovieClipStop)
+	//	}
+	//}
+
+	//if e.velocityX == 0 && e.status.Verify(KSpriteStatusPlayerStoppingHorizontal) {
+	//	e.status.Remove(playerRunningHorizontal, KSpriteStatusPlayerStoppingHorizontal, KSpriteStatusPlayerStoppingHorizontalConfigured)
+	//	//if e.runningStopSlip == false {
+	//	e.status.Add(KSpriteStatusMovieClipStop)
+	//	//e.MovieClipStopped()
+	//	//}
+	//}
+
+	//if e.status.Verify(KSpriteStatusPlayerStoppingVertical) {
+	//	if e.velocityY == 0 {
+	//		e.status.Remove(KSpriteStatusPlayerRunningVertical, KSpriteStatusPlayerStoppingVertical)
+	//	}
+	//}
+
+	// Jumping
+	//if e.status.Verify(KSpriteStatusJumpingDisable) {
+	//	e.status.Remove(KSpriteStatusJumpingDisable, KSpriteStatusJumpingEnable)
+	//}
+
+	//if e.status.Verify(KSpriteStatusJumpingStart) {
+	//	e.jumpingStart = time.Now()
+	//}
+
+	//if e.status.Verify(KSpriteStatusJumpingStop) {
+	//	e.jumpingStop = time.Now()
+	//}
+
+	// é removido para só acontecer uma vez por evento
+	//if e.status.Verify(KSpriteStatusFreeFallImpact) {
+	//	e.status.Remove(KSpriteStatusFreeFallImpact)
+	//}
+
+	// configuração do movie clip.
+
+	//if e.status.Verify(KSpriteStatusPlayerRunningVertical) {
+	//	e.MovieClipFall()
+	//	return
+	//}
+
+	//if e.status.Verify(KSpriteStatusMovieClipStop) {
+	//	e.status.Remove(KSpriteStatusMovieClipStop)
+	//	e.MovieClipStopped()
+	//	return
+	//}
+
+	//if e.status.Verify(playerRunningHorizontal) {
+	//	e.MovieClipRunning()
+	//}
+}
+
+func (e *SpritePlayer) MovieClipStopped() (ref *SpritePlayer) {
+	if e.xVectorDesired == KRight {
+		e.MovieClipStoppedRightSide()
+	} else {
+		e.MovieClipStoppedLeftSide()
+	}
+
+	return e
+}
+
+func (e *SpritePlayer) MovieClipRunning() (ref *SpritePlayer) {
+	if e.xVectorDesired == KRight {
+		e.MovieClipWalkingRightSide()
+	} else {
+		e.MovieClipWalkingLeftSide()
+	}
+
+	return e
 }
 
 func (e *SpritePlayer) X(x int) (ref *SpritePlayer) {
@@ -586,7 +886,7 @@ func (e *SpritePlayer) CreateStoppedRightSide() (ref *spriteConfig) {
 	return e.spt.Scene("stoppedRightSide")
 }
 
-func (e *SpritePlayer) StartStoppedRightSide() (ref *SpritePlayer) {
+func (e *SpritePlayer) MovieClipStoppedRightSide() (ref *SpritePlayer) {
 	err := e.spt.Start("stoppedRightSide")
 	if err != nil {
 		log.Printf("bug: StartStoppedRightSide()")
@@ -599,7 +899,7 @@ func (e *SpritePlayer) CreateStoppedLeftSide() (ref *spriteConfig) {
 	return e.spt.Scene("stoppedLeftSide")
 }
 
-func (e *SpritePlayer) StartStoppedLeftSide() (ref *SpritePlayer) {
+func (e *SpritePlayer) MovieClipStoppedLeftSide() (ref *SpritePlayer) {
 	err := e.spt.Start("stoppedLeftSide")
 	if err != nil {
 		log.Printf("bug: StartStoppedLeftSide()")
@@ -612,7 +912,7 @@ func (e *SpritePlayer) CreateWalkingRightSide() (ref *spriteConfig) {
 	return e.spt.Scene("walkingRightSide")
 }
 
-func (e *SpritePlayer) StartWalkingRightSide() (ref *SpritePlayer) {
+func (e *SpritePlayer) MovieClipWalkingRightSide() (ref *SpritePlayer) {
 	err := e.spt.Start("walkingRightSide")
 	if err != nil {
 		log.Printf("bug: StartWalkingRightSide()")
@@ -625,7 +925,7 @@ func (e *SpritePlayer) CreateWalkingLeftSide() (ref *spriteConfig) {
 	return e.spt.Scene("walkingLeftSide")
 }
 
-func (e *SpritePlayer) StartWalkingLeftSide() (ref *SpritePlayer) {
+func (e *SpritePlayer) MovieClipWalkingLeftSide() (ref *SpritePlayer) {
 	err := e.spt.Start("walkingLeftSide")
 	if err != nil {
 		log.Printf("bug: StartWalkingLeftSide()")
@@ -638,7 +938,17 @@ func (e *SpritePlayer) CreateFallRightSide() (ref *spriteConfig) {
 	return e.spt.Scene("fallRightSide")
 }
 
-func (e *SpritePlayer) StartFallRightSide() (ref *SpritePlayer) {
+func (e *SpritePlayer) MovieClipFall() (ref *SpritePlayer) {
+	if e.xVectorDesired == KRight {
+		e.MovieClipFallRightSide()
+	} else {
+		e.MovieClipFallLeftSide()
+	}
+
+	return e
+}
+
+func (e *SpritePlayer) MovieClipFallRightSide() (ref *SpritePlayer) {
 	err := e.spt.Start("fallRightSide")
 	if err != nil {
 		log.Printf("bug: StartFallRightSide()")
@@ -651,7 +961,7 @@ func (e *SpritePlayer) CreateFallLeftSide() (ref *spriteConfig) {
 	return e.spt.Scene("fallLeftSide")
 }
 
-func (e *SpritePlayer) StartFallLeftSide() (ref *SpritePlayer) {
+func (e *SpritePlayer) MovieClipFallLeftSide() (ref *SpritePlayer) {
 	err := e.spt.Start("fallLeftSide")
 	if err != nil {
 		log.Printf("bug: StartFallLeftSide()")
@@ -660,91 +970,136 @@ func (e *SpritePlayer) StartFallLeftSide() (ref *SpritePlayer) {
 	return e
 }
 
-func (e *SpritePlayer) onRunningLeftStop() {
-	if e.runningStopSlip == true {
-		e.StartStoppedLeftSide()
-	}
-
-	e.horizontalFunction = e.runningLeftStopFunction
-
-	if e.xVector == KRight {
-		e.velocityXInertial = -e.velocityX
-	} else {
-		e.velocityXInertial = e.velocityX
-	}
-
-	e.runningStart = time.Now()
-
+func (e *SpritePlayer) RunningRightStop() {
+	e.status.AddEvent(
+		moveRightStop,
+		true,
+	)
 }
 
 func (e *SpritePlayer) RunningLeftStop() {
-	e.status.Add(
-		KSpriteStatusLeftUp,
-		//KSpriteStatusLeftUpFirst,
-		KSpriteStatusPlayerStoppingHorizontal,
+	e.status.AddEvent(
+		moveLeftStop,
+		true,
 	)
 }
 
-func (e *SpritePlayer) RunningLeftStart() {
-	e.xVectorDesired = KLeft
-	e.StartWalkingLeftSide()
-	e.horizontalFunction = e.runningLeftStartFunction
-
-	if e.xVector == KRight {
-		e.velocityXInertial = e.velocityX
-	} else {
-		e.velocityXInertial = -e.velocityX
-	}
-
-	e.runningStart = time.Now()
-
-	e.status.Add(
-		KSpriteStatusLeftDown,
-		//KSpriteStatusLeftDownFirst,
-	)
-}
-
-func (e *SpritePlayer) RunningRightStop() {
-	//e.onRunningRightStop()
-
-	e.status.Add(
-		KSpriteStatusRightUp,
-		//KSpriteStatusRightUpFirst,
-		KSpriteStatusPlayerStoppingHorizontal,
-	)
+func (e *SpritePlayer) clearRunningConfigure() {
+	e.onRunningRightStopConfigure = false
+	e.onRunningLeftStopConfigure = false
+	e.onRunningRightConfigBeforeStartConfigure = false
+	e.onRunningLeftConfigBeforeStartConfigure = false
 }
 
 func (e *SpritePlayer) onRunningRightStop() {
-	if e.runningStopSlip == true {
-		e.StartStoppedRightSide()
+	if e.onRunningRightStopConfigure == true {
+		return
 	}
 
 	e.horizontalFunction = e.runningRightStopFunction
 
-	if e.xVector == KRight {
-		e.velocityXInertial = -e.velocityX
-	} else {
-		e.velocityXInertial = e.velocityX
-	}
+	//if e.xVector == KRight {
+	//	e.velocityXInertial = -e.velocityX
+	//} else {
+	//	e.velocityXInertial = e.velocityX
+	//}
 
 	e.runningStart = time.Now()
+
+	e.clearRunningConfigure()
+	e.onRunningRightStopConfigure = true
+}
+
+func (e *SpritePlayer) onRunningLeftStop() {
+	if e.onRunningLeftStopConfigure == true {
+		return
+	}
+
+	e.horizontalFunction = e.runningLeftStopFunction
+
+	//if e.xVector == KRight {
+	//	e.velocityXInertial = -e.velocityX
+	//} else {
+	//	e.velocityXInertial = e.velocityX
+	//}
+
+	e.runningStart = time.Now()
+
+	e.clearRunningConfigure()
+	e.onRunningLeftStopConfigure = true
+}
+
+func (e *SpritePlayer) onRunningRightConfigBeforeStart() {
+	if e.onRunningRightConfigBeforeStartConfigure == true {
+		return
+	}
+
+	//e.xVectorDesired = KRight
+
+	e.horizontalFunction = e.runningRightStartFunction
+
+	//if e.xVector == KRight {
+	//	e.velocityXInertial = -e.velocityX
+	//} else {
+	//	e.velocityXInertial = e.velocityX
+	//}
+
+	e.runningStart = time.Now()
+
+	e.clearRunningConfigure()
+	e.onRunningRightConfigBeforeStartConfigure = true
+	e.status.AddEvent(playerRunningHorizontal, true)
+	e.MovieClipRunning()
+}
+
+func (e *SpritePlayer) onRunningLeftConfigBeforeStart() {
+	if e.onRunningLeftConfigBeforeStartConfigure == true {
+		return
+	}
+
+	//e.xVectorDesired = KLeft
+
+	e.horizontalFunction = e.runningLeftStartFunction
+
+	//if e.xVector == KRight {
+	//	e.velocityXInertial = e.velocityX
+	//} else {
+	//	e.velocityXInertial = -e.velocityX
+	//}
+
+	e.runningStart = time.Now()
+
+	e.clearRunningConfigure()
+	e.onRunningLeftConfigBeforeStartConfigure = true
+	e.status.AddEvent(playerRunningHorizontal, true)
+	e.MovieClipRunning()
 }
 
 func (e *SpritePlayer) RunningRightStart() {
-	e.xVectorDesired = KRight
-	e.StartWalkingRightSide()
-	e.horizontalFunction = e.runningRightStartFunction
+	e.status.AddEvent(
+		moveRight,
+		true,
+	)
+}
 
-	if e.xVector == KRight {
-		e.velocityXInertial = -e.velocityX
-	} else {
-		e.velocityXInertial = e.velocityX
-	}
+func (e *SpritePlayer) RunningLeftStart() {
+	e.status.AddEvent(
+		moveLeft,
+		true,
+	)
+}
 
-	e.runningStart = time.Now()
-	e.status.Add(
-		KSpriteStatusRightDown,
-		//KSpriteStatusRightDownFirst,
+func (e *SpritePlayer) JumpingStart() {
+	e.status.AddEvent(
+		KSpriteStatusJumpingStart,
+		true,
+	)
+}
+
+func (e *SpritePlayer) JumpingStop() {
+	e.status.AddEvent(
+		KSpriteStatusJumpingStop,
+		true,
 	)
 }
 
@@ -764,7 +1119,7 @@ func (e *SpritePlayer) WalkingRight() {
 	}
 }
 
-func (e *SpritePlayer) onGravityStart() {
+func (e *SpritePlayer) onFreeFall() {
 	e.yVectorDesired = KDown
 
 	if e.yVector == KUp {
@@ -773,29 +1128,62 @@ func (e *SpritePlayer) onGravityStart() {
 		e.velocityYInertial = e.velocityY
 	}
 
-	e.verticalFunction = e.gravityFunction
-	e.gravityStart = time.Now()
+	//if e.velocityX < 0 {
+	//	e.velocityXInertial = -e.velocityX
+	//} else {
+	//	e.velocityXInertial = e.velocityX
+	//}
+
+	e.verticalFunction = e.freeFallFunction
+	e.freeFallStart = time.Now()
 }
 
-func (e *SpritePlayer) Gravity() {
-	if e.gravityStarted == true {
+func (e *SpritePlayer) FreeFallEnable() {
+	if e.freeFallRegistered == true {
 		return
 	}
-	e.gravityStarted = true
+	e.freeFallRegistered = true
 
-	e.status.Add(
-		KSpriteStatusGravityStart,
+	e.status.AddEvent(
+		SpriteStatusFreeFallStart,
+		true,
 	)
 }
 
-func (e *SpritePlayer) GravityStop() {
-	if e.gravityStarted == false {
+func (e *SpritePlayer) FreeFallDisable() {
+	if e.freeFallRegistered == false {
 		return
 	}
-	e.gravityStarted = false
+	e.freeFallRegistered = false
 
-	e.status.Add(
-		KSpriteStatusGravityStop,
+	e.status.AddEvent(
+		SpriteStatusFreeFall,
+		false,
+	)
+}
+
+func (e *SpritePlayer) JumpingEnable() {
+	if e.jumpingEnabled == true {
+		return
+	}
+	e.jumpingEnabled = true
+
+	// fixme: descomentar
+	//e.status.AddEvent(
+	//	KSpriteStatusJumpingEnable,
+	//	true,
+	//)
+}
+
+func (e *SpritePlayer) JumpingDisable() {
+	if e.jumpingEnabled == false {
+		return
+	}
+	e.jumpingEnabled = false
+
+	e.status.AddEvent(
+		KSpriteStatusJumpingDisable,
+		true,
 	)
 }
 

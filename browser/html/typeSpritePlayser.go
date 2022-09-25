@@ -497,40 +497,61 @@ func (e *SpritePlayer) statusVerify() {
 	}
 
 	if e.statusPrev[moveLeft] && activeList[moveRight] {
-		log.Print("o sentido mudou da esquerda para a direita") // ✔︎
+		// English: This block is triggered when the movement changes from left to right
+		// Português: Este bloco é acionado quando o movimento muda da esquerda para a direita
+
 	} else if e.statusPrev[moveRight] && activeList[moveLeft] {
-		log.Print("o sentido mudou da direita para a esquerda") // ✔︎
+		// English: This block is triggered when the movement changes from right to left
+		// Português: Este bloco é acionado quando o movimento muda da direita para a esquerda
+
 	} else if e.statusPrev[moveLeft] && activeList[moveLeftStop] {
-		log.Print("mudou de andar para parar em direção a esquerda") // ✔︎
+		// English: This block is triggered when the movement changes from walking left to stopping left
+		// Português: Este bloco é acionado quando o movimento muda de andar para a esquerda para parar a esquerda
+
 		e.horizontalFunction = e.runningRightStopFunction
 		e.velocityXInertial = -e.velocityX
 		e.runningStart = time.Now()
 	} else if e.statusPrev[moveRight] && activeList[moveRightStop] {
-		log.Print("mudou de andar para parar em direção a direita") // ✔︎
+		// English: This block is triggered when the movement changes from walking right to stopping right
+		// Português: Este bloco é acionado quando o movimento muda de andar para a direita para parar a direita
+
 		e.horizontalFunction = e.runningRightStopFunction
 		e.velocityXInertial = e.velocityX
 		e.runningStart = time.Now()
 	} else if e.statusPrev[moveLeftStop] && activeList[moveLeft] {
-		log.Print("mudou de parar para andar em direção a esquerda") // ✔︎
+		// English: This block is triggered when movement changes from stopping left to walking left
+		// Português: Este bloco é acionado quando o movimento muda de parando em direção a esquerda para andando em direção a esquerda
+
 	} else if e.statusPrev[playerStoppingHorizontal] && activeList[moveRight] && !activeList[moveRightConfig] {
-		log.Print("mudou de parar para andar em direção a direita") // ✔︎
+		// English: This block is triggered when movement changes from stopping right to walking right
+		// Português: Este bloco é acionado quando o movimento muda de parando em direção a direita para andando em direção a direita
+
 	} else if e.statusPrev[playerStoppingHorizontal] && activeList[moveRight] && !activeList[moveRightConfig] {
-		log.Print("mudou de parar esquerda para andar direita") // ✔︎
+		// English: This block is triggered when movement changes from stopping left to walking right
+		// Português: Este bloco é acionado quando o movimento muda de parando em direção a esquerda para andando em direção a direita
+
 	} else if e.statusPrev[moveRightStop] && activeList[moveLeft] {
-		log.Print("mudou de parar direita para andar esquerda") // ✔︎
+		// English: This block is triggered when movement changes from stopping right to walking left
+		// Português: Este bloco é acionado quando o movimento muda de parando em direção a esquerda para andando em direção a esquerda
+
 	}
 
-	// English: Happens when player is moving with mc stopped and user triggers movement again (slippery floor)
-	// Português: Acontece quando o player está se deslocando com mc de parado e usuário aciona movimento novamente (chão escorregadio)
 	if (activeList[moveRight] || activeList[moveLeft]) && activeList[KSpriteStatusMovieClipStop] {
 		delete(activeList, KSpriteStatusMovieClipStop)
 
+		// English: This block is triggered when the player is moving with the movie clip stopped and user triggers movement again (slippery floor)
+		// Português: Este bloco é acionado quando o player está se deslocando com o movie clip de parado e usuário aciona movimento novamente (chão escorregadio)
 		e.status.AddEvent(KSpriteStatusMovieClipStop, false)
 	}
 
 	if !activeList[moveRight] && !activeList[moveLeft] &&
 		activeList[playerStoppingHorizontal] {
 
+		// English: This block is triggered when right/left movement is not triggered
+		// Português: Este bloco é acionado quando o movimento de direita/esquerda não é acionado
+
+		// English: The stopped movie clip makes the player slip on the floor
+		// Português: O movie clip de parado faz o player escorregar no chão
 		if e.runningStopSlip == true && !activeList[KSpriteStatusMovieClipStop] {
 			e.status.AddEvent(KSpriteStatusMovieClipStop, true)
 		}
@@ -539,33 +560,29 @@ func (e *SpritePlayer) statusVerify() {
 	if activeList[moveRightStop] {
 		delete(activeList, moveRight)
 
+		// English: This block is triggered by the command to stop the movement to the right
+		// Português: Este bloco é acionado pelo comando de parar o movimento para à direita
 		e.status.AddEvent(playerStoppingHorizontal, true)
 		e.status.AddEvent(moveRight, false)
 		e.status.AddEvent(moveRightStop, false)
-
-		//e.onRunningRightStop()
 	}
-
-	//if activeList[moveRight] {
-	//	e.onRunningRightConfigBeforeStart()
-	//}
 
 	if activeList[moveLeftStop] {
 		delete(activeList, moveLeft)
 
+		// English: This block is triggered by the command to stop the movement to the left
+		// Português: Este bloco é acionado pelo comando de parar o movimento para à esquerda
 		e.status.AddEvent(playerStoppingHorizontal, true)
 		e.status.AddEvent(moveLeft, false)
 		e.status.AddEvent(moveLeftStop, false)
-
-		//e.onRunningLeftStop()
 	}
 
-	//if activeList[moveLeft] {
-	//	e.onRunningLeftConfigBeforeStart()
-	//}
-
 	if activeList[playerStoppingHorizontal] {
+		// English: This block is triggered by the stop horizontal movement command
+		// Português: Este bloco é acionado pelo comando de parar o movimento horizontal
+
 		if e.velocityX == 0 {
+
 			e.status.AddEvent(playerRunningHorizontal, false)
 			e.status.AddEvent(playerStoppingHorizontal, false)
 
@@ -576,22 +593,23 @@ func (e *SpritePlayer) statusVerify() {
 	}
 
 	if activeList[playerRunningHorizontal] {
+		// English: This block is triggered by the horizontal movement command and triggers the acceleration formula, both for running and stopping.
+		// Português: Este bloco é acionado pelo comando de movimento horizontal e aciona a fórmula de aceleração, tanto para correr quanto parar
+
 		if e.horizontalFunction != nil {
 			tRunning := time.Since(e.runningStart).Milliseconds()
 			tGravity := time.Since(e.freeFallStart).Milliseconds()
 			e.velocityX, e.velocityY = e.horizontalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.xVectorDesired, e.yVector, e.yVectorDesired)
 			e.DX(e.velocityX)
-			//if e.xVectorDesired == KRight {
-			//	e.DX(e.velocityX)
-			//} else {
-			//	e.DX(-e.velocityX)
-			//}
 		} else {
 			log.Print("bug: horizontal function is nil")
 		}
 	}
 
 	if activeList[KSpriteStatusMovieClipStop] {
+
+		// English: This block triggers the stopped movie clip
+		// Português: Este bloco aciona o movie clip parado
 		e.status.AddEvent(KSpriteStatusMovieClipStop, false)
 		e.MovieClipStopped()
 	}
@@ -600,177 +618,6 @@ func (e *SpritePlayer) statusVerify() {
 	for k, v := range activeList {
 		e.statusPrev[k] = v
 	}
-
-	return
-
-	//if !e.status.Verify(moveRight) && !e.status.Verify(moveLeft) {
-	//	e.status.Add(KSpriteStatusPlayerStoppingHorizontal)
-	//	if e.runningStopSlip == true {
-	//		e.status.Add(KSpriteStatusMovieClipStop)
-	//		//e.MovieClipStopped()
-	//	}
-	//}
-
-	// Teclas UP não são mais usadas depois deste ponto.
-	//if e.status.Verify(moveRightStop) {
-	//	e.status.Remove(moveRightStop)
-	//	//if e.runningStopSlip == false {
-	//	//	e.status.Add(KSpriteStatusMovieClipStop)
-	//	//	//e.MovieClipStopped()
-	//	//}
-	//
-	//	e.onRunningRightStop()
-	//}
-	//if e.status.Verify(moveLeftStop) {
-	//	e.status.Remove(moveLeftStop)
-	//	//if e.runningStopSlip == false {
-	//	//	e.status.Add(KSpriteStatusMovieClipStop)
-	//	//	//e.MovieClipStopped()
-	//	//}
-	//
-	//	e.onRunningLeftStop()
-	//}
-
-	// Caso uma tecla horizontal esteja pressionada, o player anda
-	//if e.status.Verify(moveRight) {
-	//	if !e.status.Verify(KSpriteStatusRightDownConfigured) {
-	//		e.onRunningRightConfigBeforeStart()
-	//		//e.MovieClipWalkingRightSide()
-	//		e.status.Add(KSpriteStatusRightDownConfigured)
-	//		e.status.Add(playerRunningHorizontal)
-	//	}
-	//}
-	//if e.status.Verify(moveLeft) {
-	//	if !e.status.Verify(KSpriteStatusLeftDownConfigured) {
-	//		e.onRunningLeftConfigBeforeStart()
-	//		//e.MovieClipWalkingLeftSide()
-	//		e.status.Add(KSpriteStatusLeftDownConfigured)
-	//		e.status.Add(playerRunningHorizontal)
-	//	}
-	//}
-
-	// inicio da gravidade
-	//if e.status.Verify(kSpriteStatusFreeFallStart) {
-	//	e.status.Remove(kSpriteStatusFreeFallStart)
-	//	e.onFreeFall()
-	//	e.status.Add(KSpriteStatusPlayerRunningVertical)
-	//	//e.horizontalTmpFunction = e.horizontalFunction
-	//	e.horizontalFunction = e.gravityFunctionAirFriction
-	//
-	//	//e.MovieClipFall()
-	//}
-	//
-	//if e.status.Verify(KSpriteStatusFreeFallStop) {
-	//	e.status.Remove(
-	//		KSpriteStatusFreeFallStop,
-	//		KSpriteStatusPlayerRunningVertical,
-	//	)
-	//	//e.horizontalFunction = e.horizontalTmpFunction
-	//}
-	// fim da gravidade
-
-	//if e.status.Verify(playerRunningHorizontal) {
-	//	if e.horizontalFunction != nil {
-	//		tRunning := time.Since(e.runningStart).Milliseconds()
-	//		tGravity := time.Since(e.freeFallStart).Milliseconds()
-	//		e.velocityX, e.velocityY = e.horizontalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.yVector)
-	//
-	//		if e.xVectorDesired == KRight {
-	//			e.DX(e.velocityX)
-	//		} else {
-	//			e.DX(-e.velocityX)
-	//		}
-	//
-	//		if e.velocityX == 0 {
-	//			if e.runningStopSlip == false {
-	//				e.status.Add(KSpriteStatusMovieClipStop)
-	//				//e.MovieClipStopped()
-	//			}
-	//		}
-	//	} else {
-	//		log.Print("bug: horizontal function is nil")
-	//	}
-	//}
-
-	//if e.status.Verify(KSpriteStatusPlayerRunningVertical) {
-	//	if e.verticalFunction != nil {
-	//		tRunning := time.Since(e.runningStart).Milliseconds()
-	//		tGravity := time.Since(e.freeFallStart).Milliseconds()
-	//		e.velocityX, e.velocityY = e.verticalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.yVector)
-	//
-	//		if e.yVectorDesired == KUp {
-	//			e.DY(-e.velocityY)
-	//		} else {
-	//			e.DY(e.velocityY)
-	//		}
-	//	} else {
-	//		log.Print("bug: vertical function is nil")
-	//	}
-	//}
-
-	// Quando não há teclas horizontais e houve uma queda, é necessário colocar a fórmula de parar.
-	//if e.status.Verify(KSpriteStatusPlayerStoppingHorizontal) && !e.status.Verify(KSpriteStatusPlayerStoppingHorizontalConfigured) && !e.status.Verify(moveRight) && !e.status.Verify(moveLeft) {
-	//	e.status.Add(KSpriteStatusPlayerStoppingHorizontalConfigured)
-	//
-	//	if e.xVector == KRight {
-	//		e.onRunningRightStop()
-	//	} else {
-	//		e.onRunningLeftStop()
-	//	}
-	//
-	//	if e.runningStopSlip == false {
-	//		e.status.Add(KSpriteStatusMovieClipStop)
-	//	}
-	//}
-
-	//if e.velocityX == 0 && e.status.Verify(KSpriteStatusPlayerStoppingHorizontal) {
-	//	e.status.Remove(playerRunningHorizontal, KSpriteStatusPlayerStoppingHorizontal, KSpriteStatusPlayerStoppingHorizontalConfigured)
-	//	//if e.runningStopSlip == false {
-	//	e.status.Add(KSpriteStatusMovieClipStop)
-	//	//e.MovieClipStopped()
-	//	//}
-	//}
-
-	//if e.status.Verify(KSpriteStatusPlayerStoppingVertical) {
-	//	if e.velocityY == 0 {
-	//		e.status.Remove(KSpriteStatusPlayerRunningVertical, KSpriteStatusPlayerStoppingVertical)
-	//	}
-	//}
-
-	// Jumping
-	//if e.status.Verify(KSpriteStatusJumpingDisable) {
-	//	e.status.Remove(KSpriteStatusJumpingDisable, KSpriteStatusJumpingEnable)
-	//}
-
-	//if e.status.Verify(KSpriteStatusJumpingStart) {
-	//	e.jumpingStart = time.Now()
-	//}
-
-	//if e.status.Verify(KSpriteStatusJumpingStop) {
-	//	e.jumpingStop = time.Now()
-	//}
-
-	// é removido para só acontecer uma vez por evento
-	//if e.status.Verify(KSpriteStatusFreeFallImpact) {
-	//	e.status.Remove(KSpriteStatusFreeFallImpact)
-	//}
-
-	// configuração do movie clip.
-
-	//if e.status.Verify(KSpriteStatusPlayerRunningVertical) {
-	//	e.MovieClipFall()
-	//	return
-	//}
-
-	//if e.status.Verify(KSpriteStatusMovieClipStop) {
-	//	e.status.Remove(KSpriteStatusMovieClipStop)
-	//	e.MovieClipStopped()
-	//	return
-	//}
-
-	//if e.status.Verify(playerRunningHorizontal) {
-	//	e.MovieClipRunning()
-	//}
 }
 
 func (e *SpritePlayer) MovieClipStopped() (ref *SpritePlayer) {
@@ -982,97 +829,6 @@ func (e *SpritePlayer) RunningLeftStop() {
 		moveLeftStop,
 		true,
 	)
-}
-
-func (e *SpritePlayer) clearRunningConfigure() {
-	e.onRunningRightStopConfigure = false
-	e.onRunningLeftStopConfigure = false
-	e.onRunningRightConfigBeforeStartConfigure = false
-	e.onRunningLeftConfigBeforeStartConfigure = false
-}
-
-func (e *SpritePlayer) onRunningRightStop() {
-	if e.onRunningRightStopConfigure == true {
-		return
-	}
-
-	e.horizontalFunction = e.runningRightStopFunction
-
-	//if e.xVector == KRight {
-	//	e.velocityXInertial = -e.velocityX
-	//} else {
-	//	e.velocityXInertial = e.velocityX
-	//}
-
-	e.runningStart = time.Now()
-
-	e.clearRunningConfigure()
-	e.onRunningRightStopConfigure = true
-}
-
-func (e *SpritePlayer) onRunningLeftStop() {
-	if e.onRunningLeftStopConfigure == true {
-		return
-	}
-
-	e.horizontalFunction = e.runningLeftStopFunction
-
-	//if e.xVector == KRight {
-	//	e.velocityXInertial = -e.velocityX
-	//} else {
-	//	e.velocityXInertial = e.velocityX
-	//}
-
-	e.runningStart = time.Now()
-
-	e.clearRunningConfigure()
-	e.onRunningLeftStopConfigure = true
-}
-
-func (e *SpritePlayer) onRunningRightConfigBeforeStart() {
-	if e.onRunningRightConfigBeforeStartConfigure == true {
-		return
-	}
-
-	//e.xVectorDesired = KRight
-
-	e.horizontalFunction = e.runningRightStartFunction
-
-	//if e.xVector == KRight {
-	//	e.velocityXInertial = -e.velocityX
-	//} else {
-	//	e.velocityXInertial = e.velocityX
-	//}
-
-	e.runningStart = time.Now()
-
-	e.clearRunningConfigure()
-	e.onRunningRightConfigBeforeStartConfigure = true
-	e.status.AddEvent(playerRunningHorizontal, true)
-	e.MovieClipRunning()
-}
-
-func (e *SpritePlayer) onRunningLeftConfigBeforeStart() {
-	if e.onRunningLeftConfigBeforeStartConfigure == true {
-		return
-	}
-
-	//e.xVectorDesired = KLeft
-
-	e.horizontalFunction = e.runningLeftStartFunction
-
-	//if e.xVector == KRight {
-	//	e.velocityXInertial = e.velocityX
-	//} else {
-	//	e.velocityXInertial = -e.velocityX
-	//}
-
-	e.runningStart = time.Now()
-
-	e.clearRunningConfigure()
-	e.onRunningLeftConfigBeforeStartConfigure = true
-	e.status.AddEvent(playerRunningHorizontal, true)
-	e.MovieClipRunning()
 }
 
 func (e *SpritePlayer) RunningRightStart() {

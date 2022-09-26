@@ -13,6 +13,9 @@ const (
 	moveRightStop                                   = "moveRightStop"
 	moveLeft                                        = "moveLeft"
 	moveLeftConfig                                  = "moveLeftConfig"
+	freeFallStart                                   = "freeFallStart"
+	freeFall                                        = "freeFall"
+	freeFallImpact                                  = "freeFallImpact"
 	KSpriteStatusLeftDownConfigured                 = "KSpriteStatusLeftDownConfigured"
 	moveLeftStop                                    = "moveLeftStop"
 	playerRunningHorizontal                         = "playerRunningHorizontal"
@@ -21,9 +24,6 @@ const (
 	KSpriteStatusPlayerStoppingHorizontalConfigured = "KSpriteStatusPlayerStoppingHorizontalConfigured"
 	KSpriteStatusPlayerRunningVertical              = "KSpriteStatusPlayerRunningVertical"
 	KSpriteStatusPlayerStoppingVertical             = "KSpriteStatusPlayerStoppingVertical"
-	SpriteStatusFreeFallStart                       = "SpriteStatusFreeFallStart"
-	SpriteStatusFreeFall                            = "SpriteStatusFreeFall"
-	KSpriteStatusFreeFallImpact                     = "KSpriteStatusFreeFallImpact"
 
 	KSpriteStatusJumpingStart      = "KSpriteStatusJumpingStart"
 	KSpriteStatusJumpingStop       = "KSpriteStatusJumpingStop"
@@ -119,6 +119,9 @@ type SpritePlayer struct {
 	freeFallRegistered bool
 	freeFallStart      time.Time
 
+	tRunning int64
+	tGravity int64
+
 	jumpingEnabled bool
 	jumpingStart   time.Time
 	jumpingStop    time.Time
@@ -132,12 +135,11 @@ type SpritePlayer struct {
 	horizontalFunction    AccelerationFunction
 	verticalFunction      AccelerationFunction
 
-	runningLeftStartFunction   AccelerationFunction
-	runningLeftStopFunction    AccelerationFunction
-	runningRightStartFunction  AccelerationFunction
-	runningRightStopFunction   AccelerationFunction
-	freeFallFunction           AccelerationFunction
-	gravityFunctionAirFriction AccelerationFunction
+	runningLeftStartFunction  AccelerationFunction
+	runningLeftStopFunction   AccelerationFunction
+	runningRightStartFunction AccelerationFunction
+	runningRightStopFunction  AccelerationFunction
+	freeFallFunction          AccelerationFunction
 
 	onRunningRightStopConfigure              bool
 	onRunningLeftStopConfigure               bool
@@ -183,12 +185,6 @@ func (e *SpritePlayer) StopSlip(slip bool) (ref *SpritePlayer) {
 //	}
 func (e *SpritePlayer) GravityFunc(f AccelerationFunction) (ref *SpritePlayer) {
 	e.freeFallFunction = f
-
-	return e
-}
-
-func (e *SpritePlayer) GravityAirFrictionFunc(f AccelerationFunction) (ref *SpritePlayer) {
-	e.gravityFunctionAirFriction = f
 
 	return e
 }
@@ -356,20 +352,26 @@ func (e *SpritePlayer) GetFormulaFloorDefaultStop() (f AccelerationFunction) {
 
 func (e *SpritePlayer) GetFormulaGravityDefault() (f AccelerationFunction) {
 	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
-		dy = 0.0000005*float64(tRunning*tRunning) + 0.5
-		if dy > 20 {
-			dy = 20
+		dy = 0.000004*float64(tRunning*tRunning) + 1.0
+		if dy > 6 {
+			dy = 6
 		}
-		return
-	}
-}
 
-func (e *SpritePlayer) GetFormulaAirFriction() (f AccelerationFunction) {
-	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
-		dx = inertialSpeedX - (0.0000002*float64(tRunning*tRunning) + 0.0)
-		if dx < 0 {
+		if inertialSpeedX == 0 {
+			return
+		}
+
+		dx = (inertialSpeedX / 4) - 0.000008*float64(tRunning*tRunning)
+		dx += 0.5
+		if xVector == KLeft {
+			dx *= -1.0
+			if dx > 0 {
+				dx = 0
+			}
+		} else if dx < 0 {
 			dx = 0
 		}
+
 		return
 	}
 }
@@ -394,7 +396,6 @@ func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath st
 	e.spt.Init()
 
 	e.freeFallFunction = e.GetFormulaGravityDefault()
-	e.gravityFunctionAirFriction = e.GetFormulaAirFriction()
 	e.runningRightStartFunction = e.GetFormulaFloorDefaultStart()
 	e.runningLeftStartFunction = e.GetFormulaFloorDefaultStart()
 	e.runningRightStopFunction = e.GetFormulaFloorDefaultStop()
@@ -409,6 +410,9 @@ func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath st
 
 	e.xVector = KRight
 	e.xVectorDesired = KRight
+
+	e.velocityXInertial = 0.0
+	e.velocityYInertial = 0.0
 
 	e.MovieClipStopped()
 
@@ -431,28 +435,6 @@ func (e *SpritePlayer) statusVerify() {
 	}
 
 	//e.status.Debug()
-
-	if activeList[SpriteStatusFreeFallStart] {
-		e.status.AddEvent(SpriteStatusFreeFallStart, false)
-		e.status.AddEvent(SpriteStatusFreeFall, true)
-		e.onFreeFall()
-	}
-
-	if activeList[SpriteStatusFreeFall] {
-		if e.verticalFunction != nil {
-			tRunning := time.Since(e.runningStart).Milliseconds()
-			tGravity := time.Since(e.freeFallStart).Milliseconds()
-			e.velocityX, e.velocityY = e.verticalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.xVectorDesired, e.yVector, e.yVectorDesired)
-
-			if e.yVectorDesired == KUp {
-				e.DY(-e.velocityY)
-			} else {
-				e.DY(e.velocityY)
-			}
-		} else {
-			log.Print("bug: vertical function is nil")
-		}
-	}
 
 	if activeList[moveRight] && !activeList[moveRightConfig] {
 		e.status.AddEvent(moveRightConfig, true)
@@ -592,14 +574,70 @@ func (e *SpritePlayer) statusVerify() {
 		}
 	}
 
-	if activeList[playerRunningHorizontal] {
+	if activeList[freeFallImpact] {
+		delete(activeList, freeFallImpact)
+		e.status.AddEvent(freeFallImpact, false)
+
+		log.Printf("e.velocityY: %v", e.velocityY)
+		log.Printf("e.tGravity: %v", e.tGravity)
+	}
+
+	if activeList[freeFallStart] {
+		e.status.AddEvent(freeFallStart, false)
+		e.status.AddEvent(freeFall, true)
+
+		e.verticalFunction = e.freeFallFunction
+		e.yVectorDesired = KDown
+		if e.yVector == KUp {
+			e.velocityYInertial = -e.velocityY
+		} else {
+			e.velocityYInertial = e.velocityY
+		}
+
+		e.freeFallStart = time.Now()
+		e.runningStart = time.Now()
+
+		// English: Free fall takes into account the actual movement direction and not the desired direction
+		// Português: A queda livre leva em conta a direção do movimento real e não a direção desejada
+		if e.xVector == KRight {
+			e.velocityXInertial = e.velocityX
+		} else {
+			e.velocityXInertial = -e.velocityX
+		}
+	}
+
+	if activeList[freeFall] {
+		if e.verticalFunction != nil {
+			e.tRunning = time.Since(e.runningStart).Milliseconds()
+			e.tGravity = time.Since(e.freeFallStart).Milliseconds()
+			e.velocityX, e.velocityY = e.verticalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, e.tRunning, e.tGravity, e.xVector, e.xVectorDesired, e.yVector, e.yVectorDesired)
+
+			if e.yVectorDesired == KUp {
+				e.DY(-e.velocityY)
+			} else {
+				e.DY(e.velocityY)
+			}
+
+			e.DX(e.velocityX)
+
+			// todo: fazer limite de queda
+			if e.tGravity >= 1000 {
+				log.Printf("die!")
+			}
+
+		} else {
+			log.Print("bug: 2. vertical function is nil")
+		}
+	}
+
+	if activeList[playerRunningHorizontal] && !activeList[freeFall] && !activeList[freeFallImpact] {
 		// English: This block is triggered by the horizontal movement command and triggers the acceleration formula, both for running and stopping.
 		// Português: Este bloco é acionado pelo comando de movimento horizontal e aciona a fórmula de aceleração, tanto para correr quanto parar
 
 		if e.horizontalFunction != nil {
-			tRunning := time.Since(e.runningStart).Milliseconds()
-			tGravity := time.Since(e.freeFallStart).Milliseconds()
-			e.velocityX, e.velocityY = e.horizontalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, tRunning, tGravity, e.xVector, e.xVectorDesired, e.yVector, e.yVectorDesired)
+			e.tRunning = time.Since(e.runningStart).Milliseconds()
+			e.tGravity = time.Since(e.freeFallStart).Milliseconds()
+			e.velocityX, e.velocityY = e.horizontalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, e.tRunning, e.tGravity, e.xVector, e.xVectorDesired, e.yVector, e.yVectorDesired)
 			e.DX(e.velocityX)
 		} else {
 			log.Print("bug: horizontal function is nil")
@@ -875,25 +913,6 @@ func (e *SpritePlayer) WalkingRight() {
 	}
 }
 
-func (e *SpritePlayer) onFreeFall() {
-	e.yVectorDesired = KDown
-
-	if e.yVector == KUp {
-		e.velocityYInertial = -e.velocityY
-	} else {
-		e.velocityYInertial = e.velocityY
-	}
-
-	//if e.velocityX < 0 {
-	//	e.velocityXInertial = -e.velocityX
-	//} else {
-	//	e.velocityXInertial = e.velocityX
-	//}
-
-	e.verticalFunction = e.freeFallFunction
-	e.freeFallStart = time.Now()
-}
-
 func (e *SpritePlayer) FreeFallEnable() {
 	if e.freeFallRegistered == true {
 		return
@@ -901,7 +920,7 @@ func (e *SpritePlayer) FreeFallEnable() {
 	e.freeFallRegistered = true
 
 	e.status.AddEvent(
-		SpriteStatusFreeFallStart,
+		freeFallStart,
 		true,
 	)
 }
@@ -913,8 +932,13 @@ func (e *SpritePlayer) FreeFallDisable() {
 	e.freeFallRegistered = false
 
 	e.status.AddEvent(
-		SpriteStatusFreeFall,
+		freeFall,
 		false,
+	)
+
+	e.status.AddEvent(
+		freeFallImpact,
+		true,
 	)
 }
 

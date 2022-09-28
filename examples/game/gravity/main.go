@@ -197,8 +197,8 @@ func main() {
 	stage.AddMathFunctions(sptTiles.Process)
 
 	err := sptTiles.AddCsv("ground", csvGround, img1, true, true, 64, 64).
-		AddColision(spt, spt.FreeFallDisable).
-		AddColision(spt, spt.JumppingEnable).
+		AddCollision(spt, spt.FreeFallDisable).
+		AddCollision(spt, spt.JumppingEnable).
 		AddKeyboard("ArrowRight", spt.RunningRightStart, spt.RunningRightStop).
 		AddKeyboard("ArrowLeft", spt.RunningLeftStart, spt.RunningLeftStop).
 		AddKeyboard("ArrowUp", spt.JumppingStart, spt.JumppingStop).

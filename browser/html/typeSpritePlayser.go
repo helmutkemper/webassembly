@@ -28,8 +28,8 @@ const (
 	KSpriteStatusJumpingStart      = "KSpriteStatusJumpingStart"
 	KSpriteStatusJumpingStop       = "KSpriteStatusJumpingStop"
 	KSpriteStatusJumpingInProgress = "KSpriteStatusJumpingInProgress"
-	KSpriteStatusJumpingEnable     = "KSpriteStatusJumpingEnable"
-	KSpriteStatusJumpingDisable    = "KSpriteStatusJumpingDisable"
+	jumpingEnable                  = "jumpingEnable"
+	jumpingDisable                 = "jumpingDisable"
 
 	// KSpriteStatusMovieClipStop
 	//
@@ -119,8 +119,10 @@ type SpritePlayer struct {
 	freeFallRegistered bool
 	freeFallStart      time.Time
 
-	tRunning int64
-	tGravity int64
+	tRunning            int64
+	tGravity            int64
+	tGravityToDie       int64
+	tGravityDisableJump int64
 
 	jumpingEnabled bool
 	jumpingStart   time.Time
@@ -145,6 +147,19 @@ type SpritePlayer struct {
 	onRunningLeftStopConfigure               bool
 	onRunningRightConfigBeforeStartConfigure bool
 	onRunningLeftConfigBeforeStartConfigure  bool
+}
+
+// GravityTimeToDia
+//
+// English:
+//
+// Defines the time, in milliseconds, of maximum free fall before triggering a player died event.
+//
+// Português:
+//
+// Define o tempo, em milissegundos, máximo de queda livre antes de disparar um evento player died.
+func (e *SpritePlayer) GravityTimeToDia(time int64) {
+	e.tGravityToDie = time
 }
 
 // StopSlip
@@ -352,9 +367,16 @@ func (e *SpritePlayer) GetFormulaFloorDefaultStop() (f AccelerationFunction) {
 
 func (e *SpritePlayer) GetFormulaGravityDefault() (f AccelerationFunction) {
 	return func(inertialSpeedX, inertialSpeedY, velocityX, velocityY, x, y float64, tRunning, tGravity int64, xVector, xVectorDesired DirectionHorizontal, yVector, yVectorDesired DirectionVertical) (dx, dy float64) {
-		dy = 0.000004*float64(tRunning*tRunning) + 1.0
+		if inertialSpeedY != 0.0 {
+			dy = inertialSpeedY + 0.000004*float64(tRunning*tRunning)
+		} else {
+			dy = 0.000004*float64(tRunning*tRunning) + 1.0
+		}
+
 		if dy > 6 {
 			dy = 6
+		} else if dy < -6 {
+			dy = -6
 		}
 
 		if inertialSpeedX == 0 {
@@ -413,6 +435,8 @@ func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath st
 
 	e.velocityXInertial = 0.0
 	e.velocityYInertial = 0.0
+
+	e.tGravityToDie = -1
 
 	e.MovieClipStopped()
 
@@ -578,8 +602,10 @@ func (e *SpritePlayer) statusVerify() {
 		delete(activeList, freeFallImpact)
 		e.status.AddEvent(freeFallImpact, false)
 
-		log.Printf("e.velocityY: %v", e.velocityY)
-		log.Printf("e.tGravity: %v", e.tGravity)
+		// English: This block is triggered when there is impact in free fall.
+		// Português: Este bloco é acionado quando há o impacto na queda livre.
+
+		//todo: colocar o ajuste de nível aqui
 	}
 
 	if activeList[freeFallStart] {
@@ -611,18 +637,20 @@ func (e *SpritePlayer) statusVerify() {
 			e.tRunning = time.Since(e.runningStart).Milliseconds()
 			e.tGravity = time.Since(e.freeFallStart).Milliseconds()
 			e.velocityX, e.velocityY = e.verticalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, e.tRunning, e.tGravity, e.xVector, e.xVectorDesired, e.yVector, e.yVectorDesired)
-
-			if e.yVectorDesired == KUp {
-				e.DY(-e.velocityY)
-			} else {
-				e.DY(e.velocityY)
-			}
-
 			e.DX(e.velocityX)
+			e.DY(e.velocityY)
 
 			// todo: fazer limite de queda
-			if e.tGravity >= 1000 {
+			if e.tGravityToDie != -1 && e.tGravity >= e.tGravityToDie {
 				log.Printf("die!")
+			}
+
+			if e.tGravityDisableJump != -1 && activeList[jumpingEnable] && e.tGravity >= e.tGravityDisableJump {
+				delete(activeList, jumpingEnable)
+				e.status.AddEvent(jumpingEnable, false)
+
+				// This block is triggered when the jump is disabled.
+				// Este bloco é acionado quando o salto é desabilitado
 			}
 
 		} else {
@@ -639,6 +667,7 @@ func (e *SpritePlayer) statusVerify() {
 			e.tGravity = time.Since(e.freeFallStart).Milliseconds()
 			e.velocityX, e.velocityY = e.horizontalFunction(e.velocityXInertial, e.velocityYInertial, e.velocityX, e.velocityY, e.x, e.y, e.tRunning, e.tGravity, e.xVector, e.xVectorDesired, e.yVector, e.yVectorDesired)
 			e.DX(e.velocityX)
+			e.DY(e.velocityY)
 		} else {
 			log.Print("bug: horizontal function is nil")
 		}
@@ -884,10 +913,25 @@ func (e *SpritePlayer) RunningLeftStart() {
 }
 
 func (e *SpritePlayer) JumpingStart() {
+	if e.freeFallRegistered == true {
+		return
+	}
+	e.freeFallRegistered = true
+
+	e.velocityXInertial = e.velocityX
+	e.velocityYInertial = -2
+	e.freeFallStart = time.Now()
+	e.runningStart = time.Now()
+	e.yVectorDesired = KUp
+
 	e.status.AddEvent(
-		KSpriteStatusJumpingStart,
+		freeFall,
 		true,
 	)
+	//e.status.AddEvent(
+	//	KSpriteStatusJumpingStart,
+	//	true,
+	//)
 }
 
 func (e *SpritePlayer) JumpingStop() {
@@ -947,11 +991,10 @@ func (e *SpritePlayer) JumpingEnable() {
 		return
 	}
 	e.jumpingEnabled = true
-
-	// fixme: descomentar
+	// todo: status verify jumpingDisable
 	//e.status.AddEvent(
-	//	KSpriteStatusJumpingEnable,
-	//	true,
+	//	jumpingDisable,
+	//	false,
 	//)
 }
 
@@ -960,11 +1003,11 @@ func (e *SpritePlayer) JumpingDisable() {
 		return
 	}
 	e.jumpingEnabled = false
-
-	e.status.AddEvent(
-		KSpriteStatusJumpingDisable,
-		true,
-	)
+	// todo: status verify jumpingDisable
+	//e.status.AddEvent(
+	//	jumpingDisable,
+	//	true,
+	//)
 }
 
 func (e *SpritePlayer) GetCollisionBox() (box Box) {

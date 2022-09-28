@@ -113,7 +113,7 @@ func (e *SpriteTiles) AddNoEvent(element CollisionBox, timeOut time.Duration, ev
 	return e
 }
 
-func (e *SpriteTiles) AddColision(element CollisionBox, event func()) (ref *SpriteTiles) {
+func (e *SpriteTiles) AddCollision(element CollisionBox, event func()) (ref *SpriteTiles) {
 	data := e.frame[e.name]
 	if data.Events == nil {
 		data.Events = make(map[int]Event)
@@ -136,7 +136,7 @@ func (e *SpriteTiles) AddKeyboard(key string, down, up func()) (ref *SpriteTiles
 	return e
 }
 
-func (e *SpriteTiles) AddCsv(sceneName, csv string, img *TagImg, visible, proccess bool, width, height int) (ref *SpriteTiles) {
+func (e *SpriteTiles) AddCsv(sceneName, csv string, img *TagImg, visible, process bool, width, height int) (ref *SpriteTiles) {
 	var err error
 
 	e.name = sceneName
@@ -147,7 +147,7 @@ func (e *SpriteTiles) AddCsv(sceneName, csv string, img *TagImg, visible, procce
 	data := SpriteData{}
 	data.Init(width, height)
 	data.Visible = visible
-	data.Process = proccess
+	data.Process = process
 
 	var tile int64
 	var imageData js.Value
@@ -287,6 +287,12 @@ func (e *SpriteTiles) Process() {
 
 						pass = true
 						//collision
+
+						// todo: isto deve fazer o ajuste de penetração da colisão
+						//diffY := elementCBox.Y + elementCBox.Height - thisCBox.Y
+						//if diffY > 5 {
+						//	elementCBox.Y -= diffY
+						//}
 
 						e.noCollisionTime = time.Now()
 						if v.Event != nil {

@@ -19,7 +19,7 @@ type spriteScene struct {
 	interval      time.Duration
 	imageData     js.Value
 	collisionData [][]bool
-	collisionBox  Box
+	collisionBox  CollisionBox
 }
 
 type spriteConfig struct {
@@ -114,7 +114,7 @@ type Sprite struct {
 	// draw and colision - start
 	imageData     js.Value
 	collisionData [][]bool
-	collisionBox  Box
+	collisionBox  CollisionBox
 	// draw and colision - end
 }
 

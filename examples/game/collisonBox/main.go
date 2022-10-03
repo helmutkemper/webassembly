@@ -13,7 +13,7 @@ import (
 
 func main() {
 
-	text := "please, use arrow keys"
+	text := "please, use arrow keys and space bar"
 
 	imageBoxColor := color.RGBA{A: 0}
 	collisionBoxColor := color.RGBA{R: 255, A: 255}
@@ -49,9 +49,9 @@ func main() {
 	groundData := canvasA.GetImageData(0, 0, w, h, false, false)
 	canvasA.ClearRect(0*w, 0*h, w, h)
 
-	groundBox := html.Box{}
+	groundBox := html.CollisionBox{}
 	groundBox.Debug(&imageBoxColor, &collisionBoxColor)
-	groundBox.Populate(groundData, w, h)
+	groundBox.Init(groundData, w, h)
 	groundBox.X(200)
 	groundBox.Y(200)
 
@@ -88,22 +88,24 @@ func main() {
 				playerData := canvasB.GetImageData(0, 0, w, h, false, false)
 				canvasB.ClearRect(0*w, 0*h, w, h)
 
-				playerBox := html.Box{}
+				playerBox := html.CollisionBox{}
 				playerBox.Debug(&imageBoxColor, &collisionBoxColor)
-				playerBox.Populate(playerData, w, h)
+				playerBox.Init(playerData, w, h)
 				playerBox.X(positionX)
 				playerBox.Y(positionY)
 
 				canvasB.ClearRect(0, 0, 800, 600)
 				canvasB.PutImageData(playerBox.GetData(), playerBox.GetX(), playerBox.GetY())
 
-				text = "please, use arrow keys<br><br>Player collision:<br>"
+				text = "please, use arrow keys and space bar<br><br>Player collision:<br>"
 
+				upPx, rightPx, downPx, leftPx := playerBox.DistanceCorrection(groundBox)
 				upLeft, upRight, downLeft, downRight := playerBox.Quadrant(groundBox)
-				text += fmt.Sprintf("up: <b>%v</b><br>", upLeft || upRight)
-				text += fmt.Sprintf("left: <b>%v</b><br>", upLeft || downLeft)
-				text += fmt.Sprintf("right: <b>%v</b><br>", upRight || downRight)
-				text += fmt.Sprintf("down: <b>%v</b><br>", downLeft || downRight)
+
+				text += fmt.Sprintf("up [%vpx]: <b>%v</b><br>", upPx, upLeft || upRight)
+				text += fmt.Sprintf("left [%vpx]: <b>%v</b><br>", leftPx, upLeft || downLeft)
+				text += fmt.Sprintf("right [%vpx]: <b>%v</b><br>", rightPx, upRight || downRight)
+				text += fmt.Sprintf("down [%vpx]: <b>%v</b><br>", downPx, downLeft || downRight)
 				text += fmt.Sprintf("upLeft: <b>%v</b><br>", upLeft)
 				text += fmt.Sprintf("upRight: <b>%v</b><br>", upRight)
 				text += fmt.Sprintf("downLeft: <b>%v</b><br>", downLeft)

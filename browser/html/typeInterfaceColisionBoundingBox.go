@@ -14,7 +14,7 @@ type CollisionBoundingBox interface {
 	GetBoundingBox() (x, y, width, height int)
 }
 
-type CollisionBox interface {
+type CollisionBoxInterface interface {
 	// GetCollisionBox
 	//
 	// English:
@@ -24,6 +24,6 @@ type CollisionBox interface {
 	// Português:
 	//
 	// Retorna o elemento collison box.
-	GetCollisionBox() (box Box)
+	GetCollisionBox() (box CollisionBox)
 	AdjustBox(dx, dy int)
 }

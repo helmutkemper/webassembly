@@ -5,8 +5,8 @@ import (
 )
 
 func TestBox_Collision(t *testing.T) {
-	boxElement := Box{X: 10, Y: 10, Width: 10, Height: 10}
-	element2 := Box{X: 10 - 5, Y: 10, Width: 10, Height: 10}
+	boxElement := CollisionBox{X: 10, Y: 10, Width: 10, Height: 10}
+	element2 := CollisionBox{X: 10 - 5, Y: 10, Width: 10, Height: 10}
 
 	var a, b, c, d bool
 

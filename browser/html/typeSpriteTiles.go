@@ -35,7 +35,7 @@ type SpriteData struct {
 	Csv       [][]int
 	Draw      map[int]js.Value
 	Collision map[int][][]bool
-	Box       [][]Box
+	Box       [][]CollisionBox
 	Events    map[int]Event
 	Keyboard  map[int]SpriteKeyboard
 	Triggered map[int]time.Time
@@ -238,7 +238,7 @@ func (e *SpriteTiles) AddCsv(sceneName, csv string, img *TagImg, visible, proces
 
 	lines := strings.Split(csv, "\n")
 	data.Csv = make([][]int, len(lines))
-	data.Box = make([][]Box, len(lines))
+	data.Box = make([][]CollisionBox, len(lines))
 	for row, line := range lines {
 
 		// English: occurs when there is a line break at the end of the file.
@@ -249,7 +249,7 @@ func (e *SpriteTiles) AddCsv(sceneName, csv string, img *TagImg, visible, proces
 
 		cols := strings.Split(line, ",")
 		data.Csv[row] = make([]int, len(cols))
-		data.Box[row] = make([]Box, len(cols))
+		data.Box[row] = make([]CollisionBox, len(cols))
 		for col, value := range cols {
 
 			// English: occurs when there is a line break at the end of the file.

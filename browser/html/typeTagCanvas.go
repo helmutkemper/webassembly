@@ -4,7 +4,6 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"image/color"
 	"log"
-	"math"
 	"strconv"
 	"syscall/js"
 )
@@ -46,7 +45,7 @@ type TagCanvas struct {
 	pattern   js.Value
 	transform js.Value
 
-	colisionDataFunction func(red, green, blue, alpha uint8) bool
+	collisionDataFunction func(red, green, blue, alpha uint8) bool
 }
 
 // Reference
@@ -81,7 +80,7 @@ func (el *TagCanvas) Init(width, height int) (ref *TagCanvas) {
 	//e.listener = new(sync.Map)
 	el.CreateElement("canvas", width, height)
 
-	el.colisionDataFunction = func(r, g, b, a uint8) bool {
+	el.collisionDataFunction = func(r, g, b, a uint8) bool {
 		if a != 0 {
 			return true
 		}
@@ -407,7 +406,7 @@ func (el *TagCanvas) Append(append interface{}) (ref *TagCanvas) {
 //
 // Determina uma nova função para o cálculo da matriz de colisão padrão, return ALPHA != 0
 func (el *TagCanvas) CollisionDataFunction(f func(red, green, blue, alpha uint8) bool) (ref *TagCanvas) {
-	el.colisionDataFunction = f
+	el.collisionDataFunction = f
 	return ref
 }
 
@@ -483,7 +482,7 @@ func (el *TagCanvas) GetCollisionData() (data [][]bool) {
 			blue = uint8(dataJs.Index(i + 2).Int())
 			alpha = uint8(dataJs.Index(i + 3).Int())
 
-			data[y][x] = el.colisionDataFunction(red, green, blue, alpha)
+			data[y][x] = el.collisionDataFunction(red, green, blue, alpha)
 
 			i += rgbaLength
 		}
@@ -492,32 +491,100 @@ func (el *TagCanvas) GetCollisionData() (data [][]bool) {
 	return
 }
 
-func (el *TagCanvas) GetCollisionBox() (box Box) {
+func (el *TagCanvas) GetCollisionDataFromImageData(dataJs js.Value, width, height int) (data [][]bool) {
+	dataJs = dataJs.Get("data")
 
-	var xMin = math.MaxInt
-	var yMin = math.MaxInt
-	var xMax = math.MinInt
-	var yMax = math.MinInt
+	var rgbaLength = 4
 
-	collisionData := el.GetCollisionData()
-	for y, dataY := range collisionData {
-		for x, value := range dataY {
-			if value == true {
-				xMin = el.min(xMin, x+1)
-				yMin = el.min(yMin, y+1)
-				xMax = el.max(xMax, x)
-				yMax = el.max(yMax, y)
-			}
+	var i = 0
+	var x int
+	var y int
+
+	var red uint8
+	var green uint8
+	var blue uint8
+	var alpha uint8
+
+	data = make([][]bool, height)
+	for y = 0; y != height; y += 1 {
+		data[y] = make([]bool, width)
+		for x = 0; x != width; x += 1 {
+
+			red = uint8(dataJs.Index(i + 0).Int())
+			green = uint8(dataJs.Index(i + 1).Int())
+			blue = uint8(dataJs.Index(i + 2).Int())
+			alpha = uint8(dataJs.Index(i + 3).Int())
+
+			data[y][x] = el.collisionDataFunction(red, green, blue, alpha)
+
+			i += rgbaLength
 		}
 	}
 
-	return Box{
-		X:      xMin,
-		Y:      yMin,
-		Width:  xMax - xMin,
-		Height: yMax - yMin,
-	}
+	return
 }
+
+func (el *TagCanvas) AdjustBox(dx, dy int) {
+	//todo: implementar
+}
+
+//func (el *TagCanvas) GetCollisionBox() (box Box) {
+//
+//	var xMin = math.MaxInt
+//	var yMin = math.MaxInt
+//	var xMax = math.MinInt
+//	var yMax = math.MinInt
+//
+//	collisionData := el.GetCollisionData()
+//	for y, dataY := range collisionData {
+//		for x, value := range dataY {
+//			if value == true {
+//				xMin = el.min(xMin, x+1)
+//				yMin = el.min(yMin, y+1)
+//				xMax = el.max(xMax, x)
+//				yMax = el.max(yMax, y)
+//			}
+//		}
+//	}
+//
+//	return Box{
+//		X:         xMin,
+//		Y:         yMin,
+//		Width:     xMax - xMin,
+//		Height:    yMax - yMin,
+//		WidthImg:  el.width,
+//		HeightImg: el.height,
+//	}
+//}
+
+//func (el *TagCanvas) GetCollisionBoxFromImageData(dataJs js.Value, width, height int) (box Box) {
+//
+//	var xMin = math.MaxInt
+//	var yMin = math.MaxInt
+//	var xMax = math.MinInt
+//	var yMax = math.MinInt
+//
+//	collisionData := el.GetCollisionDataFromImageData(dataJs, width, height)
+//	for y, dataY := range collisionData {
+//		for x, value := range dataY {
+//			if value == true {
+//				xMin = el.min(xMin, x+1)
+//				yMin = el.min(yMin, y+1)
+//				xMax = el.max(xMax, x)
+//				yMax = el.max(yMax, y)
+//			}
+//		}
+//	}
+//
+//	return Box{
+//		X:         xMin,
+//		Y:         yMin,
+//		Width:     xMax - xMin,
+//		Height:    yMax - yMin,
+//		WidthImg:  width,
+//		HeightImg: height,
+//	}
+//}
 
 // flipData
 //
@@ -588,7 +655,7 @@ func (el *TagCanvas) flipDataHorizontal(dataJs, flipped js.Value, width, height 
 	}
 }
 
-// flipDataVertival
+// flipDataVertical
 //
 // English:
 //
@@ -597,7 +664,7 @@ func (el *TagCanvas) flipDataHorizontal(dataJs, flipped js.Value, width, height 
 // Português:
 //
 // Inverte o sentido da imagem na vertical.
-func (el *TagCanvas) flipDataVertival(dataJs, flipped js.Value, width, height int) {
+func (el *TagCanvas) flipDataVertical(dataJs, flipped js.Value, width, height int) {
 	var x, y, m, i int
 
 	var rgbaLength = 4
@@ -655,7 +722,7 @@ func (el *TagCanvas) GetImageData(x, y, width, height int, flipVertical, flipHor
 		return imageDataFlipped
 
 	} else if flipVertical == true && flipHorizontal == false {
-		el.flipDataVertival(data1, data2, width, height)
+		el.flipDataVertical(data1, data2, width, height)
 		return imageDataFlipped
 
 	} else { //flipVertical == true && flipHorizontal == true
@@ -845,6 +912,16 @@ func (el *TagCanvas) ImageData(imgData [][][]uint8, width, height int) (ref *Tag
 	}
 
 	el.context.Call("putImageData", dataJs, 0, 0, 0, 0, width, height)
+	return el
+}
+
+func (el *TagCanvas) PutImageDataComplete(imageData js.Value, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight int) (ref *TagCanvas) {
+	el.context.Call("putImageData", imageData, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
+	return el
+}
+
+func (el *TagCanvas) PutImageData(imageData js.Value, dx, dy int) (ref *TagCanvas) {
+	el.context.Call("putImageData", imageData, dx, dy)
 	return el
 }
 

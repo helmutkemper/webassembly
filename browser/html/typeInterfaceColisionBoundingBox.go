@@ -25,4 +25,5 @@ type CollisionBox interface {
 	//
 	// Retorna o elemento collison box.
 	GetCollisionBox() (box Box)
+	AdjustBox(dx, dy int)
 }

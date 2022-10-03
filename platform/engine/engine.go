@@ -26,7 +26,7 @@ const kUIdSize = 10
 // Português:
 //
 // Define a quantidade mínima de fps permitida para o ajuste automático da engine
-const kFpsMin = 10
+const kFpsMin = 20
 
 // kFpsMax
 //

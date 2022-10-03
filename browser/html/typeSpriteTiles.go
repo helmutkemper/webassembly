@@ -12,9 +12,15 @@ import (
 )
 
 type Event struct {
-	Element CollisionBox
-	Event   func()
-	TimeOut time.Duration
+	Element        CollisionBox
+	Event          func()
+	EventUp        func()
+	EventUpLeft    func()
+	EventUpRight   func()
+	EventDown      func()
+	EventDownLeft  func()
+	EventDownRight func()
+	TimeOut        time.Duration
 }
 
 type SpriteKeyboard struct {
@@ -47,16 +53,22 @@ func (e *SpriteData) Init(width, height int) {
 }
 
 type SpriteTiles struct {
-	name            string
-	frame           map[string]SpriteData
-	error           error
-	NoEvents        map[int]Event
-	Trigger         map[int]time.Time
-	uId             int
-	KeyCode         map[string]bool
-	noCollisionTime time.Time
+	name              string
+	frame             map[string]SpriteData
+	error             error
+	NoEvents          map[int]Event
+	Trigger           map[int]time.Time
+	uId               int
+	KeyCode           map[string]bool
+	lastCollisionTime time.Time
 
 	eventOnKeyData chan keyboard.Data
+
+	lx      int
+	ly      int
+	lw      int
+	lh      int
+	lcanvas *TagCanvas
 }
 
 func (e *SpriteTiles) getUId() int {
@@ -73,7 +85,7 @@ func (e *SpriteTiles) Init(stage *stage.Stage) {
 	e.Trigger = make(map[int]time.Time)
 	e.KeyCode = make(map[string]bool)
 
-	e.noCollisionTime = time.Now()
+	e.lastCollisionTime = time.Now()
 
 	e.eventOnKeyData = make(chan keyboard.Data)
 
@@ -121,6 +133,78 @@ func (e *SpriteTiles) AddCollision(element CollisionBox, event func()) (ref *Spr
 	}
 
 	data.Events[e.getUId()] = Event{Element: element, Event: event}
+	e.frame[e.name] = data
+	return e
+}
+
+func (e *SpriteTiles) AddCollisionUp(element CollisionBox, event func()) (ref *SpriteTiles) {
+	data := e.frame[e.name]
+	if data.Events == nil {
+		data.Events = make(map[int]Event)
+		data.Triggered = make(map[int]time.Time)
+	}
+
+	data.Events[e.getUId()] = Event{Element: element, EventUp: event}
+	e.frame[e.name] = data
+	return e
+}
+
+func (e *SpriteTiles) AddCollisionUpLeft(element CollisionBox, event func()) (ref *SpriteTiles) {
+	data := e.frame[e.name]
+	if data.Events == nil {
+		data.Events = make(map[int]Event)
+		data.Triggered = make(map[int]time.Time)
+	}
+
+	data.Events[e.getUId()] = Event{Element: element, EventUpLeft: event}
+	e.frame[e.name] = data
+	return e
+}
+
+func (e *SpriteTiles) AddCollisionUpRight(element CollisionBox, event func()) (ref *SpriteTiles) {
+	data := e.frame[e.name]
+	if data.Events == nil {
+		data.Events = make(map[int]Event)
+		data.Triggered = make(map[int]time.Time)
+	}
+
+	data.Events[e.getUId()] = Event{Element: element, EventUpRight: event}
+	e.frame[e.name] = data
+	return e
+}
+
+func (e *SpriteTiles) AddCollisionDown(element CollisionBox, event func()) (ref *SpriteTiles) {
+	data := e.frame[e.name]
+	if data.Events == nil {
+		data.Events = make(map[int]Event)
+		data.Triggered = make(map[int]time.Time)
+	}
+
+	data.Events[e.getUId()] = Event{Element: element, EventDown: event}
+	e.frame[e.name] = data
+	return e
+}
+
+func (e *SpriteTiles) AddCollisionDownLeft(element CollisionBox, event func()) (ref *SpriteTiles) {
+	data := e.frame[e.name]
+	if data.Events == nil {
+		data.Events = make(map[int]Event)
+		data.Triggered = make(map[int]time.Time)
+	}
+
+	data.Events[e.getUId()] = Event{Element: element, EventDownLeft: event}
+	e.frame[e.name] = data
+	return e
+}
+
+func (e *SpriteTiles) AddCollisionDownRight(element CollisionBox, event func()) (ref *SpriteTiles) {
+	data := e.frame[e.name]
+	if data.Events == nil {
+		data.Events = make(map[int]Event)
+		data.Triggered = make(map[int]time.Time)
+	}
+
+	data.Events[e.getUId()] = Event{Element: element, EventDownRight: event}
 	e.frame[e.name] = data
 	return e
 }
@@ -197,10 +281,14 @@ func (e *SpriteTiles) AddCsv(sceneName, csv string, img *TagImg, visible, proces
 			canvas.DrawImageComplete(img, colTile*width, rowTile*height, width, height, 0, 0, width, height)
 			imageData = canvas.GetImageData(0, 0, width, height, false, false)
 
-			cBox := canvas.GetCollisionBox()
-			cBox.X += col * width
-			cBox.Y += row * height
-			data.Box[row][col] = cBox
+			//todo: descomentar - início
+			//cBox := canvas.GetCollisionBoxFromImageData(imageData, width, height)
+			//cBox.XImg = col * width
+			//cBox.YImg = row * height
+			//cBox.WidthImg = width
+			//cBox.HeightImg = height
+			//data.Box[row][col] = cBox
+			//todo: descomentar - fim
 
 			_, found := data.Draw[int(tile)]
 			if found == true {
@@ -208,7 +296,7 @@ func (e *SpriteTiles) AddCsv(sceneName, csv string, img *TagImg, visible, proces
 			}
 
 			data.Draw[int(tile)] = imageData
-			data.Collision[int(tile)] = canvas.GetCollisionData()
+			data.Collision[int(tile)] = canvas.GetCollisionDataFromImageData(imageData, width, height)
 		}
 	}
 
@@ -219,12 +307,14 @@ func (e *SpriteTiles) AddCsv(sceneName, csv string, img *TagImg, visible, proces
 func (e *SpriteTiles) Draw(canvas *TagCanvas, sceneName string) (err error) {
 	data, ok := e.frame[sceneName]
 
-	if data.Visible == false {
-		return
-	}
+	e.lcanvas = canvas
 
 	if ok == false {
 		err = errors.New(fmt.Sprintf("scene %v not found", sceneName))
+		return
+	}
+
+	if data.Visible == false {
 		return
 	}
 
@@ -242,138 +332,157 @@ func (e *SpriteTiles) Draw(canvas *TagCanvas, sceneName string) (err error) {
 	return
 }
 
-func (e *SpriteTiles) Process() {
-
-	var thisCBox Box
-	var pass = false
-	for name, data := range e.frame {
-		_ = name //fixme
-		if data.Process == false {
-			continue
-		}
-
-		rowMaxAllowed := len(data.Box) - 1
-		colMaxAllowed := len(data.Box[0]) - 1
-		for eventID, v := range data.Events {
-			var elementCBox = v.Element.GetCollisionBox()
-
-			rowMin := elementCBox.Y / data.Height
-			if rowMin < 0 {
-				rowMin = 0
-			}
-
-			rowMax := (elementCBox.Y + elementCBox.Height) / data.Height
-			if rowMax > rowMaxAllowed {
-				rowMax = rowMaxAllowed
-			}
-
-			colMin := elementCBox.X / data.Width
-			if colMin < 0 {
-				colMin = 0
-			}
-
-			colMax := (elementCBox.X + elementCBox.Width) / data.Width
-			if colMax > colMaxAllowed {
-				colMax = colMaxAllowed
-			}
-
-			for row := rowMin; row <= rowMax; row += 1 {
-				for col := colMin; col <= colMax; col += 1 {
-					thisCBox = data.Box[row][col]
-					if thisCBox.X < elementCBox.X+elementCBox.Width &&
-						thisCBox.X+thisCBox.Width > elementCBox.X &&
-						thisCBox.Y < elementCBox.Y+elementCBox.Height &&
-						thisCBox.Y+thisCBox.Height > elementCBox.Y {
-
-						pass = true
-						//collision
-
-						// todo: isto deve fazer o ajuste de penetração da colisão
-						//diffY := elementCBox.Y + elementCBox.Height - thisCBox.Y
-						//if diffY > 5 {
-						//	elementCBox.Y -= diffY
-						//}
-
-						e.noCollisionTime = time.Now()
-						if v.Event != nil {
-							v.Event()
-							data.Triggered[eventID] = time.Now()
-						}
-
-						break
-					}
-				}
-			}
-
-			if pass == true { //fixme: eu posso querer usar as teclas em queda livre
-				for k := range data.Keyboard {
-					keyOn, keyFound := e.KeyCode[data.Keyboard[k].Key]
-					if keyFound == true && keyOn == true && data.Keyboard[k].DownExec == false {
-						tmp := data.Keyboard[k]
-						tmp.DownExec = true
-						tmp.UpExec = false
-						data.Keyboard[k] = tmp
-
-						if data.Keyboard[k].Down != nil {
-							data.Keyboard[k].Down()
-						}
-					} else if keyFound == true && keyOn == false && data.Keyboard[k].UpExec == false {
-						tmp := data.Keyboard[k]
-						tmp.UpExec = true
-						tmp.DownExec = false
-						data.Keyboard[k] = tmp
-
-						if data.Keyboard[k].Up != nil {
-							data.Keyboard[k].Up()
-						}
-					}
-				}
-			}
-
-			// collision
-			if pass == false {
-
-				for eventID, v := range e.NoEvents {
-					if v.TimeOut != 0 && time.Now().Sub(e.noCollisionTime) < v.TimeOut {
-						continue
-					}
-
-					if v.Event != nil {
-						v.Event()
-						e.Trigger[eventID] = time.Now()
-					}
-				}
-			}
-		}
-
-		e.frame[name] = data
-	}
-}
-
-func (e *SpriteTiles) TestCollisionBox(element CollisionBox, sceneName string) (collision bool) {
-	if e.frame == nil {
-		return
-	}
-
-	data, ok := e.frame[sceneName]
-	if ok == false {
-		return
-	}
-
-	elementCBox := element.GetCollisionBox()
-
-	var thisCBox Box
-	for row, rowData := range data.Csv {
-		for col := range rowData {
-			thisCBox = data.Box[row][col]
-			if thisCBox.X < elementCBox.X+elementCBox.Width &&
-				thisCBox.X+thisCBox.Width > elementCBox.X &&
-				thisCBox.Y < elementCBox.Y+elementCBox.Height &&
-				thisCBox.Y+thisCBox.Height > elementCBox.Y {
-				return true
-			}
-		}
-	}
-
-	return false
-}
+//func (e *SpriteTiles) Process() {
+//
+//	var sceneElementCBox Box
+//	var pass = false
+//	for frameName, frameData := range e.frame {
+//		if frameData.Process == false {
+//			continue
+//		}
+//
+//		rowMaxAllowed := len(frameData.Box) - 1
+//		colMaxAllowed := len(frameData.Box[0]) - 1
+//		for frameEventID, frameDataEvent := range frameData.Events {
+//			var elementCBox = frameDataEvent.Element.GetCollisionBox()
+//
+//			rowMin := elementCBox.YImg / frameData.Height
+//			if rowMin < 0 {
+//				rowMin = 0
+//			}
+//
+//			rowMax := (elementCBox.YImg + elementCBox.HeightImg) / frameData.Height
+//			if rowMax > rowMaxAllowed {
+//				rowMax = rowMaxAllowed
+//			}
+//
+//			colMin := elementCBox.XImg / frameData.Width
+//			if colMin < 0 {
+//				colMin = 0
+//			}
+//
+//			colMax := (elementCBox.XImg + elementCBox.WidthImg) / frameData.Width
+//			if colMax > colMaxAllowed {
+//				colMax = colMaxAllowed
+//			}
+//
+//			for row := rowMin; row <= rowMax; row += 1 {
+//				for col := colMin; col <= colMax; col += 1 {
+//					sceneElementCBox = frameData.Box[row][col]
+//
+//					e.lx = elementCBox.X + elementCBox.XImg
+//					e.ly = elementCBox.Y + elementCBox.YImg
+//					e.lw = elementCBox.Width
+//					e.lh = elementCBox.Height
+//
+//					e.lcanvas.StrokeStyle(factoryColor.NewRed()).
+//						ClearRect(e.lx-5, e.ly-5, e.lw+10, e.lh+10).
+//						StrokeRect(e.lx, e.ly, e.lw, e.lh).
+//						Stroke()
+//
+//					if elementCBox.Collision(sceneElementCBox) {
+//
+//						pass = true
+//						//collision
+//
+//						e.lastCollisionTime = time.Now()
+//						frameData.Triggered[frameEventID] = time.Now()
+//
+//						upLeft, upRight, downLeft, downRight := elementCBox.Quadrant(sceneElementCBox)
+//						log.Printf("quadrant: %v, %v, %v, %v", upLeft, upRight, downLeft, downRight)
+//						// todo: isto deve fazer o ajuste de penetração da colisão
+//						//diffY := elementCBox.Y + elementCBox.Height - sceneElementCBox.Y
+//						//if diffY > 5 {
+//						//	elementCBox.Y -= diffY
+//						//}
+//
+//						if (upLeft || upRight) && frameDataEvent.EventUp != nil {
+//							frameDataEvent.EventUp()
+//							log.Printf("up: %v", (elementCBox.YImg+elementCBox.Y)-(sceneElementCBox.YImg+sceneElementCBox.Y+sceneElementCBox.Height))
+//							//frameDataEvent.Element.AdjustBox(0, (elementCBox.YImg+elementCBox.Y)-(sceneElementCBox.YImg+sceneElementCBox.Y+sceneElementCBox.Height))
+//							break
+//						}
+//
+//						if upLeft && frameDataEvent.EventUpLeft != nil {
+//							frameDataEvent.EventUpLeft()
+//							break
+//						}
+//
+//						if upRight && frameDataEvent.EventUpRight != nil {
+//							frameDataEvent.EventUpRight()
+//							break
+//						}
+//
+//						if (downLeft || downRight) && frameDataEvent.EventDown != nil {
+//							frameDataEvent.EventDown()
+//							log.Printf("down: %v", (sceneElementCBox.YImg+sceneElementCBox.Y)-(elementCBox.YImg+elementCBox.Y+elementCBox.Height))
+//							frameDataEvent.Element.AdjustBox(0, (sceneElementCBox.YImg+sceneElementCBox.Y)-(elementCBox.YImg+elementCBox.Y+elementCBox.Height)-2)
+//							break
+//						}
+//
+//						if downLeft && frameDataEvent.EventDownLeft != nil {
+//							frameDataEvent.EventDownLeft()
+//							break
+//						}
+//
+//						if downRight && frameDataEvent.EventDownRight != nil {
+//							frameDataEvent.EventDownRight()
+//							break
+//						}
+//
+//						if frameDataEvent.Event != nil {
+//							frameDataEvent.Event()
+//							break
+//						}
+//					}
+//
+//					if pass == true {
+//						break
+//					}
+//				}
+//			}
+//
+//			if pass == true { //fixme: eu posso querer usar as teclas em queda livre - colocar timeout como em jumpEnable
+//				for k := range frameData.Keyboard {
+//					keyOn, keyFound := e.KeyCode[frameData.Keyboard[k].Key]
+//					if keyFound == true && keyOn == true && frameData.Keyboard[k].DownExec == false {
+//						tmp := frameData.Keyboard[k]
+//						tmp.DownExec = true
+//						tmp.UpExec = false
+//						frameData.Keyboard[k] = tmp
+//
+//						if frameData.Keyboard[k].Down != nil {
+//							frameData.Keyboard[k].Down()
+//						}
+//					} else if keyFound == true && keyOn == false && frameData.Keyboard[k].UpExec == false {
+//						tmp := frameData.Keyboard[k]
+//						tmp.UpExec = true
+//						tmp.DownExec = false
+//						frameData.Keyboard[k] = tmp
+//
+//						if frameData.Keyboard[k].Up != nil {
+//							frameData.Keyboard[k].Up()
+//						}
+//					}
+//				}
+//			}
+//
+//			// collision
+//			if pass == false {
+//
+//				for noEventsEventID, noEventsEvent := range e.NoEvents {
+//					if noEventsEvent.TimeOut != 0 && time.Now().Sub(e.lastCollisionTime) < noEventsEvent.TimeOut {
+//						continue
+//					}
+//
+//					if noEventsEvent.Event != nil {
+//						noEventsEvent.Event()
+//						e.Trigger[noEventsEventID] = time.Now()
+//					}
+//				}
+//			}
+//		}
+//
+//		e.frame[frameName] = frameData
+//	}
+//}

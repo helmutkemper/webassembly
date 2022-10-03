@@ -16,7 +16,7 @@ import (
 //
 // Arquiva cada sprite individualmente
 type spriteScene struct {
-	intervel      time.Duration
+	interval      time.Duration
 	imageData     js.Value
 	collisionData [][]bool
 	collisionBox  Box
@@ -71,9 +71,9 @@ func (e *spriteConfig) Add(col, row int, interval time.Duration, flipHorizontal,
 		config.data,
 		spriteScene{
 			imageData:     imageData,
-			intervel:      interval,
-			collisionData: canvas.GetCollisionData(),
-			collisionBox:  canvas.GetCollisionBox(),
+			interval:      interval,
+			collisionData: canvas.GetCollisionDataFromImageData(imageData, e.sprite.spriteWidth, e.sprite.spriteHeight),
+			//collisionBox:  canvas.GetCollisionBoxFromImageData(imageData, e.sprite.spriteWidth, e.sprite.spriteHeight),
 		},
 	)
 	e.sprite.scene[e.sprite.sceneName] = config
@@ -267,7 +267,7 @@ func (e *Sprite) Start(name string) (err error) {
 		var i = 0
 		var l = len(data) - 1
 
-		var timer = time.NewTimer(data[i].intervel)
+		var timer = time.NewTimer(data[i].interval)
 		for {
 			select {
 			case <-e.stopCh:
@@ -287,17 +287,17 @@ func (e *Sprite) Start(name string) (err error) {
 
 				e.imageData = data[i].imageData
 				e.collisionData = data[i].collisionData
-				//e.collisionBox = data[i].collisionBox//fixme: descomentar
+				e.collisionBox = data[i].collisionBox
 				if e.onChange != nil && len(*e.onChange) == 0 {
 					*e.onChange <- struct{}{}
 				}
 
-				if data[i].intervel == 0 {
+				if data[i].interval == 0 {
 					e.running = false
 					return
 				}
 
-				timer = time.NewTimer(data[i].intervel)
+				timer = time.NewTimer(data[i].interval)
 			}
 		}
 	}(config.data)
@@ -398,25 +398,18 @@ func (e *Sprite) Draw() {
 	e.canvas.context.Call("putImageData", e.imageData, e.x, e.y)
 }
 
-func (e *Sprite) GetCollisionBox() (box Box) {
-	cBox := e.collisionBox
-	cBox.X += e.x
-	cBox.Y += e.y
-
-	return cBox
+func (e *Sprite) AdjustBox(dx, dy int) {
+	e.x += dx
+	e.y += dy
 }
 
-func (e *Sprite) TestCollisionBox(element CollisionBox) (collision bool) {
-	thisCBox := e.collisionBox
-	elementCBox := element.GetCollisionBox()
-	if thisCBox.X < elementCBox.X+elementCBox.Width &&
-		thisCBox.X+thisCBox.Width > elementCBox.X &&
-		thisCBox.Y < elementCBox.Y+elementCBox.Height &&
-		thisCBox.Y+thisCBox.Height > elementCBox.Y {
-		return true
-	}
-	return false
-}
+//func (e *Sprite) GetCollisionBox() (box Box) {
+//	cBox := e.collisionBox
+//	cBox.XImg = e.x
+//	cBox.YImg = e.y
+//
+//	return cBox
+//}
 
 //
 //

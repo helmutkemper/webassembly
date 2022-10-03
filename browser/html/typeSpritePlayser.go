@@ -16,6 +16,7 @@ const (
 	freeFallStart                                   = "freeFallStart"
 	freeFall                                        = "freeFall"
 	freeFallImpact                                  = "freeFallImpact"
+	ceilingImpact                                   = "ceilingImpact"
 	KSpriteStatusLeftDownConfigured                 = "KSpriteStatusLeftDownConfigured"
 	moveLeftStop                                    = "moveLeftStop"
 	playerRunningHorizontal                         = "playerRunningHorizontal"
@@ -383,7 +384,7 @@ func (e *SpritePlayer) GetFormulaGravityDefault() (f AccelerationFunction) {
 			return
 		}
 
-		dx = (inertialSpeedX / 4) - 0.000008*float64(tRunning*tRunning)
+		dx = (inertialSpeedX / 1) - 0.000008*float64(tRunning)
 		dx += 0.5
 		if xVector == KLeft {
 			dx *= -1.0
@@ -604,7 +605,7 @@ func (e *SpritePlayer) statusVerify() {
 
 		// English: This block is triggered when there is impact in free fall.
 		// Português: Este bloco é acionado quando há o impacto na queda livre.
-
+		log.Printf(">>>>>>>>>>>> impact")
 		//todo: colocar o ajuste de nível aqui
 	}
 
@@ -626,6 +627,25 @@ func (e *SpritePlayer) statusVerify() {
 		// English: Free fall takes into account the actual movement direction and not the desired direction
 		// Português: A queda livre leva em conta a direção do movimento real e não a direção desejada
 		if e.xVector == KRight {
+			e.velocityXInertial = e.velocityX
+		} else {
+			e.velocityXInertial = -e.velocityX
+		}
+	}
+
+	if activeList[ceilingImpact] {
+		delete(activeList, ceilingImpact)
+		e.status.AddEvent(ceilingImpact, false)
+
+		e.yVectorDesired = KDown
+		e.velocityYInertial = 0
+
+		e.freeFallStart = time.Now()
+		e.runningStart = time.Now()
+
+		// English: Free fall takes into account the actual movement direction and not the desired direction
+		// Português: A queda livre leva em conta a direção do movimento real e não a direção desejada
+		if e.xVectorDesired == KRight {
 			e.velocityXInertial = e.velocityX
 		} else {
 			e.velocityXInertial = -e.velocityX
@@ -969,6 +989,14 @@ func (e *SpritePlayer) FreeFallEnable() {
 	)
 }
 
+func (e *SpritePlayer) CeilingImpactEnable() {
+
+	e.status.AddEvent(
+		ceilingImpact,
+		true,
+	)
+}
+
 func (e *SpritePlayer) FreeFallDisable() {
 	if e.freeFallRegistered == false {
 		return
@@ -1010,6 +1038,14 @@ func (e *SpritePlayer) JumpingDisable() {
 	//)
 }
 
-func (e *SpritePlayer) GetCollisionBox() (box Box) {
-	return e.spt.GetCollisionBox()
+//todo: descomentar - início
+//func (e *SpritePlayer) GetCollisionBox() (box Box) {
+//	return e.spt.GetCollisionBox()
+//}
+//todo: descomentar - fim
+
+func (e *SpritePlayer) AdjustBox(dx, dy int) {
+	//e.DX(float64(dx))
+	e.y += float64(dy)
+	e.spt.y += dy
 }

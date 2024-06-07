@@ -17,6 +17,7 @@ type EventQueue struct {
 	activeEventsEmpty bool
 	activeEvents      []Event
 	activeEventsNow   bool
+	activeEventsData  map[any]any
 
 	sync.Mutex
 }
@@ -40,11 +41,11 @@ type EventQueue struct {
 //	  newEvent: novo evento desde a última leitura desta função;
 //	  empty: lista de eventos limpa;
 //	  activeEvents: lista de eventos, sendo o último evento, o primeiro da lista.
-func (e *EventQueue) GetStatus() (newEvent, empty bool, activeEvents []Event) {
+func (e *EventQueue) GetStatus() (newEvent, empty bool, activeEvents []Event, data map[any]any) {
 	e.Lock()
 	defer e.Unlock()
 
-	newEvent, empty, activeEvents = e.activeEventsNow, e.activeEventsEmpty, e.activeEvents
+	newEvent, empty, activeEvents, data = e.activeEventsNow, e.activeEventsEmpty, e.activeEvents, e.activeEventsData
 	e.activeEventsNow = false
 	return
 }
@@ -69,7 +70,7 @@ func (e *EventQueue) AddSpecialEvent(name string, list []Event) {
 	}
 
 	newEvent := Event{}
-	newEvent.Set(name, true, 0)
+	newEvent.Set(name, true, nil, 0)
 
 	if e.listSize < sizeList {
 		e.listSize = sizeList
@@ -179,9 +180,9 @@ func (e *EventQueue) AddOppositeEvent(eventA, eventB string) {
 	defer e.Unlock()
 
 	var newEventA Event
-	newEventA.Set(eventA, true, 0)
+	newEventA.Set(eventA, true, nil, 0)
 	var newEventB Event
-	newEventB.Set(eventB, true, 0)
+	newEventB.Set(eventB, true, nil, 0)
 
 	e.oppositeEvents = append(e.oppositeEvents, [2]Event{newEventA, newEventB})
 }
@@ -203,12 +204,12 @@ func (e *EventQueue) AddOppositeEvent(eventA, eventB string) {
 //	Notas:
 //	  * Caso AddOppositeEvent() seja usado e o usuário ativar os eventos direita e esquerda ao mesmo tempo, a lista
 //	    vai conter o último evento disparado.
-func (e *EventQueue) AddEvent(event string, active bool) (empty bool, activeEvents []Event) {
+func (e *EventQueue) AddEvent(event string, active bool, data map[any]any) (empty bool, activeEvents []Event) {
 	e.Lock()
 	defer e.Unlock()
 
 	var newEvent Event
-	newEvent.Set(event, active, 0)
+	newEvent.Set(event, active, data, 0)
 	e.queue = append(e.queue, newEvent)
 
 	if e.listSize > 0 {

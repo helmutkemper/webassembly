@@ -448,7 +448,7 @@ func (e *SpritePlayer) Init(stage stage.Functions, canvas *TagCanvas, imgPath st
 
 func (e *SpritePlayer) statusVerify() {
 
-	_, empty, list := e.status.GetStatus()
+	_, empty, list, data := e.status.GetStatus()
 
 	if empty == true {
 		return
@@ -462,8 +462,8 @@ func (e *SpritePlayer) statusVerify() {
 	//e.status.Debug()
 
 	if activeList[moveRight] && !activeList[moveRightConfig] {
-		e.status.AddEvent(moveRightConfig, true)
-		e.status.AddEvent(playerRunningHorizontal, true)
+		e.status.AddEvent(moveRightConfig, true, nil)
+		e.status.AddEvent(playerRunningHorizontal, true, nil)
 
 		// English: This block configures when right movement starts
 		// Português: Este bloco configura quando o movimento para a direita começa
@@ -476,15 +476,15 @@ func (e *SpritePlayer) statusVerify() {
 
 	if activeList[moveRightConfig] && !activeList[moveRight] {
 		delete(activeList, moveRightConfig)
-		e.status.AddEvent(moveRightConfig, false)
+		e.status.AddEvent(moveRightConfig, false, nil)
 
 		// English: This block removes the configuration flag
 		// Português: Este bloco remove o flag indicativo de configuração
 	}
 
 	if activeList[moveLeft] && !activeList[moveLeftConfig] {
-		e.status.AddEvent(moveLeftConfig, true)
-		e.status.AddEvent(playerRunningHorizontal, true)
+		e.status.AddEvent(moveLeftConfig, true, nil)
+		e.status.AddEvent(playerRunningHorizontal, true, nil)
 
 		// English: This block configures when left movement starts
 		// Português: Este bloco configura quando o movimento para a esquerda começa
@@ -497,7 +497,7 @@ func (e *SpritePlayer) statusVerify() {
 
 	if activeList[moveLeftConfig] && !activeList[moveLeft] {
 		delete(activeList, moveLeftConfig)
-		e.status.AddEvent(moveLeftConfig, false)
+		e.status.AddEvent(moveLeftConfig, false, nil)
 
 		// English: This block removes the configuration flag
 		// Português: Este bloco remove o flag indicativo de configuração
@@ -543,12 +543,17 @@ func (e *SpritePlayer) statusVerify() {
 
 	}
 
+	if activeList[moveRight] || activeList[moveLeft] {
+		log.Printf("data: %+v", data)
+		//e.spt.DY()
+	}
+
 	if (activeList[moveRight] || activeList[moveLeft]) && activeList[KSpriteStatusMovieClipStop] {
 		delete(activeList, KSpriteStatusMovieClipStop)
 
 		// English: This block is triggered when the player is moving with the movie clip stopped and user triggers movement again (slippery floor)
 		// Português: Este bloco é acionado quando o player está se deslocando com o movie clip de parado e usuário aciona movimento novamente (chão escorregadio)
-		e.status.AddEvent(KSpriteStatusMovieClipStop, false)
+		e.status.AddEvent(KSpriteStatusMovieClipStop, false, nil)
 	}
 
 	if !activeList[moveRight] && !activeList[moveLeft] &&
@@ -560,7 +565,7 @@ func (e *SpritePlayer) statusVerify() {
 		// English: The stopped movie clip makes the player slip on the floor
 		// Português: O movie clip de parado faz o player escorregar no chão
 		if e.runningStopSlip == true && !activeList[KSpriteStatusMovieClipStop] {
-			e.status.AddEvent(KSpriteStatusMovieClipStop, true)
+			e.status.AddEvent(KSpriteStatusMovieClipStop, true, nil)
 		}
 	}
 
@@ -569,9 +574,9 @@ func (e *SpritePlayer) statusVerify() {
 
 		// English: This block is triggered by the command to stop the movement to the right
 		// Português: Este bloco é acionado pelo comando de parar o movimento para à direita
-		e.status.AddEvent(playerStoppingHorizontal, true)
-		e.status.AddEvent(moveRight, false)
-		e.status.AddEvent(moveRightStop, false)
+		e.status.AddEvent(playerStoppingHorizontal, true, nil)
+		e.status.AddEvent(moveRight, false, nil)
+		e.status.AddEvent(moveRightStop, false, nil)
 	}
 
 	if activeList[moveLeftStop] {
@@ -579,9 +584,9 @@ func (e *SpritePlayer) statusVerify() {
 
 		// English: This block is triggered by the command to stop the movement to the left
 		// Português: Este bloco é acionado pelo comando de parar o movimento para à esquerda
-		e.status.AddEvent(playerStoppingHorizontal, true)
-		e.status.AddEvent(moveLeft, false)
-		e.status.AddEvent(moveLeftStop, false)
+		e.status.AddEvent(playerStoppingHorizontal, true, nil)
+		e.status.AddEvent(moveLeft, false, nil)
+		e.status.AddEvent(moveLeftStop, false, nil)
 	}
 
 	if activeList[playerStoppingHorizontal] {
@@ -590,18 +595,18 @@ func (e *SpritePlayer) statusVerify() {
 
 		if e.velocityX == 0 {
 
-			e.status.AddEvent(playerRunningHorizontal, false)
-			e.status.AddEvent(playerStoppingHorizontal, false)
+			e.status.AddEvent(playerRunningHorizontal, false, nil)
+			e.status.AddEvent(playerStoppingHorizontal, false, nil)
 
 			if e.runningStopSlip == false {
-				e.status.AddEvent(KSpriteStatusMovieClipStop, true)
+				e.status.AddEvent(KSpriteStatusMovieClipStop, true, nil)
 			}
 		}
 	}
 
 	if activeList[freeFallImpact] {
 		delete(activeList, freeFallImpact)
-		e.status.AddEvent(freeFallImpact, false)
+		e.status.AddEvent(freeFallImpact, false, nil)
 
 		// English: This block is triggered when there is impact in free fall.
 		// Português: Este bloco é acionado quando há o impacto na queda livre.
@@ -610,8 +615,8 @@ func (e *SpritePlayer) statusVerify() {
 	}
 
 	if activeList[freeFallStart] {
-		e.status.AddEvent(freeFallStart, false)
-		e.status.AddEvent(freeFall, true)
+		e.status.AddEvent(freeFallStart, false, nil)
+		e.status.AddEvent(freeFall, true, nil)
 
 		e.verticalFunction = e.freeFallFunction
 		e.yVectorDesired = KDown
@@ -635,7 +640,7 @@ func (e *SpritePlayer) statusVerify() {
 
 	if activeList[ceilingImpact] {
 		delete(activeList, ceilingImpact)
-		e.status.AddEvent(ceilingImpact, false)
+		e.status.AddEvent(ceilingImpact, false, nil)
 
 		e.yVectorDesired = KDown
 		e.velocityYInertial = 0
@@ -650,6 +655,9 @@ func (e *SpritePlayer) statusVerify() {
 		} else {
 			e.velocityXInertial = -e.velocityX
 		}
+
+		// todo: correção de y aqui
+		_ = data
 	}
 
 	if activeList[freeFall] {
@@ -667,7 +675,7 @@ func (e *SpritePlayer) statusVerify() {
 
 			if e.tGravityDisableJump != -1 && activeList[jumpingEnable] && e.tGravity >= e.tGravityDisableJump {
 				delete(activeList, jumpingEnable)
-				e.status.AddEvent(jumpingEnable, false)
+				e.status.AddEvent(jumpingEnable, false, nil)
 
 				// This block is triggered when the jump is disabled.
 				// Este bloco é acionado quando o salto é desabilitado
@@ -697,7 +705,7 @@ func (e *SpritePlayer) statusVerify() {
 
 		// English: This block triggers the stopped movie clip
 		// Português: Este bloco aciona o movie clip parado
-		e.status.AddEvent(KSpriteStatusMovieClipStop, false)
+		e.status.AddEvent(KSpriteStatusMovieClipStop, false, nil)
 		e.MovieClipStopped()
 	}
 
@@ -741,6 +749,7 @@ func (e *SpritePlayer) X(x int) (ref *SpritePlayer) {
 	}
 
 	e.spt.x = int(e.x)
+	e.spt.collisionBox.X(int(e.x))
 
 	return e
 }
@@ -759,6 +768,7 @@ func (e *SpritePlayer) DX(x float64) (ref *SpritePlayer) {
 	}
 
 	e.spt.x = int(e.x)
+	e.spt.collisionBox.X(int(e.x))
 
 	return e
 }
@@ -777,6 +787,7 @@ func (e *SpritePlayer) Y(y int) (ref *SpritePlayer) {
 	}
 
 	e.spt.y = int(e.y)
+	e.spt.collisionBox.Y(int(e.y))
 
 	return e
 }
@@ -795,6 +806,7 @@ func (e *SpritePlayer) DY(y float64) (ref *SpritePlayer) {
 	}
 
 	e.spt.y = int(e.y)
+	e.spt.collisionBox.Y(int(e.y))
 
 	return e
 }
@@ -908,6 +920,7 @@ func (e *SpritePlayer) RunningRightStop() {
 	e.status.AddEvent(
 		moveRightStop,
 		true,
+		nil,
 	)
 }
 
@@ -915,6 +928,7 @@ func (e *SpritePlayer) RunningLeftStop() {
 	e.status.AddEvent(
 		moveLeftStop,
 		true,
+		nil,
 	)
 }
 
@@ -922,6 +936,7 @@ func (e *SpritePlayer) RunningRightStart() {
 	e.status.AddEvent(
 		moveRight,
 		true,
+		nil,
 	)
 }
 
@@ -929,6 +944,7 @@ func (e *SpritePlayer) RunningLeftStart() {
 	e.status.AddEvent(
 		moveLeft,
 		true,
+		nil,
 	)
 }
 
@@ -947,6 +963,7 @@ func (e *SpritePlayer) JumpingStart() {
 	e.status.AddEvent(
 		freeFall,
 		true,
+		nil,
 	)
 	//e.status.AddEvent(
 	//	KSpriteStatusJumpingStart,
@@ -958,6 +975,7 @@ func (e *SpritePlayer) JumpingStop() {
 	e.status.AddEvent(
 		KSpriteStatusJumpingStop,
 		true,
+		nil,
 	)
 }
 
@@ -977,7 +995,7 @@ func (e *SpritePlayer) WalkingRight() {
 	}
 }
 
-func (e *SpritePlayer) FreeFallEnable() {
+func (e *SpritePlayer) FreeFallEnable(upDiff, rightDiff, downDiff, leftDiff int) {
 	if e.freeFallRegistered == true {
 		return
 	}
@@ -986,18 +1004,30 @@ func (e *SpritePlayer) FreeFallEnable() {
 	e.status.AddEvent(
 		freeFallStart,
 		true,
+		map[any]any{
+			"up":    upDiff,
+			"right": rightDiff,
+			"down":  downDiff,
+			"left":  leftDiff,
+		},
 	)
 }
 
-func (e *SpritePlayer) CeilingImpactEnable() {
+func (e *SpritePlayer) CeilingImpactEnable(upDiff, rightDiff, downDiff, leftDiff int) {
 
 	e.status.AddEvent(
 		ceilingImpact,
 		true,
+		map[any]any{
+			"up":    upDiff,
+			"right": rightDiff,
+			"down":  downDiff,
+			"left":  leftDiff,
+		},
 	)
 }
 
-func (e *SpritePlayer) FreeFallDisable() {
+func (e *SpritePlayer) FreeFallDisable(upDiff, rightDiff, downDiff, leftDiff int) {
 	if e.freeFallRegistered == false {
 		return
 	}
@@ -1006,15 +1036,27 @@ func (e *SpritePlayer) FreeFallDisable() {
 	e.status.AddEvent(
 		freeFall,
 		false,
+		map[any]any{
+			"up":    upDiff,
+			"right": rightDiff,
+			"down":  downDiff,
+			"left":  leftDiff,
+		},
 	)
 
 	e.status.AddEvent(
 		freeFallImpact,
 		true,
+		map[any]any{
+			"up":    upDiff,
+			"right": rightDiff,
+			"down":  downDiff,
+			"left":  leftDiff,
+		},
 	)
 }
 
-func (e *SpritePlayer) JumpingEnable() {
+func (e *SpritePlayer) JumpingEnable(upDiff, rightDiff, downDiff, leftDiff int) {
 	if e.jumpingEnabled == true {
 		return
 	}
@@ -1023,10 +1065,16 @@ func (e *SpritePlayer) JumpingEnable() {
 	//e.status.AddEvent(
 	//	jumpingDisable,
 	//	false,
+	//	map[any]any{
+	//		"up": upDiff,
+	//		"right": rightDiff,
+	//		"down": downDiff,
+	//		"left": leftDiff,
+	//	},
 	//)
 }
 
-func (e *SpritePlayer) JumpingDisable() {
+func (e *SpritePlayer) JumpingDisable(upDiff, rightDiff, downDiff, leftDiff int) {
 	if e.jumpingEnabled == false {
 		return
 	}
@@ -1035,14 +1083,18 @@ func (e *SpritePlayer) JumpingDisable() {
 	//e.status.AddEvent(
 	//	jumpingDisable,
 	//	true,
+	//	map[any]any{
+	//		"up": upDiff,
+	//		"right": rightDiff,
+	//		"down": downDiff,
+	//		"left": leftDiff,
+	//	},
 	//)
 }
 
-//todo: descomentar - início
-//func (e *SpritePlayer) GetCollisionBox() (box Box) {
-//	return e.spt.GetCollisionBox()
-//}
-//todo: descomentar - fim
+func (e *SpritePlayer) GetCollisionBox() (box *CollisionBox) {
+	return e.spt.GetCollisionBox()
+}
 
 func (e *SpritePlayer) AdjustBox(dx, dy int) {
 	//e.DX(float64(dx))

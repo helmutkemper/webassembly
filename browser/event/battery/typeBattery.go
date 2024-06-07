@@ -122,7 +122,7 @@ func (e *Battery) Init() {
 // Adds a battery charging change event listener equivalent to the JavaScript command addEventListener('chargingchange',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel battery.Data
+//	  mouseEvent: pointer to channel battery.Data
 //
 // Fired when the battery charging state (the charging property) is updated.
 //
@@ -131,7 +131,7 @@ func (e *Battery) Init() {
 // Adiciona um ouvinte de evento de carga da bateria mudou, equivalente ao comando JavaScript addEventListener('chargingchange',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel battery.Data
+//	  mouseEvent: ponteiro para o channel battery.Data
 //
 // Acionado quando o estado de carregamento da bateria (a propriedade de carregamento) é atualizado.
 func (e *Battery) AddListenerChargingChange(batteryData *chan Data) (ref *Battery) {
@@ -195,7 +195,7 @@ func (e *Battery) RemoveListenerChargingChange() (ref *Battery) {
 // Adds a battery charging time change event listener equivalent to the JavaScript command addEventListener('chargingtimechange',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel battery.Data
+//	  mouseEvent: pointer to channel battery.Data
 //
 // Fired when the battery charging time (the chargingTime property) is updated.
 //
@@ -204,7 +204,7 @@ func (e *Battery) RemoveListenerChargingChange() (ref *Battery) {
 // Adiciona um ouvinte de evento de tempo de carga da bateria mudou, equivalente ao comando JavaScript addEventListener('chargingtimechange',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel battery.Data
+//	  mouseEvent: ponteiro para o channel battery.Data
 //
 // Acionado quando o tempo de carregamento da bateria (propriedade loadingTime) é atualizado.
 func (e *Battery) AddListenerChargingTimeChange(batteryData *chan Data) (ref *Battery) {
@@ -266,7 +266,7 @@ func (e *Battery) RemoveListenerChargingTimeChange() (ref *Battery) {
 // Adds a battery discharging time change event listener equivalent to the JavaScript command addEventListener('dischargingtimechange',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel battery.Data
+//	  mouseEvent: pointer to channel battery.Data
 //
 // Fired when the battery discharging time (the dischargingTime property) is updated.
 //
@@ -275,7 +275,7 @@ func (e *Battery) RemoveListenerChargingTimeChange() (ref *Battery) {
 // Adiciona um ouvinte de evento de tempo de descarga da bateria mudou, equivalente ao comando JavaScript addEventListener('dischargingtimechange',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel battery.Data
+//	  mouseEvent: ponteiro para o channel battery.Data
 //
 // Acionado quando o tempo de descarga da bateria (propriedade dischargingTime) é atualizado.
 func (e *Battery) AddListenerDischargingTimeChange(batteryData *chan Data) (ref *Battery) {
@@ -337,7 +337,7 @@ func (e *Battery) RemoveListenerDischargingTimeChange() (ref *Battery) {
 // Adds a battery level change event listener equivalent to the JavaScript command addEventListener('levelchange',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel battery.Data
+//	  mouseEvent: pointer to channel battery.Data
 //
 // Fired when the battery level (the level property) is updated.
 //
@@ -346,7 +346,7 @@ func (e *Battery) RemoveListenerDischargingTimeChange() (ref *Battery) {
 // Adiciona um ouvinte de evento de nível da bateria mudou, equivalente ao comando JavaScript addEventListener('levelchange',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel battery.Data
+//	  mouseEvent: ponteiro para o channel battery.Data
 //
 // Acionado quando o nível da bateria (a propriedade de nível) é atualizado.
 func (e *Battery) AddListenerLevelChange(batteryData *chan Data) (ref *Battery) {

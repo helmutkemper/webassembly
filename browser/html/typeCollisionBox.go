@@ -16,21 +16,36 @@ import (
 //
 // Automatiza a detecção de colisão usando uma caixa de tamanho automático.
 type CollisionBox struct {
-	xImg      int
-	yImg      int
-	widthImg  int
-	heightImg int
-	x         int
-	y         int
-	width     int
-	height    int
+	xImg      float64
+	yImg      float64
+	widthImg  float64
+	heightImg float64
+	x         float64
+	y         float64
+	width     float64
+	height    float64
 
 	collisionDataFunction func(red, green, blue, alpha uint8) bool
 
 	boxImageColor     *color.RGBA
 	boxCollisionColor *color.RGBA
 
-	data js.Value
+	useOptimizedBox bool
+
+	imageData js.Value
+}
+
+// UseOptimized
+//
+// English:
+//
+// true: detect collision by the collision-optimized box, otherwise by the size of the original image.
+//
+// Português:
+//
+// true: detecta a colisão pela caixa optimizada de colisão, caso contrário, pelo tamanho da imagem original.
+func (e *CollisionBox) UseOptimized(optimized bool) {
+	e.useOptimizedBox = optimized
 }
 
 // X
@@ -43,7 +58,7 @@ type CollisionBox struct {
 //
 // Define o X da caixa de colisão (X da imagem)
 func (e *CollisionBox) X(x int) {
-	e.xImg = x
+	e.xImg = float64(x)
 }
 
 // Y
@@ -56,7 +71,7 @@ func (e *CollisionBox) X(x int) {
 //
 // Define o Y da caixa de colisão (Y da imagem)
 func (e *CollisionBox) Y(y int) {
-	e.yImg = y
+	e.yImg = float64(y)
 }
 
 // GetX
@@ -69,7 +84,7 @@ func (e *CollisionBox) Y(y int) {
 //
 // Retorna o valor de X da caixa de colisão (X da imagem)
 func (e *CollisionBox) GetX() (x int) {
-	return e.xImg
+	return int(e.xImg)
 }
 
 // GetY
@@ -82,7 +97,7 @@ func (e *CollisionBox) GetX() (x int) {
 //
 // Retorna o valor de Y da caixa de colisão (Y da imagem)
 func (e *CollisionBox) GetY() (y int) {
-	return e.yImg
+	return int(e.yImg)
 }
 
 // GetXBox
@@ -95,7 +110,7 @@ func (e *CollisionBox) GetY() (y int) {
 //
 // Retorna o valor de X da caixa de colisão otimizada, dentro da imagem.
 func (e *CollisionBox) GetXBox() (x int) {
-	return e.xImg + e.x
+	return int(e.xImg + e.x)
 }
 
 // GetYBox
@@ -108,7 +123,7 @@ func (e *CollisionBox) GetXBox() (x int) {
 //
 // Retorna o valor de Y da caixa de colisão otimizada, dentro da imagem.
 func (e *CollisionBox) GetYBox() (y int) {
-	return e.yImg + e.y
+	return int(e.yImg + e.y)
 }
 
 // GetWidthBox
@@ -121,7 +136,7 @@ func (e *CollisionBox) GetYBox() (y int) {
 //
 // Retorna o comprimento da caixa de colisão otimizada, dentro da imagem.
 func (e *CollisionBox) GetWidthBox() (width int) {
-	return e.width
+	return int(e.width)
 }
 
 // GetHeightBox
@@ -134,7 +149,7 @@ func (e *CollisionBox) GetWidthBox() (width int) {
 //
 // Retorna a altura da caixa de colisão otimizada, dentro da imagem.
 func (e *CollisionBox) GetHeightBox() (height int) {
-	return e.height
+	return int(e.height)
 }
 
 // GetWidth
@@ -147,7 +162,7 @@ func (e *CollisionBox) GetHeightBox() (height int) {
 //
 // Retorna o comprimento da imagem.
 func (e *CollisionBox) GetWidth() (width int) {
-	return e.widthImg
+	return int(e.widthImg)
 }
 
 // GetHeight
@@ -160,7 +175,7 @@ func (e *CollisionBox) GetWidth() (width int) {
 //
 // Retorna o altura da imagem.
 func (e *CollisionBox) GetHeight() (height int) {
-	return e.heightImg
+	return int(e.heightImg)
 }
 
 // GetData
@@ -173,7 +188,7 @@ func (e *CollisionBox) GetHeight() (height int) {
 //
 // Retorna o dado usado para formar a imagem no canvas.
 func (e *CollisionBox) GetData() (data js.Value) {
-	return e.data
+	return e.imageData
 }
 
 // Debug
@@ -210,9 +225,10 @@ func (e *CollisionBox) Debug(boxImageColor, boxCollisionColor *color.RGBA) {
 //	  width: comprimento da imagem;
 //	  height: altura da imagem.
 func (e *CollisionBox) Init(data js.Value, width, height int) {
-	e.data = data
-	e.widthImg = width
-	e.heightImg = height
+	e.imageData = data
+	e.widthImg = float64(width)
+	e.heightImg = float64(height)
+	e.useOptimizedBox = false
 
 	if e.collisionDataFunction == nil {
 		e.collisionDataFunction = func(r, g, b, a uint8) bool {
@@ -260,7 +276,7 @@ func (e *CollisionBox) DataFunction(f func(red, green, blue, alpha uint8) bool) 
 //
 // Retorna um slice booleano formado por [y][x]color.RGBA.A != 0
 func (e *CollisionBox) getCollisionDataFromImageData() (data [][]bool) {
-	dataJs := e.data.Get("data")
+	dataJs := e.imageData.Get("data")
 
 	var rgbaLength = 4
 
@@ -273,10 +289,10 @@ func (e *CollisionBox) getCollisionDataFromImageData() (data [][]bool) {
 	var blue uint8
 	var alpha uint8
 
-	data = make([][]bool, e.heightImg)
-	for y = 0; y != e.heightImg; y += 1 {
-		data[y] = make([]bool, e.widthImg)
-		for x = 0; x != e.widthImg; x += 1 {
+	data = make([][]bool, int(e.heightImg))
+	for y = 0; float64(y) < e.heightImg; y += 1 {
+		data[y] = make([]bool, int(e.widthImg))
+		for x = 0; float64(x) < e.widthImg; x += 1 {
 
 			red = uint8(dataJs.Index(i + 0).Int())
 			green = uint8(dataJs.Index(i + 1).Int())
@@ -305,11 +321,11 @@ func (e *CollisionBox) debug(collisionColor, imageColor color.RGBA) {
 	var rgbaLength = 4
 
 	var i = 0
-	var col int
-	var row int
+	var col float64
+	var row float64
 
-	for row = 0; row != e.heightImg; row += 1 {
-		for col = 0; col != e.widthImg; col += 1 {
+	for row = 0; row < e.heightImg; row += 1 {
+		for col = 0; col < e.widthImg; col += 1 {
 
 			//CollisionBox de colisão - início
 			//A := true //col == x || col == x+width
@@ -319,30 +335,30 @@ func (e *CollisionBox) debug(collisionColor, imageColor color.RGBA) {
 			//if (A && D) && (B && C) {}
 			//CollisionBox de colisão - fim
 
-			// Image
+			// Image box
 			A := col == 0 || col == e.widthImg-1
 			B := row == 0 || row == e.heightImg-1
 			C := col >= 0 && col <= e.widthImg-1
 			D := row >= 0 && row <= e.heightImg-1
 
 			if (A && D) || (B && C) {
-				e.data.Get("data").SetIndex(i+0, int(imageColor.R))
-				e.data.Get("data").SetIndex(i+1, int(imageColor.G))
-				e.data.Get("data").SetIndex(i+2, int(imageColor.B))
-				e.data.Get("data").SetIndex(i+3, int(imageColor.A))
+				e.imageData.Get("data").SetIndex(i+0, int(imageColor.R))
+				e.imageData.Get("data").SetIndex(i+1, int(imageColor.G))
+				e.imageData.Get("data").SetIndex(i+2, int(imageColor.B))
+				e.imageData.Get("data").SetIndex(i+3, int(imageColor.A))
 			}
 
-			// Collision
+			// Optimized box
 			A = col == e.x || col == e.x+e.width
 			B = row == e.y || row == e.y+e.height
 			C = col >= e.x && col <= e.x+e.width
 			D = row >= e.y && row <= e.y+e.height
 
 			if (A && D) || (B && C) {
-				e.data.Get("data").SetIndex(i+0, int(collisionColor.R))
-				e.data.Get("data").SetIndex(i+1, int(collisionColor.G))
-				e.data.Get("data").SetIndex(i+2, int(collisionColor.B))
-				e.data.Get("data").SetIndex(i+3, int(collisionColor.A))
+				e.imageData.Get("data").SetIndex(i+0, int(collisionColor.R))
+				e.imageData.Get("data").SetIndex(i+1, int(collisionColor.G))
+				e.imageData.Get("data").SetIndex(i+2, int(collisionColor.B))
+				e.imageData.Get("data").SetIndex(i+3, int(collisionColor.A))
 			}
 
 			i += rgbaLength
@@ -378,10 +394,10 @@ func (e *CollisionBox) getCollisionBoxFromImageData() {
 		}
 	}
 
-	e.x = xMin
-	e.y = yMin
-	e.width = xMax - xMin
-	e.height = yMax - yMin
+	e.x = float64(xMin)
+	e.y = float64(yMin)
+	e.width = float64(xMax - xMin)
+	e.height = float64(yMax - yMin)
 }
 
 func (e *CollisionBox) max(a, b int) int {
@@ -407,15 +423,26 @@ func (e *CollisionBox) min(a, b int) int {
 // Português:
 //
 // Detecta colisão. Esta função não é pública, pois, pois, ela falha em 1px com a função de quadrante, devido a divisão de inteiro.
-func (e *CollisionBox) collision(element CollisionBox) (collision bool) {
-	if e.GetXBox() <= element.GetXBox()+element.GetWidthBox() &&
-		e.GetXBox()+e.GetWidthBox() >= element.GetXBox() &&
-		e.GetYBox() < element.GetYBox()+element.GetHeightBox() &&
-		e.GetYBox()+e.GetHeightBox() >= element.GetYBox() {
-		return true
+func (e *CollisionBox) collision(element *CollisionBox) (collision bool) {
+	if e.useOptimizedBox == true {
+		return e.collisionBox(element)
 	}
 
-	return false
+	return e.collisionImage(element)
+}
+
+func (e CollisionBox) collisionBox(element *CollisionBox) (collision bool) {
+	return e.GetXBox() <= element.GetXBox()+element.GetWidthBox() &&
+		e.GetXBox()+e.GetWidthBox() >= element.GetXBox() &&
+		e.GetYBox() < element.GetYBox()+element.GetHeightBox() &&
+		e.GetYBox()+e.GetHeightBox() >= element.GetYBox()
+}
+
+func (e CollisionBox) collisionImage(element *CollisionBox) (collision bool) {
+	return e.GetX() <= element.GetX()+element.GetWidth() &&
+		e.GetX()+e.GetWidth() >= element.GetX() &&
+		e.GetY() < element.GetY()+element.GetHeight() &&
+		e.GetY()+e.GetHeight() >= element.GetY()
 }
 
 // Quadrant
@@ -427,8 +454,29 @@ func (e *CollisionBox) collision(element CollisionBox) (collision bool) {
 // Português:
 //
 // Retorna o quadrante da colisão onde o elemento testado bateu na caixa.
-func (e *CollisionBox) Quadrant(element CollisionBox) (upLeft, upRight, downLeft, downRight bool) {
-	q := CollisionBox{}
+//
+//	+----------+----------+
+//	|          |          |
+//	|    up    |    up    |
+//	|   left   |   right  |
+//	|          |          |
+//	+----------+----------+
+//	|          |          |
+//	|   down   |   down   |
+//	|   left   |   right  |
+//	|          |          |
+//	+----------+----------+
+func (e CollisionBox) Quadrant(element *CollisionBox) (upLeft, upRight, downLeft, downRight bool) {
+	if e.useOptimizedBox == true {
+		return e.quadrantBox(element)
+	}
+
+	return e.quadrantImage(element)
+}
+
+func (e CollisionBox) quadrantBox(element *CollisionBox) (upLeft, upRight, downLeft, downRight bool) {
+	q := new(CollisionBox)
+	q.useOptimizedBox = e.useOptimizedBox
 	q.xImg = e.xImg
 	q.yImg = e.yImg
 	q.widthImg = e.widthImg
@@ -440,18 +488,57 @@ func (e *CollisionBox) Quadrant(element CollisionBox) (upLeft, upRight, downLeft
 
 	q.width = e.width / 2
 	q.height = e.height / 2
-	upLeft = q.collision(element)
+	upLeft = q.collisionBox(element)
 
 	q.x = e.x + q.width
 	q.y = e.y
-	upRight = q.collision(element)
+	upRight = q.collisionBox(element)
 
 	q.x = e.x
 	q.y = e.y + q.height
-	downLeft = q.collision(element)
+	downLeft = q.collisionBox(element)
 
 	q.x = e.x + q.width
 	q.y = e.y + q.height
+	downRight = q.collisionBox(element)
+
+	return
+}
+
+func (e CollisionBox) quadrantImage(element *CollisionBox) (upLeft, upRight, downLeft, downRight bool) {
+	q := new(CollisionBox)
+	q.useOptimizedBox = e.useOptimizedBox
+	q.xImg = e.xImg
+	q.yImg = e.yImg
+	q.widthImg = e.widthImg
+	q.heightImg = e.heightImg
+	q.x = e.x
+	q.y = e.y
+	q.width = e.width
+	q.height = e.height
+
+	q.width = e.width / 2
+	q.height = e.height / 2
+	q.widthImg = e.widthImg / 2
+	q.heightImg = e.heightImg / 2
+	upLeft = q.collision(element)
+
+	q.x = e.x + q.width
+	q.xImg = e.xImg + q.widthImg
+	q.y = e.y
+	q.yImg = e.yImg
+	upRight = q.collision(element)
+
+	q.x = e.x
+	q.xImg = e.xImg
+	q.y = e.y + q.height
+	q.yImg = e.yImg + q.heightImg
+	downLeft = q.collision(element)
+
+	q.x = e.x + q.width
+	q.xImg = e.xImg + q.widthImg
+	q.y = e.y + q.height
+	q.yImg = e.yImg + q.heightImg
 	downRight = q.collision(element)
 
 	return
@@ -466,11 +553,27 @@ func (e *CollisionBox) Quadrant(element CollisionBox) (upLeft, upRight, downLeft
 // Português:
 //
 // Retorna a distância em pixels quando um objeto se sobrepõe a outro.
-func (e *CollisionBox) DistanceCorrection(element CollisionBox) (up, right, down, left int) {
+func (e CollisionBox) DistanceCorrection(element *CollisionBox) (up, right, down, left int) {
+	if e.useOptimizedBox {
+		return e.distanceCorrectionBox(element)
+	}
+
+	return e.distanceCorrectionImage(element)
+}
+
+func (e CollisionBox) distanceCorrectionBox(element *CollisionBox) (up, right, down, left int) {
 	up = element.GetYBox() + element.GetHeightBox() - e.GetYBox()
 	right = e.GetXBox() + e.GetWidthBox() - element.GetXBox()
 	down = e.GetYBox() + e.GetHeightBox() - element.GetYBox()
 	left = element.GetXBox() + element.GetWidthBox() - e.GetXBox()
+	return
+}
+
+func (e CollisionBox) distanceCorrectionImage(element *CollisionBox) (up, right, down, left int) {
+	up = element.GetY() + element.GetHeight() - e.GetY()
+	right = e.GetX() + e.GetWidth() - element.GetX()
+	down = e.GetY() + e.GetHeight() - element.GetY()
+	left = element.GetX() + element.GetWidth() - e.GetX()
 	return
 }
 
@@ -483,7 +586,7 @@ func (e *CollisionBox) DistanceCorrection(element CollisionBox) (up, right, down
 // Português:
 //
 // Retorna se ouve colisão a esquerda e em cima, usado apenas para teste.
-func (e *CollisionBox) collisionUpLeft(element CollisionBox) (collision bool) {
+func (e *CollisionBox) collisionUpLeft(element *CollisionBox) (collision bool) {
 	a := CollisionBox{}
 	a.x = e.x
 	a.y = e.y
@@ -501,7 +604,7 @@ func (e *CollisionBox) collisionUpLeft(element CollisionBox) (collision bool) {
 // Português:
 //
 // Retorna se ouve colisão a direita e em cima, usado apenas para teste.
-func (e *CollisionBox) collisionUpRight(element CollisionBox) (collision bool) {
+func (e *CollisionBox) collisionUpRight(element *CollisionBox) (collision bool) {
 	b := CollisionBox{}
 	b.x = e.x + e.width/2
 	b.y = e.y
@@ -519,7 +622,7 @@ func (e *CollisionBox) collisionUpRight(element CollisionBox) (collision bool) {
 // Português:
 //
 // Retorna se ouve colisão a esquerda e em baixo, usado apenas para teste.
-func (e *CollisionBox) collisionDownLeft(element CollisionBox) (collision bool) {
+func (e *CollisionBox) collisionDownLeft(element *CollisionBox) (collision bool) {
 	c := CollisionBox{}
 	c.x = e.x
 	c.y = e.y + e.height/2
@@ -537,7 +640,7 @@ func (e *CollisionBox) collisionDownLeft(element CollisionBox) (collision bool) 
 // Português:
 //
 // Retorna se ouve colisão a direita e em baixo, usado apenas para teste.
-func (e *CollisionBox) collisionDownRight(element CollisionBox) (collision bool) {
+func (e *CollisionBox) collisionDownRight(element *CollisionBox) (collision bool) {
 	d := CollisionBox{}
 	d.x = e.x + e.width/2
 	d.y = e.y + e.height/2

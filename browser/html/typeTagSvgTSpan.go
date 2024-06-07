@@ -3357,7 +3357,7 @@ func (e *TagSvgTSpan) Reference(reference **TagSvgTSpan) (ref *TagSvgTSpan) {
 // Adds a mouse click event listener equivalent to the JavaScript command addEventListener('click',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when the user clicks the primary pointer button.
 //
@@ -3366,7 +3366,7 @@ func (e *TagSvgTSpan) Reference(reference **TagSvgTSpan) (ref *TagSvgTSpan) {
 // Adiciona um ouvinte de evento de click do mouse, equivalente ao comando JavaScript addEventListener('click',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 // Acionado quando o usuário clica no botão do ponteiro principal.
 //
@@ -3419,7 +3419,7 @@ func (e *TagSvgTSpan) Reference(reference **TagSvgTSpan) (ref *TagSvgTSpan) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvgTSpan) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+func (e *TagSvgTSpan) AddListenerClick(mouseEvent *chan mouse.Data) (ref *TagSvgTSpan) {
 	if e.fnClick != nil {
 		return e
 	}
@@ -3429,7 +3429,7 @@ func (e *TagSvgTSpan) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagSvgT
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventClick, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventClick, this, args)
 		return nil
 	})
 	e.fnClick = &fn
@@ -3526,7 +3526,7 @@ func (e *TagSvgTSpan) RemoveListenerClick() (ref *TagSvgTSpan) {
 // Adds a mouse over event listener equivalent to the JavaScript command addEventListener('mouseover',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when a mouse or other pointing device is moved outside the element.
 //
@@ -3540,7 +3540,7 @@ func (e *TagSvgTSpan) RemoveListenerClick() (ref *TagSvgTSpan) {
 // Acionado quando um mouse ou outro dispositivo apontador é movido para fora do elemento.
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 //	Notas:
 //	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -3594,7 +3594,7 @@ func (e *TagSvgTSpan) RemoveListenerClick() (ref *TagSvgTSpan) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvgTSpan) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+func (e *TagSvgTSpan) AddListenerMouseOver(mouseEvent *chan mouse.Data) (ref *TagSvgTSpan) {
 	if e.fnMouseOver != nil {
 		return e
 	}
@@ -3604,7 +3604,7 @@ func (e *TagSvgTSpan) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *Tag
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseOver, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseOver, this, args)
 		return nil
 	})
 	e.fnMouseOver = &fn
@@ -3697,7 +3697,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseOver() (ref *TagSvgTSpan) {
 // Adds a mouse out event listener equivalent to the JavaScript command addEventListener('mouseout',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 //	Notes:
 //	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -3707,7 +3707,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseOver() (ref *TagSvgTSpan) {
 // Adiciona um ouvinte de evento de mouse fora, equivalente ao comando JavaScript addEventListener('mouseout',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 //	Notas:
 //	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -3761,7 +3761,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseOver() (ref *TagSvgTSpan) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvgTSpan) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+func (e *TagSvgTSpan) AddListenerMouseOut(mouseEvent *chan mouse.Data) (ref *TagSvgTSpan) {
 	if e.fnMouseOut != nil {
 		return e
 	}
@@ -3771,7 +3771,7 @@ func (e *TagSvgTSpan) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagS
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseOut, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseOut, this, args)
 		return nil
 	})
 	e.fnMouseOut = &fn
@@ -3864,7 +3864,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseOut() (ref *TagSvgTSpan) {
 // Adds a mouse move event listener equivalent to the JavaScript command addEventListener('mousemove',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 //	Notes:
 //	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -3874,7 +3874,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseOut() (ref *TagSvgTSpan) {
 // Adiciona um ouvinte de evento de mouse move, equivalente ao comando JavaScript addEventListener('mousemove',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 //	Notas:
 //	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -3928,7 +3928,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseOut() (ref *TagSvgTSpan) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvgTSpan) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+func (e *TagSvgTSpan) AddListenerMouseMove(mouseEvent *chan mouse.Data) (ref *TagSvgTSpan) {
 	if e.fnMouseMove != nil {
 		return e
 	}
@@ -3938,7 +3938,7 @@ func (e *TagSvgTSpan) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *Tag
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseMove, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseMove, this, args)
 		return nil
 	})
 	e.fnMouseMove = &fn
@@ -4031,7 +4031,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseMove() (ref *TagSvgTSpan) {
 // Adds a mouse leave event listener equivalent to the JavaScript command addEventListener('mouseleave',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 //	Notes:
 //	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4041,7 +4041,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseMove() (ref *TagSvgTSpan) {
 // Adiciona um ouvinte de evento de mouse saiu, equivalente ao comando JavaScript addEventListener('mouseleave',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 //	Notas:
 //	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4095,7 +4095,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseMove() (ref *TagSvgTSpan) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvgTSpan) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+func (e *TagSvgTSpan) AddListenerMouseLeave(mouseEvent *chan mouse.Data) (ref *TagSvgTSpan) {
 	if e.fnMouseLeave != nil {
 		return e
 	}
@@ -4105,7 +4105,7 @@ func (e *TagSvgTSpan) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *Ta
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
 		return nil
 	})
 	e.fnMouseLeave = &fn
@@ -4198,7 +4198,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseLeave() (ref *TagSvgTSpan) {
 // Adds a mouse enter event listener equivalent to the JavaScript command addEventListener('mouseenter',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 //	Notes:
 //	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4208,7 +4208,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseLeave() (ref *TagSvgTSpan) {
 // Adiciona um ouvinte de evento de mouse entrou, equivalente ao comando JavaScript addEventListener('mouseenter',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 //	Notas:
 //	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4262,7 +4262,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseLeave() (ref *TagSvgTSpan) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvgTSpan) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+func (e *TagSvgTSpan) AddListenerMouseEnter(mouseEvent *chan mouse.Data) (ref *TagSvgTSpan) {
 	if e.fnMouseEnter != nil {
 		return e
 	}
@@ -4272,7 +4272,7 @@ func (e *TagSvgTSpan) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *Ta
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
 		return nil
 	})
 	e.fnMouseEnter = &fn
@@ -4365,7 +4365,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseEnter() (ref *TagSvgTSpan) {
 // Adds a mouse down event listener equivalent to the JavaScript command addEventListener('mousedown',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 //	Notes:
 //	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4376,7 +4376,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseEnter() (ref *TagSvgTSpan) {
 // addEventListener('mousedown',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 //	Notas:
 //	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4430,7 +4430,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseEnter() (ref *TagSvgTSpan) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvgTSpan) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+func (e *TagSvgTSpan) AddListenerMouseDown(mouseEvent *chan mouse.Data) (ref *TagSvgTSpan) {
 	if e.fnMouseDown != nil {
 		return e
 	}
@@ -4440,7 +4440,7 @@ func (e *TagSvgTSpan) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *Tag
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseDown, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseDown, this, args)
 		return nil
 	})
 	e.fnMouseDown = &fn
@@ -4533,7 +4533,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseDown() (ref *TagSvgTSpan) {
 // Adds a mouse uo event listener equivalent to the JavaScript command addEventListener('mouseup',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 //	Notes:
 //	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4544,7 +4544,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseDown() (ref *TagSvgTSpan) {
 // addEventListener('mouseup',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 //	Notas:
 //	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4598,7 +4598,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseDown() (ref *TagSvgTSpan) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvgTSpan) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+func (e *TagSvgTSpan) AddListenerMouseUp(mouseEvent *chan mouse.Data) (ref *TagSvgTSpan) {
 	if e.fnMouseUp != nil {
 		return e
 	}
@@ -4608,7 +4608,7 @@ func (e *TagSvgTSpan) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagSv
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseUp, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseUp, this, args)
 		return nil
 	})
 	e.fnMouseUp = &fn
@@ -4701,7 +4701,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseUp() (ref *TagSvgTSpan) {
 // Adds a mouse wheel event listener equivalent to the JavaScript command addEventListener('mousewheel',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 //	Notes:
 //	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4711,7 +4711,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseUp() (ref *TagSvgTSpan) {
 // Adiciona um ouvinte de evento de roda do mouse equivalente ao comando JavaScript addEventListener('mousewheel',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 //	Notas:
 //	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4765,7 +4765,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseUp() (ref *TagSvgTSpan) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvgTSpan) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+func (e *TagSvgTSpan) AddListenerMouseWheel(mouseEvent *chan mouse.Data) (ref *TagSvgTSpan) {
 	if e.fnMouseWheel != nil {
 		return e
 	}
@@ -4775,7 +4775,7 @@ func (e *TagSvgTSpan) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *Ta
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
 		return nil
 	})
 	e.fnMouseWheel = &fn
@@ -4868,7 +4868,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseWheel() (ref *TagSvgTSpan) {
 // Adds a mouse double click event listener equivalent to the JavaScript command addEventListener('dblclick',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 //	Notes:
 //	  * For more information see the website https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4879,7 +4879,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseWheel() (ref *TagSvgTSpan) {
 // addEventListener('dblclick',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 //	Notas:
 //	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -4933,7 +4933,7 @@ func (e *TagSvgTSpan) RemoveListenerMouseWheel() (ref *TagSvgTSpan) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvgTSpan) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagSvgTSpan) {
+func (e *TagSvgTSpan) AddListenerDoubleClick(mouseEvent *chan mouse.Data) (ref *TagSvgTSpan) {
 	if e.fnDoubleClick != nil {
 		return e
 	}
@@ -4943,7 +4943,7 @@ func (e *TagSvgTSpan) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *T
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
 		return nil
 	})
 	e.fnDoubleClick = &fn

@@ -67,13 +67,18 @@ func (e *spriteConfig) Add(col, row int, interval time.Duration, flipHorizontal,
 	imageData = canvas.GetImageData(0, 0, e.sprite.spriteWidth, e.sprite.spriteHeight, flipVertical, flipHorizontal)
 
 	config := e.sprite.scene[e.sprite.sceneName]
+
+	collisionBox := CollisionBox{}
+	collisionBox.Init(imageData, e.sprite.spriteWidth, e.sprite.spriteHeight)
+	collisionBox.UseOptimized(false)
+
 	config.data = append(
 		config.data,
 		spriteScene{
 			imageData:     imageData,
 			interval:      interval,
 			collisionData: canvas.GetCollisionDataFromImageData(imageData, e.sprite.spriteWidth, e.sprite.spriteHeight),
-			//collisionBox:  canvas.GetCollisionBoxFromImageData(imageData, e.sprite.spriteWidth, e.sprite.spriteHeight),
+			collisionBox:  collisionBox,
 		},
 	)
 	e.sprite.scene[e.sprite.sceneName] = config
@@ -111,11 +116,11 @@ type Sprite struct {
 	stopCh    chan struct{}
 	stoppedCh chan struct{}
 
-	// draw and colision - start
+	// draw and collision - start
 	imageData     js.Value
 	collisionData [][]bool
 	collisionBox  CollisionBox
-	// draw and colision - end
+	// draw and collision - end
 }
 
 // Y
@@ -126,9 +131,16 @@ type Sprite struct {
 //
 // Português:
 //
-// Cordenada Y de onde o desenho será inserido no canvas.
+// Coordenada Y de onde o desenho será inserido no canvas.
 func (e *Sprite) Y(y int) (ref *Sprite) {
 	e.y = y
+	e.collisionBox.Y(y)
+	return e
+}
+
+func (e *Sprite) DY(y int) (ref *Sprite) {
+	e.y += y
+	e.collisionBox.Y(e.y)
 	return e
 }
 
@@ -140,9 +152,16 @@ func (e *Sprite) Y(y int) (ref *Sprite) {
 //
 // Português:
 //
-// Cordenada X de onde o desenho será inserido no canvas.
+// Coordenada X de onde o desenho será inserido no canvas.
 func (e *Sprite) X(x int) (ref *Sprite) {
 	e.x = x
+	e.collisionBox.X(x)
+	return e
+}
+
+func (e *Sprite) DX(x int) (ref *Sprite) {
+	e.x += x
+	e.collisionBox.X(e.x)
 	return e
 }
 
@@ -403,13 +422,9 @@ func (e *Sprite) AdjustBox(dx, dy int) {
 	e.y += dy
 }
 
-//func (e *Sprite) GetCollisionBox() (box Box) {
-//	cBox := e.collisionBox
-//	cBox.XImg = e.x
-//	cBox.YImg = e.y
-//
-//	return cBox
-//}
+func (e *Sprite) GetCollisionBox() (box *CollisionBox) {
+	return &e.collisionBox
+}
 
 //
 //

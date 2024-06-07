@@ -1849,7 +1849,7 @@ func (e *TagDiv) Html(value string) (ref *TagDiv) {
 // Adds a mouse click event listener equivalent to the JavaScript command addEventListener('click',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when the user clicks the primary pointer button.
 //
@@ -1858,7 +1858,7 @@ func (e *TagDiv) Html(value string) (ref *TagDiv) {
 // Adiciona um ouvinte de evento de click do mouse, equivalente ao comando JavaScript addEventListener('click',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 // Acionado quando o usuário clica no botão do ponteiro principal.
 //
@@ -1911,7 +1911,7 @@ func (e *TagDiv) Html(value string) (ref *TagDiv) {
 //	      }
 //	    }
 //	  }()
-func (e *TagDiv) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagDiv) {
+func (e *TagDiv) AddListenerClick(mouseEvent *chan mouse.Data) (ref *TagDiv) {
 	if e.fnClick != nil {
 		return e
 	}
@@ -1921,7 +1921,7 @@ func (e *TagDiv) AddListenerClick(mouseEvet *chan mouse.Data) (ref *TagDiv) {
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventClick, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventClick, this, args)
 		return nil
 	})
 	e.fnClick = &fn
@@ -2018,7 +2018,7 @@ func (e *TagDiv) RemoveListenerClick() (ref *TagDiv) {
 // Adds a mouse over event listener equivalent to the JavaScript command addEventListener('mouseover',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when a mouse or other pointing device is moved outside the element.
 //
@@ -2032,7 +2032,7 @@ func (e *TagDiv) RemoveListenerClick() (ref *TagDiv) {
 // Acionado quando um mouse ou outro dispositivo apontador é movido para fora do elemento.
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 //	Notas:
 //	  * Para mais informações veja o site https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
@@ -2086,7 +2086,7 @@ func (e *TagDiv) RemoveListenerClick() (ref *TagDiv) {
 //	      }
 //	    }
 //	  }()
-func (e *TagDiv) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagDiv) {
+func (e *TagDiv) AddListenerMouseOver(mouseEvent *chan mouse.Data) (ref *TagDiv) {
 	if e.fnMouseOver != nil {
 		return e
 	}
@@ -2096,7 +2096,7 @@ func (e *TagDiv) AddListenerMouseOver(mouseEvet *chan mouse.Data) (ref *TagDiv) 
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseOver, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseOver, this, args)
 		return nil
 	})
 	e.fnMouseOver = &fn
@@ -2193,7 +2193,7 @@ func (e *TagDiv) RemoveListenerMouseOver() (ref *TagDiv) {
 // Adds a mouse out event listener equivalent to the JavaScript command addEventListener('mouseout',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when a mouse or other pointing device is moved outside the boundary of the element.
 //
@@ -2205,7 +2205,7 @@ func (e *TagDiv) RemoveListenerMouseOver() (ref *TagDiv) {
 // Adiciona um ouvinte de evento de mouse fora, equivalente ao comando JavaScript addEventListener('mouseout',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 // Acionado quando um mouse ou outro dispositivo apontador é movido para fora do limite do elemento.
 //
@@ -2261,7 +2261,7 @@ func (e *TagDiv) RemoveListenerMouseOver() (ref *TagDiv) {
 //	      }
 //	    }
 //	  }()
-func (e *TagDiv) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagDiv) {
+func (e *TagDiv) AddListenerMouseOut(mouseEvent *chan mouse.Data) (ref *TagDiv) {
 	if e.fnMouseOut != nil {
 		return e
 	}
@@ -2271,7 +2271,7 @@ func (e *TagDiv) AddListenerMouseOut(mouseEvet *chan mouse.Data) (ref *TagDiv) {
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseOut, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseOut, this, args)
 		return nil
 	})
 	e.fnMouseOut = &fn
@@ -2368,7 +2368,7 @@ func (e *TagDiv) RemoveListenerMouseOut() (ref *TagDiv) {
 // Adds a mouse move event listener equivalent to the JavaScript command addEventListener('mousemove',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when a mouse or other pointing device is moved while over an element.
 //
@@ -2380,7 +2380,7 @@ func (e *TagDiv) RemoveListenerMouseOut() (ref *TagDiv) {
 // Adiciona um ouvinte de evento de mouse move, equivalente ao comando JavaScript addEventListener('mousemove',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 // Acionado quando um mouse ou outro dispositivo apontador é movido sobre um elemento.
 //
@@ -2436,7 +2436,7 @@ func (e *TagDiv) RemoveListenerMouseOut() (ref *TagDiv) {
 //	      }
 //	    }
 //	  }()
-func (e *TagDiv) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagDiv) {
+func (e *TagDiv) AddListenerMouseMove(mouseEvent *chan mouse.Data) (ref *TagDiv) {
 	if e.fnMouseMove != nil {
 		return e
 	}
@@ -2446,7 +2446,7 @@ func (e *TagDiv) AddListenerMouseMove(mouseEvet *chan mouse.Data) (ref *TagDiv) 
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseMove, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseMove, this, args)
 		return nil
 	})
 	e.fnMouseMove = &fn
@@ -2543,7 +2543,7 @@ func (e *TagDiv) RemoveListenerMouseMove() (ref *TagDiv) {
 // Adds a mouse leave event listener equivalent to the JavaScript command addEventListener('mouseleave',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when a mouse or other pointing device is moved outside the boundary of the element and all of its descendants.
 //
@@ -2555,7 +2555,7 @@ func (e *TagDiv) RemoveListenerMouseMove() (ref *TagDiv) {
 // Adiciona um ouvinte de evento de mouse saiu, equivalente ao comando JavaScript addEventListener('mouseleave',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 // Acionado quando um mouse ou outro dispositivo apontador é movido para fora do limite do elemento e de todos os seus descendentes.
 //
@@ -2611,7 +2611,7 @@ func (e *TagDiv) RemoveListenerMouseMove() (ref *TagDiv) {
 //	      }
 //	    }
 //	  }()
-func (e *TagDiv) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *TagDiv) {
+func (e *TagDiv) AddListenerMouseLeave(mouseEvent *chan mouse.Data) (ref *TagDiv) {
 	if e.fnMouseLeave != nil {
 		return e
 	}
@@ -2621,7 +2621,7 @@ func (e *TagDiv) AddListenerMouseLeave(mouseEvet *chan mouse.Data) (ref *TagDiv)
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
 		return nil
 	})
 	e.fnMouseLeave = &fn
@@ -2718,7 +2718,7 @@ func (e *TagDiv) RemoveListenerMouseLeave() (ref *TagDiv) {
 // Adds a mouse enter event listener equivalent to the JavaScript command addEventListener('mouseenter',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when a mouse or other pointing device is moved inside the boundary of the element or one of its descendants.
 //
@@ -2730,7 +2730,7 @@ func (e *TagDiv) RemoveListenerMouseLeave() (ref *TagDiv) {
 // Adiciona um ouvinte de evento de mouse entrou, equivalente ao comando JavaScript addEventListener('mouseenter',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 // Acionado quando um mouse ou outro dispositivo apontador é movido para dentro do limite do elemento ou de um de seus descendentes.
 //
@@ -2786,7 +2786,7 @@ func (e *TagDiv) RemoveListenerMouseLeave() (ref *TagDiv) {
 //	      }
 //	    }
 //	  }()
-func (e *TagDiv) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *TagDiv) {
+func (e *TagDiv) AddListenerMouseEnter(mouseEvent *chan mouse.Data) (ref *TagDiv) {
 	if e.fnMouseEnter != nil {
 		return e
 	}
@@ -2796,7 +2796,7 @@ func (e *TagDiv) AddListenerMouseEnter(mouseEvet *chan mouse.Data) (ref *TagDiv)
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
 		return nil
 	})
 	e.fnMouseEnter = &fn
@@ -2893,7 +2893,7 @@ func (e *TagDiv) RemoveListenerMouseEnter() (ref *TagDiv) {
 // Adds a mouse down event listener equivalent to the JavaScript command addEventListener('mousedown',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when the user presses a button on a mouse or other pointing device, while the pointer is over the element.
 //
@@ -2906,7 +2906,7 @@ func (e *TagDiv) RemoveListenerMouseEnter() (ref *TagDiv) {
 // addEventListener('mousedown',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 // Acionado quando o usuário pressiona um botão em um mouse ou outro dispositivo apontador, enquanto o ponteiro está sobre o elemento.
 //
@@ -2962,7 +2962,7 @@ func (e *TagDiv) RemoveListenerMouseEnter() (ref *TagDiv) {
 //	      }
 //	    }
 //	  }()
-func (e *TagDiv) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagDiv) {
+func (e *TagDiv) AddListenerMouseDown(mouseEvent *chan mouse.Data) (ref *TagDiv) {
 	if e.fnMouseDown != nil {
 		return e
 	}
@@ -2972,7 +2972,7 @@ func (e *TagDiv) AddListenerMouseDown(mouseEvet *chan mouse.Data) (ref *TagDiv) 
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseDown, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseDown, this, args)
 		return nil
 	})
 	e.fnMouseDown = &fn
@@ -3069,7 +3069,7 @@ func (e *TagDiv) RemoveListenerMouseDown() (ref *TagDiv) {
 // Adds a mouse uo event listener equivalent to the JavaScript command addEventListener('mouseup',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when the user releases a button on a mouse or other pointing device, while the pointer is over the element.
 //
@@ -3082,7 +3082,7 @@ func (e *TagDiv) RemoveListenerMouseDown() (ref *TagDiv) {
 // addEventListener('mouseup',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 // Acionado quando o usuário libera um botão em um mouse ou outro dispositivo apontador, enquanto o ponteiro está sobre o elemento.
 //
@@ -3138,7 +3138,7 @@ func (e *TagDiv) RemoveListenerMouseDown() (ref *TagDiv) {
 //	      }
 //	    }
 //	  }()
-func (e *TagDiv) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagDiv) {
+func (e *TagDiv) AddListenerMouseUp(mouseEvent *chan mouse.Data) (ref *TagDiv) {
 	if e.fnMouseUp != nil {
 		return e
 	}
@@ -3148,7 +3148,7 @@ func (e *TagDiv) AddListenerMouseUp(mouseEvet *chan mouse.Data) (ref *TagDiv) {
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseUp, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseUp, this, args)
 		return nil
 	})
 	e.fnMouseUp = &fn
@@ -3245,7 +3245,7 @@ func (e *TagDiv) RemoveListenerMouseUp() (ref *TagDiv) {
 // Adds a mouse wheel event listener equivalent to the JavaScript command addEventListener('mousewheel',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when the user rotates a mouse wheel or similar user interface component such as a touchpad.
 //
@@ -3257,7 +3257,7 @@ func (e *TagDiv) RemoveListenerMouseUp() (ref *TagDiv) {
 // Adiciona um ouvinte de evento de roda do mouse equivalente ao comando JavaScript addEventListener('mousewheel',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 // Acionado quando o usuário gira a roda do mouse ou um componente de interface de usuário semelhante, como um touchpad.
 //
@@ -3313,7 +3313,7 @@ func (e *TagDiv) RemoveListenerMouseUp() (ref *TagDiv) {
 //	      }
 //	    }
 //	  }()
-func (e *TagDiv) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *TagDiv) {
+func (e *TagDiv) AddListenerMouseWheel(mouseEvent *chan mouse.Data) (ref *TagDiv) {
 	if e.fnMouseWheel != nil {
 		return e
 	}
@@ -3323,7 +3323,7 @@ func (e *TagDiv) AddListenerMouseWheel(mouseEvet *chan mouse.Data) (ref *TagDiv)
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
 		return nil
 	})
 	e.fnMouseWheel = &fn
@@ -3420,7 +3420,7 @@ func (e *TagDiv) RemoveListenerMouseWheel() (ref *TagDiv) {
 // Adds a mouse double click event listener equivalent to the JavaScript command addEventListener('dblclick',fn).
 //
 //	Input:
-//	  mouseEvet: pointer to channel mouse.Data
+//	  mouseEvent: pointer to channel mouse.Data
 //
 // Fired when the user double-clicks the primary pointer button.
 //
@@ -3433,7 +3433,7 @@ func (e *TagDiv) RemoveListenerMouseWheel() (ref *TagDiv) {
 // addEventListener('dblclick',fn).
 //
 //	Entrada:
-//	  mouseEvet: ponteiro para o channel mouse.Data
+//	  mouseEvent: ponteiro para o channel mouse.Data
 //
 // Acionado quando o usuário clica duas vezes no botão do ponteiro principal.
 //
@@ -3489,7 +3489,7 @@ func (e *TagDiv) RemoveListenerMouseWheel() (ref *TagDiv) {
 //	      }
 //	    }
 //	  }()
-func (e *TagDiv) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagDiv) {
+func (e *TagDiv) AddListenerDoubleClick(mouseEvent *chan mouse.Data) (ref *TagDiv) {
 	if e.fnDoubleClick != nil {
 		return e
 	}
@@ -3499,7 +3499,7 @@ func (e *TagDiv) AddListenerDoubleClick(mouseEvet *chan mouse.Data) (ref *TagDiv
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvet <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
+		*mouseEvent <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
 		return nil
 	})
 	e.fnDoubleClick = &fn

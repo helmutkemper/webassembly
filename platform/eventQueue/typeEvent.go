@@ -14,6 +14,8 @@ type Event struct {
 
 	// event active
 	active bool
+
+	data map[any]any
 }
 
 func (e Event) GetDate() (date time.Time) {
@@ -32,6 +34,10 @@ func (e Event) GetActive() (active bool) {
 	return e.active
 }
 
+func (e Event) GetData() (data map[any]any) {
+	return e.data
+}
+
 // Set
 //
 // English:
@@ -41,9 +47,10 @@ func (e Event) GetActive() (active bool) {
 // Português:
 //
 // Define um novo evento
-func (e *Event) Set(label string, active bool, timeout time.Duration) {
+func (e *Event) Set(label string, active bool, data map[any]any, timeout time.Duration) {
 	e.date = time.Now()
 	e.timeout = timeout
 	e.label = label
 	e.active = active
+	e.data = data
 }

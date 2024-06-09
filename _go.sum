@@ -1,3 +1,5 @@
+github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/helmutkemper/iotmaker.platform.webbrowser v0.0.0-20200208001228-b665b1f435bb/go.mod h1:QUbS2Rmofhi8TU3QHKxdbydS0e3bOzOMKlKNY5F1zmM=
 github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go v0.0.0-20200120233119-9d62fed13020/go.mod h1:HA3lnQ50R+4hrCjx5MYkUvvHFX7WJjTBjJ5+0xqxW1I=
 github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go v0.0.0-20210626181330-090ff97f89e5 h1:L58byX5/tAlpnNc8ot0T/w4JLBBZqwrxmqKaMy5AM20=

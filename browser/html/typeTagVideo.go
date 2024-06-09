@@ -1181,7 +1181,7 @@ func (e *TagVideo) Width(value float64) (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerAbort(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerAbort(evet chan event.Data) (ref *TagVideo) {
 	if e.fnAbort != nil {
 		return e
 	}
@@ -1192,7 +1192,7 @@ func (e *TagVideo) AddListenerAbort(evet *chan event.Data) (ref *TagVideo) {
 			return nil
 		}
 
-		*evet <- event.EventManager(event.KEventAbort, this, args)
+		evet <- event.EventManager(event.KEventAbort, this, args)
 		return nil
 	})
 	e.fnAbort = &fn
@@ -1305,7 +1305,7 @@ func (e *TagVideo) RemoveListenerAbort() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerCanPlay(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerCanPlay(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnCanplay == nil {
@@ -1314,7 +1314,7 @@ func (e *TagVideo) AddListenerCanPlay(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventCanPlay, this, args)
+			evet <- event.EventManager(event.KEventCanPlay, this, args)
 			return nil
 		})
 		e.fnCanplay = &fn
@@ -1430,7 +1430,7 @@ func (e *TagVideo) RemoveListenerCanPlay() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerCanPlayThrough(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerCanPlayThrough(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnCanPlayThrough == nil {
@@ -1439,7 +1439,7 @@ func (e *TagVideo) AddListenerCanPlayThrough(evet *chan event.Data) (ref *TagVid
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventCanPlayThrough, this, args)
+			evet <- event.EventManager(event.KEventCanPlayThrough, this, args)
 			return nil
 		})
 		e.fnCanPlayThrough = &fn
@@ -1553,7 +1553,7 @@ func (e *TagVideo) RemoveListenerCanPlayThrough() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerDurationChange(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerDurationChange(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnDurationChange == nil {
@@ -1562,7 +1562,7 @@ func (e *TagVideo) AddListenerDurationChange(evet *chan event.Data) (ref *TagVid
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventDurationChange, this, args)
+			evet <- event.EventManager(event.KEventDurationChange, this, args)
 			return nil
 		})
 		e.fnDurationChange = &fn
@@ -1676,7 +1676,7 @@ func (e *TagVideo) RemoveListenerDurationChange() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerEmptied(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerEmptied(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnEmptied == nil {
@@ -1685,7 +1685,7 @@ func (e *TagVideo) AddListenerEmptied(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventEmptied, this, args)
+			evet <- event.EventManager(event.KEventEmptied, this, args)
 			return nil
 		})
 		e.fnEmptied = &fn
@@ -1801,7 +1801,7 @@ func (e *TagVideo) RemoveListenerEmptied() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerEnded(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerEnded(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnEnded == nil {
@@ -1810,7 +1810,7 @@ func (e *TagVideo) AddListenerEnded(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventEnded, this, args)
+			evet <- event.EventManager(event.KEventEnded, this, args)
 			return nil
 		})
 		e.fnEnded = &fn
@@ -1924,7 +1924,7 @@ func (e *TagVideo) RemoveListenerEnded() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerError(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerError(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnError == nil {
@@ -1933,7 +1933,7 @@ func (e *TagVideo) AddListenerError(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventEnded, this, args)
+			evet <- event.EventManager(event.KEventEnded, this, args)
 			return nil
 		})
 		e.fnError = &fn
@@ -2045,7 +2045,7 @@ func (e *TagVideo) RemoveListenerError() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerLoadedData(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerLoadedData(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnLoadedData == nil {
@@ -2054,7 +2054,7 @@ func (e *TagVideo) AddListenerLoadedData(evet *chan event.Data) (ref *TagVideo) 
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventLoadedData, this, args)
+			evet <- event.EventManager(event.KEventLoadedData, this, args)
 			return nil
 		})
 		e.fnLoadedData = &fn
@@ -2166,7 +2166,7 @@ func (e *TagVideo) RemoveListenerLoadedData() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerLoadedMetadata(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerLoadedMetadata(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnLoadedMetadata == nil {
@@ -2175,7 +2175,7 @@ func (e *TagVideo) AddListenerLoadedMetadata(evet *chan event.Data) (ref *TagVid
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventLoadedMetadata, this, args)
+			evet <- event.EventManager(event.KEventLoadedMetadata, this, args)
 			return nil
 		})
 		e.fnLoadedMetadata = &fn
@@ -2287,7 +2287,7 @@ func (e *TagVideo) RemoveListenerLoadedMetadata() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerLoadStart(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerLoadStart(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnLoadStart == nil {
@@ -2296,7 +2296,7 @@ func (e *TagVideo) AddListenerLoadStart(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventLoadStart, this, args)
+			evet <- event.EventManager(event.KEventLoadStart, this, args)
 			return nil
 		})
 		e.fnLoadStart = &fn
@@ -2410,7 +2410,7 @@ func (e *TagVideo) RemoveListenerLoadStart() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerPause(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerPause(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnPause == nil {
@@ -2419,7 +2419,7 @@ func (e *TagVideo) AddListenerPause(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventPause, this, args)
+			evet <- event.EventManager(event.KEventPause, this, args)
 			return nil
 		})
 		e.fnPause = &fn
@@ -2535,7 +2535,7 @@ func (e *TagVideo) RemoveListenerPause() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerPlay(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerPlay(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnPlay == nil {
@@ -2544,7 +2544,7 @@ func (e *TagVideo) AddListenerPlay(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventPlay, this, args)
+			evet <- event.EventManager(event.KEventPlay, this, args)
 			return nil
 		})
 		e.fnPlay = &fn
@@ -2658,7 +2658,7 @@ func (e *TagVideo) RemoveListenerPlay() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerPlaying(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerPlaying(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnPlaying == nil {
@@ -2667,7 +2667,7 @@ func (e *TagVideo) AddListenerPlaying(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventPlaying, this, args)
+			evet <- event.EventManager(event.KEventPlaying, this, args)
 			return nil
 		})
 		e.fnPlaying = &fn
@@ -2779,7 +2779,7 @@ func (e *TagVideo) RemoveListenerPlaying() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerProgress(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerProgress(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnProgress == nil {
@@ -2788,7 +2788,7 @@ func (e *TagVideo) AddListenerProgress(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventProgress, this, args)
+			evet <- event.EventManager(event.KEventProgress, this, args)
 			return nil
 		})
 		e.fnProgress = &fn
@@ -2900,7 +2900,7 @@ func (e *TagVideo) RemoveListenerProgress() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerRateChange(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerRateChange(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnRateChange == nil {
@@ -2909,7 +2909,7 @@ func (e *TagVideo) AddListenerRateChange(evet *chan event.Data) (ref *TagVideo) 
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventRateChange, this, args)
+			evet <- event.EventManager(event.KEventRateChange, this, args)
 			return nil
 		})
 		e.fnRateChange = &fn
@@ -3021,7 +3021,7 @@ func (e *TagVideo) RemoveListenerRateChange() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerSeeked(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerSeeked(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnSeeked == nil {
@@ -3030,7 +3030,7 @@ func (e *TagVideo) AddListenerSeeked(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventSeeked, this, args)
+			evet <- event.EventManager(event.KEventSeeked, this, args)
 			return nil
 		})
 		e.fnSeeked = &fn
@@ -3142,7 +3142,7 @@ func (e *TagVideo) RemoveListenerSeeked() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerSeeking(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerSeeking(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnSeeking == nil {
@@ -3151,7 +3151,7 @@ func (e *TagVideo) AddListenerSeeking(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventSeeking, this, args)
+			evet <- event.EventManager(event.KEventSeeking, this, args)
 			return nil
 		})
 		e.fnSeeking = &fn
@@ -3264,7 +3264,7 @@ func (e *TagVideo) RemoveListenerSeeking() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerStalled(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerStalled(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnStalled == nil {
@@ -3273,7 +3273,7 @@ func (e *TagVideo) AddListenerStalled(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventStalled, this, args)
+			evet <- event.EventManager(event.KEventStalled, this, args)
 			return nil
 		})
 		e.fnStalled = &fn
@@ -3386,7 +3386,7 @@ func (e *TagVideo) RemoveListenerStalled() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerSuspend(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerSuspend(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnSuspend == nil {
@@ -3395,7 +3395,7 @@ func (e *TagVideo) AddListenerSuspend(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventSuspend, this, args)
+			evet <- event.EventManager(event.KEventSuspend, this, args)
 			return nil
 		})
 		e.fnSuspend = &fn
@@ -3507,7 +3507,7 @@ func (e *TagVideo) RemoveListenerSuspend() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerTimeUpdate(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerTimeUpdate(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnTimeUpdate == nil {
@@ -3516,7 +3516,7 @@ func (e *TagVideo) AddListenerTimeUpdate(evet *chan event.Data) (ref *TagVideo) 
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventTimeUpdate, this, args)
+			evet <- event.EventManager(event.KEventTimeUpdate, this, args)
 			return nil
 		})
 		e.fnTimeUpdate = &fn
@@ -3628,7 +3628,7 @@ func (e *TagVideo) RemoveListenerTimeUpdate() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerVolumeChange(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerVolumeChange(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnVolumeChange == nil {
@@ -3637,7 +3637,7 @@ func (e *TagVideo) AddListenerVolumeChange(evet *chan event.Data) (ref *TagVideo
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventVolumeChange, this, args)
+			evet <- event.EventManager(event.KEventVolumeChange, this, args)
 			return nil
 		})
 		e.fnVolumeChange = &fn
@@ -3749,7 +3749,7 @@ func (e *TagVideo) RemoveListenerVolumeChange() (ref *TagVideo) {
 //
 //	   done := make(chan struct{}, 0)
 //	   <-done
-func (e *TagVideo) AddListenerWaiting(evet *chan event.Data) (ref *TagVideo) {
+func (e *TagVideo) AddListenerWaiting(evet chan event.Data) (ref *TagVideo) {
 	var fn js.Func
 
 	if e.fnWaiting == nil {
@@ -3758,7 +3758,7 @@ func (e *TagVideo) AddListenerWaiting(evet *chan event.Data) (ref *TagVideo) {
 				return nil
 			}
 
-			*evet <- event.EventManager(event.KEventWaiting, this, args)
+			evet <- event.EventManager(event.KEventWaiting, this, args)
 			return nil
 		})
 		e.fnWaiting = &fn

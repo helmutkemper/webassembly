@@ -211,14 +211,14 @@ func (e *GeoLocation) EnableHighAccuracy(enableHighAccuracy bool) {
 //	Notas:
 //	  * Accuracy é em metros.
 //	  * Esse recurso está disponível apenas em contextos seguros (HTTPS).
-func (e *GeoLocation) GetPosition(chCoordinate *chan Coordinate) {
+func (e *GeoLocation) GetPosition(chCoordinate chan Coordinate) {
 	var coordinate Coordinate
 	var options = e.prepareOptions()
 
 	onError := js.FuncOf(func(_ js.Value, args []js.Value) interface{} {
 		coordinate.ErrorCode = args[0].Get("code").Int()
 		coordinate.ErrorMessage = args[0].Get("message").String()
-		*chCoordinate <- coordinate
+		chCoordinate <- coordinate
 		return nil
 	})
 
@@ -231,7 +231,7 @@ func (e *GeoLocation) GetPosition(chCoordinate *chan Coordinate) {
 		coordinate.Latitude = coordinates.Get("latitude").Float()
 		coordinate.Longitude = coordinates.Get("longitude").Float()
 		coordinate.Accuracy = coordinates.Get("accuracy").Float()
-		*chCoordinate <- coordinate
+		chCoordinate <- coordinate
 		return nil
 	})
 
@@ -266,7 +266,7 @@ func (e *GeoLocation) GetPosition(chCoordinate *chan Coordinate) {
 //
 //	Notas:
 //	  * Este recurso está disponível apenas em contextos seguros (HTTPS).
-func (e *GeoLocation) WatchPosition(chCoordinate *chan Coordinate) (id int) {
+func (e *GeoLocation) WatchPosition(chCoordinate chan Coordinate) (id int) {
 	var coordinate Coordinate
 	var options = e.prepareOptions()
 
@@ -274,7 +274,7 @@ func (e *GeoLocation) WatchPosition(chCoordinate *chan Coordinate) (id int) {
 		coordinate.ErrorCode = errJs.Get("code").Int()
 		coordinate.ErrorMessage = errJs.Get("message").String()
 
-		*chCoordinate <- coordinate
+		chCoordinate <- coordinate
 		return nil
 	})
 
@@ -288,7 +288,7 @@ func (e *GeoLocation) WatchPosition(chCoordinate *chan Coordinate) (id int) {
 		coordinate.Longitude = coordinates.Get("longitude").Float()
 		coordinate.Accuracy = coordinates.Get("accuracy").Float()
 
-		*chCoordinate <- coordinate
+		chCoordinate <- coordinate
 		return nil
 	})
 

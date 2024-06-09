@@ -1,6 +1,7 @@
 package html
 
 import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"image/color"
 	"log"
 	"strconv"
@@ -19,6 +20,7 @@ import (
 // O elemento <mask> define uma máscara alfa para compor o objeto atual em segundo plano. Uma máscara é used/referenced
 // usando a propriedade mask.
 type TagSvgMask struct {
+	commonEvents commonEvents
 
 	// id
 	//
@@ -2969,5 +2971,1049 @@ func (e *TagSvgMask) UpdateBoundingClientRect() (ref *TagSvgMask) {
 	e.height = e.heightBBox - e.x
 	e.width = e.bottom - e.y
 
+	return e
+}
+func (e *TagSvgMask) AddListenerAbort(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerAbort() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerAuxclick() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerBeforeinput() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerBeforematch() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerBeforetoggle() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerCancel(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerCancel() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerCanplay() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerCanplaythrough() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerChange(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerChange() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerClick(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerClick() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerClose(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerClose() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerContextlost() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerContextmenu() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerContextrestored() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerCopy(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerCopy() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerCuechange() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerCut(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerCut() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerDblclick() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerDrag(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerDrag() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerDragend(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerDragend() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerDragenter() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerDragleave() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerDragover(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerDragover() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerDragstart() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerDrop(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerDrop() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerDurationchange() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerEmptied() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerEnded(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerEnded() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerFormdata() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerInput(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerInput() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerInvalid() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerKeydown() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerKeypress() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerKeyup() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerLoadeddata() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerLoadedmetadata() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerLoadstart() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerMousedown() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerMouseenter() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerMouseleave() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerMousemove() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerMouseout() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerMouseover() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerMouseup() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerPaste(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerPaste() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerPause(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerPause() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerPlay(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerPlay() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerPlaying() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerProgress(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerProgress() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerRatechange() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerReset(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerReset() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerScrollend() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerSecuritypolicyviolation() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerSeeked() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerSeeking() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerSelect(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerSelect() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerSlotchange() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerStalled(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerStalled() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerSubmit() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerSuspend() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerTimeupdate() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerToggle(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerToggle() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerVolumechange() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerWaiting() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerWebkitanimationend() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerWebkitanimationiteration() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerWebkitanimationstart() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerWebkittransitionend() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerWheel(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerWheel() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerBlur(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerBlur() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerError(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerError() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerFocus(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerFocus() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerLoad(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerLoad() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerResize(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerResize() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerScroll(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerScroll() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerAfterprint() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerBeforeprint() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerBeforeunload() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerHashchange() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerLanguagechange() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerMessage(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerMessage() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerMessageerror() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerOffline(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerOffline() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerOnline(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerOnline() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerPageswap() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerPagehide() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerPagereveal() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerPageshow() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerPopstate() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerRejectionhandled() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerStorage(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerStorage() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerUnhandledrejection() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerUnload(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerUnload() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerReadystatechange() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagSvgMask) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagSvgMask) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagSvgMask) RemoveListenerVisibilitychange() (ref *TagSvgMask) {
+	e.commonEvents.RemoveListenerVisibilitychange()
 	return e
 }

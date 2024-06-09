@@ -1,6 +1,7 @@
 package html
 
 import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"log"
 	"strconv"
 	"strings"
@@ -26,6 +27,7 @@ import (
 // com uma ampla variedade de navegadores, devido ao suporte diferente para formatos de arquivo de imagem e formatos de
 // arquivo de mídia.
 type TagSource struct {
+	commonEvents commonEvents
 
 	// id
 	//
@@ -1062,4 +1064,1048 @@ func (e *TagSource) Init() (ref *TagSource) {
 //	Prepara à referencia do stage na inicialização.
 func (e *TagSource) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
+}
+func (e *TagSource) AddListenerAbort(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerAbort() (ref *TagSource) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagSource) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerAuxclick() (ref *TagSource) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagSource) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerBeforeinput() (ref *TagSource) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagSource) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerBeforematch() (ref *TagSource) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagSource) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerBeforetoggle() (ref *TagSource) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagSource) AddListenerCancel(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerCancel() (ref *TagSource) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagSource) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerCanplay() (ref *TagSource) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagSource) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerCanplaythrough() (ref *TagSource) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagSource) AddListenerChange(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerChange() (ref *TagSource) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+func (e *TagSource) AddListenerClick(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerClick() (ref *TagSource) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagSource) AddListenerClose(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerClose() (ref *TagSource) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagSource) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerContextlost() (ref *TagSource) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagSource) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerContextmenu() (ref *TagSource) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagSource) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerContextrestored() (ref *TagSource) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagSource) AddListenerCopy(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerCopy() (ref *TagSource) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagSource) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerCuechange() (ref *TagSource) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagSource) AddListenerCut(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerCut() (ref *TagSource) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagSource) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerDblclick() (ref *TagSource) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagSource) AddListenerDrag(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerDrag() (ref *TagSource) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagSource) AddListenerDragend(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerDragend() (ref *TagSource) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagSource) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerDragenter() (ref *TagSource) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagSource) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerDragleave() (ref *TagSource) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagSource) AddListenerDragover(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerDragover() (ref *TagSource) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagSource) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerDragstart() (ref *TagSource) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagSource) AddListenerDrop(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerDrop() (ref *TagSource) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagSource) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerDurationchange() (ref *TagSource) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagSource) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerEmptied() (ref *TagSource) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagSource) AddListenerEnded(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerEnded() (ref *TagSource) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagSource) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerFormdata() (ref *TagSource) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagSource) AddListenerInput(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerInput() (ref *TagSource) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagSource) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerInvalid() (ref *TagSource) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagSource) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerKeydown() (ref *TagSource) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagSource) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerKeypress() (ref *TagSource) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagSource) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerKeyup() (ref *TagSource) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagSource) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerLoadeddata() (ref *TagSource) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagSource) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerLoadedmetadata() (ref *TagSource) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagSource) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerLoadstart() (ref *TagSource) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagSource) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerMousedown() (ref *TagSource) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagSource) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerMouseenter() (ref *TagSource) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagSource) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerMouseleave() (ref *TagSource) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagSource) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerMousemove() (ref *TagSource) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagSource) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerMouseout() (ref *TagSource) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagSource) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerMouseover() (ref *TagSource) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagSource) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerMouseup() (ref *TagSource) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagSource) AddListenerPaste(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerPaste() (ref *TagSource) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagSource) AddListenerPause(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerPause() (ref *TagSource) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagSource) AddListenerPlay(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerPlay() (ref *TagSource) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagSource) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerPlaying() (ref *TagSource) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagSource) AddListenerProgress(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerProgress() (ref *TagSource) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagSource) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerRatechange() (ref *TagSource) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagSource) AddListenerReset(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerReset() (ref *TagSource) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagSource) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerScrollend() (ref *TagSource) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagSource) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerSecuritypolicyviolation() (ref *TagSource) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagSource) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerSeeked() (ref *TagSource) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagSource) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerSeeking() (ref *TagSource) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagSource) AddListenerSelect(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerSelect() (ref *TagSource) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagSource) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerSlotchange() (ref *TagSource) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagSource) AddListenerStalled(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerStalled() (ref *TagSource) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagSource) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerSubmit() (ref *TagSource) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagSource) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerSuspend() (ref *TagSource) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagSource) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerTimeupdate() (ref *TagSource) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagSource) AddListenerToggle(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerToggle() (ref *TagSource) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagSource) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerVolumechange() (ref *TagSource) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagSource) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerWaiting() (ref *TagSource) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagSource) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerWebkitanimationend() (ref *TagSource) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagSource) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerWebkitanimationiteration() (ref *TagSource) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagSource) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerWebkitanimationstart() (ref *TagSource) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagSource) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerWebkittransitionend() (ref *TagSource) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagSource) AddListenerWheel(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerWheel() (ref *TagSource) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagSource) AddListenerBlur(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerBlur() (ref *TagSource) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagSource) AddListenerError(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerError() (ref *TagSource) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagSource) AddListenerFocus(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerFocus() (ref *TagSource) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagSource) AddListenerLoad(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerLoad() (ref *TagSource) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagSource) AddListenerResize(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerResize() (ref *TagSource) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagSource) AddListenerScroll(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerScroll() (ref *TagSource) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagSource) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerAfterprint() (ref *TagSource) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagSource) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerBeforeprint() (ref *TagSource) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagSource) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerBeforeunload() (ref *TagSource) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagSource) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerHashchange() (ref *TagSource) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagSource) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerLanguagechange() (ref *TagSource) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagSource) AddListenerMessage(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerMessage() (ref *TagSource) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagSource) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerMessageerror() (ref *TagSource) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagSource) AddListenerOffline(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerOffline() (ref *TagSource) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagSource) AddListenerOnline(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerOnline() (ref *TagSource) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagSource) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerPageswap() (ref *TagSource) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagSource) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerPagehide() (ref *TagSource) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagSource) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerPagereveal() (ref *TagSource) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagSource) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerPageshow() (ref *TagSource) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagSource) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerPopstate() (ref *TagSource) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagSource) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerRejectionhandled() (ref *TagSource) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagSource) AddListenerStorage(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerStorage() (ref *TagSource) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagSource) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerUnhandledrejection() (ref *TagSource) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagSource) AddListenerUnload(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerUnload() (ref *TagSource) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagSource) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerReadystatechange() (ref *TagSource) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagSource) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagSource) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagSource) RemoveListenerVisibilitychange() (ref *TagSource) {
+	e.commonEvents.RemoveListenerVisibilitychange()
+	return e
 }

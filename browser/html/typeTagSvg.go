@@ -2,6 +2,7 @@ package html
 
 import (
 	"fmt"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
 	"image/color"
 	"log"
@@ -30,6 +31,7 @@ import (
 //	  * O atributo xmlns só é necessário no elemento svg mais externo dos documentos SVG. É desnecessário para
 //	    elementos svg internos ou dentro de documentos HTML.
 type TagSvg struct {
+	commonEvents commonEvents
 
 	// id
 	//
@@ -3115,175 +3117,6 @@ func (e *TagSvg) Reference(reference **TagSvg) (ref *TagSvg) {
 	return e
 }
 
-// AddListenerClick
-//
-// English:
-//
-// Adds a mouse click event listener equivalent to the JavaScript command addEventListener('click',fn).
-//
-//	Input:
-//	  mouseEvent: pointer to channel mouse.Data
-//
-// Fired when the user clicks the primary pointer button.
-//
-// Português:
-//
-// Adiciona um ouvinte de evento de click do mouse, equivalente ao comando JavaScript addEventListener('click',fn).
-//
-//	Entrada:
-//	  mouseEvent: ponteiro para o channel mouse.Data
-//
-// Acionado quando o usuário clica no botão do ponteiro principal.
-//
-//	Example: / Exemplo:
-//	  tagCircle := &html.TagSvgCircle{}
-//	  mouseEvent := make(chan mouse.Data)
-//
-//	  stage := factoryBrowser.NewStage()
-//
-//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//	  )
-//
-//	  go func() {
-//	    for {
-//	      select {
-//	      case <-mouseEvent:
-//	        log.Printf("click")
-//	        // English: Remove the addEventListener('click') from the three elements
-//	        // Português: Remove o addEventListener('click') dos três elementos
-//	        tagCircle.RemoveListenerClick()
-//	      }
-//	    }
-//	  }()
-//
-//	Example: / Exemplo:
-//	  tagUse := &html.TagSvgUse{}
-//	  mouseEvent := make(chan mouse.Data)
-//
-//	  stage := factoryBrowser.NewStage()
-//
-//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//	  )
-//
-//	  go func() {
-//	    for {
-//	      select {
-//	      case <-mouseEvent:
-//	        log.Printf("click")
-//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
-//	        //   inválida e o comando não funciona.
-//	        tagUse.RemoveListenerClick()
-//	      }
-//	    }
-//	  }()
-func (e *TagSvg) AddListenerClick(mouseEvent *chan mouse.Data) (ref *TagSvg) {
-	if e.fnClick != nil {
-		return e
-	}
-
-	var fn js.Func
-	fn = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		if len(args) == 0 {
-			return nil
-		}
-		*mouseEvent <- mouse.EventManager(mouse.KEventClick, this, args)
-		return nil
-	})
-	e.fnClick = &fn
-
-	e.selfElement.Call(
-		"addEventListener",
-		"click",
-		*e.fnClick,
-	)
-	return e
-}
-
-// RemoveListenerClick
-//
-// English:
-//
-// Removes a mouse click event listener, equivalent to the JavaScript command RemoveEventListener('click',fn).
-//
-// Fired when the user clicks the primary pointer button.
-//
-// Português:
-//
-// Remove um ouvinte de evento de click do mouse, equivalente ao comando JavaScript RemoveEventListener('click',fn).
-//
-// Acionado quando o usuário clica no botão do ponteiro principal.
-//
-//	Example: / Exemplo:
-//	  tagCircle := &html.TagSvgCircle{}
-//	  mouseEvent := make(chan mouse.Data)
-//
-//	  stage := factoryBrowser.NewStage()
-//
-//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//	  )
-//
-//	  go func() {
-//	    for {
-//	      select {
-//	      case <-mouseEvent:
-//	        log.Printf("click")
-//	        // English: Remove the addEventListener('click') from the three elements
-//	        // Português: Remove o addEventListener('click') dos três elementos
-//	        tagCircle.RemoveListenerClick()
-//	      }
-//	    }
-//	  }()
-//
-//	Example: / Exemplo:
-//	  tagUse := &html.TagSvgUse{}
-//	  mouseEvent := make(chan mouse.Data)
-//
-//	  stage := factoryBrowser.NewStage()
-//
-//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
-//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
-//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
-//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
-//	  )
-//
-//	  go func() {
-//	    for {
-//	      select {
-//	      case <-mouseEvent:
-//	        log.Printf("click")
-//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
-//	        //   the command does not work.
-//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
-//	        //   inválida e o comando não funciona.
-//	        tagUse.RemoveListenerClick()
-//	      }
-//	    }
-//	  }()
-func (e *TagSvg) RemoveListenerClick() (ref *TagSvg) {
-	if e.fnClick == nil {
-		return e
-	}
-
-	e.selfElement.Call(
-		"removeEventListener",
-		"click",
-		*e.fnClick,
-	)
-	e.fnClick = nil
-	return e
-}
-
 // AddListenerMouseOver
 //
 // English:
@@ -3359,7 +3192,7 @@ func (e *TagSvg) RemoveListenerClick() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerMouseOver(mouseEvent *chan mouse.Data) (ref *TagSvg) {
+func (e *TagSvg) AddListenerMouseOver(mouseEvent chan mouse.Data) (ref *TagSvg) {
 	if e.fnMouseOver != nil {
 		return e
 	}
@@ -3369,7 +3202,7 @@ func (e *TagSvg) AddListenerMouseOver(mouseEvent *chan mouse.Data) (ref *TagSvg)
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvent <- mouse.EventManager(mouse.KEventMouseOver, this, args)
+		mouseEvent <- mouse.EventManager(mouse.KEventMouseOver, this, args)
 		return nil
 	})
 	e.fnMouseOver = &fn
@@ -3526,7 +3359,7 @@ func (e *TagSvg) RemoveListenerMouseOver() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerMouseOut(mouseEvent *chan mouse.Data) (ref *TagSvg) {
+func (e *TagSvg) AddListenerMouseOut(mouseEvent chan mouse.Data) (ref *TagSvg) {
 	if e.fnMouseOut != nil {
 		return e
 	}
@@ -3536,7 +3369,7 @@ func (e *TagSvg) AddListenerMouseOut(mouseEvent *chan mouse.Data) (ref *TagSvg) 
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvent <- mouse.EventManager(mouse.KEventMouseOut, this, args)
+		mouseEvent <- mouse.EventManager(mouse.KEventMouseOut, this, args)
 		return nil
 	})
 	e.fnMouseOut = &fn
@@ -3693,7 +3526,7 @@ func (e *TagSvg) RemoveListenerMouseOut() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerMouseMove(mouseEvent *chan mouse.Data) (ref *TagSvg) {
+func (e *TagSvg) AddListenerMouseMove(mouseEvent chan mouse.Data) (ref *TagSvg) {
 	if e.fnMouseMove != nil {
 		return e
 	}
@@ -3703,7 +3536,7 @@ func (e *TagSvg) AddListenerMouseMove(mouseEvent *chan mouse.Data) (ref *TagSvg)
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvent <- mouse.EventManager(mouse.KEventMouseMove, this, args)
+		mouseEvent <- mouse.EventManager(mouse.KEventMouseMove, this, args)
 		return nil
 	})
 	e.fnMouseMove = &fn
@@ -3860,7 +3693,7 @@ func (e *TagSvg) RemoveListenerMouseMove() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerMouseLeave(mouseEvent *chan mouse.Data) (ref *TagSvg) {
+func (e *TagSvg) AddListenerMouseLeave(mouseEvent chan mouse.Data) (ref *TagSvg) {
 	if e.fnMouseLeave != nil {
 		return e
 	}
@@ -3870,7 +3703,7 @@ func (e *TagSvg) AddListenerMouseLeave(mouseEvent *chan mouse.Data) (ref *TagSvg
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvent <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
+		mouseEvent <- mouse.EventManager(mouse.KEventMouseLeave, this, args)
 		return nil
 	})
 	e.fnMouseLeave = &fn
@@ -4027,7 +3860,7 @@ func (e *TagSvg) RemoveListenerMouseLeave() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerMouseEnter(mouseEvent *chan mouse.Data) (ref *TagSvg) {
+func (e *TagSvg) AddListenerMouseEnter(mouseEvent chan mouse.Data) (ref *TagSvg) {
 	if e.fnMouseEnter != nil {
 		return e
 	}
@@ -4037,7 +3870,7 @@ func (e *TagSvg) AddListenerMouseEnter(mouseEvent *chan mouse.Data) (ref *TagSvg
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvent <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
+		mouseEvent <- mouse.EventManager(mouse.KEventMouseEnter, this, args)
 		return nil
 	})
 	e.fnMouseEnter = &fn
@@ -4195,7 +4028,7 @@ func (e *TagSvg) RemoveListenerMouseEnter() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerMouseDown(mouseEvent *chan mouse.Data) (ref *TagSvg) {
+func (e *TagSvg) AddListenerMouseDown(mouseEvent chan mouse.Data) (ref *TagSvg) {
 	if e.fnMouseDown != nil {
 		return e
 	}
@@ -4205,7 +4038,7 @@ func (e *TagSvg) AddListenerMouseDown(mouseEvent *chan mouse.Data) (ref *TagSvg)
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvent <- mouse.EventManager(mouse.KEventMouseDown, this, args)
+		mouseEvent <- mouse.EventManager(mouse.KEventMouseDown, this, args)
 		return nil
 	})
 	e.fnMouseDown = &fn
@@ -4363,7 +4196,7 @@ func (e *TagSvg) RemoveListenerMouseDown() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerMouseUp(mouseEvent *chan mouse.Data) (ref *TagSvg) {
+func (e *TagSvg) AddListenerMouseUp(mouseEvent chan mouse.Data) (ref *TagSvg) {
 	if e.fnMouseUp != nil {
 		return e
 	}
@@ -4373,7 +4206,7 @@ func (e *TagSvg) AddListenerMouseUp(mouseEvent *chan mouse.Data) (ref *TagSvg) {
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvent <- mouse.EventManager(mouse.KEventMouseUp, this, args)
+		mouseEvent <- mouse.EventManager(mouse.KEventMouseUp, this, args)
 		return nil
 	})
 	e.fnMouseUp = &fn
@@ -4530,7 +4363,7 @@ func (e *TagSvg) RemoveListenerMouseUp() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerMouseWheel(mouseEvent *chan mouse.Data) (ref *TagSvg) {
+func (e *TagSvg) AddListenerMouseWheel(mouseEvent chan mouse.Data) (ref *TagSvg) {
 	if e.fnMouseWheel != nil {
 		return e
 	}
@@ -4540,7 +4373,7 @@ func (e *TagSvg) AddListenerMouseWheel(mouseEvent *chan mouse.Data) (ref *TagSvg
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvent <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
+		mouseEvent <- mouse.EventManager(mouse.KEventMouseWheel, this, args)
 		return nil
 	})
 	e.fnMouseWheel = &fn
@@ -4698,7 +4531,7 @@ func (e *TagSvg) RemoveListenerMouseWheel() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerDoubleClick(mouseEvent *chan mouse.Data) (ref *TagSvg) {
+func (e *TagSvg) AddListenerDoubleClick(mouseEvent chan mouse.Data) (ref *TagSvg) {
 	if e.fnDoubleClick != nil {
 		return e
 	}
@@ -4708,7 +4541,7 @@ func (e *TagSvg) AddListenerDoubleClick(mouseEvent *chan mouse.Data) (ref *TagSv
 		if len(args) == 0 {
 			return nil
 		}
-		*mouseEvent <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
+		mouseEvent <- mouse.EventManager(mouse.KEventDoubleClick, this, args)
 		return nil
 	})
 	e.fnDoubleClick = &fn
@@ -4828,7 +4661,7 @@ func (e *TagSvg) RemoveListenerDoubleClick() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerFocusIn(focusEvent *chan struct{}) (ref *TagSvg) {
+func (e *TagSvg) AddListenerFocusIn(focusEvent chan struct{}) (ref *TagSvg) {
 	if e.fnFocusIn != nil {
 		return e
 	}
@@ -4838,7 +4671,7 @@ func (e *TagSvg) AddListenerFocusIn(focusEvent *chan struct{}) (ref *TagSvg) {
 		if len(args) == 0 {
 			return nil
 		}
-		*focusEvent <- struct{}{}
+		focusEvent <- struct{}{}
 		return nil
 	})
 	e.fnFocusIn = &fn
@@ -4933,7 +4766,7 @@ func (e *TagSvg) RemoveListenerFocusIn() (ref *TagSvg) {
 //	      }
 //	    }
 //	  }()
-func (e *TagSvg) AddListenerFocusOut(focusEvent *chan struct{}) (ref *TagSvg) {
+func (e *TagSvg) AddListenerFocusOut(focusEvent chan struct{}) (ref *TagSvg) {
 	if e.fnFocusOut != nil {
 		return e
 	}
@@ -4943,7 +4776,7 @@ func (e *TagSvg) AddListenerFocusOut(focusEvent *chan struct{}) (ref *TagSvg) {
 		if len(args) == 0 {
 			return nil
 		}
-		*focusEvent <- struct{}{}
+		focusEvent <- struct{}{}
 		return nil
 	})
 	e.fnFocusOut = &fn
@@ -5001,6 +4834,1183 @@ func (e *TagSvg) RemoveListenerFocusOut() (ref *TagSvg) {
 		*e.fnFocusOut,
 	)
 	e.fnFocusOut = nil
+	return e
+}
+
+func (e *TagSvg) AddListenerAbort(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerAbort() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagSvg) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerAuxclick() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagSvg) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerBeforeinput() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagSvg) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerBeforematch() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagSvg) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerBeforetoggle() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagSvg) AddListenerCancel(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerCancel() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagSvg) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerCanplay() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagSvg) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerCanplaythrough() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagSvg) AddListenerChange(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerChange() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+// AddListenerClick
+//
+// English:
+//
+// Adds a mouse click event listener equivalent to the JavaScript command addEventListener('click',fn).
+//
+//	Input:
+//	  mouseEvent: pointer to channel mouse.Data
+//
+// Fired when the user clicks the primary pointer button.
+//
+// Português:
+//
+// Adiciona um ouvinte de evento de click do mouse, equivalente ao comando JavaScript addEventListener('click',fn).
+//
+//	Entrada:
+//	  mouseEvent: ponteiro para o channel mouse.Data
+//
+// Acionado quando o usuário clica no botão do ponteiro principal.
+//
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
+//
+//	  stage := factoryBrowser.NewStage()
+//
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
+//
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
+//
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
+//
+//	  stage := factoryBrowser.NewStage()
+//
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
+//
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
+func (e *TagSvg) AddListenerClick(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+// RemoveListenerClick
+//
+// English:
+//
+// Removes a mouse click event listener, equivalent to the JavaScript command RemoveEventListener('click',fn).
+//
+// Fired when the user clicks the primary pointer button.
+//
+// Português:
+//
+// Remove um ouvinte de evento de click do mouse, equivalente ao comando JavaScript RemoveEventListener('click',fn).
+//
+// Acionado quando o usuário clica no botão do ponteiro principal.
+//
+//	Example: / Exemplo:
+//	  tagCircle := &html.TagSvgCircle{}
+//	  mouseEvent := make(chan mouse.Data)
+//
+//	  stage := factoryBrowser.NewStage()
+//
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().Reference(&tagCircle).AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
+//
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: Remove the addEventListener('click') from the three elements
+//	        // Português: Remove o addEventListener('click') dos três elementos
+//	        tagCircle.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
+//
+//	Example: / Exemplo:
+//	  tagUse := &html.TagSvgUse{}
+//	  mouseEvent := make(chan mouse.Data)
+//
+//	  stage := factoryBrowser.NewStage()
+//
+//	  s1 := factoryBrowser.NewTagSvg().ViewBox([]float64{0, 0, 30, 10}).Append(
+//	    factoryBrowser.NewTagSvgCircle().AddListenerClick(&mouseEvent).Id("myCircle").Cx(5).Cy(5).R(4).Stroke(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().Reference(&tagUse).HRef("#myCircle").X(10).Fill(factoryColor.NewBlue()),
+//	    factoryBrowser.NewTagSvgUse().HRef("#myCircle").X(20).Fill(factoryColor.NewWhite()).Stroke(factoryColor.NewRed()),
+//	  )
+//
+//	  go func() {
+//	    for {
+//	      select {
+//	      case <-mouseEvent:
+//	        log.Printf("click")
+//	        // English: addEventListener('click') was created on the <circle> element, so the reference is invalid and
+//	        //   the command does not work.
+//	        // Português: addEventListener('click') foi criado no elemento <circle>, por isto, a referência é
+//	        //   inválida e o comando não funciona.
+//	        tagUse.RemoveListenerClick()
+//	      }
+//	    }
+//	  }()
+func (e *TagSvg) RemoveListenerClick() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagSvg) AddListenerClose(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerClose() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagSvg) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerContextlost() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagSvg) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerContextmenu() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagSvg) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerContextrestored() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagSvg) AddListenerCopy(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerCopy() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagSvg) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerCuechange() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagSvg) AddListenerCut(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerCut() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagSvg) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerDblclick() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagSvg) AddListenerDrag(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerDrag() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagSvg) AddListenerDragend(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerDragend() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagSvg) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerDragenter() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagSvg) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerDragleave() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagSvg) AddListenerDragover(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerDragover() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagSvg) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerDragstart() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagSvg) AddListenerDrop(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerDrop() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagSvg) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerDurationchange() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagSvg) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerEmptied() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagSvg) AddListenerEnded(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerEnded() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagSvg) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerFormdata() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagSvg) AddListenerInput(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerInput() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagSvg) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerInvalid() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagSvg) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerKeydown() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagSvg) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerKeypress() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagSvg) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerKeyup() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagSvg) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerLoadeddata() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagSvg) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerLoadedmetadata() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagSvg) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerLoadstart() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagSvg) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerMousedown() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagSvg) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerMouseenter() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagSvg) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerMouseleave() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagSvg) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerMousemove() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagSvg) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerMouseout() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagSvg) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerMouseover() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagSvg) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerMouseup() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagSvg) AddListenerPaste(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerPaste() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagSvg) AddListenerPause(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerPause() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagSvg) AddListenerPlay(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerPlay() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagSvg) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerPlaying() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagSvg) AddListenerProgress(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerProgress() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagSvg) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerRatechange() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagSvg) AddListenerReset(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerReset() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagSvg) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerScrollend() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagSvg) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerSecuritypolicyviolation() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagSvg) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerSeeked() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagSvg) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerSeeking() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagSvg) AddListenerSelect(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerSelect() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagSvg) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerSlotchange() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagSvg) AddListenerStalled(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerStalled() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagSvg) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerSubmit() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagSvg) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerSuspend() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagSvg) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerTimeupdate() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagSvg) AddListenerToggle(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerToggle() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagSvg) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerVolumechange() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagSvg) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerWaiting() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagSvg) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerWebkitanimationend() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagSvg) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerWebkitanimationiteration() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagSvg) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerWebkitanimationstart() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagSvg) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerWebkittransitionend() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagSvg) AddListenerWheel(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerWheel() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagSvg) AddListenerBlur(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerBlur() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagSvg) AddListenerError(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerError() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagSvg) AddListenerFocus(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerFocus() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagSvg) AddListenerLoad(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerLoad() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagSvg) AddListenerResize(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerResize() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagSvg) AddListenerScroll(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerScroll() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagSvg) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerAfterprint() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagSvg) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerBeforeprint() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagSvg) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerBeforeunload() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagSvg) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerHashchange() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagSvg) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerLanguagechange() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagSvg) AddListenerMessage(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerMessage() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagSvg) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerMessageerror() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagSvg) AddListenerOffline(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerOffline() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagSvg) AddListenerOnline(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerOnline() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagSvg) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerPageswap() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagSvg) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerPagehide() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagSvg) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerPagereveal() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagSvg) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerPageshow() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagSvg) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerPopstate() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagSvg) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerRejectionhandled() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagSvg) AddListenerStorage(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerStorage() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagSvg) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerUnhandledrejection() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagSvg) AddListenerUnload(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerUnload() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagSvg) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerReadystatechange() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagSvg) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagSvg) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagSvg) RemoveListenerVisibilitychange() (ref *TagSvg) {
+	e.commonEvents.RemoveListenerVisibilitychange()
 	return e
 }
 

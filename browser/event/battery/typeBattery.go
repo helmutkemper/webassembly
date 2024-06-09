@@ -134,7 +134,7 @@ func (e *Battery) Init() {
 //	  mouseEvent: ponteiro para o channel battery.Data
 //
 // Acionado quando o estado de carregamento da bateria (a propriedade de carregamento) é atualizado.
-func (e *Battery) AddListenerChargingChange(batteryData *chan Data) (ref *Battery) {
+func (e *Battery) AddListenerChargingChange(batteryData chan Data) (ref *Battery) {
 	if e.fnChargingChange != nil {
 		return e
 	}
@@ -145,7 +145,7 @@ func (e *Battery) AddListenerChargingChange(batteryData *chan Data) (ref *Batter
 			return nil
 		}
 
-		*batteryData <- EventManager(KEventChargingChange, this, args)
+		batteryData <- EventManager(KEventChargingChange, this, args)
 
 		return nil
 	})
@@ -207,7 +207,7 @@ func (e *Battery) RemoveListenerChargingChange() (ref *Battery) {
 //	  mouseEvent: ponteiro para o channel battery.Data
 //
 // Acionado quando o tempo de carregamento da bateria (propriedade loadingTime) é atualizado.
-func (e *Battery) AddListenerChargingTimeChange(batteryData *chan Data) (ref *Battery) {
+func (e *Battery) AddListenerChargingTimeChange(batteryData chan Data) (ref *Battery) {
 	if e.fnChargingTimeChange != nil {
 		return e
 	}
@@ -218,7 +218,7 @@ func (e *Battery) AddListenerChargingTimeChange(batteryData *chan Data) (ref *Ba
 			return nil
 		}
 
-		*batteryData <- EventManager(KEventChargingTimeChange, this, args)
+		batteryData <- EventManager(KEventChargingTimeChange, this, args)
 		return nil
 	})
 	e.fnChargingTimeChange = &fn
@@ -278,7 +278,7 @@ func (e *Battery) RemoveListenerChargingTimeChange() (ref *Battery) {
 //	  mouseEvent: ponteiro para o channel battery.Data
 //
 // Acionado quando o tempo de descarga da bateria (propriedade dischargingTime) é atualizado.
-func (e *Battery) AddListenerDischargingTimeChange(batteryData *chan Data) (ref *Battery) {
+func (e *Battery) AddListenerDischargingTimeChange(batteryData chan Data) (ref *Battery) {
 	if e.fnDischargingTimeChange != nil {
 		return e
 	}
@@ -289,7 +289,7 @@ func (e *Battery) AddListenerDischargingTimeChange(batteryData *chan Data) (ref 
 			return nil
 		}
 
-		*batteryData <- EventManager(KEventDischargingTimeChange, this, args)
+		batteryData <- EventManager(KEventDischargingTimeChange, this, args)
 		return nil
 	})
 	e.fnDischargingTimeChange = &fn
@@ -349,7 +349,7 @@ func (e *Battery) RemoveListenerDischargingTimeChange() (ref *Battery) {
 //	  mouseEvent: ponteiro para o channel battery.Data
 //
 // Acionado quando o nível da bateria (a propriedade de nível) é atualizado.
-func (e *Battery) AddListenerLevelChange(batteryData *chan Data) (ref *Battery) {
+func (e *Battery) AddListenerLevelChange(batteryData chan Data) (ref *Battery) {
 	if e.fnLevelChange != nil {
 		return e
 	}
@@ -360,7 +360,7 @@ func (e *Battery) AddListenerLevelChange(batteryData *chan Data) (ref *Battery) 
 			return nil
 		}
 
-		*batteryData <- EventManager(KEventLevelChange, this, args)
+		batteryData <- EventManager(KEventLevelChange, this, args)
 		return nil
 	})
 	e.fnLevelChange = &fn

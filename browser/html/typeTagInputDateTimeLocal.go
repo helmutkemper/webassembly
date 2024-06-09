@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"log"
 	"strconv"
 	"strings"
@@ -9,6 +10,8 @@ import (
 )
 
 type TagInputDateTimeLocal struct {
+	commonEvents commonEvents
+
 	tag         Tag
 	id          string
 	selfElement js.Value
@@ -1501,5 +1504,1054 @@ func (e *TagInputDateTimeLocal) SetY(y int) (ref *TagInputDateTimeLocal) {
 
 	e.UpdateBoundingClientRect()
 
+	return e
+}
+
+func (e *TagInputDateTimeLocal) Get() (el js.Value) {
+	return e.selfElement
+}
+
+func (e *TagInputDateTimeLocal) AddListenerAbort(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerAbort() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerAuxclick() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerBeforeinput() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerBeforematch() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerBeforetoggle() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerCancel(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerCancel() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerCanplay() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerCanplaythrough() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerChange(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerChange() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerClick(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerClick() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerClose(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerClose() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerContextlost() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerContextmenu() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerContextrestored() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerCopy(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerCopy() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerCuechange() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerCut(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerCut() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerDblclick() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerDrag(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerDrag() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerDragend(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerDragend() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerDragenter() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerDragleave() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerDragover(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerDragover() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerDragstart() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerDrop(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerDrop() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerDurationchange() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerEmptied() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerEnded(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerEnded() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerFormdata() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerInput(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerInput() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerInvalid() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerKeydown() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerKeypress() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerKeyup() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerLoadeddata() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerLoadedmetadata() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerLoadstart() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerMousedown() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerMouseenter() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerMouseleave() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerMousemove() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerMouseout() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerMouseover() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerMouseup() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerPaste(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerPaste() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerPause(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerPause() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerPlay(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerPlay() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerPlaying() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerProgress(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerProgress() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerRatechange() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerReset(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerReset() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerScrollend() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerSecuritypolicyviolation() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerSeeked() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerSeeking() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerSelect(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerSelect() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerSlotchange() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerStalled(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerStalled() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerSubmit() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerSuspend() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerTimeupdate() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerToggle(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerToggle() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerVolumechange() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerWaiting() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerWebkitanimationend() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerWebkitanimationiteration() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerWebkitanimationstart() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerWebkittransitionend() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerWheel(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerWheel() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerBlur(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerBlur() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerError(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerError() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerFocus(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerFocus() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerLoad(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerLoad() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerResize(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerResize() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerScroll(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerScroll() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerAfterprint() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerBeforeprint() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerBeforeunload() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerHashchange() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerLanguagechange() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerMessage(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerMessage() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerMessageerror() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerOffline(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerOffline() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerOnline(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerOnline() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerPageswap() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerPagehide() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerPagereveal() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerPageshow() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerPopstate() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerRejectionhandled() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerStorage(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerStorage() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerUnhandledrejection() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerUnload(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerUnload() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerReadystatechange() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagInputDateTimeLocal) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagInputDateTimeLocal) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagInputDateTimeLocal) RemoveListenerVisibilitychange() (ref *TagInputDateTimeLocal) {
+	e.commonEvents.RemoveListenerVisibilitychange()
 	return e
 }

@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"log"
 	"strconv"
 	"strings"
@@ -9,6 +10,8 @@ import (
 )
 
 type TagInputButton struct {
+	commonEvents commonEvents
+
 	tag         Tag
 	id          string
 	selfElement js.Value
@@ -1369,5 +1372,1054 @@ func (e *TagInputButton) SetY(y int) (ref *TagInputButton) {
 
 	e.UpdateBoundingClientRect()
 
+	return e
+}
+
+func (e *TagInputButton) Get() (el js.Value) {
+	return e.selfElement
+}
+
+func (e *TagInputButton) AddListenerAbort(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerAbort() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagInputButton) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerAuxclick() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagInputButton) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerBeforeinput() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagInputButton) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerBeforematch() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagInputButton) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerBeforetoggle() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagInputButton) AddListenerCancel(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerCancel() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagInputButton) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerCanplay() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagInputButton) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerCanplaythrough() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagInputButton) AddListenerChange(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerChange() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+func (e *TagInputButton) AddListenerClick(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerClick() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagInputButton) AddListenerClose(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerClose() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagInputButton) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerContextlost() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagInputButton) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerContextmenu() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagInputButton) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerContextrestored() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagInputButton) AddListenerCopy(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerCopy() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagInputButton) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerCuechange() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagInputButton) AddListenerCut(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerCut() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagInputButton) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerDblclick() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagInputButton) AddListenerDrag(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerDrag() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagInputButton) AddListenerDragend(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerDragend() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagInputButton) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerDragenter() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagInputButton) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerDragleave() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagInputButton) AddListenerDragover(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerDragover() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagInputButton) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerDragstart() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagInputButton) AddListenerDrop(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerDrop() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagInputButton) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerDurationchange() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagInputButton) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerEmptied() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagInputButton) AddListenerEnded(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerEnded() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagInputButton) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerFormdata() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagInputButton) AddListenerInput(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerInput() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagInputButton) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerInvalid() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagInputButton) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerKeydown() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagInputButton) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerKeypress() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagInputButton) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerKeyup() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagInputButton) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerLoadeddata() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagInputButton) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerLoadedmetadata() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagInputButton) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerLoadstart() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagInputButton) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerMousedown() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagInputButton) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerMouseenter() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagInputButton) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerMouseleave() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagInputButton) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerMousemove() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagInputButton) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerMouseout() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagInputButton) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerMouseover() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagInputButton) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerMouseup() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagInputButton) AddListenerPaste(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerPaste() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagInputButton) AddListenerPause(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerPause() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagInputButton) AddListenerPlay(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerPlay() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagInputButton) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerPlaying() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagInputButton) AddListenerProgress(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerProgress() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagInputButton) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerRatechange() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagInputButton) AddListenerReset(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerReset() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagInputButton) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerScrollend() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagInputButton) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerSecuritypolicyviolation() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagInputButton) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerSeeked() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagInputButton) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerSeeking() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagInputButton) AddListenerSelect(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerSelect() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagInputButton) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerSlotchange() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagInputButton) AddListenerStalled(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerStalled() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagInputButton) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerSubmit() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagInputButton) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerSuspend() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagInputButton) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerTimeupdate() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagInputButton) AddListenerToggle(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerToggle() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagInputButton) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerVolumechange() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagInputButton) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerWaiting() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagInputButton) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerWebkitanimationend() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagInputButton) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerWebkitanimationiteration() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagInputButton) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerWebkitanimationstart() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagInputButton) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerWebkittransitionend() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagInputButton) AddListenerWheel(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerWheel() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagInputButton) AddListenerBlur(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerBlur() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagInputButton) AddListenerError(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerError() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagInputButton) AddListenerFocus(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerFocus() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagInputButton) AddListenerLoad(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerLoad() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagInputButton) AddListenerResize(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerResize() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagInputButton) AddListenerScroll(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerScroll() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagInputButton) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerAfterprint() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagInputButton) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerBeforeprint() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagInputButton) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerBeforeunload() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagInputButton) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerHashchange() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagInputButton) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerLanguagechange() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagInputButton) AddListenerMessage(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerMessage() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagInputButton) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerMessageerror() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagInputButton) AddListenerOffline(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerOffline() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagInputButton) AddListenerOnline(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerOnline() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagInputButton) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerPageswap() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagInputButton) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerPagehide() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagInputButton) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerPagereveal() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagInputButton) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerPageshow() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagInputButton) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerPopstate() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagInputButton) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerRejectionhandled() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagInputButton) AddListenerStorage(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerStorage() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagInputButton) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerUnhandledrejection() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagInputButton) AddListenerUnload(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerUnload() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagInputButton) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerReadystatechange() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagInputButton) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagInputButton) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagInputButton) RemoveListenerVisibilitychange() (ref *TagInputButton) {
+	e.commonEvents.RemoveListenerVisibilitychange()
 	return e
 }

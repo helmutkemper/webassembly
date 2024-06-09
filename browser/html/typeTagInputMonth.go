@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"log"
 	"strconv"
 	"strings"
@@ -9,6 +10,8 @@ import (
 )
 
 type TagInputMonth struct {
+	commonEvents commonEvents
+
 	tag         Tag
 	id          string
 	selfElement js.Value
@@ -1501,5 +1504,1054 @@ func (e *TagInputMonth) SetY(y int) (ref *TagInputMonth) {
 
 	e.UpdateBoundingClientRect()
 
+	return e
+}
+
+func (e *TagInputMonth) Get() (el js.Value) {
+	return e.selfElement
+}
+
+func (e *TagInputMonth) AddListenerAbort(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerAbort() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerAuxclick() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerBeforeinput() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerBeforematch() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerBeforetoggle() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerCancel(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerCancel() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerCanplay() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerCanplaythrough() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerChange(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerChange() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerClick(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerClick() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerClose(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerClose() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerContextlost() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerContextmenu() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerContextrestored() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerCopy(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerCopy() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerCuechange() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerCut(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerCut() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerDblclick() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerDrag(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerDrag() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerDragend(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerDragend() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerDragenter() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerDragleave() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerDragover(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerDragover() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerDragstart() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerDrop(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerDrop() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerDurationchange() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerEmptied() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerEnded(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerEnded() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerFormdata() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerInput(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerInput() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerInvalid() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerKeydown() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerKeypress() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerKeyup() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerLoadeddata() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerLoadedmetadata() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerLoadstart() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerMousedown() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerMouseenter() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerMouseleave() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerMousemove() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerMouseout() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerMouseover() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerMouseup() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerPaste(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerPaste() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerPause(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerPause() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerPlay(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerPlay() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerPlaying() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerProgress(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerProgress() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerRatechange() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerReset(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerReset() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerScrollend() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerSecuritypolicyviolation() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerSeeked() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerSeeking() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerSelect(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerSelect() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerSlotchange() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerStalled(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerStalled() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerSubmit() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerSuspend() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerTimeupdate() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerToggle(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerToggle() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerVolumechange() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerWaiting() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerWebkitanimationend() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerWebkitanimationiteration() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerWebkitanimationstart() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerWebkittransitionend() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerWheel(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerWheel() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerBlur(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerBlur() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerError(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerError() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerFocus(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerFocus() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerLoad(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerLoad() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerResize(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerResize() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerScroll(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerScroll() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerAfterprint() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerBeforeprint() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerBeforeunload() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerHashchange() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerLanguagechange() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerMessage(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerMessage() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerMessageerror() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerOffline(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerOffline() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerOnline(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerOnline() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerPageswap() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerPagehide() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerPagereveal() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerPageshow() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerPopstate() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerRejectionhandled() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerStorage(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerStorage() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerUnhandledrejection() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerUnload(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerUnload() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerReadystatechange() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagInputMonth) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagInputMonth) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagInputMonth) RemoveListenerVisibilitychange() (ref *TagInputMonth) {
+	e.commonEvents.RemoveListenerVisibilitychange()
 	return e
 }

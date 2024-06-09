@@ -1,6 +1,7 @@
 package html
 
 import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"image/color"
 	"log"
 	"strconv"
@@ -19,6 +20,7 @@ import (
 // Para renderizar o texto ao longo da forma de um <path>, coloque o texto em um elemento <textPath> que tenha um
 // atributo href com uma referência ao elemento <path>.
 type TagSvgTextPath struct {
+	commonEvents commonEvents
 
 	// id
 	//
@@ -3060,5 +3062,1049 @@ func (e *TagSvgTextPath) GetLeft() (left float64) {
 //	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgTextPath) Reference(reference **TagSvgTextPath) (ref *TagSvgTextPath) {
 	*reference = e
+	return e
+}
+func (e *TagSvgTextPath) AddListenerAbort(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerAbort() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerAuxclick() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerBeforeinput() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerBeforematch() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerBeforetoggle() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerCancel(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerCancel() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerCanplay() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerCanplaythrough() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerChange(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerChange() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerClick(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerClick() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerClose(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerClose() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerContextlost() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerContextmenu() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerContextrestored() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerCopy(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerCopy() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerCuechange() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerCut(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerCut() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerDblclick() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerDrag(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerDrag() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerDragend(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerDragend() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerDragenter() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerDragleave() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerDragover(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerDragover() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerDragstart() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerDrop(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerDrop() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerDurationchange() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerEmptied() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerEnded(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerEnded() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerFormdata() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerInput(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerInput() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerInvalid() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerKeydown() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerKeypress() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerKeyup() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerLoadeddata() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerLoadedmetadata() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerLoadstart() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerMousedown() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerMouseenter() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerMouseleave() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerMousemove() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerMouseout() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerMouseover() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerMouseup() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerPaste(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerPaste() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerPause(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerPause() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerPlay(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerPlay() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerPlaying() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerProgress(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerProgress() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerRatechange() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerReset(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerReset() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerScrollend() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerSecuritypolicyviolation() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerSeeked() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerSeeking() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerSelect(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerSelect() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerSlotchange() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerStalled(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerStalled() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerSubmit() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerSuspend() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerTimeupdate() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerToggle(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerToggle() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerVolumechange() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerWaiting() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerWebkitanimationend() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerWebkitanimationiteration() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerWebkitanimationstart() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerWebkittransitionend() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerWheel(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerWheel() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerBlur(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerBlur() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerError(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerError() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerFocus(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerFocus() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerLoad(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerLoad() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerResize(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerResize() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerScroll(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerScroll() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerAfterprint() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerBeforeprint() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerBeforeunload() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerHashchange() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerLanguagechange() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerMessage(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerMessage() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerMessageerror() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerOffline(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerOffline() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerOnline(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerOnline() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerPageswap() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerPagehide() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerPagereveal() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerPageshow() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerPopstate() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerRejectionhandled() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerStorage(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerStorage() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerUnhandledrejection() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerUnload(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerUnload() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerReadystatechange() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagSvgTextPath) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagSvgTextPath) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagSvgTextPath) RemoveListenerVisibilitychange() (ref *TagSvgTextPath) {
+	e.commonEvents.RemoveListenerVisibilitychange()
 	return e
 }

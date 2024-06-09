@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"log"
 	"strconv"
 	"strings"
@@ -9,6 +10,8 @@ import (
 )
 
 type TagInputRadio struct {
+	commonEvents commonEvents
+
 	tag         Tag
 	id          string
 	selfElement js.Value
@@ -1413,5 +1416,1054 @@ func (e *TagInputRadio) SetY(y int) (ref *TagInputRadio) {
 
 	e.UpdateBoundingClientRect()
 
+	return e
+}
+
+func (e *TagInputRadio) Get() (el js.Value) {
+	return e.selfElement
+}
+
+func (e *TagInputRadio) AddListenerAbort(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerAbort() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerAuxclick() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerBeforeinput() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerBeforematch() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerBeforetoggle() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerCancel(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerCancel() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerCanplay() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerCanplaythrough() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerChange(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerChange() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerClick(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerClick() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerClose(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerClose() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerContextlost() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerContextmenu() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerContextrestored() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerCopy(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerCopy() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerCuechange() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerCut(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerCut() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerDblclick() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerDrag(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerDrag() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerDragend(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerDragend() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerDragenter() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerDragleave() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerDragover(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerDragover() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerDragstart() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerDrop(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerDrop() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerDurationchange() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerEmptied() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerEnded(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerEnded() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerFormdata() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerInput(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerInput() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerInvalid() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerKeydown() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerKeypress() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerKeyup() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerLoadeddata() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerLoadedmetadata() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerLoadstart() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerMousedown() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerMouseenter() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerMouseleave() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerMousemove() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerMouseout() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerMouseover() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerMouseup() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerPaste(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerPaste() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerPause(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerPause() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerPlay(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerPlay() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerPlaying() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerProgress(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerProgress() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerRatechange() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerReset(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerReset() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerScrollend() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerSecuritypolicyviolation() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerSeeked() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerSeeking() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerSelect(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerSelect() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerSlotchange() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerStalled(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerStalled() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerSubmit() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerSuspend() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerTimeupdate() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerToggle(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerToggle() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerVolumechange() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerWaiting() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerWebkitanimationend() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerWebkitanimationiteration() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerWebkitanimationstart() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerWebkittransitionend() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerWheel(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerWheel() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerBlur(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerBlur() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerError(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerError() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerFocus(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerFocus() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerLoad(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerLoad() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerResize(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerResize() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerScroll(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerScroll() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerAfterprint() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerBeforeprint() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerBeforeunload() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerHashchange() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerLanguagechange() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerMessage(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerMessage() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerMessageerror() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerOffline(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerOffline() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerOnline(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerOnline() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerPageswap() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerPagehide() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerPagereveal() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerPageshow() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerPopstate() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerRejectionhandled() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerStorage(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerStorage() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerUnhandledrejection() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerUnload(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerUnload() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerReadystatechange() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagInputRadio) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagInputRadio) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagInputRadio) RemoveListenerVisibilitychange() (ref *TagInputRadio) {
+	e.commonEvents.RemoveListenerVisibilitychange()
 	return e
 }

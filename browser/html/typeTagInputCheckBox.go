@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"log"
 	"strconv"
 	"strings"
@@ -9,6 +10,8 @@ import (
 )
 
 type TagInputCheckBox struct {
+	commonEvents commonEvents
+
 	tag         Tag
 	id          string
 	selfElement js.Value
@@ -1413,5 +1416,1054 @@ func (e *TagInputCheckBox) SetY(y int) (ref *TagInputCheckBox) {
 
 	e.UpdateBoundingClientRect()
 
+	return e
+}
+
+func (e *TagInputCheckBox) Get() (el js.Value) {
+	return e.selfElement
+}
+
+func (e *TagInputCheckBox) AddListenerAbort(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerAbort() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerAuxclick() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerBeforeinput() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerBeforematch() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerBeforetoggle() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerCancel(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerCancel() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerCanplay() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerCanplaythrough() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerChange(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerChange() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerClick(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerClick() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerClose(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerClose() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerContextlost() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerContextmenu() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerContextrestored() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerCopy(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerCopy() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerCuechange() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerCut(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerCut() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerDblclick() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerDrag(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerDrag() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerDragend(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerDragend() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerDragenter() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerDragleave() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerDragover(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerDragover() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerDragstart() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerDrop(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerDrop() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerDurationchange() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerEmptied() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerEnded(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerEnded() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerFormdata() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerInput(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerInput() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerInvalid() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerKeydown() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerKeypress() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerKeyup() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerLoadeddata() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerLoadedmetadata() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerLoadstart() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerMousedown() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerMouseenter() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerMouseleave() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerMousemove() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerMouseout() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerMouseover() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerMouseup() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerPaste(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerPaste() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerPause(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerPause() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerPlay(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerPlay() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerPlaying() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerProgress(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerProgress() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerRatechange() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerReset(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerReset() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerScrollend() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerSecuritypolicyviolation() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerSeeked() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerSeeking() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerSelect(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerSelect() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerSlotchange() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerStalled(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerStalled() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerSubmit() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerSuspend() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerTimeupdate() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerToggle(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerToggle() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerVolumechange() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerWaiting() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerWebkitanimationend() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerWebkitanimationiteration() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerWebkitanimationstart() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerWebkittransitionend() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerWheel(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerWheel() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerBlur(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerBlur() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerError(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerError() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerFocus(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerFocus() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerLoad(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerLoad() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerResize(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerResize() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerScroll(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerScroll() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerAfterprint() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerBeforeprint() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerBeforeunload() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerHashchange() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerLanguagechange() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerMessage(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerMessage() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerMessageerror() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerOffline(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerOffline() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerOnline(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerOnline() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerPageswap() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerPagehide() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerPagereveal() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerPageshow() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerPopstate() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerRejectionhandled() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerStorage(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerStorage() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerUnhandledrejection() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerUnload(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerUnload() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerReadystatechange() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagInputCheckBox) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagInputCheckBox) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagInputCheckBox) RemoveListenerVisibilitychange() (ref *TagInputCheckBox) {
+	e.commonEvents.RemoveListenerVisibilitychange()
 	return e
 }

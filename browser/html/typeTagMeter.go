@@ -2,6 +2,7 @@ package html
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"log"
 	"strconv"
 	"strings"
@@ -9,6 +10,8 @@ import (
 )
 
 type TagMeter struct {
+	commonEvents commonEvents
+
 	tag         Tag
 	id          string
 	selfElement js.Value
@@ -1258,5 +1261,1050 @@ func (e *TagMeter) SetY(y int) (ref *TagMeter) {
 
 	e.UpdateBoundingClientRect()
 
+	return e
+}
+
+func (e *TagMeter) AddListenerAbort(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerAbort() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagMeter) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerAuxclick() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagMeter) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerBeforeinput() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagMeter) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerBeforematch() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagMeter) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerBeforetoggle() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagMeter) AddListenerCancel(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerCancel() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagMeter) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerCanplay() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagMeter) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerCanplaythrough() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagMeter) AddListenerChange(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerChange() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+func (e *TagMeter) AddListenerClick(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerClick() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagMeter) AddListenerClose(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerClose() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagMeter) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerContextlost() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagMeter) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerContextmenu() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagMeter) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerContextrestored() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagMeter) AddListenerCopy(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerCopy() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagMeter) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerCuechange() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagMeter) AddListenerCut(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerCut() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagMeter) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerDblclick() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagMeter) AddListenerDrag(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerDrag() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagMeter) AddListenerDragend(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerDragend() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagMeter) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerDragenter() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagMeter) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerDragleave() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagMeter) AddListenerDragover(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerDragover() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagMeter) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerDragstart() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagMeter) AddListenerDrop(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerDrop() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagMeter) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerDurationchange() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagMeter) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerEmptied() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagMeter) AddListenerEnded(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerEnded() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagMeter) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerFormdata() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagMeter) AddListenerInput(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerInput() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagMeter) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerInvalid() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagMeter) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerKeydown() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagMeter) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerKeypress() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagMeter) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerKeyup() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagMeter) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerLoadeddata() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagMeter) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerLoadedmetadata() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagMeter) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerLoadstart() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagMeter) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerMousedown() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagMeter) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerMouseenter() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagMeter) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerMouseleave() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagMeter) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerMousemove() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagMeter) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerMouseout() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagMeter) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerMouseover() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagMeter) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerMouseup() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagMeter) AddListenerPaste(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerPaste() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagMeter) AddListenerPause(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerPause() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagMeter) AddListenerPlay(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerPlay() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagMeter) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerPlaying() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagMeter) AddListenerProgress(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerProgress() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagMeter) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerRatechange() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagMeter) AddListenerReset(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerReset() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagMeter) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerScrollend() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagMeter) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerSecuritypolicyviolation() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagMeter) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerSeeked() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagMeter) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerSeeking() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagMeter) AddListenerSelect(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerSelect() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagMeter) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerSlotchange() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagMeter) AddListenerStalled(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerStalled() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagMeter) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerSubmit() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagMeter) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerSuspend() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagMeter) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerTimeupdate() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagMeter) AddListenerToggle(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerToggle() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagMeter) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerVolumechange() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagMeter) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerWaiting() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagMeter) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerWebkitanimationend() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagMeter) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerWebkitanimationiteration() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagMeter) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerWebkitanimationstart() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagMeter) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerWebkittransitionend() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagMeter) AddListenerWheel(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerWheel() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagMeter) AddListenerBlur(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerBlur() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagMeter) AddListenerError(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerError() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagMeter) AddListenerFocus(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerFocus() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagMeter) AddListenerLoad(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerLoad() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagMeter) AddListenerResize(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerResize() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagMeter) AddListenerScroll(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerScroll() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagMeter) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerAfterprint() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagMeter) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerBeforeprint() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagMeter) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerBeforeunload() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagMeter) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerHashchange() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagMeter) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerLanguagechange() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagMeter) AddListenerMessage(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerMessage() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagMeter) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerMessageerror() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagMeter) AddListenerOffline(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerOffline() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagMeter) AddListenerOnline(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerOnline() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagMeter) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerPageswap() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagMeter) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerPagehide() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagMeter) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerPagereveal() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagMeter) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerPageshow() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagMeter) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerPopstate() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagMeter) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerRejectionhandled() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagMeter) AddListenerStorage(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerStorage() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagMeter) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerUnhandledrejection() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagMeter) AddListenerUnload(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerUnload() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagMeter) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerReadystatechange() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagMeter) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagMeter) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagMeter) RemoveListenerVisibilitychange() (ref *TagMeter) {
+	e.commonEvents.RemoveListenerVisibilitychange()
 	return e
 }

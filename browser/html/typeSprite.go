@@ -106,8 +106,8 @@ type Sprite struct {
 	clearRectDeltaWidth  int
 	clearRectDeltaHeight int
 	init                 bool
-	onChange             *chan struct{}
-	onEnd                *chan struct{}
+	onChange             chan struct{}
+	onEnd                chan struct{}
 
 	scene     map[string]spriteConfig
 	sceneName string
@@ -174,8 +174,8 @@ func (e *Sprite) DX(x int) (ref *Sprite) {
 // Português:
 //
 // Channel disparado quando uma sena é terminada.
-func (e *Sprite) OnEnd(onEnd *chan struct{}) (ref *Sprite) {
-	*onEnd = make(chan struct{}, 1)
+func (e *Sprite) OnEnd(onEnd chan struct{}) (ref *Sprite) {
+	onEnd = make(chan struct{}, 1)
 	e.onEnd = onEnd
 	return e
 }
@@ -189,8 +189,8 @@ func (e *Sprite) OnEnd(onEnd *chan struct{}) (ref *Sprite) {
 // Português:
 //
 // Channel disparado quando uma sprite é trocada.
-func (e *Sprite) OnChange(onChange *chan struct{}) (ref *Sprite) {
-	*onChange = make(chan struct{}, 1)
+func (e *Sprite) OnChange(onChange chan struct{}) (ref *Sprite) {
+	onChange = make(chan struct{}, 1)
 	e.onChange = onChange
 	return e
 }
@@ -268,8 +268,8 @@ func (e *Sprite) Start(name string) (err error) {
 	e.collisionData = config.data[0].collisionData
 	e.collisionBox = config.data[0].collisionBox
 
-	if e.onChange != nil && len(*e.onChange) > 1 {
-		*e.onChange <- struct{}{}
+	if e.onChange != nil && len(e.onChange) > 1 {
+		e.onChange <- struct{}{}
 	}
 
 	if len(config.data) == 1 {
@@ -297,8 +297,8 @@ func (e *Sprite) Start(name string) (err error) {
 				if i < l {
 					i += 1
 				} else {
-					if e.onEnd != nil && len(*e.onEnd) == 0 {
-						*e.onEnd <- struct{}{}
+					if e.onEnd != nil && len(e.onEnd) == 0 {
+						e.onEnd <- struct{}{}
 					}
 
 					i = 0
@@ -307,8 +307,8 @@ func (e *Sprite) Start(name string) (err error) {
 				e.imageData = data[i].imageData
 				e.collisionData = data[i].collisionData
 				e.collisionBox = data[i].collisionBox
-				if e.onChange != nil && len(*e.onChange) == 0 {
-					*e.onChange <- struct{}{}
+				if e.onChange != nil && len(e.onChange) == 0 {
+					e.onChange <- struct{}{}
 				}
 
 				if data[i].interval == 0 {

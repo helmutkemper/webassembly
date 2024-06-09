@@ -847,7 +847,7 @@ func (e *Stage) SetDrawZIndex(UId string, index int) int {
 	return e.engine.DrawSetZIndex(UId, index)
 }
 
-func (e *Stage) AddListenerKeyUp(keyBoardCh *chan keyboard.Data) (ref *Stage) {
+func (e *Stage) AddListenerKeyUp(keyBoardCh chan keyboard.Data) (ref *Stage) {
 	if e.fnKeyUp != nil {
 		return e
 	}
@@ -857,7 +857,7 @@ func (e *Stage) AddListenerKeyUp(keyBoardCh *chan keyboard.Data) (ref *Stage) {
 		if len(args) == 0 {
 			return nil
 		}
-		*keyBoardCh <- keyboard.EventManager(keyboard.KEventKeyUp, this, args)
+		keyBoardCh <- keyboard.EventManager(keyboard.KEventKeyUp, this, args)
 		return nil
 	})
 	e.fnKeyUp = &fn
@@ -870,7 +870,7 @@ func (e *Stage) AddListenerKeyUp(keyBoardCh *chan keyboard.Data) (ref *Stage) {
 	return e
 }
 
-func (e *Stage) AddListenerKeyDown(keyBoardCh *chan keyboard.Data) (ref *Stage) {
+func (e *Stage) AddListenerKeyDown(keyBoardCh chan keyboard.Data) (ref *Stage) {
 	if e.fnKeyDown != nil {
 		return e
 	}
@@ -880,7 +880,7 @@ func (e *Stage) AddListenerKeyDown(keyBoardCh *chan keyboard.Data) (ref *Stage) 
 		if len(args) == 0 {
 			return nil
 		}
-		*keyBoardCh <- keyboard.EventManager(keyboard.KEventKeyDown, this, args)
+		keyBoardCh <- keyboard.EventManager(keyboard.KEventKeyDown, this, args)
 		return nil
 	})
 	e.fnKeyDown = &fn
@@ -893,7 +893,7 @@ func (e *Stage) AddListenerKeyDown(keyBoardCh *chan keyboard.Data) (ref *Stage) 
 	return e
 }
 
-func (e *Stage) AddListenerResize(windowEvet *chan document.Data) (ref *Stage) {
+func (e *Stage) AddListenerResize(windowEvet chan document.Data) (ref *Stage) {
 	if e.fnResize != nil {
 		return e
 	}
@@ -903,7 +903,7 @@ func (e *Stage) AddListenerResize(windowEvet *chan document.Data) (ref *Stage) {
 		if len(args) == 0 {
 			return nil
 		}
-		*windowEvet <- document.EventManager(document.KEventResize, this, args)
+		windowEvet <- document.EventManager(document.KEventResize, this, args)
 		return nil
 	})
 	e.fnResize = &fn
@@ -930,7 +930,7 @@ func (e *Stage) RemoveListenerResize() (ref *Stage) {
 	return e
 }
 
-func (e *Stage) AddListenerLoad(windowEvet *chan document.Data) (ref *Stage) {
+func (e *Stage) AddListenerLoad(windowEvet chan document.Data) (ref *Stage) {
 	if e.fnLoad != nil {
 		return e
 	}
@@ -940,7 +940,7 @@ func (e *Stage) AddListenerLoad(windowEvet *chan document.Data) (ref *Stage) {
 		if len(args) == 0 {
 			return nil
 		}
-		*windowEvet <- document.EventManager(document.KEventLoad, this, args)
+		windowEvet <- document.EventManager(document.KEventLoad, this, args)
 		return nil
 	})
 	e.fnLoad = &fn
@@ -953,7 +953,7 @@ func (e *Stage) AddListenerLoad(windowEvet *chan document.Data) (ref *Stage) {
 	return e
 }
 
-func (e *Stage) AddListenerOnUnload(windowEvet *chan document.Data) (ref *Stage) {
+func (e *Stage) AddListenerOnUnload(windowEvet chan document.Data) (ref *Stage) {
 	if e.fnUnload != nil {
 		return e
 	}
@@ -963,7 +963,7 @@ func (e *Stage) AddListenerOnUnload(windowEvet *chan document.Data) (ref *Stage)
 		if len(args) == 0 {
 			return nil
 		}
-		*windowEvet <- document.EventManager(document.KEventUnLoad, this, args)
+		windowEvet <- document.EventManager(document.KEventUnLoad, this, args)
 		return nil
 	})
 	e.fnUnload = &fn

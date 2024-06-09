@@ -1,0 +1,210 @@
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+      body {
+          margin: 0 !important;
+          padding: 0 !important;
+      }
+  </style>
+  <script src="../support/wasm_exec.js"></script>
+  <script>
+    const go = new Go();
+    WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+      go.run(result.instance);
+    });
+  </script>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    /* Estilos base para os controles deslizantes e campos de número */
+    .slider, .number {
+      width: 100%; /* Ocupa a largura total do contêiner */
+      margin: 5px 0; /* Espaço acima e abaixo de cada controle */
+      box-sizing: border-box; /* Inclui padding e border na largura total */
+    }
+
+    /* Estilos adicionais para os controles deslizantes */
+    .slider {
+      -webkit-appearance: none; /* Remove a aparência padrão */
+      margin-top: 16px;
+      appearance: none;
+      height: 5px; /* Altura do controle deslizante */
+      background: #ddd; /* Cor de fundo */
+      outline: none; /* Remove o contorno ao focar */
+      opacity: 0.7; /* Transparência */
+      transition: opacity .2s; /* Efeito de transição ao passar o mouse */
+    }
+
+    .slider:hover {
+      opacity: 1; /* Opacidade total ao passar o mouse */
+    }
+
+    /* Estilos para o thumb do controle deslizante */
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Remove a aparência padrão */
+      appearance: none;
+      width: 15px; /* Largura do thumb */
+      height: 25px; /* Altura do thumb */
+      background: #4CAF50; /* Cor de fundo do thumb */
+      opacity: 0.8;
+      cursor: pointer; /* Formato do cursor como ponteiro */
+    }
+
+    .slider::-moz-range-thumb {
+      width: 25px; /* Largura do thumb */
+      height: 25px; /* Altura do thumb */
+      background: #4CAF50; /* Cor de fundo do thumb */
+      cursor: pointer; /* Formato do cursor como ponteiro */
+    }
+
+    /* Estilos para os campos de número */
+    .number {
+      border: 1px solid #ccc; /* Borda */
+      border-radius: 4px; /* Bordas arredondadas */
+    }
+
+    .text {
+      margin-top: 10px;
+      font-family: Verdana;
+    }
+
+    /*----------------------------------------------------------------------*/
+    .cell {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 330px;
+      /*padding: 10px;*/
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+    }
+
+    .cell .text {
+      flex-grow: 1;
+    }
+
+    .cell .slider {
+      width: 100px;
+    }
+
+    .cell input[type='number'] {
+      -moz-appearance: textfield;
+      margin-left: 10px;
+      width: 30px;
+      text-align: center;
+    }
+
+    /* Para Chrome, Safari, Edge, Opera */
+    .cell input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+
+
+
+    /*-------------------------------*/
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      width: 300px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+    }
+
+    /* elemento número início                       */
+    /* estrutura: label + slice     + input numeric */
+    /*            label:  ------*--  [ n ]          */
+
+    .container .text {
+      flex-grow: 1;
+    }
+
+    .container .slider {
+      width: 100px;
+    }
+
+    .container input[type='number'] {
+      -moz-appearance: textfield;
+      margin-left: 10px;
+      width: 30px;
+      text-align: center;
+    }
+
+    /* Para Chrome, Safari, Edge, Opera */
+    .container input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+    /* elemento número fim                          */
+
+    /*-----------------------------------------------------------------------------------------------*/
+    .internalCell {
+      display: flex;
+      justify-content: space-between;
+      width: 300px;
+      padding-left: 20px;
+      border: 0px solid #ddd;
+    }
+
+    /* elemento número início                       */
+    /* estrutura: label + slice     + input numeric */
+    /*            label:  ------*--  [ n ]          */
+
+    .internalCell .text {
+      flex-grow: 1;
+    }
+
+    .internalCell .label {
+      padding-bottom: 20px;
+    }
+
+    .internalCell .slider {
+      width: 100px;
+    }
+
+    .internalCell input[type='number'] {
+      -moz-appearance: textfield;
+      margin-left: 10px;
+      width: 50px;
+      height: 30px;
+      text-align: center;
+    }
+
+    /* Para Chrome, Safari, Edge, Opera */
+    .internalCell input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+    /* elemento número fim                          */
+
+    #panel {
+      display: none;
+    }
+
+    #toggleButton {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<i class="material-icons" id="toggleButton">menu</i>
+
+
+
+</body>
+</html>
+<script>
+  document.getElementById('toggleButton').addEventListener('click', function() {
+    var panel = document.getElementById('panel');
+    if (panel.style.display === "none") {
+      panel.style.display = "block";
+    } else {
+      panel.style.display = "none";
+    }
+
+  });
+  panel.style.display = "block";
+</script>

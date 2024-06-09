@@ -1,6 +1,7 @@
 package html
 
 import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
 	"image/color"
 	"log"
 	"strconv"
@@ -29,6 +30,7 @@ import (
 // Graphical objects can be referenced from anywhere, however, defining these objects inside of a <defs> element
 // promotes understandability of the SVG content and is beneficial to the overall accessibility of the document.
 type TagSvgLinearGradient struct {
+	commonEvents commonEvents
 
 	// id
 	//
@@ -2866,5 +2868,1049 @@ func (e *TagSvgLinearGradient) Html(value string) (ref *TagSvgLinearGradient) {
 //	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
 func (e *TagSvgLinearGradient) Reference(reference **TagSvgLinearGradient) (ref *TagSvgLinearGradient) {
 	*reference = e
+	return e
+}
+func (e *TagSvgLinearGradient) AddListenerAbort(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAbort(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerAbort() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerAbort()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerAuxclick(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAuxclick(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerAuxclick() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerAuxclick()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerBeforeinput(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeinput(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerBeforeinput() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerBeforeinput()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerBeforematch(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforematch(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerBeforematch() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerBeforematch()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerBeforetoggle(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforetoggle(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerBeforetoggle() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerBeforetoggle()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerCancel(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCancel(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerCancel() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerCancel()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerCanplay(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplay(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerCanplay() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerCanplay()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerCanplaythrough(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCanplaythrough(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerCanplaythrough() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerCanplaythrough()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerChange(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerChange(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerChange() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerChange()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerClick(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClick(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerClick() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerClick()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerClose(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerClose(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerClose() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerClose()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerContextlost(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextlost(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerContextlost() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerContextlost()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerContextmenu(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextmenu(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerContextmenu() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerContextmenu()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerContextrestored(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerContextrestored(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerContextrestored() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerContextrestored()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerCopy(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCopy(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerCopy() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerCopy()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerCuechange(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCuechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerCuechange() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerCuechange()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerCut(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerCut(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerCut() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerCut()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerDblclick(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDblclick(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerDblclick() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerDblclick()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerDrag(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrag(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerDrag() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerDrag()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerDragend(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragend(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerDragend() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerDragend()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerDragenter(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragenter(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerDragenter() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerDragenter()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerDragleave(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragleave(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerDragleave() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerDragleave()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerDragover(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragover(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerDragover() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerDragover()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerDragstart(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDragstart(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerDragstart() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerDragstart()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerDrop(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDrop(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerDrop() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerDrop()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerDurationchange(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerDurationchange(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerDurationchange() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerDurationchange()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerEmptied(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEmptied(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerEmptied() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerEmptied()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerEnded(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerEnded(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerEnded() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerEnded()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerFormdata(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFormdata(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerFormdata() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerFormdata()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerInput(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInput(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerInput() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerInput()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerInvalid(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerInvalid(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerInvalid() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerInvalid()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerKeydown(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeydown(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerKeydown() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerKeydown()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerKeypress(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeypress(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerKeypress() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerKeypress()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerKeyup(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerKeyup(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerKeyup() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerKeyup()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerLoadeddata(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadeddata(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerLoadeddata() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerLoadeddata()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerLoadedmetadata(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadedmetadata(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerLoadedmetadata() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerLoadedmetadata()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerLoadstart(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoadstart(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerLoadstart() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerLoadstart()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerMousedown(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousedown(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerMousedown() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerMousedown()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerMouseenter(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseenter(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerMouseenter() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerMouseenter()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerMouseleave(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseleave(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerMouseleave() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerMouseleave()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerMousemove(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMousemove(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerMousemove() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerMousemove()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerMouseout(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseout(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerMouseout() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerMouseout()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerMouseover(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseover(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerMouseover() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerMouseover()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerMouseup(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMouseup(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerMouseup() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerMouseup()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerPaste(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPaste(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerPaste() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerPaste()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerPause(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPause(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerPause() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerPause()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerPlay(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlay(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerPlay() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerPlay()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerPlaying(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPlaying(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerPlaying() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerPlaying()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerProgress(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerProgress(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerProgress() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerProgress()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerRatechange(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRatechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerRatechange() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerRatechange()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerReset(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReset(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerReset() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerReset()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerScrollend(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScrollend(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerScrollend() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerScrollend()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerSecuritypolicyviolation(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSecuritypolicyviolation(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerSecuritypolicyviolation() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerSecuritypolicyviolation()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerSeeked(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeked(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerSeeked() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerSeeked()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerSeeking(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSeeking(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerSeeking() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerSeeking()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerSelect(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSelect(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerSelect() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerSelect()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerSlotchange(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSlotchange(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerSlotchange() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerSlotchange()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerStalled(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStalled(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerStalled() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerStalled()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerSubmit(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSubmit(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerSubmit() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerSubmit()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerSuspend(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerSuspend(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerSuspend() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerSuspend()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerTimeupdate(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerTimeupdate(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerTimeupdate() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerTimeupdate()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerToggle(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerToggle(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerToggle() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerToggle()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerVolumechange(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVolumechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerVolumechange() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerVolumechange()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerWaiting(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWaiting(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerWaiting() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerWaiting()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerWebkitanimationend(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationend(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerWebkitanimationend() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerWebkitanimationend()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerWebkitanimationiteration(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationiteration(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerWebkitanimationiteration() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerWebkitanimationiteration()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerWebkitanimationstart(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkitanimationstart(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerWebkitanimationstart() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerWebkitanimationstart()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerWebkittransitionend(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWebkittransitionend(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerWebkittransitionend() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerWebkittransitionend()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerWheel(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerWheel(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerWheel() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerWheel()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerBlur(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBlur(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerBlur() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerBlur()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerError(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerError(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerError() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerError()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerFocus(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerFocus(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerFocus() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerFocus()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerLoad(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLoad(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerLoad() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerLoad()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerResize(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerResize(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerResize() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerResize()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerScroll(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerScroll(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerScroll() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerScroll()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerAfterprint(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerAfterprint(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerAfterprint() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerAfterprint()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerBeforeprint(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeprint(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerBeforeprint() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerBeforeprint()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerBeforeunload(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerBeforeunload(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerBeforeunload() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerBeforeunload()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerHashchange(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerHashchange(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerHashchange() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerHashchange()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerLanguagechange(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerLanguagechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerLanguagechange() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerLanguagechange()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerMessage(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessage(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerMessage() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerMessage()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerMessageerror(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerMessageerror(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerMessageerror() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerMessageerror()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerOffline(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOffline(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerOffline() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerOffline()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerOnline(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerOnline(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerOnline() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerOnline()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerPageswap(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageswap(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerPageswap() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerPageswap()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerPagehide(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagehide(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerPagehide() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerPagehide()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerPagereveal(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPagereveal(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerPagereveal() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerPagereveal()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerPageshow(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPageshow(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerPageshow() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerPageshow()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerPopstate(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerPopstate(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerPopstate() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerPopstate()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerRejectionhandled(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerRejectionhandled(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerRejectionhandled() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerRejectionhandled()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerStorage(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerStorage(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerStorage() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerStorage()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerUnhandledrejection(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnhandledrejection(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerUnhandledrejection() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerUnhandledrejection()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerUnload(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerUnload(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerUnload() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerUnload()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerReadystatechange(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerReadystatechange(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerReadystatechange() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerReadystatechange()
+	return e
+}
+
+func (e *TagSvgLinearGradient) AddListenerVisibilitychange(genericEvent chan generic.Data) (ref *TagSvgLinearGradient) {
+	e.commonEvents.selfElement = &e.selfElement
+	e.commonEvents.AddListenerVisibilitychange(genericEvent)
+	return e
+}
+
+func (e *TagSvgLinearGradient) RemoveListenerVisibilitychange() (ref *TagSvgLinearGradient) {
+	e.commonEvents.RemoveListenerVisibilitychange()
 	return e
 }

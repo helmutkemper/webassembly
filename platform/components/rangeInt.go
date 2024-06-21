@@ -79,12 +79,15 @@ type __rangeChane struct {
 }
 
 type Range struct {
-	__max    []any
-	__min    []any
-	__step   []any
-	__value  []any
+	__max   any
+	__min   any
+	__step  any
+	__value any
+
+	// __rangeChane is the pointer sent when the `change` event happens
 	__change *__rangeChane
 
+	// reference of component elements
 	__rangeTag  *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
 	__numberTag *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
 }
@@ -99,108 +102,84 @@ func (e *Range) OnChangeRange(stt __rangeChane) {
 
 func (e *Range) init() {
 	if e.__max != nil {
-		for k := range e.__max {
-			e.setMax(e.__max[k])
-		}
-
+		e.max(e.__max)
 		e.__max = nil
 	}
 
 	if e.__min != nil {
-		for k := range e.__min {
-			e.setMin(e.__min[k])
-		}
-
+		e.min(e.__min)
 		e.__min = nil
 	}
 
 	if e.__step != nil {
-		for k := range e.__step {
-			e.setStep(e.__step[k])
-		}
-
+		e.step(e.__step)
 		e.__step = nil
 	}
 
 	if e.__value != nil {
-		for k := range e.__value {
-			e.setValue(e.__value[k])
-		}
-
+		e.value(e.__value)
 		e.__value = nil
 	}
 }
 
-func (e *Range) setMax(max any) {
+func (e *Range) max(max any) {
 	e.__rangeTag.Max(max)
 	e.__numberTag.Max(max)
 }
 
-func (e *Range) setMin(min any) {
+func (e *Range) min(min any) {
 	e.__rangeTag.Min(min)
 	e.__numberTag.Min(min)
 }
 
-func (e *Range) setStep(step any) {
+func (e *Range) step(step any) {
 	e.__rangeTag.Step(step)
 	e.__numberTag.Step(step)
 }
 
-func (e *Range) setValue(step any) {
+func (e *Range) value(step any) {
 	e.__rangeTag.Value(step)
 	e.__numberTag.Value(step)
 }
 
-func (e *Range) SetMax(max any) {
+func (e *Range) Max(max any) {
 	if e.__rangeTag == nil {
-		if e.__max == nil {
-			e.__max = make([]any, 0)
-		}
-
-		e.__max = append(e.__max, max)
+		e.__max = max
 		return
 	}
 
-	e.setMax(max)
+	e.max(max)
 }
 
-func (e *Range) SetMin(min any) {
+func (e *Range) Min(min any) {
 	if e.__rangeTag == nil {
-		if e.__min == nil {
-			e.__min = make([]any, 0)
-		}
-
-		e.__min = append(e.__min, min)
+		e.__min = min
 		return
 	}
 
-	e.setMin(min)
+	e.min(min)
 }
 
-func (e *Range) SetStep(step any) {
+func (e *Range) Step(step any) {
 	if e.__rangeTag == nil {
-		if e.__step == nil {
-			e.__step = make([]any, 0)
-		}
-
-		e.__step = append(e.__step, step)
+		e.__step = step
 		return
 	}
 
-	e.setStep(step)
+	e.step(step)
 }
 
-func (e *Range) SetValue(value any) {
-	if e.__rangeTag == nil {
-		if e.__value == nil {
-			e.__value = make([]any, 0)
-		}
+func (e *Range) GetValue() (value any) {
+	return e.__rangeTag.GetValue()
+}
 
-		e.__value = append(e.__value, value)
+func (e *Range) Value(value any) {
+	if e.__rangeTag == nil {
+		e.__value = value
 		return
 	}
 
-	e.setValue(value)
+	e.value(value)
 }
 
 func (e *Components) Init(el any) (err error) {
@@ -321,11 +300,31 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 func (e *Components) processComponent(element reflect.Value, typeof reflect.Type, tagData *tag, father *html.TagDiv) (err error) {
 
 	if element.CanInterface() {
+
+		for {
+			if element.Kind() != reflect.Pointer {
+				break
+			}
+
+			if element.CanSet() && element.IsNil() {
+				newInstance := reflect.New(element.Type().Elem())
+				element.Set(newInstance)
+			}
+
+			element = element.Elem()
+
+		}
+
 		for i := 0; i != element.NumField(); i += 1 {
 			divComponent := factoryBrowser.NewTagDiv().Class("component")
 
+			var fieldTyp reflect.StructField
 			fieldVal := element.Field(i)
-			fieldTyp := typeof.Field(i)
+			if typeof.Kind() == reflect.Pointer {
+				fieldTyp = typeof.Elem().Field(i)
+			} else {
+				fieldTyp = typeof.Field(i)
+			}
 
 			tagRaw := fieldTyp.Tag.Get("wasmPanel")
 			if tagRaw != "" {
@@ -334,6 +333,12 @@ func (e *Components) processComponent(element reflect.Value, typeof reflect.Type
 
 				switch tagData.Type {
 				case "range":
+
+					if fieldVal.CanSet() && fieldVal.IsNil() {
+						newInstance := reflect.New(fieldVal.Type().Elem())
+						fieldVal.Set(newInstance)
+					}
+
 					err = e.processComponentRange(fieldVal, tagData, divComponent)
 					if err != nil {
 						file, line, funcName := runTimeUtil.Trace()
@@ -413,6 +418,12 @@ func (e *Components) searchFieldByTagType(typeName, eventName string, element re
 		if tagRaw != "" {
 			tagDataInternal.init(tagRaw)
 		}
+
+		if tagDataInternal.Type == typeName && eventName == "" {
+			found = true
+			return
+		}
+
 		if tagDataInternal.Type == typeName && tagDataInternal.Event == eventName {
 			found = true
 			return
@@ -475,7 +486,7 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 	inputNumber := factoryBrowser.NewTagInputNumber().Class("inputNumber") //.Min(eMin).Max(eMax).Step(eStep).Value(rangeVal).ListenerAdd(generic.KEventChange, captureData, listenerFunc).ListenerDebug(true)
 
 	if element.Kind() != reflect.Pointer {
-		err = fmt.Errorf("error: component `%v` must be a pointer", element.Type().Name())
+		err = fmt.Errorf("error: component `%v` must be a pointer", 9 /*element.Type().Name()*/)
 		return
 	}
 
@@ -491,8 +502,8 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 
 	// Initializes the pointer if it is nil
 	if element.IsNil() {
-		novaInstancia := reflect.New(element.Type().Elem())
-		element.Set(novaInstancia)
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
 	}
 
 	// Move element to pointer struct
@@ -510,14 +521,14 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 		return
 	} else {
 		// Initialize Range
-		novaInstancia := reflect.New(fieldRange.Type())
-		fieldRange.Set(novaInstancia.Elem())
+		newInstance := reflect.New(fieldRange.Type())
+		fieldRange.Set(newInstance.Elem())
 
 		// Initializes the two input tags within Range
 		rangeComponent.__rangeTag = inputRange
 		rangeComponent.__numberTag = inputNumber
 
-		// __rangeChane é o ponteiro chamado quando o evento `change` acontece
+		// __rangeChane is the pointer sent when the `change` event happens
 		rangeComponent.__change = new(__rangeChane)
 	}
 
@@ -640,8 +651,8 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 				// Checks if the field is nil and initializes the pointer
 				// The less work for the user, the greater the chance they will like the system
 				if fieldVal.CanSet() && fieldVal.IsNil() {
-					novaInstancia := reflect.New(fieldVal.Type().Elem())
-					fieldVal.Set(novaInstancia)
+					newInstance := reflect.New(fieldVal.Type().Elem())
+					fieldVal.Set(newInstance)
 				}
 
 				if fieldVal.IsNil() {

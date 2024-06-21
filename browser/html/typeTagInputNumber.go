@@ -1333,6 +1333,10 @@ func (e *TagInputNumber) Step(step any) (ref *TagInputNumber) {
 	return e
 }
 
+func (e *TagInputNumber) GetStep() (step any) {
+	return e.selfElement.Get("step").String()
+}
+
 // Type
 //
 // English:

@@ -16,12 +16,12 @@ type Panel struct {
 }
 
 type Body struct {
-	Color        ColorAdjust   `wasmPanel:"type:component;label:Color Adjust"`
-	RunCommand   RunCommand    `wasmPanel:"type:component;label:Run Command"`
-	SelectFilter SelectFilter  `wasmPanel:"type:component;label:File format"`
-	Payment      RadioGroup    `wasmPanel:"type:component;label:Payment"`
-	Options      CheckboxGroup `wasmPanel:"type:component;label:Options"`
-	Colors       ColorGroup    `wasmPanel:"type:component;label:Colors"`
+	Color        *ColorAdjust   `wasmPanel:"type:component;label:Color Adjust"`
+	RunCommand   *RunCommand    `wasmPanel:"type:component;label:Run Command"`
+	SelectFilter *SelectFilter  `wasmPanel:"type:component;label:File format"`
+	Payment      *RadioGroup    `wasmPanel:"type:component;label:Payment"`
+	Options      *CheckboxGroup `wasmPanel:"type:component;label:Options"`
+	Colors       *ColorGroup    `wasmPanel:"type:component;label:Colors"`
 }
 
 type Click struct {
@@ -150,7 +150,7 @@ func main() {
 
 	red := new(ColorRange)
 	red.Color = 10
-	//red.ColorChange = new(Click)
+
 	//red.SetMin(-2)
 	//red.SetMax(4)
 	//red.SetStep(2)
@@ -160,18 +160,7 @@ func main() {
 		Panel: Panel{
 			Header: "Control Panel",
 			Body: Body{
-				Color: ColorAdjust{
-					//Red: &ColorRange{
-					//	Color: 0,
-					//},
-					//Green: &ColorRange{
-					//	Color: 50,
-					//},
-					//Blue: &ColorRange{
-					//	Color: 100,
-					//},
-				},
-				SelectFilter: SelectFilter{
+				SelectFilter: &SelectFilter{
 					FileFormat: []Select{
 						{
 							Label:    "Please select",
@@ -196,7 +185,7 @@ func main() {
 						},
 					},
 				},
-				Payment: RadioGroup{
+				Payment: &RadioGroup{
 					Payments: []Radio{
 						{
 							Name:     "payment",
@@ -221,7 +210,7 @@ func main() {
 						},
 					},
 				},
-				Options: CheckboxGroup{
+				Options: &CheckboxGroup{
 					Options: []Checkbox{
 						{
 							Name:     "payment",
@@ -246,7 +235,7 @@ func main() {
 						},
 					},
 				},
-				Colors: ColorGroup{
+				Colors: &ColorGroup{
 					Input: ColorEvent{
 						Disabled:  false,
 						Label:     "Input color",

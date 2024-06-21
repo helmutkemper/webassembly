@@ -3,19 +3,41 @@ package html
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
+	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"log"
 	"strconv"
 	"strings"
+	"sync"
 	"syscall/js"
 )
 
 type TagInputRadio struct {
 	commonEvents commonEvents
 
-	tag         Tag
-	id          string
+	// id
+	//
+	// English:
+	//
+	//  Unique id, standard html id property.
+	//
+	// Português:
+	//
+	//  Id único, propriedade padrão id do html.
+	id string
+
+	// selfElement
+	//
+	// English:
+	//
+	//  Reference to self element as js.Value.
+	//
+	// Português:
+	//
+	//  Referencia ao próprio elemento na forma de js.Value.
 	selfElement js.Value
-	cssClass    *css.Class
+
+	cssClass *css.Class
 
 	x          int //#replicar
 	y          int //#replicar
@@ -23,6 +45,63 @@ type TagInputRadio struct {
 	height     int //#replicar
 	heightBBox int //#replicar
 	bottom     int //#replicar
+
+	// listener
+	//
+	// English:
+	//
+	//  The javascript function removeEventListener needs to receive the function passed in addEventListener
+	//
+	// Português:
+	//
+	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
+	listener *sync.Map
+
+	// drag
+
+	// stage
+	//
+	// English:
+	//
+	//  Browser main document reference captured at startup.
+	//
+	// Português:
+	//
+	//  Referencia do documento principal do navegador capturado na inicialização.
+	stage js.Value
+
+	// isDragging
+	//
+	// English:
+	//
+	//  Indicates the process of dragging the element.
+	//
+	// Português:
+	//
+	//  Indica o processo de arrasto do elemento.
+	isDragging bool
+
+	// dragDifX
+	//
+	// English:
+	//
+	//  Used in calculating element drag.
+	//
+	// Português:
+	//
+	//  Usado no cálculo do arrasto de elemento.
+	dragDifX int
+
+	// dragDifX
+	//
+	// English:
+	//
+	//  Used in calculating element drag.
+	//
+	// Português:
+	//
+	//  Usado no cálculo do arrasto de elemento.
+	dragDifY int
 
 	// deltaMovieX
 	//
@@ -50,16 +129,171 @@ type TagInputRadio struct {
 	//  GetY(): (y = y - deltaMovieY).
 	deltaMovieY int
 
-	// isDragging
+	// tween
 	//
 	// English:
 	//
-	//  Indicates the process of dragging the element.
+	//  Easing tween.
+	//
+	// Receives an identifier and a pointer of the tween object to be used in case of multiple
+	// functions.
 	//
 	// Português:
 	//
-	//  Indica o processo de arrasto do elemento.
-	isDragging bool
+	//  Facilitador de interpolação.
+	//
+	// Recebe um identificador e um ponteiro do objeto tween para ser usado em caso de múltiplas
+	// funções.
+	tween map[string]interfaces.TweenInterface
+
+	points    *[]algorithm.Point
+	pointsLen int
+
+	rotateDelta float64
+
+	// fnClick
+	//
+	// English:
+	//
+	// Fired when the user clicks the primary pointer button.
+	//
+	// Português:
+	//
+	// Acionado quando o usuário clica no botão do ponteiro principal.
+	fnClick *js.Func
+
+	// fnMouseOver
+	//
+	// English:
+	//
+	// Fired when a mouse or other pointing device is moved outside the element.
+	//
+	// Português:
+	//
+	// Acionado quando um mouse ou outro dispositivo apontador é movido para fora do elemento.
+	fnMouseOver *js.Func
+
+	// fnMouseOut
+	//
+	// English:
+	//
+	// Fired when a mouse or other pointing device is moved outside the boundary of the element.
+	//
+	// Português:
+	//
+	// Acionado quando um mouse ou outro dispositivo apontador é movido para fora do limite do elemento.
+	fnMouseOut *js.Func
+
+	// fnMouseMove
+	//
+	// English:
+	//
+	// Fired when a mouse or other pointing device is moved while over an element.
+	//
+	// Português:
+	//
+	// Acionado quando um mouse ou outro dispositivo apontador é movido sobre um elemento.
+	fnMouseMove *js.Func
+
+	// fnMouseLeave
+	//
+	// English:
+	//
+	// Fired when a mouse or other pointing device is moved outside the boundary of the element and all of its descendants.
+	//
+	// Português:
+	//
+	// Acionado quando um mouse ou outro dispositivo apontador é movido para fora do limite do elemento e de todos os seus descendentes.
+	fnMouseLeave *js.Func
+
+	// fnMouseEnter
+	//
+	// English:
+	//
+	// Fired when a mouse or other pointing device is moved inside the boundary of the element or one of its descendants.
+	//
+	// Português:
+	//
+	// Acionado quando um mouse ou outro dispositivo apontador é movido para dentro do limite do elemento ou de um de seus descendentes.
+	fnMouseEnter *js.Func
+
+	// fnMouseDown
+	//
+	// English:
+	//
+	// Fired when the user presses a button on a mouse or other pointing device, while the pointer is over the element.
+	//
+	// Português:
+	//
+	// Acionado quando o usuário pressiona um botão em um mouse ou outro dispositivo apontador, enquanto o ponteiro está sobre o elemento.
+	fnMouseDown *js.Func
+
+	// fnMouseUp
+	//
+	// English:
+	//
+	// Fired when the user releases a button on a mouse or other pointing device, while the pointer is over the element.
+	//
+	// Português:
+	//
+	// Acionado quando o usuário libera um botão em um mouse ou outro dispositivo apontador, enquanto o ponteiro está sobre o elemento.
+	fnMouseUp *js.Func
+
+	// fnMouseWheel
+	//
+	// English:
+	//
+	// Fired when the user rotates a mouse wheel or similar user interface component such as a touchpad.
+	//
+	// Português:
+	//
+	// Acionado quando o usuário gira a roda do mouse ou um componente de interface de usuário semelhante, como um touchpad.
+	fnMouseWheel *js.Func
+
+	// fnDoubleClick
+	//
+	// English:
+	//
+	// Fired when the user double-clicks the primary pointer button.
+	//
+	// Português:
+	//
+	// Acionado quando o usuário clica duas vezes no botão do ponteiro principal.
+	fnDoubleClick *js.Func
+}
+
+// Init
+//
+// English:
+//
+//	Initializes the object correctly.
+//
+// Português:
+//
+//	Inicializa o objeto corretamente.
+func (e *TagInputRadio) Init() (ref *TagInputRadio) {
+	e.listener = new(sync.Map)
+	e.tween = make(map[string]interfaces.TweenInterface)
+
+	e.CreateElement(KTagInput)
+	e.Type("radio")
+	e.prepareStageReference()
+	e.id = e.commonEvents.GetUuidStr()
+
+	return e
+}
+
+// prepareStageReference
+//
+// English:
+//
+//	Prepares the stage reference at initialization.
+//
+// Português:
+//
+//	Prepara à referencia do stage na inicialização.
+func (e *TagInputRadio) prepareStageReference() {
+	e.stage = js.Global().Get("document").Get("body")
 }
 
 // Reference
@@ -763,7 +997,6 @@ func (e *TagInputRadio) CreateElement(tag Tag) (ref *TagInputRadio) {
 		log.Print(KNewElementIsUndefined)
 		return
 	}
-	e.tag = tag
 
 	return e
 }
@@ -836,22 +1069,13 @@ func (e *TagInputRadio) AppendById(appendId string) (ref *TagInputRadio) {
 //	   * Equivale a:
 //	       var p = document.createElement("p");
 //	       document.body.appendChild(p);
-func (e *TagInputRadio) Append(append interface{}) (ref *TagInputRadio) {
-	switch append.(type) {
-	case *TagInputRadio:
-		e.selfElement.Call("appendChild", append.(*TagInputRadio).selfElement)
-	case js.Value:
-		e.selfElement.Call("appendChild", append)
-	case string:
-		toAppend := js.Global().Get("document").Call("getElementById", append.(string))
-		if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
-			log.Print(KIdToAppendNotFound, append.(string))
-			return e
-		}
-
-		toAppend.Call("appendChild", e.selfElement)
+func (e *TagInputRadio) Append(elements ...Compatible) (ref *TagInputRadio) {
+	fragment := js.Global().Get("document").Call("createDocumentFragment")
+	for _, element := range elements {
+		fragment.Call("appendChild", element.Get())
 	}
 
+	e.selfElement.Call("appendChild", fragment)
 	return e
 }
 

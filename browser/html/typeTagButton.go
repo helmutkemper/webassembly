@@ -1477,6 +1477,10 @@ func (e *TagButton) SetY(y int) (ref *TagButton) {
 	return e
 }
 
+func (e *TagButton) Get() (el js.Value) {
+	return e.selfElement
+}
+
 func (e *TagButton) AddListenerAbort(genericEvent chan generic.Data) (ref *TagButton) {
 	e.commonEvents.selfElement = &e.selfElement
 	e.commonEvents.AddListenerAbort(genericEvent)

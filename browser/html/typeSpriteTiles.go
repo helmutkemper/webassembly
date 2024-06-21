@@ -103,8 +103,8 @@ func (e *SpriteTiles) Init(stage *stage.Stage) {
 		}
 	}()
 
-	stage.AddListenerKeyUp(&e.eventOnKeyData)
-	stage.AddListenerKeyDown(&e.eventOnKeyData)
+	stage.AddListenerKeyUp(e.eventOnKeyData)
+	stage.AddListenerKeyDown(e.eventOnKeyData)
 }
 
 func (e *SpriteTiles) GetError() (err error) {

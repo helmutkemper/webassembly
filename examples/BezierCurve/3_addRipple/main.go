@@ -58,7 +58,7 @@ func main() {
 	bezier.Process(10000)
 	bezier.SetNumberOfSegments(2000)
 
-	bezier.GenerateRipple(20, 20)
+	//bezier.GenerateRipple(20, 30)
 	for _, point := range *bezier.GetProcessed() {
 		AddDotBlue(int(point.X), int(point.Y))
 	}
@@ -80,7 +80,7 @@ func main() {
 			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of a simple html div")
 	stage.Append(wasm)
 
-	factoryEasingTween.NewLinear(
+	factoryEasingTween.NewInOutBounce(
 		20*time.Second,
 		0,
 		10000,

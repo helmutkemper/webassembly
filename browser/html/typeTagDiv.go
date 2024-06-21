@@ -8,9 +8,9 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"log"
 	"math"
+	"reflect"
 	"strconv"
 	"strings"
-	"sync"
 	"syscall/js"
 )
 
@@ -81,7 +81,8 @@ type TagDiv struct {
 	// Português:
 	//
 	//  A função javascript removeEventListener necessitam receber a função passada em addEventListener
-	listener *sync.Map
+	listener      map[string]js.Func
+	debugListener bool
 
 	// drag
 
@@ -1534,7 +1535,7 @@ func (e *TagDiv) Mouse(value mouse.CursorType) (ref *TagDiv) {
 //
 //	Inicializa o objeto corretamente.
 func (e *TagDiv) Init() (ref *TagDiv) {
-	e.listener = new(sync.Map)
+	e.listener = make(map[string]js.Func)
 	e.tween = make(map[string]interfaces.TweenInterface)
 
 	e.CreateElement(KTagDiv)
@@ -1826,7 +1827,7 @@ func (e *TagDiv) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenTh
 // Text:
 //
 // Adiciona um texto simples ao conteúdo da tag.
-func (e *TagDiv) Text(value string) (ref *TagDiv) {
+func (e *TagDiv) Text(value any) (ref *TagDiv) {
 	e.selfElement.Set("textContent", value)
 	return e
 }
@@ -4882,6 +4883,133 @@ func (e *TagDiv) AddListenerVisibilitychange(genericEvent chan generic.Data) (re
 
 func (e *TagDiv) RemoveListenerVisibilitychange() (ref *TagDiv) {
 	e.commonEvents.RemoveListenerVisibilitychange()
+	return e
+}
+
+func (e *TagDiv) ListenerDebug(debug bool) (ref *TagDiv) {
+	log.Printf("set debug: %v", debug)
+	e.debugListener = debug
+	return e
+}
+
+func (e *TagDiv) ListenerRemove(event generic.EventName) (ref *TagDiv) {
+	eventStr := event.String()
+
+	e.selfElement.Call(
+		"removeEventListener",
+		eventStr,
+		e.listener[eventStr],
+	)
+
+	delete(e.listener, eventStr)
+	return e
+}
+
+func (e *TagDiv) ListenerAdd(event generic.EventName, dataType any, function func(arg any)) (ref *TagDiv) {
+
+	if function == nil {
+		log.Printf("error: function deve ser um ponteiro de função, porém, foi encontrado nil")
+		return nil
+	}
+
+	eventStr := event.String()
+
+	e.listener[eventStr] = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) == 0 {
+			return nil
+		}
+
+		e.selfElement.Set("isTrusted", args[0].Get("isTrusted"))
+
+		// melhor forma de varrer um objeto
+		if e.debugListener {
+			log.Printf("entrou no debug")
+			var obj = e.selfElement
+			js.Global().Get("Object").Call("keys", obj).Call("forEach", js.FuncOf(func(this js.Value, args []js.Value) any {
+				log.Printf("key: [%v]: %v", args[0].String(), obj.Get(args[0].String()).String())
+				return nil
+			}))
+		}
+
+		element := reflect.ValueOf(dataType)
+		for {
+			if element.Kind() != reflect.Pointer {
+				break
+			}
+
+			element = element.Elem()
+		}
+
+		for i := 0; i != element.NumField(); i += 1 {
+			fieldVal := element.Field(i)
+			if !fieldVal.CanSet() {
+				continue
+			}
+
+			fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+
+			propertyToGet := fieldTyp.Tag.Get("wasmGet")
+			propertyValue := e.selfElement.Get(propertyToGet)
+
+			var receiverType reflect.Kind
+			switch propertyValue.Type() {
+			case js.TypeString:
+				receiverType = reflect.String
+			case js.TypeNumber:
+				if propertyValue.Truthy() && float64(propertyValue.Int()) == propertyValue.Float() {
+					receiverType = reflect.Int64
+				} else {
+					receiverType = reflect.Float64
+				}
+			case js.TypeBoolean:
+				receiverType = reflect.Bool
+			default:
+				receiverType = reflect.Invalid
+				continue
+			}
+
+			switch fieldVal.Kind() {
+			case reflect.Bool:
+				if receiverType != reflect.Bool {
+					log.Printf("error: %v retornou um tipo diferente de boolean, %v", propertyToGet, propertyValue.String())
+					continue
+				}
+				fieldVal.SetBool(propertyValue.Bool())
+			case reflect.Int64:
+				if receiverType != reflect.Int64 {
+					log.Printf("error: %v retornou um tipo diferente de integer, %v", propertyToGet, propertyValue.String())
+					continue
+				}
+				fieldVal.SetInt(int64(propertyValue.Int()))
+			case reflect.Float64:
+				if receiverType != reflect.Float64 {
+					log.Printf("error: %v retornou um tipo diferente de float64, %v", propertyToGet, propertyValue.String())
+					continue
+				}
+				fieldVal.SetFloat(propertyValue.Float())
+			case reflect.String:
+				if receiverType != reflect.String {
+					log.Printf("error: %v retornou um tipo diferente de string, %v", propertyToGet, propertyValue.String())
+					continue
+				}
+				fieldVal.SetString(propertyValue.String())
+			default:
+				log.Printf("error: %v deve ser string, int64, float64 ou bool", propertyToGet)
+				continue
+			}
+		}
+
+		function(element.Interface())
+
+		return nil
+	})
+
+	e.selfElement.Call(
+		"addEventListener",
+		eventStr,
+		e.listener[eventStr],
+	)
+
 	return e
 }
 

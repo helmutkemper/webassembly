@@ -6,7 +6,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // English:
 //
-//  Create a new tag html button.
+//	Create a new tag html button.
 //
 // The <button> HTML element is an interactive element activated by a user with a mouse, keyboard,
 // finger, voice command, or other assistive technology. Once activated, it then performs a
@@ -17,7 +17,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Português:
 //
-//  Cria uma nova tag html button
+//	Cria uma nova tag html button
 //
 // O elemento HTML <button> é um elemento interativo ativado por um usuário com mouse, teclado,
 // dedo, comando de voz ou outra tecnologia assistiva. Uma vez ativado, ele executa uma ação
@@ -25,10 +25,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Por padrão, os botões HTML são apresentados em um estilo semelhante à plataforma na qual o agente
 // do usuário é executado, mas você pode alterar a aparência dos botões com CSS.
-func NewTagButton(id string) (ref *html.TagButton) {
+func NewTagButton() (ref *html.TagButton) {
 	ref = &html.TagButton{}
 	ref.CreateElement(html.KTagButton)
-	ref.Id(id)
 
 	return ref
 }

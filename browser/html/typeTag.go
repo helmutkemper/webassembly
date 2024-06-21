@@ -589,6 +589,17 @@ const (
 	//
 	KTagIns Tag = "ins"
 
+	// KTagRadio
+	//
+	// English:
+	//
+	//
+	//
+	// Português:
+	//
+	//
+	KTagRadio Tag = "radio"
+
 	// KTagKbd
 	//
 	// English:

@@ -929,7 +929,9 @@ func (e *TagSelect) Autocomplete(autocomplete Autocomplete) (ref *TagSelect) {
 //
 //	Este atributo booleano impede que o usuário interaja com o elemento.
 func (e *TagSelect) Disabled(disabled bool) (ref *TagSelect) {
-	e.selfElement.Set("disabled", disabled)
+	if disabled {
+		e.selfElement.Set("disabled", "disabled")
+	}
 	return e
 }
 
@@ -1046,7 +1048,6 @@ func (e *TagSelect) Size(size int) (ref *TagSelect) {
 //	items in an HTML document.
 //
 //	 Input:
-//	   id: a unique id for an element;
 //	   label: This attribute is text for the label indicating the meaning of the option. If the label
 //	     attribute isn't defined, its value is that of the element text content;
 //	   value: The content of this attribute represents the value to be submitted with the form, should
@@ -1072,7 +1073,6 @@ func (e *TagSelect) Size(size int) (ref *TagSelect) {
 //	itens em um documento HTML.
 //
 //	 Entrada:
-//	   id: um id exclusivo para um elemento;
 //	   label: Este atributo é um texto para o rótulo que indica o significado da opção. Se o atributo
 //	     label não estiver definido, seu valor será o do conteúdo do texto do elemento;
 //	   value: O conteúdo deste atributo representa o valor a ser enviado com o formulário, caso esta
@@ -1090,21 +1090,16 @@ func (e *TagSelect) Size(size int) (ref *TagSelect) {
 //	 Nota:
 //	   * O novo option será criado dentro do último NewOptionGroup() criado. Use a função
 //	     ReleaseGroup() para criar o novo option na raiz.
-func (e *TagSelect) NewOption(id, label, value string, disabled, selected bool) (ref *TagSelect) {
+func (e *TagSelect) NewOption(label, value string, disabled, selected bool) (ref *TagSelect) {
 
 	op := &TagSelect{}
 	op.CreateElement(KTagOption)
-	op.Id(id)
+	//op.Id(id)
 	op.value(value)
 	op.textContent(label)
 
-	if disabled == true {
-		op.Disabled(disabled)
-	}
-
-	if selected == true {
-		op.selected(selected)
-	}
+	op.Disabled(disabled)
+	op.selected(selected)
 
 	if e.lastOptionGroup == nil {
 		e.Append(op.selfElement)
@@ -1246,7 +1241,9 @@ func (e *TagSelect) textContent(text string) (ref *TagSelect) {
 //	<option> é descendente de um elemento <select> cujo atributo múltiplo não está definido, apenas um
 //	único <option> deste elemento <select> pode ter o atributo selecionado.
 func (e *TagSelect) selected(selected bool) (ref *TagSelect) {
-	e.selfElement.Set("selected", selected)
+	if selected {
+		e.selfElement.Set("selected", "selected")
+	}
 	return e
 }
 
@@ -1547,6 +1544,10 @@ func (e *TagSelect) SetY(y int) (ref *TagSelect) {
 	e.UpdateBoundingClientRect()
 
 	return e
+}
+
+func (e *TagSelect) Get() (el js.Value) {
+	return e.selfElement
 }
 
 func (e *TagSelect) AddListenerAbort(genericEvent chan generic.Data) (ref *TagSelect) {

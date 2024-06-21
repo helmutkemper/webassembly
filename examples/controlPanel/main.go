@@ -1,354 +1,288 @@
-//go:build js
-
 package main
 
 import (
-	"fmt"
-	"github.com/google/uuid"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/event/generic"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/components"
 	"log"
-	"reflect"
-	"strings"
-	"time"
 )
 
-const (
-	kTagName = "admin"
-)
+type Control struct {
+	components.Components
+	Panel Panel `wasmPanel:"type:panel"`
+}
 
-func uuidStr() (uuidStr string) {
-	uId, err := uuid.NewUUID()
-	if err != nil {
-		err = fmt.Errorf("controlCell.NewUUID().error: %v", err)
+type Panel struct {
+	Header string `wasmPanel:"type:headerText"`
+	Body   Body   `wasmPanel:"type:panelBody"`
+}
+
+type Body struct {
+	Color        ColorAdjust   `wasmPanel:"type:component;label:Color Adjust"`
+	RunCommand   RunCommand    `wasmPanel:"type:component;label:Run Command"`
+	SelectFilter SelectFilter  `wasmPanel:"type:component;label:File format"`
+	Payment      RadioGroup    `wasmPanel:"type:component;label:Payment"`
+	Options      CheckboxGroup `wasmPanel:"type:component;label:Options"`
+	Colors       ColorGroup    `wasmPanel:"type:component;label:Colors"`
+}
+
+type Click struct {
+	IsTrusted bool    `wasmGet:"isTrusted"`
+	Min       float64 `wasmGet:"min"`
+	Max       float64 `wasmGet:"max"`
+	Step      float64 `wasmGet:"step"`
+	Value     float64 `wasmGet:"value"`
+	//test      string  `wasmGet:"test"`
+}
+
+func (e *Click) OnChange(click Click) {
+	log.Printf("> Trusted: %+v", click.IsTrusted)
+	log.Printf("> Min:     %+v", click.Min)
+	log.Printf("> Max:     %+v", click.Max)
+	log.Printf("> Step:    %+v", click.Step)
+	log.Printf("> Value:   %+v", click.Value)
+}
+
+type ColorRange struct {
+	components.Range
+
+	//TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
+	//TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
+	Color       int64  `wasmPanel:"type:value;min:0;max:50;step:1;default:0"`
+	ColorChange *Click `wasmPanel:"type:listener;event:change;func:OnChange"`
+}
+
+func (e *ColorRange) Init() {
+	//log.Printf("entrou em onInit de ColorRange!")
+	//e.SetStep(1)
+	//e.SetMax(200)
+	//e.SetMin(0)
+}
+
+type ColorAdjust struct {
+	Red   *ColorRange `wasmPanel:"type:range;label:Red"`
+	Green *ColorRange `wasmPanel:"type:range;label:Green"`
+	Blue  *ColorRange `wasmPanel:"type:range;label:Blue"`
+}
+
+type RunCommand struct {
+	Button ButtonEvent `wasmPanel:"type:button;label:Exec. command;value:Click me"`
+	Undo   ButtonEvent `wasmPanel:"type:button;label:Undo last exec.;value:Undo"`
+}
+
+type SelectFilter struct {
+	Red        *ColorRange `wasmPanel:"type:range;label:Red"`
+	FileFormat []Select    `wasmPanel:"type:select;label:Select the file format"`
+	Button     ButtonEvent `wasmPanel:"type:button;label:Exec. command;value:Click me"`
+}
+
+type RadioGroup struct {
+	Payments []Radio `wasmPanel:"type:radio;label:Payment method"`
+}
+
+type CheckboxGroup struct {
+	Options []Checkbox `wasmPanel:"type:checkbox;label:Please, select all"`
+}
+
+type ColorGroup struct {
+	Input  ColorEvent `wasmPanel:"type:color"`
+	Output ColorEvent `wasmPanel:"type:color"`
+}
+
+type ColorEvent struct {
+	Disabled  bool   `wasmPanel:"type:disabled"`
+	Value     string `wasmPanel:"type:value"`
+	Label     string `wasmPanel:"type:label"`
+	OnPress   func() `wasmPanel:"type:onpress"`
+	OnRelease func() `wasmPanel:"type:onRelease"`
+	OnClick   func() `wasmPanel:"type:onclick"`
+}
+
+type Radio struct {
+	Name     string `wasmPanel:"type:name"`
+	Label    string `wasmPanel:"type:label"`
+	Value    string `wasmPanel:"type:value"`
+	Selected bool   `wasmPanel:"type:selected"`
+	Disabled bool   `wasmPanel:"type:disabled"`
+}
+
+type Checkbox struct {
+	Name     string `wasmPanel:"type:name"`
+	Label    string `wasmPanel:"type:label"`
+	Value    string `wasmPanel:"type:value"`
+	Selected bool   `wasmPanel:"type:selected"`
+	Disabled bool   `wasmPanel:"type:disabled"`
+}
+
+type Select struct {
+	Label    string `wasmPanel:"type:label"`
+	Value    string `wasmPanel:"type:value"`
+	Disabled bool   `wasmPanel:"type:disabled"`
+	Selected bool   `wasmPanel:"type:selected"`
+	OnSelect func() `wasmPanel:"type:onselect"`
+}
+
+type ButtonEvent struct {
+	OnPress   func() `wasmPanel:"type:onpress"`
+	OnRelease func() `wasmPanel:"type:onRelease"`
+	OnClick   func() `wasmPanel:"type:onclick"`
+}
+
+func (e *Control) Init() (err error) {
+	err = e.Components.Init(e)
+	return
+}
+
+func ColorOnChange(args any) {
+	capturedDataEvent, ok := args.(Click)
+	if !ok {
+		log.Printf("error: interface conversion error")
 		return
 	}
-	uuidStr = uId.String()
-	return
-}
 
-func (e *Admin) basicRangeCell(label, class, id string, min, max, value any, element reflect.Value) (div *html.TagDiv) {
-	slicerTag := factoryBrowser.NewTagInputRange(id + "Range").
-		Class("slider").
-		Min(min).
-		Max(max).
-		Value(value).
-		AddListenerInput(e.sliderEvent)
-
-	numberTag := factoryBrowser.NewTagInputNumber(id + "Number").
-		Class("number").
-		Min(min).
-		Max(max).
-		Value(value).
-		AddListenerInput(e.numberEvent)
-
-	div = factoryBrowser.NewTagDiv().
-		Id(id+"Filter").
-		Class(class).
-		Append(
-			factoryBrowser.NewTagDiv().
-				Class("text").
-				Lang(html.KLanguageEnglishUnitedStates).
-				Text(label),
-			slicerTag,
-			numberTag,
-		)
-
-	//e.eventListSlider = append(
-	//	e.eventListSlider, func() {
-	//		numberTag.Value(slicerTag.GetValue())
-	//		if element.CanAddr() {
-	//			element.SetInt(int64(slicerTag.GetValue()))
-	//		}
-	//	},
-	//)
-	//e.eventListNumber = append(
-	//	e.eventListNumber, func() {
-	//		slicerTag.Value(numberTag.GetValue())
-	//		if element.CanAddr() {
-	//			element.SetInt(int64(numberTag.GetValue()))
-	//		}
-	//	},
-	//)
-	return
-}
-
-func (e *Admin) basicDivCell(label, class, id string) (div *html.TagDiv) {
-	div = factoryBrowser.NewTagDiv().
-		Id(id + "Filter").
-		Class(class).
-		Append(
-			factoryBrowser.NewTagDiv().
-				Class("text").
-				Lang(html.KLanguageEnglishUnitedStates).
-				Text(label),
-		)
-
-	return
+	log.Printf("%+v", args)
+	log.Printf("> Trusted: %+v", capturedDataEvent.IsTrusted)
+	log.Printf("> Min:     %+v", capturedDataEvent.Min)
+	log.Printf("> Max:     %+v", capturedDataEvent.Max)
+	log.Printf("> Step:    %+v", capturedDataEvent.Step)
+	log.Printf("> Value:   %+v", capturedDataEvent.Value)
 }
 
 func main() {
 
-	t := Test{
-		Color: Color{
-			Name:   "Color distance",
-			Global: 128,
-			Red:    10,
-			Green:  20,
-			Blue:   40,
+	red := new(ColorRange)
+	red.Color = 10
+	//red.ColorChange = new(Click)
+	//red.SetMin(-2)
+	//red.SetMax(4)
+	//red.SetStep(2)
+	//red.SetValue(0)
+
+	c := Control{
+		Panel: Panel{
+			Header: "Control Panel",
+			Body: Body{
+				Color: ColorAdjust{
+					//Red: &ColorRange{
+					//	Color: 0,
+					//},
+					//Green: &ColorRange{
+					//	Color: 50,
+					//},
+					//Blue: &ColorRange{
+					//	Color: 100,
+					//},
+				},
+				SelectFilter: SelectFilter{
+					FileFormat: []Select{
+						{
+							Label:    "Please select",
+							Value:    "",
+							Disabled: false,
+							Selected: false,
+							OnSelect: nil,
+						},
+						{
+							Label:    "label 1",
+							Value:    "value 1",
+							Disabled: false,
+							Selected: false,
+							OnSelect: nil,
+						},
+						{
+							Label:    "label 2",
+							Value:    "value 2",
+							Disabled: false,
+							Selected: true,
+							OnSelect: nil,
+						},
+					},
+				},
+				Payment: RadioGroup{
+					Payments: []Radio{
+						{
+							Name:     "payment",
+							Label:    "Option 1",
+							Value:    "vista",
+							Selected: false,
+							Disabled: false,
+						},
+						{
+							Name:     "payment",
+							Label:    "Opti 2",
+							Value:    "credit",
+							Selected: false,
+							Disabled: false,
+						},
+						{
+							Name:     "payment",
+							Label:    "Opt 3",
+							Value:    "Option 3",
+							Selected: false,
+							Disabled: false,
+						},
+					},
+				},
+				Options: CheckboxGroup{
+					Options: []Checkbox{
+						{
+							Name:     "payment",
+							Label:    "Option 1",
+							Value:    "vista",
+							Selected: false,
+							Disabled: false,
+						},
+						{
+							Name:     "payment",
+							Label:    "Opti 2",
+							Value:    "credit",
+							Selected: false,
+							Disabled: false,
+						},
+						{
+							Name:     "payment",
+							Label:    "Opt 3",
+							Value:    "Option 3",
+							Selected: false,
+							Disabled: false,
+						},
+					},
+				},
+				Colors: ColorGroup{
+					Input: ColorEvent{
+						Disabled:  false,
+						Label:     "Input color",
+						Value:     "#11aa66",
+						OnPress:   nil,
+						OnRelease: nil,
+						OnClick:   nil,
+					},
+					Output: ColorEvent{
+						Disabled:  true,
+						Label:     "Output color",
+						Value:     "#cc3300",
+						OnPress:   nil,
+						OnRelease: nil,
+						OnClick:   nil,
+					},
+				},
+			},
 		},
 	}
-	d := t.Init()
+	if err := c.Init(); err != nil {
+		log.Printf("%v", err)
+		panic(err)
+	}
 
-	go func() {
-		for {
-			log.Printf("Global: %v", t.Color.Global)
-			time.Sleep(time.Second)
-		}
-	}()
+	//red.TagNumber.Min(-20).Max(0).Value(-10)
+	//red.TagRange.Min(-20).Max(0).Value(-10)
+	//red.SetMax(39)
 
-	divPanel := factoryBrowser.NewTagDiv().Id("panel").Append(d)
-
-	stage := factoryBrowser.NewStage()
-	stage.Append(divPanel)
+	//red.SetMin(0)
+	//red.SetMax(5)
+	//red.SetStep(1)
+	//red.TagRange.Min(0).Max(3).Step(1)
+	//red.TagNumber.Min(0).Max(3).Step(1)
 
 	done := make(chan struct{})
-	<-done
+	done <- struct{}{}
+
 }
-
-type Color struct {
-	Name   string `admin:"type:label"`
-	Global int    `admin:"type:slice;min:0;max:255;value:128;label:Global"`
-	Red    int    `admin:"type:slice;min:0;max:255;value:0;label:Red"`
-	Green  int    `admin:"type:slice;min:0;max:255;value:0;label:Green"`
-	Blue   int    `admin:"type:slice;min:0;max:255;value:0;label:Blue"`
-}
-
-type Test struct {
-	Admin
-
-	Color Color `admin:"type:controlCell"`
-}
-
-func (e *Test) Init() (div *html.TagDiv) {
-	return e.init(reflect.ValueOf(e).Elem())
-}
-
-type Admin struct {
-	sliderEvent chan generic.Data
-	numberEvent chan generic.Data
-
-	eventListSlider []func()
-	eventListNumber []func()
-}
-
-func (e *Admin) makeControlCellLabel(element reflect.Value, data []string) (div *html.TagDiv) {
-	for k := range data {
-		values := strings.Split(data[k], ":")
-		if len(values) == 2 {
-			key := values[0]
-			value := values[1]
-
-			if key == "type" && value == "label" {
-				log.Printf("element name: %v", element.Elem().String())
-				return e.basicDivCell(element.Elem().String(), "internalCell", "0")
-			}
-		}
-	}
-
-	//todo: error de config!
-	return
-}
-
-func (e *Admin) makeControlCellSlice(element reflect.Value, data []string) (div *html.TagDiv) {
-
-	var eLabel, eMax, eMin, eValue any
-
-	switch element.Elem().Kind() {
-	case reflect.Int:
-		eValue = element.Elem().Int()
-	case reflect.Float64:
-		eValue = element.Elem().Float()
-	}
-
-	for k := range data {
-		values := strings.Split(data[k], ":")
-		if len(values) == 2 {
-			key := values[0]
-			value := values[1]
-
-			switch key {
-			case "min":
-				eMin = value
-			case "max":
-				eMax = value
-			case "label":
-				eLabel = value
-			}
-		}
-	}
-
-	return e.basicRangeCell(eLabel.(string), "internalCell", "1", eMin, eMax, eValue, element.Elem())
-}
-
-func (e *Admin) makeControlCell(element reflect.Value) (elements []html.Compatible) {
-	elements = make([]html.Compatible, 0)
-
-	if element.Kind() == reflect.Pointer {
-		element = element.Elem()
-	}
-
-	for i := 0; i < element.NumField(); i++ {
-		field := element.Field(i)
-		typeField := element.Type().Field(i)
-		tag := typeField.Tag
-
-		if field.CanInterface() { // Verifica se o campo é exportado
-			tagName := tag.Get(kTagName)
-			if tagName == "-" {
-				continue
-			}
-
-			configList := strings.Split(tagName, ";")
-			for k := range configList {
-				values := strings.Split(configList[k], ":")
-				if len(values) == 2 {
-					key := values[0]
-					value := values[1]
-
-					switch key {
-					case "type":
-
-						switch value {
-						case "label":
-							elements = append(elements, e.makeControlCellLabel(field.Addr(), configList))
-						case "slice":
-							elements = append(elements, e.makeControlCellSlice(field.Addr(), configList))
-						}
-
-					}
-
-				}
-			}
-		}
-	}
-
-	return
-}
-
-func (e *Admin) channelLoopB() {
-	defer func() {
-		log.Printf("não deveria ter entrado aqui")
-	}()
-	for {
-		select {
-		//case <-e.sliderEvent:
-		//	for k := range e.eventListSlider {
-		//		e.eventListSlider[k]()
-		//	}
-
-		case <-e.numberEvent:
-			for k := range e.eventListNumber {
-				e.eventListNumber[k]()
-			}
-		}
-	}
-}
-
-func (e *Admin) channelLoopA() {
-	defer func() {
-		log.Printf("não deveria ter entrado aqui")
-	}()
-	for {
-		select {
-		case <-e.sliderEvent:
-			for k := range e.eventListSlider {
-				e.eventListSlider[k]()
-			}
-
-			//case <-e.numberEvent:
-			//	for k := range e.eventListNumber {
-			//		e.eventListNumber[k]()
-			//	}
-		}
-	}
-}
-
-func (e *Admin) init(element reflect.Value) (div *html.TagDiv) {
-	//e.sliderEvent = make(chan generic.Data)
-	//e.numberEvent = make(chan generic.Data)
-
-	go e.channelLoopA()
-	go e.channelLoopB()
-
-	div = factoryBrowser.NewTagDiv().Class("cell")
-
-	if element.Kind() == reflect.Pointer {
-		element = element.Elem()
-	}
-
-	for i := 0; i < element.NumField(); i++ {
-		field := element.Field(i)
-		typeField := element.Type().Field(i)
-		tag := typeField.Tag
-
-		if field.CanInterface() { // Verifica se o campo é exportado
-			tagName := tag.Get(kTagName)
-			if tagName == "-" {
-				continue
-			}
-
-			configList := strings.Split(tagName, ";")
-			for k := range configList {
-				values := strings.Split(configList[k], ":")
-				if len(values) == 2 {
-					key := values[0]
-					value := values[1]
-
-					switch key {
-					case "type":
-
-						switch value {
-						case "controlCell":
-							if field.Kind() == reflect.Struct && field.CanAddr() {
-								div.Append(e.makeControlCell(field.Addr())...)
-							}
-						}
-					}
-				}
-			}
-
-			// Se o campo for um struct e for endereçável, chame init recursivamente
-			if field.Kind() == reflect.Struct && field.CanAddr() {
-				e.init(field.Addr())
-			}
-		}
-	}
-
-	return
-}
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//

@@ -31,10 +31,10 @@ func main() {
 	}()
 
 	bat := factoryBrowser.NewBattery()
-	bat.AddListenerChargingChange(&batteryEvent)
-	bat.AddListenerDischargingTimeChange(&batteryEvent)
-	bat.AddListenerChargingTimeChange(&batteryEvent)
-	bat.AddListenerLevelChange(&batteryEvent)
+	bat.AddListenerChargingChange(batteryEvent)
+	bat.AddListenerDischargingTimeChange(batteryEvent)
+	bat.AddListenerChargingTimeChange(batteryEvent)
+	bat.AddListenerLevelChange(batteryEvent)
 
 	batteryEvent <- bat.Now()
 

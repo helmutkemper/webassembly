@@ -70,7 +70,7 @@ func main() {
 		RotateDelta(-math.Pi / 2)
 	stage.Append(div)
 
-	factoryEasingTween.NewLinear(
+	factoryEasingTween.NewInOutBounce(
 		20*time.Second,
 		0,
 		10000,

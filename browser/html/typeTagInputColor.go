@@ -927,7 +927,9 @@ func (e *TagInputColor) Autocomplete(autocomplete Autocomplete) (ref *TagInputCo
 //
 //	Este atributo booleano impede que o usuário interaja com o elemento.
 func (e *TagInputColor) Disabled(disabled bool) (ref *TagInputColor) {
-	e.selfElement.Set("disabled", disabled)
+	if disabled {
+		e.selfElement.Set("disabled", "disabled")
+	}
 	return e
 }
 

@@ -1072,7 +1072,7 @@ func (e *TagInputRange) Max(max any) (ref *TagInputRange) {
 // pode ser menor que o valor de min, o que indica que o intervalo pode ser contornado; por exemplo,
 // isso permite que você especifique um intervalo de tempo das 22h às 4h.
 func (e *TagInputRange) Min(min any) (ref *TagInputRange) {
-	e.selfElement.Set("max", min)
+	e.selfElement.Set("min", min)
 	return e
 }
 

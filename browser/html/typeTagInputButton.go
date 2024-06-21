@@ -1085,7 +1085,7 @@ func (e *TagInputButton) Type(inputType InputType) (ref *TagInputButton) {
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagInputButton) Value(value string) (ref *TagInputButton) {
+func (e *TagInputButton) Value(value any) (ref *TagInputButton) {
 	e.selfElement.Set("value", value)
 	return e
 }

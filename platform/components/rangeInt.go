@@ -664,17 +664,19 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 				var params []interface{}
 
 				switch tagDataInternal.Event {
-				case "change":
+				case "input":
 
 					// Passes the functions to be executed in the listener
 					methods = []reflect.Value{
 						fieldVal.MethodByName(tagDataInternal.Func),
 						reflect.ValueOf(&rangeComponent).MethodByName("OnChangeNumber"),
+						reflect.ValueOf(&rangeComponent).MethodByName("OnChangeRange"),
 					}
 
 					// Pass variable pointers
 					params = []interface{}{
 						fieldVal.Interface(),
+						new(__rangeChane),
 						new(__rangeChane),
 					}
 
@@ -696,7 +698,8 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 				//   inputNumber.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
 				//   The first element of the array is the user function
 				//   From the second element onwards, they are internal functions and must be called after the user function in case the user has changed any value.
-				inputNumber.ListenerAdd(tagDataInternal.Event, params, methods)
+				inputRange.ListenerAddReflect(tagDataInternal.Event, params, methods)
+				inputNumber.ListenerAddReflect(tagDataInternal.Event, params, methods)
 
 				//case "func":
 				//	if !fieldVal.CanInterface() {

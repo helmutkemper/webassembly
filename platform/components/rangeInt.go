@@ -421,8 +421,8 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 		rangeComponent.__rangeTag = inputRange
 		rangeComponent.__numberTag = inputNumber
 
-		// __rangeChane is the pointer sent when the `change` event happens
-		rangeComponent.__change = new(__rangeChane)
+		// __rangeOnInputEvent is the pointer sent when the `change` event happens
+		rangeComponent.__change = new(__rangeOnInputEvent)
 
 		// populates the component.Range within the user component
 		componentRange := element.FieldByName("Range")
@@ -444,10 +444,10 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 
 		// Pass variable pointers
 		params = []interface{}{
-			// __rangeChane is the type pointer contained in components.Range and collects value
-			new(__rangeChane),
-			// __rangeChane is the type pointer contained in components.Range and collects value
-			new(__rangeChane),
+			// __rangeOnInputEvent is the type pointer contained in components.Range and collects value
+			new(__rangeOnInputEvent),
+			// __rangeOnInputEvent is the type pointer contained in components.Range and collects value
+			new(__rangeOnInputEvent),
 		}
 
 		// explanation
@@ -605,10 +605,10 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 					params = []interface{}{
 						// fieldVal.Interface() is the struct pointer that collects user data
 						fieldVal.Interface(),
-						// __rangeChane is the type pointer contained in components.Range and collects value
-						new(__rangeChane),
-						// __rangeChane is the type pointer contained in components.Range and collects value
-						new(__rangeChane),
+						// __rangeOnInputEvent is the type pointer contained in components.Range and collects value
+						new(__rangeOnInputEvent),
+						// __rangeOnInputEvent is the type pointer contained in components.Range and collects value
+						new(__rangeOnInputEvent),
 					}
 
 				// If the user uses another event, different from `input`, it just mounts the user event

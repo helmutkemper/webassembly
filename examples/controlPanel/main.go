@@ -25,21 +25,14 @@ type Body struct {
 	Colors       *ColorGroup    `wasmPanel:"type:component;label:Colors"`
 }
 
-type Click struct {
+type OnChangeEvent struct {
 	IsTrusted bool    `wasmGet:"isTrusted"`
-	Min       float64 `wasmGet:"min"`
-	Max       float64 `wasmGet:"max"`
-	Step      float64 `wasmGet:"step"`
 	Value     float64 `wasmGet:"value"`
-	//test      string  `wasmGet:"test"`
 }
 
-func (e *Click) OnChange(click Click) {
-	log.Printf("> Trusted: %+v", click.IsTrusted)
-	log.Printf("> Min:     %+v", click.Min)
-	log.Printf("> Max:     %+v", click.Max)
-	log.Printf("> Step:    %+v", click.Step)
-	log.Printf("> Value:   %+v", click.Value)
+func (e *OnChangeEvent) OnChange(event OnChangeEvent) {
+	log.Printf("> Trusted: %+v", event.IsTrusted)
+	log.Printf("> Value:   %+v", event.Value)
 }
 
 type ColorRange struct {
@@ -48,7 +41,7 @@ type ColorRange struct {
 	TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
 	TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
 	Color       float64              `wasmPanel:"type:value;min:0;max:50;step:1;default:0"`
-	ColorChange *Click               `wasmPanel:"type:listener;event:change;func:OnChange"`
+	ColorChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChange"`
 }
 
 //func (e *ColorRange) Init() {
@@ -133,7 +126,7 @@ func (e *Control) Init() (err error) {
 }
 
 func ColorOnChange(args any) {
-	capturedDataEvent, ok := args.(Click)
+	capturedDataEvent, ok := args.(OnChangeEvent)
 	if !ok {
 		log.Printf("error: interface conversion error")
 		return
@@ -141,9 +134,6 @@ func ColorOnChange(args any) {
 
 	log.Printf("%+v", args)
 	log.Printf("> Trusted: %+v", capturedDataEvent.IsTrusted)
-	log.Printf("> Min:     %+v", capturedDataEvent.Min)
-	log.Printf("> Max:     %+v", capturedDataEvent.Max)
-	log.Printf("> Step:    %+v", capturedDataEvent.Step)
 	log.Printf("> Value:   %+v", capturedDataEvent.Value)
 }
 

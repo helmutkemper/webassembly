@@ -4,7 +4,8 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 )
 
-type __rangeChane struct {
+// __rangeOnInputEvent faz a captura de dados do event input
+type __rangeOnInputEvent struct {
 	Value float64 `wasmGet:"value"`
 }
 
@@ -12,62 +13,85 @@ type __rangeChane struct {
 //
 // English:
 //
-//		Component width label, input range and input number
+//	 Component width label, input range and input number
 //
-//	 Public methods
-//	   * Max(int64/float64)
-//	   * Min(int64/float64)
-//	   * Step(int64/float64)
-//	   * Value(int64/float64)
+//	Public methods
+//	  * Max(int64/float64)
+//	  * Min(int64/float64)
+//	  * Step(int64/float64)
+//	  * Value(int64/float64)
 //
-//	 Methods for internal use, should not be used by you and should not be shadowed (rewritten)
-//	   * OnChangeNumber
-//	   * OnChangeRange
+//	Methods for internal use, should not be used by you and should not be shadowed (rewritten)
+//	  * OnChangeNumber
+//	  * OnChangeRange
 //
-//		    Example:
+//	     Example:
 //
-//		    +- panel --------------------------------------------------------+
-//		    |                                                                |
-//		    |  +- panelCel -----------------------------------------------+  |
-//		    |  |                                                          |  |
-//		    |  | +- labelCel -------------------------------------------+ |  |
-//		    |  | | Label                                              ˇ | |  |
-//		    |  | +- compCel --------------------------------------------+ |  |
-//		    |  | | Text inside component  ⊢--*-----------------⊣  [ n ] | |  |
-//		    |  | | Text inside component  ⊢--*-----------------⊣  [ n ] | |  |
-//		    |  | | Text inside component  ⊢--*-----------------⊣  [ n ] | |  |
-//		    |  | +------------------------------------------------------+ |  |
-//		    |  |                                                          |  |
-//		    |  +----------------------------------------------------------+  |
-//		    |                                                                |
-//		    +----------------------------------------------------------------+
+//	     +- panel --------------------------------------------------------+
+//	     |                                                                |
+//	     |  +- panelCel -----------------------------------------------+  |
+//	     |  |                                                          |  |
+//	     |  | +- labelCel -------------------------------------------+ |  |
+//	     |  | | Label                                              ˇ | |  |
+//	     |  | +- compCel --------------------------------------------+ |  |
+//	     |  | | Text inside component  ⊢--*-----------------⊣  [ n ] | |  |
+//	     |  | | Text inside component  ⊢--*-----------------⊣  [ n ] | |  |
+//	     |  | | Text inside component  ⊢--*-----------------⊣  [ n ] | |  |
+//	     |  | +------------------------------------------------------+ |  |
+//	     |  |                                                          |  |
+//	     |  +----------------------------------------------------------+  |
+//	     |                                                                |
+//	     +----------------------------------------------------------------+
 //
-//	     type ColorRange struct {
-//	       components.Range
+//	    // ColorRange Component type Range
+//	    type ColorRange struct {
+//	      // Mount the component
+//	      components.Range
 //
-//	       Color       float64              `wasmPanel:"type:value;min:0;max:50;step:1;default:0"` // Field with the value of the element
-//	       TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"` // [optional] Reference to the range component
-//	       TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"` // [optional] Reference to the number component
-//	       ColorChange *Click               `wasmPanel:"type:listener;event:change;func:OnChange"` // [optional] Event pointer. Create one for each event, change, click, etc.
-//	     }
+//	      // Field with the value of the element must be type int64 or float64
+//	      Color       float64              `wasmPanel:"type:value;min:0;max:50;step:1;default:0"`
+//	      // [optional] Reference to the range component
+//	      TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
+//	      // [optional] Reference to the number component
+//	      TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
+//	      // [optional] Event pointer. Create one for each event, change, click, etc.
+//	      ColorChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChange"`
+//	    }
 //
-//	     func (e *ColorRange) Init() { // [optional]
-//	       anything you want
+//	    // Init is invoked when the component is initialized
+//	    func (e *ColorRange) Init() { // [optional]
+//	      // anything you want
 //
-//	       you can change the default properties
-//	       e.Step(1)
-//	       e.Max(255)
-//	       e.Min(0)
-//	       e.Value(0)
-//	     }
+//	      // you can change the default properties
+//	      e.Step(1)
+//	      e.Max(255)
+//	      e.Min(0)
+//	      e.Value(0)
+//	    }
+//
+//	    // OnChangeEvent Component data capture object. The values are isTrusted, min, max, step and value
+//	    type OnChangeEvent struct {
+//
+//	      // Indicates that the value was generated by the user and not by another method
+//	      IsTrusted bool    `wasmGet:"isTrusted"`
+//	      // Returns the value of the component
+//	      Value     float64 `wasmGet:"value"`
+//	    }
+//
+//	    // OnChange is the function determined by the tag `wasmPanel:"type:listener;event:change;func:OnChange"`.
+//	    // `func:OnChange` determines the name of the public function to be invoked in the event
+//	    func (e *OnChangeEvent) OnChange(event OnChangeEvent) {
+//	      log.Printf("Trusted: %+v", event.IsTrusted)
+//	      log.Printf("Value:   %+v", event.Value)
+//	    }
 type Range struct {
 	__max   any
 	__min   any
 	__step  any
 	__value any
 
-	// __rangeChane is the pointer sent when the `change` event happens
-	__change *__rangeChane
+	// __rangeOnInputEvent is the pointer sent when the `change` event happens
+	__change *__rangeOnInputEvent
 
 	// reference of component elements
 	__rangeTag  *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
@@ -78,7 +102,7 @@ type Range struct {
 //
 //	This function must not be called by the user, and it must not be shadowed.
 //	It is public so that reflect can access it.
-func (e *Range) OnChangeNumber(stt __rangeChane) {
+func (e *Range) OnChangeNumber(stt __rangeOnInputEvent) {
 	e.__rangeTag.Value(stt.Value)
 }
 
@@ -86,7 +110,7 @@ func (e *Range) OnChangeNumber(stt __rangeChane) {
 //
 //	This function must not be called by the user, and it must not be shadowed.
 //	It is public so that reflect can access it.
-func (e *Range) OnChangeRange(stt __rangeChane) {
+func (e *Range) OnChangeRange(stt __rangeOnInputEvent) {
 	e.__numberTag.Value(stt.Value)
 }
 

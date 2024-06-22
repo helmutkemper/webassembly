@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/components"
 	"log"
 )
@@ -44,18 +45,18 @@ func (e *Click) OnChange(click Click) {
 type ColorRange struct {
 	components.Range
 
-	//TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
-	//TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
-	Color       float64 `wasmPanel:"type:value;min:0;max:50;step:1;default:0"`
-	ColorChange *Click  `wasmPanel:"type:listener;event:change;func:OnChange"`
+	TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
+	TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
+	Color       float64              `wasmPanel:"type:value;min:0;max:50;step:1;default:0"`
+	ColorChange *Click               `wasmPanel:"type:listener;event:change;func:OnChange"`
 }
 
-func (e *ColorRange) Init() {
-	//log.Printf("entrou em onInit de ColorRange!")
-	//e.SetStep(1)
-	//e.SetMax(200)
-	//e.SetMin(0)
-}
+//func (e *ColorRange) Init() {
+//	e.Step(1)
+//	e.Max(255)
+//	e.Min(0)
+//	e.Value(255)
+//}
 
 type ColorAdjust struct {
 	Red   *ColorRange `wasmPanel:"type:range;label:Red"`

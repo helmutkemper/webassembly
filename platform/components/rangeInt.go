@@ -28,7 +28,6 @@ type tag struct {
 }
 
 func (e *tag) getTagKeyValue(data string) (key, value string) {
-	//log.Printf("tag data: %v", data)
 	list := strings.Split(data, ":")
 	key = list[0]
 	value = list[1]
@@ -74,113 +73,7 @@ type Components struct {
 	panelBody   *html.TagDiv
 }
 
-type __rangeChane struct {
-	Value float64 `wasmGet:"value"`
-}
-
-type Range struct {
-	__max   any
-	__min   any
-	__step  any
-	__value any
-
-	// __rangeChane is the pointer sent when the `change` event happens
-	__change *__rangeChane
-
-	// reference of component elements
-	__rangeTag  *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
-	__numberTag *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
-}
-
-func (e *Range) OnChangeNumber(stt __rangeChane) {
-	e.__rangeTag.Value(stt.Value)
-}
-
-func (e *Range) OnChangeRange(stt __rangeChane) {
-	e.__numberTag.Value(stt.Value)
-}
-
-func (e *Range) init() {
-	if e.__max != nil {
-		e.max(e.__max)
-		e.__max = nil
-	}
-
-	if e.__min != nil {
-		e.min(e.__min)
-		e.__min = nil
-	}
-
-	if e.__step != nil {
-		e.step(e.__step)
-		e.__step = nil
-	}
-
-	if e.__value != nil {
-		e.value(e.__value)
-		e.__value = nil
-	}
-}
-
-func (e *Range) max(max any) {
-	e.__rangeTag.Max(max)
-	e.__numberTag.Max(max)
-}
-
-func (e *Range) min(min any) {
-	e.__rangeTag.Min(min)
-	e.__numberTag.Min(min)
-}
-
-func (e *Range) step(step any) {
-	e.__rangeTag.Step(step)
-	e.__numberTag.Step(step)
-}
-
-func (e *Range) value(step any) {
-	e.__rangeTag.Value(step)
-	e.__numberTag.Value(step)
-}
-
-func (e *Range) Max(max any) {
-	if e.__rangeTag == nil {
-		e.__max = max
-		return
-	}
-
-	e.max(max)
-}
-
-func (e *Range) Min(min any) {
-	if e.__rangeTag == nil {
-		e.__min = min
-		return
-	}
-
-	e.min(min)
-}
-
-func (e *Range) Step(step any) {
-	if e.__rangeTag == nil {
-		e.__step = step
-		return
-	}
-
-	e.step(step)
-}
-
-func (e *Range) GetValue() (value any) {
-	return e.__rangeTag.GetValue()
-}
-
-func (e *Range) Value(value any) {
-	if e.__rangeTag == nil {
-		e.__value = value
-		return
-	}
-
-	e.value(value)
-}
+type _Button struct{}
 
 func (e *Components) Init(el any) (err error) {
 	element := reflect.ValueOf(el)
@@ -530,6 +423,10 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 
 		// __rangeChane is the pointer sent when the `change` event happens
 		rangeComponent.__change = new(__rangeChane)
+
+		// populates the component.Range within the user component
+		componentRange := element.FieldByName("Range")
+		componentRange.Set(reflect.ValueOf(rangeComponent))
 	}
 
 	// Search for the listener input tag and if it does not exist, set up the controller control function
@@ -691,6 +588,7 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 				var params []interface{}
 
 				switch tagDataInternal.Event {
+				// If the user wants to use the `input` event, the code assembles the user event and the panel event
 				case "input":
 
 					// Passes the functions to be executed in the listener
@@ -713,6 +611,7 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 						new(__rangeChane),
 					}
 
+				// If the user uses another event, different from `input`, it just mounts the user event
 				default:
 
 					// Passes the functions to be executed in the listener
@@ -800,6 +699,7 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 		if fieldVal.Type() == reflect.TypeOf(Range{}) {
 			r := fieldVal.Interface().(Range)
 			r.init()
+			break
 		}
 	}
 
@@ -924,8 +824,6 @@ func (e *Components) processComponentColor(element reflect.Value, tagData *tag, 
 }
 
 func (e *Components) processComponentSelect(element reflect.Value, tagData *tag, father *html.TagDiv) {
-
-	log.Printf("tag data: %+v", tagData)
 
 	selectTag := factoryBrowser.NewTagSelect().Class("inputSelect")
 

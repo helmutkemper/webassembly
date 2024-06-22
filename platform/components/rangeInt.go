@@ -532,6 +532,33 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 		rangeComponent.__change = new(__rangeChane)
 	}
 
+	// Search for the listener input tag and if it does not exist, set up the controller control function
+	if _, _, found := e.searchFieldByTagType("listener", "input", element); !found {
+		var methods []reflect.Value
+		var params []interface{}
+
+		// Passes the functions to be executed in the listener
+		methods = []reflect.Value{
+			// rangeComponent is the struct components.Range and OnChangeNumber is a function belonging to the struct components.Range
+			reflect.ValueOf(&rangeComponent).MethodByName("OnChangeNumber"),
+			// rangeComponent is the struct components.Range and OnChangeRange is a function belonging to the struct components.Range
+			reflect.ValueOf(&rangeComponent).MethodByName("OnChangeRange"),
+		}
+
+		// Pass variable pointers
+		params = []interface{}{
+			// __rangeChane is the type pointer contained in components.Range and collects value
+			new(__rangeChane),
+			// __rangeChane is the type pointer contained in components.Range and collects value
+			new(__rangeChane),
+		}
+
+		// explanation
+		//   inputNumber.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
+		inputRange.ListenerAddReflect("input", params, methods)
+		inputNumber.ListenerAddReflect("input", params, methods)
+	}
+
 	for i := 0; i != element.NumField(); i += 1 {
 		fieldVal := element.Field(i)
 		fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
@@ -668,15 +695,21 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 
 					// Passes the functions to be executed in the listener
 					methods = []reflect.Value{
+						// tagDataInternal.Func is the user function
 						fieldVal.MethodByName(tagDataInternal.Func),
+						// rangeComponent is the struct components.Range and OnChangeNumber is a function belonging to the struct components.Range
 						reflect.ValueOf(&rangeComponent).MethodByName("OnChangeNumber"),
+						// rangeComponent is the struct components.Range and OnChangeRange is a function belonging to the struct components.Range
 						reflect.ValueOf(&rangeComponent).MethodByName("OnChangeRange"),
 					}
 
 					// Pass variable pointers
 					params = []interface{}{
+						// fieldVal.Interface() is the struct pointer that collects user data
 						fieldVal.Interface(),
+						// __rangeChane is the type pointer contained in components.Range and collects value
 						new(__rangeChane),
+						// __rangeChane is the type pointer contained in components.Range and collects value
 						new(__rangeChane),
 					}
 

@@ -46,8 +46,8 @@ type ColorRange struct {
 
 	//TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
 	//TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
-	Color       int64  `wasmPanel:"type:value;min:0;max:50;step:1;default:0"`
-	ColorChange *Click `wasmPanel:"type:listener;event:input;func:OnChange"`
+	Color       float64 `wasmPanel:"type:value;min:0;max:50;step:1;default:0"`
+	ColorChange *Click  `wasmPanel:"type:listener;event:change;func:OnChange"`
 }
 
 func (e *ColorRange) Init() {

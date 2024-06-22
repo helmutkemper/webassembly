@@ -227,8 +227,14 @@ func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, fu
 					}
 					fieldVal.SetBool(propertyValue.Bool())
 				case reflect.Int64:
-					if e.isNumeric(propertyValue.String()) {
-						v, err := strconv.ParseInt(propertyValue.String(), 10, 64)
+					value := propertyValue.String()
+					if value == "" {
+						fieldVal.SetInt(0)
+						continue
+					}
+
+					if e.isNumeric(value) {
+						v, err := strconv.ParseInt(value, 10, 64)
 						if err != nil {
 							log.Printf("error: %v retornou um tipo diferente de integer, %v", propertyToGet, propertyValue.String())
 							continue
@@ -243,8 +249,14 @@ func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, fu
 					fieldVal.SetInt(int64(propertyValue.Int()))
 				case reflect.Float64:
 					if receiverType != reflect.Float64 {
-						if e.isNumeric(propertyValue.String()) {
-							v, err := strconv.ParseFloat(propertyValue.String(), 64)
+						value := propertyValue.String()
+						if value == "" {
+							fieldVal.SetFloat(0)
+							continue
+						}
+
+						if e.isNumeric(value) {
+							v, err := strconv.ParseFloat(value, 64)
 							if err != nil {
 								log.Printf("error: %v (%v) retornou um tipo diferente de float64, %v", propertyToGet, propertyValue.Type(), propertyValue.String())
 								continue

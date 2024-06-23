@@ -409,7 +409,7 @@ func (e *Stage) Remove(value interface{}) (ref *Stage) {
 //	 Saída:
 //	   width: tamanho do documento em pixels.
 func (e Stage) GetWidth() (width int) {
-	return e.selfDocument.Get("body").Get("clientWidth").Int()
+	return js.Global().Get("window").Get("innerWidth").Int()
 }
 
 // GetHeight #testar
@@ -428,7 +428,7 @@ func (e Stage) GetWidth() (width int) {
 //	 Saída:
 //	   width: tamanho do documento em pixels.
 func (e Stage) GetHeight() (height int) {
-	return e.selfDocument.Get("body").Get("clientHeight").Int()
+	return js.Global().Get("window").Get("innerHeight").Int()
 }
 
 // ResizeStageToScreen #deprecated

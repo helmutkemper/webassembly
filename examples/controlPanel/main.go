@@ -1,13 +1,21 @@
 package main
 
 import (
+	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/components"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryAlgorithm"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryEasingTween"
 	"log"
+	"math"
+	"time"
 )
 
 type Control struct {
 	components.Components
+
 	Panel Panel `wasmPanel:"type:panel"`
 }
 
@@ -17,102 +25,64 @@ type Panel struct {
 }
 
 type Body struct {
-	Color        *ColorAdjust   `wasmPanel:"type:component;label:Color Adjust"`
-	RunCommand   *RunCommand    `wasmPanel:"type:component;label:Run Command"`
-	SelectFilter *SelectFilter  `wasmPanel:"type:component;label:File format"`
-	Payment      *RadioGroup    `wasmPanel:"type:component;label:Payment"`
-	Options      *CheckboxGroup `wasmPanel:"type:component;label:Options"`
-	Colors       *ColorGroup    `wasmPanel:"type:component;label:Colors"`
+	BoatAnimation *BoatAdjust `wasmPanel:"type:component;label:Boat dragging effect"`
 }
 
 type OnChangeEvent struct {
 	IsTrusted bool    `wasmGet:"isTrusted"`
 	Value     float64 `wasmGet:"value"`
+	Min       float64 `wasmGet:"min"`
+	Max       float64 `wasmGet:"max"`
+	Type      string  `wasmGet:"type"`
 }
 
-func (e *OnChangeEvent) OnChange(event OnChangeEvent, reference ColorRange) {
-	log.Printf("> Trusted: %+v", event.IsTrusted)
-	log.Printf("> Value:   %+v", event.Value)
-	reference.Max(500)
+func (e *OnChangeEvent) OnChange(event OnChangeEvent, reference DraggingEffect) {
+	log.Printf("reference.TagNumber.GetValue(): %v", reference.TagNumber.GetValue())
+	log.Printf("reference.TagRange.GetValue(): %v", reference.TagRange.GetValue())
+
+	var value = reference.TagNumber.GetValue()
+
+	factoryEasingTween.NewInOutSine(
+		time.Duration(value)*time.Second,
+		0,
+		10000,
+		tagDivRocket.EasingTweenWalkingAndRotateIntoPoints,
+		0,
+	).
+		SetArgumentsFunc(any(tagDivRocket)).
+		SetDoNotReverseMotion()
 }
 
-type ColorRange struct {
+func (e *OnChangeEvent) OnInput(event OnChangeEvent, reference DraggingEffect) {
+	switch event.Type {
+	case "range":
+		reference.TagNumber.Value(reference.MathematicalFormula(event.Min, event.Max, reference.TagRange.GetValue()))
+	case "number":
+		reference.TagRange.Value(reference.MathematicalFormula(event.Min, event.Max, reference.TagNumber.GetValue()))
+	}
+}
+
+type DraggingEffect struct {
 	components.Range
 
 	TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
 	TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
-	Color       float64              `wasmPanel:"type:value;min:0;max:50;step:1;default:0"`
+	Color       float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:15"`
 	ColorChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChange"`
+	RangeChange *OnChangeEvent       `wasmPanel:"type:listener;event:input;func:OnInput"`
 }
 
-func (e *ColorRange) Init() {
-	e.Step(1)
-	e.Max(10)
-	e.Min(0)
-	e.Value(5)
+func (e *DraggingEffect) MathematicalFormula(min, max, value float64) (result float64) {
+	return (max - value) + min
 }
 
-type ColorAdjust struct {
-	Red   *ColorRange `wasmPanel:"type:range;label:Red"`
-	Green *ColorRange `wasmPanel:"type:range;label:Green"`
-	Blue  *ColorRange `wasmPanel:"type:range;label:Blue"`
+func (e *DraggingEffect) Init() {
+	e.TagNumber.Value(e.MathematicalFormula(2, 50, e.TagRange.GetValue()))
+	e.TagRange.Value(e.MathematicalFormula(2, 50, e.TagNumber.GetValue()))
 }
 
-type RunCommand struct {
-	Button *ButtonEvent `wasmPanel:"type:button;label:Exec. command;value:Click me"`
-	Undo   *ButtonEvent `wasmPanel:"type:button;label:Undo last exec.;value:Undo"`
-}
-
-type SelectFilter struct {
-	Red        *ColorRange  `wasmPanel:"type:range;label:Red"`
-	FileFormat []Select     `wasmPanel:"type:select;label:Select the file format"`
-	Button     *ButtonEvent `wasmPanel:"type:button;label:Exec. command;value:Click me"`
-}
-
-type RadioGroup struct {
-	Payments []Radio `wasmPanel:"type:radio;label:Payment method"`
-}
-
-type CheckboxGroup struct {
-	Options []Checkbox `wasmPanel:"type:checkbox;label:Please, select all"`
-}
-
-type ColorGroup struct {
-	Input  ColorEvent `wasmPanel:"type:color"`
-	Output ColorEvent `wasmPanel:"type:color"`
-}
-
-type ColorEvent struct {
-	Disabled  bool   `wasmPanel:"type:disabled"`
-	Value     string `wasmPanel:"type:value"`
-	Label     string `wasmPanel:"type:label"`
-	OnPress   func() `wasmPanel:"type:onpress"`
-	OnRelease func() `wasmPanel:"type:onRelease"`
-	OnClick   func() `wasmPanel:"type:onclick"`
-}
-
-type Radio struct {
-	Name     string `wasmPanel:"type:name"`
-	Label    string `wasmPanel:"type:label"`
-	Value    string `wasmPanel:"type:value"`
-	Selected bool   `wasmPanel:"type:selected"`
-	Disabled bool   `wasmPanel:"type:disabled"`
-}
-
-type Checkbox struct {
-	Name     string `wasmPanel:"type:name"`
-	Label    string `wasmPanel:"type:label"`
-	Value    string `wasmPanel:"type:value"`
-	Selected bool   `wasmPanel:"type:selected"`
-	Disabled bool   `wasmPanel:"type:disabled"`
-}
-
-type Select struct {
-	Label    string `wasmPanel:"type:label"`
-	Value    string `wasmPanel:"type:value"`
-	Disabled bool   `wasmPanel:"type:disabled"`
-	Selected bool   `wasmPanel:"type:selected"`
-	OnSelect func() `wasmPanel:"type:onselect"`
+type BoatAdjust struct {
+	Dragging *DraggingEffect `wasmPanel:"type:range;label:effect"`
 }
 
 type OnClickEvent struct {
@@ -137,134 +107,95 @@ func (e *ButtonEvent) Init() {
 	e.Value("Initialized")
 }
 
-func (e *Control) Init() (err error) {
-	err = e.Components.Init(e)
+func (e *Control) Init() (panel *html.TagDiv, err error) {
+	panel, err = e.Components.Init(e)
 	return
 }
 
+var canvas *html.TagCanvas
+var tagDivRocket *html.TagDiv
+
 func main() {
+
+	stage := factoryBrowser.NewStage()
 
 	c := Control{
 		Panel: Panel{
 			Header: "Control Panel",
-			Body: Body{
-				RunCommand: &RunCommand{
-					Button: &ButtonEvent{
-						Label: "Label set",
-					},
-				},
-				SelectFilter: &SelectFilter{
-					FileFormat: []Select{
-						{
-							Label:    "Please select",
-							Value:    "",
-							Disabled: false,
-							Selected: false,
-							OnSelect: nil,
-						},
-						{
-							Label:    "label 1",
-							Value:    "value 1",
-							Disabled: false,
-							Selected: false,
-							OnSelect: nil,
-						},
-						{
-							Label:    "label 2",
-							Value:    "value 2",
-							Disabled: false,
-							Selected: true,
-							OnSelect: nil,
-						},
-					},
-				},
-				Payment: &RadioGroup{
-					Payments: []Radio{
-						{
-							Name:     "payment",
-							Label:    "Option 1",
-							Value:    "vista",
-							Selected: false,
-							Disabled: false,
-						},
-						{
-							Name:     "payment",
-							Label:    "Opti 2",
-							Value:    "credit",
-							Selected: false,
-							Disabled: false,
-						},
-						{
-							Name:     "payment",
-							Label:    "Opt 3",
-							Value:    "Option 3",
-							Selected: false,
-							Disabled: false,
-						},
-					},
-				},
-				Options: &CheckboxGroup{
-					Options: []Checkbox{
-						{
-							Name:     "payment",
-							Label:    "Option 1",
-							Value:    "vista",
-							Selected: false,
-							Disabled: false,
-						},
-						{
-							Name:     "payment",
-							Label:    "Opti 2",
-							Value:    "credit",
-							Selected: false,
-							Disabled: false,
-						},
-						{
-							Name:     "payment",
-							Label:    "Opt 3",
-							Value:    "Option 3",
-							Selected: false,
-							Disabled: false,
-						},
-					},
-				},
-				Colors: &ColorGroup{
-					Input: ColorEvent{
-						Disabled:  false,
-						Label:     "Input color",
-						Value:     "#11aa66",
-						OnPress:   nil,
-						OnRelease: nil,
-						OnClick:   nil,
-					},
-					Output: ColorEvent{
-						Disabled:  true,
-						Label:     "Output color",
-						Value:     "#cc3300",
-						OnPress:   nil,
-						OnRelease: nil,
-						OnClick:   nil,
-					},
-				},
-			},
+			Body:   Body{},
 		},
 	}
-	if err := c.Init(); err != nil {
+
+	var err error
+	var panel *html.TagDiv
+	if panel, err = c.Init(); err != nil {
 		log.Printf("%v", err)
 		panic(err)
 	}
 
-	//red.TagNumber.Min(-20).Max(0).Value(-10)
-	//red.TagRange.Min(-20).Max(0).Value(-10)
-	//red.SetMax(39)
+	canvas = factoryBrowser.NewTagCanvas(stage.GetWidth(), stage.GetHeight())
+	stage.Append(canvas)
 
-	//red.SetMin(0)
-	//red.SetMax(5)
-	//red.SetStep(1)
-	//red.TagRange.Min(0).Max(3).Step(1)
-	//red.TagNumber.Min(0).Max(3).Step(1)
+	var bezier = factoryAlgorithm.NewBezierCurve()
+
+	border := 50.0
+	wight := 400.0
+	height := 400.0
+
+	// E.g.: P0 (1,0) = (1*wight,0*height)
+	// E.g.: P1 (2,0) = (2*wight,0*height)
+	// E.g.: P2 (2,1) = (2*wight,1*height)
+	//
+	//     (0,0)            (1,0)            (2,0)
+	//       +----------------+----------------+
+	//       | P7            P0             P1 |
+	//       |                                 |
+	//       |                                 |
+	//       |                                 |
+	// (0,1) + P6                           P2 + (2,1)
+	//       |                                 |
+	//       |                                 |
+	//       |                                 |
+	//       | P5            P4             P3 |
+	//       +----------------+----------------+
+	//     (0,2)            (1,2)            (2,2)
+
+	bezier.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
+	bezier.Add(algorithm.Point{X: 2*wight + border, Y: 0*height + border})
+	bezier.Add(algorithm.Point{X: 2*wight + border, Y: 1*height + border})
+	bezier.Add(algorithm.Point{X: 2*wight + border, Y: 2*height + border})
+	bezier.Add(algorithm.Point{X: 1*wight + border, Y: 2*height + border})
+	bezier.Add(algorithm.Point{X: 0*wight + border, Y: 2*height + border})
+	bezier.Add(algorithm.Point{X: 0*wight + border, Y: 1*height + border})
+	bezier.Add(algorithm.Point{X: 0*wight + border, Y: 0*height + border})
+	bezier.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
+	//bezier.Process(10000)
+	//bezier.SetNumberOfSegments(2000)
+
+	for _, point := range *bezier.GetProcessed() {
+		AddDotBlue(int(point.X), int(point.Y))
+	}
+
+	tagDivRocket = factoryBrowser.NewTagDiv().
+		Class("animate").
+		AddPointsToEasingTween(bezier).
+		SetDeltaX(-25).
+		SetDeltaY(-25).
+		RotateDelta(-math.Pi).
+		SetXY(int(1*wight+border), int(0*height+border)).
+		Html("<img src=\"boat.png\" alt=\"Imagem\">")
+	stage.Append(tagDivRocket)
+
+	stage.Append(panel)
 
 	done := make(chan struct{})
 	done <- struct{}{}
 
+}
+
+func AddDotBlue(x, y int) {
+	canvas.BeginPath().
+		FillStyle(factoryColor.NewBlueHalfTransparent()).
+		Arc(x, y, 10.5, 0, 2*math.Pi, false).
+		Fill()
 }

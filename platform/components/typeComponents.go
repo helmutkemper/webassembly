@@ -17,7 +17,7 @@ type Components struct {
 	panelBody   *html.TagDiv
 }
 
-func (e *Components) Init(el any) (err error) {
+func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 	element := reflect.ValueOf(el)
 	typeof := reflect.TypeOf(el)
 	e.createDivsFather()
@@ -29,10 +29,9 @@ func (e *Components) Init(el any) (err error) {
 		return
 	}
 
-	stage := factoryBrowser.NewStage()
-	stage.Append(e.panelFather)
+	e.panelFather.Class("panel")
 
-	return
+	return e.panelFather, err
 }
 
 func (e *Components) GetUId() (uuidStr string, err error) {
@@ -53,7 +52,13 @@ func (e *Components) createDivsFather() {
 }
 
 func (e *Components) process(element reflect.Value, typeof reflect.Type) (err error) {
+
 	if element.Kind() == reflect.Pointer {
+		if element.CanSet() && element.IsNil() {
+			newInstance := reflect.New(element.Type().Elem())
+			element.Set(newInstance)
+		}
+
 		element = element.Elem()
 		typeof = typeof.Elem()
 	}
@@ -74,7 +79,7 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 
 				switch tagData.Type {
 				case "headerText":
-					e.processHeaderText(fieldVal, e.panelFather)
+					e.processHeaderText(fieldVal, tagData.Label, e.panelFather)
 					// Espera criar panelHeader para que panelBody fique abaixo
 					e.panelFather.Append(e.panelBody)
 				case "panelBody":
@@ -538,27 +543,27 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 
 				switch tagDataInternal.Event {
 				// If the user wants to use the `input` event, the code assembles the user event and the panel event
-				case "input":
-
-					// Passes the functions to be executed in the listener
-					methods = []reflect.Value{
-						// tagDataInternal.Func is the user function
-						fieldVal.MethodByName(tagDataInternal.Func),
-						// rangeComponent is the struct components.Range and OnChangeNumber is a function belonging to the struct components.Range
-						reflect.ValueOf(&rangeComponent).MethodByName("OnChangeNumber"),
-						// rangeComponent is the struct components.Range and OnChangeRange is a function belonging to the struct components.Range
-						reflect.ValueOf(&rangeComponent).MethodByName("OnChangeRange"),
-					}
-
-					// Pass variable pointers
-					params = []interface{}{
-						// fieldVal.Interface() is the struct pointer that collects user data
-						fieldVal.Interface(),
-						// __rangeOnInputEvent is the type pointer contained in components.Range and collects value
-						new(__rangeOnInputEvent),
-						// __rangeOnInputEvent is the type pointer contained in components.Range and collects value
-						new(__rangeOnInputEvent),
-					}
+				//case "input":
+				//
+				//	// Passes the functions to be executed in the listener
+				//	methods = []reflect.Value{
+				//		// tagDataInternal.Func is the user function
+				//		fieldVal.MethodByName(tagDataInternal.Func),
+				//		// rangeComponent is the struct components.Range and OnChangeNumber is a function belonging to the struct components.Range
+				//		reflect.ValueOf(&rangeComponent).MethodByName("OnChangeNumber"),
+				//		// rangeComponent is the struct components.Range and OnChangeRange is a function belonging to the struct components.Range
+				//		reflect.ValueOf(&rangeComponent).MethodByName("OnChangeRange"),
+				//	}
+				//
+				//	// Pass variable pointers
+				//	params = []interface{}{
+				//		// fieldVal.Interface() is the struct pointer that collects user data
+				//		fieldVal.Interface(),
+				//		// __rangeOnInputEvent is the type pointer contained in components.Range and collects value
+				//		new(__rangeOnInputEvent),
+				//		// __rangeOnInputEvent is the type pointer contained in components.Range and collects value
+				//		new(__rangeOnInputEvent),
+				//	}
 
 				// If the user uses another event, different from `input`, it just mounts the user event
 				default:
@@ -1102,7 +1107,16 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 	)
 }
 
-func (e *Components) processHeaderText(element reflect.Value, father *html.TagDiv) {
+func (e *Components) processHeaderText(element reflect.Value, defaultText string, father *html.TagDiv) {
+
+	var ok bool
+	var text string
+
+	text, ok = element.Interface().(string)
+	if ok && text != "" {
+
+		defaultText = text
+	}
 
 	// <div class="panelHeader">
 	//   <div class="headerText">Panel</div>
@@ -1111,7 +1125,7 @@ func (e *Components) processHeaderText(element reflect.Value, father *html.TagDi
 	// </div>
 	father.Append(
 		factoryBrowser.NewTagDiv().Class("panelHeader").Append(
-			factoryBrowser.NewTagDiv().Class("headerText").Text(element.Interface()),
+			factoryBrowser.NewTagDiv().Class("headerText").Text(defaultText),
 			factoryBrowser.NewTagDiv().Class("dragIcon"),
 			factoryBrowser.NewTagDiv().Class("closeIconPanel").Text("ˇ"),
 		),

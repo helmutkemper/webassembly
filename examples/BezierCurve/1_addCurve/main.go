@@ -55,7 +55,7 @@ func main() {
 	bezier.Add(algorithm.Point{X: 0*wight + border, Y: 1*height + border})
 	bezier.Add(algorithm.Point{X: 0*wight + border, Y: 0*height + border})
 	bezier.Add(algorithm.Point{X: 1*wight + border, Y: 0*height + border})
-	bezier.Process(1000)
+	bezier.Process()
 
 	for v, point := range *bezier.GetOriginal() {
 		AddRedPointer(int(point.X), int(point.Y))

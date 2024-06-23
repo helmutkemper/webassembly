@@ -5,6 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Draggable Panel Example</title>
   <style>
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  </style>
+  <style>
+    body {
+      background: #fdff17
+    }
+    /*.animate {*/
+    /*  width: 512px;*/
+    /*  height: 512px;*/
+    /*  position: absolute;*/
+    /*  background-image: url("./boat.png");*/
+    /*}*/
+    .animate {
+      width: 50px;
+      height: 50px;
+      overflow: hidden;
+    }
+
+    .animate img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* cobre todo o container */
+    }
+  </style>
+  <style>
     /*                                                                     */
     /* +- panel --------------------------------------------------------+  */
     /* |                                                                |  */
@@ -75,16 +103,15 @@
       box-shadow: var(--panel-box-shadow);
       border: 1px solid var(--panel-border);
       padding: 10px;
-      position: fixed;
-      top: 0;
-      left: 0;
       background-color: var(--panel-bg);
       z-index: 1000;
       user-select: none;
-      max-height: 100vh;
+      max-height: 90vh;
       overflow-y: auto;
-      margin-top: 10px;
-      margin-left: 10px;
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      margin: 10px;
     }
 
     .panel .panelBody {
@@ -354,7 +381,7 @@
   <script src="../support/wasm_exec.js"></script>
 </head>
 <body class="light-theme">
-<button id="toggleTheme">Toggle Theme</button>
+<!--button id="toggleTheme">Toggle Theme</button-->
 
 
 </body>
@@ -369,7 +396,6 @@
       go.run(result.instance);
 
       const panel = document.querySelector('.panel');
-      console.log("panel", panel)
       const dragIcon = document.querySelector('.dragIcon');
       const closeIconPanel = document.querySelector('.closeIconPanel');
       let isDragging = false;

@@ -62,7 +62,27 @@ func (e *BezierCurve) getPercent(n1, n2 float64, percent float64) float64 {
 	return n1 + (diff * percent)
 }
 
-func (e *BezierCurve) Process(nPoints float64) (ref *BezierCurve) {
+func (e *BezierCurve) Process() (ref *BezierCurve) {
+	nPoints := 0.0
+	if len(e.original) > 3 {
+		for i := 1; i != len(e.original); i += 1 {
+			nPoints += e.DistanceBetweenTwoPoints(e.original[i-1], e.original[i])
+		}
+	}
+
+	e.ProcessManual(nPoints)
+
+	nPoints = 0.0
+	for i := 1; i != len(e.original); i += 1 {
+		nPoints += e.DistanceBetweenTwoPoints(e.original[i-1], e.original[i])
+	}
+	nPoints = nPoints / float64(len(e.processed))
+
+	e.SetNumberOfSegments(int(float64(len(e.processed)) / (1.0 / nPoints)))
+	return e
+}
+
+func (e *BezierCurve) ProcessManual(nPoints float64) (ref *BezierCurve) {
 	e.step = 1 / (nPoints - 1)
 	if len(e.original) < 3 {
 		e.processed = make([]Point, len(e.original))
@@ -86,7 +106,6 @@ func (e *BezierCurve) Process(nPoints float64) (ref *BezierCurve) {
 	}
 
 	e.processed = append(e.processed, e.original[len(e.original)-1])
-
 	return e
 }
 

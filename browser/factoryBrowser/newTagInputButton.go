@@ -6,7 +6,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // English:
 //
-//  Create the element input.
+//	Create the element input.
 //
 // The <input> HTML element is used to create interactive controls for web-based forms in order to
 // accept data from the user; a wide variety of types of input data and control widgets are
@@ -17,7 +17,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Português:
 //
-//  Cria o elemento input.
+//	Cria o elemento input.
 //
 // O elemento HTML <input> é usado para criar controles interativos para formulários baseados na
 // web para aceitar dados do usuário; uma ampla variedade de tipos de dados de entrada e widgets
@@ -25,11 +25,10 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // O elemento <input> é um dos mais poderosos e complexos dentro do HTML, devido ao grande número
 // de combinações de tipos de entrada e atributos.
-func NewTagInputButton(id string) (ref *html.TagInputButton) {
+func NewTagInputButton() (ref *html.TagInputButton) {
 	ref = &html.TagInputButton{}
 	ref.CreateElement(html.KTagInput)
 	ref.Type(html.KInputTypeButton)
-	ref.Id(id)
 
 	return ref
 }

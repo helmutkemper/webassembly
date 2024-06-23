@@ -58,14 +58,14 @@ type ColorAdjust struct {
 }
 
 type RunCommand struct {
-	Button ButtonEvent `wasmPanel:"type:button;label:Exec. command;value:Click me"`
-	Undo   ButtonEvent `wasmPanel:"type:button;label:Undo last exec.;value:Undo"`
+	Button *ButtonEvent `wasmPanel:"type:button;label:Exec. command;value:Click me"`
+	Undo   *ButtonEvent `wasmPanel:"type:button;label:Undo last exec.;value:Undo"`
 }
 
 type SelectFilter struct {
-	Red        *ColorRange `wasmPanel:"type:range;label:Red"`
-	FileFormat []Select    `wasmPanel:"type:select;label:Select the file format"`
-	Button     ButtonEvent `wasmPanel:"type:button;label:Exec. command;value:Click me"`
+	Red        *ColorRange  `wasmPanel:"type:range;label:Red"`
+	FileFormat []Select     `wasmPanel:"type:select;label:Select the file format"`
+	Button     *ButtonEvent `wasmPanel:"type:button;label:Exec. command;value:Click me"`
 }
 
 type RadioGroup struct {
@@ -114,10 +114,21 @@ type Select struct {
 	OnSelect func() `wasmPanel:"type:onselect"`
 }
 
+type OnClickEvent struct {
+	IsTrusted bool   `wasmGet:"isTrusted"`
+	Value     string `wasmGet:"value"`
+}
+
+func (e *OnClickEvent) OnClick(event OnClickEvent) {
+	log.Printf("Trusted: %v", event.IsTrusted)
+	log.Printf("Value:   %v", event.Value)
+}
+
 type ButtonEvent struct {
-	OnPress   func() `wasmPanel:"type:onpress"`
-	OnRelease func() `wasmPanel:"type:onRelease"`
-	OnClick   func() `wasmPanel:"type:onclick"`
+	components.Button
+
+	Label      string        `wasmPanel:"type:value;default:Ok"`
+	RunCommand *OnClickEvent `wasmPanel:"type:listener;event:click;func:OnClick"`
 }
 
 func (e *Control) Init() (err error) {
@@ -143,6 +154,11 @@ func main() {
 		Panel: Panel{
 			Header: "Control Panel",
 			Body: Body{
+				RunCommand: &RunCommand{
+					Button: &ButtonEvent{
+						Label: "Label set",
+					},
+				},
 				SelectFilter: &SelectFilter{
 					FileFormat: []Select{
 						{

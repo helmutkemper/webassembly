@@ -104,7 +104,7 @@ type Range struct {
 //
 //	This function must not be called by the user, and it must not be shadowed.
 //	It is public so that reflect can access it.
-func (e *Range) OnChangeNumber(stt __rangeOnInputEvent) {
+func (e *Range) OnChangeNumber(stt __rangeOnInputEvent, ref any) {
 	e.__rangeTag.Value(stt.Value)
 }
 
@@ -112,7 +112,7 @@ func (e *Range) OnChangeNumber(stt __rangeOnInputEvent) {
 //
 //	This function must not be called by the user, and it must not be shadowed.
 //	It is public so that reflect can access it.
-func (e *Range) OnChangeRange(stt __rangeOnInputEvent) {
+func (e *Range) OnChangeRange(stt __rangeOnInputEvent, ref any) {
 	e.__numberTag.Value(stt.Value)
 }
 

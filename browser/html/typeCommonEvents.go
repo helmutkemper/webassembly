@@ -122,13 +122,11 @@ func (e *commonEvents) isNumeric(str string) (numeric bool) {
 	return true
 }
 
-func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value) {
+func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) {
 
 	if e.listener == nil {
 		e.listener = make(map[string]js.Func)
 	}
-
-	//eventStr := event.String()
 
 	e.listener[event] = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		if len(args) == 0 {
@@ -136,6 +134,7 @@ func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, fu
 		}
 
 		e.selfElement.Set("isTrusted", args[0].Get("isTrusted"))
+
 		//melhor forma de varrer um objeto
 		//if e.debugListener {
 		//	var obj = args[0]
@@ -146,17 +145,7 @@ func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, fu
 		//}
 
 		for kFunc := range functions {
-
 			element := reflect.ValueOf(params[kFunc])
-
-			//md := element1.MethodByName("OnChangeNumber")
-			//log.Printf(">>>>>>>>>>>>>> %+v", element1)
-			//log.Printf(">>>>>>>>>>>>>> %v", md)
-			//md := element1.MethodByName("OnChangeNumber")
-			//if _, err := e.callFunc(md, e.GetValue()); err != nil {
-			//	log.Printf("error call %v", err)
-			//}
-			//log.Printf(">>>>>>>>>>>>>> %v", md)
 
 			for {
 				if element.Kind() != reflect.Pointer {
@@ -167,12 +156,13 @@ func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, fu
 			}
 
 			if !element.IsValid() {
-				log.Printf(">>>>>>>> error: the event cannot populate the event variable.")
+				log.Printf("error: the event cannot populate the event variable.")
 				log.Printf("This usually occurs when:")
 				log.Printf("  you do not pass a pointer to the memory address where the variable is located;")
 				log.Printf("  the field is not public, the first letter of the field within the struct is lowercase.")
 				return nil
 			}
+
 			for i := 0; i != element.NumField(); i += 1 {
 				fieldVal := element.Field(i)
 
@@ -284,10 +274,19 @@ func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, fu
 				log.Printf("error: method passado para ListenerAdd é inválido")
 				return nil
 			}
-			_, err := e.callFunc(functions[kFunc], element.Interface())
-			if err != nil {
-				log.Printf("error: chamar a função %v, retornou um erro: %v", functions[kFunc].Type().Name(), err)
-				return nil
+
+			if reference == nil {
+				_, err := e.callFunc(functions[kFunc], element.Interface())
+				if err != nil {
+					log.Printf("error: chamar a função %v, retornou um erro: %v", functions[kFunc].Type().Name(), err)
+					return nil
+				}
+			} else {
+				_, err := e.callFunc(functions[kFunc], element.Interface(), reference)
+				if err != nil {
+					log.Printf("error: chamar a função %v, retornou um erro: %v", functions[kFunc].Type().Name(), err)
+					return nil
+				}
 			}
 		}
 

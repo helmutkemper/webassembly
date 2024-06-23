@@ -447,9 +447,9 @@ func (e *TagSvgStyle) Reference(reference **TagSvgStyle) (ref *TagSvgStyle) {
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagSvgStyle) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value) (ref *TagSvgStyle) {
+func (e *TagSvgStyle) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagSvgStyle) {
 	e.commonEvents.selfElement = &e.selfElement
-	e.commonEvents.ListenerAddReflect(event, params, functions)
+	e.commonEvents.ListenerAddReflect(event, params, functions, reference)
 	return e
 }
 

@@ -1579,9 +1579,9 @@ func (e *TagSelect) Get() (el js.Value) {
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagSelect) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value) (ref *TagSelect) {
+func (e *TagSelect) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagSelect) {
 	e.commonEvents.selfElement = &e.selfElement
-	e.commonEvents.ListenerAddReflect(event, params, functions)
+	e.commonEvents.ListenerAddReflect(event, params, functions, reference)
 	return e
 }
 

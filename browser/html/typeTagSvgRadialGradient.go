@@ -2940,9 +2940,9 @@ func (e *TagSvgRadialGradient) Reference(reference **TagSvgRadialGradient) (ref 
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagSvgRadialGradient) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value) (ref *TagSvgRadialGradient) {
+func (e *TagSvgRadialGradient) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagSvgRadialGradient) {
 	e.commonEvents.selfElement = &e.selfElement
-	e.commonEvents.ListenerAddReflect(event, params, functions)
+	e.commonEvents.ListenerAddReflect(event, params, functions, reference)
 	return e
 }
 

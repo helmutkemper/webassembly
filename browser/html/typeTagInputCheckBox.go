@@ -1452,9 +1452,9 @@ func (e *TagInputCheckBox) Get() (el js.Value) {
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagInputCheckBox) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value) (ref *TagInputCheckBox) {
+func (e *TagInputCheckBox) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagInputCheckBox) {
 	e.commonEvents.selfElement = &e.selfElement
-	e.commonEvents.ListenerAddReflect(event, params, functions)
+	e.commonEvents.ListenerAddReflect(event, params, functions, reference)
 	return e
 }
 

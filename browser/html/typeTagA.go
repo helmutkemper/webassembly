@@ -1496,9 +1496,9 @@ func (e *TagA) Html(value string) (ref *TagA) {
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagA) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value) (ref *TagA) {
+func (e *TagA) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagA) {
 	e.commonEvents.selfElement = &e.selfElement
-	e.commonEvents.ListenerAddReflect(event, params, functions)
+	e.commonEvents.ListenerAddReflect(event, params, functions, reference)
 	return e
 }
 

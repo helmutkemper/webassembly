@@ -1676,9 +1676,9 @@ func (e *TagInputRadio) Get() (el js.Value) {
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagInputRadio) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value) (ref *TagInputRadio) {
+func (e *TagInputRadio) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagInputRadio) {
 	e.commonEvents.selfElement = &e.selfElement
-	e.commonEvents.ListenerAddReflect(event, params, functions)
+	e.commonEvents.ListenerAddReflect(event, params, functions, reference)
 	return e
 }
 

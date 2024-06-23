@@ -3137,9 +3137,9 @@ func (el *TagCanvas) min(a, b int) int {
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagCanvas) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value) (ref *TagCanvas) {
+func (e *TagCanvas) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagCanvas) {
 	e.commonEvents.selfElement = &e.selfElement
-	e.commonEvents.ListenerAddReflect(event, params, functions)
+	e.commonEvents.ListenerAddReflect(event, params, functions, reference)
 	return e
 }
 

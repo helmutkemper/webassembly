@@ -401,8 +401,8 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 
 		// explanation
 		//   inputNumber.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
-		inputRange.ListenerAddReflect("input", params, methods)
-		inputNumber.ListenerAddReflect("input", params, methods)
+		inputRange.ListenerAddReflect("input", params, methods, element.Interface())
+		inputNumber.ListenerAddReflect("input", params, methods, element.Interface())
 	}
 
 	for i := 0; i != element.NumField(); i += 1 {
@@ -579,8 +579,8 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 				//   inputNumber.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
 				//   The first element of the array is the user function
 				//   From the second element onwards, they are internal functions and must be called after the user function in case the user has changed any value.
-				inputRange.ListenerAddReflect(tagDataInternal.Event, params, methods)
-				inputNumber.ListenerAddReflect(tagDataInternal.Event, params, methods)
+				inputRange.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
+				inputNumber.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
 
 				//case "func":
 				//	if !fieldVal.CanInterface() {
@@ -666,6 +666,7 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 	var value any
 	var ok bool
 
+	elementOriginal := element
 	buttonComponent := Button{}
 
 	inputButton := factoryBrowser.NewTagInputButton().Class("inputButton").Value("-- ok --")
@@ -807,7 +808,7 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 				//   inputNumber.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
 				//   The first element of the array is the user function
 				//   From the second element onwards, they are internal functions and must be called after the user function in case the user has changed any value.
-				inputButton.ListenerAddReflect(tagDataInternal.Event, params, methods)
+				inputButton.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
 
 			}
 
@@ -818,6 +819,20 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 		factoryBrowser.NewTagSpan().Text(tagData.Label),
 		inputButton,
 	)
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		if fieldVal.Type() == reflect.TypeOf(Button{}) {
+			r := fieldVal.Interface().(Button)
+			r.init()
+			break
+		}
+	}
+
+	method := elementOriginal.MethodByName("Init")
+	if method.IsValid() {
+		method.Call(nil)
+	}
 
 	return
 }

@@ -4866,9 +4866,9 @@ func (e *TagSvg) RemoveListenerFocusOut() (ref *TagSvg) {
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagSvg) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value) (ref *TagSvg) {
+func (e *TagSvg) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagSvg) {
 	e.commonEvents.selfElement = &e.selfElement
-	e.commonEvents.ListenerAddReflect(event, params, functions)
+	e.commonEvents.ListenerAddReflect(event, params, functions, reference)
 	return e
 }
 

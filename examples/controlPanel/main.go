@@ -30,9 +30,10 @@ type OnChangeEvent struct {
 	Value     float64 `wasmGet:"value"`
 }
 
-func (e *OnChangeEvent) OnChange(event OnChangeEvent) {
+func (e *OnChangeEvent) OnChange(event OnChangeEvent, reference ColorRange) {
 	log.Printf("> Trusted: %+v", event.IsTrusted)
 	log.Printf("> Value:   %+v", event.Value)
+	reference.Max(500)
 }
 
 type ColorRange struct {
@@ -44,12 +45,12 @@ type ColorRange struct {
 	ColorChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChange"`
 }
 
-//func (e *ColorRange) Init() {
-//	e.Step(1)
-//	e.Max(255)
-//	e.Min(0)
-//	e.Value(255)
-//}
+func (e *ColorRange) Init() {
+	e.Step(1)
+	e.Max(10)
+	e.Min(0)
+	e.Value(5)
+}
 
 type ColorAdjust struct {
 	Red   *ColorRange `wasmPanel:"type:range;label:Red"`
@@ -119,9 +120,10 @@ type OnClickEvent struct {
 	Value     string `wasmGet:"value"`
 }
 
-func (e *OnClickEvent) OnClick(event OnClickEvent) {
+func (e *OnClickEvent) OnClick(event OnClickEvent, Reference ButtonEvent) {
 	log.Printf("Trusted: %v", event.IsTrusted)
 	log.Printf("Value:   %v", event.Value)
+	Reference.Value("Clicked")
 }
 
 type ButtonEvent struct {
@@ -131,21 +133,13 @@ type ButtonEvent struct {
 	RunCommand *OnClickEvent `wasmPanel:"type:listener;event:click;func:OnClick"`
 }
 
+func (e *ButtonEvent) Init() {
+	e.Value("Initialized")
+}
+
 func (e *Control) Init() (err error) {
 	err = e.Components.Init(e)
 	return
-}
-
-func ColorOnChange(args any) {
-	capturedDataEvent, ok := args.(OnChangeEvent)
-	if !ok {
-		log.Printf("error: interface conversion error")
-		return
-	}
-
-	log.Printf("%+v", args)
-	log.Printf("> Trusted: %+v", capturedDataEvent.IsTrusted)
-	log.Printf("> Value:   %+v", capturedDataEvent.Value)
 }
 
 func main() {

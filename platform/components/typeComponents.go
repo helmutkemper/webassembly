@@ -688,7 +688,7 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 		err = errors.Join(err, fmt.Errorf("         IsTrusted bool `wasmGet:\"isTrusted\"`"))
 		err = errors.Join(err, fmt.Errorf("         Value     string `wasmGet:\"value\"`"))
 		err = errors.Join(err, fmt.Errorf("       }"))
-		err = errors.Join(err, fmt.Errorf("       func (e *OnClickEvent) OnClick(event OnClickEvent) {"))
+		err = errors.Join(err, fmt.Errorf("       func (e *OnClickEvent, ref %v) OnClick(event OnClickEvent) {", element.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         log.Printf(\"Trusted: %%v\", event.IsTrusted)"))
 		err = errors.Join(err, fmt.Errorf("         log.Printf(\"Value:   %%v\", event.Value)"))
 		err = errors.Join(err, fmt.Errorf("       }"))

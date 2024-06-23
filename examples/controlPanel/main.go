@@ -120,10 +120,10 @@ type OnClickEvent struct {
 	Value     string `wasmGet:"value"`
 }
 
-func (e *OnClickEvent) OnClick(event OnClickEvent, Reference ButtonEvent) {
+func (e *OnClickEvent) OnClick(event OnClickEvent, ref ButtonEvent) {
 	log.Printf("Trusted: %v", event.IsTrusted)
 	log.Printf("Value:   %v", event.Value)
-	Reference.Value("Clicked")
+	ref.Value("Clicked")
 }
 
 type ButtonEvent struct {

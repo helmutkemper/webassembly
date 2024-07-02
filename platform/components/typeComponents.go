@@ -928,6 +928,7 @@ func (e *Components) processComponentColor(element reflect.Value, tagData *tag, 
 	)
 }
 
+// verifyTypesComponentSelect checks the types of the components.Select configuration
 func (e *Components) verifyTypesComponentSelect(element reflect.Value) (err error) {
 
 	elemTpl := element.Type()
@@ -1160,9 +1161,10 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 		return
 	}
 
+	fieldTyp := element.Type()
 	for i := 0; i != element.NumField(); i += 1 {
 		fieldVal := element.Field(i)
-		fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+		fieldTyp := fieldTyp.Field(i)
 
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
@@ -1174,16 +1176,17 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 				fieldVal.Set(reflect.ValueOf(inputSelect))
 
 			case "value":
-				log.Printf("select value: %+v", fieldVal.Kind())
 
 				if fieldVal.Kind() != reflect.Pointer {
 					//todo: erro
 				}
 
-				// pointer is nil
-				if fieldVal.IsNil() {
+				// pointer is not nil
+				// Move the element from pointer to struct
+				fieldVal = fieldVal.Elem()
 
-					// get key:value as label:value
+				if fieldVal.Len() == 0 {
+
 					optionList := strings.Split(tagDataInternal.Default, ",")
 					if len(optionList)%2 != 0 {
 						// todo: colocar o nome da tag
@@ -1192,6 +1195,7 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 					}
 
 					for k := 0; k != len(optionList); k += 2 {
+
 						// if label start with `>` the option is selected
 						selected := false
 						if strings.HasPrefix(optionList[k], ">") {
@@ -1200,11 +1204,8 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 						}
 						inputSelect.NewOption(optionList[k], optionList[k+1], false, selected)
 					}
-				} else {
 
-					// pointer is not nil
-					// Move the element from pointer to struct
-					fieldVal = fieldVal.Elem()
+				} else {
 
 					// run inside slice data
 					for iField := 0; iField != fieldVal.Len(); iField += 1 {
@@ -1236,9 +1237,10 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 						}
 
 						inputSelect.NewOption(label, value, disabled, selected)
-
 					}
 				}
+
+				//
 			}
 		}
 	}

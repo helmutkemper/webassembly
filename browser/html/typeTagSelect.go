@@ -1095,11 +1095,11 @@ func (e *TagSelect) NewOption(label, value string, disabled, selected bool) (ref
 	op := &TagSelect{}
 	op.CreateElement(KTagOption)
 	//op.Id(id)
-	op.value(value)
-	op.textContent(label)
+	op.Value(value)
+	op.TextContent(label)
 
 	op.Disabled(disabled)
-	op.selected(selected)
+	op.Selected(selected)
 
 	if e.lastOptionGroup == nil {
 		e.Append(op.selfElement)
@@ -1110,11 +1110,11 @@ func (e *TagSelect) NewOption(label, value string, disabled, selected bool) (ref
 	return e
 }
 
-func (e *TagSelect) NewOptionGroup(id, label string, disabled bool) (ref *TagSelect) {
+func (e *TagSelect) NewOptionGroup(label string, disabled bool) (ref *TagSelect) {
 
 	e.lastOptionGroup = &TagOptionGroup{}
 	e.lastOptionGroup.CreateElement(KTagOptionGroup)
-	e.lastOptionGroup.Id(id)
+	//e.lastOptionGroup.Id(id)
 	e.lastOptionGroup.Label(label)
 
 	if disabled == true {
@@ -1126,7 +1126,7 @@ func (e *TagSelect) NewOptionGroup(id, label string, disabled bool) (ref *TagSel
 	return e
 }
 
-// value
+// Value
 //
 // English:
 //
@@ -1135,12 +1135,12 @@ func (e *TagSelect) NewOptionGroup(id, label string, disabled bool) (ref *TagSel
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagSelect) value(value string) (ref *TagSelect) {
+func (e *TagSelect) Value(value any) (ref *TagSelect) {
 	e.selfElement.Set("value", value)
 	return e
 }
 
-// textContent
+// TextContent
 //
 // English:
 //
@@ -1222,12 +1222,12 @@ func (e *TagSelect) value(value string) (ref *TagSelect) {
 // SetTextContent() tem melhor desempenho porque seu valor não é analisado como HTML.
 //
 // Além disso, usar GetTextContent() / SetTextContent() pode prevenir ataques XSS.
-func (e *TagSelect) textContent(text string) (ref *TagSelect) {
+func (e *TagSelect) TextContent(text string) (ref *TagSelect) {
 	e.selfElement.Set("textContent", text)
 	return e
 }
 
-// SetSelected
+// Selected
 //
 // English:
 //
@@ -1240,7 +1240,7 @@ func (e *TagSelect) textContent(text string) (ref *TagSelect) {
 //	Se presente, este atributo booleano indica que a opção foi selecionada inicialmente. Se o elemento
 //	<option> é descendente de um elemento <select> cujo atributo múltiplo não está definido, apenas um
 //	único <option> deste elemento <select> pode ter o atributo selecionado.
-func (e *TagSelect) selected(selected bool) (ref *TagSelect) {
+func (e *TagSelect) Selected(selected bool) (ref *TagSelect) {
 	if selected {
 		e.selfElement.Set("selected", "selected")
 	}

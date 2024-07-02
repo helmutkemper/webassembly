@@ -13,6 +13,7 @@ import (
 )
 
 type Components struct {
+	ref         interface{}
 	panelFather *html.TagDiv
 	panelBody   *html.TagDiv
 }
@@ -21,6 +22,7 @@ func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 	element := reflect.ValueOf(el)
 	typeof := reflect.TypeOf(el)
 	e.createDivsFather()
+
 	err = e.process(element, typeof)
 	if err != nil {
 		//file, line, funcName := runTimeUtil.Trace()
@@ -83,6 +85,16 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 					// Espera criar panelHeader para que panelBody fique abaixo
 					e.panelFather.Append(e.panelBody)
 				case "panelBody":
+
+					// initialize the panelBody pointer
+					if fieldVal.Kind() == reflect.Pointer {
+						if fieldVal.CanSet() && fieldVal.IsNil() {
+							newInstance := reflect.New(fieldVal.Type().Elem())
+							fieldVal.Set(newInstance)
+							e.ref = fieldVal.Interface()
+						}
+					}
+
 					err = e.process(fieldVal, fieldTyp.Type)
 					if err != nil {
 						//file, line, funcName := runTimeUtil.Trace()
@@ -191,6 +203,7 @@ func (e *Components) processComponent(element reflect.Value, typeof reflect.Type
 					if err != nil {
 						return
 					}
+
 				case "button":
 
 					if fieldVal.Kind() != reflect.Pointer {
@@ -210,8 +223,13 @@ func (e *Components) processComponent(element reflect.Value, typeof reflect.Type
 					if err != nil {
 						return
 					}
+
 				case "select":
-					e.processComponentSelect(fieldVal, tagData, divComponent)
+					err = e.processComponentSelect(fieldVal, tagData, divComponent)
+					if err != nil {
+						return
+					}
+
 				case "radio":
 					divComponent.Class("component component-radio")
 					e.processComponentRadio(fieldVal, tagData, divComponent)
@@ -577,15 +595,17 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 					params = []interface{}{
 						fieldVal.Interface(),
 					}
-
 				}
 
 				// explanation
 				//   inputNumber.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
 				//   The first element of the array is the user function
 				//   From the second element onwards, they are internal functions and must be called after the user function in case the user has changed any value.
-				inputRange.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
-				inputNumber.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
+				//inputRange.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
+				//inputNumber.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
+
+				inputRange.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
+				inputNumber.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
 
 				//case "func":
 				//	if !fieldVal.CanInterface() {
@@ -763,8 +783,8 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 
 				// If the value is zero, and the user has determined a value other than zero,
 				// fill in the field with the default value
-				if !passValue && tagDataInternal.Default != "" {
-					inputButton.Value(tagDataInternal.Default)
+				if !passValue && tagDataInternal.Label != "" {
+					inputButton.Value(tagDataInternal.Label)
 				}
 
 			// listener defines the field received by the event function
@@ -813,7 +833,8 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 				//   inputNumber.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
 				//   The first element of the array is the user function
 				//   From the second element onwards, they are internal functions and must be called after the user function in case the user has changed any value.
-				inputButton.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
+				//inputButton.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
+				inputButton.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
 
 			}
 
@@ -907,64 +928,327 @@ func (e *Components) processComponentColor(element reflect.Value, tagData *tag, 
 	)
 }
 
-func (e *Components) processComponentSelect(element reflect.Value, tagData *tag, father *html.TagDiv) {
+func (e *Components) verifyTypesComponentSelect(element reflect.Value) (err error) {
 
-	selectTag := factoryBrowser.NewTagSelect().Class("inputSelect")
+	elemTpl := element.Type()
+	elemTplOriginal := element.Type()
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := elemTpl.Field(i)
+		log.Printf("fieldTyp.Name: %+v", fieldTyp.Name)
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
 
-	if element.CanInterface() {
-		for i := 0; i != element.Len(); i += 1 {
-			subElement := element.Index(i)
+			switch tagDataInternal.Type {
+			case "value":
 
-			var ok bool
-			var disabled bool
-			var selected bool
-			var label string
-			var value string
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("the field %v, inside %v, must be a pointer of slice struct", fieldTyp.Name, elemTplOriginal.Name())
+					err = errors.Join(err, fmt.Errorf("       Example:"))
+					err = errors.Join(err, fmt.Errorf("       type %v struct {", elemTplOriginal.Name()))
+					err = errors.Join(err, fmt.Errorf("         components.Select"))
+					err = errors.Join(err, fmt.Errorf("         "))
+					err = errors.Join(err, fmt.Errorf("         %v *[]SelectData `wasmPanel:\"type:value;default:label 1,value 1,>label 2,value 2,label N,value N\"`", fieldTyp.Name))
+					err = errors.Join(err, fmt.Errorf("       }"))
+					err = errors.Join(err, fmt.Errorf("       "))
+					err = errors.Join(err, fmt.Errorf("       type SelectData struct {"))
+					err = errors.Join(err, fmt.Errorf("         Label    string `wasmPanel:\"type:label\"`"))
+					err = errors.Join(err, fmt.Errorf("         Value    string `wasmPanel:\"type:value\"`"))
+					err = errors.Join(err, fmt.Errorf("         Disabled bool   `wasmPanel:\"type:disabled\"`"))
+					err = errors.Join(err, fmt.Errorf("         Selected bool   `wasmPanel:\"type:selected\"`"))
+					err = errors.Join(err, fmt.Errorf("       }"))
 
-			for i := 0; i != subElement.NumField(); i += 1 {
+					return
+				}
 
-				fieldVal := subElement.Field(i)
-				fieldTyp := reflect.TypeOf(subElement.Interface()).Field(i)
+				if fieldVal.IsNil() {
+					newInstance := reflect.New(fieldVal.Type().Elem())
+					fieldVal.Set(newInstance)
+				}
 
-				tagDataInternal := new(tag)
-				tagRaw := fieldTyp.Tag.Get("wasmPanel")
-				if tagRaw != "" {
-					tagDataInternal.init(tagRaw)
+				if fieldVal.Elem().Kind() != reflect.Slice {
+					err = fmt.Errorf("the field %v, inside %v, must be a pointer of slice struct", fieldTyp.Name, elemTplOriginal.Name())
+					err = errors.Join(err, fmt.Errorf("       Example:"))
+					err = errors.Join(err, fmt.Errorf("       type %v struct {", elemTplOriginal.Name()))
+					err = errors.Join(err, fmt.Errorf("         components.Select"))
+					err = errors.Join(err, fmt.Errorf("         "))
+					err = errors.Join(err, fmt.Errorf("         %v *[]SelectData `wasmPanel:\"type:value;default:label 1,value 1,>label 2,value 2,label N,value N\"`", fieldTyp.Name))
+					err = errors.Join(err, fmt.Errorf("       }"))
+					err = errors.Join(err, fmt.Errorf("       "))
+					err = errors.Join(err, fmt.Errorf("       type SelectData struct {"))
+					err = errors.Join(err, fmt.Errorf("         Label    string `wasmPanel:\"type:label\"`"))
+					err = errors.Join(err, fmt.Errorf("         Value    string `wasmPanel:\"type:value\"`"))
+					err = errors.Join(err, fmt.Errorf("         Disabled bool   `wasmPanel:\"type:disabled\"`"))
+					err = errors.Join(err, fmt.Errorf("         Selected bool   `wasmPanel:\"type:selected\"`"))
+					err = errors.Join(err, fmt.Errorf("       }"))
 
-					switch tagDataInternal.Type {
-					case "disabled":
-						disabled, ok = fieldVal.Interface().(bool)
-						if !ok {
-							log.Printf("error: disabled deve ser do tipo booleano")
+					return
+				}
+
+				fieldVal = fieldVal.Elem()
+				fieldTpl := fieldVal.Type().Elem()
+
+				if fieldTpl.Kind() != reflect.Struct {
+					err = fmt.Errorf("the field %v, inside %v, must be a pointer of slice struct", fieldTyp.Name, elemTplOriginal.Name())
+					err = errors.Join(err, fmt.Errorf("       Example:"))
+					err = errors.Join(err, fmt.Errorf("       type %v struct {", elemTplOriginal.Name()))
+					err = errors.Join(err, fmt.Errorf("         components.Select"))
+					err = errors.Join(err, fmt.Errorf("         "))
+					err = errors.Join(err, fmt.Errorf("         %v *[]SelectData `wasmPanel:\"type:value;default:label 1,value 1,>label 2,value 2,label N,value N\"`", fieldTyp.Name))
+					err = errors.Join(err, fmt.Errorf("       }"))
+					err = errors.Join(err, fmt.Errorf("       "))
+					err = errors.Join(err, fmt.Errorf("       type SelectData struct {"))
+					err = errors.Join(err, fmt.Errorf("         Label    string `wasmPanel:\"type:label\"`"))
+					err = errors.Join(err, fmt.Errorf("         Value    string `wasmPanel:\"type:value\"`"))
+					err = errors.Join(err, fmt.Errorf("         Disabled bool   `wasmPanel:\"type:disabled\"`"))
+					err = errors.Join(err, fmt.Errorf("         Selected bool   `wasmPanel:\"type:selected\"`"))
+					err = errors.Join(err, fmt.Errorf("       }"))
+
+					return
+				}
+
+				for k := 0; k != fieldTpl.NumField(); k += 1 {
+					fieldTyp := fieldTpl.Field(k)
+
+					tagRaw := fieldTyp.Tag.Get("wasmPanel")
+					if tagRaw != "" {
+						tagDataInternal := new(tag)
+						tagDataInternal.init(tagRaw)
+
+						switch tagDataInternal.Type {
+						case "label":
+							if fieldTyp.Type.Kind() != reflect.String {
+								err = fmt.Errorf("the tag type:%v, inside %v, must be a string", tagDataInternal.Type, fieldTpl.Name())
+								err = errors.Join(err, fmt.Errorf("       Example:"))
+								err = errors.Join(err, fmt.Errorf("       type %v struct {", elemTplOriginal.Name()))
+								err = errors.Join(err, fmt.Errorf("         components.Select"))
+								err = errors.Join(err, fmt.Errorf("         "))
+								err = errors.Join(err, fmt.Errorf("         %v *[]%v `wasmPanel:\"type:value;default:label 1,value 1,>label 2,value 2,label N,value N\"`", fieldTyp.Name, fieldTpl.Name()))
+								err = errors.Join(err, fmt.Errorf("       }"))
+								err = errors.Join(err, fmt.Errorf("       "))
+								err = errors.Join(err, fmt.Errorf("       type %v struct {", fieldTpl.Name()))
+								err = errors.Join(err, fmt.Errorf("         Label    string `wasmPanel:\"type:label\"`"))
+								err = errors.Join(err, fmt.Errorf("         Value    string `wasmPanel:\"type:value\"`"))
+								err = errors.Join(err, fmt.Errorf("         Disabled bool   `wasmPanel:\"type:disabled\"`"))
+								err = errors.Join(err, fmt.Errorf("         Selected bool   `wasmPanel:\"type:selected\"`"))
+								err = errors.Join(err, fmt.Errorf("       }"))
+
+								return
+							}
+						case "value":
+							if fieldTyp.Type.Kind() != reflect.String {
+								err = fmt.Errorf("the tag type:%v, inside %v, must be a string", tagDataInternal.Type, fieldTpl.Name())
+								err = errors.Join(err, fmt.Errorf("       Example:"))
+								err = errors.Join(err, fmt.Errorf("       type %v struct {", elemTplOriginal.Name()))
+								err = errors.Join(err, fmt.Errorf("         components.Select"))
+								err = errors.Join(err, fmt.Errorf("         "))
+								err = errors.Join(err, fmt.Errorf("         %v *[]%v `wasmPanel:\"type:value;default:label 1,value 1,>label 2,value 2,label N,value N\"`", fieldTyp.Name, fieldTpl.Name()))
+								err = errors.Join(err, fmt.Errorf("       }"))
+								err = errors.Join(err, fmt.Errorf("       "))
+								err = errors.Join(err, fmt.Errorf("       type %v struct {", fieldTpl.Name()))
+								err = errors.Join(err, fmt.Errorf("         Label    string `wasmPanel:\"type:label\"`"))
+								err = errors.Join(err, fmt.Errorf("         Value    string `wasmPanel:\"type:value\"`"))
+								err = errors.Join(err, fmt.Errorf("         Disabled bool   `wasmPanel:\"type:disabled\"`"))
+								err = errors.Join(err, fmt.Errorf("         Selected bool   `wasmPanel:\"type:selected\"`"))
+								err = errors.Join(err, fmt.Errorf("       }"))
+
+								return
+							}
+						case "disabled":
+							if fieldTyp.Type.Kind() != reflect.Bool {
+								err = fmt.Errorf("the tag type:%v, inside %v, must be a boolean", tagDataInternal.Type, fieldTpl.Name())
+								err = errors.Join(err, fmt.Errorf("       Example:"))
+								err = errors.Join(err, fmt.Errorf("       type %v struct {", elemTplOriginal.Name()))
+								err = errors.Join(err, fmt.Errorf("         components.Select"))
+								err = errors.Join(err, fmt.Errorf("         "))
+								err = errors.Join(err, fmt.Errorf("         %v *[]%v `wasmPanel:\"type:value;default:label 1,value 1,>label 2,value 2,label N,value N\"`", fieldTyp.Name, fieldTpl.Name()))
+								err = errors.Join(err, fmt.Errorf("       }"))
+								err = errors.Join(err, fmt.Errorf("       "))
+								err = errors.Join(err, fmt.Errorf("       type %v struct {", fieldTpl.Name()))
+								err = errors.Join(err, fmt.Errorf("         Label    string `wasmPanel:\"type:label\"`"))
+								err = errors.Join(err, fmt.Errorf("         Value    string `wasmPanel:\"type:value\"`"))
+								err = errors.Join(err, fmt.Errorf("         Disabled bool   `wasmPanel:\"type:disabled\"`"))
+								err = errors.Join(err, fmt.Errorf("         Selected bool   `wasmPanel:\"type:selected\"`"))
+								err = errors.Join(err, fmt.Errorf("       }"))
+
+								return
+							}
+						case "selected":
+							if fieldTyp.Type.Kind() != reflect.Bool {
+								err = fmt.Errorf("the tag type:%v, inside %v, must be a boolean", tagDataInternal.Type, fieldTpl.Name())
+								err = errors.Join(err, fmt.Errorf("       Example:"))
+								err = errors.Join(err, fmt.Errorf("       type %v struct {", elemTplOriginal.Name()))
+								err = errors.Join(err, fmt.Errorf("         components.Select"))
+								err = errors.Join(err, fmt.Errorf("         "))
+								err = errors.Join(err, fmt.Errorf("         %v *[]%v `wasmPanel:\"type:value;default:label 1,value 1,>label 2,value 2,label N,value N\"`", fieldTyp.Name, fieldTpl.Name()))
+								err = errors.Join(err, fmt.Errorf("       }"))
+								err = errors.Join(err, fmt.Errorf("       "))
+								err = errors.Join(err, fmt.Errorf("       type %v struct {", fieldTpl.Name()))
+								err = errors.Join(err, fmt.Errorf("         Label    string `wasmPanel:\"type:label\"`"))
+								err = errors.Join(err, fmt.Errorf("         Value    string `wasmPanel:\"type:value\"`"))
+								err = errors.Join(err, fmt.Errorf("         Disabled bool   `wasmPanel:\"type:disabled\"`"))
+								err = errors.Join(err, fmt.Errorf("         Selected bool   `wasmPanel:\"type:selected\"`"))
+								err = errors.Join(err, fmt.Errorf("       }"))
+
+								return
+							}
 						}
-					case "selected":
-						selected, ok = fieldVal.Interface().(bool)
-						if !ok {
-							log.Printf("error: selected deve ser do tipo booleano")
+
+					}
+				}
+				return
+			}
+
+		}
+
+	}
+
+	return
+}
+
+func (e *Components) processComponentSelect(element reflect.Value, tagData *tag, father *html.TagDiv) (err error) {
+
+	inputSelect := factoryBrowser.NewTagSelect().Class("inputSelect")
+	selectComponent := Select{}
+
+	// Initializes the pointer if it is nil
+	if element.IsNil() {
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
+	}
+
+	// Move the element from pointer to struct
+	element = element.Elem()
+
+	// Checks if the import of `components.Select` was done
+	if fieldSelect := element.FieldByName("Select"); !fieldSelect.IsValid() {
+		err = fmt.Errorf("error: component %v needs to embed `components.Select` directly", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.Select"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         List *[]SelectData `wasmPanel:\"type:value;default:label 1,value 1,>label 2,value 2,label 3,value 3\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       type SelectData struct {"))
+		err = errors.Join(err, fmt.Errorf("         Label    string `wasmPanel:\"type:label\"`"))
+		err = errors.Join(err, fmt.Errorf("         Value    string `wasmPanel:\"type:value\"`"))
+		err = errors.Join(err, fmt.Errorf("         Disabled bool   `wasmPanel:\"type:disabled\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("         Selected bool   `wasmPanel:\"type:selected\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       // Note: Use `>` to set value as selected. ie. >label,value"))
+		return
+	} else {
+		// Initialize Select
+		newInstance := reflect.New(fieldSelect.Type())
+		fieldSelect.Set(newInstance.Elem())
+
+		// Initializes the input tags within Select
+		selectComponent.__selectTag = inputSelect
+
+		// __selectOnInputEvent is the pointer sent when the `change` event happens
+		selectComponent.__change = new(__selectOnInputEvent)
+
+		// populates the component.Select within the user component
+		componentRange := element.FieldByName("Select")
+		componentRange.Set(reflect.ValueOf(selectComponent))
+	}
+
+	err = e.verifyTypesComponentSelect(element)
+	if err != nil {
+		return
+	}
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+			case "inputTagSelect":
+				fieldVal.Set(reflect.ValueOf(inputSelect))
+
+			case "value":
+				log.Printf("select value: %+v", fieldVal.Kind())
+
+				if fieldVal.Kind() != reflect.Pointer {
+					//todo: erro
+				}
+
+				// pointer is nil
+				if fieldVal.IsNil() {
+
+					// get key:value as label:value
+					optionList := strings.Split(tagDataInternal.Default, ",")
+					if len(optionList)%2 != 0 {
+						// todo: colocar o nome da tag
+						err = fmt.Errorf("the correct format from tag value is: `wasmPanel:\"type:value;default:label1,value1,label2,value2,labelN,valueN\"`, where label and value must be a pair")
+						return
+					}
+
+					for k := 0; k != len(optionList); k += 2 {
+						// if label start with `>` the option is selected
+						selected := false
+						if strings.HasPrefix(optionList[k], ">") {
+							optionList[k] = optionList[k][1:]
+							selected = true
 						}
-					case "label":
-						label, ok = fieldVal.Interface().(string)
-						if !ok {
-							log.Printf("error: label deve ser do tipo string")
+						inputSelect.NewOption(optionList[k], optionList[k+1], false, selected)
+					}
+				} else {
+
+					// pointer is not nil
+					// Move the element from pointer to struct
+					fieldVal = fieldVal.Elem()
+
+					// run inside slice data
+					for iField := 0; iField != fieldVal.Len(); iField += 1 {
+						keyVal := fieldVal.Index(iField)
+
+						// get label, value, disabled and selected
+						var label, value string
+						var disabled, selected bool
+						for ik := 0; ik != keyVal.NumField(); ik += 1 {
+							optionVal := keyVal.Field(ik)
+							optionTyp := reflect.TypeOf(keyVal.Interface()).Field(ik)
+
+							optionTagRaw := optionTyp.Tag.Get("wasmPanel")
+							if optionTagRaw != "" {
+								optionTag := new(tag)
+								optionTag.init(optionTagRaw)
+
+								switch optionTag.Type {
+								case "label":
+									label = optionVal.Interface().(string)
+								case "value":
+									value = optionVal.Interface().(string)
+								case "disabled":
+									disabled = optionVal.Interface().(bool)
+								case "selected":
+									selected = optionVal.Interface().(bool)
+								}
+							}
 						}
-					case "value":
-						value, ok = fieldVal.Interface().(string)
-						if !ok {
-							log.Printf("error: value deve ser do tipo string")
-						}
+
+						inputSelect.NewOption(label, value, disabled, selected)
+
 					}
 				}
 			}
-
-			selectTag.NewOption(label, value, disabled, selected)
-
 		}
 	}
 
 	father.Append(
 		factoryBrowser.NewTagSpan().Text(tagData.Label),
-		selectTag,
+		inputSelect,
 	)
+
+	return
 }
 
 func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, father *html.TagDiv) {

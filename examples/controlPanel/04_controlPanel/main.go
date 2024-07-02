@@ -75,8 +75,8 @@ type DraggingEffect struct {
 	// ColorChange Creates a listener for the `event:change`, using the `func:OnChange` function defined in the `OnChangeEvent` struct
 	ColorChange *OnChangeEvent `wasmPanel:"type:listener;event:change;func:OnChange"`
 
-	// RangeChange Obscures the `event:input` used by the component to function correctly, using the `func:OnInput` function defined in the `OnChangeEvent` struct
-	RangeChange *OnChangeEvent `wasmPanel:"type:listener;event:input;func:OnInput"`
+	// RangeChange Obscures the `event:input` used by the component to function correctly, using the `func:OnInputEvent` function defined in the `OnChangeEvent` struct
+	RangeChange *OnChangeEvent `wasmPanel:"type:listener;event:input;func:OnInputEvent"`
 }
 
 // MathematicalFormula Defines a mathematical formula to invert the operation of the input number with the component's input range
@@ -130,8 +130,8 @@ func (e *OnChangeEvent) OnChange(_ OnChangeEvent, reference DraggingEffect) {
 		SetDoNotReverseMotion()
 }
 
-// OnInput  is the function called for the listener, defined in `RangeChange *OnChangeEvent` and its name was defined in `func:OnInput`
-func (e *OnChangeEvent) OnInput(event OnChangeEvent, reference DraggingEffect) {
+// OnInputEvent  is the function called for the listener, defined in `RangeChange *OnChangeEvent` and its name was defined in `func:OnInputEvent`
+func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference DraggingEffect) {
 	// Defines which component generated the event and changes the opposite component
 	switch event.Type {
 	case "range":

@@ -1112,6 +1112,8 @@ func (e *Components) verifyTypesComponentSelect(element reflect.Value) (err erro
 func (e *Components) processComponentSelect(element reflect.Value, tagData *tag, father *html.TagDiv) (err error) {
 
 	inputSelect := factoryBrowser.NewTagSelect().Class("inputSelect")
+
+	elementOriginal := element
 	selectComponent := Select{}
 
 	// Initializes the pointer if it is nil
@@ -1187,22 +1189,24 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 
 				if fieldVal.Len() == 0 {
 
-					optionList := strings.Split(tagDataInternal.Default, ",")
-					if len(optionList)%2 != 0 {
-						// todo: colocar o nome da tag
-						err = fmt.Errorf("the correct format from tag value is: `wasmPanel:\"type:value;default:label1,value1,label2,value2,labelN,valueN\"`, where label and value must be a pair")
-						return
-					}
-
-					for k := 0; k != len(optionList); k += 2 {
-
-						// if label start with `>` the option is selected
-						selected := false
-						if strings.HasPrefix(optionList[k], ">") {
-							optionList[k] = optionList[k][1:]
-							selected = true
+					if tagDataInternal.Default != "" {
+						optionList := strings.Split(tagDataInternal.Default, ",")
+						if len(optionList)%2 != 0 {
+							// todo: colocar o nome da tag
+							err = fmt.Errorf("the correct format from tag value is: `wasmPanel:\"type:value;default:label1,value1,label2,value2,labelN,valueN\"`, where label and value must be a pair")
+							return
 						}
-						inputSelect.NewOption(optionList[k], optionList[k+1], false, selected)
+
+						for k := 0; k != len(optionList); k += 2 {
+
+							// if label start with `>` the option is selected
+							selected := false
+							if strings.HasPrefix(optionList[k], ">") {
+								optionList[k] = optionList[k][1:]
+								selected = true
+							}
+							inputSelect.NewOption(optionList[k], optionList[k+1], false, selected)
+						}
 					}
 
 				} else {
@@ -1240,7 +1244,54 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 					}
 				}
 
-				//
+			//
+
+			case "listener":
+
+				// The field must be a pointer, or it cannot be populated
+				if fieldVal.Kind() != reflect.Pointer {
+					log.Printf("error: %v deve ser um ponteiro", fieldVal.Type().Name())
+					continue
+				}
+
+				if !fieldVal.CanSet() {
+					log.Printf("error: %v não pode ser definido automaticamente.", fieldVal.Type().Name())
+					log.Printf("         isto geralmente acontece quando %v não é público.", fieldVal.Type().Name())
+					continue
+				}
+
+				// Checks if the field is nil and initializes the pointer
+				// The less work for the user, the greater the chance they will like the system
+				if fieldVal.CanSet() && fieldVal.IsNil() {
+					newInstance := reflect.New(fieldVal.Type().Elem())
+					fieldVal.Set(newInstance)
+				}
+
+				if fieldVal.IsNil() {
+					err = fmt.Errorf("o campo %v não foi inicializado de forma correta. ele deve ser público", fieldVal.Type().Name())
+					return
+				}
+
+				var methods []reflect.Value
+				var params []interface{}
+
+				// Passes the functions to be executed in the listener
+				methods = []reflect.Value{
+					// tagDataInternal.Func is the user function
+					fieldVal.MethodByName(tagDataInternal.Func),
+				}
+
+				// Pass variable pointers
+				params = []interface{}{
+					// fieldVal.Interface() is the struct pointer that collects user data
+					fieldVal.Interface(),
+				}
+
+				// explanation
+				//   inputSelect.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
+				//   The first element of the array is the user function
+				//   From the second element onwards, they are internal functions and must be called after the user function in case the user has changed any value.
+				inputSelect.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
 			}
 		}
 	}
@@ -1249,6 +1300,20 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 		factoryBrowser.NewTagSpan().Text(tagData.Label),
 		inputSelect,
 	)
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		if fieldVal.Type() == reflect.TypeOf(Select{}) {
+			r := fieldVal.Interface().(Select)
+			r.init()
+			break
+		}
+	}
+
+	method := elementOriginal.MethodByName("Init")
+	if method.IsValid() {
+		method.Call(nil)
+	}
 
 	return
 }

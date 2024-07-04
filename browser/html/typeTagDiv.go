@@ -1793,17 +1793,17 @@ func (e *TagDiv) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenTh
 		var angle float64
 		switch pCalc {
 		case 0.0:
-			log.Printf("0.0")
+			//log.Printf("0.0")
 			if angleCorrection == false {
-				log.Printf("0.1")
+				//log.Printf("0.1")
 				angle = math.Atan2((*e.points)[0].Y-(*e.points)[1].Y, (*e.points)[0].X-(*e.points)[1].X)
 			} else {
-				log.Printf("0.2")
+				//log.Printf("0.2")
 				angle = math.Atan2((*e.points)[1].Y-(*e.points)[0].Y, (*e.points)[1].X-(*e.points)[0].X)
 			}
 
 		case 1.0:
-			log.Printf("1.0")
+			//log.Printf("1.0")
 			if angleCorrection == true {
 				angle = math.Atan2((*e.points)[pCalc].Y-(*e.points)[pCalc-1].Y, (*e.points)[pCalc].X-(*e.points)[pCalc-1].X)
 			} else {

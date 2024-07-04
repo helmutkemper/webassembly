@@ -7,6 +7,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/platform/components"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/easingTween"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryAlgorithm"
+	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
 	"math"
 	"time"
 )
@@ -93,9 +94,8 @@ type TweenSelect struct {
 func (e *TweenSelect) Init() {
 
 	e.SelectTag.
-		NewOption("", "", false, false).
 		NewOptionGroup("linear", false).
-		NewOption("linear", "Linear", false, false).
+		NewOption("linear", "Linear", false, true).
 		NewOptionGroup("back", false).
 		NewOption("ease in back", "EaseInBack", false, false).
 		NewOption("ease out back", "EaseOutBack", false, false).
@@ -354,8 +354,8 @@ func BezierCurve(border, wight, height float64) (bezier *algorithm.BezierCurve) 
 }
 
 func AddDotBlue(x, y int) {
-	//canvas.BeginPath().
-	//	FillStyle(factoryColor.NewBlueHalfTransparent()).
-	//	Arc(x, y, 0.5, 0, 2*math.Pi, false).
-	//	Fill()
+	canvas.BeginPath().
+		FillStyle(factoryColor.NewBlueHalfTransparent()).
+		Arc(x, y, 0.5, 0, 2*math.Pi, false).
+		Fill()
 }

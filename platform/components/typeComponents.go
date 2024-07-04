@@ -936,7 +936,7 @@ func (e *Components) verifyTypesComponentSelect(element reflect.Value) (err erro
 	for i := 0; i != element.NumField(); i += 1 {
 		fieldVal := element.Field(i)
 		fieldTyp := elemTpl.Field(i)
-		log.Printf("fieldTyp.Name: %+v", fieldTyp.Name)
+
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)

@@ -43,7 +43,7 @@ const kFpsMin = 20
 //
 //	Notas:
 //	 * Definir fps elevados travam o navegador em um teste feito no Mac M1 com 16GB de RAM
-const kFpsMax = 240
+const kFpsMax = 480 //240
 
 // FuncList
 //

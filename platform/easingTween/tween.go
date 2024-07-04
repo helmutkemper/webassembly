@@ -484,6 +484,11 @@ func (el *Tween) tickerRunnerPrepare(startValue, endValue float64) {
 func (el *Tween) tickerRunnerRun() {
 	elapsed := time.Since(el.startTime)
 	percent := elapsed.Seconds() / el.duration.Seconds()
+
+	if elapsed > el.duration {
+		percent = 1.0
+	}
+
 	value := el.tweenFunc(elapsed.Seconds(), el.duration.Seconds(), percent, el.loopStartValue, el.loopEndValue, el.loopEndValue-el.loopStartValue)
 
 	if el.interaction != nil {

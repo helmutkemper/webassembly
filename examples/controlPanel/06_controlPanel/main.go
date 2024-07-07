@@ -8,6 +8,7 @@ import (
 	"github.com/helmutkemper/iotmaker.webassembly/platform/easingTween"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryAlgorithm"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"log"
 	"math"
 	"time"
 )
@@ -30,6 +31,7 @@ type ControlPanel struct {
 
 type Body struct {
 	BoatAnimation *BoatAdjust `wasmPanel:"type:component;label:Boat dragging effect"`
+	SimpleForm    *SimpleForm `wasmPanel:"type:component;label:simple form"`
 }
 
 type OnChangeEvent struct {
@@ -51,29 +53,36 @@ func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference *Body) {
 	ref := reference.BoatAnimation.Dragging
 	switch event.Type {
 	case "range":
-		ref.TagNumber.Value(ref.MathematicalFormula(event.Min, event.Max, ref.TagRange.GetValue()))
+		ref.TagNumber.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagRange.GetValue()))
 	case "number":
-		ref.TagRange.Value(ref.MathematicalFormula(event.Min, event.Max, ref.TagNumber.GetValue()))
+		ref.TagRange.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagNumber.GetValue()))
 	}
 }
 
 type DraggingEffect struct {
 	components.Range
 
-	TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
-	TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
-	Dragging    float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:15"`
-	ColorChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChange"`
-	RangeChange *OnChangeEvent       `wasmPanel:"type:listener;event:input;func:OnInputEvent"`
+	TagRange     *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
+	TagNumber    *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
+	Dragging     float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:15"`
+	NumberChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChange"`
+	RangeChange  *OnChangeEvent       `wasmPanel:"type:listener;event:input;func:OnInputEvent"`
 }
 
-func (e *DraggingEffect) MathematicalFormula(min, max, value float64) (result float64) {
+func (e *DraggingEffect) RangeCalcFormula(min, max, value float64) (result float64) {
 	return (max - value) + min
 }
 
 func (e *DraggingEffect) Init() {
-	e.TagNumber.Value(e.MathematicalFormula(2, 50, e.TagRange.GetValue()))
-	e.TagRange.Value(e.MathematicalFormula(2, 50, e.TagNumber.GetValue()))
+	e.TagNumber.Value(e.RangeCalcFormula(2, 50, e.TagRange.GetValue()))
+	e.TagRange.Value(e.RangeCalcFormula(2, 50, e.TagNumber.GetValue()))
+}
+
+type SimpleForm struct {
+	Text     *TextFrom     `wasmPanel:"type:text;label:Name"`
+	Password *PasswordFrom `wasmPanel:"type:password;label:Password"`
+	Mail     *MailFrom     `wasmPanel:"type:mail;label:E-Mail"`
+	TextArea *TextAreaForm `wasmPanel:"type:textArea;label:Text"`
 }
 
 type BoatAdjust struct {
@@ -82,13 +91,76 @@ type BoatAdjust struct {
 	Start    *EasingTweenStart `wasmPanel:"type:button;label:start easing tween"`
 }
 
+type TextAreaForm struct {
+	components.TextArea
+
+	TextTag *html.TagTextArea `wasmPanel:"type:inputTagTextArea"`
+	Value   string            `wasmPanel:"type:value;placeHolder:Digite um texto;default:default text"`
+	Change  *OnTextAreaEvent  `wasmPanel:"type:listener;event:input;func:OnChangeEvent"`
+}
+
+type OnTextAreaEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnTextAreaEvent) OnChangeEvent(event OnTextAreaEvent, reference *Body) {
+	log.Printf("text: %v", event.Value)
+}
+
+type TextFrom struct {
+	components.Text
+
+	TextTag *html.TagInputText `wasmPanel:"type:inputTagText"`
+	Value   string             `wasmPanel:"type:value;placeHolder:Digite um texto;default:default text"`
+	Change  *OnTextEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+type OnTextEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnTextEvent) OnChangeEvent(event OnTextEvent, reference *Body) {
+	log.Printf("text: %v", event.Value)
+}
+
+type MailFrom struct {
+	components.Mail
+
+	MailTag *html.TagInputMail `wasmPanel:"type:inputTagMail"`
+	Value   string             `wasmPanel:"type:value;placeHolder:Digite um e-mail;default:eu@eu.com"`
+	Change  *OnMailEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+type OnMailEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnMailEvent) OnChangeEvent(event OnMailEvent, reference *Body) {
+	log.Printf("text: %v", event.Value)
+}
+
+type PasswordFrom struct {
+	components.Password
+
+	MailTag *html.TagInputPassword `wasmPanel:"type:inputTagPassword"`
+	Value   string                 `wasmPanel:"type:value;placeHolder:Digite uma senha;default:senha"`
+	Change  *OnPasswordEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+type OnPasswordEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnPasswordEvent) OnChangeEvent(event OnPasswordEvent, reference *Body) {
+	log.Printf("text: %v", event.Value)
+}
+
 type TweenSelect struct {
 	components.Select
 
 	SelectTag *html.TagSelect `wasmPanel:"type:inputTagSelect"`
 	List      *[]TweenType    `wasmPanel:"type:value"` //;default:label 1,value 1,>label 2,value 2,label 3,value 3
 	Change    *OnSelectChange `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
-	//todo: falta a captura de ref
 }
 
 func (e *TweenSelect) Init() {
@@ -145,8 +217,6 @@ type OnSelectChange struct {
 }
 
 func (e *OnSelectChange) OnChangeEvent(event OnSelectChange, reference *Body) {
-	// https://github.com/ai/easings.net/blob/master/src/easings/easingsFunctions.ts
-	//log.Printf("value: %v", event.Value)
 	switch event.Value {
 	case "Linear":
 		e.function = easingTween.KLinear

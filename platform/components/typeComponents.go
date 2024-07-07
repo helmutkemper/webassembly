@@ -195,7 +195,7 @@ func (e *Components) processComponent(element reflect.Value, typeof reflect.Type
 					}
 
 					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Range (%v) requires a public fiel, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+						err = fmt.Errorf("component.Range (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
 						return
 					}
 
@@ -215,7 +215,7 @@ func (e *Components) processComponent(element reflect.Value, typeof reflect.Type
 					}
 
 					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Button (%v) requires a public fiel, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+						err = fmt.Errorf("component.Button (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
 						return
 					}
 
@@ -225,19 +225,105 @@ func (e *Components) processComponent(element reflect.Value, typeof reflect.Type
 					}
 
 				case "select":
+
+					if fieldVal.Kind() != reflect.Pointer {
+						err = fmt.Errorf("component.Select (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:select;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("}"))
+						return
+					}
+
+					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+						err = fmt.Errorf("component.Select (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+						return
+					}
+
 					err = e.processComponentSelect(fieldVal, tagData, divComponent)
 					if err != nil {
 						return
 					}
 
-				case "radio":
-					divComponent.Class("component component-radio")
-					e.processComponentRadio(fieldVal, tagData, divComponent)
-				case "checkbox":
-					divComponent.Class("component component-checkbox")
-					e.processComponentCheckbox(fieldVal, tagData, divComponent)
-				case "color":
-					e.processComponentColor(fieldVal, tagData, divComponent)
+				case "text":
+
+					if fieldVal.Kind() != reflect.Pointer {
+						err = fmt.Errorf("component.Text (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:text;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("}"))
+						return
+					}
+
+					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+						err = fmt.Errorf("component.Text (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+						return
+					}
+
+					err = e.processComponentText(fieldVal, tagData, divComponent)
+					if err != nil {
+						return
+					}
+
+				case "password":
+
+					if fieldVal.Kind() != reflect.Pointer {
+						err = fmt.Errorf("component.Password (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:password;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("}"))
+						return
+					}
+
+					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+						err = fmt.Errorf("component.Password (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+						return
+					}
+
+					err = e.processComponentPassword(fieldVal, tagData, divComponent)
+					if err != nil {
+						return
+					}
+
+				case "mail":
+
+					if fieldVal.Kind() != reflect.Pointer {
+						err = fmt.Errorf("component.Mail (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:mail;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("}"))
+						return
+					}
+
+					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+						err = fmt.Errorf("component.Mail (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+						return
+					}
+
+					err = e.processComponentMail(fieldVal, tagData, divComponent)
+					if err != nil {
+						return
+					}
+
+				case "textArea":
+
+					if fieldVal.Kind() != reflect.Pointer {
+						err = fmt.Errorf("component.TextArea (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:text;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("}"))
+						return
+					}
+
+					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+						err = fmt.Errorf("component.TextArea (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+						return
+					}
+
+					err = e.processComponentTextArea(fieldVal, tagData, divComponent)
+					if err != nil {
+						return
+					}
+
 				default:
 					//log.Printf(">>>>>>>> %v", tagData.Type)
 				}
@@ -559,42 +645,14 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 				var methods []reflect.Value
 				var params []interface{}
 
-				switch tagDataInternal.Event {
-				// If the user wants to use the `input` event, the code assembles the user event and the panel event
-				//case "input":
-				//
-				//	// Passes the functions to be executed in the listener
-				//	methods = []reflect.Value{
-				//		// tagDataInternal.Func is the user function
-				//		fieldVal.MethodByName(tagDataInternal.Func),
-				//		// rangeComponent is the struct components.Range and OnChangeNumber is a function belonging to the struct components.Range
-				//		reflect.ValueOf(&rangeComponent).MethodByName("OnChangeNumber"),
-				//		// rangeComponent is the struct components.Range and OnChangeRange is a function belonging to the struct components.Range
-				//		reflect.ValueOf(&rangeComponent).MethodByName("OnChangeRange"),
-				//	}
-				//
-				//	// Pass variable pointers
-				//	params = []interface{}{
-				//		// fieldVal.Interface() is the struct pointer that collects user data
-				//		fieldVal.Interface(),
-				//		// __rangeOnInputEvent is the type pointer contained in components.Range and collects value
-				//		new(__rangeOnInputEvent),
-				//		// __rangeOnInputEvent is the type pointer contained in components.Range and collects value
-				//		new(__rangeOnInputEvent),
-				//	}
+				// Passes the functions to be executed in the listener
+				methods = []reflect.Value{
+					fieldVal.MethodByName(tagDataInternal.Func),
+				}
 
-				// If the user uses another event, different from `input`, it just mounts the user event
-				default:
-
-					// Passes the functions to be executed in the listener
-					methods = []reflect.Value{
-						fieldVal.MethodByName(tagDataInternal.Func),
-					}
-
-					// Pass variable pointers
-					params = []interface{}{
-						fieldVal.Interface(),
-					}
+				// Pass variable pointers
+				params = []interface{}{
+					fieldVal.Interface(),
 				}
 
 				// explanation
@@ -606,57 +664,6 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 
 				inputRange.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
 				inputNumber.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
-
-				//case "func":
-				//	if !fieldVal.CanInterface() {
-				//		err = fmt.Errorf("%v.%v must be a public field", element.Type().Name(), fieldTyp.Name)
-				//		return
-				//	}
-				//
-				//	if fieldVal.Kind() != reflect.Func {
-				//		err = fmt.Errorf("%v.%v must be a function, but a %v was received", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
-				//		return
-				//	}
-				//
-				//	if _, ok = fieldVal.Interface().(func(any)); !ok {
-				//		err = fmt.Errorf("%v.%v must be a function type func pointer 'func(ars any)', but a %v was received", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
-				//		return
-				//	}
-				//
-				//	if _, _, found := e.searchFieldByTagType("data", tagDataInternal.Event, element); !found {
-				//		err = fmt.Errorf("in the struct named %v, there is a tag named %v 'type:func' for the event '%v', but there is no field with the tag 'type:data;event:%v' containing the pointer to the struct with the data information to be collected for the `%v` event", element.Type().Name(), fieldTyp.Name, tagDataInternal.Event, tagDataInternal.Event, tagDataInternal.Event)
-				//		return err
-				//	}
-				//
-				//	if dataVal, dataType, found := e.searchFieldByTagType("data", tagDataInternal.Event, element); found {
-				//		if !fieldVal.IsNil() && dataVal.IsNil() {
-				//			err = fmt.Errorf("%v.%v is nil, that is, it did not receive a pointer to a variable and cannot be set", element.Type().Name(), dataType.Name)
-				//			return
-				//		}
-				//	}
-				//
-				//	if dataVal, dataType, found := e.searchFieldByTagType("data", tagDataInternal.Event, element); found {
-				//		if !fieldVal.IsNil() && !dataVal.CanSet() {
-				//			err = fmt.Errorf("%v.%v can't be set", element.Type().Name(), dataType.Name)
-				//			return
-				//		}
-				//	}
-
-				//case "data":
-				//	if !fieldVal.CanInterface() {
-				//		err = fmt.Errorf("%v.%v must be a public field", element.Type().Name(), fieldTyp.Name)
-				//		return
-				//	}
-				//
-				//	if fieldVal.Kind() != reflect.Pointer {
-				//		err = fmt.Errorf("%v.%v must be a struct pointer, but a %v was received: %+v", element.Type().Name(), fieldTyp.Name, fieldVal.Kind(), fieldVal.Interface())
-				//		return
-				//	}
-				//
-				//	if _, _, found := e.searchFieldByTagType("func", tagDataInternal.Event, element); !found {
-				//		err = fmt.Errorf("in the struct named %v, there is a tag named %v 'type:data' for the event '%v', but there is no field with the tag 'type:func;event:%v' containing the function pointer 'func(arg any)' of event `%v`", element.Type().Name(), fieldTyp.Name, tagDataInternal.Event, tagDataInternal.Event, tagDataInternal.Event)
-				//		return err
-				//	}
 
 			}
 		}
@@ -672,6 +679,658 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 		fieldVal := element.Field(i)
 		if fieldVal.Type() == reflect.TypeOf(Range{}) {
 			r := fieldVal.Interface().(Range)
+			r.init()
+			break
+		}
+	}
+
+	method := elementOriginal.MethodByName("Init")
+	if method.IsValid() {
+		method.Call(nil)
+	}
+
+	return
+}
+
+func (e *Components) processComponentText(element reflect.Value, tagDataFather *tag, father *html.TagDiv) (err error) {
+
+	var dataType reflect.Kind
+	var value any
+	var ok bool
+
+	elementOriginal := element
+	textComponent := Text{}
+
+	inputText := factoryBrowser.NewTagInputText().Class("component .component-text")
+
+	// Initializes the pointer if it is nil
+	if element.IsNil() {
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
+	}
+
+	// Move element to pointer struct
+	element = element.Elem()
+
+	// Checks if the import of `components.Text` was done
+	if fieldText := element.FieldByName("Text"); !fieldText.IsValid() {
+		err = fmt.Errorf("error: component %v needs to embed `components.Text` directly", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.Text"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         Value string `wasmPanel:\"type:value;default:Predefined fixed text;placeHolder:Place holder text\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	} else {
+		// Initialize Text
+		newInstance := reflect.New(fieldText.Type())
+		fieldText.Set(newInstance.Elem())
+
+		// Initializes the two input tags within Text
+		textComponent.__textTag = inputText
+
+		// __textOnInputEvent is the pointer sent when the `change` event happens
+		textComponent.__change = new(__textOnInputEvent)
+
+		// populates the component.Text within the user component
+		componentText := element.FieldByName("Text")
+		componentText.Set(reflect.ValueOf(textComponent))
+	}
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+
+			// Checks whether the reference to the input text tag was requested by the user
+			case "inputTagText":
+				fieldVal.Set(reflect.ValueOf(inputText))
+
+			// Checks if the value tag was created
+			case "value":
+
+				// Captures the value of the component defined by the value tag
+				dataType, value, ok = e.verifyTypeFromElement(fieldVal, fieldVal.Kind())
+				if !ok {
+					err = fmt.Errorf("%v.%v type '%v', must be a type int64, float64, bool or string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				// Checks if the field is non-zero, i.e. defined by the user
+				// Limits the types accepted by numeric fields
+				// The limitation on int64, float64, string and bool types is determined by the golang webassembly
+				passValue := false
+				switch dataType {
+				case reflect.String:
+					if value.(string) != "" {
+						passValue = true
+					}
+
+				default:
+					err = fmt.Errorf("%v.%v type '%v', must be a type string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				inputText.Value(value)
+
+				// If the value is zero, and the user has determined a value other than blank,
+				// fill in the field with the default value
+				if !passValue && tagDataInternal.Default != "" {
+					inputText.Value(tagDataInternal.Default)
+				}
+
+				inputText.Placeholder(tagDataInternal.PlaceHolder)
+
+			// listener defines the field received by the event function
+			case "listener":
+
+				// The field must be a pointer, or it cannot be populated
+				if fieldVal.Kind() != reflect.Pointer {
+					log.Printf("error: %v deve ser um ponteiro", fieldVal.Type().Name())
+					continue
+				}
+
+				if !fieldVal.CanSet() {
+					log.Printf("error: %v não pode ser definido automaticamente.", fieldVal.Type().Name())
+					log.Printf("         isto geralmente acontece quando %v não é público.", fieldVal.Type().Name())
+					continue
+				}
+
+				// Checks if the field is nil and initializes the pointer
+				// The less work for the user, the greater the chance they will like the system
+				if fieldVal.CanSet() && fieldVal.IsNil() {
+					newInstance := reflect.New(fieldVal.Type().Elem())
+					fieldVal.Set(newInstance)
+				}
+
+				if fieldVal.IsNil() {
+					err = fmt.Errorf("o campo %v não foi inicializado de forma correta. ele deve ser público", fieldVal.Type().Name())
+					return
+				}
+
+				var methods []reflect.Value
+				var params []interface{}
+
+				// Passes the functions to be executed in the listener
+				methods = []reflect.Value{
+					fieldVal.MethodByName(tagDataInternal.Func),
+				}
+
+				// Pass variable pointers
+				params = []interface{}{
+					fieldVal.Interface(),
+				}
+
+				inputText.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
+			}
+		}
+	}
+
+	father.Append(
+		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		inputText,
+	)
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		if fieldVal.Type() == reflect.TypeOf(Text{}) {
+			r := fieldVal.Interface().(Text)
+			r.init()
+			break
+		}
+	}
+
+	method := elementOriginal.MethodByName("Init")
+	if method.IsValid() {
+		method.Call(nil)
+	}
+
+	return
+}
+
+func (e *Components) processComponentPassword(element reflect.Value, tagDataFather *tag, father *html.TagDiv) (err error) {
+
+	var dataType reflect.Kind
+	var value any
+	var ok bool
+
+	elementOriginal := element
+	passwordComponent := Password{}
+
+	inputPassword := factoryBrowser.NewTagInputPassword().Class("component .component-password")
+
+	// Initializes the pointer if it is nil
+	if element.IsNil() {
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
+	}
+
+	// Move element to pointer struct
+	element = element.Elem()
+
+	// Checks if the import of `components.Password` was done
+	if fieldPassword := element.FieldByName("Password"); !fieldPassword.IsValid() {
+		err = fmt.Errorf("error: component %v needs to embed `components.Password` directly", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.Password"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         Value string `wasmPanel:\"type:value;default:Predefined fixed password;placeHolder:Place holder text\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	} else {
+		// Initialize Password
+		newInstance := reflect.New(fieldPassword.Type())
+		fieldPassword.Set(newInstance.Elem())
+
+		// Initializes the two input tags within Password
+		passwordComponent.__passwordTag = inputPassword
+
+		// __passwordOnInputEvent is the pointer sent when the `change` event happens
+		passwordComponent.__change = new(__passwordOnInputEvent)
+
+		// populates the component.Password within the user component
+		componentPassword := element.FieldByName("Password")
+		componentPassword.Set(reflect.ValueOf(passwordComponent))
+	}
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+
+			// Checks whether the reference to the input password tag was requested by the user
+			case "inputTagPassword":
+				fieldVal.Set(reflect.ValueOf(inputPassword))
+
+			// Checks if the value tag was created
+			case "value":
+
+				// Captures the value of the component defined by the value tag
+				dataType, value, ok = e.verifyTypeFromElement(fieldVal, fieldVal.Kind())
+				if !ok {
+					err = fmt.Errorf("%v.%v type '%v', must be a type int64, float64, bool or string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				// Checks if the field is non-zero, i.e. defined by the user
+				// Limits the types accepted by numeric fields
+				// The limitation on int64, float64, string and bool types is determined by the golang webassembly
+				passValue := false
+				switch dataType {
+				case reflect.String:
+					if value.(string) != "" {
+						passValue = true
+					}
+
+				default:
+					err = fmt.Errorf("%v.%v type '%v', must be a type string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				inputPassword.Value(value)
+
+				// If the value is zero, and the user has determined a value other than blank,
+				// fill in the field with the default value
+				if !passValue && tagDataInternal.Default != "" {
+					inputPassword.Value(tagDataInternal.Default)
+				}
+
+				inputPassword.Placeholder(tagDataInternal.PlaceHolder)
+
+			// listener defines the field received by the event function
+			case "listener":
+
+				// The field must be a pointer, or it cannot be populated
+				if fieldVal.Kind() != reflect.Pointer {
+					log.Printf("error: %v deve ser um ponteiro", fieldVal.Type().Name())
+					continue
+				}
+
+				if !fieldVal.CanSet() {
+					log.Printf("error: %v não pode ser definido automaticamente.", fieldVal.Type().Name())
+					log.Printf("         isto geralmente acontece quando %v não é público.", fieldVal.Type().Name())
+					continue
+				}
+
+				// Checks if the field is nil and initializes the pointer
+				// The less work for the user, the greater the chance they will like the system
+				if fieldVal.CanSet() && fieldVal.IsNil() {
+					newInstance := reflect.New(fieldVal.Type().Elem())
+					fieldVal.Set(newInstance)
+				}
+
+				if fieldVal.IsNil() {
+					err = fmt.Errorf("o campo %v não foi inicializado de forma correta. ele deve ser público", fieldVal.Type().Name())
+					return
+				}
+
+				var methods []reflect.Value
+				var params []interface{}
+
+				// Passes the functions to be executed in the listener
+				methods = []reflect.Value{
+					fieldVal.MethodByName(tagDataInternal.Func),
+				}
+
+				// Pass variable pointers
+				params = []interface{}{
+					fieldVal.Interface(),
+				}
+
+				inputPassword.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
+			}
+		}
+	}
+
+	father.Append(
+		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		inputPassword,
+	)
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		if fieldVal.Type() == reflect.TypeOf(Password{}) {
+			r := fieldVal.Interface().(Password)
+			r.init()
+			break
+		}
+	}
+
+	method := elementOriginal.MethodByName("Init")
+	if method.IsValid() {
+		method.Call(nil)
+	}
+
+	return
+}
+
+func (e *Components) processComponentMail(element reflect.Value, tagDataFather *tag, father *html.TagDiv) (err error) {
+
+	var dataType reflect.Kind
+	var value any
+	var ok bool
+
+	elementOriginal := element
+	mailComponent := Mail{}
+
+	inputMail := factoryBrowser.NewTagInputEMail().Class("component .component-mail")
+
+	// Initializes the pointer if it is nil
+	if element.IsNil() {
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
+	}
+
+	// Move element to pointer struct
+	element = element.Elem()
+
+	// Checks if the import of `components.Mail` was done
+	if fieldMail := element.FieldByName("Mail"); !fieldMail.IsValid() {
+		err = fmt.Errorf("error: component %v needs to embed `components.Mail` directly", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.Mail"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         Value string `wasmPanel:\"type:value;default:Predefined fixed Mail;placeHolder:Place holder text\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	} else {
+		// Initialize Mail
+		newInstance := reflect.New(fieldMail.Type())
+		fieldMail.Set(newInstance.Elem())
+
+		// Initializes the two input tags within Mail
+		mailComponent.__mailTag = inputMail
+
+		// __mailOnInputEvent is the pointer sent when the `change` event happens
+		mailComponent.__change = new(__mailOnInputEvent)
+
+		// populates the component.Mail within the user component
+		componentMail := element.FieldByName("Mail")
+		componentMail.Set(reflect.ValueOf(mailComponent))
+	}
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+
+			// Checks whether the reference to the input mail tag was requested by the user
+			case "inputTagMail":
+				fieldVal.Set(reflect.ValueOf(inputMail))
+
+			// Checks if the value tag was created
+			case "value":
+
+				// Captures the value of the component defined by the value tag
+				dataType, value, ok = e.verifyTypeFromElement(fieldVal, fieldVal.Kind())
+				if !ok {
+					err = fmt.Errorf("%v.%v type '%v', must be a type int64, float64, bool or string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				// Checks if the field is non-zero, i.e. defined by the user
+				// Limits the types accepted by numeric fields
+				// The limitation on int64, float64, string and bool types is determined by the golang webassembly
+				passValue := false
+				switch dataType {
+				case reflect.String:
+					if value.(string) != "" {
+						passValue = true
+					}
+
+				default:
+					err = fmt.Errorf("%v.%v type '%v', must be a type string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				inputMail.Value(value)
+
+				// If the value is zero, and the user has determined a value other than blank,
+				// fill in the field with the default value
+				if !passValue && tagDataInternal.Default != "" {
+					inputMail.Value(tagDataInternal.Default)
+				}
+
+				inputMail.Placeholder(tagDataInternal.PlaceHolder)
+
+			// listener defines the field received by the event function
+			case "listener":
+
+				// The field must be a pointer, or it cannot be populated
+				if fieldVal.Kind() != reflect.Pointer {
+					log.Printf("error: %v deve ser um ponteiro", fieldVal.Type().Name())
+					continue
+				}
+
+				if !fieldVal.CanSet() {
+					log.Printf("error: %v não pode ser definido automaticamente.", fieldVal.Type().Name())
+					log.Printf("         isto geralmente acontece quando %v não é público.", fieldVal.Type().Name())
+					continue
+				}
+
+				// Checks if the field is nil and initializes the pointer
+				// The less work for the user, the greater the chance they will like the system
+				if fieldVal.CanSet() && fieldVal.IsNil() {
+					newInstance := reflect.New(fieldVal.Type().Elem())
+					fieldVal.Set(newInstance)
+				}
+
+				if fieldVal.IsNil() {
+					err = fmt.Errorf("o campo %v não foi inicializado de forma correta. ele deve ser público", fieldVal.Type().Name())
+					return
+				}
+
+				var methods []reflect.Value
+				var params []interface{}
+
+				// Passes the functions to be executed in the listener
+				methods = []reflect.Value{
+					fieldVal.MethodByName(tagDataInternal.Func),
+				}
+
+				// Pass variable pointers
+				params = []interface{}{
+					fieldVal.Interface(),
+				}
+
+				inputMail.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
+			}
+		}
+	}
+
+	father.Append(
+		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		inputMail,
+	)
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		if fieldVal.Type() == reflect.TypeOf(Mail{}) {
+			r := fieldVal.Interface().(Mail)
+			r.init()
+			break
+		}
+	}
+
+	method := elementOriginal.MethodByName("Init")
+	if method.IsValid() {
+		method.Call(nil)
+	}
+
+	return
+}
+
+func (e *Components) processComponentTextArea(element reflect.Value, tagDataFather *tag, father *html.TagDiv) (err error) {
+
+	var dataType reflect.Kind
+	var value any
+	var ok bool
+
+	elementOriginal := element
+	textAreaComponent := TextArea{}
+
+	inputTextArea := factoryBrowser.NewTagTextArea().Class("component .component-textarea")
+
+	// Initializes the pointer if it is nil
+	if element.IsNil() {
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
+	}
+
+	// Move element to pointer struct
+	element = element.Elem()
+
+	// Checks if the import of `components.TextArea` was done
+	if fieldTextArea := element.FieldByName("TextArea"); !fieldTextArea.IsValid() {
+		err = fmt.Errorf("error: component %v needs to embed `components.TextArea` directly", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.TextArea"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         Value string `wasmPanel:\"type:value;default:Predefined fixed text;placeHolder:Place holder text\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	} else {
+		// Initialize TextArea
+		newInstance := reflect.New(fieldTextArea.Type())
+		fieldTextArea.Set(newInstance.Elem())
+
+		// Initializes the textArea tag within TextArea
+		textAreaComponent.__textAreaTag = inputTextArea
+
+		// __textAreaOnInputEvent is the pointer sent when the `change` event happens
+		textAreaComponent.__change = new(__textAreaOnInputEvent)
+
+		// populates the component.TextArea within the user component
+		componentTextArea := element.FieldByName("TextArea")
+		componentTextArea.Set(reflect.ValueOf(textAreaComponent))
+	}
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+
+			// Checks whether the reference to the textArea tag was requested by the user
+			case "inputTagTextArea":
+				fieldVal.Set(reflect.ValueOf(inputTextArea))
+
+			// Checks if the value tag was created
+			case "value":
+
+				// Captures the value of the component defined by the value tag
+				dataType, value, ok = e.verifyTypeFromElement(fieldVal, fieldVal.Kind())
+				if !ok {
+					err = fmt.Errorf("%v.%v type '%v', must be a type int64, float64, bool or string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				// Checks if the field is non-zero, i.e. defined by the user
+				// Limits the types accepted by numeric fields
+				// The limitation on int64, float64, string and bool types is determined by the golang webassembly
+				passValue := false
+				switch dataType {
+				case reflect.String:
+					if value.(string) != "" {
+						passValue = true
+					}
+
+				default:
+					err = fmt.Errorf("%v.%v type '%v', must be a type string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				inputTextArea.Text(value)
+
+				// If the value is zero, and the user has determined a value other than blank,
+				// fill in the field with the default value
+				if !passValue && tagDataInternal.Default != "" {
+					inputTextArea.Text(tagDataInternal.Default)
+				}
+
+				inputTextArea.Placeholder(tagDataInternal.PlaceHolder)
+
+			// listener defines the field received by the event function
+			case "listener":
+
+				// The field must be a pointer, or it cannot be populated
+				if fieldVal.Kind() != reflect.Pointer {
+					log.Printf("error: %v deve ser um ponteiro", fieldVal.Type().Name())
+					continue
+				}
+
+				if !fieldVal.CanSet() {
+					log.Printf("error: %v não pode ser definido automaticamente.", fieldVal.Type().Name())
+					log.Printf("         isto geralmente acontece quando %v não é público.", fieldVal.Type().Name())
+					continue
+				}
+
+				// Checks if the field is nil and initializes the pointer
+				// The less work for the user, the greater the chance they will like the system
+				if fieldVal.CanSet() && fieldVal.IsNil() {
+					newInstance := reflect.New(fieldVal.Type().Elem())
+					fieldVal.Set(newInstance)
+				}
+
+				if fieldVal.IsNil() {
+					err = fmt.Errorf("o campo %v não foi inicializado de forma correta. ele deve ser público", fieldVal.Type().Name())
+					return
+				}
+
+				var methods []reflect.Value
+				var params []interface{}
+
+				// Passes the functions to be executed in the listener
+				methods = []reflect.Value{
+					fieldVal.MethodByName(tagDataInternal.Func),
+				}
+
+				// Pass variable pointers
+				params = []interface{}{
+					fieldVal.Interface(),
+				}
+
+				inputTextArea.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
+			}
+		}
+	}
+
+	father.Append(
+		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		inputTextArea,
+	)
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		if fieldVal.Type() == reflect.TypeOf(TextArea{}) {
+			r := fieldVal.Interface().(TextArea)
 			r.init()
 			break
 		}
@@ -861,71 +1520,6 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 	}
 
 	return
-}
-
-func (e *Components) processComponentColor(element reflect.Value, tagData *tag, father *html.TagDiv) {
-
-	var buttonClick func()
-	var buttonPress func()
-	var buttonRelease func()
-	var label string
-	var value string
-	var disabled bool
-	_ = buttonClick   //todo: fazer
-	_ = buttonPress   //todo: fazer
-	_ = buttonRelease //todo: fazer
-	var ok bool
-
-	if element.CanInterface() {
-		for i := 0; i != element.NumField(); i += 1 {
-			fieldVal := element.Field(i)
-			fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
-
-			tagDataInternal := new(tag)
-			tagRaw := fieldTyp.Tag.Get("wasmPanel")
-			if tagRaw != "" {
-				tagDataInternal.init(tagRaw)
-
-				switch tagDataInternal.Type {
-				case "disabled":
-					disabled, ok = fieldVal.Interface().(bool)
-					if !ok {
-						log.Printf("error: Disabled deve ser do tipo booleano")
-					}
-				case "label":
-					label, ok = fieldVal.Interface().(string)
-					if !ok {
-						log.Printf("error: Label deve ser do tipo string")
-					}
-				case "value":
-					value, ok = fieldVal.Interface().(string)
-					if !ok {
-						log.Printf("error: Value deve ser do tipo string")
-					}
-				case "onclick":
-					buttonClick, ok = fieldVal.Interface().(func())
-					if !ok {
-						log.Printf("error: A função onclick deve ser func()")
-					}
-				case "onpress":
-					buttonPress, ok = fieldVal.Interface().(func())
-					if !ok {
-						log.Printf("error: A função onpress deve ser func()")
-					}
-				case "onrelease":
-					buttonRelease, ok = fieldVal.Interface().(func())
-					if !ok {
-						log.Printf("error: A função onrelease deve ser func()")
-					}
-				}
-			}
-		}
-	}
-
-	father.Append(
-		factoryBrowser.NewTagSpan().Text(label),
-		factoryBrowser.NewTagInputColor().Class("inputButton").Value(value).Disabled(disabled),
-	)
 }
 
 // verifyTypesComponentSelect checks the types of the components.Select configuration
@@ -1179,10 +1773,6 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 
 			case "value":
 
-				if fieldVal.Kind() != reflect.Pointer {
-					//todo: erro
-				}
-
 				// pointer is not nil
 				// Move the element from pointer to struct
 				fieldVal = fieldVal.Elem()
@@ -1192,13 +1782,11 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 					if tagDataInternal.Default != "" {
 						optionList := strings.Split(tagDataInternal.Default, ",")
 						if len(optionList)%2 != 0 {
-							// todo: colocar o nome da tag
-							err = fmt.Errorf("the correct format from tag value is: `wasmPanel:\"type:value;default:label1,value1,label2,value2,labelN,valueN\"`, where label and value must be a pair")
+							err = fmt.Errorf("%v.%v: the correct format from tag value is: `wasmPanel:\"type:value;default:label1,value1,label2,value2,labelN,valueN\"`, where value and label, must be a pair", element.Type().Name(), fieldTyp.Name)
 							return
 						}
 
 						for k := 0; k != len(optionList); k += 2 {
-
 							// if label start with `>` the option is selected
 							selected := false
 							if strings.HasPrefix(optionList[k], ">") {
@@ -1316,146 +1904,6 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 	}
 
 	return
-}
-
-func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, father *html.TagDiv) {
-
-	radioOptionsTag := factoryBrowser.NewTagDiv().Class("radioOptions")
-
-	if element.CanInterface() {
-		for i := 0; i != element.Len(); i += 1 {
-			subElement := element.Index(i)
-
-			var ok bool
-			var name string
-			var disabled bool
-			var selected bool
-			var label string
-			var value string
-
-			for i := 0; i != subElement.NumField(); i += 1 {
-
-				fieldVal := subElement.Field(i)
-				fieldTyp := reflect.TypeOf(subElement.Interface()).Field(i)
-
-				tagDataInternal := new(tag)
-				tagRaw := fieldTyp.Tag.Get("wasmPanel")
-				if tagRaw != "" {
-					tagDataInternal.init(tagRaw)
-
-					switch tagDataInternal.Type {
-					case "name":
-						name, ok = fieldVal.Interface().(string)
-						if !ok {
-							log.Printf("error: name deve ser do tipo string")
-						}
-					case "disabled":
-						disabled, ok = fieldVal.Interface().(bool)
-						if !ok {
-							log.Printf("error: disabled deve ser do tipo booleano")
-						}
-					case "selected":
-						selected, ok = fieldVal.Interface().(bool)
-						if !ok {
-							log.Printf("error: selected deve ser do tipo booleano")
-						}
-					case "label":
-						label, ok = fieldVal.Interface().(string)
-						if !ok {
-							log.Printf("error: label deve ser do tipo string")
-						}
-					case "value":
-						value, ok = fieldVal.Interface().(string)
-						if !ok {
-							log.Printf("error: value deve ser do tipo string")
-						}
-					}
-				}
-			}
-
-			radioOptionsTag.Append(
-				factoryBrowser.NewTagLabel().Text(label).Append(
-					factoryBrowser.NewTagInputRadio().Class("inputRadio").Name(name).Value(value).Disabled(disabled).Checked(selected),
-				),
-			)
-
-		}
-	}
-
-	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagData.Label),
-		radioOptionsTag,
-	)
-}
-
-func (e *Components) processComponentCheckbox(element reflect.Value, tagData *tag, father *html.TagDiv) {
-
-	radioOptionsTag := factoryBrowser.NewTagDiv().Class("checkboxOptions")
-
-	if element.CanInterface() {
-		for i := 0; i != element.Len(); i += 1 {
-			subElement := element.Index(i)
-
-			var ok bool
-			var name string
-			var disabled bool
-			var selected bool
-			var label string
-			var value string
-
-			for i := 0; i != subElement.NumField(); i += 1 {
-
-				fieldVal := subElement.Field(i)
-				fieldTyp := reflect.TypeOf(subElement.Interface()).Field(i)
-
-				tagDataInternal := new(tag)
-				tagRaw := fieldTyp.Tag.Get("wasmPanel")
-				if tagRaw != "" {
-					tagDataInternal.init(tagRaw)
-
-					switch tagDataInternal.Type {
-					case "name":
-						name, ok = fieldVal.Interface().(string)
-						if !ok {
-							log.Printf("error: name deve ser do tipo string")
-						}
-					case "disabled":
-						disabled, ok = fieldVal.Interface().(bool)
-						if !ok {
-							log.Printf("error: disabled deve ser do tipo booleano")
-						}
-					case "selected":
-						selected, ok = fieldVal.Interface().(bool)
-						if !ok {
-							log.Printf("error: selected deve ser do tipo booleano")
-						}
-					case "label":
-						label, ok = fieldVal.Interface().(string)
-						if !ok {
-							log.Printf("error: label deve ser do tipo string")
-						}
-					case "value":
-						value, ok = fieldVal.Interface().(string)
-						if !ok {
-							log.Printf("error: value deve ser do tipo string")
-						}
-					}
-				}
-			}
-
-			radioOptionsTag.Append(
-				factoryBrowser.NewTagLabel().Text(label).Append(
-					factoryBrowser.NewTagInputCheckBox().Class("inputRadio").Name(name).Value(value).Disabled(disabled).Checked(selected),
-				),
-			)
-
-		}
-	}
-
-	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagData.Label),
-		radioOptionsTag,
-	)
 }
 
 func (e *Components) processHeaderText(element reflect.Value, defaultText string, father *html.TagDiv) {

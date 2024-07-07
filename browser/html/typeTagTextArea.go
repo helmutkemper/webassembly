@@ -1409,6 +1409,24 @@ func (e *TagTextArea) SetY(y int) (ref *TagTextArea) {
 	return e
 }
 
+// Text #replicar
+//
+// English:
+//
+// Adds plain text to the tag's content.
+//
+// Text:
+//
+// Adiciona um texto simples ao conteúdo da tag.
+func (e *TagTextArea) Text(value any) (ref *TagTextArea) {
+	e.selfElement.Set("textContent", value)
+	return e
+}
+
+func (e *TagTextArea) Get() (el js.Value) {
+	return e.selfElement
+}
+
 // ListenerAddReflect
 //
 // English:

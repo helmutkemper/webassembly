@@ -9,7 +9,7 @@ import (
 	"syscall/js"
 )
 
-type TagInputEMail struct {
+type TagInputMail struct {
 	commonEvents commonEvents
 
 	tag         Tag
@@ -76,7 +76,7 @@ type TagInputEMail struct {
 //	  var circle *html.TagSvgCircle
 //	  factoryBrowser.NewTagSvgCircle().Reference(&circle).R(5).Fill(factoryColor.NewRed())
 //	  log.Printf("x: %v, y: %v", circle.GetX(), circle.GetY())
-func (e *TagInputEMail) Reference(reference **TagInputEMail) (ref *TagInputEMail) {
+func (e *TagInputMail) Reference(reference **TagInputMail) (ref *TagInputMail) {
 	*reference = e
 	return e
 }
@@ -119,7 +119,7 @@ func (e *TagInputEMail) Reference(reference **TagInputEMail) (ref *TagInputEMail
 //	   importantes no navegador;
 //	   Para evitar esse problema, a maioria dos navegadores usará as teclas de acesso somente se
 //	   pressionadas junto com a tecla Alt.
-func (e *TagInputEMail) AccessKey(key string) (ref *TagInputEMail) {
+func (e *TagInputMail) AccessKey(key string) (ref *TagInputMail) {
 	e.selfElement.Set("accesskey", key)
 	return e
 }
@@ -135,7 +135,7 @@ func (e *TagInputEMail) AccessKey(key string) (ref *TagInputEMail) {
 //
 //	Este atributo booleano especifica que o botão deve ter foco de entrada quando a página for
 //	carregada. Apenas um elemento em um documento pode ter esse atributo.
-func (e *TagInputEMail) Autofocus(autofocus bool) (ref *TagInputEMail) {
+func (e *TagInputMail) Autofocus(autofocus bool) (ref *TagInputMail) {
 	e.selfElement.Set("autofocus", autofocus)
 	return e
 }
@@ -177,7 +177,7 @@ func (e *TagInputEMail) Autofocus(autofocus bool) (ref *TagInputEMail) {
 // O atributo class é usado principalmente para apontar para uma classe em uma folha de estilo.
 // No entanto, também pode ser usado por um JavaScript (através do HTML DOM) para fazer alterações
 // em elementos HTML com uma classe especificada.
-func (e *TagInputEMail) Class(class ...string) (ref *TagInputEMail) {
+func (e *TagInputMail) Class(class ...string) (ref *TagInputMail) {
 	e.selfElement.Set("classList", strings.Join(class, " "))
 	return e
 }
@@ -205,7 +205,7 @@ func (e *TagInputEMail) Class(class ...string) (ref *TagInputEMail) {
 //	 Nota:
 //	   Quando o atributo contentEditable não está definido em um elemento, o elemento o herdará de
 //	   seu pai.
-func (e *TagInputEMail) ContentEditable(editable bool) (ref *TagInputEMail) {
+func (e *TagInputMail) ContentEditable(editable bool) (ref *TagInputMail) {
 	e.selfElement.Set("contenteditable", editable)
 	return e
 }
@@ -257,7 +257,7 @@ func (e *TagInputEMail) ContentEditable(editable bool) (ref *TagInputEMail) {
 //	Nota:
 //	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
 //	    usuário.
-func (e *TagInputEMail) Data(data map[string]string) (ref *TagInputEMail) {
+func (e *TagInputMail) Data(data map[string]string) (ref *TagInputMail) {
 	for k, v := range data {
 		e.selfElement.Set(" data-"+k, v)
 	}
@@ -280,7 +280,7 @@ func (e *TagInputEMail) Data(data map[string]string) (ref *TagInputEMail) {
 //	 Entrada:
 //	   dir: direção do texto para o conteúdo em um elemento. [ KDirLeftToRight | KDirRightToLeft |
 //	        KDirAuto ]
-func (e *TagInputEMail) Dir(dir Dir) (ref *TagInputEMail) {
+func (e *TagInputMail) Dir(dir Dir) (ref *TagInputMail) {
 	e.selfElement.Set("dir", dir.String())
 	return e
 }
@@ -317,7 +317,7 @@ func (e *TagInputEMail) Dir(dir Dir) (ref *TagInputEMail) {
 //	  * O atributo arrastável é frequentemente usado em operações de arrastar e soltar.
 //	  * Leia nosso tutorial de arrastar e soltar HTML para saber mais.
 //	    https://www.w3schools.com/html/html5_draganddrop.asp
-func (e *TagInputEMail) Draggable(draggable Draggable) (ref *TagInputEMail) {
+func (e *TagInputMail) Draggable(draggable Draggable) (ref *TagInputMail) {
 	e.selfElement.Set("draggable", draggable.String())
 	return e
 }
@@ -367,7 +367,7 @@ func (e *TagInputEMail) Draggable(draggable Draggable) (ref *TagInputEMail) {
 //
 // Se nenhum valor enterKeyHint foi especificado ou se foi definido com um valor diferente dos
 // permitidos, ele retornará uma string vazia.
-func (e *TagInputEMail) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagInputEMail) {
+func (e *TagInputMail) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagInputMail) {
 	e.selfElement.Set("enterKeyHint", enterKeyHint.String())
 	return e
 }
@@ -404,7 +404,7 @@ func (e *TagInputEMail) EnterKeyHint(enterKeyHint EnterKeyHint) (ref *TagInputEM
 // O atributo oculto também pode ser usado para impedir que um usuário veja um elemento até que alguma
 // outra condição seja atendida (como marcar uma caixa de seleção etc.). Então, um JavaScript pode
 // remover o atributo oculto e tornar o elemento visível.
-func (e *TagInputEMail) Hidden() (ref *TagInputEMail) {
+func (e *TagInputMail) Hidden() (ref *TagInputMail) {
 	e.selfElement.Get("style").Set("visibility", "hidden")
 	return e
 }
@@ -430,7 +430,7 @@ func (e *TagInputEMail) Hidden() (ref *TagInputEMail) {
 //
 // O atributo id é mais usado para apontar para um estilo em uma folha de estilo, e por JavaScript
 // (através do HTML DOM) para manipular o elemento com o id específico.
-func (e *TagInputEMail) Id(id string) (ref *TagInputEMail) {
+func (e *TagInputMail) Id(id string) (ref *TagInputMail) {
 	e.id = id
 	e.selfElement.Set("id", id)
 	return e
@@ -464,7 +464,7 @@ func (e *TagInputEMail) Id(id string) (ref *TagInputEMail) {
 // imposto na entrada. Para exigir que a entrada esteja em conformidade com um tipo de dados
 // específico, escolha um tipo de elemento <input> apropriado. Para obter orientações específicas
 // sobre como escolher os tipos de <input>, consulte a seção Valores.
-func (e *TagInputEMail) InputMode(inputMode InputMode) (ref *TagInputEMail) {
+func (e *TagInputMail) InputMode(inputMode InputMode) (ref *TagInputMail) {
 	e.selfElement.Set("inputmode", inputMode.String())
 	return e
 }
@@ -480,7 +480,7 @@ func (e *TagInputEMail) InputMode(inputMode InputMode) (ref *TagInputEMail) {
 //
 //	Permite especificar que um elemento HTML padrão deve se comportar como um elemento interno
 //	personalizado registrado.
-func (e *TagInputEMail) Is(is string) (ref *TagInputEMail) {
+func (e *TagInputMail) Is(is string) (ref *TagInputMail) {
 	e.selfElement.Set("is", is)
 	return e
 }
@@ -494,7 +494,7 @@ func (e *TagInputEMail) Is(is string) (ref *TagInputEMail) {
 // Português:
 //
 //	O identificador global exclusivo de um item.
-func (e *TagInputEMail) ItemId(id string) (ref *TagInputEMail) {
+func (e *TagInputMail) ItemId(id string) (ref *TagInputMail) {
 	e.selfElement.Set("itemid", id)
 	return e
 }
@@ -510,7 +510,7 @@ func (e *TagInputEMail) ItemId(id string) (ref *TagInputEMail) {
 //
 //	Usado para adicionar propriedades a um item. Cada elemento HTML pode ter um atributo itemprop
 //	especificado, onde um itemprop consiste em um par de nome e valor.
-func (e *TagInputEMail) ItemProp(itemprop string) (ref *TagInputEMail) {
+func (e *TagInputMail) ItemProp(itemprop string) (ref *TagInputMail) {
 	e.selfElement.Set("itemprop", itemprop)
 	return e
 }
@@ -528,7 +528,7 @@ func (e *TagInputEMail) ItemProp(itemprop string) (ref *TagInputEMail) {
 //	Propriedades que não são descendentes de um elemento com o atributo itemscope podem ser
 //	associadas ao item usando um itemref. Ele fornece uma lista de IDs de elementos (não IDs de itens)
 //	com propriedades adicionais em outras partes do documento.
-func (e *TagInputEMail) ItemRef(itemref string) (ref *TagInputEMail) {
+func (e *TagInputMail) ItemRef(itemref string) (ref *TagInputMail) {
 	e.selfElement.Set("itemref", itemref)
 	return e
 }
@@ -546,7 +546,7 @@ func (e *TagInputEMail) ItemRef(itemref string) (ref *TagInputEMail) {
 //	Especifica a URL do vocabulário que será usado para definir itemprops (propriedades do item) na
 //	estrutura de dados. itemscope é usado para definir o escopo de onde na estrutura de dados o
 //	vocabulário definido por tipo de item estará ativo.
-func (e *TagInputEMail) ItemType(itemType string) (ref *TagInputEMail) {
+func (e *TagInputMail) ItemType(itemType string) (ref *TagInputMail) {
 	e.selfElement.Set("itemtype", itemType)
 	return e
 }
@@ -570,7 +570,7 @@ func (e *TagInputEMail) ItemType(itemType string) (ref *TagInputEMail) {
 //
 // Exemplos comuns são KLanguageEnglish para inglês, KLanguageSpanish para espanhol, KLanguageFrench
 // para francês e assim por diante.
-func (e *TagInputEMail) Lang(language Language) (ref *TagInputEMail) {
+func (e *TagInputMail) Lang(language Language) (ref *TagInputMail) {
 	e.selfElement.Set("lang", language.String())
 	return e
 }
@@ -587,7 +587,7 @@ func (e *TagInputEMail) Lang(language Language) (ref *TagInputEMail) {
 //	Uma lista separada por espaços dos nomes das partes do elemento. Os nomes das partes permitem que
 //	o CSS selecione e estilize elementos específicos em uma árvore de sombra por meio do
 //	pseudo-elemento ::part.
-func (e *TagInputEMail) Part(part ...string) (ref *TagInputEMail) {
+func (e *TagInputMail) Part(part ...string) (ref *TagInputMail) {
 	e.selfElement.Set("part", strings.Join(part, " "))
 	return e
 }
@@ -603,7 +603,7 @@ func (e *TagInputEMail) Part(part ...string) (ref *TagInputEMail) {
 //
 // Um nonce criptográfico ("número usado uma vez") que pode ser usado pela Política de Segurança de Conteúdo para
 // determinar se uma determinada busca terá permissão para prosseguir.
-func (e *TagInputEMail) Nonce(nonce string) (ref *TagInputEMail) {
+func (e *TagInputMail) Nonce(nonce string) (ref *TagInputMail) {
 	e.selfElement.Set("nonce", nonce)
 	return e
 }
@@ -621,7 +621,7 @@ func (e *TagInputEMail) Nonce(nonce string) (ref *TagInputEMail) {
 //	Atribui um slot em uma shadow DOM shadow tree a um elemento: Um elemento com um atributo slot é
 //	atribuído ao slot criado pelo elemento <slot> cujo valor do atributo name corresponde ao valor
 //	desse atributo slot.
-func (e *TagInputEMail) Slot(slot string) (ref *TagInputEMail) {
+func (e *TagInputMail) Slot(slot string) (ref *TagInputMail) {
 	e.selfElement.Set("slot", slot)
 	return e
 }
@@ -649,7 +649,7 @@ func (e *TagInputEMail) Slot(slot string) (ref *TagInputEMail) {
 //	      Valores de texto em elementos de entrada (não senha)
 //	      Texto em elementos <textarea>
 //	      Texto em elementos editáveis
-func (e *TagInputEMail) Spellcheck(spell bool) (ref *TagInputEMail) {
+func (e *TagInputMail) Spellcheck(spell bool) (ref *TagInputMail) {
 	e.selfElement.Set("spellcheck", spell)
 
 	return e
@@ -676,7 +676,7 @@ func (e *TagInputEMail) Spellcheck(spell bool) (ref *TagInputEMail) {
 //
 // O atributo style pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagInputEMail) Style(style string) (ref *TagInputEMail) {
+func (e *TagInputMail) Style(style string) (ref *TagInputMail) {
 	e.selfElement.Set("style", style)
 	return e
 }
@@ -696,7 +696,7 @@ func (e *TagInputEMail) Style(style string) (ref *TagInputEMail) {
 //
 // O atributo tabindex pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento
 // HTML. No entanto, não é necessariamente útil).
-func (e *TagInputEMail) TabIndex(index int) (ref *TagInputEMail) {
+func (e *TagInputMail) TabIndex(index int) (ref *TagInputMail) {
 	e.selfElement.Set("tabindex", index)
 	return e
 }
@@ -721,7 +721,7 @@ func (e *TagInputEMail) TabIndex(index int) (ref *TagInputEMail) {
 //
 // O atributo title pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
 // No entanto, não é necessariamente útil).
-func (e *TagInputEMail) Title(title string) (ref *TagInputEMail) {
+func (e *TagInputMail) Title(title string) (ref *TagInputMail) {
 	e.selfElement.Set("title", title)
 	return e
 }
@@ -741,7 +741,7 @@ func (e *TagInputEMail) Title(title string) (ref *TagInputEMail) {
 //
 //	 Entrada:
 //	   translate: elemento deve ser traduzido ou não. [ KTranslateYes | KTranslateNo ]
-func (e *TagInputEMail) Translate(translate Translate) (ref *TagInputEMail) {
+func (e *TagInputMail) Translate(translate Translate) (ref *TagInputMail) {
 	e.selfElement.Set("translate", translate.String())
 	return e
 }
@@ -757,7 +757,7 @@ func (e *TagInputEMail) Translate(translate Translate) (ref *TagInputEMail) {
 //
 //	Em um documento HTML, o método Document.createElement() cria o elemento HTML especificado ou um
 //	HTMLUnknownElement se o nome do elemento dado não for conhecido.
-func (e *TagInputEMail) CreateElement(tag Tag) (ref *TagInputEMail) {
+func (e *TagInputMail) CreateElement(tag Tag) (ref *TagInputMail) {
 	e.selfElement = js.Global().Get("document").Call("createElement", tag.String())
 	if e.selfElement.IsUndefined() == true || e.selfElement.IsNull() == true {
 		log.Print(KNewElementIsUndefined)
@@ -796,7 +796,7 @@ func (e *TagInputEMail) CreateElement(tag Tag) (ref *TagInputEMail) {
 //	   * Equivale a:
 //	       var p = document.createElement("p");
 //	       document.body.appendChild(p);
-func (e *TagInputEMail) AppendById(appendId string) (ref *TagInputEMail) {
+func (e *TagInputMail) AppendById(appendId string) (ref *TagInputMail) {
 
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
@@ -836,10 +836,10 @@ func (e *TagInputEMail) AppendById(appendId string) (ref *TagInputEMail) {
 //	   * Equivale a:
 //	       var p = document.createElement("p");
 //	       document.body.appendChild(p);
-func (e *TagInputEMail) Append(append interface{}) (ref *TagInputEMail) {
+func (e *TagInputMail) Append(append interface{}) (ref *TagInputMail) {
 	switch append.(type) {
-	case *TagInputEMail:
-		e.selfElement.Call("appendChild", append.(*TagInputEMail).selfElement)
+	case *TagInputMail:
+		e.selfElement.Call("appendChild", append.(*TagInputMail).selfElement)
 	case js.Value:
 		e.selfElement.Call("appendChild", append)
 	case string:
@@ -912,7 +912,7 @@ func (e *TagInputEMail) Append(append interface{}) (ref *TagInputEMail) {
 //	      Ter um atributo name e ou id;
 //	      Ser descendentes de um elemento <form>;
 //	      O formulário para ter um botão de envio.
-func (e *TagInputEMail) Autocomplete(autocomplete Autocomplete) (ref *TagInputEMail) {
+func (e *TagInputMail) Autocomplete(autocomplete Autocomplete) (ref *TagInputMail) {
 	e.selfElement.Set("autocomplete", autocomplete.String())
 	return e
 }
@@ -926,7 +926,7 @@ func (e *TagInputEMail) Autocomplete(autocomplete Autocomplete) (ref *TagInputEM
 // Português:
 //
 //	Este atributo booleano impede que o usuário interaja com o elemento.
-func (e *TagInputEMail) Disabled(disabled bool) (ref *TagInputEMail) {
+func (e *TagInputMail) Disabled(disabled bool) (ref *TagInputMail) {
 	e.selfElement.Set("disabled", disabled)
 	return e
 }
@@ -950,7 +950,7 @@ func (e *TagInputEMail) Disabled(disabled bool) (ref *TagInputEMail) {
 //
 // Este atributo permite associar elementos <button> a <form>s em qualquer lugar do documento, não
 // apenas dentro de um <form>. Ele também pode substituir um elemento <form> ancestral.
-func (e *TagInputEMail) Form(form string) (ref *TagInputEMail) {
+func (e *TagInputMail) Form(form string) (ref *TagInputMail) {
 	e.selfElement.Set("form", form)
 	return e
 }
@@ -1002,7 +1002,7 @@ func (e *TagInputEMail) Form(form string) (ref *TagInputEMail) {
 // entrada.
 //
 // Veja factoryBrowser.NewTagDataList()
-func (e *TagInputEMail) List(list string) (ref *TagInputEMail) {
+func (e *TagInputMail) List(list string) (ref *TagInputMail) {
 	e.selfElement.Set("list", list)
 	return e
 }
@@ -1021,7 +1021,7 @@ func (e *TagInputEMail) List(list string) (ref *TagInputEMail) {
 //	especificado, apenas uma opção pode ser selecionada por vez. Quando vários são especificados, a
 //	maioria dos navegadores mostrará uma caixa de listagem de rolagem em vez de uma lista suspensa
 //	de uma única linha.
-func (e *TagInputEMail) Multiple(multiple bool) (ref *TagInputEMail) {
+func (e *TagInputMail) Multiple(multiple bool) (ref *TagInputMail) {
 	e.selfElement.Set("multiple", multiple)
 	return e
 }
@@ -1037,8 +1037,39 @@ func (e *TagInputEMail) Multiple(multiple bool) (ref *TagInputEMail) {
 //
 //	O nome do botão, enviado como um par com o valor do botão como parte dos dados do formulário,
 //	quando esse botão é usado para enviar o formulário.
-func (e *TagInputEMail) Name(name string) (ref *TagInputEMail) {
+func (e *TagInputMail) Name(name string) (ref *TagInputMail) {
 	e.selfElement.Set("name", name)
+	return e
+}
+
+// Placeholder
+//
+// English:
+//
+//	The placeholder attribute is a string that provides a brief hint to the user as to what kind of
+//	information is expected in the field. It should be a word or short phrase that provides a hint
+//	as to the expected type of data, rather than an explanation or prompt. The text must not include
+//	carriage returns or line feeds. So for example if a field is expected to capture a user's first
+//	name, and its label is "First Name", a suitable placeholder might be "e.g. Mustafa".
+//
+//	 Note:
+//	   * The placeholder attribute is not as semantically useful as other ways to explain your form,
+//	     and can cause unexpected technical issues with your content. See Labels for more information.
+//
+// Português:
+//
+//	O atributo placeholder é uma string que fornece uma breve dica ao usuário sobre que tipo de
+//	informação é esperada no campo. Deve ser uma palavra ou frase curta que forneça uma dica sobre o
+//	tipo de dados esperado, em vez de uma explicação ou prompt. O texto não deve incluir retornos de
+//	carro ou feeds de linha. Assim, por exemplo, se espera-se que um campo capture o primeiro nome de
+//	um usuário e seu rótulo for "Nome", um espaço reservado adequado pode ser "por exemplo, Mustafa".
+//
+//	 Nota:
+//	   * O atributo placeholder não é tão semanticamente útil quanto outras formas de explicar seu
+//	     formulário e pode causar problemas técnicos inesperados com seu conteúdo. Consulte Rótulos
+//	     para obter mais informações.
+func (e *TagInputMail) Placeholder(placeholder string) (ref *TagInputMail) {
+	e.selfElement.Set("placeholder", placeholder)
 	return e
 }
 
@@ -1055,7 +1086,7 @@ func (e *TagInputEMail) Name(name string) (ref *TagInputEMail) {
 // Português:
 //
 //	A Boolean attribute which, if present, indicates that the user should not be able to edit the value of the input. The readonly attribute is supported by the text, search, url, tel, email, date, month, week, time, datetime-local, number, and password input types.
-func (e *TagInputEMail) ReadOnly(readonly bool) (ref *TagInputEMail) {
+func (e *TagInputMail) ReadOnly(readonly bool) (ref *TagInputMail) {
 	e.selfElement.Set("readonly", readonly)
 	return e
 }
@@ -1070,7 +1101,7 @@ func (e *TagInputEMail) ReadOnly(readonly bool) (ref *TagInputEMail) {
 //
 //	Um atributo booleano que indica que uma opção com um valor de string não vazio deve ser
 //	selecionada.
-func (e *TagInputEMail) Required(required bool) (ref *TagInputEMail) {
+func (e *TagInputMail) Required(required bool) (ref *TagInputMail) {
 	e.selfElement.Set("required", required)
 	return e
 }
@@ -1100,7 +1131,7 @@ func (e *TagInputEMail) Required(required bool) (ref *TagInputEMail) {
 //	   * De acordo com a especificação HTML5, o valor padrão para tamanho deve ser 1; no entanto, na
 //	     prática, descobriu-se que isso quebra alguns sites, e nenhum outro navegador atualmente faz
 //	     isso, então a Mozilla optou por continuar retornando 0 por enquanto com o Firefox.
-func (e *TagInputEMail) Size(size int) (ref *TagInputEMail) {
+func (e *TagInputMail) Size(size int) (ref *TagInputMail) {
 	e.selfElement.Set("size", size)
 	return e
 }
@@ -1120,7 +1151,7 @@ func (e *TagInputEMail) Size(size int) (ref *TagInputEMail) {
 //	portanto, os diferentes tipos são abordados em suas próprias páginas de referência separadas.
 //
 // Se este atributo não for especificado, o tipo padrão adotado é texto.
-func (e *TagInputEMail) Type(inputType InputType) (ref *TagInputEMail) {
+func (e *TagInputMail) Type(inputType InputType) (ref *TagInputMail) {
 	e.selfElement.Set("type", inputType.String())
 	return e
 }
@@ -1134,7 +1165,7 @@ func (e *TagInputEMail) Type(inputType InputType) (ref *TagInputEMail) {
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagInputEMail) Value(value string) (ref *TagInputEMail) {
+func (e *TagInputMail) Value(value any) (ref *TagInputMail) {
 	e.selfElement.Set("value", value)
 	return e
 }
@@ -1148,7 +1179,7 @@ func (e *TagInputEMail) Value(value string) (ref *TagInputEMail) {
 // Português:
 //
 //	Retorna os eixos X e Y em pixels.
-func (e *TagInputEMail) GetXY() (x, y int) {
+func (e *TagInputMail) GetXY() (x, y int) {
 	x = e.x
 	y = e.y
 
@@ -1166,7 +1197,7 @@ func (e *TagInputEMail) GetXY() (x, y int) {
 // Português:
 //
 //	Retorna o eixo X em pixels.
-func (e *TagInputEMail) GetX() (x int) {
+func (e *TagInputMail) GetX() (x int) {
 	return e.x - e.deltaMovieX
 }
 
@@ -1179,7 +1210,7 @@ func (e *TagInputEMail) GetX() (x int) {
 // Português:
 //
 //	Retorna o eixo Y em pixels.
-func (e *TagInputEMail) GetY() (y int) {
+func (e *TagInputMail) GetY() (y int) {
 	return e.y - e.deltaMovieY
 }
 
@@ -1192,7 +1223,7 @@ func (e *TagInputEMail) GetY() (y int) {
 // Português:
 //
 //	O mesmo que a função GetX(), retorna a posição x do elemento.
-func (e *TagInputEMail) GetTop() (top int) {
+func (e *TagInputMail) GetTop() (top int) {
 	return e.x - e.deltaMovieX
 }
 
@@ -1205,7 +1236,7 @@ func (e *TagInputEMail) GetTop() (top int) {
 // Português:
 //
 //	É o mesmo que x + width.
-func (e *TagInputEMail) GetRight() (right int) {
+func (e *TagInputMail) GetRight() (right int) {
 	return e.x + e.width - e.deltaMovieX
 }
 
@@ -1218,7 +1249,7 @@ func (e *TagInputEMail) GetRight() (right int) {
 // Português:
 //
 //	É o mesmo que y + Height.
-func (e *TagInputEMail) GetBottom() (bottom int) {
+func (e *TagInputMail) GetBottom() (bottom int) {
 	return e.y + e.height - e.deltaMovieY
 }
 
@@ -1231,7 +1262,7 @@ func (e *TagInputEMail) GetBottom() (bottom int) {
 // Português:
 //
 //	O mesmo que a função GetY(), retorna a posição y do elemento.
-func (e *TagInputEMail) GetLeft() (left int) {
+func (e *TagInputMail) GetLeft() (left int) {
 	return e.y - e.deltaMovieY
 }
 
@@ -1244,7 +1275,7 @@ func (e *TagInputEMail) GetLeft() (left int) {
 // Português:
 //
 // Retorna a última atualização do bounding box do elemnto.
-func (e *TagInputEMail) GetBoundingBox() (x, y, width, height int) {
+func (e *TagInputMail) GetBoundingBox() (x, y, width, height int) {
 	return e.x - e.deltaMovieX, e.y - e.deltaMovieY, e.width, e.height
 }
 
@@ -1257,7 +1288,7 @@ func (e *TagInputEMail) GetBoundingBox() (x, y, width, height int) {
 // Português:
 //
 // Detecta colisão entre dois bounding box.
-func (e *TagInputEMail) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
+func (e *TagInputMail) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bool) {
 	x, y, width, height := elemnt.GetBoundingBox()
 	if e.x-e.deltaMovieX < x+width && e.x-e.deltaMovieX+e.width > x && e.y-e.deltaMovieY < y+height && e.y-e.deltaMovieY+e.height > y {
 		return true
@@ -1275,7 +1306,7 @@ func (e *TagInputEMail) CollisionBoundingBox(elemnt CollisionBoundingBox) (colli
 // Português:
 //
 // Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
-func (e *TagInputEMail) UpdateBoundingClientRect() (ref *TagInputEMail) {
+func (e *TagInputMail) UpdateBoundingClientRect() (ref *TagInputMail) {
 	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
 	//
 	//                    ⋀                ⋀
@@ -1312,7 +1343,7 @@ func (e *TagInputEMail) UpdateBoundingClientRect() (ref *TagInputEMail) {
 // Português:
 //
 //	Define os eixos X e Y em pixels.
-func (e *TagInputEMail) SetXY(x, y int) (ref *TagInputEMail) {
+func (e *TagInputMail) SetXY(x, y int) (ref *TagInputMail) {
 
 	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
 	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
@@ -1347,7 +1378,7 @@ func (e *TagInputEMail) SetXY(x, y int) (ref *TagInputEMail) {
 //
 //	Valor adicional adicionado na função SetX(): (x = x + deltaMovieX)  e subtraído na função
 //	GetX(): (x = x - deltaMovieX).
-func (e *TagInputEMail) SetDeltaX(delta int) (ref *TagInputEMail) {
+func (e *TagInputMail) SetDeltaX(delta int) (ref *TagInputMail) {
 	e.deltaMovieX = delta
 	return e
 }
@@ -1363,7 +1394,7 @@ func (e *TagInputEMail) SetDeltaX(delta int) (ref *TagInputEMail) {
 //
 //	Valor adicional adicionado na função SetY(): (y = y + deltaMovieY)  e subtraído na função
 //	GetX(): (y = y - deltaMovieY).
-func (e *TagInputEMail) SetDeltaY(delta int) (ref *TagInputEMail) {
+func (e *TagInputMail) SetDeltaY(delta int) (ref *TagInputMail) {
 	e.deltaMovieY = delta
 	return e
 }
@@ -1377,7 +1408,7 @@ func (e *TagInputEMail) SetDeltaY(delta int) (ref *TagInputEMail) {
 // Português:
 //
 //	Define o eixo X em pixels.
-func (e *TagInputEMail) SetX(x int) (ref *TagInputEMail) {
+func (e *TagInputMail) SetX(x int) (ref *TagInputMail) {
 
 	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
 	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
@@ -1405,7 +1436,7 @@ func (e *TagInputEMail) SetX(x int) (ref *TagInputEMail) {
 // Português:
 //
 //	Define o eixo Y em pixels.
-func (e *TagInputEMail) SetY(y int) (ref *TagInputEMail) {
+func (e *TagInputMail) SetY(y int) (ref *TagInputMail) {
 
 	// dragging does not move delta(x,y) as the dragging function uses the delta(x,y) of mouse click
 	// dragging não move delta (x,y) pois a função dragging usa o delta (x,y) do click do mouse
@@ -1424,7 +1455,7 @@ func (e *TagInputEMail) SetY(y int) (ref *TagInputEMail) {
 	return e
 }
 
-func (e *TagInputEMail) Get() (el js.Value) {
+func (e *TagInputMail) Get() (el js.Value) {
 	return e.selfElement
 }
 
@@ -1457,7 +1488,7 @@ func (e *TagInputEMail) Get() (el js.Value) {
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagInputEMail) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagInputEMail) {
+func (e *TagInputMail) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagInputMail) {
 	e.commonEvents.selfElement = &e.selfElement
 	e.commonEvents.ListenerAddReflect(event, params, functions, reference)
 	return e
@@ -1492,7 +1523,7 @@ func (e *TagInputEMail) ListenerAddReflect(event string, params []interface{}, f
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagInputEMail) ListenerRemove(event string) (ref *TagInputEMail) {
+func (e *TagInputMail) ListenerRemove(event string) (ref *TagInputMail) {
 	e.commonEvents.ListenerRemove(event)
 	return e
 }

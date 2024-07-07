@@ -1252,7 +1252,7 @@ func (e *TagInputPassword) Type(inputType InputType) (ref *TagInputPassword) {
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagInputPassword) Value(value string) (ref *TagInputPassword) {
+func (e *TagInputPassword) Value(value any) (ref *TagInputPassword) {
 	e.selfElement.Set("value", value)
 	return e
 }

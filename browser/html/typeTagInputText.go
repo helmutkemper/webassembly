@@ -1272,7 +1272,7 @@ func (e *TagInputText) Type(inputType InputType) (ref *TagInputText) {
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagInputText) Value(value string) (ref *TagInputText) {
+func (e *TagInputText) Value(value any) (ref *TagInputText) {
 	e.selfElement.Set("value", value)
 	return e
 }

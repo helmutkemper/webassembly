@@ -3,17 +3,18 @@ package components
 import "strings"
 
 type tag struct {
-	Event    string
-	Type     string
-	Min      string
-	Max      string
-	Value    string
-	Step     string
-	Key      string
-	Label    string
-	Listener string
-	Func     string
-	Default  string
+	Event       string
+	Type        string
+	Min         string
+	Max         string
+	Value       string
+	Step        string
+	Key         string
+	Label       string
+	Listener    string
+	Func        string
+	Default     string
+	PlaceHolder string
 }
 
 func (e *tag) getTagKeyValue(data string) (key, value string) {
@@ -51,6 +52,8 @@ func (e *tag) init(tagRaw string) {
 			e.Func = value
 		case "default":
 			e.Default = value
+		case "placeHolder":
+			e.PlaceHolder = value
 		}
 	}
 

@@ -1353,7 +1353,7 @@ func (e *TagInputRadio) Type(inputType InputType) (ref *TagInputRadio) {
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagInputRadio) Value(value string) (ref *TagInputRadio) {
+func (e *TagInputRadio) Value(value any) (ref *TagInputRadio) {
 	e.selfElement.Set("value", value)
 	return e
 }

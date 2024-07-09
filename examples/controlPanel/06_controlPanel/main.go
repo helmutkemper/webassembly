@@ -83,6 +83,7 @@ type SimpleForm struct {
 	Password *PasswordFrom `wasmPanel:"type:password;label:Password"`
 	Mail     *MailFrom     `wasmPanel:"type:mail;label:E-Mail"`
 	TextArea *TextAreaForm `wasmPanel:"type:textArea;label:Text"`
+	Radio    *ListRadio    `wasmPanel:"type:radio;label:Text"`
 }
 
 type BoatAdjust struct {
@@ -153,6 +154,21 @@ type OnPasswordEvent struct {
 
 func (e *OnPasswordEvent) OnChangeEvent(event OnPasswordEvent, reference *Body) {
 	log.Printf("text: %v", event.Value)
+}
+
+type ListRadio struct {
+	components.Radio
+
+	//SelectTag *html.TagSelect `wasmPanel:"type:inputTagSelect"`
+	List *[]RadioType `wasmPanel:"type:value;name:radio;default:label 1,value 1,>label 2,value 2,label 3,value 3"` //;default:label 1,value 1,>label 2,value 2,label 3,value 3
+	//Change    *OnSelectChange `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+type RadioType struct {
+	Label    string `wasmPanel:"type:label"`
+	Value    string `wasmPanel:"type:value"`
+	Disabled bool   `wasmPanel:"type:disabled"`
+	Selected bool   `wasmPanel:"type:selected"`
 }
 
 type TweenSelect struct {

@@ -15,6 +15,7 @@ type tag struct {
 	Func        string
 	Default     string
 	PlaceHolder string
+	Name        string
 }
 
 func (e *tag) getTagKeyValue(data string) (key, value string) {
@@ -54,6 +55,8 @@ func (e *tag) init(tagRaw string) {
 			e.Default = value
 		case "placeHolder":
 			e.PlaceHolder = value
+		case "name":
+			e.Name = value
 		}
 	}
 

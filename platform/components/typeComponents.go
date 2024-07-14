@@ -1980,7 +1980,73 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 		return
 	}
 
+	fieldNameInputTagLabel := ""
+	fieldNameInputTagRadio := ""
+	fieldNameLabel := ""
+	fieldNameValue := ""
+	fieldNameDisabled := ""
+	fieldNameSelected := ""
+	fieldNameListener := ""
+	tagListener := new(tag)
+	typeListener := reflect.StructField{}
+
+	var sliceValue reflect.Value
+	var sliceType reflect.Type
+
 	fieldTyp := element.Type()
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := fieldTyp.Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+			case "value":
+
+				// fieldVal.Interface() é *[]struct{...}, por isto .Elem(), ou * -> []struct{...}
+				sliceValue = reflect.ValueOf(fieldVal.Interface()).Elem()
+				sliceType = reflect.TypeOf(sliceValue.Interface())
+				newSlice := reflect.MakeSlice(sliceType, 0, 0)
+				sliceValue.Set(newSlice)
+
+				// fieldVal.Interface() é *[]struct{...}, por isto .Elem().Elem(), ou *[] -> struct{...}
+				fieldTyp := reflect.TypeOf(fieldVal.Interface()).Elem().Elem()
+				for k := 0; k != fieldTyp.NumField(); k += 1 {
+					fieldTyp := fieldTyp.Field(k)
+					tagRaw := fieldTyp.Tag.Get("wasmPanel")
+					if tagRaw != "" {
+						tagDataInternal := new(tag)
+						tagDataInternal.init(tagRaw)
+
+						switch tagDataInternal.Type {
+						case "inputTagLabel":
+							fieldNameInputTagLabel = fieldTyp.Name
+						case "inputTagRadio":
+							fieldNameInputTagRadio = fieldTyp.Name
+						case "label":
+							fieldNameLabel = fieldTyp.Name
+						case "value":
+							fieldNameValue = fieldTyp.Name
+						case "disabled":
+							fieldNameDisabled = fieldTyp.Name
+						case "selected":
+							fieldNameSelected = fieldTyp.Name
+						case "listener":
+							fieldNameListener = fieldTyp.Name
+							tagListener = tagDataInternal
+							typeListener = fieldTyp
+						}
+					}
+				}
+			}
+		}
+	}
+
+	//fieldTyp := element.Type()
+	elemType := sliceType.Elem()
 	for i := 0; i != element.NumField(); i += 1 {
 		fieldVal := element.Field(i)
 		fieldTyp := fieldTyp.Field(i)
@@ -2003,6 +2069,8 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 				var inputLabel *html.TagLabel
 				var inputRadio *html.TagInputRadio
 
+				newElem := reflect.New(elemType).Elem()
+
 				if fieldVal.Len() == 0 {
 
 					if tagDataInternal.Default != "" {
@@ -2024,8 +2092,68 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 								selected = true
 							}
 
-							inputRadio.Value(optionList[k]).Disabled(false).Checked(selected).Class("inputRadio").Name(tagDataInternal.Name)
-							inputLabel.Text(optionList[k+1]).Append(inputRadio)
+							inputRadio.Value(optionList[k+1]).Disabled(false).Checked(selected).Class("inputRadio").Name(tagDataInternal.Name)
+							inputLabel.Text(optionList[k]).Append(inputRadio)
+
+							if fieldNameInputTagLabel != "" {
+								newElem.FieldByName(fieldNameInputTagLabel).Set(reflect.ValueOf(inputLabel))
+							}
+
+							if fieldNameInputTagRadio != "" {
+								newElem.FieldByName(fieldNameInputTagRadio).Set(reflect.ValueOf(inputRadio))
+							}
+
+							if fieldNameLabel != "" {
+								newElem.FieldByName(fieldNameLabel).SetString(optionList[k+1])
+							}
+
+							if fieldNameValue != "" {
+								newElem.FieldByName(fieldNameValue).SetString(optionList[k])
+							}
+
+							if fieldNameDisabled != "" {
+								newElem.FieldByName(fieldNameDisabled).SetBool(false)
+							}
+
+							if fieldNameSelected != "" {
+								newElem.FieldByName(fieldNameDisabled).SetBool(selected)
+							}
+
+							if fieldNameListener != "" {
+								// The field must be a pointer, or it cannot be populated
+								if typeListener.Type.Kind() != reflect.Pointer {
+									log.Printf("error: %v.%v deve ser um ponteiro", newElem.Type().Name(), typeListener.Type.Name())
+									return
+								}
+
+								if !typeListener.IsExported() {
+									log.Printf("error: %v.%v não pode ser definido automaticamente.", newElem.Type().Name(), fieldNameListener)
+									log.Printf("         isto geralmente acontece quando %v.%v não é público.", newElem.Type().Name(), fieldNameListener)
+									return
+								}
+
+								newInstance := reflect.New(typeListener.Type.Elem())
+								newElem.FieldByName(fieldNameListener).Set(newInstance)
+
+								var methods []reflect.Value
+								var params []interface{}
+
+								// Passes the functions to be executed in the listener
+								methods = []reflect.Value{
+									// tagDataInternal.Func is the user function
+									newElem.FieldByName(fieldNameListener).MethodByName(tagListener.Func),
+								}
+
+								// Pass variable pointers
+								params = []interface{}{
+									// fieldVal.Interface() is the struct pointer that collects user data
+									newElem.FieldByName(fieldNameListener).Interface(),
+								}
+
+								inputRadio.ListenerAddReflect(tagListener.Event, params, methods, e.ref)
+							}
+
+							sliceValue.Set(reflect.Append(sliceValue, newElem))
 
 							inputDivRadio.Append(
 								factoryBrowser.NewTagSpan().Append(inputLabel),
@@ -2085,7 +2213,7 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 
 			//
 
-			case "listener":
+			case "___listener":
 
 				// The field must be a pointer, or it cannot be populated
 				if fieldVal.Kind() != reflect.Pointer {
@@ -2110,27 +2238,6 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 					err = fmt.Errorf("o campo %v não foi inicializado de forma correta. ele deve ser público", fieldVal.Type().Name())
 					return
 				}
-
-				//var methods []reflect.Value
-				//var params []interface{}
-
-				// Passes the functions to be executed in the listener
-				//methods = []reflect.Value{
-				//	// tagDataInternal.Func is the user function
-				//	fieldVal.MethodByName(tagDataInternal.Func),
-				//}
-
-				// Pass variable pointers
-				//params = []interface{}{
-				//	// fieldVal.Interface() is the struct pointer that collects user data
-				//	fieldVal.Interface(),
-				//}
-
-				// explanation
-				//   inputSelect.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
-				//   The first element of the array is the user function
-				//   From the second element onwards, they are internal functions and must be called after the user function in case the user has changed any value.
-				//inputSelect.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
 			}
 		}
 	}

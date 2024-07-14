@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
@@ -159,16 +160,33 @@ func (e *OnPasswordEvent) OnChangeEvent(event OnPasswordEvent, reference *Body) 
 type ListRadio struct {
 	components.Radio
 
-	//SelectTag *html.TagSelect `wasmPanel:"type:inputTagSelect"`
 	List *[]RadioType `wasmPanel:"type:value;name:radio;default:label 1,value 1,>label 2,value 2,label 3,value 3"` //;default:label 1,value 1,>label 2,value 2,label 3,value 3
-	//Change    *OnSelectChange `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+func (e *ListRadio) Init() {
+	data, _ := json.Marshal(&e.List)
+	log.Printf("%s", data)
+
+	//(*e.List)[0].TagRadio.Checked(true)
+	//(*e.List)[0].TagLabel.Text("Vivo! >> ").Append((*e.List)[0].TagRadio)
 }
 
 type RadioType struct {
-	Label    string `wasmPanel:"type:label"`
-	Value    string `wasmPanel:"type:value"`
-	Disabled bool   `wasmPanel:"type:disabled"`
-	Selected bool   `wasmPanel:"type:selected"`
+	TagRadio *html.TagInputRadio `wasmPanel:"type:inputTagRadio"`
+	TagLabel *html.TagLabel      `wasmPanel:"type:inputTagLabel"`
+	Label    string              `wasmPanel:"type:label"`
+	Value    string              `wasmPanel:"type:value"`
+	Disabled bool                `wasmPanel:"type:disabled"`
+	Selected bool                `wasmPanel:"type:selected"`
+	Change   *RadioChange        `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+type RadioChange struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *RadioChange) OnChangeEvent(event RadioChange, reference *Body) {
+	log.Printf("value: %v", event.Value)
 }
 
 type TweenSelect struct {

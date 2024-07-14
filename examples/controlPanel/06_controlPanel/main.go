@@ -370,18 +370,26 @@ func main() {
 	controlPanel := ComponentControlPanel{
 		//Panel: &ControlPanel{
 		//	Body: &Body{
-		//		BoatAnimation: &BoatAdjust{
-		//			Tween: &TweenSelect{
-		//				List: &[]TweenType{
+		//		SimpleForm: &SimpleForm{
+		//			Radio: &ListRadio{
+		//				List: &[]RadioType{
 		//					{
-		//						Label: "label set 01",
-		//						Value: "value set 01",
-		//						//Disabled: true,
+		//						TagRadio: factoryBrowser.NewTagInputRadio(),
+		//						TagLabel: factoryBrowser.NewTagLabel(),
+		//						Label:    "label1",
+		//						Value:    "Value1",
+		//						Disabled: false,
+		//						Selected: true,
+		//						Change:   nil,
 		//					},
 		//					{
-		//						Label: "label set 02",
-		//						Value: "value set 02",
-		//						//Selected: true,
+		//						TagRadio: factoryBrowser.NewTagInputRadio(),
+		//						TagLabel: factoryBrowser.NewTagLabel(),
+		//						Label:    "label2",
+		//						Value:    "Value2",
+		//						Disabled: false,
+		//						Selected: true,
+		//						Change:   nil,
 		//					},
 		//				},
 		//			},

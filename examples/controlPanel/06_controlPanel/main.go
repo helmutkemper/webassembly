@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
@@ -164,8 +163,8 @@ type ListRadio struct {
 }
 
 func (e *ListRadio) Init() {
-	data, _ := json.Marshal(&e.List)
-	log.Printf("%s", data)
+	//data, _ := json.Marshal(&e.List)
+	//log.Printf("%s", data)
 
 	//(*e.List)[0].TagRadio.Checked(true)
 	//(*e.List)[0].TagLabel.Text("Vivo! >> ").Append((*e.List)[0].TagRadio)
@@ -368,34 +367,32 @@ func main() {
 	stage := factoryBrowser.NewStage()
 
 	controlPanel := ComponentControlPanel{
-		//Panel: &ControlPanel{
-		//	Body: &Body{
-		//		SimpleForm: &SimpleForm{
-		//			Radio: &ListRadio{
-		//				List: &[]RadioType{
-		//					{
-		//						TagRadio: factoryBrowser.NewTagInputRadio(),
-		//						TagLabel: factoryBrowser.NewTagLabel(),
-		//						Label:    "label1",
-		//						Value:    "Value1",
-		//						Disabled: false,
-		//						Selected: true,
-		//						Change:   nil,
-		//					},
-		//					{
-		//						TagRadio: factoryBrowser.NewTagInputRadio(),
-		//						TagLabel: factoryBrowser.NewTagLabel(),
-		//						Label:    "label2",
-		//						Value:    "Value2",
-		//						Disabled: false,
-		//						Selected: true,
-		//						Change:   nil,
-		//					},
-		//				},
-		//			},
-		//		},
-		//	},
-		//},
+		Panel: &ControlPanel{
+			Body: &Body{
+				SimpleForm: &SimpleForm{
+					Radio: &ListRadio{
+						List: &[]RadioType{
+							{
+								TagRadio: factoryBrowser.NewTagInputRadio(),
+								TagLabel: factoryBrowser.NewTagLabel(),
+								Label:    "label1",
+								Value:    "Value1",
+								Disabled: false,
+								Selected: true,
+							},
+							{
+								TagRadio: factoryBrowser.NewTagInputRadio(),
+								TagLabel: factoryBrowser.NewTagLabel(),
+								Label:    "label2",
+								Value:    "Value2",
+								Disabled: false,
+								Selected: true,
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 	if panel, err = controlPanel.Init(); err != nil {
 		panic(err)

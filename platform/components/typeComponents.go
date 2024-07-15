@@ -91,8 +91,9 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 						if fieldVal.CanSet() && fieldVal.IsNil() {
 							newInstance := reflect.New(fieldVal.Type().Elem())
 							fieldVal.Set(newInstance)
-							e.ref = fieldVal.Interface()
 						}
+
+						e.ref = fieldVal.Interface()
 					}
 
 					err = e.process(fieldVal, fieldTyp.Type)
@@ -1942,7 +1943,7 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 	// Move the element from pointer to struct
 	element = element.Elem()
 
-	isZero := element.IsZero()
+	//isZero := element.IsZero()
 
 	//log.Printf("1: IsNil: %v", element.IsNil())
 
@@ -1994,9 +1995,6 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 	tagListener := new(tag)
 	typeListener := reflect.StructField{}
 
-	var sliceValue reflect.Value
-	var sliceType reflect.Type
-
 	fieldTyp := element.Type()
 	for i := 0; i != element.NumField(); i += 1 {
 		fieldVal := element.Field(i)
@@ -2009,11 +2007,6 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 
 			switch tagDataInternal.Type {
 			case "value":
-				// fieldVal.Interface() é *[]struct{...}, por isto .Elem(), ou * -> []struct{...}
-				sliceValue = reflect.ValueOf(fieldVal.Interface()).Elem()
-				sliceType = reflect.TypeOf(sliceValue.Interface())
-				newSlice := reflect.MakeSlice(sliceType, 0, 0)
-				sliceValue.Set(newSlice)
 
 				// fieldVal.Interface() é *[]struct{...}, por isto .Elem().Elem(), ou *[] -> struct{...}
 				fieldTyp := reflect.TypeOf(fieldVal.Interface()).Elem().Elem()
@@ -2049,7 +2042,7 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 	}
 
 	//fieldTyp := element.Type()
-	elemType := sliceType.Elem()
+
 	for i := 0; i != element.NumField(); i += 1 {
 		fieldVal := element.Field(i)
 		fieldTyp := fieldTyp.Field(i)
@@ -2065,6 +2058,8 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 
 			case "value":
 
+				fieldValPointer := fieldVal
+
 				// pointer is not nil
 				// Move the element from pointer to struct
 				fieldVal = fieldVal.Elem()
@@ -2072,9 +2067,19 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 				var inputLabel *html.TagLabel
 				var inputRadio *html.TagInputRadio
 
-				newElem := reflect.New(elemType).Elem()
-				log.Printf("fieldVal: %v", fieldVal.Interface())
-				if isZero {
+				if fieldVal.IsZero() {
+
+					var sliceValue reflect.Value
+					var sliceType reflect.Type
+
+					// fieldVal.Interface() é *[]struct{...}, por isto .Elem(), ou * -> []struct{...}
+					sliceValue = reflect.ValueOf(fieldValPointer.Interface()).Elem()
+					sliceType = reflect.TypeOf(sliceValue.Interface())
+					newSlice := reflect.MakeSlice(sliceType, 0, 0)
+					sliceValue.Set(newSlice)
+
+					elemType := sliceType.Elem()
+					newElem := reflect.New(elemType).Elem()
 
 					if tagDataInternal.Default != "" {
 						optionList := strings.Split(tagDataInternal.Default, ",")
@@ -2165,18 +2170,18 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 					}
 
 				} else {
-					log.Printf("--------------------------------------------------------")
-					log.Printf("name: %+v", fieldVal.Type().Name())
+
 					// run inside slice data
 					for iField := 0; iField != fieldVal.Len(); iField += 1 {
 						keyVal := fieldVal.Index(iField)
+
+						inputRadio = factoryBrowser.NewTagInputRadio()
+						inputLabel = factoryBrowser.NewTagLabel()
 
 						// get label, value, disabled and selected
 						var label, value string
 						var disabled, selected bool
 						for ik := 0; ik != keyVal.NumField(); ik += 1 {
-							inputRadio = factoryBrowser.NewTagInputRadio()
-							inputLabel = factoryBrowser.NewTagLabel()
 
 							optionVal := keyVal.Field(ik)
 							optionTyp := reflect.TypeOf(keyVal.Interface()).Field(ik)
@@ -2202,18 +2207,18 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 								case "listener":
 									// The field must be a pointer, or it cannot be populated
 									if typeListener.Type.Kind() != reflect.Pointer {
-										log.Printf("error: %v.%v deve ser um ponteiro", newElem.Type().Name(), typeListener.Type.Name())
+										log.Printf("error: %v.%v deve ser um ponteiro", optionVal.Type().Name(), typeListener.Type.Name())
 										return
 									}
 
 									if !typeListener.IsExported() {
-										log.Printf("error: %v.%v não pode ser definido automaticamente.", newElem.Type().Name(), fieldNameListener)
-										log.Printf("         isto geralmente acontece quando %v.%v não é público.", newElem.Type().Name(), fieldNameListener)
+										log.Printf("error: %v.%v não pode ser definido automaticamente.", optionVal.Type().Name(), fieldNameListener)
+										log.Printf("         isto geralmente acontece quando %v.%v não é público.", optionVal.Type().Name(), fieldNameListener)
 										return
 									}
 
 									newInstance := reflect.New(typeListener.Type.Elem())
-									newElem.FieldByName(fieldNameListener).Set(newInstance)
+									keyVal.FieldByName(fieldNameListener).Set(newInstance)
 
 									var methods []reflect.Value
 									var params []interface{}
@@ -2221,27 +2226,27 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 									// Passes the functions to be executed in the listener
 									methods = []reflect.Value{
 										// tagDataInternal.Func is the user function
-										newElem.FieldByName(fieldNameListener).MethodByName(tagListener.Func),
+										keyVal.FieldByName(fieldNameListener).MethodByName(tagListener.Func),
 									}
 
 									// Pass variable pointers
 									params = []interface{}{
 										// fieldVal.Interface() is the struct pointer that collects user data
-										newElem.FieldByName(fieldNameListener).Interface(),
+										keyVal.FieldByName(fieldNameListener).Interface(),
 									}
 
 									inputRadio.ListenerAddReflect(tagListener.Event, params, methods, e.ref)
 								}
-								log.Printf("--------------------------------------------------------")
-								inputRadio.Value(value).Disabled(disabled).Checked(selected).Class("inputRadio").Name(tagDataInternal.Name)
-								inputLabel.Text(label).Append(inputRadio)
-
-								inputDivRadio.Append(
-									factoryBrowser.NewTagSpan().Append(inputLabel),
-								)
 
 							}
 						}
+
+						inputRadio.Value(value).Disabled(disabled).Checked(selected).Class("inputRadio").Name(tagDataInternal.Name)
+						inputLabel.Text(label).Append(inputRadio)
+
+						inputDivRadio.Append(
+							factoryBrowser.NewTagSpan().Append(inputLabel),
+						)
 
 						//inputSelect.NewOption(label, value, disabled, selected)
 					}

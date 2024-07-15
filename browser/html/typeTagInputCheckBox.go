@@ -1129,7 +1129,7 @@ func (e *TagInputCheckBox) Type(inputType InputType) (ref *TagInputCheckBox) {
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagInputCheckBox) Value(value string) (ref *TagInputCheckBox) {
+func (e *TagInputCheckBox) Value(value any) (ref *TagInputCheckBox) {
 	e.selfElement.Set("value", value)
 	return e
 }

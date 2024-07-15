@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
 	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
@@ -83,7 +84,8 @@ type SimpleForm struct {
 	Password *PasswordFrom `wasmPanel:"type:password;label:Password"`
 	Mail     *MailFrom     `wasmPanel:"type:mail;label:E-Mail"`
 	TextArea *TextAreaForm `wasmPanel:"type:textArea;label:Text"`
-	Radio    *ListRadio    `wasmPanel:"type:radio;label:Text"`
+	Radio    *ListRadio    `wasmPanel:"type:radio;label:Select one"`
+	Checkbox *ListCheckbox `wasmPanel:"type:checkbox;label:Select all"`
 }
 
 type BoatAdjust struct {
@@ -163,8 +165,8 @@ type ListRadio struct {
 }
 
 func (e *ListRadio) Init() {
-	//data, _ := json.Marshal(&e.List)
-	//log.Printf("%s", data)
+	data, _ := json.Marshal(&e.List)
+	log.Printf("%s", data)
 
 	//(*e.List)[0].TagRadio.Checked(true)
 	//(*e.List)[0].TagLabel.Text("Vivo! >> ").Append((*e.List)[0].TagRadio)
@@ -186,6 +188,39 @@ type RadioChange struct {
 
 func (e *RadioChange) OnChangeEvent(event RadioChange, reference *Body) {
 	log.Printf("value: %v", event.Value)
+}
+
+type ListCheckbox struct {
+	components.Checkbox
+
+	List *[]CheckboxType `wasmPanel:"type:value;name:radio;default:label 1,value 1,>label 2,value 2,label 3,value 3"` //;default:label 1,value 1,>label 2,value 2,label 3,value 3
+}
+
+func (e *ListCheckbox) Init() {
+	data, _ := json.Marshal(&e.List)
+	log.Printf("%s", data)
+
+	//(*e.List)[0].TagRadio.Checked(true)
+	//(*e.List)[0].TagLabel.Text("Vivo! >> ").Append((*e.List)[0].TagRadio)
+}
+
+type CheckboxType struct {
+	TagRadio *html.TagInputCheckBox `wasmPanel:"type:inputTagCheckbox"`
+	TagLabel *html.TagLabel         `wasmPanel:"type:inputTagLabel"`
+	Label    string                 `wasmPanel:"type:label"`
+	Value    string                 `wasmPanel:"type:value"`
+	Disabled bool                   `wasmPanel:"type:disabled"`
+	Selected bool                   `wasmPanel:"type:selected"`
+	Change   *CheckboxChange        `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+type CheckboxChange struct {
+	Value   string `wasmGet:"value"`
+	Checked bool   `wasmGet:"checked"`
+}
+
+func (e *CheckboxChange) OnChangeEvent(event CheckboxChange, reference *Body) {
+	log.Printf("value: %v:%v", event.Value, event.Checked)
 }
 
 type TweenSelect struct {
@@ -370,21 +405,21 @@ func main() {
 		Panel: &ControlPanel{
 			Body: &Body{
 				SimpleForm: &SimpleForm{
-					Radio: &ListRadio{
-						List: &[]RadioType{
+					Checkbox: &ListCheckbox{
+						List: &[]CheckboxType{
 							{
-								TagRadio: factoryBrowser.NewTagInputRadio(),
+								TagRadio: factoryBrowser.NewTagInputCheckBox(),
 								TagLabel: factoryBrowser.NewTagLabel(),
 								Label:    "label1",
-								Value:    "Value1",
+								Value:    "Value_1",
 								Disabled: false,
-								Selected: true,
+								Selected: false,
 							},
 							{
-								TagRadio: factoryBrowser.NewTagInputRadio(),
+								TagRadio: factoryBrowser.NewTagInputCheckBox(),
 								TagLabel: factoryBrowser.NewTagLabel(),
 								Label:    "label2",
-								Value:    "Value2",
+								Value:    "Value_2",
 								Disabled: false,
 								Selected: true,
 							},

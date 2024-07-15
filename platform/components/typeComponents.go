@@ -248,7 +248,7 @@ func (e *Components) processComponent(element reflect.Value, typeof reflect.Type
 				case "radio":
 
 					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Select (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+						err = fmt.Errorf("component.Radio (%v) requires a pointer to the component, example", fieldVal.Type().Name())
 						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
 						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:radio;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
 						err = errors.Join(err, fmt.Errorf("}"))
@@ -261,6 +261,26 @@ func (e *Components) processComponent(element reflect.Value, typeof reflect.Type
 					}
 
 					err = e.processComponentRadio(fieldVal, tagData, divComponent)
+					if err != nil {
+						return
+					}
+
+				case "checkbox":
+
+					if fieldVal.Kind() != reflect.Pointer {
+						err = fmt.Errorf("component.Checkbox (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:checkbox;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("}"))
+						return
+					}
+
+					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+						err = fmt.Errorf("component.Checkbox (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+						return
+					}
+
+					err = e.processComponentCheckbox(fieldVal, tagData, divComponent)
 					if err != nil {
 						return
 					}
@@ -1943,10 +1963,6 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 	// Move the element from pointer to struct
 	element = element.Elem()
 
-	//isZero := element.IsZero()
-
-	//log.Printf("1: IsNil: %v", element.IsNil())
-
 	// Checks if the import of `components.Radio` was done
 	if fieldRadio := element.FieldByName("Radio"); !fieldRadio.IsValid() {
 		err = fmt.Errorf("error: component %v needs to embed `components.Radio` directly", element.Type().Name())
@@ -1957,12 +1973,21 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 		err = errors.Join(err, fmt.Errorf("         List *[]RadioData `wasmPanel:\"type:value;default:label 1,value 1,>label 2,value 2,label 3,value 3\"`"))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		err = errors.Join(err, fmt.Errorf("       type RadioData struct {"))
-		err = errors.Join(err, fmt.Errorf("         Label    string `wasmPanel:\"type:label\"`"))
-		err = errors.Join(err, fmt.Errorf("         Value    string `wasmPanel:\"type:value\"`"))
-		err = errors.Join(err, fmt.Errorf("         Disabled bool   `wasmPanel:\"type:disabled\"` // [optional]"))
-		err = errors.Join(err, fmt.Errorf("         Selected bool   `wasmPanel:\"type:selected\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("         TagRadio *html.TagInputRadio `wasmPanel:\"type:inputTagRadio\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("         TagLabel *html.TagLabel      `wasmPanel:\"type:inputTagLabel\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("         Label    string              `wasmPanel:\"type:label\"`"))
+		err = errors.Join(err, fmt.Errorf("         Value    string              `wasmPanel:\"type:value\"`"))
+		err = errors.Join(err, fmt.Errorf("         Disabled bool                `wasmPanel:\"type:disabled\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("         Selected bool                `wasmPanel:\"type:selected\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("         Change   *RadioChange        `wasmPanel:\"type:listener;event:change;func:OnChangeEvent\"` // [optional]"))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		err = errors.Join(err, fmt.Errorf("       // Note: Use `>` to set value as selected. ie. >label,value"))
+		err = errors.Join(err, fmt.Errorf("       type RadioChange struct {"))
+		err = errors.Join(err, fmt.Errorf("         Value string `wasmGet:\"value\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       func (e *RadioChange) OnChangeEvent(event RadioChange, reference *Body) {"))
+		err = errors.Join(err, fmt.Errorf("         log.Printf(\"value: %%v\", event.Value)"))
+		err = errors.Join(err, fmt.Errorf("       }"))
 		return
 	} else {
 		// Initialize Radio
@@ -2252,33 +2277,6 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 					}
 				}
 
-			//
-
-			case "___listener":
-
-				// The field must be a pointer, or it cannot be populated
-				if fieldVal.Kind() != reflect.Pointer {
-					log.Printf("error: %v deve ser um ponteiro", fieldVal.Type().Name())
-					continue
-				}
-
-				if !fieldVal.CanSet() {
-					log.Printf("error: %v não pode ser definido automaticamente.", fieldVal.Type().Name())
-					log.Printf("         isto geralmente acontece quando %v não é público.", fieldVal.Type().Name())
-					continue
-				}
-
-				// Checks if the field is nil and initializes the pointer
-				// The less work for the user, the greater the chance they will like the system
-				if fieldVal.CanSet() && fieldVal.IsNil() {
-					newInstance := reflect.New(fieldVal.Type().Elem())
-					fieldVal.Set(newInstance)
-				}
-
-				if fieldVal.IsNil() {
-					err = fmt.Errorf("o campo %v não foi inicializado de forma correta. ele deve ser público", fieldVal.Type().Name())
-					return
-				}
 			}
 		}
 	}
@@ -2292,6 +2290,362 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 		fieldVal := element.Field(i)
 		if fieldVal.Type() == reflect.TypeOf(Radio{}) {
 			r := fieldVal.Interface().(Radio)
+			r.init()
+			break
+		}
+	}
+
+	method := elementOriginal.MethodByName("Init")
+	if method.IsValid() {
+		method.Call(nil)
+	}
+
+	return
+}
+
+func (e *Components) processComponentCheckbox(element reflect.Value, tagData *tag, father *html.TagDiv) (err error) {
+
+	inputDivCheckbox := factoryBrowser.NewTagDiv().Class("inputCheckbox")
+
+	elementOriginal := element
+	checkboxComponent := Checkbox{}
+
+	// Initializes the pointer if it is nil
+	if element.IsNil() {
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
+	}
+
+	// Move the element from pointer to struct
+	element = element.Elem()
+
+	// Checks if the import of `components.Checkbox` was done
+	if fieldCheckbox := element.FieldByName("Checkbox"); !fieldCheckbox.IsValid() {
+		err = fmt.Errorf("error: component %v needs to embed `components.Checkbox` directly", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.Checkbox"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         List *[]CheckboxData `wasmPanel:\"type:value;default:label 1,value 1,>label 2,value 2,label 3,value 3\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       type CheckboxData struct {"))
+		err = errors.Join(err, fmt.Errorf("         TagCheckbox *html.TagInputCheckbox `wasmPanel:\"type:inputTagCheckbox\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("         TagLabel *html.TagLabel      `wasmPanel:\"type:inputTagLabel\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("         Label    string              `wasmPanel:\"type:label\"`"))
+		err = errors.Join(err, fmt.Errorf("         Value    string              `wasmPanel:\"type:value\"`"))
+		err = errors.Join(err, fmt.Errorf("         Disabled bool                `wasmPanel:\"type:disabled\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("         Selected bool                `wasmPanel:\"type:selected\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("         Change   *CheckboxChange        `wasmPanel:\"type:listener;event:change;func:OnChangeEvent\"` // [optional]"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       // Note: Use `>` to set value as selected. ie. >label,value"))
+		err = errors.Join(err, fmt.Errorf("       type CheckboxChange struct {"))
+		err = errors.Join(err, fmt.Errorf("         Value string `wasmGet:\"value\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       func (e *CheckboxChange) OnChangeEvent(event CheckboxChange, reference *Body) {"))
+		err = errors.Join(err, fmt.Errorf("         log.Printf(\"value: %%v\", event.Value)"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	} else {
+		// Initialize Checkbox
+		newInstance := reflect.New(fieldCheckbox.Type())
+		fieldCheckbox.Set(newInstance.Elem())
+
+		// Initializes the input tags within Checkbox
+		//checkboxComponent.__checkboxTag = inputCheckbox // todo: fazer
+
+		// __checkboxOnInputEvent is the pointer sent when the `change` event happens
+		checkboxComponent.__change = new(__checkboxOnInputEvent)
+
+		// populates the component.Checkbox within the user component
+		componentRange := element.FieldByName("Checkbox")
+		componentRange.Set(reflect.ValueOf(checkboxComponent))
+	}
+
+	err = e.verifyTypesComponentSelect(element) // todo: mudar este nome
+	if err != nil {
+		return
+	}
+
+	fieldNameInputTagLabel := ""
+	fieldNameInputTagCheckbox := ""
+	fieldNameLabel := ""
+	fieldNameValue := ""
+	fieldNameDisabled := ""
+	fieldNameSelected := ""
+	fieldNameListener := ""
+	tagListener := new(tag)
+	typeListener := reflect.StructField{}
+
+	fieldTyp := element.Type()
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := fieldTyp.Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+			case "value":
+
+				// fieldVal.Interface() é *[]struct{...}, por isto .Elem().Elem(), ou *[] -> struct{...}
+				fieldTyp := reflect.TypeOf(fieldVal.Interface()).Elem().Elem()
+				for k := 0; k != fieldTyp.NumField(); k += 1 {
+					fieldTyp := fieldTyp.Field(k)
+					tagRaw := fieldTyp.Tag.Get("wasmPanel")
+					if tagRaw != "" {
+						tagDataInternal := new(tag)
+						tagDataInternal.init(tagRaw)
+
+						switch tagDataInternal.Type {
+						case "inputTagLabel":
+							fieldNameInputTagLabel = fieldTyp.Name
+						case "inputTagCheckbox":
+							fieldNameInputTagCheckbox = fieldTyp.Name
+						case "label":
+							fieldNameLabel = fieldTyp.Name
+						case "value":
+							fieldNameValue = fieldTyp.Name
+						case "disabled":
+							fieldNameDisabled = fieldTyp.Name
+						case "selected":
+							fieldNameSelected = fieldTyp.Name
+						case "listener":
+							fieldNameListener = fieldTyp.Name
+							tagListener = tagDataInternal
+							typeListener = fieldTyp
+						}
+					}
+				}
+			}
+		}
+	}
+
+	//fieldTyp := element.Type()
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := fieldTyp.Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+			//case "inputTagCheckbox":
+			//	fieldVal.Set(reflect.ValueOf(inputCheckbox))
+
+			case "value":
+
+				fieldValPointer := fieldVal
+
+				// pointer is not nil
+				// Move the element from pointer to struct
+				fieldVal = fieldVal.Elem()
+
+				var inputLabel *html.TagLabel
+				var inputCheckbox *html.TagInputCheckBox
+
+				if fieldVal.IsZero() {
+
+					var sliceValue reflect.Value
+					var sliceType reflect.Type
+
+					// fieldVal.Interface() é *[]struct{...}, por isto .Elem(), ou * -> []struct{...}
+					sliceValue = reflect.ValueOf(fieldValPointer.Interface()).Elem()
+					sliceType = reflect.TypeOf(sliceValue.Interface())
+					newSlice := reflect.MakeSlice(sliceType, 0, 0)
+					sliceValue.Set(newSlice)
+
+					elemType := sliceType.Elem()
+					newElem := reflect.New(elemType).Elem()
+
+					if tagDataInternal.Default != "" {
+						optionList := strings.Split(tagDataInternal.Default, ",")
+						if len(optionList)%2 != 0 {
+							err = fmt.Errorf("%v.%v: the correct format from tag value is: `wasmPanel:\"type:value;default:label1,value1,label2,value2,labelN,valueN\"`, where value and label, must be a pair", element.Type().Name(), fieldTyp.Name)
+							return
+						}
+
+						for k := 0; k != len(optionList); k += 2 {
+
+							inputCheckbox = factoryBrowser.NewTagInputCheckBox()
+							inputLabel = factoryBrowser.NewTagLabel()
+
+							// if label start with `>` the option is selected
+							selected := false
+							if strings.HasPrefix(optionList[k], ">") {
+								optionList[k] = optionList[k][1:]
+								selected = true
+							}
+
+							inputCheckbox.Value(optionList[k+1]).Disabled(false).Checked(selected).Class("inputCheckbox").Name(tagDataInternal.Name)
+							inputLabel.Text(optionList[k]).Append(inputCheckbox)
+
+							if fieldNameInputTagLabel != "" {
+								newElem.FieldByName(fieldNameInputTagLabel).Set(reflect.ValueOf(inputLabel))
+							}
+
+							if fieldNameInputTagCheckbox != "" {
+								newElem.FieldByName(fieldNameInputTagCheckbox).Set(reflect.ValueOf(inputCheckbox))
+							}
+
+							if fieldNameLabel != "" {
+								newElem.FieldByName(fieldNameLabel).SetString(optionList[k+1])
+							}
+
+							if fieldNameValue != "" {
+								newElem.FieldByName(fieldNameValue).SetString(optionList[k])
+							}
+
+							if fieldNameDisabled != "" {
+								newElem.FieldByName(fieldNameDisabled).SetBool(false)
+							}
+
+							if fieldNameSelected != "" {
+								newElem.FieldByName(fieldNameDisabled).SetBool(selected)
+							}
+
+							if fieldNameListener != "" {
+								// The field must be a pointer, or it cannot be populated
+								if typeListener.Type.Kind() != reflect.Pointer {
+									log.Printf("error: %v.%v deve ser um ponteiro", newElem.Type().Name(), typeListener.Type.Name())
+									return
+								}
+
+								if !typeListener.IsExported() {
+									log.Printf("error: %v.%v não pode ser definido automaticamente.", newElem.Type().Name(), fieldNameListener)
+									log.Printf("         isto geralmente acontece quando %v.%v não é público.", newElem.Type().Name(), fieldNameListener)
+									return
+								}
+
+								newInstance := reflect.New(typeListener.Type.Elem())
+								newElem.FieldByName(fieldNameListener).Set(newInstance)
+
+								var methods []reflect.Value
+								var params []interface{}
+
+								// Passes the functions to be executed in the listener
+								methods = []reflect.Value{
+									// tagDataInternal.Func is the user function
+									newElem.FieldByName(fieldNameListener).MethodByName(tagListener.Func),
+								}
+
+								// Pass variable pointers
+								params = []interface{}{
+									// fieldVal.Interface() is the struct pointer that collects user data
+									newElem.FieldByName(fieldNameListener).Interface(),
+								}
+
+								inputCheckbox.ListenerAddReflect(tagListener.Event, params, methods, e.ref)
+							}
+
+							sliceValue.Set(reflect.Append(sliceValue, newElem))
+
+							inputDivCheckbox.Append(
+								factoryBrowser.NewTagSpan().Append(inputLabel),
+							)
+						}
+					}
+
+				} else {
+
+					// run inside slice data
+					for iField := 0; iField != fieldVal.Len(); iField += 1 {
+						keyVal := fieldVal.Index(iField)
+
+						inputCheckbox = factoryBrowser.NewTagInputCheckBox()
+						inputLabel = factoryBrowser.NewTagLabel()
+
+						// get label, value, disabled and selected
+						var label, value string
+						var disabled, selected bool
+						for ik := 0; ik != keyVal.NumField(); ik += 1 {
+
+							optionVal := keyVal.Field(ik)
+							optionTyp := reflect.TypeOf(keyVal.Interface()).Field(ik)
+
+							optionTagRaw := optionTyp.Tag.Get("wasmPanel")
+							if optionTagRaw != "" {
+								optionTag := new(tag)
+								optionTag.init(optionTagRaw)
+
+								switch optionTag.Type {
+								case "inputTagLabel":
+									optionVal.Set(reflect.ValueOf(inputLabel))
+								case "inputTagCheckbox":
+									optionVal.Set(reflect.ValueOf(inputCheckbox))
+								case "label":
+									label = optionVal.Interface().(string)
+								case "value":
+									value = optionVal.Interface().(string)
+								case "disabled":
+									disabled = optionVal.Interface().(bool)
+								case "selected":
+									selected = optionVal.Interface().(bool)
+								case "listener":
+									// The field must be a pointer, or it cannot be populated
+									if typeListener.Type.Kind() != reflect.Pointer {
+										log.Printf("error: %v.%v deve ser um ponteiro", optionVal.Type().Name(), typeListener.Type.Name())
+										return
+									}
+
+									if !typeListener.IsExported() {
+										log.Printf("error: %v.%v não pode ser definido automaticamente.", optionVal.Type().Name(), fieldNameListener)
+										log.Printf("         isto geralmente acontece quando %v.%v não é público.", optionVal.Type().Name(), fieldNameListener)
+										return
+									}
+
+									newInstance := reflect.New(typeListener.Type.Elem())
+									keyVal.FieldByName(fieldNameListener).Set(newInstance)
+
+									var methods []reflect.Value
+									var params []interface{}
+
+									// Passes the functions to be executed in the listener
+									methods = []reflect.Value{
+										// tagDataInternal.Func is the user function
+										keyVal.FieldByName(fieldNameListener).MethodByName(tagListener.Func),
+									}
+
+									// Pass variable pointers
+									params = []interface{}{
+										// fieldVal.Interface() is the struct pointer that collects user data
+										keyVal.FieldByName(fieldNameListener).Interface(),
+									}
+
+									inputCheckbox.ListenerAddReflect(tagListener.Event, params, methods, e.ref)
+								}
+
+							}
+						}
+
+						inputCheckbox.Value(value).Disabled(disabled).Checked(selected).Class("inputCheckbox").Name(tagDataInternal.Name)
+						inputLabel.Text(label).Append(inputCheckbox)
+
+						inputDivCheckbox.Append(
+							factoryBrowser.NewTagSpan().Append(inputLabel),
+						)
+
+						//inputSelect.NewOption(label, value, disabled, selected)
+					}
+				}
+
+			}
+		}
+	}
+
+	father.Append(
+		factoryBrowser.NewTagSpan().Text(tagData.Label),
+		inputDivCheckbox,
+	)
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		if fieldVal.Type() == reflect.TypeOf(Checkbox{}) {
+			r := fieldVal.Interface().(Checkbox)
 			r.init()
 			break
 		}

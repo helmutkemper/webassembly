@@ -200,8 +200,8 @@ func (e *ListCheckbox) Init() {
 	data, _ := json.Marshal(&e.List)
 	log.Printf("%s", data)
 
-	//(*e.List)[0].TagRadio.Checked(true)
-	//(*e.List)[0].TagLabel.Text("Vivo! >> ").Append((*e.List)[0].TagRadio)
+	(*e.List)[0].TagRadio.Checked(true)
+	(*e.List)[0].TagLabel.Text("Vivo! >> ").Append((*e.List)[0].TagRadio)
 }
 
 type CheckboxType struct {

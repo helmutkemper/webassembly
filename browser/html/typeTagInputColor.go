@@ -1249,7 +1249,7 @@ func (e *TagInputColor) Type(inputType InputType) (ref *TagInputColor) {
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagInputColor) Value(value string) (ref *TagInputColor) {
+func (e *TagInputColor) Value(value any) (ref *TagInputColor) {
 	e.selfElement.Set("value", value)
 	return e
 }

@@ -1030,7 +1030,7 @@ func (e *TagInputWeek) List(list string) (ref *TagInputWeek) {
 // Há um caso especial: se o tipo de dado for periódico (como para datas ou horas), o valor de max
 // pode ser menor que o valor de min, o que indica que o intervalo pode ser contornado;
 // por exemplo, isso permite que você especifique um intervalo de tempo das 22h às 4h.
-func (e *TagInputWeek) Max(max int) (ref *TagInputWeek) {
+func (e *TagInputWeek) Max(max any) (ref *TagInputWeek) {
 	e.selfElement.Set("max", max)
 	return e
 }
@@ -1071,7 +1071,7 @@ func (e *TagInputWeek) Max(max int) (ref *TagInputWeek) {
 // Há um caso especial: se o tipo de dado for periódico (como para datas ou horas), o valor de max
 // pode ser menor que o valor de min, o que indica que o intervalo pode ser contornado; por exemplo,
 // isso permite que você especifique um intervalo de tempo das 22h às 4h.
-func (e *TagInputWeek) Min(min int) (ref *TagInputWeek) {
+func (e *TagInputWeek) Min(min any) (ref *TagInputWeek) {
 	e.selfElement.Set("max", min)
 	return e
 }
@@ -1183,7 +1183,7 @@ func (e *TagInputWeek) Required(required bool) (ref *TagInputWeek) {
 //	  * Quando os dados inseridos pelo usuário não estão de acordo com a configuração de stepping,
 //	    o valor é considerado inválido na validação da restrição e corresponderá à
 //	    :invalid pseudoclass.
-func (e *TagInputWeek) Step(step int) (ref *TagInputWeek) {
+func (e *TagInputWeek) Step(step any) (ref *TagInputWeek) {
 	e.selfElement.Set("step", step)
 	return e
 }
@@ -1217,7 +1217,7 @@ func (e *TagInputWeek) Type(inputType InputType) (ref *TagInputWeek) {
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagInputWeek) Value(value string) (ref *TagInputWeek) {
+func (e *TagInputWeek) Value(value any) (ref *TagInputWeek) {
 	e.selfElement.Set("value", value)
 	return e
 }

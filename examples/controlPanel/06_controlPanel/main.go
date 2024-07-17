@@ -80,7 +80,12 @@ func (e *DraggingEffect) Init() {
 }
 
 type SimpleForm struct {
-	Text     *TextFrom     `wasmPanel:"type:text;label:Name"`
+	Text     *TextForm     `wasmPanel:"type:text;label:Text"`
+	Time     *TimeForm     `wasmPanel:"type:time;label:Time"`
+	Month    *MonthForm    `wasmPanel:"type:month;label:Month"`
+	Week     *WeekForm     `wasmPanel:"type:week;label:Week"`
+	Date     *DateForm     `wasmPanel:"type:date;label:Date"`
+	Color    *ColorForm    `wasmPanel:"type:color;label:Color"`
 	Password *PasswordFrom `wasmPanel:"type:password;label:Password"`
 	Mail     *MailFrom     `wasmPanel:"type:mail;label:E-Mail"`
 	TextArea *TextAreaForm `wasmPanel:"type:textArea;label:Text"`
@@ -110,7 +115,7 @@ func (e *OnTextAreaEvent) OnChangeEvent(event OnTextAreaEvent, reference *Body) 
 	log.Printf("text: %v", event.Value)
 }
 
-type TextFrom struct {
+type TextForm struct {
 	components.Text
 
 	TextTag *html.TagInputText `wasmPanel:"type:inputTagText"`
@@ -123,6 +128,112 @@ type OnTextEvent struct {
 }
 
 func (e *OnTextEvent) OnChangeEvent(event OnTextEvent, reference *Body) {
+	log.Printf("text: %v", event.Value)
+}
+
+type TimeForm struct {
+	components.Time
+
+	TextTag   *html.TagInputTime `wasmPanel:"type:inputTagTime"`
+	TimeValue string             `wasmPanel:"type:value;default:13h30m"`
+	Change    *OnTimeEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+func (e *TimeForm) Init() {
+	date, err := time.ParseDuration("23h49m")
+	if err != nil {
+		log.Printf("duration.error: %v", err)
+	}
+	e.Value(date)
+}
+
+type OnTimeEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnTimeEvent) OnChangeEvent(event OnTimeEvent, reference *Body) {
+	log.Printf("text: %v", event.Value)
+}
+
+type MonthForm struct {
+	components.Month
+
+	TextTag    *html.TagInputMonth `wasmPanel:"type:inputTagMonth"`
+	MonthValue string              `wasmPanel:"type:value;default:2024-09"`
+	Change     *OnMonthEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+func (e *MonthForm) Init() {
+	date, _ := time.Parse(time.DateOnly, "1973-10-19")
+	e.Value(date)
+}
+
+type OnMonthEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnMonthEvent) OnChangeEvent(event OnMonthEvent, reference *Body) {
+	log.Printf("text: %v", event.Value)
+}
+
+type DateForm struct {
+	components.Date
+
+	DateTag   *html.TagInputDate `wasmPanel:"type:inputTagDate"`
+	DateValue string             `wasmPanel:"type:value;default:2017-06-01"`
+	Change    *OnDateEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+func (e *DateForm) Init() {
+	e.Value("1973-10-19")
+}
+
+type OnDateEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnDateEvent) OnChangeEvent(event OnDateEvent, reference *Body) {
+	log.Printf("date: %v", event.Value)
+}
+
+type WeekForm struct {
+	components.Week
+
+	DateTag   *html.TagInputWeek `wasmPanel:"type:inputTagWeek"`
+	WeekValue string             `wasmPanel:"type:value;default:2017-W45"`
+	Change    *OnWeekEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+func (e *WeekForm) Init() {
+	e.Value(time.Date(1973, time.October, 19, 0, 0, 0, 0, time.UTC))
+}
+
+type OnWeekEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnWeekEvent) OnChangeEvent(event OnWeekEvent, reference *Body) {
+	log.Printf("week: %v", event.Value)
+}
+
+type ColorForm struct {
+	components.Color
+
+	ColorTag   *html.TagInputColor `wasmPanel:"type:inputTagColor"`
+	ColorValue string              `wasmPanel:"type:value;default:#ff0000"`
+	Change     *OnColorEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+func (e *ColorForm) Init() {
+
+	e.Value("#ffffff")
+}
+
+type OnColorEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnColorEvent) OnChangeEvent(event OnColorEvent, reference *Body) {
 	log.Printf("text: %v", event.Value)
 }
 

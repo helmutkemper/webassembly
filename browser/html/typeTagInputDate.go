@@ -1030,7 +1030,7 @@ func (e *TagInputDate) List(list string) (ref *TagInputDate) {
 // Há um caso especial: se o tipo de dado for periódico (como para datas ou horas), o valor de max
 // pode ser menor que o valor de min, o que indica que o intervalo pode ser contornado;
 // por exemplo, isso permite que você especifique um intervalo de tempo das 22h às 4h.
-func (e *TagInputDate) Max(max int) (ref *TagInputDate) {
+func (e *TagInputDate) Max(max any) (ref *TagInputDate) {
 	e.selfElement.Set("max", max)
 	return e
 }
@@ -1071,7 +1071,7 @@ func (e *TagInputDate) Max(max int) (ref *TagInputDate) {
 // Há um caso especial: se o tipo de dado for periódico (como para datas ou horas), o valor de max
 // pode ser menor que o valor de min, o que indica que o intervalo pode ser contornado; por exemplo,
 // isso permite que você especifique um intervalo de tempo das 22h às 4h.
-func (e *TagInputDate) Min(min int) (ref *TagInputDate) {
+func (e *TagInputDate) Min(min any) (ref *TagInputDate) {
 	e.selfElement.Set("max", min)
 	return e
 }
@@ -1183,7 +1183,7 @@ func (e *TagInputDate) Required(required bool) (ref *TagInputDate) {
 //	  * Quando os dados inseridos pelo usuário não estão de acordo com a configuração de stepping,
 //	    o valor é considerado inválido na validação da restrição e corresponderá à
 //	    :invalid pseudoclass.
-func (e *TagInputDate) Step(step int) (ref *TagInputDate) {
+func (e *TagInputDate) Step(step any) (ref *TagInputDate) {
 	e.selfElement.Set("step", step)
 	return e
 }
@@ -1217,7 +1217,7 @@ func (e *TagInputDate) Type(inputType InputType) (ref *TagInputDate) {
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagInputDate) Value(value string) (ref *TagInputDate) {
+func (e *TagInputDate) Value(value any) (ref *TagInputDate) {
 	e.selfElement.Set("value", value)
 	return e
 }

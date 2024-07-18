@@ -2,8 +2,6 @@ package easingTween
 
 import (
 	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/globalEngine"
 	"time"
 )
 
@@ -11,7 +9,7 @@ import (
 // https://github.com/ai/easings.net/blob/master/src/easings/easingsFunctions.ts
 
 type Tween struct {
-	engine             engine.IEngine
+	chanEnd            chan struct{}
 	engineHasFunction  bool
 	startValue         float64
 	endValue           float64
@@ -56,10 +54,10 @@ type Tween struct {
 //
 //	 Saída:
 //	   object: referência para o objeto Tween corrente.
-func (el *Tween) Engine(value engine.IEngine) (object interfaces.TweenInterface) {
-	el.engine = value
-	return el
-}
+//func (el *Tween) Engine(value engine.IEngine) (object interfaces.TweenInterface) {
+//	el.engine = value
+//	return el
+//}
 
 // SetTweenFunc
 //
@@ -430,43 +428,6 @@ func (el *Tween) SetArgumentsFunc(arguments interface{}) (object interfaces.Twee
 	return el
 }
 
-// Start
-//
-// English:
-//
-//	Starts the interaction according to the chosen tween function.
-//
-//	 Output:
-//	   object: reference to the current Tween object.
-//
-// Português:
-//
-//	Inicia a interação conforme a função tween escolhida.
-//
-//	 Saída:
-//	   object: referência para o objeto Tween corrente.
-func (el *Tween) Start() (object interfaces.TweenInterface) {
-
-	if el.engine == nil {
-		el.engine = globalEngine.Engine
-	}
-
-	if el.tweenFunc == nil {
-		el.tweenFunc = KLinear
-	}
-
-	el.startTime = time.Now()
-	el.invert = true
-
-	if el.onStart != nil {
-		el.onStart(el.startValue, el.arguments)
-	}
-
-	el.tickerRunnerPrepare(el.startValue, el.endValue)
-
-	return el
-}
-
 func (el *Tween) tickerRunnerPrepare(startValue, endValue float64) {
 	if el.onCycleStart != nil {
 		el.onCycleStart(el.startValue, el.arguments)
@@ -477,7 +438,19 @@ func (el *Tween) tickerRunnerPrepare(startValue, endValue float64) {
 
 	if el.engineHasFunction == false {
 		el.engineHasFunction = true
-		el.fpsUId, _ = el.engine.MathAddToFunctions(el.tickerRunnerRun)
+
+		go func(el *Tween) {
+			for {
+				select {
+				case <-el.chanEnd:
+					el.engineHasFunction = false
+					return
+				default:
+					el.tickerRunnerRun()
+					time.Sleep(time.Nanosecond)
+				}
+			}
+		}(el)
 	}
 }
 
@@ -526,6 +499,44 @@ func (el *Tween) tickerRunnerRun() {
 	}
 }
 
+// Start
+//
+// English:
+//
+//	Starts the interaction according to the chosen tween function.
+//
+//	 Output:
+//	   object: reference to the current Tween object.
+//
+// Português:
+//
+//	Inicia a interação conforme a função tween escolhida.
+//
+//	 Saída:
+//	   object: referência para o objeto Tween corrente.
+func (el *Tween) Start() (object interfaces.TweenInterface) {
+	el.chanEnd = make(chan struct{})
+
+	if el.engineHasFunction {
+		el.Stop()
+	}
+
+	if el.tweenFunc == nil {
+		el.tweenFunc = KLinear
+	}
+
+	el.startTime = time.Now()
+	el.invert = true
+
+	if el.onStart != nil {
+		el.onStart(el.startValue, el.arguments)
+	}
+
+	el.tickerRunnerPrepare(el.startValue, el.endValue)
+
+	return el
+}
+
 // End
 //
 // English:
@@ -543,9 +554,7 @@ func (el *Tween) tickerRunnerRun() {
 //	Saída:
 //	  object: referência para o objeto Tween corrente.
 func (el *Tween) End() (object interfaces.TweenInterface) {
-	el.engineHasFunction = false
-	el.engine.MathDeleteFromFunctions(el.fpsUId)
-
+	el.chanEnd <- struct{}{}
 	return el
 }
 
@@ -567,8 +576,7 @@ func (el *Tween) End() (object interfaces.TweenInterface) {
 //	 Saída:
 //	   object: referência para o objeto Tween corrente.
 func (el *Tween) Stop() (object interfaces.TweenInterface) {
-	el.engineHasFunction = false
-	el.engine.MathDeleteFromFunctions(el.fpsUId)
+	el.chanEnd <- struct{}{}
 
 	if el.onCycleEnd != nil {
 		el.onCycleEnd(el.endValue, el.arguments)

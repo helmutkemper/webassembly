@@ -84,9 +84,7 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 					e.processHeaderText(fieldVal, tagData.Label, e.panelFather)
 					// Espera criar panelHeader para que panelBody fique abaixo
 					e.panelFather.Append(e.panelBody)
-				case "panelBody":
-
-					// initialize the panelBody pointer
+				case "panel":
 					if fieldVal.Kind() == reflect.Pointer {
 						if fieldVal.CanSet() && fieldVal.IsNil() {
 							newInstance := reflect.New(fieldVal.Type().Elem())
@@ -103,6 +101,7 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 						//err = errors.Join(fmt.Errorf("file: %v", file), err)
 						return
 					}
+
 				case "compCel":
 					// ignore
 				case "component":

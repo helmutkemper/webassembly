@@ -1,7 +1,6 @@
 package interfaces
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
 	"time"
 )
 
@@ -28,7 +27,7 @@ type TweenInterface interface {
 	//
 	//   Saída:
 	//     object: referência para o objeto Tween corrente.
-	Engine(value engine.IEngine) (object TweenInterface)
+	//Engine(value engine.IEngine) (object TweenInterface)
 
 	// SetTweenFunc
 	//

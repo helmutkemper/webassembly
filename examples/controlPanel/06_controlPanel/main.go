@@ -53,15 +53,15 @@ type OnChangeEvent struct {
 	Type      string  `wasmGet:"type"`
 }
 
-func (e *OnChangeEvent) OnChange(event OnChangeEvent, reference *Body) {
+func (e *OnChangeEvent) OnChange(event OnChangeEvent, reference *ControlPanel) {
 	//ref := reference.BoatAnimation.Dragging
 
 	//log.Printf("reference.TagNumber.GetValue(): %v", ref.TagNumber.GetValue())
 	//log.Printf("reference.TagRange.GetValue(): %v", ref.TagRange.GetValue())
 }
 
-func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference *Body) {
-	ref := reference.BoatAnimation.Dragging
+func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference *ControlPanel) {
+	ref := reference.Body.BoatAnimation.Dragging
 	switch event.Type {
 	case "range":
 		ref.TagNumber.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagRange.GetValue()))
@@ -113,7 +113,7 @@ type OnTextAreaEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnTextAreaEvent) OnChangeEvent(event OnTextAreaEvent, reference *Body) {
+func (e *OnTextAreaEvent) OnChangeEvent(event OnTextAreaEvent, reference *ControlPanel) {
 	log.Printf("text: %v", event.Value)
 }
 
@@ -129,7 +129,7 @@ type OnTextEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnTextEvent) OnChangeEvent(event OnTextEvent, reference *Body) {
+func (e *OnTextEvent) OnChangeEvent(event OnTextEvent, reference *ControlPanel) {
 	log.Printf("text: %v", event.Value)
 }
 
@@ -145,7 +145,7 @@ type OnUrlEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnUrlEvent) OnChangeEvent(event OnUrlEvent, reference *Body) {
+func (e *OnUrlEvent) OnChangeEvent(event OnUrlEvent, reference *ControlPanel) {
 	log.Printf("Url: %v", event.Value)
 }
 
@@ -165,7 +165,7 @@ type OnTelEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnTelEvent) OnChangeEvent(event OnTelEvent, reference *Body) {
+func (e *OnTelEvent) OnChangeEvent(event OnTelEvent, reference *ControlPanel) {
 	log.Printf("Tel: %v", event.Value)
 }
 
@@ -185,7 +185,7 @@ type OnMailEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnMailEvent) OnChangeEvent(event OnMailEvent, reference *Body) {
+func (e *OnMailEvent) OnChangeEvent(event OnMailEvent, reference *ControlPanel) {
 	log.Printf("mail: %v", event.Value)
 }
 
@@ -205,7 +205,7 @@ type OnTimeEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnTimeEvent) OnChangeEvent(event OnTimeEvent, reference *Body) {
+func (e *OnTimeEvent) OnChangeEvent(event OnTimeEvent, reference *ControlPanel) {
 	log.Printf("text: %v", event.Value)
 }
 
@@ -226,7 +226,7 @@ type OnMonthEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnMonthEvent) OnChangeEvent(event OnMonthEvent, reference *Body) {
+func (e *OnMonthEvent) OnChangeEvent(event OnMonthEvent, reference *ControlPanel) {
 	log.Printf("text: %v", event.Value)
 }
 
@@ -246,7 +246,7 @@ type OnDateEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnDateEvent) OnChangeEvent(event OnDateEvent, reference *Body) {
+func (e *OnDateEvent) OnChangeEvent(event OnDateEvent, reference *ControlPanel) {
 	log.Printf("date: %v", event.Value)
 }
 
@@ -266,7 +266,7 @@ type OnWeekEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnWeekEvent) OnChangeEvent(event OnWeekEvent, reference *Body) {
+func (e *OnWeekEvent) OnChangeEvent(event OnWeekEvent, reference *ControlPanel) {
 	log.Printf("week: %v", event.Value)
 }
 
@@ -287,7 +287,7 @@ type OnColorEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnColorEvent) OnChangeEvent(event OnColorEvent, reference *Body) {
+func (e *OnColorEvent) OnChangeEvent(event OnColorEvent, reference *ControlPanel) {
 	log.Printf("text: %v", event.Value)
 }
 
@@ -303,7 +303,7 @@ type OnPasswordEvent struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *OnPasswordEvent) OnChangeEvent(event OnPasswordEvent, reference *Body) {
+func (e *OnPasswordEvent) OnChangeEvent(event OnPasswordEvent, reference *ControlPanel) {
 	log.Printf("text: %v", event.Value)
 }
 
@@ -335,7 +335,7 @@ type RadioChange struct {
 	Value string `wasmGet:"value"`
 }
 
-func (e *RadioChange) OnChangeEvent(event RadioChange, reference *Body) {
+func (e *RadioChange) OnChangeEvent(event RadioChange, reference *ControlPanel) {
 	log.Printf("value: %v", event.Value)
 }
 
@@ -368,7 +368,7 @@ type CheckboxChange struct {
 	Checked bool   `wasmGet:"checked"`
 }
 
-func (e *CheckboxChange) OnChangeEvent(event CheckboxChange, reference *Body) {
+func (e *CheckboxChange) OnChangeEvent(event CheckboxChange, reference *ControlPanel) {
 	log.Printf("value: %v:%v", event.Value, event.Checked)
 }
 
@@ -433,7 +433,7 @@ type OnSelectChange struct {
 	function func(interactionCurrent, interactionTotal, currentPercentage, startValue, endValue, delta float64) float64
 }
 
-func (e *OnSelectChange) OnChangeEvent(event OnSelectChange, reference *Body) {
+func (e *OnSelectChange) OnChangeEvent(event OnSelectChange, reference *ControlPanel) {
 	switch event.Value {
 	case "Linear":
 		e.function = easingTween.KLinear
@@ -512,8 +512,8 @@ type OnClickEvent struct {
 	Value     string `wasmGet:"value"`
 }
 
-func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *Body) {
-	ref := reference.BoatAnimation
+func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel) {
+	ref := reference.Body.BoatAnimation
 	//log.Printf("Trusted: %v", event.IsTrusted)
 	//log.Printf("Value:   %v", event.Value)
 
@@ -525,7 +525,7 @@ func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *Body) {
 		SetOnStepFunc(tagDivRocket.EasingTweenWalkingAndRotateIntoPoints()).
 		SetLoops(0).
 		SetArgumentsFunc(any(tagDivRocket)).
-		SetTweenFunc(reference.BoatAnimation.Tween.Change.function).
+		SetTweenFunc(ref.Tween.Change.function).
 		SetDoNotReverseMotion().
 		Start()
 }

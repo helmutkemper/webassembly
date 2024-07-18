@@ -382,36 +382,36 @@ type TweenInterface interface {
 	//
 	// English:
 	//
-	//  Terminates all interactions of the chosen Tween function, without invoking the onCycleEnd and
-	//  onEnd functions.
+	//	Ends all interactions of the chosen Tween function, interacting with the onCycleEnd and onEnd
+	//	functions, respectively, in that order, if they have been defined.
 	//
-	//   Saída:
-	//     object: reference to the current Tween object.
+	//	 Output:
+	//	   object: reference to the current Tween object.
 	//
 	// Português:
 	//
-	// Termina todas as interações da função Tween escolhida, sem invocar as funções onCycleEnd e onEnd.
+	//	Termina todas as interações da função Tween escolhida, interagindo com as funções onCycleEnd e
+	//	onEnd, respectivamente nessa ordem, se elas tiverem sido definidas.
 	//
-	//   Saída:
-	//     object: referência para o objeto Tween corrente.
+	//	 Saída:
+	//	   object: referência para o objeto Tween corrente.
 	End() (object TweenInterface)
 
 	// Stop
 	//
 	// English:
 	//
-	//  Ends all interactions of the chosen Tween function, interacting with the onCycleEnd and onEnd
-	//  functions, respectively, in that order, if they have been defined.
+	//	Ends all interactions of the chosen Tween function, without invoking the onCycleEnd and
+	//	onEnd functions.
 	//
-	//   Output:
-	//     object: reference to the current Tween object.
+	//	 Saída:
+	//	   object: reference to the current Tween object.
 	//
 	// Português:
 	//
-	//  Termina todas as interações da função Tween escolhida, interagindo com as funções onCycleEnd e
-	//  onEnd, respectivamente nessa ordem, se elas tiverem sido definidas.
+	// Termina todas as interações da função Tween escolhida, sem invocar as funções onCycleEnd e onEnd.
 	//
-	//   Saída:
-	//     object: referência para o objeto Tween corrente.
+	//	Saída:
+	//	  object: referência para o objeto Tween corrente.
 	Stop() (object TweenInterface)
 }

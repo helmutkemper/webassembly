@@ -444,6 +444,7 @@ func (el *Tween) tickerRunnerPrepare(startValue, endValue float64) {
 				select {
 				case <-el.chanEnd:
 					el.engineHasFunction = false
+					el.chanEnd = make(chan struct{}, 2)
 					return
 				default:
 					el.tickerRunnerRun()
@@ -515,7 +516,7 @@ func (el *Tween) tickerRunnerRun() {
 //	 Saída:
 //	   object: referência para o objeto Tween corrente.
 func (el *Tween) Start() (object interfaces.TweenInterface) {
-	el.chanEnd = make(chan struct{})
+	el.chanEnd = make(chan struct{}, 2)
 
 	if el.engineHasFunction {
 		el.Stop()
@@ -537,11 +538,28 @@ func (el *Tween) Start() (object interfaces.TweenInterface) {
 	return el
 }
 
-// End
+func (el *Tween) End() (object interfaces.TweenInterface) {
+	select {
+	case el.chanEnd <- struct{}{}:
+	default:
+	}
+
+	if el.onCycleEnd != nil {
+		el.onCycleEnd(el.endValue, el.arguments)
+	}
+
+	if el.onEnd != nil && el.repeat == 0 {
+		el.onEnd(el.endValue, el.arguments)
+	}
+
+	return el
+}
+
+// Stop
 //
 // English:
 //
-//	Terminates all interactions of the chosen Tween function, without invoking the onCycleEnd and
+//	Ends all interactions of the chosen Tween function, without invoking the onCycleEnd and
 //	onEnd functions.
 //
 //	 Saída:
@@ -553,37 +571,10 @@ func (el *Tween) Start() (object interfaces.TweenInterface) {
 //
 //	Saída:
 //	  object: referência para o objeto Tween corrente.
-func (el *Tween) End() (object interfaces.TweenInterface) {
-	el.chanEnd <- struct{}{}
-	return el
-}
-
-// Stop
-//
-// English:
-//
-//	Ends all interactions of the chosen Tween function, interacting with the onCycleEnd and onEnd
-//	functions, respectively, in that order, if they have been defined.
-//
-//	 Output:
-//	   object: reference to the current Tween object.
-//
-// Português:
-//
-//	Termina todas as interações da função Tween escolhida, interagindo com as funções onCycleEnd e
-//	onEnd, respectivamente nessa ordem, se elas tiverem sido definidas.
-//
-//	 Saída:
-//	   object: referência para o objeto Tween corrente.
 func (el *Tween) Stop() (object interfaces.TweenInterface) {
-	el.chanEnd <- struct{}{}
-
-	if el.onCycleEnd != nil {
-		el.onCycleEnd(el.endValue, el.arguments)
-	}
-
-	if el.onEnd != nil && el.repeat == 0 {
-		el.onEnd(el.endValue, el.arguments)
+	select {
+	case el.chanEnd <- struct{}{}:
+	default:
 	}
 
 	return el

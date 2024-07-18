@@ -510,6 +510,8 @@ type TweenType struct {
 type OnClickEvent struct {
 	IsTrusted bool   `wasmGet:"isTrusted"`
 	Value     string `wasmGet:"value"`
+
+	tween *easingTween.Tween
 }
 
 func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel) {
@@ -519,14 +521,26 @@ func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel)
 
 	var value = ref.Dragging.TagNumber.GetValue()
 
-	t := new(easingTween.Tween)
-	t.SetDuration(time.Duration(value)*time.Second).
+	ref.Start.Value("Stop")
+	if e.tween != nil {
+		e.tween.End()
+
+		return
+	}
+
+	e.tween = new(easingTween.Tween)
+	e.tween.SetDuration(time.Duration(value)*time.Second).
 		SetValues(0, 10000).
 		SetOnStepFunc(tagDivRocket.EasingTweenWalkingAndRotateIntoPoints()).
 		SetLoops(0).
 		SetArgumentsFunc(any(tagDivRocket)).
 		SetTweenFunc(ref.Tween.Change.function).
 		SetDoNotReverseMotion().
+		//todo: criar uma função onEnded?
+		SetOnEndFunc(func(_ float64, _ interface{}) {
+			e.tween = nil
+			ref.Start.Value("Restart")
+		}).
 		Start()
 }
 

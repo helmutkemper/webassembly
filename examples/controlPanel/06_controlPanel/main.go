@@ -35,6 +35,16 @@ type Body struct {
 	SimpleForm    *SimpleForm `wasmPanel:"type:component;label:simple form"`
 }
 
+type DraggingEffect struct {
+	components.Range
+
+	TagRange     *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
+	TagNumber    *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
+	Dragging     float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:15"`
+	NumberChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChange"`
+	RangeChange  *OnChangeEvent       `wasmPanel:"type:listener;event:input;func:OnInputEvent"`
+}
+
 type OnChangeEvent struct {
 	IsTrusted bool    `wasmGet:"isTrusted"`
 	Value     float64 `wasmGet:"value"`
@@ -60,16 +70,6 @@ func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference *Body) {
 	}
 }
 
-type DraggingEffect struct {
-	components.Range
-
-	TagRange     *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
-	TagNumber    *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
-	Dragging     float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:15"`
-	NumberChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChange"`
-	RangeChange  *OnChangeEvent       `wasmPanel:"type:listener;event:input;func:OnInputEvent"`
-}
-
 func (e *DraggingEffect) RangeCalcFormula(min, max, value float64) (result float64) {
 	return (max - value) + min
 }
@@ -81,13 +81,15 @@ func (e *DraggingEffect) Init() {
 
 type SimpleForm struct {
 	Text     *TextForm     `wasmPanel:"type:text;label:Text"`
+	Url      *UrlForm      `wasmPanel:"type:url;label:Url"`
+	Tel      *TelForm      `wasmPanel:"type:tel;label:Telephone"`
 	Time     *TimeForm     `wasmPanel:"type:time;label:Time"`
 	Month    *MonthForm    `wasmPanel:"type:month;label:Month"`
 	Week     *WeekForm     `wasmPanel:"type:week;label:Week"`
 	Date     *DateForm     `wasmPanel:"type:date;label:Date"`
 	Color    *ColorForm    `wasmPanel:"type:color;label:Color"`
-	Password *PasswordFrom `wasmPanel:"type:password;label:Password"`
-	Mail     *MailFrom     `wasmPanel:"type:mail;label:E-Mail"`
+	Password *PasswordForm `wasmPanel:"type:password;label:Password"`
+	Mail     *MailForm     `wasmPanel:"type:mail;label:E-Mail"`
 	TextArea *TextAreaForm `wasmPanel:"type:textArea;label:Text"`
 	Radio    *ListRadio    `wasmPanel:"type:radio;label:Select one"`
 	Checkbox *ListCheckbox `wasmPanel:"type:checkbox;label:Select all"`
@@ -131,20 +133,72 @@ func (e *OnTextEvent) OnChangeEvent(event OnTextEvent, reference *Body) {
 	log.Printf("text: %v", event.Value)
 }
 
+type UrlForm struct {
+	components.Url
+
+	TextTag  *html.TagInputUrl `wasmPanel:"type:inputTagUrl"`
+	UrlValue string            `wasmPanel:"type:value;placeHolder:Digite a URL;default:'https://www.google.com'"`
+	Change   *OnUrlEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+type OnUrlEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnUrlEvent) OnChangeEvent(event OnUrlEvent, reference *Body) {
+	log.Printf("Url: %v", event.Value)
+}
+
+type TelForm struct {
+	components.Tel
+
+	TelTag   *html.TagInputTel `wasmPanel:"type:inputTagTel"`
+	TelValue string            `wasmPanel:"type:value;placeHolder:Digite o telefone;default:(99)9999999999"`
+	Change   *OnTelEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+func (e *TelForm) Init() {
+	e.Value("(88)888888888")
+}
+
+type OnTelEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnTelEvent) OnChangeEvent(event OnTelEvent, reference *Body) {
+	log.Printf("Tel: %v", event.Value)
+}
+
+type MailForm struct {
+	components.Mail
+
+	TextTag   *html.TagInputMail `wasmPanel:"type:inputTagMail"`
+	MailValue string             `wasmPanel:"type:value;placeHolder:Digite um e-mail;default:eu@eu.eu"`
+	Change    *OnMailEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+}
+
+func (e *MailForm) Init() {
+	e.Value("tu@eu")
+}
+
+type OnMailEvent struct {
+	Value string `wasmGet:"value"`
+}
+
+func (e *OnMailEvent) OnChangeEvent(event OnMailEvent, reference *Body) {
+	log.Printf("mail: %v", event.Value)
+}
+
 type TimeForm struct {
 	components.Time
 
 	TextTag   *html.TagInputTime `wasmPanel:"type:inputTagTime"`
-	TimeValue string             `wasmPanel:"type:value;default:13h30m"`
+	TimeValue string             `wasmPanel:"type:value;default:'12:30'"`
 	Change    *OnTimeEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
 }
 
 func (e *TimeForm) Init() {
-	date, err := time.ParseDuration("23h49m")
-	if err != nil {
-		log.Printf("duration.error: %v", err)
-	}
-	e.Value(date)
+	e.Value("22:59")
 }
 
 type OnTimeEvent struct {
@@ -237,26 +291,10 @@ func (e *OnColorEvent) OnChangeEvent(event OnColorEvent, reference *Body) {
 	log.Printf("text: %v", event.Value)
 }
 
-type MailFrom struct {
-	components.Mail
-
-	MailTag *html.TagInputMail `wasmPanel:"type:inputTagMail"`
-	Value   string             `wasmPanel:"type:value;placeHolder:Digite um e-mail;default:eu@eu.com"`
-	Change  *OnMailEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
-}
-
-type OnMailEvent struct {
-	Value string `wasmGet:"value"`
-}
-
-func (e *OnMailEvent) OnChangeEvent(event OnMailEvent, reference *Body) {
-	log.Printf("text: %v", event.Value)
-}
-
-type PasswordFrom struct {
+type PasswordForm struct {
 	components.Password
 
-	MailTag *html.TagInputPassword `wasmPanel:"type:inputTagPassword"`
+	PassTag *html.TagInputPassword `wasmPanel:"type:inputTagPassword"`
 	Value   string                 `wasmPanel:"type:value;placeHolder:Digite uma senha;default:senha"`
 	Change  *OnPasswordEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
 }

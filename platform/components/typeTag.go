@@ -1,6 +1,8 @@
 package components
 
-import "strings"
+import (
+	"strings"
+)
 
 type tag struct {
 	Event       string
@@ -18,18 +20,27 @@ type tag struct {
 	Name        string
 }
 
-func (e *tag) getTagKeyValue(data string) (key, value string) {
-	list := strings.Split(data, ":")
-	key = list[0]
-	value = list[1]
+func (e *tag) getTagKeyValue(data string, isolationData []Isolation) (key, value string) {
+	pairKeyValue := strings.Split(data, ":")
+	key = pairKeyValue[0]
+	value = pairKeyValue[1]
+
+	for k := range isolationData {
+		value = strings.Replace(value, string(isolationData[k].key), string(isolationData[k].value), -1)
+	}
+
 	return
 }
 
 func (e *tag) init(tagRaw string) {
 
-	list := strings.Split(tagRaw, ";")
+	isolate := Isolation{}
+	output, isolationData := isolate.isolate(tagRaw)
+	result := isolate.exchangeForKey(output, isolationData)
+
+	list := strings.Split(string(result), ";")
 	for k := range list {
-		key, value := e.getTagKeyValue(list[k])
+		key, value := e.getTagKeyValue(list[k], isolationData)
 		switch key {
 		case "event":
 			e.Event = value

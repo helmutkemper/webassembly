@@ -176,6 +176,14 @@ func (e *Time) value(value any) {
 		e.__timeTag.Value(converted.Format(time.TimeOnly))
 	case time.Duration:
 		e.__timeTag.Value(Timespan(converted).Format(time.TimeOnly))
+	case string:
+		d, err := time.ParseDuration(converted)
+		if err != nil {
+			e.__timeTag.Value(converted)
+		} else {
+			e.__timeTag.Value(Timespan(d).Format(time.TimeOnly))
+		}
+
 	default:
 		e.__timeTag.Value(value)
 	}

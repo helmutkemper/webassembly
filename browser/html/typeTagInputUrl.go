@@ -1206,7 +1206,7 @@ func (e *TagInputUrl) Type(inputType InputType) (ref *TagInputUrl) {
 // Português:
 //
 //	Define o valor associado ao elemento.
-func (e *TagInputUrl) Value(value string) (ref *TagInputUrl) {
+func (e *TagInputUrl) Value(value any) (ref *TagInputUrl) {
 	e.selfElement.Set("value", value)
 	return e
 }

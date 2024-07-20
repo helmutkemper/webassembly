@@ -2,13 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/components"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/easingTween"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryAlgorithm"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/platform/algorithm"
+	"github.com/helmutkemper/webassembly/platform/components"
+	"github.com/helmutkemper/webassembly/platform/easingTween"
+	"github.com/helmutkemper/webassembly/platform/factoryAlgorithm"
+	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"log"
 	"math"
 	"time"
@@ -93,6 +93,7 @@ type SimpleForm struct {
 	TextArea *TextAreaForm `wasmPanel:"type:textArea;label:Text"`
 	Radio    *ListRadio    `wasmPanel:"type:radio;label:Select one"`
 	Checkbox *ListCheckbox `wasmPanel:"type:checkbox;label:Select all"`
+	QRCode   *QRCodeForm   `wasmPanel:"type:qrcode;label:QR Code"`
 }
 
 type BoatAdjust struct {
@@ -131,6 +132,29 @@ type OnTextEvent struct {
 
 func (e *OnTextEvent) OnChangeEvent(event OnTextEvent, reference *ControlPanel) {
 	log.Printf("text: %v", event.Value)
+}
+
+type QRCodeForm struct {
+	components.QRCode
+
+	TextTag       *html.TagCanvas `wasmPanel:"type:TagCanvas"`
+	QRCodeValue   string          `wasmPanel:"type:value;size:256;level:4;color:#000000;background:#00ff00;default:Hello Word!"`
+	RecoveryLevel int             `wasmPanel:"type:level"`
+	Color         string          `wasmPanel:"type:color"`
+	Background    string          `wasmPanel:"type:background"`
+	Change        *OnQRCodeEvent  `wasmPanel:"type:listener;event:click;func:OnChangeEvent"`
+}
+
+type OnQRCodeEvent struct {
+	//Value string `wasmGet:"value"`
+}
+
+func (e *OnQRCodeEvent) OnChangeEvent(event OnQRCodeEvent, reference *ControlPanel) {
+	ref := reference.Body.SimpleForm
+
+	ref.QRCode.SetColor("#ff00ff")
+	ref.QRCode.SetBackground("#ffff00")
+	ref.QRCode.SetValue("tel:99999999999")
 }
 
 type UrlForm struct {
@@ -536,7 +560,7 @@ func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel)
 		SetArgumentsFunc(any(tagDivRocket)).
 		SetTweenFunc(ref.Tween.Change.function).
 		SetDoNotReverseMotion().
-		//todo: criar uma função onEnded?
+		//todo: criar uma função onTermination
 		SetOnEndFunc(func(_ float64, _ interface{}) {
 			e.tween = nil
 			ref.Start.Value("Restart")
@@ -568,6 +592,12 @@ func main() {
 		Panel: &ControlPanel{
 			Body: &Body{
 				SimpleForm: &SimpleForm{
+					QRCode: &QRCodeForm{
+						QRCodeValue:   "frankenstein",
+						RecoveryLevel: 1,
+						Color:         "#ffffff",
+						Background:    "#000000",
+					},
 					Checkbox: &ListCheckbox{
 						List: &[]CheckboxType{
 							{

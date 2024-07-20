@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/components"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryAlgorithm"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryEasingTween"
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/platform/algorithm"
+	"github.com/helmutkemper/webassembly/platform/components"
+	"github.com/helmutkemper/webassembly/platform/factoryAlgorithm"
+	"github.com/helmutkemper/webassembly/platform/factoryColor"
+	"github.com/helmutkemper/webassembly/platform/factoryEasingTween"
 	"log"
 	"math"
 	"time"

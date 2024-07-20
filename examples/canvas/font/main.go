@@ -3,11 +3,11 @@
 package main
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontFamily"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontStyle"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/factoryFontFamily"
+	"github.com/helmutkemper/webassembly/browser/factoryFontStyle"
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/platform/factoryColor"
 )
 
 var canvas *html.TagCanvas

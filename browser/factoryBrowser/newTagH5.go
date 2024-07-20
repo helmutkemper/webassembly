@@ -1,7 +1,7 @@
 package factoryBrowser
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/html"
 )
 
 // NewTagH5
@@ -22,14 +22,14 @@ import (
 // a subheading. This functionality has never been implemented; therefore it is important to use your
 // headings to describe the outline of your document.
 //
-//   Notes:
-//     * Heading information can be used by user agents to construct a table of contents for a
-//       document automatically.
-//     * Avoid using heading elements to resize text. Instead, use the CSS font-size property.
-//     * Avoid skipping heading levels: always start from <h1>, followed by <h2> and so on.
-//     * Use only one <h1> per page or view. It should concisely describe the overall purpose of the
-//       content.
-//     * The align attribute is obsolete; don't use it.
+//	Notes:
+//	  * Heading information can be used by user agents to construct a table of contents for a
+//	    document automatically.
+//	  * Avoid using heading elements to resize text. Instead, use the CSS font-size property.
+//	  * Avoid skipping heading levels: always start from <h1>, followed by <h2> and so on.
+//	  * Use only one <h1> per page or view. It should concisely describe the overall purpose of the
+//	    content.
+//	  * The align attribute is obsolete; don't use it.
 //
 // Português:
 //
@@ -47,15 +47,15 @@ import (
 // definida é um subtítulo. Essa funcionalidade nunca foi implementada; portanto, é importante usar
 // seus títulos para descrever o esboço do seu documento.
 //
-//   Notas:
-//     * As informações de cabeçalho podem ser usadas por agentes de usuário para construir
-//       automaticamente um índice para um documento.
-//     * Evite usar elementos de título para redimensionar o texto. Em vez disso, use a propriedade
-//       CSS font-size.
-//     * Evite pular níveis de título: sempre comece de <h1>, seguido de <h2> e assim por diante.
-//     * Use apenas um <h1> por página ou visualização. Deve descrever de forma concisa o propósito
-//       geral do conteúdo.
-//     * O atributo align está obsoleto; não o use.
+//	Notas:
+//	  * As informações de cabeçalho podem ser usadas por agentes de usuário para construir
+//	    automaticamente um índice para um documento.
+//	  * Evite usar elementos de título para redimensionar o texto. Em vez disso, use a propriedade
+//	    CSS font-size.
+//	  * Evite pular níveis de título: sempre comece de <h1>, seguido de <h2> e assim por diante.
+//	  * Use apenas um <h1> por página ou visualização. Deve descrever de forma concisa o propósito
+//	    geral do conteúdo.
+//	  * O atributo align está obsoleto; não o use.
 func NewTagH5() (ref *html.TagH5) {
 	ref = &html.TagH5{}
 	ref.Init()

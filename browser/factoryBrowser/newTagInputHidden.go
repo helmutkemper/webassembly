@@ -1,12 +1,12 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+import "github.com/helmutkemper/webassembly/browser/html"
 
 // NewTagInputHidden
 //
 // English:
 //
-//  Create the element input.
+//	Create the element input.
 //
 // The <input> HTML element is used to create interactive controls for web-based forms in order to
 // accept data from the user; a wide variety of types of input data and control widgets are
@@ -17,7 +17,7 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 //
 // Português:
 //
-//  Cria o elemento input.
+//	Cria o elemento input.
 //
 // O elemento HTML <input> é usado para criar controles interativos para formulários baseados na
 // web para aceitar dados do usuário; uma ampla variedade de tipos de dados de entrada e widgets

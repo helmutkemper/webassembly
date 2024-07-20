@@ -5,9 +5,9 @@ package main
 import (
 	coordinateManager "github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.coordinate"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factorySimpleBox"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserDocument"
-	"github.com/helmutkemper/iotmaker.webassembly/factoryBrowserStage"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
+	"github.com/helmutkemper/webassembly/factoryBrowserDocument"
+	"github.com/helmutkemper/webassembly/factoryBrowserStage"
+	"github.com/helmutkemper/webassembly/platform/engine"
 )
 
 func main() {

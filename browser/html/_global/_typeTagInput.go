@@ -1,8 +1,8 @@
 package _global
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
-	"github.com/helmutkemper/iotmaker.webassembly/globalDocument"
+	"github.com/helmutkemper/webassembly/browser/css"
+	"github.com/helmutkemper/webassembly/globalDocument"
 	"log"
 	"strings"
 	"syscall/js"
@@ -585,7 +585,7 @@ func (e *TagInput) Slot(slot string) (ref *TagInput) {
 //         Texto em elementos editáveis
 func (e *TagInput) Spellcheck(spell bool) (ref *TagInput) {
 	e.selfElement.Set("spellcheck", spell)
-	
+
 	return e
 }
 
@@ -698,7 +698,7 @@ func (e *TagInput) CreateElement(tag Tag) (ref *TagInput) {
 		return
 	}
 	e.tag = tag
-	
+
 	return e
 }
 
@@ -731,13 +731,13 @@ func (e *TagInput) CreateElement(tag Tag) (ref *TagInput) {
 //         var p = document.createElement("p");
 //         document.body.appendChild(p);
 func (e *TagInput) AppendById(appendId string) (ref *TagInput) {
-	
+
 	toAppend := js.Global().Get("document").Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
 		log.Print(KIdToAppendNotFound, appendId)
 		return e
 	}
-	
+
 	toAppend.Call("appendChild", e.selfElement)
 	return e
 }
@@ -777,7 +777,7 @@ func (e *TagInput) Append(append interface{}) (ref *TagInput) {
 	case js.Value:
 		e.selfElement.Call("appendChild", append)
 	}
-	
+
 	return e
 }
 

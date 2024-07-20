@@ -3,10 +3,10 @@
 package main
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/media"
+	"github.com/helmutkemper/webassembly/browser/event/mouse"
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/media"
 	"log"
 	"syscall/js"
 )

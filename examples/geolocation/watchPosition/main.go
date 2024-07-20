@@ -4,8 +4,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/geolocation"
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/geolocation"
 )
 
 func main() {

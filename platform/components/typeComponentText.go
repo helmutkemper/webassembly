@@ -1,6 +1,6 @@
 package components
 
-import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+import "github.com/helmutkemper/webassembly/browser/html"
 
 // __textOnInputEvent faz a captura de dados do event input
 type __textOnInputEvent struct {

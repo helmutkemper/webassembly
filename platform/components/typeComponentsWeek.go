@@ -2,7 +2,7 @@ package components
 
 import (
 	"fmt"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/html"
 	"time"
 )
 

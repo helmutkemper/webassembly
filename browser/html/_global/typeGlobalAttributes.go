@@ -1,7 +1,7 @@
 package _global
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/webassembly/browser/css"
 	"strconv"
 	"syscall/js"
 )

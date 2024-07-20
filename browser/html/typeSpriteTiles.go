@@ -3,8 +3,8 @@ package html
 import (
 	"errors"
 	"fmt"
-	keyboard "github.com/helmutkemper/iotmaker.webassembly/browser/event/keyBoard"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+	keyboard "github.com/helmutkemper/webassembly/browser/event/keyBoard"
+	"github.com/helmutkemper/webassembly/browser/stage"
 	"strconv"
 	"strings"
 	"syscall/js"

@@ -18,6 +18,12 @@ type tag struct {
 	Default     string
 	PlaceHolder string
 	Name        string
+	Width       string
+	Height      string
+	Size        string
+	Level       string
+	Color       string
+	Background  string
 }
 
 func (e *tag) getTagKeyValue(data string, isolationData []Isolation) (key, value string) {
@@ -68,6 +74,18 @@ func (e *tag) init(tagRaw string) {
 			e.PlaceHolder = value
 		case "name":
 			e.Name = value
+		case "height":
+			e.Height = value
+		case "width":
+			e.Width = value
+		case "size":
+			e.Size = value
+		case "level":
+			e.Level = value
+		case "color":
+			e.Color = value
+		case "background":
+			e.Background = value
 		}
 	}
 

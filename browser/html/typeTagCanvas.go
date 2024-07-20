@@ -1,8 +1,12 @@
 package html
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"bytes"
+	"encoding/base64"
+	"github.com/helmutkemper/webassembly/browser/css"
+	"github.com/helmutkemper/webassembly/qrcode"
 	"image/color"
+	"image/png"
 	"log"
 	"reflect"
 	"strconv"
@@ -152,6 +156,111 @@ func (el *TagCanvas) CreateElement(tag Tag, width, height int) (ref *TagCanvas) 
 
 func (el *TagCanvas) Get() (element js.Value) {
 	return el.selfElement
+}
+
+func (el *TagCanvas) DrawQRCode(size int, content string, recoveryLevel qrcode.RecoveryLevel) (ref *TagCanvas) {
+	return el.DrawQRCodeColor(size, content, recoveryLevel, color.White, color.Black)
+}
+
+// DrawQRCodeColor Defines the content of the QR Code
+//
+//	Example formats:
+//
+//	  URL:
+//	  Prefix: http:// or https://
+//	  Example: https://www.example.com
+//
+//	  Phone number:
+//	  Prefix: tel:
+//	  Example: tel:+1234567890
+//
+//	  SMS:
+//	  Prefix: sms:
+//	  Example: sms:+1234567890?body=Hello
+//
+//	  Email:
+//	  Prefix: mailto:
+//	  Example: mailto:example@example.com
+//
+//	  Contact (vCard):
+//	  Prefix: BEGIN:VCARD
+//	  Example:
+//	  `BEGIN:VCARD
+//	  VERSION:3.0
+//	  FN:John Doe
+//	  TEL:+1234567890
+//	  EMAIL:example@example.com
+//	  END:VCARD`
+//
+//	  Event (iCalendar):
+//	  Prefix: BEGIN:VEVENT
+//	  Example:
+//	  `BEGIN:VEVENT
+//	  SUMMARY:Meeting
+//	  DTSTART:20230701T120000Z
+//	  DTEND:20230701T130000Z
+//	  LOCATION:Conference Room
+//	  END:VEVENT`
+//
+//	  Location (Geo URI):
+//	  Prefix: geo:
+//	  Example: geo:37.7749,-122.4194
+//
+//	  WiFi:
+//	  Prefix: WIFI:
+//	  Example: WIFI:T:WPA;S:NetworkName;P:Password;;
+//
+//	  Simple text:
+//	  No prefix needed
+//	  Example: Hello, world!
+//
+//	  Bitcoin:
+//	  Prefix: bitcoin:
+//	  Example: bitcoin:1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+//
+//	  PayPal:
+//	  Prefix: paypal:
+//	  Example: paypal:someone@example.com
+//
+//	  WhatsApp:
+//	  Prefix: https://wa.me/
+//	  Example: https://wa.me/1234567890
+//
+//	  MeCard (Contato):
+//	  Prefix: MECARD:
+//	  Example:
+//	  `MECARD:N:John Doe;TEL:+1234567890;EMAIL:example@example.com;;`
+func (el *TagCanvas) DrawQRCodeColor(size int, content string, recoveryLevel qrcode.RecoveryLevel, foregroundColor, background color.Color) (ref *TagCanvas) {
+
+	var err error
+	var qrc *qrcode.QRCode
+	qrc, err = qrcode.New(content, recoveryLevel)
+	if err != nil {
+		log.Printf("QR Code error: %v", err)
+		return
+	}
+
+	qrc.ForegroundColor = foregroundColor
+	qrc.BackgroundColor = background
+
+	img := qrc.Image(size)
+	jsImg := js.Global().Get("Image").New()
+	buf := new(bytes.Buffer)
+	err = png.Encode(buf, img)
+	if err != nil {
+		log.Printf("QR Code error: %v", err)
+		return
+	}
+
+	jsImg.Set("src", "data:image/png;base64,"+base64.StdEncoding.EncodeToString(buf.Bytes()))
+
+	ctx := el.Get().Call("getContext", "2d")
+	jsImg.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		ctx.Call("drawImage", jsImg, 0, 0)
+		return nil
+	}))
+
+	return el
 }
 
 // DrawImage

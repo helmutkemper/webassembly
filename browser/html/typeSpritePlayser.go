@@ -1,8 +1,8 @@
 package html
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/eventQueue"
+	"github.com/helmutkemper/webassembly/browser/stage"
+	"github.com/helmutkemper/webassembly/platform/eventQueue"
 	"log"
 	"time"
 )

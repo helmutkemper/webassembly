@@ -4,11 +4,11 @@ package main
 
 import (
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/mathUtil"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryFontFamily"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/factoryColor"
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/factoryFontFamily"
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/stage"
+	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"strconv"
 	"time"
 )

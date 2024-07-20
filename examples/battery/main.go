@@ -4,8 +4,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/event/battery"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/event/battery"
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 )
 
 func main() {

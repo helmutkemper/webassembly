@@ -5,8 +5,8 @@ package main
 import (
 	global "github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig"
 	"github.com/helmutkemper/iotmaker.santa_isabel_theater.platform/factoryImage"
-	factoryBrowserImage "github.com/helmutkemper/iotmaker.webassembly/_factoryBrowserImage"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
+	factoryBrowserImage "github.com/helmutkemper/webassembly/_factoryBrowserImage"
+	"github.com/helmutkemper/webassembly/browser/stage"
 	"html"
 	"time"
 )

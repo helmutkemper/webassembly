@@ -3,14 +3,20 @@ package components
 import (
 	"errors"
 	"fmt"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+	"github.com/helmutkemper/webassembly/qrcode"
+	"image/color"
 	"log"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
 )
+
+// todo: padrão da fábrica, autocomplete off
+// todo: number de range, onFocusOut se value == null, valur = min
 
 type Components struct {
 	ref         interface{}
@@ -360,6 +366,26 @@ func (e *Components) processComponent(element reflect.Value, typeof reflect.Type
 					}
 
 					err = e.processComponentText(fieldVal, tagData, divComponent)
+					if err != nil {
+						return
+					}
+
+				case "qrcode":
+
+					if fieldVal.Kind() != reflect.Pointer {
+						err = fmt.Errorf("component.QRCode (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:qrcode;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("}"))
+						return
+					}
+
+					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+						err = fmt.Errorf("component.QRCode (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+						return
+					}
+
+					err = e.processComponentQRCode(fieldVal, tagData, divComponent)
 					if err != nil {
 						return
 					}
@@ -1374,6 +1400,326 @@ func (e *Components) processComponentText(element reflect.Value, tagDataFather *
 		method.Call(nil)
 	}
 
+	return
+}
+
+func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather *tag, father *html.TagDiv) (err error) {
+
+	var fieldComponent reflect.Value
+	var dataType reflect.Kind
+	var value any
+	var ok bool
+
+	elementOriginal := element
+	qrCodeComponent := QRCode{}
+
+	//tagCanvas := factoryBrowser.NewTagCanvas(255,255)//.Class("component .component-text")
+	tagCanvas := new(html.TagCanvas)
+
+	// Initializes the pointer if it is nil
+	if element.IsNil() {
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
+	}
+
+	// Move element to pointer struct
+	element = element.Elem()
+
+	// Checks if the import of `components.Text` was done
+	if fieldText := element.FieldByName("QRCode"); !fieldText.IsValid() {
+		err = fmt.Errorf("error: component %v needs to embed `components.Text` directly", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.QRCode"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         Value string `wasmPanel:\"type:value;size:512;default:'htts://www.google.com'\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	} else {
+		// Initialize QRCode
+		fieldComponent = fieldText
+	}
+
+	var qrCodeSize int
+	var qrCodeRecoveryLevel int
+	var qrCodeColor color.Color
+	var qrCodeBackground color.Color
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+
+			case "color":
+				if !fieldVal.IsValid() {
+
+				} else if color, ok := fieldVal.Interface().(string); ok {
+					if color == "" {
+						color = "#000000"
+					}
+
+					qrCodeColor, err = mathUtil.HexToColor(color)
+					if err != nil {
+						err = fmt.Errorf("%v.%v type '%v', contains an error in the value: %v", element.Type().Name(), fieldTyp.Name, fieldVal.Kind(), err)
+						return
+					}
+				} else {
+					err = fmt.Errorf("%v.%v type '%v', must be a type string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+			case "background":
+				if !fieldVal.IsValid() {
+
+				} else if color, ok := fieldVal.Interface().(string); ok {
+					if color == "" {
+						color = "#ffffff"
+					}
+
+					qrCodeBackground, err = mathUtil.HexToColor(color)
+					if err != nil {
+						err = fmt.Errorf("%v.%v type '%v', contains an error in the value: %v", element.Type().Name(), fieldTyp.Name, fieldVal.Kind(), err)
+						return
+					}
+				} else {
+					err = fmt.Errorf("%v.%v type '%v', must be a type string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+			case "size":
+				if !fieldVal.IsValid() {
+
+				} else if size, ok := fieldVal.Interface().(int); ok {
+					qrCodeSize = size
+				} else {
+					err = fmt.Errorf("%v.%v type '%v', must be a type int", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+			case "level":
+
+				if !fieldVal.IsValid() {
+					qrCodeRecoveryLevel = 2
+				} else if level, ok := fieldVal.Interface().(int); ok {
+
+					if level < 1 || level > 4 {
+						err = fmt.Errorf("%v.%v type '%v(%v)'", element.Type().Name(), fieldTyp.Name, fieldVal.Kind(), fieldVal.Interface())
+						err = errors.Join(err, fmt.Errorf("  values:"))
+						err = errors.Join(err, fmt.Errorf("    1 - Level Low: 7%% error recovery"))
+						err = errors.Join(err, fmt.Errorf("    2 - Level Medium: 15%% error recovery. Good default choice"))
+						err = errors.Join(err, fmt.Errorf("    3 - Level High: 25%% error recovery"))
+						err = errors.Join(err, fmt.Errorf("    4 - Level Highest: 30%% error recovery."))
+						return
+					}
+					qrCodeRecoveryLevel = level
+				} else {
+					err = fmt.Errorf("%v.%v type '%v', must be a type int", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					err = errors.Join(err, fmt.Errorf("  values:"))
+					err = errors.Join(err, fmt.Errorf("    1 - Level Low: 7%% error recovery"))
+					err = errors.Join(err, fmt.Errorf("    2 - Level Medium: 15%% error recovery. Good default choice"))
+					err = errors.Join(err, fmt.Errorf("    3 - Level High: 25%% error recovery"))
+					err = errors.Join(err, fmt.Errorf("    4 - Level Highest: 30%% error recovery."))
+					return
+				}
+			}
+		}
+	}
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+
+			// Checks whether the reference to the canvas tag was requested by the user
+			case "tagCanvas":
+				fieldVal.Set(reflect.ValueOf(tagCanvas))
+
+			// Checks if the value tag was created
+			case "value":
+
+				// Captures the value of the component defined by the value tag
+				dataType, value, ok = e.verifyTypeFromElement(fieldVal, fieldVal.Kind())
+				if !ok {
+					err = fmt.Errorf("%v.%v type '%v', must be a type int64, float64, bool or string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				// Checks if the field is non-zero, i.e. defined by the user
+				// Limits the types accepted by numeric fields
+				// The limitation on int64, float64, string and bool types is determined by the golang webassembly
+				switch dataType {
+				case reflect.String:
+
+				default:
+					err = fmt.Errorf("%v.%v type '%v', must be a type string", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				//if tagDataInternal.Size == "" {
+				//	err = fmt.Errorf("%v.%v tag config 'size' must be set with numeric value, eg. 512", element.Type().Name(), fieldTyp.Name)
+				//	return
+				//}
+
+				if qrCodeSize == 0 && tagDataInternal.Size != "" {
+					var size int64
+					size, err = strconv.ParseInt(tagDataInternal.Size, 10, 64)
+					if err != nil {
+						err = fmt.Errorf("%v.%v tag config 'size' return an error: %v", element.Type().Name(), fieldTyp.Name, err)
+						return
+					}
+					qrCodeSize = int(size)
+				}
+
+				tagCanvas.Init(qrCodeSize, qrCodeSize)
+
+				if qrCodeRecoveryLevel == 0 && tagDataInternal.Level != "" {
+					var level int64
+					level, err = strconv.ParseInt(tagDataInternal.Level, 10, 64)
+					if err != nil {
+						err = fmt.Errorf("%v.%v tag config 'level' return an error: %v", element.Type().Name(), fieldTyp.Name, err)
+						return
+					}
+
+					if level < 1 || level > 4 {
+						err = fmt.Errorf("%v.%v config 'level', error", element.Type().Name(), fieldTyp.Name)
+						err = errors.Join(err, fmt.Errorf("  values:"))
+						err = errors.Join(err, fmt.Errorf("    1 - Level Low: 7%% error recovery"))
+						err = errors.Join(err, fmt.Errorf("    2 - Level Medium: 15%% error recovery. Good default choice"))
+						err = errors.Join(err, fmt.Errorf("    3 - Level High: 25%% error recovery"))
+						err = errors.Join(err, fmt.Errorf("    4 - Level Highest: 30%% error recovery."))
+						return
+					}
+
+					// 0 is used to know if level was defined, therefore, level must be greater than zero
+					qrCodeRecoveryLevel = int(level) - 1
+				} else if qrCodeRecoveryLevel == 0 {
+					qrCodeRecoveryLevel = 1
+				} else {
+					// level was defined, but 0 is used to know if level was defined, therefore, level must be greater than zero
+					qrCodeRecoveryLevel -= 1
+				}
+
+				if qrCodeColor == nil && tagDataInternal.Color != "" {
+					qrCodeColor, err = mathUtil.HexToColor(tagDataInternal.Color)
+					if err != nil {
+						err = fmt.Errorf("%v.%v config 'color', error: %v", element.Type().Name(), fieldTyp.Name, err)
+						return
+					}
+				} else if qrCodeColor == nil {
+					qrCodeColor = color.Black
+				}
+
+				if qrCodeBackground == nil && tagDataInternal.Background != "" {
+					qrCodeBackground, err = mathUtil.HexToColor(tagDataInternal.Background)
+					if err != nil {
+						err = fmt.Errorf("%v.%v config 'color', error: %v", element.Type().Name(), fieldTyp.Name, err)
+						return
+					}
+				} else if qrCodeBackground == nil {
+					qrCodeBackground = color.White
+				}
+
+				qrCodeComponent.__size = qrCodeSize
+				qrCodeComponent.__recoveryLevel = qrcode.RecoveryLevel(qrCodeRecoveryLevel)
+				qrCodeComponent.__background = qrCodeBackground
+				qrCodeComponent.__color = qrCodeColor
+
+				if converted, ok := value.(string); ok && converted != "" {
+					tagCanvas.DrawQRCodeColor(qrCodeSize, converted, qrcode.RecoveryLevel(qrCodeRecoveryLevel), qrCodeColor, qrCodeBackground)
+				} else {
+					tagCanvas.DrawQRCodeColor(qrCodeSize, tagDataInternal.Default, qrcode.RecoveryLevel(qrCodeRecoveryLevel), qrCodeColor, qrCodeBackground)
+				}
+
+			// listener defines the field received by the event function
+			case "listener":
+
+				// The field must be a pointer, or it cannot be populated
+				if fieldVal.Kind() != reflect.Pointer {
+					log.Printf("error: %v deve ser um ponteiro", fieldVal.Type().Name())
+					continue
+				}
+
+				if !fieldVal.CanSet() {
+					log.Printf("error: %v não pode ser definido automaticamente.", fieldVal.Type().Name())
+					log.Printf("         isto geralmente acontece quando %v não é público.", fieldVal.Type().Name())
+					continue
+				}
+
+				// Checks if the field is nil and initializes the pointer
+				// The less work for the user, the greater the chance they will like the system
+				if fieldVal.CanSet() && fieldVal.IsNil() {
+					newInstance := reflect.New(fieldVal.Type().Elem())
+					fieldVal.Set(newInstance)
+				}
+
+				if fieldVal.IsNil() {
+					err = fmt.Errorf("o campo %v não foi inicializado de forma correta. ele deve ser público", fieldVal.Type().Name())
+					return
+				}
+
+				var methods []reflect.Value
+				var params []interface{}
+
+				// Passes the functions to be executed in the listener
+				methods = []reflect.Value{
+					fieldVal.MethodByName(tagDataInternal.Func),
+				}
+
+				// Pass variable pointers
+				params = []interface{}{
+					fieldVal.Interface(),
+				}
+
+				tagCanvas.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
+			}
+		}
+	}
+
+	father.Append(
+		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		tagCanvas,
+	)
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		if fieldVal.Type() == reflect.TypeOf(Text{}) {
+			r := fieldVal.Interface().(Text)
+			r.init()
+			break
+		}
+	}
+
+	method := elementOriginal.MethodByName("Init")
+	if method.IsValid() {
+		method.Call(nil)
+	}
+
+	// ------------------------------------------------------------------------------------------------------------------
+
+	// Initialize QRCode
+	newInstance := reflect.New(fieldComponent.Type())
+	fieldComponent.Set(newInstance.Elem())
+	log.Printf("--entrou aqui!--")
+	// Initializes the canvas tag
+	qrCodeComponent.__canvasTag = tagCanvas
+
+	// __textOnInputEvent is the pointer sent when the `change` event happens
+	qrCodeComponent.__change = new(__qrCodeOnInputEvent)
+
+	// populates the component.Text within the user component
+	componentQRCode := element.FieldByName("QRCode")
+	componentQRCode.Set(reflect.ValueOf(qrCodeComponent))
 	return
 }
 

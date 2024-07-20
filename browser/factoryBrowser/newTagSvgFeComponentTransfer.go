@@ -1,6 +1,6 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+import "github.com/helmutkemper/webassembly/browser/html"
 
 // NewTagSvgFeComponentTransfer
 //

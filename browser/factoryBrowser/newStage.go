@@ -1,8 +1,8 @@
 package factoryBrowser
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/stage"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/globalEngine"
+	"github.com/helmutkemper/webassembly/browser/stage"
+	"github.com/helmutkemper/webassembly/platform/globalEngine"
 )
 
 func NewStage() (ref *stage.Stage) {

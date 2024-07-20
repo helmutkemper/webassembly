@@ -1,6 +1,6 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+import "github.com/helmutkemper/webassembly/browser/html"
 
 // NewTagSvgSet
 //
@@ -11,9 +11,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // It supports all attribute types, including those that cannot reasonably be interpolated, such as string and boolean
 // values. For attributes that can be reasonably be interpolated, the <animate> is usually preferred.
 //
-//   Notes:
-//     * The <set> element is non-additive. The additive and accumulate attributes are not allowed, and will be
-//       ignored if specified.
+//	Notes:
+//	  * The <set> element is non-additive. The additive and accumulate attributes are not allowed, and will be
+//	    ignored if specified.
 //
 // Português:
 //
@@ -23,9 +23,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // valores de string e booleanos. Para atributos que podem ser razoavelmente interpolados, o <animate> geralmente é
 // preferido.
 //
-//   Notas:
-//     * O elemento <set> não é aditivo. Os atributos aditivo e acumular não são permitidos e serão ignorados se
-//       especificados.
+//	Notas:
+//	  * O elemento <set> não é aditivo. Os atributos aditivo e acumular não são permitidos e serão ignorados se
+//	    especificados.
 func NewTagSvgSet() (ref *html.TagSvgSet) {
 	ref = &html.TagSvgSet{}
 	ref.Init()

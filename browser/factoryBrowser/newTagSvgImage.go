@@ -1,6 +1,6 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
+import "github.com/helmutkemper/webassembly/browser/html"
 
 // NewTagSvgImage
 //
@@ -15,9 +15,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // applied, and they cannot be interactive. To include dynamic SVG elements, try <use> with an external URL. To include
 // SVG files and run scripts inside them, try <object> inside of <foreignObject>.
 //
-//   Notes:
-//     * The HTML spec defines <image> as a synonym for <img> while parsing HTML. This specific element and its
-//       behavior only apply inside SVG documents or inline SVG.
+//	Notes:
+//	  * The HTML spec defines <image> as a synonym for <img> while parsing HTML. This specific element and its
+//	    behavior only apply inside SVG documents or inline SVG.
 //
 // Português:
 //
@@ -31,9 +31,9 @@ import "github.com/helmutkemper/iotmaker.webassembly/browser/html"
 // :visited não são aplicados e não podem ser interativos. Para incluir elementos SVG dinâmicos, tente <use> com uma
 // URL externa. Para incluir arquivos SVG e executar scripts dentro deles, tente <object> dentro de <foreignObject>.
 //
-//   Notes:
-//     * The HTML spec defines <image> as a synonym for <img> while parsing HTML. This specific element and its
-//       behavior only apply inside SVG documents or inline SVG.
+//	Notes:
+//	  * The HTML spec defines <image> as a synonym for <img> while parsing HTML. This specific element and its
+//	    behavior only apply inside SVG documents or inline SVG.
 func NewTagSvgImage() (ref *html.TagSvgImage) {
 	ref = &html.TagSvgImage{}
 	ref.Init()

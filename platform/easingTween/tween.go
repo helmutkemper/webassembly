@@ -1,7 +1,7 @@
 package easingTween
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
+	"github.com/helmutkemper/webassembly/interfaces"
 	"time"
 )
 
@@ -471,7 +471,7 @@ func (el *Tween) tickerRunnerRun() {
 
 	if elapsed >= el.duration {
 
-		el.Stop()
+		el.End()
 
 		if el.repeat == 0 && el.onEnd != nil {
 			el.onEnd(value, el.arguments)
@@ -519,7 +519,7 @@ func (el *Tween) Start() (object interfaces.TweenInterface) {
 	el.chanEnd = make(chan struct{}, 2)
 
 	if el.engineHasFunction {
-		el.Stop()
+		el.End()
 	}
 
 	if el.tweenFunc == nil {

@@ -1,10 +1,10 @@
 package stage
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/event/document"
-	keyboard "github.com/helmutkemper/iotmaker.webassembly/browser/event/keyBoard"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
+	"github.com/helmutkemper/webassembly/browser/event/document"
+	keyboard "github.com/helmutkemper/webassembly/browser/event/keyBoard"
+	"github.com/helmutkemper/webassembly/browser/event/mouse"
+	"github.com/helmutkemper/webassembly/platform/engine"
 	"log"
 	"sync"
 	"syscall/js"

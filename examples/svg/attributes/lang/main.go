@@ -15,7 +15,7 @@
 package main
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 )
 
 func main() {

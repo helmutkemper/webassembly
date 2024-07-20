@@ -1,6 +1,6 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/iotmaker.webassembly/browser/event/battery"
+import "github.com/helmutkemper/webassembly/browser/event/battery"
 
 // NewBattery
 //

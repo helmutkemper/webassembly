@@ -1,7 +1,7 @@
 package factoryBrowser
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/geolocation"
+	"github.com/helmutkemper/webassembly/browser/geolocation"
 )
 
 // NewGeoLocation

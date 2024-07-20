@@ -1,6 +1,6 @@
 package factoryAlgorithm
 
-import "github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
+import "github.com/helmutkemper/webassembly/platform/algorithm"
 
 // NewBezierCurve
 //

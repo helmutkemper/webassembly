@@ -1,8 +1,8 @@
 package html
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/event/animation"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/engine"
+	"github.com/helmutkemper/webassembly/browser/event/animation"
+	"github.com/helmutkemper/webassembly/platform/engine"
 	"image/color"
 	"log"
 	"reflect"

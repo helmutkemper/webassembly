@@ -1,8 +1,8 @@
 package html
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
+	"github.com/helmutkemper/webassembly/browser/css"
+	"github.com/helmutkemper/webassembly/browser/event/mouse"
 	"image/color"
 	"log"
 	"reflect"

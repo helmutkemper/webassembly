@@ -1,7 +1,7 @@
 package html
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
+	"github.com/helmutkemper/webassembly/browser/css"
 	"log"
 	"reflect"
 	"strconv"

@@ -25,8 +25,8 @@
 package main
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/html"
 	"time"
 )
 

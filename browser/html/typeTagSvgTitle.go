@@ -1,7 +1,7 @@
 package html
 
 import (
-	"github.com/helmutkemper/iotmaker.webassembly/browser/event/mouse"
+	"github.com/helmutkemper/webassembly/browser/event/mouse"
 	"log"
 	"reflect"
 	"syscall/js"

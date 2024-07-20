@@ -2,9 +2,9 @@ package html
 
 import (
 	"fmt"
-	"github.com/helmutkemper/iotmaker.webassembly/browser/css"
-	"github.com/helmutkemper/iotmaker.webassembly/interfaces"
-	"github.com/helmutkemper/iotmaker.webassembly/platform/algorithm"
+	"github.com/helmutkemper/webassembly/browser/css"
+	"github.com/helmutkemper/webassembly/interfaces"
+	"github.com/helmutkemper/webassembly/platform/algorithm"
 	"image/color"
 	"strconv"
 	"sync"

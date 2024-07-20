@@ -1,6 +1,6 @@
 package globalEngine
 
-import "github.com/helmutkemper/iotmaker.webassembly/platform/engine"
+import "github.com/helmutkemper/webassembly/platform/engine"
 
 var Engine *engine.Engine
 

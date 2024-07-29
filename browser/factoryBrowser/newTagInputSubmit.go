@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagInputSubmit
 //
@@ -25,11 +28,11 @@ import "github.com/helmutkemper/webassembly/browser/html"
 //
 // O elemento <input> é um dos mais poderosos e complexos dentro do HTML, devido ao grande número
 // de combinações de tipos de entrada e atributos.
-func NewTagInputSubmit(id string) (ref *html.TagInputSubmit) {
+func NewTagInputSubmit() (ref *html.TagInputSubmit) {
 	ref = &html.TagInputSubmit{}
 	ref.CreateElement(html.KTagInput)
 	ref.Type(html.KInputTypeSubmit)
-	ref.Id(id)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

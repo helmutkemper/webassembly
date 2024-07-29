@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgClipPath
 //
@@ -20,6 +23,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgClipPath() (ref *html.TagSvgClipPath) {
 	ref = &html.TagSvgClipPath{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

@@ -33,6 +33,7 @@ type ControlPanel struct {
 type Body struct {
 	BoatAnimation *BoatAdjust `wasmPanel:"type:component;label:Boat dragging effect"`
 	SimpleForm    *SimpleForm `wasmPanel:"type:component;label:simple form"`
+	Share         *ShareForm  `wasmPanel:"type:component;label:Share"`
 }
 
 type DraggingEffect struct {
@@ -40,7 +41,7 @@ type DraggingEffect struct {
 
 	TagRange     *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
 	TagNumber    *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
-	Dragging     float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:15"`
+	Dragging     float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:42"`
 	NumberChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChange"`
 	RangeChange  *OnChangeEvent       `wasmPanel:"type:listener;event:input;func:OnInputEvent"`
 }
@@ -93,7 +94,10 @@ type SimpleForm struct {
 	TextArea *TextAreaForm `wasmPanel:"type:textArea;label:Text"`
 	Radio    *ListRadio    `wasmPanel:"type:radio;label:Select one"`
 	Checkbox *ListCheckbox `wasmPanel:"type:checkbox;label:Select all"`
-	QRCode   *QRCodeForm   `wasmPanel:"type:qrcode;label:QR Code"`
+}
+
+type ShareForm struct {
+	QRCode *QRCodeForm `wasmPanel:"type:qrcode;label:QR Code"`
 }
 
 type BoatAdjust struct {
@@ -138,10 +142,11 @@ type QRCodeForm struct {
 	components.QRCode
 
 	TextTag       *html.TagCanvas `wasmPanel:"type:TagCanvas"`
-	QRCodeValue   string          `wasmPanel:"type:value;size:256;level:4;color:#000000;background:#00ff00;default:Hello Word!"`
+	QRCodeValue   string          `wasmPanel:"type:value;size:309;level:4;color:#000000;background:#00ff00;default:Hello Word!"`
 	RecoveryLevel int             `wasmPanel:"type:level"`
 	Color         string          `wasmPanel:"type:color"`
 	Background    string          `wasmPanel:"type:background"`
+	DisableBorder bool            `wasmPanel:"type:disableBorder"`
 	Change        *OnQRCodeEvent  `wasmPanel:"type:listener;event:click;func:OnChangeEvent"`
 }
 
@@ -150,11 +155,11 @@ type OnQRCodeEvent struct {
 }
 
 func (e *OnQRCodeEvent) OnChangeEvent(event OnQRCodeEvent, reference *ControlPanel) {
-	ref := reference.Body.SimpleForm
+	ref := reference.Body.Share
 
 	ref.QRCode.SetColor("#ff00ff")
 	ref.QRCode.SetBackground("#ffff00")
-	ref.QRCode.SetValue("tel:99999999999")
+	ref.QRCode.SetValue(time.Now().Format(time.TimeOnly))
 }
 
 type UrlForm struct {
@@ -554,7 +559,7 @@ func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel)
 
 	e.tween = new(easingTween.Tween)
 	e.tween.SetDuration(time.Duration(value)*time.Second).
-		SetValues(0, 10000).
+		SetValues(0, 1000000).
 		SetOnStepFunc(tagDivRocket.EasingTweenWalkingAndRotateIntoPoints()).
 		SetLoops(0).
 		SetArgumentsFunc(any(tagDivRocket)).
@@ -583,6 +588,7 @@ var canvas *html.TagCanvas
 var tagDivRocket *html.TagDiv
 
 func main() {
+
 	var err error
 	var panel *html.TagDiv
 
@@ -592,12 +598,6 @@ func main() {
 		Panel: &ControlPanel{
 			Body: &Body{
 				SimpleForm: &SimpleForm{
-					QRCode: &QRCodeForm{
-						QRCodeValue:   "frankenstein",
-						RecoveryLevel: 1,
-						Color:         "#ffffff",
-						Background:    "#000000",
-					},
 					Checkbox: &ListCheckbox{
 						List: &[]CheckboxType{
 							{
@@ -617,6 +617,15 @@ func main() {
 								Selected: true,
 							},
 						},
+					},
+				},
+				Share: &ShareForm{
+					QRCode: &QRCodeForm{
+						QRCodeValue:   "frankenstein",
+						RecoveryLevel: 1,
+						Color:         "#ffffff",
+						Background:    "#000000",
+						DisableBorder: true,
 					},
 				},
 			},
@@ -652,7 +661,6 @@ func main() {
 
 	done := make(chan struct{})
 	done <- struct{}{}
-
 }
 
 func BezierCurve(border, wight, height float64) (bezier *algorithm.BezierCurve) {

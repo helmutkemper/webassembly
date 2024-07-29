@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgPolygon
 //
@@ -20,6 +23,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgPolygon() (ref *html.TagSvgPolygon) {
 	ref = &html.TagSvgPolygon{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgAnimateTransform
 //
@@ -16,6 +19,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgAnimateTransform() (ref *html.TagSvgAnimateTransform) {
 	ref = &html.TagSvgAnimateTransform{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

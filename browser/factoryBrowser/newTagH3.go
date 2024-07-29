@@ -2,6 +2,7 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
 )
 
 // NewTagH3
@@ -59,6 +60,7 @@ import (
 func NewTagH3() (ref *html.TagH3) {
 	ref = &html.TagH3{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

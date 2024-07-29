@@ -2,7 +2,6 @@ package html
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"log"
 	"reflect"
 	"strconv"
@@ -13,16 +12,6 @@ import (
 type commonEvents struct {
 	selfElement *js.Value
 	listener    map[string]js.Func
-}
-
-func (e *commonEvents) GetUuidStr() (uuidStr string) {
-	uId, err := uuid.NewUUID()
-	if err != nil {
-		err = fmt.Errorf("commonEvents.NewUUID().error: %v", err)
-		return
-	}
-	uuidStr = uId.String()
-	return
 }
 
 func (e *commonEvents) ListenerRemove(event string) {

@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgPolyline
 //
@@ -22,6 +25,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgPolyline() (ref *html.TagSvgPolyline) {
 	ref = &html.TagSvgPolyline{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

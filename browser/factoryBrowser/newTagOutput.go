@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagOutput
 //
@@ -13,10 +16,10 @@ import "github.com/helmutkemper/webassembly/browser/html"
 //
 //	O elemento HTML <output> é um elemento de contêiner no qual um site ou aplicativo pode injetar os
 //	resultados de um cálculo ou o resultado de uma ação do usuário.
-func NewTagOutput(id string) (ref *html.TagOutput) {
+func NewTagOutput() (ref *html.TagOutput) {
 	ref = &html.TagOutput{}
 	ref.CreateElement(html.KTagMeter)
-	ref.Id(id)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

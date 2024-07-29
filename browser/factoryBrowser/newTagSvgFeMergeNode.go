@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgFeMergeNode
 //
@@ -14,6 +17,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgFeMergeNode() (ref *html.TagSvgFeMergeNode) {
 	ref = &html.TagSvgFeMergeNode{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

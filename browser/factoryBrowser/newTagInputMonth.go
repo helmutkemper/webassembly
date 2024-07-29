@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagInputMonth
 //
@@ -29,6 +32,7 @@ func NewTagInputMonth() (ref *html.TagInputMonth) {
 	ref = &html.TagInputMonth{}
 	ref.CreateElement(html.KTagInput)
 	ref.Type(html.KInputTypeMonth)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

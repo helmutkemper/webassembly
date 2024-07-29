@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagInputDateTimeLocal
 //
@@ -25,11 +28,11 @@ import "github.com/helmutkemper/webassembly/browser/html"
 //
 // O elemento <input> é um dos mais poderosos e complexos dentro do HTML, devido ao grande número
 // de combinações de tipos de entrada e atributos.
-func NewTagInputDateTimeLocal(id string) (ref *html.TagInputDateTimeLocal) {
+func NewTagInputDateTimeLocal() (ref *html.TagInputDateTimeLocal) {
 	ref = &html.TagInputDateTimeLocal{}
 	ref.CreateElement(html.KTagInput)
 	ref.Type(html.KInputTypeDatetimeLocal)
-	ref.Id(id)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

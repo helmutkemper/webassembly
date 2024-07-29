@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgMask
 //
@@ -16,6 +19,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgMask() (ref *html.TagSvgMask) {
 	ref = &html.TagSvgMask{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

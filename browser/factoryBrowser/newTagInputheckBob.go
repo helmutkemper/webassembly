@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagInputCheckBox
 //
@@ -29,6 +32,7 @@ func NewTagInputCheckBox() (ref *html.TagInputCheckBox) {
 	ref = &html.TagInputCheckBox{}
 	ref.CreateElement(html.KTagInput)
 	ref.Type(html.KInputTypeCheckbox)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

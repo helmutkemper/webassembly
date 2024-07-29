@@ -5,25 +5,26 @@ import (
 )
 
 type tag struct {
-	Event       string
-	Type        string
-	Min         string
-	Max         string
-	Value       string
-	Step        string
-	Key         string
-	Label       string
-	Listener    string
-	Func        string
-	Default     string
-	PlaceHolder string
-	Name        string
-	Width       string
-	Height      string
-	Size        string
-	Level       string
-	Color       string
-	Background  string
+	Event         string
+	Type          string
+	Min           string
+	Max           string
+	Value         string
+	Step          string
+	Key           string
+	Label         string
+	Listener      string
+	Func          string
+	Default       string
+	PlaceHolder   string
+	Name          string
+	Width         string
+	Height        string
+	Size          string
+	Level         string
+	Color         string
+	Background    string
+	DisableBorder string
 }
 
 func (e *tag) getTagKeyValue(data string, isolationData []Isolation) (key, value string) {
@@ -86,6 +87,8 @@ func (e *tag) init(tagRaw string) {
 			e.Color = value
 		case "background":
 			e.Background = value
+		case "disableBorder":
+			e.DisableBorder = value
 		}
 	}
 

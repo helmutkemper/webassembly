@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgText
 //
@@ -22,6 +25,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgText() (ref *html.TagSvgText) {
 	ref = &html.TagSvgText{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

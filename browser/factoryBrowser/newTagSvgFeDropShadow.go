@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgFeDropShadow
 //
@@ -24,6 +27,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgFeDropShadow() (ref *html.TagSvgFeDropShadow) {
 	ref = &html.TagSvgFeDropShadow{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

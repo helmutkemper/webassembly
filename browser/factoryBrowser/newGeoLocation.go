@@ -8,11 +8,11 @@ import (
 //
 // English:
 //
-// The Geolocation interface represents an object able to obtain the position of the device programmatically. It gives
+// The Geolocation interface represents an object able to get the position of the device programmatically. It gives
 // Web content access to the location of the device. This allows a website or app to offer customized results based on
 // the user's location.
 //
-// An object with this interface is obtained using the navigator.geolocation property implemented by the Navigator
+// An object with this interface is get using the navigator.geolocation property implemented by the Navigator
 // object.
 //
 //	Notes:
@@ -26,7 +26,7 @@ import (
 // Dá acesso ao conteúdo da Web à localização do dispositivo. Isso permite que um site ou aplicativo ofereça resultados
 // personalizados com base na localização do usuário.
 //
-// An object with this interface is obtained using the navigator.geolocation property implemented by the Navigator
+// An object with this interface is get using the navigator.geolocation property implemented by the Navigator
 // object.
 //
 //	Notes:

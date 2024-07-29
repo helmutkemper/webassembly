@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagInputColor
 //
@@ -29,6 +32,7 @@ func NewTagInputColor() (ref *html.TagInputColor) {
 	ref = &html.TagInputColor{}
 	ref.CreateElement(html.KTagInput)
 	ref.Type(html.KInputTypeColor)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

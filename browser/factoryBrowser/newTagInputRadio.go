@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagInputRadio
 //
@@ -28,6 +31,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagInputRadio() (ref *html.TagInputRadio) {
 	ref = new(html.TagInputRadio)
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

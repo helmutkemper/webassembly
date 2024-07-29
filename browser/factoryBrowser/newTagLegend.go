@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagLegend
 //
@@ -15,10 +18,10 @@ import "github.com/helmutkemper/webassembly/browser/html"
 //	Crie o elemento Legenda.
 //
 // O elemento HTML <legend> representa uma legenda para o conteúdo de seu pai <fieldset>.
-func NewTagLegend(id string) (ref *html.TagLegend) {
+func NewTagLegend() (ref *html.TagLegend) {
 	ref = &html.TagLegend{}
 	ref.CreateElement(html.KTagLegend)
-	ref.Id(id)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

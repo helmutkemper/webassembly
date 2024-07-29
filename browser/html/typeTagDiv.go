@@ -741,6 +741,31 @@ func (e *TagDiv) Id(id string) (ref *TagDiv) {
 	return e
 }
 
+// GetId #global
+//
+// English:
+//
+//	Return a unique id for an element
+//
+// The id attribute specifies a unique id for an HTML element (the value must be unique within the
+// HTML document).
+//
+// The id attribute is most used to point to a style in a style sheet, and by JavaScript (via the HTML
+// DOM) to manipulate the element with the specific id.
+//
+// Português:
+//
+//	Retorna um ID exclusivo para um elemento
+//
+// O atributo id especifica um id exclusivo para um elemento HTML (o valor deve ser exclusivo no
+// documento HTML).
+//
+// O atributo id é mais usado para apontar para um estilo em uma folha de estilo, e por JavaScript
+// (através do HTML DOM) para manipular o elemento com o id específico.
+func (e *TagDiv) GetId() (id string) {
+	return e.id
+}
+
 // ItemProp #global
 //
 // English:
@@ -1539,7 +1564,6 @@ func (e *TagDiv) Init() (ref *TagDiv) {
 
 	e.CreateElement(KTagDiv)
 	e.prepareStageReference()
-	e.id = e.commonEvents.GetUuidStr()
 
 	return e
 }
@@ -1775,15 +1799,15 @@ func (e *TagDiv) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenTh
 
 		angleCorrection := false
 
-		if forTenThousand > 10000.0 {
-			forTenThousand = forTenThousand - 10000.0
+		if forTenThousand > 1000000.0 {
+			forTenThousand = forTenThousand - 1000000.0
 			angleCorrection = true
 		} else if forTenThousand < 0.0 {
-			forTenThousand = 10000.0 + forTenThousand
+			forTenThousand = 1000000.0 + forTenThousand
 			angleCorrection = true
 		}
 
-		pCalc := int(float64(e.pointsLen) * forTenThousand / 10000.0)
+		pCalc := int(float64(e.pointsLen) * forTenThousand / 1000000.0)
 
 		// há um bug que coloca pCalc = len
 		if pCalc >= e.pointsLen {
@@ -1818,8 +1842,13 @@ func (e *TagDiv) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenTh
 			}
 		}
 
-		e.Rotate(angle)
-		e.SetXY(int((*e.points)[pCalc].X), int((*e.points)[pCalc].Y))
+		// https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame
+		js.Global().Get("window").Call("requestAnimationFrame", js.FuncOf(func(_ js.Value, _ []js.Value) any {
+			e.Rotate(angle)
+			e.SetXY(int((*e.points)[pCalc].X), int((*e.points)[pCalc].Y))
+			return nil
+		}))
+
 		e.Data(map[string]string{"angle": strconv.FormatFloat(angle, 'g', 10, 64)})
 	}
 

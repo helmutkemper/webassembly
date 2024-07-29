@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgMarker
 //
@@ -21,6 +24,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgMarker() (ref *html.TagSvgMarker) {
 	ref = &html.TagSvgMarker{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagInputPassword
 //
@@ -29,6 +32,7 @@ func NewTagInputPassword() (ref *html.TagInputPassword) {
 	ref = &html.TagInputPassword{}
 	ref.CreateElement(html.KTagInput)
 	ref.Type(html.KInputTypePassword)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgFeFuncB
 //
@@ -16,6 +19,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgFeFuncB() (ref *html.TagSvgFeFuncB) {
 	ref = &html.TagSvgFeFuncB{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

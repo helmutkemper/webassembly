@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagMeter
 //
@@ -17,10 +20,10 @@ import "github.com/helmutkemper/webassembly/browser/html"
 //
 //	O elemento HTML <meter> representa um valor escalar dentro de um intervalo conhecido ou um
 //	valor fracionário.
-func NewTagMeter(id string) (ref *html.TagMeter) {
+func NewTagMeter() (ref *html.TagMeter) {
 	ref = &html.TagMeter{}
 	ref.CreateElement(html.KTagMeter)
-	ref.Id(id)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

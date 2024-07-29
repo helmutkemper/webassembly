@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagInputButton
 //
@@ -29,6 +32,7 @@ func NewTagInputButton() (ref *html.TagInputButton) {
 	ref = &html.TagInputButton{}
 	ref.CreateElement(html.KTagInput)
 	ref.Type(html.KInputTypeButton)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagDataList
 //
@@ -26,10 +29,10 @@ import "github.com/helmutkemper/webassembly/browser/html"
 //	  SetNewOption("test_A_c", "label c", "value_c", false, false).
 //	  SetNewOption("test_A_d", "label d", "value_d", false, true).
 //	  AppendById("stage")
-func NewTagDataList(id string) (ref *html.TagDataList) {
+func NewTagDataList() (ref *html.TagDataList) {
 	ref = &html.TagDataList{}
 	ref.CreateElement(html.KTagDatalist)
-	ref.Id(id)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

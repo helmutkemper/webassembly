@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgRadialGradient
 //
@@ -26,6 +29,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgRadialGradient() (ref *html.TagSvgRadialGradient) {
 	ref = &html.TagSvgRadialGradient{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

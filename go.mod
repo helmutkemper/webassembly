@@ -3,7 +3,6 @@ module github.com/helmutkemper/webassembly
 go 1.22.4
 
 require (
-	github.com/google/uuid v1.6.0
 	github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig v0.0.0-20210626132318-c33958e83e03
 	github.com/helmutkemper/iotmaker.santa_isabel_theater.platform v0.0.7
 )

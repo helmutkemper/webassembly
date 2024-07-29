@@ -125,6 +125,31 @@ func (el *TagCanvas) Id(id string) (ref *TagCanvas) {
 	return el
 }
 
+// GetId #global
+//
+// English:
+//
+//	Return a unique id for an element
+//
+// The id attribute specifies a unique id for an HTML element (the value must be unique within the
+// HTML document).
+//
+// The id attribute is most used to point to a style in a style sheet, and by JavaScript (via the HTML
+// DOM) to manipulate the element with the specific id.
+//
+// Português:
+//
+//	Retorna um ID exclusivo para um elemento
+//
+// O atributo id especifica um id exclusivo para um elemento HTML (o valor deve ser exclusivo no
+// documento HTML).
+//
+// O atributo id é mais usado para apontar para um estilo em uma folha de estilo, e por JavaScript
+// (através do HTML DOM) para manipular o elemento com o id específico.
+func (el *TagCanvas) GetId() (id string) {
+	return el.id
+}
+
 // CreateElement
 //
 // English:
@@ -158,8 +183,76 @@ func (el *TagCanvas) Get() (element js.Value) {
 	return el.selfElement
 }
 
+// DrawQRCode Defines the content of the QR Code
+//
+//	Example formats:
+//
+//	  URL:
+//	  Prefix: http:// or https://
+//	  Example: https://www.example.com
+//
+//	  Phone number:
+//	  Prefix: tel:
+//	  Example: tel:+1234567890
+//
+//	  SMS:
+//	  Prefix: sms:
+//	  Example: sms:+1234567890?body=Hello
+//
+//	  Email:
+//	  Prefix: mailto:
+//	  Example: mailto:example@example.com
+//
+//	  Contact (vCard):
+//	  Prefix: BEGIN:VCARD
+//	  Example:
+//	  `BEGIN:VCARD
+//	  VERSION:3.0
+//	  FN:John Doe
+//	  TEL:+1234567890
+//	  EMAIL:example@example.com
+//	  END:VCARD`
+//
+//	  Event (iCalendar):
+//	  Prefix: BEGIN:VEVENT
+//	  Example:
+//	  `BEGIN:VEVENT
+//	  SUMMARY:Meeting
+//	  DTSTART:20230701T120000Z
+//	  DTEND:20230701T130000Z
+//	  LOCATION:Conference Room
+//	  END:VEVENT`
+//
+//	  Location (Geo URI):
+//	  Prefix: geo:
+//	  Example: geo:37.7749,-122.4194
+//
+//	  WiFi:
+//	  Prefix: WIFI:
+//	  Example: WIFI:T:WPA;S:NetworkName;P:Password;;
+//
+//	  Simple text:
+//	  No prefix needed
+//	  Example: Hello, world!
+//
+//	  Bitcoin:
+//	  Prefix: bitcoin:
+//	  Example: bitcoin:1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+//
+//	  PayPal:
+//	  Prefix: paypal:
+//	  Example: paypal:someone@example.com
+//
+//	  WhatsApp:
+//	  Prefix: https://wa.me/
+//	  Example: https://wa.me/1234567890
+//
+//	  MeCard (Contato):
+//	  Prefix: MECARD:
+//	  Example:
+//	  `MECARD:N:John Doe;TEL:+1234567890;EMAIL:example@example.com;;`
 func (el *TagCanvas) DrawQRCode(size int, content string, recoveryLevel qrcode.RecoveryLevel) (ref *TagCanvas) {
-	return el.DrawQRCodeColor(size, content, recoveryLevel, color.White, color.Black)
+	return el.DrawQRCodeColor(size, content, recoveryLevel, color.White, color.Black, false)
 }
 
 // DrawQRCodeColor Defines the content of the QR Code
@@ -230,7 +323,7 @@ func (el *TagCanvas) DrawQRCode(size int, content string, recoveryLevel qrcode.R
 //	  Prefix: MECARD:
 //	  Example:
 //	  `MECARD:N:John Doe;TEL:+1234567890;EMAIL:example@example.com;;`
-func (el *TagCanvas) DrawQRCodeColor(size int, content string, recoveryLevel qrcode.RecoveryLevel, foregroundColor, background color.Color) (ref *TagCanvas) {
+func (el *TagCanvas) DrawQRCodeColor(size int, content string, recoveryLevel qrcode.RecoveryLevel, foregroundColor, background color.Color, disableBorder bool) (ref *TagCanvas) {
 
 	var err error
 	var qrc *qrcode.QRCode
@@ -242,6 +335,7 @@ func (el *TagCanvas) DrawQRCodeColor(size int, content string, recoveryLevel qrc
 
 	qrc.ForegroundColor = foregroundColor
 	qrc.BackgroundColor = background
+	qrc.DisableBorder = disableBorder
 
 	img := qrc.Image(size)
 	jsImg := js.Global().Get("Image").New()
@@ -2946,7 +3040,7 @@ func (el *TagCanvas) TextBaseline(value TextBaseLineRule) (ref *TagCanvas) {
 //	    FillRect(50, 50, 230, 70).
 //	    AppendToStage()
 func (el *TagCanvas) Transform(a, b, c, d, e, f float64) (ref *TagCanvas) {
-	el.context.Call("transform", a, b, c, d, e, f)
+	el.context.Call("transform", a, b, c, d, el, f)
 	return el
 }
 
@@ -3246,10 +3340,10 @@ func (el *TagCanvas) min(a, b int) int {
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagCanvas) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagCanvas) {
-	e.commonEvents.selfElement = &e.selfElement
-	e.commonEvents.ListenerAddReflect(event, params, functions, reference)
-	return e
+func (el *TagCanvas) ListenerAddReflect(event string, params []interface{}, functions []reflect.Value, reference any) (ref *TagCanvas) {
+	el.commonEvents.selfElement = &el.selfElement
+	el.commonEvents.ListenerAddReflect(event, params, functions, reference)
+	return el
 }
 
 // ListenerRemove
@@ -3281,7 +3375,7 @@ func (e *TagCanvas) ListenerAddReflect(event string, params []interface{}, funct
 //	Popover events
 //	  beforetoggle: Fired when the element is a popover, before it is hidden or shown.
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
-func (e *TagCanvas) ListenerRemove(event string) (ref *TagCanvas) {
-	e.commonEvents.ListenerRemove(event)
-	return e
+func (el *TagCanvas) ListenerRemove(event string) (ref *TagCanvas) {
+	el.commonEvents.ListenerRemove(event)
+	return el
 }

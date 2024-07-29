@@ -2,6 +2,7 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
 )
 
 // NewTagDiv
@@ -37,6 +38,7 @@ import (
 func NewTagDiv() (ref *html.TagDiv) {
 	ref = new(html.TagDiv)
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }
@@ -45,7 +47,8 @@ func NewTagDivWithDelta(deltaX, deltaY int) (ref *html.TagDiv) {
 	ref = &html.TagDiv{}
 	ref.Init().
 		SetDeltaX(deltaX).
-		SetDeltaY(deltaY)
+		SetDeltaY(deltaY).
+		Id(mathUtil.GetUID())
 
 	return ref
 }

@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagA
 //
@@ -27,6 +30,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagA() (ref *html.TagA) {
 	ref = &html.TagA{}
 	ref.CreateElement(html.KTagA)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

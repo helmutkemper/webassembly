@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagSvgEllipse
 //
@@ -24,6 +27,7 @@ import "github.com/helmutkemper/webassembly/browser/html"
 func NewTagSvgEllipse() (ref *html.TagSvgEllipse) {
 	ref = &html.TagSvgEllipse{}
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

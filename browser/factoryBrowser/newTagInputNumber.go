@@ -2,6 +2,7 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
 )
 
 // NewTagInputNumber
@@ -30,6 +31,7 @@ import (
 func NewTagInputNumber() (ref *html.TagInputNumber) {
 	ref = new(html.TagInputNumber)
 	ref.Init()
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

@@ -42,18 +42,6 @@ func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 	return e.panelFather, err
 }
 
-//func (e *Components) GetUId() (uuidStr string, err error) {
-//	uId, err := uuid.NewUUID()
-//	if err != nil {
-//		//file, line, funcName := runTimeUtil.Trace()
-//		//err = errors.Join(fmt.Errorf("%v(line: %v).NewUUID().error: %v", funcName, line, err))
-//		//err = errors.Join(fmt.Errorf("file: %v", file), err)
-//		return
-//	}
-//	uuidStr = uId.String()
-//	return
-//}
-
 func (e *Components) createDivsFather() {
 	e.panelFather = factoryBrowser.NewTagDiv().Class("panel")
 	e.panelBody = factoryBrowser.NewTagDiv().Class("panelBody")
@@ -1249,7 +1237,7 @@ func (e *Components) processComponentText(element reflect.Value, tagDataFather *
 	elementOriginal := element
 	textComponent := Text{}
 
-	inputText := factoryBrowser.NewTagInputText().Class("component .component-text")
+	inputText := factoryBrowser.NewTagInputText().Class("component component-text")
 
 	// Initializes the pointer if it is nil
 	if element.IsNil() {
@@ -1440,6 +1428,7 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 		fieldComponent = fieldText
 	}
 
+	var qrDisableBorder bool
 	var qrCodeSize int
 	var qrCodeRecoveryLevel int
 	var qrCodeColor color.Color
@@ -1454,6 +1443,17 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 			tagDataInternal.init(tagRaw)
 
 			switch tagDataInternal.Type {
+
+			case "disableBorder":
+				if !fieldVal.IsValid() {
+
+				} else if disableBorder, ok := fieldVal.Interface().(bool); ok {
+					qrDisableBorder = disableBorder
+
+				} else {
+					err = fmt.Errorf("%v.%v type '%v', must be a type bool", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
 
 			case "color":
 				if !fieldVal.IsValid() {
@@ -1634,11 +1634,12 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 				qrCodeComponent.__recoveryLevel = qrcode.RecoveryLevel(qrCodeRecoveryLevel)
 				qrCodeComponent.__background = qrCodeBackground
 				qrCodeComponent.__color = qrCodeColor
+				qrCodeComponent.__disableBorder = qrDisableBorder
 
 				if converted, ok := value.(string); ok && converted != "" {
-					tagCanvas.DrawQRCodeColor(qrCodeSize, converted, qrcode.RecoveryLevel(qrCodeRecoveryLevel), qrCodeColor, qrCodeBackground)
+					tagCanvas.DrawQRCodeColor(qrCodeSize, converted, qrcode.RecoveryLevel(qrCodeRecoveryLevel), qrCodeColor, qrCodeBackground, qrDisableBorder)
 				} else {
-					tagCanvas.DrawQRCodeColor(qrCodeSize, tagDataInternal.Default, qrcode.RecoveryLevel(qrCodeRecoveryLevel), qrCodeColor, qrCodeBackground)
+					tagCanvas.DrawQRCodeColor(qrCodeSize, tagDataInternal.Default, qrcode.RecoveryLevel(qrCodeRecoveryLevel), qrCodeColor, qrCodeBackground, qrDisableBorder)
 				}
 
 			// listener defines the field received by the event function
@@ -1687,7 +1688,7 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		//factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
 		tagCanvas,
 	)
 
@@ -1710,7 +1711,7 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 	// Initialize QRCode
 	newInstance := reflect.New(fieldComponent.Type())
 	fieldComponent.Set(newInstance.Elem())
-	log.Printf("--entrou aqui!--")
+
 	// Initializes the canvas tag
 	qrCodeComponent.__canvasTag = tagCanvas
 

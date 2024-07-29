@@ -23,7 +23,7 @@
     .animate {
       width: 50px;
       height: 50px;
-      overflow: hidden;
+      overflow: inherit;
     }
 
     .animate img {
@@ -123,6 +123,7 @@
       border: none; /* Remove as bordas */
       scrollbar-width: thin; /* Para Firefox */
       scrollbar-color: var(--scrollbar-bg) transparent; /* Para Firefox */
+      overflow: initial;
     }
 
     .panelBody::-webkit-scrollbar {
@@ -394,7 +395,7 @@
       display: none;
     }
   </style>
-  <script src="../../support/wasm_exec.js"></script>
+
 </head>
 <body class="light-theme">
 <!--button id="toggleTheme">Toggle Theme</button-->
@@ -404,60 +405,114 @@
 
 
 </html>
+<script src="../../support/wasm_exec.js"></script>
 <script>
-
-  document.addEventListener("DOMContentLoaded", function() {
+  async function loadWasm() {
+    // Carregar o Go runtime
     const go = new Go();
-    WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
-      go.run(result.instance);
 
-      const panel = document.querySelector('.panel');
-      const dragIcon = document.querySelector('.dragIcon');
-      const closeIconPanel = document.querySelector('.closeIconPanel');
-      let isDragging = false;
-      let offsetX, offsetY;
+    // Carregar o arquivo WASM de forma assíncrona
+    const response = await fetch('main.wasm');
+    const bytes = await response.arrayBuffer();
 
-      dragIcon.addEventListener('mousedown', function(e) {
-        isDragging = true;
-        offsetX = e.clientX - panel.getBoundingClientRect().left;
-        offsetY = e.clientY - panel.getBoundingClientRect().top;
-      });
+    // Inicializar o WebAssembly
+    const { instance } = await WebAssembly.instantiate(bytes, go.importObject);
 
-      document.addEventListener('mousemove', function(e) {
-        if (isDragging) {
-          panel.style.left = `${e.clientX - offsetX}px`;
-          panel.style.top = `${e.clientY - offsetY}px`;
+    // Inicializar o Go runtime com a instância WASM
+    go.run(instance);
+
+    // -- worker - start --
+
+    let worker;
+
+    function startWorker() {
+      if (worker) {
+        worker.terminate();
+      }
+      worker = new Worker('worker.js');
+      worker.postMessage('start');
+      worker.onmessage = function(e) {
+        console.log('Worker message:', e.data);
+      }
+    }
+
+    function stopWorker() {
+      if (worker) {
+        worker.postMessage('stop');
+      }
+    }
+
+    // -- worker - end --
+
+    // -- start --
+    const panel = document.querySelector('.panel');
+    const dragIcon = document.querySelector('.dragIcon');
+    const closeIconPanel = document.querySelector('.closeIconPanel');
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    dragIcon.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      offsetX = e.clientX - panel.getBoundingClientRect().left;
+      offsetY = e.clientY - panel.getBoundingClientRect().top;
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      if (isDragging) {
+        panel.style.left = `${e.clientX - offsetX}px`;
+        panel.style.top = `${e.clientY - offsetY}px`;
+      }
+    });
+
+    document.addEventListener('mouseup', function() {
+      isDragging = false;
+    });
+
+    closeIconPanel.addEventListener('click', function(e) {
+      e.stopPropagation();
+      panel.classList.toggle('open');
+    });
+
+    const closeIcons = document.querySelectorAll('.closeIcon');
+    closeIcons.forEach(icon => {
+      icon.addEventListener('click', function(event) {
+        event.stopPropagation();
+        const compCel = this.closest('.panelCel') ? this.closest('.panelCel').querySelector('.compCel') : null;
+        if (compCel) {
+          compCel.classList.toggle('hidden');
         }
-      });
-
-      document.addEventListener('mouseup', function() {
-        isDragging = false;
-      });
-
-      closeIconPanel.addEventListener('click', function(e) {
-        e.stopPropagation();
-        panel.classList.toggle('open');
-      });
-
-      const closeIcons = document.querySelectorAll('.closeIcon');
-      closeIcons.forEach(icon => {
-        icon.addEventListener('click', function(event) {
-          event.stopPropagation();
-          const compCel = this.closest('.panelCel') ? this.closest('.panelCel').querySelector('.compCel') : null;
-          if (compCel) {
-            compCel.classList.toggle('hidden');
-          }
-        });
-      });
-
-      // Alternância de Tema
-      const toggleThemeButton = document.getElementById('toggleTheme');
-      toggleThemeButton.addEventListener('click', function() {
-        document.body.classList.toggle('dark-theme');
-        document.body.classList.toggle('light-theme');
       });
     });
 
+    // Alternância de Tema
+    const toggleThemeButton = document.getElementById('toggleTheme');
+    toggleThemeButton.addEventListener('click', function() {
+      document.body.classList.toggle('dark-theme');
+      document.body.classList.toggle('light-theme');
+    });
 
+    // -- end --
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    loadWasm();
+    // Função para iniciar o carregamento do WASM
+    // function initializeWasm() {
+    //   if (document.visibilityState === 'visible') {
+    //     loadWasm();
+    //   }
+    // }
+    //
+    // // Evento para detectar mudança de visibilidade da página
+    // document.addEventListener('visibilitychange', () => {
+    //   if (document.visibilityState === 'visible') {
+    //     initializeWasm();
+    //   }
+    // });
+    //
+    // // Inicializar o carregamento do WASM se a página estiver visível ao carregar
+    // if (document.visibilityState === 'visible') {
+    //   initializeWasm();
+    // }
   });
 </script>

@@ -19,6 +19,7 @@ type QRCode struct {
 	__recoveryLevel qrcode.RecoveryLevel
 	__color         color.Color
 	__background    color.Color
+	__disableBorder bool
 
 	__canvasTag *html.TagCanvas `wasmPanel:"type:TagCanvas"`
 }
@@ -31,7 +32,7 @@ func (e *QRCode) init() {
 }
 
 func (e *QRCode) setValue(value string) {
-	e.__canvasTag.DrawQRCodeColor(e.__size, value, e.__recoveryLevel, e.__color, e.__background)
+	e.__canvasTag.DrawQRCodeColor(e.__size, value, e.__recoveryLevel, e.__color, e.__background, e.__disableBorder)
 }
 
 // SetValue Defines the content of the QR Code
@@ -109,6 +110,10 @@ func (e *QRCode) SetValue(value string) {
 	}
 
 	e.setValue(value)
+}
+
+func (e *QRCode) SetDisableBorder(value bool) {
+	e.__disableBorder = value
 }
 
 func (e *QRCode) SetBackground(value any) (err error) {

@@ -1,6 +1,9 @@
 package factoryBrowser
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/mathUtil"
+)
 
 // NewTagInputTime
 //
@@ -29,6 +32,7 @@ func NewTagInputTime() (ref *html.TagInputTime) {
 	ref = &html.TagInputTime{}
 	ref.CreateElement(html.KTagInput)
 	ref.Type(html.KInputTypeTime)
+	ref.Id(mathUtil.GetUID())
 
 	return ref
 }

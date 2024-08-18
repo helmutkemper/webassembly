@@ -31,9 +31,10 @@ type ControlPanel struct {
 }
 
 type Body struct {
-	BoatAnimation *BoatAdjust `wasmPanel:"type:component;label:Boat dragging effect"`
-	SimpleForm    *SimpleForm `wasmPanel:"type:component;label:simple form"`
-	Share         *ShareForm  `wasmPanel:"type:component;label:Share"`
+	//BoatAnimation *BoatAdjust `wasmPanel:"type:component;label:Boat dragging effect"`
+	//SimpleForm    *SimpleForm `wasmPanel:"type:component;label:simple form"`
+	//Share         *ShareForm  `wasmPanel:"type:component;label:Share"`
+	Osm *OsmForm `wasmPanel:"type:component;label:Osm"`
 }
 
 type DraggingEffect struct {
@@ -61,15 +62,15 @@ func (e *OnChangeEvent) OnChange(event OnChangeEvent, reference *ControlPanel) {
 	//log.Printf("reference.TagRange.GetValue(): %v", ref.TagRange.GetValue())
 }
 
-func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference *ControlPanel) {
-	ref := reference.Body.BoatAnimation.Dragging
-	switch event.Type {
-	case "range":
-		ref.TagNumber.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagRange.GetValue()))
-	case "number":
-		ref.TagRange.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagNumber.GetValue()))
-	}
-}
+//func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference *ControlPanel) {
+//	ref := reference.Body.BoatAnimation.Dragging
+//	switch event.Type {
+//	case "range":
+//		ref.TagNumber.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagRange.GetValue()))
+//	case "number":
+//		ref.TagRange.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagNumber.GetValue()))
+//	}
+//}
 
 func (e *DraggingEffect) RangeCalcFormula(min, max, value float64) (result float64) {
 	return (max - value) + min
@@ -81,6 +82,8 @@ func (e *DraggingEffect) Init() {
 }
 
 type SimpleForm struct {
+	components.Board
+
 	Text     *TextForm     `wasmPanel:"type:text;label:Text"`
 	Url      *UrlForm      `wasmPanel:"type:url;label:Url"`
 	Tel      *TelForm      `wasmPanel:"type:tel;label:Telephone"`
@@ -97,10 +100,40 @@ type SimpleForm struct {
 }
 
 type ShareForm struct {
+	components.Board
+
 	QRCode *QRCodeForm `wasmPanel:"type:qrcode;label:QR Code"`
 }
 
+type OsmForm struct {
+	components.Board
+
+	OsmMap *OsmConf `wasmPanel:"type:osm;label:Address"`
+}
+
+type OsmConf struct {
+	components.Osm
+
+	OsmTag    *html.TagDiv    `wasmPanel:"type:tagOsm"`
+	CanvasTag *html.TagCanvas `wasmPanel:"type:tagCanvas"`
+	Latitude  float64         `wasmPanel:"type:latitude;default:-27.428935"`
+	Longitude float64         `wasmPanel:"type:longitude;default:-48.465274"`
+	Zoom      int64           `wasmPanel:"type:zoom;width:300;height:300;default:13"`
+	Url       string          `wasmPanel:"type:url;default:https://tile.openstreetmap.org/%d/%d/%d.png"`
+	Change    *OnOsmEvent     `wasmPanel:"type:listener;event:click;func:OnChangeEvent"`
+}
+
+type OnOsmEvent struct {
+	//Value string `wasmGet:"value"`
+}
+
+func (e *OnOsmEvent) OnChangeEvent(event OnOsmEvent, reference *ControlPanel) {
+
+}
+
 type BoatAdjust struct {
+	components.Board
+
 	Dragging *DraggingEffect   `wasmPanel:"type:range;label:effect"`
 	Tween    *TweenSelect      `wasmPanel:"type:select;label:Tween function"`
 	Start    *EasingTweenStart `wasmPanel:"type:button;label:start easing tween"`
@@ -141,7 +174,7 @@ func (e *OnTextEvent) OnChangeEvent(event OnTextEvent, reference *ControlPanel) 
 type QRCodeForm struct {
 	components.QRCode
 
-	TextTag       *html.TagCanvas `wasmPanel:"type:TagCanvas"`
+	CanvasTag     *html.TagCanvas `wasmPanel:"type:TagCanvas"`
 	QRCodeValue   string          `wasmPanel:"type:value;size:309;level:4;color:#000000;background:#00ff00;default:Hello Word!"`
 	RecoveryLevel int             `wasmPanel:"type:level"`
 	Color         string          `wasmPanel:"type:color"`
@@ -154,13 +187,13 @@ type OnQRCodeEvent struct {
 	//Value string `wasmGet:"value"`
 }
 
-func (e *OnQRCodeEvent) OnChangeEvent(event OnQRCodeEvent, reference *ControlPanel) {
-	ref := reference.Body.Share
-
-	ref.QRCode.SetColor("#ff00ff")
-	ref.QRCode.SetBackground("#ffff00")
-	ref.QRCode.SetValue(time.Now().Format(time.TimeOnly))
-}
+//func (e *OnQRCodeEvent) OnChangeEvent(event OnQRCodeEvent, reference *ControlPanel) {
+//	ref := reference.Body.Share
+//
+//	ref.QRCode.SetColor("#ff00ff")
+//	ref.QRCode.SetBackground("#ffff00")
+//	ref.QRCode.SetValue(time.Now().Format(time.TimeOnly))
+//}
 
 type UrlForm struct {
 	components.Url
@@ -543,35 +576,35 @@ type OnClickEvent struct {
 	tween *easingTween.Tween
 }
 
-func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel) {
-	ref := reference.Body.BoatAnimation
-	//log.Printf("Trusted: %v", event.IsTrusted)
-	//log.Printf("Value:   %v", event.Value)
-
-	var value = ref.Dragging.TagNumber.GetValue()
-
-	ref.Start.Value("Stop")
-	if e.tween != nil {
-		e.tween.End()
-
-		return
-	}
-
-	e.tween = new(easingTween.Tween)
-	e.tween.SetDuration(time.Duration(value)*time.Second).
-		SetValues(0, 1000000).
-		SetOnStepFunc(tagDivRocket.EasingTweenWalkingAndRotateIntoPoints()).
-		SetLoops(0).
-		SetArgumentsFunc(any(tagDivRocket)).
-		SetTweenFunc(ref.Tween.Change.function).
-		SetDoNotReverseMotion().
-		//todo: criar uma função onTermination
-		SetOnEndFunc(func(_ float64, _ interface{}) {
-			e.tween = nil
-			ref.Start.Value("Restart")
-		}).
-		Start()
-}
+//func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel) {
+//	ref := reference.Body.BoatAnimation
+//	//log.Printf("Trusted: %v", event.IsTrusted)
+//	//log.Printf("Value:   %v", event.Value)
+//
+//	var value = ref.Dragging.TagNumber.GetValue()
+//
+//	ref.Start.Value("Stop")
+//	if e.tween != nil {
+//		e.tween.End()
+//
+//		return
+//	}
+//
+//	e.tween = new(easingTween.Tween)
+//	e.tween.SetDuration(time.Duration(value)*time.Second).
+//		SetValues(0, 1000000).
+//		SetOnStepFunc(tagDivRocket.EasingTweenWalkingAndRotateIntoPoints()).
+//		SetLoops(0).
+//		SetArgumentsFunc(any(tagDivRocket)).
+//		SetTweenFunc(ref.Tween.Change.function).
+//		SetDoNotReverseMotion().
+//		//todo: criar uma função onTermination
+//		SetOnEndFunc(func(_ float64, _ interface{}) {
+//			e.tween = nil
+//			ref.Start.Value("Restart")
+//		}).
+//		Start()
+//}
 
 type EasingTweenStart struct {
 	components.Button
@@ -597,37 +630,37 @@ func main() {
 	controlPanel := ComponentControlPanel{
 		Panel: &ControlPanel{
 			Body: &Body{
-				SimpleForm: &SimpleForm{
-					Checkbox: &ListCheckbox{
-						List: &[]CheckboxType{
-							{
-								TagRadio: factoryBrowser.NewTagInputCheckBox(),
-								TagLabel: factoryBrowser.NewTagLabel(),
-								Label:    "label1",
-								Value:    "Value_1",
-								Disabled: false,
-								Selected: false,
-							},
-							{
-								TagRadio: factoryBrowser.NewTagInputCheckBox(),
-								TagLabel: factoryBrowser.NewTagLabel(),
-								Label:    "label2",
-								Value:    "Value_2",
-								Disabled: false,
-								Selected: true,
-							},
-						},
-					},
-				},
-				Share: &ShareForm{
-					QRCode: &QRCodeForm{
-						QRCodeValue:   "frankenstein",
-						RecoveryLevel: 1,
-						Color:         "#ffffff",
-						Background:    "#000000",
-						DisableBorder: true,
-					},
-				},
+				//SimpleForm: &SimpleForm{
+				//	Checkbox: &ListCheckbox{
+				//		List: &[]CheckboxType{
+				//			{
+				//				TagRadio: factoryBrowser.NewTagInputCheckBox(),
+				//				TagLabel: factoryBrowser.NewTagLabel(),
+				//				Label:    "label1",
+				//				Value:    "Value_1",
+				//				Disabled: false,
+				//				Selected: false,
+				//			},
+				//			{
+				//				TagRadio: factoryBrowser.NewTagInputCheckBox(),
+				//				TagLabel: factoryBrowser.NewTagLabel(),
+				//				Label:    "label2",
+				//				Value:    "Value_2",
+				//				Disabled: false,
+				//				Selected: true,
+				//			},
+				//		},
+				//	},
+				//},
+				//Share: &ShareForm{
+				//	QRCode: &QRCodeForm{
+				//		QRCodeValue:   "frankenstein",
+				//		RecoveryLevel: 1,
+				//		Color:         "#ffffff",
+				//		Background:    "#000000",
+				//		DisableBorder: true,
+				//	},
+				//},
 			},
 		},
 	}

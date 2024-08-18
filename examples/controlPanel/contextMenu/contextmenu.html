@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Context Menu with Inspect Option</title>
+    <style>
+        /* Estilo para o menu de contexto personalizado */
+        .custom-context-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .custom-context-menu ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        .custom-context-menu li {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .custom-context-menu li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<div class="custom-context-menu" id="contextMenu">
+    <ul>
+        <li id="customOption1">Opção Personalizada 1</li>
+        <li id="customOption2">Opção Personalizada 2</li>
+        <li id="inspectElement">Inspecionar</li>
+    </ul>
+</div>
+
+<script>
+    // JavaScript para o menu de contexto personalizado
+    document.addEventListener('contextmenu', function (event) {
+        // Evitar o menu de contexto padrão
+        event.preventDefault();
+
+        // Exibir o menu de contexto personalizado
+        var contextMenu = document.getElementById('contextMenu');
+        contextMenu.style.display = 'block';
+        contextMenu.style.left = event.pageX + 'px';
+        contextMenu.style.top = event.pageY + 'px';
+    });
+
+    // Ocultar o menu de contexto personalizado ao clicar em qualquer lugar
+    document.addEventListener('click', function () {
+        var contextMenu = document.getElementById('contextMenu');
+        contextMenu.style.display = 'none';
+    });
+
+    // Adicionar comportamento aos itens do menu de contexto personalizado
+    document.getElementById('customOption1').addEventListener('click', function () {
+        alert('Opção Personalizada 1 selecionada');
+    });
+
+    document.getElementById('customOption2').addEventListener('click', function () {
+        alert('Opção Personalizada 2 selecionada');
+    });
+
+    /*
+    e.keyCode=e.key.charCodeAt(0);
+    e.which=e.keyCode;
+    e.altKey=false;
+    e.ctrlKey=true;
+    e.shiftKey=false;
+    e.metaKey=false;
+    e.bubbles=true;
+    */
+    // Cria um novo evento de teclado
+
+    document.getElementById('inspectElement').addEventListener('click', function () {
+        // Função para criar e despachar um evento de teclado
+        function triggerKeyEvent(element, type, keyCode, key, code, ctrlKey, altKey, shiftKey, metaKey) {
+            var event = new KeyboardEvent(type, {
+                key: key,          // Define a tecla pressionada
+                code: code,        // Define o código da tecla
+                keyCode: keyCode,  // Define o código da tecla (deprecated, mas ainda amplamente utilizado)
+                which: keyCode,    // Define o código da tecla (deprecated, mas ainda amplamente utilizado)
+                ctrlKey: ctrlKey,  // Define se a tecla Ctrl está pressionada
+                altKey: altKey,    // Define se a tecla Option/Alt está pressionada
+                shiftKey: shiftKey,// Define se a tecla Shift está pressionada
+                metaKey: metaKey,  // Define se a tecla Command/Meta está pressionada
+                bubbles: true,     // Define se o evento deve propagar
+                cancelable: true   // Define se o evento pode ser cancelado
+            });
+
+            element.dispatchEvent(event);
+        }
+
+        // Disparar o evento no elemento desejado (por exemplo, o document)
+        triggerKeyEvent(document, 'keydown', 73, 'i', 'KeyI', false, true, false, true);
+        triggerKeyEvent(document, 'keyup', 73, 'i', 'KeyI', false, true, false, true);
+
+    });
+</script>
+</body>
+</html>
+<script>
+    // Função para criar e despachar um evento de teclado
+    function triggerKeyEvent(element, type, keyCode, key, code, ctrlKey, altKey, shiftKey, metaKey) {
+        var event = new KeyboardEvent(type, {
+            key: key,          // Define a tecla pressionada
+            code: code,        // Define o código da tecla
+            keyCode: keyCode,  // Define o código da tecla (deprecated, mas ainda amplamente utilizado)
+            which: keyCode,    // Define o código da tecla (deprecated, mas ainda amplamente utilizado)
+            ctrlKey: ctrlKey,  // Define se a tecla Ctrl está pressionada
+            altKey: altKey,    // Define se a tecla Option/Alt está pressionada
+            shiftKey: shiftKey,// Define se a tecla Shift está pressionada
+            metaKey: metaKey,  // Define se a tecla Command/Meta está pressionada
+            bubbles: true,     // Define se o evento deve propagar
+            cancelable: true   // Define se o evento pode ser cancelado
+        });
+
+        element.dispatchEvent(event);
+    }
+
+    // Disparar o evento no elemento desejado (por exemplo, o document)
+    triggerKeyEvent(document, 'keydown', 73, 'i', 'KeyI', false, true, false, true);
+    triggerKeyEvent(document, 'keyup', 73, 'i', 'KeyI', false, true, false, true);
+</script>

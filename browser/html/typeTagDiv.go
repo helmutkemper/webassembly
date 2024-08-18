@@ -970,6 +970,30 @@ func (e *TagDiv) Style(style string) (ref *TagDiv) {
 	return e
 }
 
+func (e *TagDiv) AddStyle(key string, value any) (ref *TagDiv) {
+	e.selfElement.Get("style").Set(key, value)
+	return e
+}
+
+func (e *TagDiv) GetStyleInt(key string) (value int) {
+	valueStr := e.selfElement.Get("style").Get(key).String()
+	i := len(valueStr) - 1
+	for ; i > 0; i -= 1 {
+		char := valueStr[i]
+		if char >= 0x30 && char <= 0x39 {
+			break
+		}
+	}
+	valueI64, err := strconv.ParseInt(valueStr[:i+1], 10, 64)
+	if err != nil {
+		log.Printf("GetStyleInt().ParseInt(%v).error: %v", valueStr[:i+1], err)
+		return
+	}
+
+	return int(valueI64)
+	return e.selfElement.Get("style").Get(key).Int()
+}
+
 // TabIndex #global
 //
 // English:

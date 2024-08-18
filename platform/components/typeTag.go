@@ -25,6 +25,9 @@ type tag struct {
 	Color         string
 	Background    string
 	DisableBorder string
+	Latitude      string
+	Longitude     string
+	Zoom          string
 }
 
 func (e *tag) getTagKeyValue(data string, isolationData []Isolation) (key, value string) {

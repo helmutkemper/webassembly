@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go WASM in Worker</title>
+</head>
+<body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const worker = new Worker('worker.js');
+
+        // Escutar por mensagens do worker
+        worker.onmessage = function(e) {
+            // Now the runtime is ready, we can call exported Go functions
+            if (e.data === 'runtimeReady') {
+
+                // worker.postMessage({ action: 'runInWorker' });
+                worker.postMessage("World");
+                return
+            }
+
+            console.log('Message from worker:', e.data);
+        };
+    });
+</script>
+</body>
+</html>

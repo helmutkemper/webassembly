@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GeoJSON to SVG Converter</title>
+</head>
+<body>
+<style>
+    .fixed-div {
+        /*width: 1024px;!*300px;*! !* Tamanho fixo *!*/
+        /*height: 1024px; !* Tamanho fixo *!*/
+        overflow: hidden; /* Esconde as barras de rolagem */
+        top: 0px;
+        left: 0px;
+        position: absolute;
+        /*border: 1px solid #ccc;*/
+    }
+
+    .fixed-div2 {
+        width: 256px;/*300px;*/ /* Tamanho fixo */
+        height: 256px; /* Tamanho fixo */
+        overflow: hidden; /* Esconde as barras de rolagem */
+        top: 256px;
+        left: 256px;
+        position: absolute;
+        border: 1px solid #000;
+    }
+
+    .draggable-content {
+        position: absolute;
+        cursor: grab;
+    }
+</style>
+<!--div id="mask" class="fixed-div">
+    <div id="map" class="draggable-content">
+        <canvas id="canvas"></canvas>
+    </div>
+</div-->
+<!--div class="fixed-div2"></div-->
+<script src="../../support/wasm_exec.js"></script>
+<script>
+    async function convert() {
+        const geojson = document.getElementById("geojson").value;
+        const svg = await geojsonToSVG(geojson);
+        document.getElementById("svgOutput").innerHTML = svg;
+    }
+
+    const go = new Go();
+    WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+        go.run(result.instance);
+    });
+</script>
+
+</body>
+</html>

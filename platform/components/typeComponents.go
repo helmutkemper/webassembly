@@ -12,6 +12,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"syscall/js"
 	"time"
 )
 
@@ -101,7 +102,7 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 				case "component":
 					divCompCel := factoryBrowser.NewTagDiv().Class("compCel")
 
-					err = e.processComponent(fieldVal, fieldTyp.Type, tagData, divCompCel)
+					err = e.processComponent(element, fieldVal, fieldTyp.Type, tagData, divCompCel)
 					if err != nil {
 						//file, line, funcName := runTimeUtil.Trace()
 						//err = errors.Join(fmt.Errorf("%v(line: %v).processComponent().error: %v", funcName, line, err))
@@ -143,22 +144,52 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 	return
 }
 
-func (e *Components) processComponent(element reflect.Value, typeof reflect.Type, tagData *tag, father *html.TagDiv) (err error) {
+func (e *Components) processComponent(parentElement, element reflect.Value, typeof reflect.Type, tagData *tag, father *html.TagDiv) (err error) {
+
+	boardComponent := Board{}
 
 	if element.CanInterface() {
 
-		for {
-			if element.Kind() != reflect.Pointer {
-				break
-			}
+		if element.Kind() != reflect.Pointer {
+			err = fmt.Errorf("component.Board (%v) requires a pointer to the component, example", parentElement.Type().Name())
+			err = errors.Join(err, fmt.Errorf("type %v struct {", parentElement.Type().Name()))
+			err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:range;label:...\"`", typeof.Name(), element.Type().Name()))
+			err = errors.Join(err, fmt.Errorf("}"))
+			return
+		}
 
-			if element.CanSet() && element.IsNil() {
-				newInstance := reflect.New(element.Type().Elem())
-				element.Set(newInstance)
-			}
+		// populates the pointer, if it is nil
+		if element.CanSet() && element.IsNil() {
+			newInstance := reflect.New(element.Type().Elem())
+			element.Set(newInstance)
+		}
 
-			element = element.Elem()
+		// passes from pointer to element
+		element = element.Elem()
 
+		// Checks if the import of `components.Board` was done
+		if fieldBoard := element.FieldByName("Board"); !fieldBoard.IsValid() {
+			err = fmt.Errorf("error: component %v needs to embed `components.Board` directly", element.Type().Name())
+			err = errors.Join(err, fmt.Errorf("       Example:"))
+			err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+			err = errors.Join(err, fmt.Errorf("         components.Board"))
+			err = errors.Join(err, fmt.Errorf("         "))
+			err = errors.Join(err, fmt.Errorf("         Dragging *DraggingEffect   `wasmPanel:\"type:range;label:effect\"`"))
+			err = errors.Join(err, fmt.Errorf("         Tween    *TweenSelect      `wasmPanel:\"type:select;label:Tween function\"`"))
+			err = errors.Join(err, fmt.Errorf("         Start    *EasingTweenStart `wasmPanel:\"type:button;label:start easing tween\"`"))
+			err = errors.Join(err, fmt.Errorf("       }"))
+			return
+		} else {
+			// Initialize Board
+			newInstance := reflect.New(fieldBoard.Type())
+			fieldBoard.Set(newInstance.Elem())
+
+			// Initializes the two input tags within Board
+			boardComponent.__divTag = father
+
+			// populates the component.Board within the user component
+			componentBoard := element.FieldByName("Board")
+			componentBoard.Set(reflect.ValueOf(boardComponent))
 		}
 
 		for i := 0; i != element.NumField(); i += 1 {
@@ -194,6 +225,26 @@ func (e *Components) processComponent(element reflect.Value, typeof reflect.Type
 					}
 
 					err = e.processComponentRange(fieldVal, tagData, divComponent)
+					if err != nil {
+						return
+					}
+
+				case "osm":
+
+					if fieldVal.Kind() != reflect.Pointer {
+						err = fmt.Errorf("component.Osm (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:osm;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+						err = errors.Join(err, fmt.Errorf("}"))
+						return
+					}
+
+					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+						err = fmt.Errorf("component.Osm (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+						return
+					}
+
+					err = e.processComponentOsm(fieldVal, tagData, divComponent)
 					if err != nil {
 						return
 					}
@@ -636,6 +687,34 @@ func (e *Components) verifyTypeFromElement(fieldVal reflect.Value, valueType ref
 	return
 }
 
+func (e *Components) verifyTypeFloat64Element(fieldVal reflect.Value, valueType reflect.Kind) (dataType reflect.Kind, value any, ok bool) {
+	switch valueType {
+	case reflect.Float64:
+		dataType = reflect.Float64
+		value = fieldVal.Float()
+	default:
+		dataType = reflect.Invalid
+		return
+	}
+
+	ok = true
+	return
+}
+
+func (e *Components) verifyTypeInt64Element(fieldVal reflect.Value, valueType reflect.Kind) (dataType reflect.Kind, value any, ok bool) {
+	switch valueType {
+	case reflect.Int64:
+		dataType = reflect.Int64
+		value = fieldVal.Int()
+	default:
+		dataType = reflect.Invalid
+		return
+	}
+
+	ok = true
+	return
+}
+
 //func (e *Components) verifyTypeNumericFromElement(fieldVal reflect.Value, valueType reflect.Kind) (dataType reflect.Kind, value any, ok bool) {
 //	switch valueType {
 //	case reflect.Int64:
@@ -652,6 +731,316 @@ func (e *Components) verifyTypeFromElement(fieldVal reflect.Value, valueType ref
 //	ok = true
 //	return
 //}
+
+func (e *Components) processComponentOsm(element reflect.Value, tagDataFather *tag, father *html.TagDiv) (err error) {
+
+	var dataType reflect.Kind
+	_ = dataType
+	var value any
+	var ok bool
+
+	var longitude, latitude float64
+	var zoom int
+	var url string
+	_ = url
+
+	elementOriginal := element
+	osmComponent := Osm{}
+
+	//tagCanvas := new(html.TagCanvas)
+	//ref.Init(width, height)
+	//tagCanvas.Id(mathUtil.GetUID())
+
+	// todo: mudar nome de inputOsm
+	inputOsm := factoryBrowser.NewTagDiv().Class("inputOsm") //.Append(tagCanvas)
+
+	// Initializes the pointer if it is nil
+	if element.IsNil() {
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
+	}
+
+	// Move element to pointer struct
+	element = element.Elem()
+
+	// Checks if the import of `components.Osm` was done
+	if fieldOsm := element.FieldByName("Osm"); !fieldOsm.IsValid() {
+		err = fmt.Errorf("error: component %v needs to embed `components.Osm` directly", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.Osm"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		// todo: colocar texto correto
+		err = errors.Join(err, fmt.Errorf("         Value int64 `wasmPanel:\"type:value;min:0;max:50;step:1;default:0\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	} else {
+		// Initialize Osm
+		newInstance := reflect.New(fieldOsm.Type())
+		fieldOsm.Set(newInstance.Elem())
+
+		// Initializes the two input tags within Osm
+		osmComponent.__osmTag = inputOsm
+		osmComponent.__canvasTag = new(html.TagCanvas)
+
+		// __osmOnInputEvent is the pointer sent when the `change` event happens
+		osmComponent.__change = new(__osmOnInputEvent)
+
+		// populates the component.Osm within the user component
+		componentOsm := element.FieldByName("Osm")
+		componentOsm.Set(reflect.ValueOf(osmComponent))
+	}
+
+	// Search for the listener input tag and if it does not exist, set up the controller control function
+	//if _, _, found := e.searchFieldByTagType("listener", "input", element); !found {
+	//	var methods []reflect.Value
+	//	var params []interface{}
+	//	log.Printf("osmComponent.__canvasTag: %v", osmComponent.__canvasTag)
+	//	// Passes the functions to be executed in the listener
+	//	methods = []reflect.Value{
+	//		// osmComponent is the struct components.Osm and OnChangeNumber is a function belonging to the struct components.Osm
+	//		//todo: fazer eventos
+	//		reflect.ValueOf(osmComponent.__change).MethodByName("OnMousedown"),
+	//	}
+	//
+	//	// Pass variable pointers
+	//	params = []interface{}{
+	//		// __osmOnInputEvent is the type pointer contained in components.Osm and collects value
+	//		osmComponent.__canvasTag,
+	//	}
+	//
+	//	// explanation
+	//	//   inputNumber.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
+	//	inputOsm.ListenerAddReflect("mousedown", params, methods, element.Interface())
+	//}
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagDataInternal := new(tag)
+			tagDataInternal.init(tagRaw)
+
+			switch tagDataInternal.Type {
+
+			// Checks whether the reference to the input osm tag was requested by the user
+			case "tagOsm":
+				fieldVal.Set(reflect.ValueOf(inputOsm))
+
+			// Checks whether the reference to the canvas tag was requested by the user
+			case "tagCanvas":
+				//osmComponent.__canvasTag = new(html.TagCanvas)
+				fieldVal.Set(reflect.ValueOf(osmComponent.__canvasTag))
+
+			// Checks if the value tag was created
+			case "latitude":
+
+				// Captures the value of the component defined by the latitude tag
+				dataType, value, ok = e.verifyTypeFloat64Element(fieldVal, fieldVal.Kind())
+				if !ok {
+					err = fmt.Errorf("%v.%v type '%v', must be a type float64", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				// Fill in the numeric fields
+				latitude = value.(float64)
+
+				// If the value is zero, and the user has determined a value other than zero,
+				// fill in the field with the default value
+				if latitude == 0 && tagDataInternal.Default != "" {
+
+					var defaultValue float64
+					defaultValue, err = strconv.ParseFloat(tagDataInternal.Default, 64)
+					if err != nil {
+						err = fmt.Errorf("%v.%v type '%v', must be a default value type string of float. Found: %v", element.Type().Name(), fieldTyp.Name, fieldVal.Kind(), tagDataInternal.Default)
+						return
+					}
+
+					latitude = defaultValue
+				}
+
+				log.Printf("latitude: %v", latitude)
+
+			// Checks if the value tag was created
+			case "longitude":
+
+				// Captures the value of the component defined by the latitude tag
+				dataType, value, ok = e.verifyTypeFloat64Element(fieldVal, fieldVal.Kind())
+				if !ok {
+					err = fmt.Errorf("%v.%v type '%v', must be a type float64", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				// Fill in the numeric fields
+				longitude = value.(float64)
+
+				// If the value is zero, and the user has determined a value other than zero,
+				// fill in the field with the default value
+				if longitude == 0 && tagDataInternal.Default != "" {
+
+					var defaultValue float64
+					defaultValue, err = strconv.ParseFloat(tagDataInternal.Default, 64)
+					if err != nil {
+						err = fmt.Errorf("%v.%v type '%v', must be a default value type string of float. Found: %v", element.Type().Name(), fieldTyp.Name, fieldVal.Kind(), tagDataInternal.Default)
+						return
+					}
+
+					longitude = defaultValue
+				}
+
+				log.Printf("longitude: %v", longitude)
+
+			case "zoom":
+
+				// Captures the value of the component defined by the latitude tag
+				dataType, value, ok = e.verifyTypeInt64Element(fieldVal, fieldVal.Kind())
+				if !ok {
+					err = fmt.Errorf("%v.%v type '%v', must be a type int or int64", element.Type().Name(), fieldTyp.Name, fieldVal.Kind())
+					return
+				}
+
+				// Fill in the numeric fields
+				zoom = int(value.(int64))
+
+				// If the value is zero, and the user has determined a value other than zero,
+				// fill in the field with the default value
+				if zoom == 0 && tagDataInternal.Default != "" {
+
+					var defaultValue int64
+					defaultValue, err = strconv.ParseInt(tagDataInternal.Default, 10, 64)
+					if err != nil {
+						//todo: mensagem de erro
+						return
+					}
+
+					zoom = int(defaultValue)
+
+					if tagDataInternal.Width == "" || tagDataInternal.Height == "" {
+						// todo: colocar o erro
+						return
+					}
+
+					var width, height int64
+					width, err = strconv.ParseInt(tagDataInternal.Width, 10, 64)
+					if err != nil {
+						// todo: colocar o erro
+						return
+					}
+
+					height, err = strconv.ParseInt(tagDataInternal.Height, 10, 64)
+					if err != nil {
+						// todo: colocar o erro
+						return
+					}
+
+					//if tagCanvas == nil {
+					//	tagCanvas = new(html.TagCanvas)
+					//}
+
+					log.Printf("width: %v", width)
+					log.Printf("height: %v", height)
+					osmComponent.__canvasTag.Init(int(width), int(height))
+					osmComponent.__canvasTag.Id(mathUtil.GetUID())
+
+				}
+
+				log.Printf("zoom: %v", zoom)
+
+			// listener defines the field received by the event function
+			case "listener":
+
+				// The field must be a pointer, or it cannot be populated
+				if fieldVal.Kind() != reflect.Pointer {
+					log.Printf("error: %v deve ser um ponteiro", fieldVal.Type().Name())
+					continue
+				}
+
+				if !fieldVal.CanSet() {
+					log.Printf("error: %v não pode ser definido automaticamente.", fieldVal.Type().Name())
+					log.Printf("         isto geralmente acontece quando %v não é público.", fieldVal.Type().Name())
+					continue
+				}
+
+				// Checks if the field is nil and initializes the pointer
+				// The less work for the user, the greater the chance they will like the system
+				if fieldVal.CanSet() && fieldVal.IsNil() {
+					newInstance := reflect.New(fieldVal.Type().Elem())
+					fieldVal.Set(newInstance)
+				}
+
+				if fieldVal.IsNil() {
+					err = fmt.Errorf("o campo %v não foi inicializado de forma correta. ele deve ser público", fieldVal.Type().Name())
+					return
+				}
+
+				var methods []reflect.Value
+				_ = methods
+				var params []interface{}
+				_ = params
+				// Passes the functions to be executed in the listener
+				methods = []reflect.Value{
+					fieldVal.MethodByName(tagDataInternal.Func),
+				}
+
+				// Pass variable pointers
+				params = []interface{}{
+					fieldVal.Interface(),
+				}
+
+				// explanation
+				//   inputNumber.ListenerAdd() accepts two arrays, one for the function to be invoked, and the other with the data to be passed
+				//   The first element of the array is the user function
+				//   From the second element onwards, they are internal functions and must be called after the user function in case the user has changed any value.
+				//inputRange.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
+				//inputNumber.ListenerAddReflect(tagDataInternal.Event, params, methods, element.Interface())
+
+				//inputRange.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
+				//inputNumber.ListenerAddReflect(tagDataInternal.Event, params, methods, e.ref)
+
+			}
+		}
+	}
+
+	if longitude != 0 && latitude != 0 && zoom != 0 {
+		longitude = -48.465279 + 0.000400000
+		latitude = -27.428942
+		zoom = 18
+	}
+
+	//if tagCanvas == nil {
+	//	tagCanvas = new(html.TagCanvas)
+	//	tagCanvas.Init(int(250), int(250))
+	//	tagCanvas.Id(mathUtil.GetUID())
+	//}
+
+	inputOsm.Append(osmComponent.__canvasTag)
+	osmComponent.__canvasTag.SetOsm(longitude, latitude, zoom, 0, 0)
+
+	osmComponent.__canvasTag.Get().Call("addEventListener", "mousedown", js.FuncOf(osmComponent.onMouseDown))
+
+	father.Append(
+		//factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		inputOsm,
+	)
+
+	for i := 0; i != element.NumField(); i += 1 {
+		fieldVal := element.Field(i)
+		if fieldVal.Type() == reflect.TypeOf(Osm{}) {
+			r := fieldVal.Interface().(Osm)
+			r.init()
+			break
+		}
+	}
+
+	method := elementOriginal.MethodByName("Init")
+	if method.IsValid() {
+		method.Call(nil)
+	}
+
+	return
+}
 
 func (e *Components) processComponentRange(element reflect.Value, tagDataFather *tag, father *html.TagDiv) (err error) {
 

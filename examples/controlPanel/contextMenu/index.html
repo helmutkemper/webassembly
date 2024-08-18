@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draggable Panel Example</title>
+  <style>
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  </style>
+  <style>
+    /* Estilo para o menu de contexto personalizado */
+    .custom-context-menu {
+      display: none;
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+    .custom-context-menu ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    .custom-context-menu li {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .custom-context-menu li:hover {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+<div class="custom-context-menu" id="contextMenu">
+  <ul>
+    <li id="option1">Opção 1</li>
+    <li id="option2">Opção 2</li>
+    <li id="option3">Opção 3</li>
+  </ul>
+</div>
+</body>
+</html>
+<script src="../../support/wasm_exec.js"></script>
+<script>
+  async function loadWasm() {
+    // Carregar o Go runtime
+    const go = new Go();
+
+    // Carregar o arquivo WASM de forma assíncrona
+    const response = await fetch('main.wasm');
+    const bytes = await response.arrayBuffer();
+
+    // Inicializar o WebAssembly
+    const { instance } = await WebAssembly.instantiate(bytes, go.importObject);
+
+    // Inicializar o Go runtime com a instância WASM
+    go.run(instance);
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    loadWasm();
+  });
+</script>

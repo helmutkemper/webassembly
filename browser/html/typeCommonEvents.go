@@ -156,11 +156,28 @@ func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, fu
 				fieldVal := element.Field(i)
 
 				fieldTyp := reflect.TypeOf(element.Interface()).Field(i)
+				propertyValue := js.Value{}
 
-				propertyToGet := fieldTyp.Tag.Get("wasmGet")
+				pass := false
+				propertyToGet := fieldTyp.Tag.Get("wasmGet") // todo: change to wasmGetProperty
+				if propertyToGet != "" {
+					propertyValue = e.selfElement.Get(propertyToGet)
+					pass = true
+				}
 
-				if propertyToGet == "-" || propertyToGet == "" {
+				if propertyToGet == "-" {
 					continue
+				}
+
+				if !pass {
+					propertyToGet = fieldTyp.Tag.Get("wasmGetArg")
+					if propertyToGet != "" {
+						propertyValue = args[0].Get(propertyToGet)
+					}
+
+					if propertyToGet == "" || propertyToGet == "-" {
+						continue
+					}
 				}
 
 				if !fieldVal.CanSet() {
@@ -169,8 +186,6 @@ func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, fu
 					log.Printf("  the field is not public, the first letter of the field within the struct is lowercase.")
 					continue
 				}
-
-				propertyValue := e.selfElement.Get(propertyToGet)
 
 				var receiverType reflect.Kind
 				switch propertyValue.Type() {
@@ -260,6 +275,8 @@ func (e *commonEvents) ListenerAddReflect(event string, params []interface{}, fu
 			}
 
 			if !functions[kFunc].IsValid() {
+				log.Printf("functions: %+v", functions)
+				log.Printf("kFunc: %+v", kFunc)
 				log.Printf("error: method passado para ListenerAdd é inválido")
 				return nil
 			}

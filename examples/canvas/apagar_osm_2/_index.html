@@ -1,0 +1,225 @@
+<html>
+    <header>
+
+    </header>
+    <body>
+        <style>
+            .fixed-div {
+                width: 256px;/*300px;*/ /* Tamanho fixo */
+                height: 256px; /* Tamanho fixo */
+                overflow: hidden; /* Esconde as barras de rolagem */
+                top: 256px;
+                left: 256px;
+                position: absolute;
+                border: 1px solid #ccc;
+            }
+
+            .fixed-div2 {
+                width: 256px;/*300px;*/ /* Tamanho fixo */
+                height: 256px; /* Tamanho fixo */
+                overflow: hidden; /* Esconde as barras de rolagem */
+                top: 256px;
+                left: 256px;
+                position: absolute;
+                border: 1px solid #000;
+            }
+
+            .draggable-content {
+                position: absolute;
+                cursor: grab;
+            }
+        </style>
+        <div id="mask" class="fixed-div">
+            <div id="map" class="draggable-content">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+        <!--div class="fixed-div2"></div-->
+    </body>
+    <script>
+        let tilesHorizontal, tilesVertical;
+    </script>
+    <script>
+        const draggableContent = document.getElementById('map');
+        let isDragging = false;
+        let scrollLeft, scrollTop, startX, startY;
+        let totalX = 0;
+        let totalY = 0;
+
+        let tileLeft = 0;
+        let tileTop = 0;
+
+        draggableContent.addEventListener('mousedown', (e) => {
+            isDragging = true;
+
+            // Pega o viewPoint da tela de onde o click aconteceu.
+            startX = e.clientX
+            startY = e.clientY
+
+            // Pega o ponto de deslocamento, a esquerda e acima, em relação ao objeto parente.
+            scrollLeft = draggableContent.offsetLeft;
+            scrollTop = draggableContent.offsetTop;
+
+            // Altera o cursor
+            draggableContent.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            // Pega o viewPoint da tela de onde o movimento aconteceu.
+            let actualX = e.clientX
+            let actualY = e.clientY
+
+            // Calcula o delta de deslocamento em relação ao ponto inicial
+            let deltaX = startX - actualX
+            let deltaY = startY - actualY
+
+            // Atualiza o viewPoint da tela de onde o click aconteceu para onde o mouse está
+            startX = actualX
+            startY = actualY
+
+            // Atualiza o ponto de deslocamento, a esquerda e acima, em relação ao objeto parente.
+            scrollLeft += deltaX
+            scrollTop += deltaY
+
+            // Calcula o ponto de deslocamento da imagem
+            totalX -= deltaX
+            totalY -= deltaY
+
+            let tileTopCalc = Math.floor(totalY / tileSize) * -1
+            let tileLeftCalc = Math.floor(totalX / tileSize) * -1
+            let pass = false
+
+            if( tileTop !== tileTopCalc ){
+                tileTop = tileTopCalc
+                pass = true
+            }
+
+            if( tileLeft !== tileLeftCalc ){
+                tileLeft = tileLeftCalc
+                pass = true
+            }
+
+            if( pass === true ){
+                console.log(`tile:(t:${tileTop}, l:${tileLeft})`)
+                console.log(`total:(t:${tilesVertical}, l:${tilesHorizontal})`)
+            }
+
+            draggableContent.style.left = `${totalX}px`;
+            draggableContent.style.top = `${totalY}px`;
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            isDragging = false;
+            draggableContent.style.cursor = 'grab';
+        });
+    </script>
+    <script>
+
+
+
+
+        const cache = {};
+
+        function preloadImage(url) {
+            if (!cache[url]) {
+                const img = new Image();
+                img.src = url;
+                cache[url] = img;
+            }
+        }
+
+        function loadImage(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = cache[url].src;
+            });
+        }
+
+        // Defina a coordenada inicial e nível de zoom
+        const maskElement = document.getElementById('mask');
+        const mapWidth = maskElement.clientWidth;
+        const mapHeight = maskElement.clientHeight;
+
+        const lat = -27.428942;
+        const lon = -48.465279;
+        const zoom = 18;
+
+        const tileSize = 256;
+
+        const tileXCoordinate = Math.floor((lon + 180.0) / 360.0 * Math.pow(2, zoom));
+        const tileYCoordinate = Math.floor((1.0 - (Math.log(Math.tan(lat * Math.PI / 180.0) + 1.0 / Math.cos(lat * Math.PI / 180.0)) / Math.PI)) / 2.0 * Math.pow(2, zoom));
+
+        tilesHorizontal = Math.ceil(mapWidth / tileSize)
+        if (mapWidth <= tileSize) {
+            tilesHorizontal += 1
+        }
+
+        if (tilesHorizontal%2 === 0) {
+            tilesHorizontal += 1
+        }
+
+        tilesVertical = Math.ceil(mapHeight / tileSize)
+        if (mapHeight <= tileSize) {
+            tilesVertical += 1
+        }
+
+        if (tilesVertical%2 === 0) {
+            tilesVertical += 1
+        }
+
+        tilesHorizontal *= 4
+        tilesVertical *= 4
+
+        // tilesHorizontalMiddle = Math.floor(tilesHorizontal/4)
+        // tilesVerticalMiddle = Math.floor(tilesVertical/4)
+
+        // console.log("tilesHorizontalMiddle:", tilesHorizontalMiddle, tilesHorizontal)
+        // console.log("tilesVerticalMiddle:", tilesVerticalMiddle, tilesVertical)
+
+        const canvas = document.getElementById('canvas');
+        canvas.width = tilesHorizontal * tileSize
+        canvas.height = tilesVertical * tileSize
+
+        const ctx = canvas.getContext('2d');
+
+        let imageUrls = [];
+        for (let v = 0; v !== tilesVertical; v += 1) {
+            for (let h = 0; h !== tilesHorizontal; h += 1) {
+                const tileX = tileXCoordinate+h-2;
+                const tileY = tileYCoordinate+v-2;
+                console.log(`url: (x:${tileX}, y:${tileY})`);
+                const url = `https://tile.openstreetmap.org/${zoom}/${tileX}/${tileY}.png`;
+                imageUrls.push(url);
+            }
+        }
+
+        async function loadAndDrawImages(url, h, v) {
+            try {
+                const img = await loadImage(url);
+                const x = h * tileSize;
+                const y = v * tileSize;
+                ctx.drawImage(img, x, y, tileSize, tileSize);
+
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(x, y, tileSize, tileSize);
+
+            } catch (error) {
+                console.error('Erro ao carregar a imagem:', imageUrls[i], error);
+            }
+        }
+
+        for (let v = 0; v !== tilesVertical; v += 1) {
+            for (let h = 0; h !== tilesHorizontal; h += 1) {
+                const url = imageUrls.shift()
+                preloadImage(url)
+                loadAndDrawImages(url, h, v)
+            }
+        }
+
+    </script>
+</html>

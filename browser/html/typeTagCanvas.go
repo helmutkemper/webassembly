@@ -3,14 +3,29 @@ package html
 import (
 	"bytes"
 	"encoding/base64"
+	"fmt"
 	"github.com/helmutkemper/webassembly/browser/css"
 	"github.com/helmutkemper/webassembly/qrcode"
+	_ "golang.org/x/image/bmp"
+	_ "golang.org/x/image/webp"
+	"image"
 	"image/color"
 	"image/png"
+	"io"
 	"log"
+	"math"
+	"net/http"
 	"reflect"
 	"strconv"
 	"syscall/js"
+)
+
+const (
+	minLatitude  = -85.05112878
+	maxLatitude  = 85.05112878
+	minLongitude = -180
+	maxLongitude = 180
+	tileSize     = 256
 )
 
 // todo: transformar em exemplo
@@ -33,6 +48,19 @@ type TagCanvas struct {
 	selfElement js.Value
 	cssClass    *css.Class
 
+	osmUrl       string
+	osmLongitude float64
+	osmLatitude  float64
+	osmZoom      int
+
+	lastTileX int
+	lastTileY int
+
+	dx     int
+	dy     int
+	lastDx int
+	lastDy int
+
 	// stage
 	//
 	// English:
@@ -53,6 +81,9 @@ type TagCanvas struct {
 	transform js.Value
 
 	collisionDataFunction func(red, green, blue, alpha uint8) bool
+
+	MouseClientX int64 `wasmGetArg:"clientX"`
+	MouseClientY int64 `wasmGetArg:"clientY"`
 }
 
 // Reference
@@ -87,6 +118,9 @@ func (el *TagCanvas) Init(width, height int) (ref *TagCanvas) {
 	//e.listener = new(sync.Map)
 	el.CreateElement("canvas", width, height)
 
+	el.width = width
+	el.height = height
+
 	el.collisionDataFunction = func(r, g, b, a uint8) bool {
 		if a != 0 {
 			return true
@@ -95,6 +129,42 @@ func (el *TagCanvas) Init(width, height int) (ref *TagCanvas) {
 		return false
 	}
 
+	return el
+}
+
+func (el *TagCanvas) Size() (width, height int) {
+	return el.width, el.height
+}
+
+func (el *TagCanvas) SetSize(width, height int) (ref *TagCanvas) {
+	// todo: documentar
+	el.selfElement.Set("width", width)
+	el.selfElement.Set("height", height)
+
+	el.width = width
+	el.height = height
+	return el
+}
+
+func (el *TagCanvas) Width() (width int) {
+	return el.width
+}
+
+func (el *TagCanvas) SetWidth(width int) (ref *TagCanvas) {
+	// todo: documentar
+	el.selfElement.Set("width", width)
+	el.width = width
+	return el
+}
+
+func (el *TagCanvas) Height() (height int) {
+	return el.height
+}
+
+func (el *TagCanvas) SetHeight(height int) (ref *TagCanvas) {
+	// todo: documentar
+	el.selfElement.Set("height", height)
+	el.height = height
 	return el
 }
 
@@ -378,17 +448,113 @@ func (el *TagCanvas) DrawQRCodeColor(size int, content string, recoveryLevel qrc
 //
 //	 Notas:
 //	   * Garanta o pré carregamento da imagem antes de chamar esta função.
-func (el *TagCanvas) DrawImage(image interface{}) (ref *TagCanvas) {
+func (el *TagCanvas) DrawImage(image interface{}, dataRect ...any) (ref *TagCanvas) {
+	// todo: documentar
+	var x, y, width, height any
+
+	/*
+		drawImage(image, dx, dy)
+		drawImage(image, dx, dy, dWidth, dHeight)
+		drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+	*/
+	//x = 0
+	//y = 0
+	//width = el.width
+	//height = el.height
+
+	switch len(dataRect) {
+	case 2:
+		x = dataRect[0]
+		y = dataRect[1]
+	case 4:
+		x = dataRect[0]
+		y = dataRect[1]
+		width = dataRect[2]
+		height = dataRect[3]
+	}
+
 	switch converted := image.(type) {
 	case Compatible:
-		el.context.Call("drawImage", converted.Get(), 0, 0, el.width, el.height)
+		el.context.Call("drawImage", converted.Get(), x, y, width, height)
 	case js.Value:
-		el.context.Call("drawImage", converted, 0, 0, el.width, el.height)
+		el.context.Call("drawImage", converted, x, y, width, height)
+	case []byte:
+		err := el.byteToCanvas(converted, dataRect...)
+		if err != nil {
+			return
+		}
+	case string:
+
+		go func() {
+			resp, err := http.Get(converted)
+			if err != nil {
+				log.Fatalf("Erro ao carregar a imagem: %v", err)
+				return
+			}
+			defer func() {
+				_ = resp.Body.Close()
+			}()
+
+			data, err := io.ReadAll(resp.Body)
+			if err != nil {
+				log.Fatalf("Erro ao lê dados da imagem: %v", err)
+				return
+			}
+
+			err = el.byteToCanvas(data, dataRect...)
+			if err != nil {
+				return
+			}
+		}()
+
 	default:
 		log.Printf("canvas.DrawImage(image).err: image must be a js.Value image or TagImg object.")
 	}
 
 	return el
+}
+
+func (el *TagCanvas) byteToCanvas(data []byte, dataRect ...any) (err error) {
+	var x, y, width, height any
+
+	switch len(dataRect) {
+	case 2:
+		width = dataRect[0]
+		height = dataRect[1]
+	case 4:
+		x = dataRect[0]
+		y = dataRect[1]
+		width = dataRect[2]
+		height = dataRect[3]
+	}
+
+	var img image.Image
+	img, _, err = el.decodeImage(data)
+	if err != nil {
+		log.Fatalf("Erro ao decodificar a imagem: %v", err)
+		return
+	}
+
+	jsImg := js.Global().Get("Image").New()
+	buf := new(bytes.Buffer)
+	err = png.Encode(buf, img)
+	if err != nil {
+		log.Printf("Erro ao bufferizar a imagem: %v", err)
+		return
+	}
+
+	jsImg.Set("src", "data:image/png;base64,"+base64.StdEncoding.EncodeToString(buf.Bytes()))
+	jsImg.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		el.context.Call("drawImage", jsImg, x, y, width, height)
+		return nil
+	}))
+
+	return
+}
+
+func (el *TagCanvas) decodeImage(data []byte) (img image.Image, format string, err error) {
+	img, format, err = image.Decode(bytes.NewReader(data))
+	return
 }
 
 // DrawImageResize
@@ -1701,7 +1867,26 @@ func (el *TagCanvas) GlobalCompositeOperation(value CompositeOperationsRule) (re
 	return el
 }
 
-// Height
+// GetWidth
+//
+// English:
+//
+//	Returns the width of an ImageData object.
+//
+//	 Output:
+//	   height: returns the width of an ImageData object, in pixels.
+//
+// Português:
+//
+//	Retorna à largura de um objeto ImageData.
+//
+//	 Saída:
+//	   height: retorna à largura de um objeto ImageData, em pixels.
+func (el *TagCanvas) GetWidth() (width int) {
+	return el.width
+}
+
+// GetHeight
 //
 // English:
 //
@@ -1716,8 +1901,8 @@ func (el *TagCanvas) GlobalCompositeOperation(value CompositeOperationsRule) (re
 //
 //	 Saída:
 //	   height: retorna à altura de um objeto ImageData, em pixels.
-func (el *TagCanvas) Height() (height int) {
-	return el.context.Get("height").Int()
+func (el *TagCanvas) GetHeight() (height int) {
+	return el.height
 }
 
 // IsPointInPath
@@ -2112,6 +2297,19 @@ func (el *TagCanvas) MeasureText(text string) (width int) {
 	return el.context.Call("measureText", text).Get("width").Int()
 }
 
+// GetContext
+//
+// English:
+//
+//	Return the canvas context
+//
+// Português:
+//
+//	Retorna o contexto do canvas
+func (el *TagCanvas) GetContext() (context js.Value) {
+	return el.context
+}
+
 // MiterLimit
 //
 // English:
@@ -2305,6 +2503,17 @@ func (el *TagCanvas) Rect(x, y, width, height int) (ref *TagCanvas) {
 //	     AppendToStage()
 func (el *TagCanvas) Restore() (ref *TagCanvas) {
 	el.context.Call("restore")
+	return el
+}
+
+// ResetTransform
+//
+// English:
+//
+//	The CanvasRenderingContext2D.resetTransform() method of the Canvas 2D API resets the current transform to the
+//	identity matrix.
+func (el *TagCanvas) ResetTransform() (ref *TagCanvas) {
+	el.context.Call("resetTransform")
 	return el
 }
 
@@ -3378,4 +3587,233 @@ func (el *TagCanvas) ListenerAddReflect(event string, params []interface{}, func
 func (el *TagCanvas) ListenerRemove(event string) (ref *TagCanvas) {
 	el.commonEvents.ListenerRemove(event)
 	return el
+}
+
+func (el *TagCanvas) osmLonLatToTile(lon, lat float64, zoom int) (int, int) {
+	x := int((lon + 180.0) / 360.0 * float64(int(1<<uint(zoom))))
+	y := int((1.0 - (math.Log(math.Tan(lat*3.141592653589793/180.0)+1.0/math.Cos(lat*3.141592653589793/180.0)) / 3.141592653589793)) / 2.0 * float64(int(1<<uint(zoom))))
+	return x, y
+}
+
+func (el *TagCanvas) osmDrawTile(ctx js.Value, tileX, tileY, zoom int, offsetX, offsetY int) {
+	if el.osmUrl == "" {
+		el.osmUrl = "https://tile.openstreetmap.org/%d/%d/%d.png"
+	}
+
+	img := js.Global().Get("Image").New()
+	url := fmt.Sprintf(el.osmUrl, zoom, tileX, tileY)
+	img.Set("src", url)
+	img.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		ctx.Call("drawImage", img, offsetX, offsetY)
+		return nil
+	}))
+}
+
+// SetOsmURL
+//
+// English:
+//
+//	Defines the default URL for downloading tiles
+//
+// Português:
+//
+//	Define a URL padrão para download dos tiles
+//
+// Note/Nota:
+//
+//	Default value: "https://tile.openstreetmap.org/%d/%d/%d.png"
+func (el *TagCanvas) SetOsmURL(url string) (ref *TagCanvas) {
+	el.osmUrl = url
+	return el
+}
+
+func (el *TagCanvas) GetOsmLongitude() (longitude float64) {
+	return el.osmLongitude
+}
+
+func (el *TagCanvas) GetOsmLatitude() (latitude float64) {
+	return el.osmLatitude
+}
+
+func (el *TagCanvas) GetOsmZoom() (zoom int) {
+	return el.osmZoom
+}
+
+func Deg2num(lon, lat float64, zoom int) (x int, y int) {
+	x = int(math.Floor((lon + 180.0) / 360.0 * (math.Exp2(float64(zoom)))))
+	y = int(math.Floor((1.0 - math.Log(math.Tan(lat*math.Pi/180.0)+1.0/math.Cos(lat*math.Pi/180.0))/math.Pi) / 2.0 * (math.Exp2(float64(zoom)))))
+	return
+}
+
+func Num2deg(x, y, zoom int) (long float64, lat float64) {
+	n := math.Pi - 2.0*math.Pi*float64(y)/math.Exp2(float64(zoom))
+	lat = 180.0 / math.Pi * math.Atan(0.5*(math.Exp(n)-math.Exp(-n)))
+	long = float64(x)/math.Exp2(float64(zoom))*360.0 - 180.0
+	return long, lat
+}
+
+func (el *TagCanvas) SetOsm(longitude, latitude float64, zoom int, dx, dy int) {
+	ctx := el.GetContext()
+	var tileX, tileY int
+
+	el.lastDx = dx
+	el.lastDy = dy
+
+	pxn, pyn := el.latLongToPixelXYOSM(latitude, longitude, zoom)
+	pxn -= dx
+	pyn -= dy
+	latitude, longitude = el.pixelXYToLatLongOSM(pxn, pyn, zoom)
+
+	//log.Printf("co (%2.9f, %2.9f)", long, lat)
+	//tileX, tileY = el.osmLonLatToTile(long, lat, zoom)
+	//log.Printf("tile:   (%v, %v)", tileX, tileY)
+	//px, py := el.latLongToPixelXYOSM(latitude, longitude, zoom)
+
+	////px += dx
+	////py += dy
+	//latitude, longitude = el.pixelXYToLatLongOSM(px, py, zoom)
+	//log.Printf("(%v, %v)", longitude, latitude)
+
+	el.osmLongitude = longitude
+	el.osmLatitude = latitude
+	el.osmZoom = zoom
+
+	//lon := -48.465274
+	//lat := -27.428935
+	//zoom := 17
+
+	tileX, tileY = el.osmLonLatToTile(longitude, latitude, zoom)
+
+	right := true
+	if el.lastDx > dx {
+		log.Printf("direita")
+	} else if el.lastDx == dx {
+	} else {
+		right = false
+		log.Printf("esquerda")
+	}
+
+	if el.lastTileX == 0 {
+		el.lastTileX = tileX
+	} else if el.lastTileX != tileX {
+		el.lastTileX = tileX
+		el.dx = dx * -1
+
+		if !right {
+			el.dx -= 256
+		} else {
+			el.dx += 256
+		}
+	}
+
+	if el.lastTileY == 0 {
+		el.lastTileY = tileY
+	} else if el.lastTileY != tileY {
+		el.lastTileY = tileY
+		el.dy = dy * -1
+	}
+
+	//log.Printf("tile:   (%v, %v)", tileX, tileY)
+
+	//log.Printf("px  (%v, %v)", px, py)
+	//log.Printf("pxn (%v, %v)", pxn, pyn)
+
+	//lo, la := Num2deg(pxn, pyn, zoom)
+	//log.Printf("co (%2.9f, %2.9f)", longitude, latitude)
+	//log.Printf("cn (%v, %v)", lo, la)
+
+	width := el.GetWidth()
+	height := el.GetHeight()
+
+	centerX := width/2 - tileSize/2
+	centerY := height/2 - tileSize/2
+
+	//centerX += dx + el.dx
+	//centerY += dy + el.dy
+
+	//log.Printf("center: (%v, %v)", centerX, centerY)
+
+	tilesHorizontal := int(math.Ceil(float64(width) / float64(tileSize)))
+	tilesVertical := int(math.Ceil(float64(height) / float64(tileSize)))
+
+	// makes the number of tiles odd to always center with a number of tiles greater than the image
+	if tilesHorizontal%2 == 0 {
+		tilesHorizontal += 1
+	}
+
+	// makes the number of tiles odd to always center with a number of tiles greater than the image
+	if tilesVertical%2 == 0 {
+		tilesVertical += 1
+	}
+
+	//tilesHorizontal = 1
+	//tilesVertical = 1
+
+	horizontalMiddle := int(math.Floor(float64(tilesHorizontal) / 2.0))
+	verticalMiddle := int(math.Floor(float64(tilesVertical) / 2.0))
+
+	log.Printf("delta: (%v, %v)", dx+el.dx, dy+el.dy)
+	//el.Save()
+
+	for h := horizontalMiddle * -1; h != tilesHorizontal-horizontalMiddle; h += 1 {
+		for v := verticalMiddle * -1; v != tilesVertical-verticalMiddle; v += 1 {
+			el.osmDrawTile(ctx, tileX+h, tileY+v, zoom, centerX+(h*tileSize), centerY+(v*tileSize))
+		}
+	}
+
+	el.ResetTransform()
+	el.Translate(dx+el.dx, dy+el.dy)
+	//el.Restore()
+}
+
+func (el *TagCanvas) ShiftInPixels(dx, dy, zoom int, longitude, latitude float64) {
+
+	//log.Printf("(%v, %v)", longitude, latitude)
+	//pixelX, pixelY := el.latLongToPixelXYOSM(latitude, longitude, zoom) // todo: mudar ordem latitude/longitude para longitude/latitude
+	//pixelX += dx
+	//pixelY += dy
+	//latitude, longitude = el.pixelXYToLatLongOSM(pixelX, pixelY, zoom)
+	//log.Printf("(%v, %v)", longitude, latitude)
+	el.SetOsm(longitude, latitude, zoom, dx, dy)
+
+}
+
+// Clip clips a number to the specified minimum and maximum values.
+func (el *TagCanvas) clip(n, minValue, maxValue float64) float64 {
+	return math.Min(math.Max(n, minValue), maxValue)
+}
+
+// ClipByRange clips a number by a specified range.
+func (el *TagCanvas) clipByRange(n, rangeVal float64) float64 {
+	return math.Mod(n, rangeVal)
+}
+
+// LatLongToPixelXYOSM converts latitude and longitude to pixel coordinates for OpenStreetMap.
+func (el *TagCanvas) latLongToPixelXYOSM(latitude, longitude float64, zoomLevel int) (pixelX, pixelY int) {
+	mapSize := math.Pow(2, float64(zoomLevel)) * tileSize
+
+	latitude = el.clip(latitude, minLatitude, maxLatitude)
+	longitude = el.clip(longitude, minLongitude, maxLongitude)
+
+	x := (longitude + 180.0) / 360.0 * float64(int(1<<zoomLevel))
+	y := (1.0 - math.Log(math.Tan(latitude*math.Pi/180.0)+1.0/math.Cos(latitude*math.Pi/180.0))/math.Pi) / 2.0 * float64(int(1<<zoomLevel))
+
+	tileX := int(math.Floor(x))
+	tileY := int(math.Floor(y))
+	pixelX = int(el.clipByRange((float64(tileX)*tileSize)+((x-float64(tileX))*tileSize), mapSize-1))
+	pixelY = int(el.clipByRange((float64(tileY)*tileSize)+((y-float64(tileY))*tileSize), mapSize-1))
+
+	return pixelX, pixelY
+}
+
+// PixelXYToLatLongOSM converts pixel coordinates to latitude and longitude for OpenStreetMap.
+func (el *TagCanvas) pixelXYToLatLongOSM(pixelX, pixelY int, zoomLevel int) (latitude, longitude float64) {
+	mapSize := math.Pow(2, float64(zoomLevel)) * tileSize
+
+	n := math.Pi - (2.0*math.Pi*el.clipByRange(float64(pixelY), mapSize-1)/tileSize)/math.Pow(2.0, float64(zoomLevel))
+
+	longitude = (el.clipByRange(float64(pixelX), mapSize-1)/tileSize)/math.Pow(2.0, float64(zoomLevel))*360.0 - 180.0
+	latitude = 180.0 / math.Pi * math.Atan(math.Sinh(n))
+
+	return latitude, longitude
 }

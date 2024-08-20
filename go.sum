@@ -1,5 +1,3 @@
-github.com/golang/geo v0.0.0-20230421003525-6adc56603217 h1:HKlyj6in2JV6wVkmQ4XmG/EIm+SCYlPZ+V4GWit7Z+I=
-github.com/golang/geo v0.0.0-20230421003525-6adc56603217/go.mod h1:8wI0hitZ3a1IxZfeH3/5I97CI8i5cLGsYe7xNhQGs9U=
 github.com/helmutkemper/iotmaker.platform.webbrowser v0.0.0-20200208001228-b665b1f435bb/go.mod h1:QUbS2Rmofhi8TU3QHKxdbydS0e3bOzOMKlKNY5F1zmM=
 github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go v0.0.0-20200120233119-9d62fed13020/go.mod h1:HA3lnQ50R+4hrCjx5MYkUvvHFX7WJjTBjJ5+0xqxW1I=
 github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go v0.0.0-20210626181330-090ff97f89e5 h1:L58byX5/tAlpnNc8ot0T/w4JLBBZqwrxmqKaMy5AM20=

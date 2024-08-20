@@ -76,8 +76,10 @@ const (
 type CacheType js.Value
 
 type OsmCache struct {
-	testX int
-	testY int
+	testX     int
+	testY     int
+	testTileX int
+	testTileY int
 
 	chZoom     chan int
 	z          int
@@ -294,27 +296,29 @@ func (e *OsmCache) mouseMoveFunc(_ js.Value, args []js.Value) any {
 func (e *OsmCache) mouseUpFunc(_ js.Value, _ []js.Value) any {
 	e.isDragging = false
 	e.mapTag.AddStyle("cursor", "grab")
+
+	log.Printf("%v,%v", e.testX, e.testY)
 	return nil
 }
 
 func (e *OsmCache) dblClickWindowFunc(_ js.Value, _ []js.Value) any {
 
-	e.testX = int(e.tileXIntegral + float64(e.testX))
-	e.testY = int(e.tileYIntegral + float64(e.testY))
+	var x = e.testX
+	log.Printf("e.testX: %v", e.testX)
+	e.testTileX = e.testX / tileSize
+	log.Printf("e.testTileX: %v", e.testTileX)
+	e.testX = e.testX % tileSize
+	log.Printf("e.testX: %v", e.testX)
 
-	dLongitude := (360.0 / math.Pow(2, float64(e.zoom))) * (float64(e.testX))
+	go func() {
+		e.calculate()
+		e.Centralize()
+		e.mapTag.AddStyle("left", fmt.Sprintf("%vpx", e.totalXMovementMouseMove+(x*-1)))
+	}()
 
-	log.Printf("(%v,%v)", e.longitude, e.latitude)
-	log.Printf("(%v,%v)", e.longitude+dLongitude, e.latitude)
+	//e.mapTag.AddStyle("left", fmt.Sprintf("%vpx", e.testX))
+	//e.mapTag.AddStyle("top", fmt.Sprintf("%vpx", e.totalYMovementMouseMove))
 
-	e.chZoom <- e.zoom
-	////log.Printf("(%v,%v)", e.longitude, e.latitude)
-	//e.isCentered = false
-	//e.calculate()
-	//e.Centralize()
-
-	e.testX = 0
-	e.testY = 0
 	return nil
 }
 
@@ -405,6 +409,9 @@ func (e *OsmCache) prepareWindowSize() {
 }
 
 func (e *OsmCache) prepareOsmTile() {
+	// https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Resolution_and_Scale
+	// (ler) https://cfis.savagexi.com/2006/05/03/google-maps-deconstructed/
+
 	e.tileXIntegral = (e.longitude + 180.0) / 360.0 * math.Pow(2, float64(e.zoom))
 	e.tileYIntegral = (1.0 - (math.Log(math.Tan(e.latitude*math.Pi/180.0)+1.0/math.Cos(e.latitude*math.Pi/180.0)) / math.Pi)) / 2.0 * math.Pow(2, float64(e.zoom))
 
@@ -442,7 +449,7 @@ func (e *OsmCache) calculateTotalTilesImage() {
 		e.verticalQuantityTile += 1
 	}
 
-	e.tileHCentral = int(math.Ceil(float64(e.horizontalQuantityTile) / 2.0))
+	e.tileHCentral = int(math.Ceil(float64(e.horizontalQuantityTile)/2.0)) + (e.testTileX * -1)
 	e.tileVCentral = int(math.Ceil(float64(e.verticalQuantityTile) / 2.0))
 }
 
@@ -584,14 +591,517 @@ func main() {
 	stage := factoryBrowser.NewStage()
 	stage.Append(osm)
 
-	var lat = 68.96301643204939
 	var lon = 33.07737274977919
+	var lat = 68.96301643204939
 	//max: 19 min: 5
 	var zoom = 19
+
+	lon = 33.07805939528697
+	lat = 68.96301643067
+
+	//resolution := 1.0 / 0.14929107082380833
+	//lonMax := 360.0 / 2.0
+	//tiles := math.Sqrt(274877906944.0)
+	//lonPerTile := lonMax / tiles
+	//lon += resolution
+
+	point := Point{}
+	point.SetDegrees(lon, lat)
 
 	cache.SetGrid(true, 1, factoryColor.NewGrayHalfTransparent())
 	cache.LoadOsm(lon, lat, zoom)
 	cache.Centralize()
 
+	d := HorizontalTileDistance(point, zoom)
+	a := Angle{}
+	a.SetDegrees(90)
+	pointB := DestinationPoint(point, d, a)
+	log.Printf("%v,%v", pointB.GetLongitudeAsDegrees(), pointB.GetLatitudeAsDegrees())
 	select {}
+}
+
+func DestinationPoint(point Point, distance Distance, angle Angle) (destination Point) {
+	earthRadius := EarthRadius(point)
+
+	//latB = asin( sin( latA ) * cos( d / R ) +
+	//  cos( latA ) * sin( d / R ) * cos( θ ) )
+	latitude := math.Asin(math.Sin(point.Rad[LATITUDE])*math.Cos(distance.GetMeters()/earthRadius.GetMeters()) +
+		math.Cos(point.Rad[LATITUDE])*math.Sin(distance.GetMeters()/earthRadius.GetMeters())*math.Cos(angle.GetAsRadians()))
+
+	//lonB = lonA + atan2( sin( θ ) *
+	//  sin( d / R ) * cos( latA ),
+	//  cos( d / R ) − sin( latA ) * sin( latB ) )
+	longitude := point.Rad[LONGITUDE] + math.Atan2(math.Sin(DegreesToRadians(angle.GetAsRadians()))*
+		math.Sin(distance.GetMeters()/earthRadius.GetMeters())*math.Cos(point.Rad[LATITUDE]),
+		math.Cos(distance.GetMeters()/earthRadius.GetMeters())-math.Sin(point.Rad[LATITUDE])*math.Sin(latitude))
+
+	destination.SetRadians(longitude, latitude)
+	return
+}
+
+func HorizontalTileDistance(point Point, zoom int) (distance Distance) {
+	// https://wiki.openstreetmap.org/wiki/Zoom_levels
+	earthCircumference := EarthCircumference(point)
+	distance.SetMeters(earthCircumference.GetMeters() * math.Cos(point.Rad[LATITUDE]) / math.Pow(2.0, float64(zoom)))
+	return
+}
+
+func EarthCircumference(point Point) (distance Distance) {
+	earthRadius := EarthRadius(point)
+	distance.SetMeters(2.0 * math.Pi * earthRadius.GetMeters())
+	return
+}
+
+func EarthRadius(point Point) (distance Distance) {
+	distance.SetMeters(
+		math.Sqrt(
+			(math.Pow(math.Pow(GeoidalMajor, 2.0)*math.Cos(point.Rad[LATITUDE]), 2.0) +
+				math.Pow(math.Pow(GeoidalMinor, 2.0)*math.Sin(point.Rad[LATITUDE]), 2.0)) /
+				(math.Pow(GeoidalMajor*math.Cos(point.Rad[LATITUDE]), 2.0) +
+					math.Pow(GeoidalMinor*math.Sin(point.Rad[LATITUDE]), 2.0))),
+	)
+
+	return
+}
+
+func DegreesToRadians(degreesAFlt float64) float64 {
+	return math.Pi * degreesAFlt / 180.0
+}
+
+func RadiansToDegrees(degreesAFlt float64) float64 {
+	return 180.0 * degreesAFlt / math.Pi
+}
+
+const (
+	GeoidalMajor = Wgs84A
+	GeoidalMinor = Wgs84B
+
+	// Wgs84A
+	// Geoide WGS84, major semi axis in meters
+	// Warning, changing this value affect an innumerable amount of testing
+	Wgs84A float64 = 6378137.0
+
+	// Wgs84B
+	// Geoide WGS84, minor semi axis in meters
+	// Warning, changing this value affect an innumerable amount of testing
+	Wgs84B float64 = 6356752.314245
+
+	// DEGREES
+	// Degrees symbol for human notation
+	// Warning, changing this value affect an innumerable amount of testing
+	DEGREES string = "°"
+
+	// MINUTES
+	// Minutes from degrees symbol for human notation
+	// Warning, changing this value affect an innumerable amount of testing
+	MINUTES string = "´"
+
+	// SECONDS
+	// Seconds from degrees symbol for human notation
+	// Warning, changing this value affect an innumerable amount of testing
+	SECONDS string = "´´"
+
+	// RADIANS
+	// Rads symbol from human notation
+	// Warning, changing this value affect an innumerable amount of testing
+	RADIANS string = "rad"
+
+	LONGITUDE = 0
+	LATITUDE  = 1
+)
+
+type Distance struct {
+	Meters       float64 // distance
+	Kilometers   float64 // distance
+	unit         string  // distance unit
+	preserveUnit string  // original unit
+}
+
+type DistanceList struct {
+	List []Distance
+}
+
+// GetMeters Get distance value
+func (d *Distance) GetMeters() float64 {
+	return d.Meters
+}
+
+// GetKilometers Get distance value
+func (d *Distance) GetKilometers() float64 {
+	return d.Kilometers
+}
+
+// GetUnit Get distance unit
+func (d *Distance) GetUnit() string {
+	return d.unit
+}
+
+func (d *Distance) GetOriginalUnit() string {
+	return d.preserveUnit
+}
+
+// AddMeters Set distance as meters
+func (d *Distance) AddMeters(m float64) (ref *Distance) {
+
+	d.Meters += m
+	d.Kilometers += m / 1000
+	return d
+}
+
+// SetMeters Set distance as meters
+func (d *Distance) SetMeters(m float64) (ref *Distance) {
+	d.Meters = m
+	d.Kilometers = m / 1000
+	d.unit = "m"
+	d.preserveUnit = "m"
+	return d
+}
+
+func (d *Distance) SetMetersIfGreaterThan(m float64) (ref *Distance) {
+	test := math.Max(d.Meters, m)
+
+	d.Meters = test
+	d.Kilometers = test / 1000
+	d.unit = "m"
+	d.preserveUnit = "m"
+	return d
+}
+
+func (d *Distance) SetKilometersIfGreaterThan(km float64) (ref *Distance) {
+	test := math.Max(d.Kilometers, km)
+
+	d.Meters = test * 1000
+	d.Kilometers = test
+	d.unit = "km"
+	d.preserveUnit = "km"
+	return d
+}
+
+func (d *Distance) SetMetersIfLessThan(m float64) (ref *Distance) {
+	test := math.Min(d.Meters, m)
+
+	d.Meters = test
+	d.Kilometers = test / 1000
+	d.unit = "m"
+	d.preserveUnit = "m"
+	return d
+}
+
+func (d *Distance) SetKilometersIfLessThan(km float64) (ref *Distance) {
+	test := math.Min(d.Kilometers, km)
+
+	d.Meters = test * 1000
+	d.Kilometers = test
+	d.unit = "km"
+	d.preserveUnit = "km"
+	return d
+}
+
+// AddKilometers Set distance as kilometers
+func (d *Distance) AddKilometers(km float64) (ref *Distance) {
+	d.Meters += km * 1000
+	d.Kilometers += km
+	d.unit = "Km"
+	d.preserveUnit = "Km"
+	return d
+}
+
+// SetKilometers Set distance as kilometers
+func (d *Distance) SetKilometers(km float64) (ref *Distance) {
+	d.Meters = km * 1000
+	d.Kilometers = km
+	d.unit = "Km"
+	d.preserveUnit = "Km"
+	return d
+}
+
+// ToMetersString Get distance as string
+func (d *Distance) ToMetersString() string {
+	return fmt.Sprintf("%1.2fm", d.Meters)
+}
+
+func (d *Distance) ToKilometersString() string {
+	return fmt.Sprintf("%1.2fKm", d.Kilometers)
+}
+
+type Angle struct {
+	Degrees      float64 //Angle
+	Radians      float64 //Angle
+	Unit         string  //Unit
+	PreserveUnit string  //original Unit
+}
+
+type AngleList struct {
+	List []Angle
+}
+
+// SetDecimalDegrees Set Angle value as decimal degrees
+func (a *Angle) SetDecimalDegrees(degrees, primes, seconds float64) (ref *Angle) {
+	a.Degrees = degrees + primes/60.0 + seconds/3600.0
+	a.Radians = DegreesToRadians(degrees + primes/60.0 + seconds/3600.0)
+	a.Unit = DEGREES
+	a.PreserveUnit = DEGREES
+	return a
+}
+
+// SetDegrees Set Angle value as degrees
+func (a *Angle) SetDegrees(angle float64) (ref *Angle) {
+	a.Degrees = angle
+	a.Radians = DegreesToRadians(angle)
+	a.Unit = DEGREES
+	a.PreserveUnit = DEGREES
+	return a
+}
+
+// SetRadians Set Angle value as radians
+func (a *Angle) SetRadians(angle float64) (ref *Angle) {
+	a.Radians = angle
+	a.Degrees = RadiansToDegrees(angle)
+	a.Unit = RADIANS
+	a.PreserveUnit = RADIANS
+	return a
+}
+
+// AddDegrees Set Angle value as degrees
+func (a *Angle) AddDegrees(angle float64) (ref *Angle) {
+	a.Degrees = a.Degrees + angle
+	a.Radians = DegreesToRadians(a.Degrees)
+	return a
+}
+
+// GetAsRadians Get Angle
+func (a *Angle) GetAsRadians() float64 {
+	return a.Radians
+}
+
+// GetAsDegrees Get Angle
+func (a *Angle) GetAsDegrees() float64 {
+	return a.Degrees
+}
+
+// GetUnit Get Unit
+func (a *Angle) GetUnit() string {
+	return a.Unit
+}
+
+// GetOriginalUnit Get original Unit before conversion
+func (a *Angle) GetOriginalUnit() string {
+	return a.PreserveUnit
+}
+
+// ToDegreesString Get Angle as string
+func (a *Angle) ToDegreesString() string {
+	return fmt.Sprintf("%1.3f%v", a.Degrees, DEGREES)
+}
+
+// ToRadiansString Get Angle as string
+func (a *Angle) ToRadiansString() string {
+	return fmt.Sprintf("%1.3f%v", a.Radians, RADIANS)
+}
+
+type Point struct {
+	Id int64 `bson:"id"`
+	// Array de localização geográfica.
+	// [0:x:longitude,1:y:latitude]
+	// Este campo deve obrigatoriamente ser um array devido a indexação do MongoDB
+	Loc [2]float64 `bson:"loc"`
+	Rad [2]float64 `bson:"rad"`
+	// Unidade original do ponto. Serve para manter a resposta no formato original.
+	// Versão dentro do Open Street Maps
+	Version int64 `bson:"version"`
+
+	Visible bool `bson:"visible"`
+
+	// TimeStamp dentro do Open Street Maps
+	TimeStamp time.Time `bson:"timeStamp"`
+	// ChangeSet dentro do Open Street Maps
+	ChangeSet int64 `bson:"changeSet"`
+	// User Id dentro do Open Street Maps
+	UId int64 `bson:"userId"`
+	// User Name dentro do Open Street Maps
+	User string `bson:"-"`
+	// Tags do Open Street Maps
+	// As Tags contêm _todo tipo de informação, desde como elas foram importadas, ao nome de um estabelecimento comercial,
+	// por exemplo.
+	Tag map[string]string `bson:"tag"`
+
+	// Dados do usuário
+	// Como o GO é fortemente tipado, eu obtive problemas em estender o struct de forma satisfatória e permitir ao usuário
+	// do sistema gravar seus próprios dados, por isto, este campo foi criado. Use-o a vontade.
+	Data map[string]string `bson:"data"`
+	Role string            `bson:"role"`
+	// Node usado apenas para o parser do arquivo
+	GeoJSon        string `bson:"geoJSon,omitempty"`
+	GeoJSonFeature string `bson:"geoJSonFeature"`
+
+	HasKeyValue bool `bson:"hasKeyValue" json:"-"`
+}
+
+// SetDegrees Set latitude and longitude as degrees
+func (el *Point) SetDegrees(longitude, latitude float64) {
+	el.Loc = [2]float64{longitude, latitude}
+	el.Rad = [2]float64{DegreesToRadians(longitude), DegreesToRadians(latitude)}
+}
+
+// SetDecimalDrees Set latitude and longitude as decimal degrees
+func (el *Point) SetDecimalDrees(longitudeDegrees, longitudePrimes, longitudeSeconds, latitudeDegrees, latitudePrimes, latitudeSeconds int64) {
+	el.Loc = [2]float64{float64(latitudeDegrees) + float64(latitudePrimes)/60.0 + float64(latitudeSeconds)/3600.0, float64(longitudeDegrees) + float64(longitudePrimes)/60.0 + float64(longitudeSeconds)/3600.0}
+	el.Rad = [2]float64{DegreesToRadians(float64(latitudeDegrees) + float64(latitudePrimes)/60.0 + float64(latitudeSeconds)/3600.0), DegreesToRadians(float64(longitudeDegrees) + float64(longitudePrimes)/60.0 + float64(longitudeSeconds)/3600.0)}
+}
+
+// SetRadians Set latitude and longitude as radians
+func (el *Point) SetRadians(longitude, latitude float64) {
+	el.Loc = [2]float64{RadiansToDegrees(longitude), RadiansToDegrees(latitude)}
+	el.Rad = [2]float64{longitude, latitude}
+}
+
+// ToDecimalDegreesString Get latitude and longitude
+func (el *Point) ToDecimalDegreesString() string {
+
+	dec := math.Abs(el.Loc[LONGITUDE])
+	degLng := math.Floor(dec)
+	minLng := math.Floor((dec - degLng) * 60.0)
+	secLng := (dec - degLng - (minLng / 60.0)) * 3600.0
+	if el.Loc[LONGITUDE] < 0 {
+		degLng *= -1
+	}
+
+	dec = math.Abs(el.Loc[LATITUDE])
+	degLat := math.Floor(dec)
+	minLat := math.Floor((dec - degLat) * 60.0)
+	secLat := (dec - degLat - (minLat / 60.0)) * 3600.0
+
+	if el.Loc[LATITUDE] < 0 {
+		degLat *= -1
+	}
+
+	return fmt.Sprintf("(%v%v%v%v%2.2f%v,%v%v%v%v%2.2f%v)", degLat, DEGREES, minLat, MINUTES, secLat, SECONDS, degLng, DEGREES, minLng, MINUTES, secLng, SECONDS)
+}
+
+func (el *Point) GetLatitudeAsDegrees() float64 {
+	return el.Loc[LATITUDE]
+}
+
+func (el *Point) GetLongitudeAsDegrees() float64 {
+	return el.Loc[LONGITUDE]
+}
+
+func (el *Point) GetLatitudeAsRadians() float64 {
+	return el.Rad[LATITUDE]
+}
+
+func (el *Point) GetLongitudeAsRadians() float64 {
+	return el.Rad[LONGITUDE]
+}
+
+func (el *Point) ToGoogleMapString() string {
+	return fmt.Sprintf("%1.5f, %1.5f [ Please, copy and past this value on google maps search ]", el.Loc[LATITUDE], el.Loc[LONGITUDE])
+}
+
+func (el *Point) ToLeafletMapString() string {
+	return fmt.Sprintf("[%1.5f, %1.5f],", el.Loc[LATITUDE], el.Loc[LONGITUDE])
+}
+
+//func (el Point) GetBoundingBox(distanceAStt Distance) Box {
+//	return BoundingBox(el, distanceAStt)
+//}
+
+func (el *Point) GetDestinationPoint(distance Distance, angle Angle) Point {
+	return DestinationPoint(*el, distance, angle)
+}
+
+//func (el *Point) GetDirectionBetweenTwoPoints(point Point) Angle {
+//	return DirectionBetweenTwoPoints(el, point)
+//}
+
+//func (el *Point) GetDistanceBetweenTwoPoints(point Point) Distance {
+//	return DistanceBetweenTwoPoints(el, point)
+//}
+
+func (el *Point) add(point Point) Point {
+	var ret = Point{}
+	ret.SetDegrees(el.Loc[LONGITUDE]+point.Loc[LONGITUDE], el.Loc[LATITUDE]+point.Loc[LATITUDE])
+	return ret
+}
+
+func (el *Point) sub(point Point) Point {
+	var ret = Point{}
+	ret.SetDegrees(el.Loc[LONGITUDE]-point.Loc[LONGITUDE], el.Loc[LATITUDE]-point.Loc[LATITUDE])
+	return ret
+}
+
+func (el *Point) plus(value float64) Point {
+	var ret = Point{}
+	ret.SetDegrees(el.Loc[LONGITUDE]*value, el.Loc[LATITUDE]*value)
+	return ret
+}
+
+func (el *Point) div(value float64) Point {
+	var ret = Point{}
+	ret.SetDegrees(el.Loc[LONGITUDE]/value, el.Loc[LATITUDE]/value)
+	return ret
+}
+
+func (el *Point) equality(point Point) bool {
+	return el.Loc[LONGITUDE] == point.Loc[LONGITUDE] && el.Loc[LATITUDE] == point.Loc[LATITUDE]
+}
+
+func (el *Point) dotProduct(point Point) float64 {
+	return el.Loc[LONGITUDE]*point.Loc[LONGITUDE] + el.Loc[LATITUDE]*point.Loc[LATITUDE]
+}
+
+func (el *Point) distanceSquared(point Point) float64 {
+	return (point.Loc[LONGITUDE]-el.Loc[LONGITUDE])*(point.Loc[LONGITUDE]-el.Loc[LONGITUDE]) + (point.Loc[LATITUDE]-el.Loc[LATITUDE])*(point.Loc[LATITUDE]-el.Loc[LATITUDE])
+}
+
+func (el *Point) pythagoras(point Point) float64 {
+	return math.Sqrt(el.distanceSquared(point))
+}
+
+func (el *Point) Distance(pointA, pointB Point) float64 {
+	var l2 = pointA.distanceSquared(pointB)
+	if l2 == 0.0 {
+		return el.pythagoras(pointA) // v == w case
+	}
+
+	// Consider the line extending the segment, parameterized as v + t (w - v)
+	// We find projection of point p onto the line.
+	// It falls where t = [(p-v) . (w-v)] / |w-v|^2
+	var pA = el.sub(pointA)
+	var pB = pointB.sub(pointA)
+	var t = pA.dotProduct(pB) / l2
+	if t < 0.0 {
+		return el.pythagoras(pointA)
+	} else if t > 1.0 {
+		return el.pythagoras(pointB)
+	}
+	var pC = pointB.sub(pointA)
+	pC = pC.plus(t)
+	pC = pointA.add(pC)
+
+	return el.pythagoras(pC)
+}
+
+func (el *Point) decisionDistance(pointsA []Point) float64 {
+	var i int
+	var curDistance float64
+	var dst = el.pythagoras(pointsA[LONGITUDE])
+	for i = 1; i < len(pointsA); i += 1 {
+		curDistance = el.pythagoras(pointsA[i])
+		if curDistance < dst {
+			dst = curDistance
+		}
+	}
+
+	return dst
+}
+
+func (el *Point) IsContainedInTheList(pointsAAStt []Point) bool {
+	for _, point := range pointsAAStt {
+		if el.equality(point) {
+			return true
+		}
+	}
+
+	return false
 }

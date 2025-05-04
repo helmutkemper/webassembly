@@ -76,10 +76,11 @@ const (
 type CacheType js.Value
 
 type OsmCache struct {
-	testX     int
-	testY     int
-	testTileX int
-	testTileY int
+	testX           int
+	xMouseDownDelta int
+	testY           int
+	testTileX       int
+	testTileY       int
 
 	chZoom     chan int
 	z          int
@@ -116,12 +117,13 @@ type OsmCache struct {
 	mapHeight               int // mapHeight internal size height of the map div
 	horizontalQuantityTile  int // horizontalQuantityTile quantidade de tiles horizontais usados na imagem
 	verticalQuantityTile    int // verticalQuantityTile quantidade de tiles verticais usados na imagem
-	startXMouseMove         int // startXMouseMove captura o x inicial da div maps para o dragging do mouse
-	startYMouseMove         int // startYMouseMove captura o y inicial da div maps para o dragging do mouse
+	xMouseDown              int // xMouseDown captura o x do evento mouse down
+	yMouseDown              int // yMouseDown captura o y do evento mouse down
 	totalXMovementMouseMove int
 	totalYMovementMouseMove int
 
 	canvasTag *html.TagCanvas
+	offScreen *html.TagCanvas
 	mapTag    *html.TagDiv
 	maskTag   *html.TagDiv
 }
@@ -130,10 +132,10 @@ func (e *OsmCache) GetJsImage(x, y, z int) (found bool, img js.Value) {
 	var data CacheType
 	data, found = e.cacheData[z][x][y]
 
-	if !found {
-		e.AddTile(x, y, z)
-		data, found = e.cacheData[z][x][y]
-	}
+	//if !found {
+	//	e.AddTile(x, y, z)
+	//	data, found = e.cacheData[z][x][y]
+	//}
 
 	return found, js.Value(data)
 }
@@ -202,9 +204,9 @@ func (e *OsmCache) AddTile(x, y, z int) {
 		return
 	}
 	//req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Access-Control-Allow-Origin", "*")
-	req.Header.Set("Access-Control-Allow-Methods", "GET")
-	req.Header.Set("Access-Control-Allow-Headers", "*")
+	//req.Header.Set("Access-Control-Allow-Origin", "*")
+	//req.Header.Set("Access-Control-Allow-Methods", "GET")
+	//req.Header.Set("Access-Control-Allow-Headers", "*")
 
 	client := http.Client{
 		Timeout: 15 * time.Second, // todo: permitir setup
@@ -255,11 +257,13 @@ func (e *OsmCache) mouseDownFunc(_ js.Value, args []js.Value) any {
 	e.isDragging = true
 
 	// Pega o viewPoint da tela de onde o click aconteceu.
-	e.startXMouseMove = event.Get("clientX").Int()
-	e.startYMouseMove = event.Get("clientY").Int()
+	e.xMouseDown = event.Get("clientX").Int()
+	//e.yMouseDown = event.Get("clientY").Int()
 
 	// Altera o cursor
 	e.mapTag.AddStyle("cursor", "grabbing")
+
+	//log.Printf("e.xMouseDown: %v", e.xMouseDown)
 	return nil
 }
 
@@ -272,23 +276,114 @@ func (e *OsmCache) mouseMoveFunc(_ js.Value, args []js.Value) any {
 
 	// Pega o viewPoint da tela de onde o movimento aconteceu.
 	var actualX = event.Get("clientX").Int()
-	var actualY = event.Get("clientY").Int()
+	//var actualY = event.Get("clientY").Int()
 
 	// Calcula o delta de deslocamento em relação ao ponto inicial
-	var deltaX = e.startXMouseMove - actualX
-	var deltaY = e.startYMouseMove - actualY
+	var deltaX = e.xMouseDown - actualX
+	//var deltaY = e.yMouseDown - actualY
 
 	e.testX += deltaX
-	e.testY += deltaY
+	//e.testY += deltaY
 
-	e.mapTag.AddStyle("left", fmt.Sprintf("%vpx", e.mapTag.GetStyleInt("left")-deltaX))
-	e.mapTag.AddStyle("top", fmt.Sprintf("%vpx", e.mapTag.GetStyleInt("top")-deltaY))
+	left := e.mapTag.GetStyleInt("left")
+	//log.Printf("left: %v", left)
+	//log.Printf("e.testX: %v", e.testX)
+	//log.Printf("inteiro: %v", -1*e.testX/tileSize)
+	integer := -1 * e.testX / tileSize
+	if integer > 0 {
+		e.xMouseDownDelta += 1
+		go func() {
 
-	// Atualiza o viewPoint da tela de onde o click aconteceu para onde o mouse está
-	e.startXMouseMove = actualX
-	e.startYMouseMove = actualY
+			e.calculate()
+			for v := 0; v != e.verticalQuantityTile; v += 1 {
+				for h := 0; h != e.horizontalQuantityTile; h += 1 {
+					x := e.tileXOsmUrl + h - e.tileHCentral + 1
+					y := e.tileYOsmUrl + v - e.tileVCentral + 1
 
-	e.isCentered = false
+					x -= e.xMouseDownDelta
+					found, jsImg := e.GetJsImage(x, y, e.zoom)
+					if !found {
+						go e.AddTile(x, y, e.zoom)
+						continue
+					}
+
+					e.offScreen.DrawImage(jsImg, h*tileSize, v*tileSize, tileSize, tileSize)
+
+					if e.gridEnable {
+						e.offScreen.StrokeStyle(e.gridColor).
+							LineWidth(e.gridLine).
+							StrokeRect(h*tileSize, v*tileSize, tileSize, tileSize)
+					}
+				}
+			}
+			e.canvasTag.DrawImage(e.offScreen, 0, 0, e.canvasTag.Width(), e.canvasTag.Height())
+		}()
+		//defer func() { go func() { func() { e.calculate() }() }() }()
+
+		delta := integer * tileSize
+		//log.Printf("e.xMouseDownDelta: %v", e.xMouseDownDelta)
+		e.testX += delta
+		e.mapTag.AddStyle("left", fmt.Sprintf("%vpx", left-deltaX-delta))
+		//e.mapTag.AddStyle("top", fmt.Sprintf("%vpx", e.mapTag.GetStyleInt("top")-deltaY))
+
+		// Atualiza o viewPoint da tela de onde o click aconteceu para onde o mouse está
+		e.xMouseDown = actualX
+		//e.yMouseDown = actualY
+
+		e.isCentered = false
+	} else if integer == 0 {
+
+		e.mapTag.AddStyle("left", fmt.Sprintf("%vpx", left-deltaX))
+		//e.mapTag.AddStyle("top", fmt.Sprintf("%vpx", e.mapTag.GetStyleInt("top")-deltaY))
+
+		// Atualiza o viewPoint da tela de onde o click aconteceu para onde o mouse está
+		e.xMouseDown = actualX
+		//e.yMouseDown = actualY
+
+		e.isCentered = false
+
+	} else if integer < 0 {
+		e.xMouseDownDelta -= 1
+		go func() {
+
+			e.calculate()
+			for v := 0; v != e.verticalQuantityTile; v += 1 {
+				for h := 0; h != e.horizontalQuantityTile; h += 1 {
+					x := e.tileXOsmUrl + h - e.tileHCentral + 1
+					y := e.tileYOsmUrl + v - e.tileVCentral + 1
+
+					x -= e.xMouseDownDelta
+					found, jsImg := e.GetJsImage(x, y, e.zoom)
+					if !found {
+						go e.AddTile(x, y, e.zoom)
+						continue
+					}
+
+					e.offScreen.DrawImage(jsImg, h*tileSize, v*tileSize, tileSize, tileSize)
+
+					if e.gridEnable {
+						e.offScreen.StrokeStyle(e.gridColor).
+							LineWidth(e.gridLine).
+							StrokeRect(h*tileSize, v*tileSize, tileSize, tileSize)
+					}
+				}
+			}
+			e.canvasTag.DrawImage(e.offScreen, 0, 0, e.canvasTag.Width(), e.canvasTag.Height())
+		}()
+		//defer func() { go func() { func() { e.calculate() }() }() }()
+
+		delta := integer * tileSize
+		//log.Printf("e.xMouseDownDelta: %v", e.xMouseDownDelta)
+		e.testX += delta
+		e.mapTag.AddStyle("left", fmt.Sprintf("%vpx", left-deltaX-delta))
+		//e.mapTag.AddStyle("top", fmt.Sprintf("%vpx", e.mapTag.GetStyleInt("top")-deltaY))
+
+		// Atualiza o viewPoint da tela de onde o click aconteceu para onde o mouse está
+		e.xMouseDown = actualX
+		//e.yMouseDown = actualY
+
+		e.isCentered = false
+	}
 
 	return nil
 }
@@ -297,28 +392,11 @@ func (e *OsmCache) mouseUpFunc(_ js.Value, _ []js.Value) any {
 	e.isDragging = false
 	e.mapTag.AddStyle("cursor", "grab")
 
-	log.Printf("%v,%v", e.testX, e.testY)
+	//log.Printf("%v,%v", e.testX, e.testY)
 	return nil
 }
 
 func (e *OsmCache) dblClickWindowFunc(_ js.Value, _ []js.Value) any {
-
-	var x = e.testX
-	log.Printf("e.testX: %v", e.testX)
-	e.testTileX = e.testX / tileSize
-	log.Printf("e.testTileX: %v", e.testTileX)
-	e.testX = e.testX % tileSize
-	log.Printf("e.testX: %v", e.testX)
-
-	go func() {
-		e.calculate()
-		e.Centralize()
-		e.mapTag.AddStyle("left", fmt.Sprintf("%vpx", e.totalXMovementMouseMove+(x*-1)))
-	}()
-
-	//e.mapTag.AddStyle("left", fmt.Sprintf("%vpx", e.testX))
-	//e.mapTag.AddStyle("top", fmt.Sprintf("%vpx", e.totalYMovementMouseMove))
-
 	return nil
 }
 
@@ -370,7 +448,7 @@ func (e *OsmCache) keyUpWindowFunc(_ js.Value, args []js.Value) any {
 
 func (e *OsmCache) resizeWindowFunc(_ js.Value, _ []js.Value) any {
 	e.resizeScreen()
-	e.calculate()
+	//e.calculate()
 
 	return nil
 }
@@ -390,13 +468,14 @@ func (e *OsmCache) Centralize() {
 
 	e.isCentered = true
 
-	e.canvasTag.BeginPath()
-	e.canvasTag.LineWidth(5)
-	e.canvasTag.StrokeStyle(color.RGBA{R: 0xff, G: 0x00, B: 0x00, A: 0xff})
-	e.canvasTag.Arc((e.tileHCentral-1)*tileSize+int(e.tileXPercentual*float64(tileSize)), (e.tileVCentral-1)*tileSize+int(e.tileYPercentual*float64(tileSize)), 10, 0, 2.0*math.Pi, false)
-	e.canvasTag.Stroke()
+	e.offScreen.BeginPath()
+	e.offScreen.LineWidth(5)
+	e.offScreen.StrokeStyle(color.RGBA{R: 0xff, G: 0x00, B: 0x00, A: 0xff})
+	e.offScreen.Arc((e.tileHCentral-1)*tileSize+int(e.tileXPercentual*float64(tileSize)), (e.tileVCentral-1)*tileSize+int(e.tileYPercentual*float64(tileSize)), 10, 0, 2.0*math.Pi, false)
+	e.offScreen.Stroke()
 }
 
+// prepareMapTagSize captura o tamanho da div mask
 func (e *OsmCache) prepareMapTagSize() {
 	// https://developer.mozilla.org/en-US/docs/Web/API/Element/clientWidth
 	e.mapWidth = e.maskTag.Get().Get("clientWidth").Int()
@@ -427,6 +506,12 @@ func (e *OsmCache) prepareCenterMap() {
 	e.totalYMovementMouseMove = e.mapHeight/2 - ((e.tileVCentral-1)*tileSize + int(e.tileYPercentual*float64(tileSize)))
 }
 
+func (e *OsmCache) setCanvasSize() {
+	e.canvasTag.SetSize(e.horizontalQuantityTile*tileSize, e.verticalQuantityTile*tileSize)
+	e.offScreen.SetSize(e.horizontalQuantityTile*tileSize, e.verticalQuantityTile*tileSize)
+}
+
+// calculateTotalTilesImage calcula a quantidade de tiles da imagem
 func (e *OsmCache) calculateTotalTilesImage() {
 	e.horizontalQuantityTile = int(math.Ceil(float64(e.mapWidth) / float64(tileSize)))
 	if e.mapWidth <= tileSize {
@@ -455,13 +540,10 @@ func (e *OsmCache) calculateTotalTilesImage() {
 
 func (e *OsmCache) calculate() {
 
-	e.prepareOsmTile()
-	e.prepareMapTagSize()
-	e.calculateTotalTilesImage()
-
-	e.canvasTag.SetSize(e.horizontalQuantityTile*tileSize, e.verticalQuantityTile*tileSize)
-
-	e.prepareCenterMap()
+	//e.prepareOsmTile()
+	//e.prepareMapTagSize()
+	//e.calculateTotalTilesImage()
+	//e.setCanvasSize()
 
 	if e.isCentered {
 		e.Centralize()
@@ -488,16 +570,19 @@ func (e *OsmCache) calculate() {
 			for h := 0; h != e.horizontalQuantityTile; h += 1 {
 				x := e.tileXOsmUrl + h - e.tileHCentral + 1
 				y := e.tileYOsmUrl + v - e.tileVCentral + 1
+
+				x -= e.xMouseDownDelta
 				found, jsImg := e.GetJsImage(x, y, e.zoom)
 				if !found {
+					e.AddTile(x, y, e.zoom)
 					pass = false
 					continue
 				}
 
-				e.canvasTag.DrawImage(jsImg, h*tileSize, v*tileSize, tileSize, tileSize)
+				e.offScreen.DrawImage(jsImg, h*tileSize, v*tileSize, tileSize, tileSize)
 
 				if e.gridEnable {
-					e.canvasTag.StrokeStyle(e.gridColor).
+					e.offScreen.StrokeStyle(e.gridColor).
 						LineWidth(e.gridLine).
 						StrokeRect(h*tileSize, v*tileSize, tileSize, tileSize)
 				}
@@ -510,11 +595,13 @@ func (e *OsmCache) calculate() {
 		time.Sleep(time.Nanosecond)
 	}
 
-	e.canvasTag.BeginPath()
-	e.canvasTag.LineWidth(5)
-	e.canvasTag.StrokeStyle(color.RGBA{R: 0xff, G: 0x00, B: 0x00, A: 0xff})
-	e.canvasTag.Arc((e.tileHCentral-1)*tileSize+int(e.tileXPercentual*float64(tileSize)), (e.tileVCentral-1)*tileSize+int(e.tileYPercentual*float64(tileSize)), 10, 0, 2.0*math.Pi, false)
-	e.canvasTag.Stroke()
+	e.offScreen.BeginPath()
+	e.offScreen.LineWidth(5)
+	e.offScreen.StrokeStyle(color.RGBA{R: 0xff, G: 0x00, B: 0x00, A: 0xff})
+	e.offScreen.Arc((e.tileHCentral-1)*tileSize+int(e.tileXPercentual*float64(tileSize)), (e.tileVCentral-1)*tileSize+int(e.tileYPercentual*float64(tileSize)), 10, 0, 2.0*math.Pi, false)
+	e.offScreen.Stroke()
+
+	e.canvasTag.DrawImage(e.offScreen, 0, 0, e.canvasTag.Width(), e.canvasTag.Height())
 }
 
 func (e *OsmCache) LoadOsm(longitude, latitude float64, zoom int) {
@@ -523,7 +610,22 @@ func (e *OsmCache) LoadOsm(longitude, latitude float64, zoom int) {
 	e.latitude = latitude
 	e.zoom = zoom
 
-	e.calculate()
+	e.prepareOsmTile()
+	e.prepareMapTagSize()
+	e.calculateTotalTilesImage()
+	e.setCanvasSize()
+	e.prepareCenterMap()
+	go e.calculate()
+
+	//ticker := time.NewTicker(300 * time.Millisecond)
+	//go func() {
+	//	for {
+	//		select {
+	//		case <-ticker.C:
+	//			e.calculate()
+	//		}
+	//	}
+	//}()
 
 	go func() {
 		for {
@@ -542,7 +644,7 @@ func (e *OsmCache) LoadOsm(longitude, latitude float64, zoom int) {
 				}
 
 				e.zoom = value
-				e.calculate()
+				//e.calculate()
 			}
 		}
 	}()
@@ -553,6 +655,11 @@ func (e *OsmCache) resizeScreen() {
 
 	e.maskTag.AddStyle("width", fmt.Sprintf("%vpx", e.usefulWindowWidth))
 	e.maskTag.AddStyle("height", fmt.Sprintf("%vpx", e.usefulWindowHeight))
+
+	e.prepareMapTagSize()
+	e.calculateTotalTilesImage()
+	e.setCanvasSize()
+	e.prepareCenterMap()
 }
 
 func (e *OsmCache) Init(screen bool) (div *html.TagDiv) {
@@ -562,6 +669,7 @@ func (e *OsmCache) Init(screen bool) (div *html.TagDiv) {
 	e.z = -1
 	e.isCentered = true
 
+	e.offScreen = factoryBrowser.NewTagCanvas(256, 256).Id("canvas")
 	e.canvasTag = factoryBrowser.NewTagCanvas(256, 256).Id("canvas")
 	e.mapTag = factoryBrowser.NewTagDiv().Id("map").Class("draggable-content").Append(e.canvasTag)
 	e.maskTag = factoryBrowser.NewTagDiv().Id("mask").Class("fixed-div").Append(e.mapTag)

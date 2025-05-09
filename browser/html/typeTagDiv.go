@@ -1873,7 +1873,7 @@ func (e *TagDiv) EasingTweenWalkingAndRotateIntoPoints() (function func(forTenTh
 			return nil
 		}))
 
-		e.Data(map[string]string{"angle": strconv.FormatFloat(angle, 'g', 10, 64)})
+		//e.Data(map[string]string{"angle": strconv.FormatFloat(angle, 'g', 10, 64)})
 	}
 
 	return

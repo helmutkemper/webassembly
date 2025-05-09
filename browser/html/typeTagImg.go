@@ -841,6 +841,30 @@ func (e *TagImg) Style(style string) (ref *TagImg) {
 	return e
 }
 
+func (e *TagImg) AddStyle(key string, value any) (ref *TagImg) {
+	e.selfElement.Get("style").Set(key, value)
+	return e
+}
+
+func (e *TagImg) GetStyleInt(key string) (value int) {
+	valueStr := e.selfElement.Get("style").Get(key).String()
+	i := len(valueStr) - 1
+	for ; i > 0; i -= 1 {
+		char := valueStr[i]
+		if char >= 0x30 && char <= 0x39 {
+			break
+		}
+	}
+	valueI64, err := strconv.ParseInt(valueStr[:i+1], 10, 64)
+	if err != nil {
+		log.Printf("GetStyleInt().ParseInt(%v).error: %v", valueStr[:i+1], err)
+		return
+	}
+
+	return int(valueI64)
+	return e.selfElement.Get("style").Get(key).Int()
+}
+
 // TabIndex
 //
 // English:

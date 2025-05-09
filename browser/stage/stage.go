@@ -408,7 +408,7 @@ func (e *Stage) Remove(value interface{}) (ref *Stage) {
 //
 //	 Saída:
 //	   width: tamanho do documento em pixels.
-func (e Stage) GetWidth() (width int) {
+func (e *Stage) GetWidth() (width int) {
 	return js.Global().Get("window").Get("innerWidth").Int()
 }
 
@@ -427,7 +427,7 @@ func (e Stage) GetWidth() (width int) {
 //
 //	 Saída:
 //	   width: tamanho do documento em pixels.
-func (e Stage) GetHeight() (height int) {
+func (e *Stage) GetHeight() (height int) {
 	return js.Global().Get("window").Get("innerHeight").Int()
 }
 
@@ -474,7 +474,7 @@ func (e *Stage) ResizeStageToScreen() (ref *Stage) {
 //	     nos documentos DTD. O atributo id é definido para ser um tipo ID em casos comuns de  XHTML,
 //	     XUL, e outros. Implementações que não reconhecem se os atributos são do tipo ID, ou não são
 //	     esperados retornam null.
-func (e Stage) GetById(id string) (element interface{}) {
+func (e *Stage) GetById(id string) (element interface{}) {
 	elementRet := js.Global().Get("document").Call("getElementById", id)
 	if elementRet.IsUndefined() == true || elementRet.IsNull() {
 		log.Printf("getElementById(%v).undefined", id)
@@ -1545,4 +1545,35 @@ func (e *Stage) GetStatusBar() (statusbar js.Value) {
 // Retorna uma referência à janela superior na hierarquia de janelas.
 func (e *Stage) GetTop() (top js.Value) {
 	return e.selfWindow.Get("top")
+}
+
+// Style #global
+//
+// English:
+//
+//	Specifies an inline CSS style for an element.
+//
+// The style attribute will override any style set globally, e.g. styles specified in the <style> tag
+// or in an external style sheet.
+//
+// The style attribute can be used on any HTML element (it will validate on any HTML element.
+// However, it is not necessarily useful).
+//
+// Português:
+//
+//	Especifica um estilo CSS embutido para um elemento
+//
+// O atributo style substituirá qualquer conjunto de estilos globalmente, por exemplo estilos
+// especificados na tag <style> ou em uma folha de estilo externa.
+//
+// O atributo style pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
+// No entanto, não é necessariamente útil).
+func (e *Stage) Style(style string) (ref *Stage) {
+	e.selfWindow.Set("style", style)
+	return e
+}
+
+func (e *Stage) AddStyle(key string, value any) (ref *Stage) {
+	e.selfWindow.Get("style").Set(key, value)
+	return e
 }

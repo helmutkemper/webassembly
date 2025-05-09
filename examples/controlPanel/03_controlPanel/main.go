@@ -8,6 +8,7 @@ import (
 	"github.com/helmutkemper/webassembly/platform/factoryAlgorithm"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"github.com/helmutkemper/webassembly/platform/factoryEasingTween"
+	"log"
 	"math"
 	"time"
 )
@@ -33,6 +34,8 @@ type Body struct {
 }
 
 type BoatAdjust struct {
+	components.Board
+
 	Dragging *DraggingEffect `wasmPanel:"type:range;label:time (s)"`
 }
 
@@ -53,13 +56,16 @@ type OnChangeEvent struct {
 	Type      string  `wasmGet:"type"`
 }
 
-func (e *OnChangeEvent) OnChangeEvent(_ OnChangeEvent, reference DraggingEffect) {
-	var value = reference.TagNumber.GetValue()
+func (e *OnChangeEvent) OnChangeEvent(event OnChangeEvent, reference *ControlPanel) {
+	var value = event.Value
 
-	factoryEasingTween.NewInOutSine(
+	log.Printf("OnChangeEvent: %v", event.Value)
+	log.Printf("Time: %v", time.Duration(value)*time.Second)
+
+	factoryEasingTween.NewInOutBounce(
 		time.Duration(value)*time.Second,
 		0,
-		10000,
+		1000000,
 		tagDivRocket.EasingTweenWalkingAndRotateIntoPoints,
 		0,
 	).

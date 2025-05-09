@@ -8,7 +8,6 @@ import (
 	"github.com/helmutkemper/webassembly/platform/factoryAlgorithm"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"github.com/helmutkemper/webassembly/platform/factoryEasingTween"
-	"log"
 	"math"
 	"time"
 )
@@ -42,10 +41,10 @@ type BoatAdjust struct {
 type DraggingEffect struct {
 	components.Range
 
-	TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
-	TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
-	Color       float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:15"`
-	ColorChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+	TagRange   *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
+	TagNumber  *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
+	Time       float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:15"`
+	TimeChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
 }
 
 type OnChangeEvent struct {
@@ -56,13 +55,11 @@ type OnChangeEvent struct {
 	Type      string  `wasmGet:"type"`
 }
 
-func (e *OnChangeEvent) OnChangeEvent(event OnChangeEvent, reference *ControlPanel) {
+func (e *OnChangeEvent) OnChangeEvent(event OnChangeEvent, controlPanel *ControlPanel) {
 	var value = event.Value
+	controlPanel.Body.BoatAnimation.Dragging.Min(30)
 
-	log.Printf("OnChangeEvent: %v", event.Value)
-	log.Printf("Time: %v", time.Duration(value)*time.Second)
-
-	factoryEasingTween.NewInOutBounce(
+	factoryEasingTween.NewRandom(
 		time.Duration(value)*time.Second,
 		0,
 		1000000,

@@ -21,47 +21,170 @@ type Options struct {
 type ContextMenu struct {
 	menu  *html.TagDiv
 	setup map[string]string
+	stage *stage.Stage
 }
 
-func (e *ContextMenu) Init(stage *stage.Stage) {
-	e.setup = map[string]string{
-		"shadow":                  "0 2px 5px rgba(0,0,0,0.2)",
-		"border":                  "0px solid #ccc",
-		"backgroundColor":         "#fff",
-		"dividerMargin":           "5px 0",
-		"gridDisplay":             "grid",
-		"gridGridTemplateColumns": "repeat(2, 1fr)",
-		"gridGap":                 "8px",
-		"gridPadding":             "2px",
-		"cellTextAlign":           "center",
-		"cellCursor":              "pointer",
-		"cellBorder":              "0px solid #ccc",
-		"cellBorderRadius":        "4px",
-		"cellPadding":             "5px",
-		"imgWidth":                "32px",
-		"imgHeight":               "32px",
-		"imgDisplay":              "block",
-		"imgMargin":               "0 auto 5px",
-		"imgPadding":              "5px",
-		"textFontSize":            "12px",
-		"fontFamily":              "Arial, sans-serif",
-		"itemPadding":             "5px 10px",
-		"itemCursor":              "pointer",
-		"itemPosition":            "relative",
-		"itemTextContent":         "&nbsp;&nbsp;▶",
-		"itemDisplay":             "flex",
-		"itemAlignItems":          "center",
-		"submenuPosition":         "absolute",
-		"submenuLeft":             "100%",
-		"submenuTop":              "0",
-		"submenuBackground":       "#ccc",
-		"submenuBorder":           "0px solid #ccc",
-		"submenuBoxShadow":        "0 2px 5px rgba(0,0,0,0.2)",
-		"submenuPadding":          "5px",
-		"submenuDisplay":          "none",
-		"submenuWhiteSpace":       "nowrap",
-		"submenuZIndex":           "1001",
+func (e *ContextMenu) Stage(stage *stage.Stage) {
+	e.stage = stage
+}
+
+func (e *ContextMenu) Css(key, value string) {
+	if e.setup == nil {
+		e.setup = make(map[string]string)
 	}
+
+	e.setup[key] = value
+}
+
+func (e *ContextMenu) Init() {
+	if e.setup == nil {
+		e.setup = make(map[string]string)
+	}
+
+	if _, found := e.setup["shadow"]; !found {
+		e.setup["shadow"] = "-1px -1px 10px rgba(0,0,0,0.2)"
+	}
+
+	if _, found := e.setup["border"]; !found {
+		e.setup["border"] = "0px solid #ccc"
+	}
+
+	if _, found := e.setup["backgroundColor"]; !found {
+		e.setup["backgroundColor"] = "#fff"
+	}
+
+	if _, found := e.setup["dividerMargin"]; !found {
+		e.setup["dividerMargin"] = "5px 0"
+	}
+
+	if _, found := e.setup["gridDisplay"]; !found {
+		e.setup["gridDisplay"] = "grid"
+	}
+
+	if _, found := e.setup["gridGridTemplateColumns"]; !found {
+		e.setup["gridGridTemplateColumns"] = "repeat(2, 1fr)"
+	}
+
+	if _, found := e.setup["gridGap"]; !found {
+		e.setup["gridGap"] = "8px"
+	}
+
+	if _, found := e.setup["gridPadding"]; !found {
+		e.setup["gridPadding"] = "2px"
+	}
+
+	if _, found := e.setup["cellTextAlign"]; !found {
+		e.setup["cellTextAlign"] = "center"
+	}
+
+	if _, found := e.setup["cellCursor"]; !found {
+		e.setup["cellCursor"] = "pointer"
+	}
+
+	if _, found := e.setup["cellBorder"]; !found {
+		e.setup["cellBorder"] = e.setup["border"]
+	}
+
+	if _, found := e.setup["cellBorderRadius"]; !found {
+		e.setup["cellBorderRadius"] = "4px"
+	}
+
+	if _, found := e.setup["cellPadding"]; !found {
+		e.setup["cellPadding"] = "5px"
+	}
+
+	if _, found := e.setup["imgWidth"]; !found {
+		e.setup["imgWidth"] = "32px"
+	}
+
+	if _, found := e.setup["imgHeight"]; !found {
+		e.setup["imgHeight"] = "32px"
+	}
+
+	if _, found := e.setup["imgDisplay"]; !found {
+		e.setup["imgDisplay"] = "block"
+	}
+
+	if _, found := e.setup["imgMargin"]; !found {
+		e.setup["imgMargin"] = "0 auto 5px"
+	}
+
+	if _, found := e.setup["imgPadding"]; !found {
+		e.setup["imgPadding"] = "5px"
+	}
+
+	if _, found := e.setup["textFontSize"]; !found {
+		e.setup["textFontSize"] = "12px"
+	}
+
+	if _, found := e.setup["fontFamily"]; !found {
+		e.setup["fontFamily"] = "Arial, sans-serif"
+	}
+
+	if _, found := e.setup["itemPadding"]; !found {
+		e.setup["itemPadding"] = "5px 10px"
+	}
+
+	if _, found := e.setup["itemCursor"]; !found {
+		e.setup["itemCursor"] = "pointer"
+	}
+
+	if _, found := e.setup["itemPosition"]; !found {
+		e.setup["itemPosition"] = "relative"
+	}
+
+	if _, found := e.setup["itemTextContent"]; !found {
+		e.setup["itemTextContent"] = "&nbsp;&nbsp;▶"
+	}
+
+	if _, found := e.setup["itemDisplay"]; !found {
+		e.setup["itemDisplay"] = "flex"
+	}
+
+	if _, found := e.setup["itemAlignItems"]; !found {
+		e.setup["itemAlignItems"] = "center"
+	}
+
+	if _, found := e.setup["submenuPosition"]; !found {
+		e.setup["submenuPosition"] = "absolute"
+	}
+
+	if _, found := e.setup["submenuLeft"]; !found {
+		e.setup["submenuLeft"] = "100%"
+	}
+
+	if _, found := e.setup["submenuTop"]; !found {
+		e.setup["submenuTop"] = "0"
+	}
+
+	if _, found := e.setup["submenuBackground"]; !found {
+		e.setup["submenuBackground"] = "#ccc"
+	}
+
+	if _, found := e.setup["submenuBorder"]; !found {
+		e.setup["submenuBorder"] = e.setup["border"]
+	}
+
+	if _, found := e.setup["submenuBoxShadow"]; !found {
+		e.setup["submenuBoxShadow"] = e.setup["shadow"]
+	}
+
+	if _, found := e.setup["submenuPadding"]; !found {
+		e.setup["submenuPadding"] = "5px"
+	}
+
+	if _, found := e.setup["submenuDisplay"]; !found {
+		e.setup["submenuDisplay"] = "none"
+	}
+
+	if _, found := e.setup["submenuWhiteSpace"]; !found {
+		e.setup["submenuWhiteSpace"] = "nowrap"
+	}
+
+	if _, found := e.setup["submenuZIndex"]; !found {
+		e.setup["submenuZIndex"] = "1001"
+	}
+
 	e.menu = factoryBrowser.NewTagDiv()
 	e.menu.AddStyle("position", "absolute")
 	e.menu.AddStyle("background", e.setup["backgroundColor"])
@@ -69,8 +192,11 @@ func (e *ContextMenu) Init(stage *stage.Stage) {
 	e.menu.AddStyle("boxShadow", e.setup["shadow"])
 	e.menu.AddStyle("padding", "5px")
 	e.menu.AddStyle("zIndex", "1000")
+
+	//e.menu.AddStyle("top", "50px")
+	//e.menu.AddStyle("left", "50px")
 	e.hide()
-	stage.Append(e.menu)
+	e.stage.Append(e.menu)
 
 	js.Global().Get("document").Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		e.hide()
@@ -108,7 +234,7 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 				cell.AddStyle("position", "relative")
 
 				img := factoryBrowser.NewTagImg()
-				img.Src(item.Icon, true)
+				img.Src(item.Icon, false)
 				img.Alt(item.Label)
 				img.AddStyle("width", e.setup["imgWidth"])
 				img.AddStyle("height", e.setup["imgHeight"])
@@ -317,7 +443,6 @@ func (e *ContextMenu) hide() {
 }
 
 func (e *ContextMenu) max(x, y int) (max int) {
-	// return the max value
 	if x > y {
 		return x
 	}
@@ -330,7 +455,8 @@ func main() {
 	stage := factoryBrowser.NewStage()
 
 	contextMenu := new(ContextMenu)
-	contextMenu.Init(stage)
+	contextMenu.Stage(stage)
+	contextMenu.Init()
 	contextMenu.AttachMenu(js.Global().Get("document"))
 	contextMenu.Menu([]Options{
 		{

@@ -38,8 +38,6 @@ func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 		return
 	}
 
-	e.panelFather.Class("panel")
-
 	return e.panelFather, err
 }
 

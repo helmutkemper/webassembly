@@ -35,6 +35,24 @@ type ContextMenu struct {
 	offsetY    int
 }
 
+func (e *ContextMenu) Menu(options []Options) {
+	e.menu.Html("")
+	e.mountMenu(options, e.menu)
+	e.adjustContentWidth()
+}
+
+func (e *ContextMenu) AttachMenu(element js.Value) {
+	if e.fixed {
+		return
+	}
+
+	element.Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		args[0].Call("preventDefault")
+		e.show(args[0].Get("clientX").Int(), args[0].Get("clientY").Int())
+		return nil
+	}))
+}
+
 func (e *ContextMenu) FixedMenu(x, y int) {
 	e.fixed = true
 	e.bodyX = x
@@ -53,6 +71,15 @@ func (e *ContextMenu) Css(key, value string) {
 	e.setup[key] = value
 }
 
+// setupInit
+//
+// English:
+//
+//	Configures the menu css
+//
+// Português:
+//
+//	Configura o css do menu
 func (e *ContextMenu) setupInit() {
 	if e.setup == nil {
 		e.setup = make(map[string]string)
@@ -290,15 +317,6 @@ func (e *ContextMenu) Init() {
 
 	e.header = factoryBrowser.NewTagDiv().Append(
 		factoryBrowser.NewTagSpan().Html(e.setup["menuTitle"]),
-		factoryBrowser.NewTagSpan().
-			AddStyle("display", "flex").
-			AddStyle("gap", "8px").
-			Append(
-				factoryBrowser.NewTagSpan().Html("&nbsp;"),
-				dragIcon,
-				minimizeIcon,
-				closeIcon,
-			),
 	)
 	e.header.AddStyle("display", "flex")
 	e.header.AddStyle("justify-content", "space-between")
@@ -310,11 +328,25 @@ func (e *ContextMenu) Init() {
 	e.header.AddStyle("font-weight", "bold")
 	e.header.AddStyle("user-select", "none")
 
+	if e.fixed {
+		e.header.Append(
+			factoryBrowser.NewTagSpan().
+				AddStyle("display", "flex").
+				AddStyle("gap", "8px").
+				Append(
+					factoryBrowser.NewTagSpan().Html("&nbsp;"),
+					dragIcon,
+					minimizeIcon,
+					closeIcon,
+				),
+		)
+	}
+
 	e.content = factoryBrowser.NewTagDiv()
 	e.content.AddStyle("display", "grid")
 	e.content.AddStyle("gap", e.setup["contentGap"])
 	e.content.AddStyle("padding", e.setup["contentPadding"])
-	e.content.FadeFunc(e.fadeProgress)
+	e.content.FadeFunc(e.contentFadeProgress)
 
 	e.body.Append(
 		e.header,
@@ -325,9 +357,7 @@ func (e *ContextMenu) Init() {
 	e.content.Append(e.menu)
 
 	e.body.HideForFade()
-	e.body.FadeFunc(func(_ float64) {
-		e.adjustContentWidth()
-	})
+	e.body.FadeFunc(e.bodyFadeProgress)
 
 	e.stage.Append(e.body)
 	e.body.Fade(300 * time.Millisecond)
@@ -346,7 +376,33 @@ func (e *ContextMenu) Init() {
 	e.body.AddStyle("top", fmt.Sprintf("%vpx", e.bodyY))
 }
 
-func (e *ContextMenu) fadeProgress(progress float64) {
+// bodyFadeProgress
+//
+// English:
+//
+//	Ajusta o conteúdo do menu quando a função div.Fade() funciona durante a função de fechar
+//
+// Português:
+//
+//	Adjusts the menu content when the Div.Fade() function works during the close function
+func (e *ContextMenu) bodyFadeProgress(progress float64) {
+	e.adjustContentWidth()
+
+	if progress == 1.0 && !e.content.FadeStatus() {
+		e.content.ShowForFade()
+	}
+}
+
+// contentFadeProgress
+//
+// English:
+//
+//	Ajusta o conteúdo do menu quando a função div.Fade() funciona durante a função de minimizar
+//
+// Português:
+//
+//	Adjusts the menu content when the Div.Fade() function works during the minimize function
+func (e *ContextMenu) contentFadeProgress(progress float64) {
 	e.adjustContentWidth()
 
 	if progress == 1.0 {
@@ -359,6 +415,15 @@ func (e *ContextMenu) fadeProgress(progress float64) {
 	}
 }
 
+// fadeShowContent
+//
+// English:
+//
+//	Show and adjusts the menu content when the div.Fade() function ends
+//
+// Português:
+//
+//	Mostra e ajusta o conteúdo do menu quando a função div.Fade() termina
 func (e *ContextMenu) fadeShowContent() {
 	e.content.AddStyle("visibility", "visible")
 	e.menu.AddStyle("visibility", "visible")
@@ -367,6 +432,15 @@ func (e *ContextMenu) fadeShowContent() {
 	e.content.AddStyle("padding", e.setup["contentPadding"])
 }
 
+// fadeHideContent
+//
+// English:
+//
+//	Hide and adjusts the menu content when the div.Fade() function ends
+//
+// Português:
+//
+//	Esconde e ajusta o conteúdo do menu quando a função div.Fade() termina
 func (e *ContextMenu) fadeHideContent() {
 	e.content.AddStyle("visibility", "hidden")
 	e.menu.AddStyle("visibility", "hidden")
@@ -375,6 +449,15 @@ func (e *ContextMenu) fadeHideContent() {
 	e.content.AddStyle("padding", "0")
 }
 
+// headerAddDragListener
+//
+// English:
+//
+//	Add a listener to the moving button
+//
+// Português:
+//
+//	Adiciona o listener para o botão de mover
 func (e *ContextMenu) headerAddDragListener(dragIcon *html.TagSpan) {
 	dragIcon.Get().Call("addEventListener", "mousedown", js.FuncOf(func(this js.Value, args []js.Value) any {
 		e.isDragging = true
@@ -397,6 +480,15 @@ func (e *ContextMenu) headerAddDragListener(dragIcon *html.TagSpan) {
 	}))
 }
 
+// headerAddMinimizeListener
+//
+// English:
+//
+//	Add a listener to the minimizing button
+//
+// Português:
+//
+//	Adiciona o listener para o botão de minimizar
 func (e *ContextMenu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
 	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
@@ -406,13 +498,22 @@ func (e *ContextMenu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
 	}))
 }
 
+// headerAddCloseListener
+//
+// English:
+//
+//	Add a listener to the closing button
+//
+// Português:
+//
+//	Adiciona o listener para o botão de fechar
 func (e *ContextMenu) headerAddCloseListener(closeIcon *html.TagSpan) {
 	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
 
 		e.body.Fade(200 * time.Millisecond)
 		go func() {
-			time.Sleep(2 * time.Second)
+			time.Sleep(1 * time.Second)
 			e.body.Fade(200 * time.Millisecond)
 		}()
 
@@ -420,6 +521,15 @@ func (e *ContextMenu) headerAddCloseListener(closeIcon *html.TagSpan) {
 	}))
 }
 
+// adjustContentWidth
+//
+// English:
+//
+//	Adjusts the menu length when it opens by div.Fade()
+//
+// Português:
+//
+//	Ajusta o comprimento do menu quando ele abre por div.Fade()
 func (e *ContextMenu) adjustContentWidth() {
 	menuRect := e.menu.Get().Call("getBoundingClientRect")
 	width := menuRect.Get("width").Int()
@@ -428,12 +538,15 @@ func (e *ContextMenu) adjustContentWidth() {
 	e.content.AddStyle("height", fmt.Sprintf("%vpx", height))
 }
 
-func (e *ContextMenu) Menu(options []Options) {
-	e.menu.Html("")
-	e.mountMenu(options, e.menu)
-	e.adjustContentWidth()
-}
-
+// mountMenu
+//
+// English:
+//
+//	Mounts the menu and the submenu
+//
+// Português:
+//
+//	Monta o menu e os submenu
 func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 	for _, option := range options {
 		if option.Label == "-" {
@@ -499,33 +612,7 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 
 					cell.Get().Call("addEventListener", "mouseenter", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 						cell.AddStyle("background", e.setup["submenuBackground"])
-						cell.AddStyle("border", e.setup["border"])
-						subMenu.AddStyle("display", "block")
-
-						submenuRect := subMenu.Get().Call("getBoundingClientRect")
-						screenWidth := js.Global().Get("window").Get("innerWidth").Int()
-						screenHeight := js.Global().Get("window").Get("innerHeight").Int()
-
-						cellRect := cell.Get().Call("getBoundingClientRect")
-						cellRight := cellRect.Get("right").Int()
-						cellTop := cellRect.Get("top").Int()
-
-						if cellRight+submenuRect.Get("width").Int() > screenWidth {
-							subMenu.AddStyle("left", "auto")
-							subMenu.AddStyle("right", "100%")
-						} else {
-							subMenu.AddStyle("left", "100%")
-							subMenu.AddStyle("right", "auto")
-						}
-
-						if cellTop+submenuRect.Get("height").Int() > screenHeight {
-							subMenu.AddStyle("top", "auto")
-							subMenu.AddStyle("bottom", "0")
-						} else {
-							subMenu.AddStyle("top", "0")
-							subMenu.AddStyle("bottom", "auto")
-						}
-
+						e.adjustSubMenuPosition(subMenu, cell)
 						return nil
 					}))
 
@@ -604,25 +691,7 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 
 			item.Append(subMenu)
 			item.Get().Call("addEventListener", "mouseenter", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-				subMenu.AddStyle("display", "block")
-
-				window := js.Global().Get("window")
-				itemClientRect := item.Get().Call("getBoundingClientRect")
-
-				submenuRect := subMenu.Get().Call("getBoundingClientRect")
-				screenWidth := window.Get("innerWidth").Int()
-				//screenHeight := window.Get("innerHeight").Int()
-
-				itemRight := itemClientRect.Get("right").Int()
-
-				if itemRight+submenuRect.Get("width").Int() > screenWidth {
-					subMenu.AddStyle("left", "auto")
-					subMenu.AddStyle("right", "100%")
-				} else {
-					subMenu.AddStyle("left", "100%")
-					subMenu.AddStyle("right", "auto")
-				}
-
+				e.adjustSubMenuPosition(subMenu, item)
 				return nil
 			}))
 			item.Get().Call("addEventListener", "mouseleave", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
@@ -643,18 +712,54 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 	}
 }
 
-func (e *ContextMenu) AttachMenu(element js.Value) {
-	if e.fixed {
-		return
+// adjustSubMenuPosition
+//
+// English:
+//
+//	Adjusts the top and left position of the submenu that opens so that it remains visible on the screen
+//
+// Português:
+//
+//	Ajusta a posição top e left do submenu que abre para que o mesmo permaneça visível na tela
+func (e *ContextMenu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
+	subMenu.AddStyle("display", "block")
+
+	window := js.Global().Get("window")
+	screenWidth := window.Get("innerWidth").Int()
+	screenHeight := window.Get("innerHeight").Int()
+
+	submenuRect := subMenu.Get().Call("getBoundingClientRect")
+
+	cellRect := cell.Get().Call("getBoundingClientRect")
+	cellRight := cellRect.Get("right").Int()
+	cellTop := cellRect.Get("top").Int()
+
+	if cellRight+submenuRect.Get("width").Int() > screenWidth {
+		subMenu.AddStyle("left", "auto")
+		subMenu.AddStyle("right", "100%")
+	} else {
+		subMenu.AddStyle("left", "100%")
+		subMenu.AddStyle("right", "auto")
 	}
 
-	element.Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		args[0].Call("preventDefault")
-		e.show(args[0].Get("clientX").Int(), args[0].Get("clientY").Int())
-		return nil
-	}))
+	if cellTop+submenuRect.Get("height").Int() > screenHeight {
+		subMenu.AddStyle("top", "auto")
+		subMenu.AddStyle("bottom", "0")
+	} else {
+		subMenu.AddStyle("top", "0")
+		subMenu.AddStyle("bottom", "auto")
+	}
 }
 
+// show
+//
+// English:
+//
+//	Show the menu when the contextual menu is triggered by the mouse
+//
+// Português:
+//
+//	Mostra o menu quando o menu contextual é acionado pelo mouse
 func (e *ContextMenu) show(x, y int) {
 	e.body.AddStyle("display", "block")
 	e.body.AddStyle("left", "0px")
@@ -685,6 +790,9 @@ func (e *ContextMenu) show(x, y int) {
 	e.body.AddStyle("top", strconv.FormatInt(int64(adjustedY), 10)+"px")
 }
 
+// hide
+//
+// Esconde o menu quando este é configurado para ser um menu contextual
 func (e *ContextMenu) hide() {
 	e.body.AddStyle("display", "none")
 }
@@ -704,8 +812,8 @@ func main() {
 	contextMenu := new(ContextMenu)
 	contextMenu.Stage(stage)
 	contextMenu.FixedMenu(200, 200)
-	contextMenu.Init()
 	contextMenu.AttachMenu(js.Global().Get("document"))
+	contextMenu.Init()
 	contextMenu.Menu([]Options{
 		{
 			Type: "grid",
@@ -718,138 +826,138 @@ func main() {
 					Label: "cat",
 					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
 				},
-				//{
-				//	Label: "cat",
-				//	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//	Type:  "grid",
-				//	Submenu: []Options{
-				//		{
-				//			Type: "grid",
-				//			Items: []Options{
-				//				{
-				//					Label: "cat",
-				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//				},
-				//				{
-				//					Label: "cat",
-				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//					Type:  "grid",
-				//					Submenu: []Options{
-				//						{
-				//							Type: "grid",
-				//							Items: []Options{
-				//								{
-				//									Label: "cat",
-				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//								},
-				//								{
-				//									Label: "cat",
-				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//								},
-				//								{
-				//									Label: "cat",
-				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//								},
-				//								{
-				//									Label: "cat",
-				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//								},
-				//								{
-				//									Label: "cat",
-				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//								},
-				//								{
-				//									Label: "cat",
-				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//									Type:  "grid",
-				//									Submenu: []Options{
-				//										{
-				//											Type: "grid",
-				//											Items: []Options{
-				//												{
-				//													Label: "cat",
-				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//												},
-				//												{
-				//													Label: "cat",
-				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//												},
-				//												{
-				//													Label: "cat",
-				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//												},
-				//												{
-				//													Label: "cat",
-				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//												},
-				//												{
-				//													Label: "cat",
-				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//													Type:  "grid",
-				//													Submenu: []Options{
-				//														{
-				//															Type: "grid",
-				//															Items: []Options{
-				//																{
-				//																	Label: "cat",
-				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//																},
-				//																{
-				//																	Label: "cat",
-				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//																},
-				//																{
-				//																	Label: "cat",
-				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//																},
-				//																{
-				//																	Label: "cat",
-				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//																},
-				//																{
-				//																	Label: "cat",
-				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//																},
-				//																{
-				//																	Label: "cat",
-				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//																},
-				//															},
-				//														},
-				//													},
-				//												},
-				//												{
-				//													Label: "cat",
-				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//												},
-				//											},
-				//										},
-				//									},
-				//								},
-				//							},
-				//						},
-				//					},
-				//				},
-				//				{
-				//					Label: "cat",
-				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//				},
-				//				{
-				//					Label: "cat",
-				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//				},
-				//				{
-				//					Label: "cat",
-				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//				},
-				//				{
-				//					Label: "cat",
-				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-				//				},
-				//			},
-				//		},
-				//	},
-				//},
+				{
+					Label: "cat",
+					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Type:  "grid",
+					Submenu: []Options{
+						{
+							Type: "grid",
+							Items: []Options{
+								{
+									Label: "cat",
+									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+								},
+								{
+									Label: "cat",
+									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+									Type:  "grid",
+									Submenu: []Options{
+										{
+											Type: "grid",
+											Items: []Options{
+												{
+													Label: "cat",
+													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+												},
+												{
+													Label: "cat",
+													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+												},
+												{
+													Label: "cat",
+													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+												},
+												{
+													Label: "cat",
+													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+												},
+												{
+													Label: "cat",
+													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+												},
+												{
+													Label: "cat",
+													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+													Type:  "grid",
+													Submenu: []Options{
+														{
+															Type: "grid",
+															Items: []Options{
+																{
+																	Label: "cat",
+																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																},
+																{
+																	Label: "cat",
+																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																},
+																{
+																	Label: "cat",
+																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																},
+																{
+																	Label: "cat",
+																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																},
+																{
+																	Label: "cat",
+																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																	Type:  "grid",
+																	Submenu: []Options{
+																		{
+																			Type: "grid",
+																			Items: []Options{
+																				{
+																					Label: "cat",
+																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																				},
+																				{
+																					Label: "cat",
+																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																				},
+																				{
+																					Label: "cat",
+																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																				},
+																				{
+																					Label: "cat",
+																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																				},
+																				{
+																					Label: "cat",
+																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																				},
+																				{
+																					Label: "cat",
+																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																				},
+																			},
+																		},
+																	},
+																},
+																{
+																	Label: "cat",
+																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+								{
+									Label: "cat",
+									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+								},
+								{
+									Label: "cat",
+									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+								},
+								{
+									Label: "cat",
+									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+								},
+								{
+									Label: "cat",
+									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+								},
+							},
+						},
+					},
+				},
 				{
 					Label: "cat",
 					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",

@@ -2910,9 +2910,7 @@ func (e *TagDiv) ShowForFade() (ref *TagDiv) {
 		return
 	}
 
-	e.selfElement.Get("style").Set("opacity", e.GetData("goWasmFadeOpacity"))
-	e.selfElement.Get("style").Set("transform", e.GetData("goWasmFadeTransform"))
-	e.Data(map[string]string{"goWasmFade": "false"})
+	e.Fade(0)
 	return e
 }
 

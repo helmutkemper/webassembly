@@ -19,7 +19,7 @@ type Options struct {
 	Submenu []Options
 }
 
-type ContextMenu struct {
+type ComponentMenu struct {
 	body    *html.TagDiv
 	header  *html.TagDiv
 	content *html.TagDiv
@@ -35,13 +35,13 @@ type ContextMenu struct {
 	offsetY    int
 }
 
-func (e *ContextMenu) Menu(options []Options) {
+func (e *ComponentMenu) Menu(options []Options) {
 	e.menu.Html("")
 	e.mountMenu(options, e.menu)
 	e.adjustContentWidth()
 }
 
-func (e *ContextMenu) AttachMenu(element js.Value) {
+func (e *ComponentMenu) AttachMenu(element js.Value) {
 	if e.fixed {
 		return
 	}
@@ -53,17 +53,17 @@ func (e *ContextMenu) AttachMenu(element js.Value) {
 	}))
 }
 
-func (e *ContextMenu) FixedMenu(x, y int) {
+func (e *ComponentMenu) FixedMenu(x, y int) {
 	e.fixed = true
 	e.bodyX = x
 	e.bodyY = y
 }
 
-func (e *ContextMenu) Stage(stage *stage.Stage) {
+func (e *ComponentMenu) Stage(stage *stage.Stage) {
 	e.stage = stage
 }
 
-func (e *ContextMenu) Css(key, value string) {
+func (e *ComponentMenu) Css(key, value string) {
 	if e.setup == nil {
 		e.setup = make(map[string]string)
 	}
@@ -80,7 +80,7 @@ func (e *ContextMenu) Css(key, value string) {
 // Português:
 //
 //	Configura o css do menu
-func (e *ContextMenu) setupInit() {
+func (e *ComponentMenu) setupInit() {
 	if e.setup == nil {
 		e.setup = make(map[string]string)
 	}
@@ -286,7 +286,7 @@ func (e *ContextMenu) setupInit() {
 	}
 }
 
-func (e *ContextMenu) Init() {
+func (e *ComponentMenu) Init() {
 	e.setupInit()
 
 	e.body = factoryBrowser.NewTagDiv()
@@ -385,7 +385,7 @@ func (e *ContextMenu) Init() {
 // Português:
 //
 //	Adjusts the menu content when the Div.Fade() function works during the close function
-func (e *ContextMenu) bodyFadeProgress(progress float64) {
+func (e *ComponentMenu) bodyFadeProgress(progress float64) {
 	e.adjustContentWidth()
 
 	if progress == 1.0 && !e.content.FadeStatus() {
@@ -402,7 +402,7 @@ func (e *ContextMenu) bodyFadeProgress(progress float64) {
 // Português:
 //
 //	Adjusts the menu content when the Div.Fade() function works during the minimize function
-func (e *ContextMenu) contentFadeProgress(progress float64) {
+func (e *ComponentMenu) contentFadeProgress(progress float64) {
 	e.adjustContentWidth()
 
 	if progress == 1.0 {
@@ -424,7 +424,7 @@ func (e *ContextMenu) contentFadeProgress(progress float64) {
 // Português:
 //
 //	Mostra e ajusta o conteúdo do menu quando a função div.Fade() termina
-func (e *ContextMenu) fadeShowContent() {
+func (e *ComponentMenu) fadeShowContent() {
 	e.content.AddStyle("visibility", "visible")
 	e.menu.AddStyle("visibility", "visible")
 
@@ -441,7 +441,7 @@ func (e *ContextMenu) fadeShowContent() {
 // Português:
 //
 //	Esconde e ajusta o conteúdo do menu quando a função div.Fade() termina
-func (e *ContextMenu) fadeHideContent() {
+func (e *ComponentMenu) fadeHideContent() {
 	e.content.AddStyle("visibility", "hidden")
 	e.menu.AddStyle("visibility", "hidden")
 
@@ -458,7 +458,7 @@ func (e *ContextMenu) fadeHideContent() {
 // Português:
 //
 //	Adiciona o listener para o botão de mover
-func (e *ContextMenu) headerAddDragListener(dragIcon *html.TagSpan) {
+func (e *ComponentMenu) headerAddDragListener(dragIcon *html.TagSpan) {
 	dragIcon.Get().Call("addEventListener", "mousedown", js.FuncOf(func(this js.Value, args []js.Value) any {
 		e.isDragging = true
 		e.offsetX = args[0].Get("clientX").Int() - e.body.Get().Call("getBoundingClientRect").Get("left").Int()
@@ -489,7 +489,7 @@ func (e *ContextMenu) headerAddDragListener(dragIcon *html.TagSpan) {
 // Português:
 //
 //	Adiciona o listener para o botão de minimizar
-func (e *ContextMenu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
+func (e *ComponentMenu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
 	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
 		e.content.Fade(300 * time.Millisecond)
@@ -507,7 +507,7 @@ func (e *ContextMenu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
 // Português:
 //
 //	Adiciona o listener para o botão de fechar
-func (e *ContextMenu) headerAddCloseListener(closeIcon *html.TagSpan) {
+func (e *ComponentMenu) headerAddCloseListener(closeIcon *html.TagSpan) {
 	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
 
@@ -530,7 +530,7 @@ func (e *ContextMenu) headerAddCloseListener(closeIcon *html.TagSpan) {
 // Português:
 //
 //	Ajusta o comprimento do menu quando ele abre por div.Fade()
-func (e *ContextMenu) adjustContentWidth() {
+func (e *ComponentMenu) adjustContentWidth() {
 	menuRect := e.menu.Get().Call("getBoundingClientRect")
 	width := menuRect.Get("width").Int()
 	height := menuRect.Get("height").Int()
@@ -547,7 +547,7 @@ func (e *ContextMenu) adjustContentWidth() {
 // Português:
 //
 //	Monta o menu e os submenu
-func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
+func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 	for _, option := range options {
 		if option.Label == "-" {
 			divider := factoryBrowser.NewTagHr()
@@ -721,7 +721,7 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 // Português:
 //
 //	Ajusta a posição top e left do submenu que abre para que o mesmo permaneça visível na tela
-func (e *ContextMenu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
+func (e *ComponentMenu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
 	subMenu.AddStyle("display", "block")
 
 	window := js.Global().Get("window")
@@ -760,7 +760,7 @@ func (e *ContextMenu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
 // Português:
 //
 //	Mostra o menu quando o menu contextual é acionado pelo mouse
-func (e *ContextMenu) show(x, y int) {
+func (e *ComponentMenu) show(x, y int) {
 	e.body.AddStyle("display", "block")
 	e.body.AddStyle("left", "0px")
 	e.body.AddStyle("top", "0px")
@@ -793,11 +793,11 @@ func (e *ContextMenu) show(x, y int) {
 // hide
 //
 // Esconde o menu quando este é configurado para ser um menu contextual
-func (e *ContextMenu) hide() {
+func (e *ComponentMenu) hide() {
 	e.body.AddStyle("display", "none")
 }
 
-func (e *ContextMenu) max(x, y int) (max int) {
+func (e *ComponentMenu) max(x, y int) (max int) {
 	if x > y {
 		return x
 	}
@@ -809,7 +809,7 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	contextMenu := new(ContextMenu)
+	contextMenu := new(ComponentMenu)
 	contextMenu.Stage(stage)
 	contextMenu.FixedMenu(200, 200)
 	contextMenu.AttachMenu(js.Global().Get("document"))

@@ -161,18 +161,6 @@
       /*text-align: center;*/
     }
 
-    .dragIcon {
-      width: 20px;
-      height: 20px;
-      background-color: #ddd;
-      cursor: move;
-      margin-right: 10px;
-    }
-
-    .closeIconPanel {
-      cursor: pointer;
-    }
-
     .panelContent {
       display: none;
     }
@@ -394,45 +382,6 @@
     const go = new Go();
     WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
       go.run(result.instance);
-
-      const panel = document.querySelector('.panel');
-      const dragIcon = document.querySelector('.dragIcon');
-      const closeIconPanel = document.querySelector('.closeIconPanel');
-      let isDragging = false;
-      let offsetX, offsetY;
-
-      dragIcon.addEventListener('mousedown', function(e) {
-        isDragging = true;
-        offsetX = e.clientX - panel.getBoundingClientRect().left;
-        offsetY = e.clientY - panel.getBoundingClientRect().top;
-      });
-
-      document.addEventListener('mousemove', function(e) {
-        if (isDragging) {
-          panel.style.left = `${e.clientX - offsetX}px`;
-          panel.style.top = `${e.clientY - offsetY}px`;
-        }
-      });
-
-      document.addEventListener('mouseup', function() {
-        isDragging = false;
-      });
-
-      closeIconPanel.addEventListener('click', function(e) {
-        e.stopPropagation();
-        panel.classList.toggle('open');
-      });
-
-      const closeIcons = document.querySelectorAll('.closeIcon');
-      closeIcons.forEach(icon => {
-        icon.addEventListener('click', function(event) {
-          event.stopPropagation();
-          const compCel = this.closest('.panelCel') ? this.closest('.panelCel').querySelector('.compCel') : null;
-          if (compCel) {
-            compCel.classList.toggle('hidden');
-          }
-        });
-      });
 
       // Alternância de Tema
       // const toggleThemeButton = document.getElementById('toggleTheme');

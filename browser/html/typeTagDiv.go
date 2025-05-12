@@ -1,6 +1,7 @@
 package html
 
 import (
+	"fmt"
 	"github.com/helmutkemper/webassembly/browser/css"
 	"github.com/helmutkemper/webassembly/browser/event/mouse"
 	"github.com/helmutkemper/webassembly/interfaces"
@@ -11,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"syscall/js"
+	"time"
 )
 
 // TagDiv
@@ -1588,6 +1590,7 @@ func (e *TagDiv) Init() (ref *TagDiv) {
 
 	e.CreateElement(KTagDiv)
 	e.prepareStageReference()
+	e.Data(map[string]string{"goWasmFade": "false"})
 
 	return e
 }
@@ -2878,6 +2881,100 @@ func (e *TagDiv) AddListenerMouseDown(mouseEvent chan mouse.Data) (ref *TagDiv) 
 		"mousedown",
 		e.fnMouseDown,
 	)
+	return e
+}
+
+// HideForFade
+//
+// English:
+//
+// # Hides the div and prepares to be animated in the effect of construction and deconstruction by the Fade() function
+//
+// Português:
+//
+// Esconde a div e a prepara para ser animada em efeito de construção e desconstrução pela função Fade()
+func (e *TagDiv) HideForFade() (ref *TagDiv) {
+	e.Data(map[string]string{"goWasmFadeTransform": e.selfElement.Get("style").Get("transform").String()})
+	e.Data(map[string]string{"goWasmFadeOpacity": e.selfElement.Get("style").Get("opacity").String()})
+
+	e.selfElement.Get("style").Set("opacity", 0)
+	e.selfElement.Get("style").Set("transform", "scale(0.0)")
+	e.Data(map[string]string{"goWasmFade": "true"})
+	return e
+}
+
+// Fade #replicar
+//
+// English:
+//
+// It makes the effect of the DIV appear or disappears slowly, affecting scale and transparency.
+//
+//	Input:
+//	  duration: event time
+//
+// To use this function, before using stage.Append(), use the hideForFade() function for correctly hidden the DIV.
+//
+// If the div is hidden, it will be shown, and VISE VERSA.
+//
+// Português:
+//
+// Faz o efeito da div aparecer ou desaparecer aos poucos, afetando escala e transparência.
+//
+//	Entrada:
+//	  duration: tempo de duração do evento
+//
+// Para usar esta função, antes de usar stage.Append(), use a função HideForFade() para que a div seja escondida de
+// forma correta.
+//
+// Caso a div esteja escondida, a mesma será mostrada, e vise versa.
+func (e *TagDiv) Fade(duration time.Duration) (ref *TagDiv) {
+	start := time.Now()
+
+	if e.GetData("goWasmFade") == "false" {
+		e.Data(map[string]string{"goWasmFadeTransform": e.selfElement.Get("style").Get("transform").String()})
+		e.Data(map[string]string{"goWasmFadeOpacity": e.selfElement.Get("style").Get("opacity").String()})
+	}
+
+	var fade js.Func
+	fade = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		elapsed := time.Since(start)
+		progress := float64(elapsed.Milliseconds()) / float64(duration.Milliseconds())
+		faded := e.GetData("goWasmFade")
+
+		if progress > 1.0 {
+			progress = 1.0
+		}
+
+		if faded == "true" {
+			if progress >= 1 {
+				e.selfElement.Get("style").Set("opacity", e.GetData("goWasmFadeOpacity"))
+				e.selfElement.Get("style").Set("transform", e.GetData("goWasmFadeTransform"))
+				e.Data(map[string]string{"goWasmFade": "false"})
+				fade.Release()
+			} else {
+				e.selfElement.Get("style").Set("opacity", progress)
+				e.selfElement.Get("style").Set("transform", fmt.Sprintf("scale(%v)", progress))
+				js.Global().Call("requestAnimationFrame", fade)
+			}
+		} else {
+			if progress >= 1 {
+				e.selfElement.Get("style").Set("opacity", 0)
+				e.selfElement.Get("style").Set("transform", "scale(0.0)")
+				e.Data(map[string]string{"goWasmFade": "true"})
+				fade.Release()
+			} else {
+				opacity := 1.0 - progress
+				e.selfElement.Get("style").Set("opacity", opacity)
+				e.selfElement.Get("style").Set("transform", fmt.Sprintf("scale(%v)", opacity))
+				js.Global().Call("requestAnimationFrame", fade)
+			}
+		}
+
+		return nil
+	})
+
+	js.Global().Call("requestAnimationFrame", fade)
+
 	return e
 }
 

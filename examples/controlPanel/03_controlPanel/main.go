@@ -57,7 +57,6 @@ type OnChangeEvent struct {
 
 func (e *OnChangeEvent) OnChangeEvent(event OnChangeEvent, controlPanel *ControlPanel) {
 	var value = event.Value
-	controlPanel.Body.BoatAnimation.Dragging.Min(30)
 
 	factoryEasingTween.NewRandom(
 		time.Duration(value)*time.Second,

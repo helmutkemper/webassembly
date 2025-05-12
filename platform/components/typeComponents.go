@@ -23,6 +23,10 @@ type Components struct {
 	ref         interface{}
 	panelFather *html.TagDiv
 	panelBody   *html.TagDiv
+
+	isDragging bool
+	offsetX    int
+	offsetY    int
 }
 
 func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
@@ -38,11 +42,15 @@ func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 		return
 	}
 
+	e.panelFather.Fade(200 * time.Millisecond)
+
 	return e.panelFather, err
 }
 
 func (e *Components) createDivsFather() {
 	e.panelFather = factoryBrowser.NewTagDiv().Class("panel")
+	e.panelFather.HideForFade()
+
 	e.panelBody = factoryBrowser.NewTagDiv().Class("panelBody")
 }
 
@@ -74,7 +82,11 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 
 				switch tagData.Type {
 				case "headerText":
-					e.processHeaderText(fieldVal, tagData.Label, e.panelFather)
+					dragIcon, minimizeIcon, closeIcon := e.processHeaderText(fieldVal, tagData.Label, e.panelFather)
+					e.processHeaderTextAddMinimizeListener(minimizeIcon)
+					e.processHeaderTextAddCloseListener(closeIcon)
+					e.processHeaderTextAddDragListener(dragIcon)
+					e.Show()
 					// Espera criar panelHeader para que panelBody fique abaixo
 					e.panelFather.Append(e.panelBody)
 				case "panel":
@@ -110,7 +122,8 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 
 					panelCel := factoryBrowser.NewTagDiv().Class("panelCel")
 
-					e.processLabelCel(tagData.Label, panelCel)
+					closeIcon := e.processLabelCel(tagData.Label, panelCel)
+					e.processLabelCelAddCloseListener(closeIcon)
 
 					panelCel.Append(
 						divCompCel,
@@ -599,17 +612,42 @@ func (e *Components) processComponent(parentElement, element reflect.Value, type
 	return
 }
 
-func (e *Components) processLabelCel(label string, father *html.TagDiv) {
+func (e *Components) processLabelCelAddCloseListener(closeIcon *html.TagDiv) {
+	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		args[0].Call("stopPropagation")
+
+		// this.closest('.panelCel')
+		panelCel := this.Call("closest", ".panelCel")
+
+		// let compCel = panelCel ? panelCel.querySelector('.compCel') : null
+		var compCel js.Value
+		if !panelCel.IsNull() && !panelCel.IsUndefined() {
+			compCel = panelCel.Call("querySelector", ".compCel")
+		}
+
+		// if (compCel) { compCel.classList.toggle('hidden'); }
+		if !compCel.IsNull() && !compCel.IsUndefined() {
+			compCel.Get("classList").Call("toggle", "hidden")
+		}
+		return nil
+	}))
+}
+
+func (e *Components) processLabelCel(label string, father *html.TagDiv) (closeIcon *html.TagDiv) {
 	// <div class="labelCel">
 	//   <div class="labelText">Label</div>
 	//   <div class="closeIcon">ˇ</div>
 	// </div>
+
+	closeIcon = factoryBrowser.NewTagDiv().Class("closeIcon").Text("ˇ")
 	father.Append(
 		factoryBrowser.NewTagDiv().Class("labelCel").Append(
 			factoryBrowser.NewTagDiv().Class("labelText").Text(label),
-			factoryBrowser.NewTagDiv().Class("closeIcon").Text("ˇ"),
+			closeIcon,
 		),
 	)
+
+	return
 }
 
 //func (e *Components) callFunc(funcObj reflect.Value, params ...interface{}) (results []interface{}, err error) {
@@ -4689,7 +4727,60 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 	return
 }
 
-func (e *Components) processHeaderText(element reflect.Value, defaultText string, father *html.TagDiv) {
+func (e *Components) processHeaderTextAddDragListener(dragIcon *html.TagDiv) {
+	dragIcon.Get().Call("addEventListener", "mousedown", js.FuncOf(func(this js.Value, args []js.Value) any {
+		e.isDragging = true
+		e.offsetX = args[0].Get("clientX").Int() - e.panelFather.Get().Call("getBoundingClientRect").Get("left").Int()
+		e.offsetY = args[0].Get("clientY").Int() - e.panelFather.Get().Call("getBoundingClientRect").Get("top").Int()
+
+		// Centralize in the middle of the icon "◇"
+		e.offsetX += 7
+		e.offsetY += 7
+		return nil
+	}))
+
+	js.Global().Get("document").Call("addEventListener", "mousemove", js.FuncOf(func(this js.Value, args []js.Value) any {
+		if e.isDragging {
+			e.panelFather.AddStyle("left", fmt.Sprintf("%vpx", args[0].Get("clientX").Int()-e.offsetX))
+			e.panelFather.AddStyle("top", fmt.Sprintf("%vpx", args[0].Get("clientY").Int()-e.offsetY))
+		}
+		return nil
+	}))
+
+	js.Global().Get("document").Call("addEventListener", "mouseup", js.FuncOf(func(this js.Value, args []js.Value) any {
+		e.isDragging = false
+		return nil
+	}))
+}
+
+func (e *Components) processHeaderTextAddMinimizeListener(closeIcon *html.TagDiv) {
+	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
+		args[0].Call("stopPropagation")
+		e.panelFather.Get().Get("classList").Call("toggle", "open")
+
+		return nil
+	}))
+}
+
+func (e *Components) processHeaderTextAddCloseListener(closeIcon *html.TagDiv) {
+	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
+		args[0].Call("stopPropagation")
+
+		e.panelFather.Fade(200 * time.Millisecond)
+		go func() {
+			time.Sleep(2 * time.Second)
+			e.panelFather.Fade(200 * time.Millisecond)
+		}()
+		return nil
+	}))
+}
+
+func (e *Components) Show() {
+	e.panelFather.Get().Get("classList").Call("toggle", "open") // todo: se tipo fechar
+	e.panelFather.AddStyle("display", "visible")
+}
+
+func (e *Components) processHeaderText(element reflect.Value, defaultText string, father *html.TagDiv) (dragIcon, minimizeIcon, closeIcon *html.TagDiv) {
 
 	var ok bool
 	var text string
@@ -4705,12 +4796,21 @@ func (e *Components) processHeaderText(element reflect.Value, defaultText string
 	//   <div class="dragIcon"></div>
 	//   <div class="closeIconPanel">ˇ</div>
 	// </div>
+
+	// minimize(ˇ) close(⤬)
+	closeIcon = factoryBrowser.NewTagDiv().AddStyle("cursor", "pointer").Html("⊗")
+	dragIcon = factoryBrowser.NewTagDiv().AddStyle("cursor", "move").Html("◇")
+	minimizeIcon = factoryBrowser.NewTagDiv().AddStyle("cursor", "pointer").Html("▾")
 	father.Append(
 		factoryBrowser.NewTagDiv().Class("panelHeader").Append(
-			factoryBrowser.NewTagDiv().Class("headerText").Text(defaultText),
-			factoryBrowser.NewTagDiv().Class("dragIcon"),
-			factoryBrowser.NewTagDiv().Class("closeIconPanel").Text("ˇ"),
+			factoryBrowser.NewTagDiv().Class("headerText").Html(defaultText),
+			dragIcon,
+			factoryBrowser.NewTagDiv().Html("&nbsp;"),
+			minimizeIcon,
+			factoryBrowser.NewTagDiv().Html("&nbsp;"),
+			closeIcon,
 		),
 	)
 
+	return
 }

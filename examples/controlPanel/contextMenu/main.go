@@ -22,6 +22,11 @@ type ContextMenu struct {
 	menu  *html.TagDiv
 	setup map[string]string
 	stage *stage.Stage
+	fixed bool
+}
+
+func (e *ContextMenu) SetAsFixed() {
+	e.fixed = true
 }
 
 func (e *ContextMenu) Stage(stage *stage.Stage) {
@@ -36,7 +41,7 @@ func (e *ContextMenu) Css(key, value string) {
 	e.setup[key] = value
 }
 
-func (e *ContextMenu) Init() {
+func (e *ContextMenu) setupInit() {
 	if e.setup == nil {
 		e.setup = make(map[string]string)
 	}
@@ -184,6 +189,10 @@ func (e *ContextMenu) Init() {
 	if _, found := e.setup["submenuZIndex"]; !found {
 		e.setup["submenuZIndex"] = "1001"
 	}
+}
+
+func (e *ContextMenu) Init() {
+	e.setupInit()
 
 	e.menu = factoryBrowser.NewTagDiv()
 	e.menu.AddStyle("position", "absolute")
@@ -193,15 +202,44 @@ func (e *ContextMenu) Init() {
 	e.menu.AddStyle("padding", "5px")
 	e.menu.AddStyle("zIndex", "1000")
 
-	//e.menu.AddStyle("top", "50px")
-	//e.menu.AddStyle("left", "50px")
-	e.hide()
+	//e.hide()
+
+	//pai := factoryBrowser.NewTagDiv().Class("panel open")
+	//header := factoryBrowser.NewTagDiv().Class("panel open").Append(
+	//	factoryBrowser.NewTagDiv().Class("panelHeader").Append(
+	//		factoryBrowser.NewTagDiv().Class("headerText").Html("Control panel"),
+	//		factoryBrowser.NewTagDiv().AddStyle("cursor", "move").Html("◇"),
+	//		factoryBrowser.NewTagDiv().Html("&nbsp;"),
+	//		factoryBrowser.NewTagDiv().AddStyle("cursor", "pointer").Html("▾"),
+	//		factoryBrowser.NewTagDiv().Html("&nbsp;"),
+	//		factoryBrowser.NewTagDiv().AddStyle("cursor", "pointer").Html("⊗"),
+	//	),
+
+	//factoryBrowser.NewTagDiv().Class("panelBody").Append(
+	//	factoryBrowser.NewTagDiv().Class("panelCel").Append(
+	//		factoryBrowser.NewTagDiv().Class("labelCel").Append(
+	//			factoryBrowser.NewTagDiv().Class("labelText").Html("Easing tween time"),
+	//			factoryBrowser.NewTagDiv().Class("closeIcon").Html("ˇ"),
+	//		),
+	//		factoryBrowser.NewTagDiv().Class("compCel").Append(
+	//			factoryBrowser.NewTagDiv().Class("component"),
+	//			factoryBrowser.NewTagDiv().Class("component").Append(e.menu),
+	//		),
+	//	),
+	//),
+	//)
+
 	e.stage.Append(e.menu)
 
-	js.Global().Get("document").Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	if e.fixed {
+		e.menu.AddStyle("top", "50px")
+		e.menu.AddStyle("left", "10px")
 		e.hide()
-		return nil
-	}))
+		js.Global().Get("document").Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			e.hide()
+			return nil
+		}))
+	}
 }
 
 func (e *ContextMenu) Menu(options []Options) {
@@ -214,7 +252,7 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 		if option.Label == "-" {
 			divider := factoryBrowser.NewTagHr()
 			divider.AddStyle("margin", e.setup["dividerMargin"])
-			container.Append(divider) //container
+			container.Append(divider)
 			continue
 
 		} else if option.Type == "grid" && option.Items != nil && len(option.Items) > 0 {
@@ -279,8 +317,11 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 
 						submenuRect := subMenu.Get().Call("getBoundingClientRect")
 						screenWidth := js.Global().Get("window").Get("innerWidth").Int()
+						screenHeight := js.Global().Get("window").Get("innerHeight").Int()
 
-						cellRight := cell.Get().Call("getBoundingClientRect").Get("right").Int()
+						cellRect := cell.Get().Call("getBoundingClientRect")
+						cellRight := cellRect.Get("right").Int()
+						cellTop := cellRect.Get("top").Int()
 
 						if cellRight+submenuRect.Get("width").Int() > screenWidth {
 							subMenu.AddStyle("left", "auto")
@@ -288,6 +329,14 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 						} else {
 							subMenu.AddStyle("left", "100%")
 							subMenu.AddStyle("right", "auto")
+						}
+
+						if cellTop+submenuRect.Get("height").Int() > screenHeight {
+							subMenu.AddStyle("top", "auto")
+							subMenu.AddStyle("bottom", "0")
+						} else {
+							subMenu.AddStyle("top", "0")
+							subMenu.AddStyle("bottom", "auto")
 						}
 
 						return nil
@@ -370,10 +419,14 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 			item.Get().Call("addEventListener", "mouseenter", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 				subMenu.AddStyle("display", "block")
 
-				submenuRect := subMenu.Get().Call("getBoundingClientRect")
-				screenWidth := js.Global().Get("window").Get("innerWidth").Int()
+				window := js.Global().Get("window")
+				itemClientRect := item.Get().Call("getBoundingClientRect")
 
-				itemRight := item.Get().Call("getBoundingClientRect").Get("right").Int()
+				submenuRect := subMenu.Get().Call("getBoundingClientRect")
+				screenWidth := window.Get("innerWidth").Int()
+				//screenHeight := window.Get("innerHeight").Int()
+
+				itemRight := itemClientRect.Get("right").Int()
 
 				if itemRight+submenuRect.Get("width").Int() > screenWidth {
 					subMenu.AddStyle("left", "auto")
@@ -382,6 +435,7 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 					subMenu.AddStyle("left", "100%")
 					subMenu.AddStyle("right", "auto")
 				}
+
 				return nil
 			}))
 			item.Get().Call("addEventListener", "mouseleave", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
@@ -403,6 +457,10 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 }
 
 func (e *ContextMenu) AttachMenu(element js.Value) {
+	if e.fixed {
+		return
+	}
+
 	element.Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		args[0].Call("preventDefault")
 		e.show(args[0].Get("clientX").Int(), args[0].Get("clientY").Int())

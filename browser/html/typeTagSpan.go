@@ -959,6 +959,11 @@ func (e *TagSpan) Style(style string) (ref *TagSpan) {
 	return e
 }
 
+func (e *TagSpan) AddStyle(key string, value any) (ref *TagSpan) {
+	e.selfElement.Get("style").Set(key, value)
+	return e
+}
+
 // TabIndex #global
 //
 // English:

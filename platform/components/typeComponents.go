@@ -4732,10 +4732,6 @@ func (e *Components) processHeaderTextAddDragListener(dragIcon *html.TagDiv) {
 		e.isDragging = true
 		e.offsetX = args[0].Get("clientX").Int() - e.panelFather.Get().Call("getBoundingClientRect").Get("left").Int()
 		e.offsetY = args[0].Get("clientY").Int() - e.panelFather.Get().Call("getBoundingClientRect").Get("top").Int()
-
-		// Centralize in the middle of the icon "◇"
-		e.offsetX += 7
-		e.offsetY += 7
 		return nil
 	}))
 
@@ -4753,8 +4749,8 @@ func (e *Components) processHeaderTextAddDragListener(dragIcon *html.TagDiv) {
 	}))
 }
 
-func (e *Components) processHeaderTextAddMinimizeListener(closeIcon *html.TagDiv) {
-	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
+func (e *Components) processHeaderTextAddMinimizeListener(minimizeIcon *html.TagDiv) {
+	minimizeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
 		e.panelFather.Get().Get("classList").Call("toggle", "open")
 

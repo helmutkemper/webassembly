@@ -7,6 +7,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/stage"
 	"strconv"
 	"syscall/js"
+	"time"
 )
 
 type Options struct {
@@ -19,14 +20,25 @@ type Options struct {
 }
 
 type ContextMenu struct {
-	menu  *html.TagDiv
-	setup map[string]string
-	stage *stage.Stage
-	fixed bool
+	body    *html.TagDiv
+	header  *html.TagDiv
+	content *html.TagDiv
+	menu    *html.TagDiv
+	setup   map[string]string
+	stage   *stage.Stage
+	fixed   bool
+	bodyX   int
+	bodyY   int
+
+	isDragging bool
+	offsetX    int
+	offsetY    int
 }
 
-func (e *ContextMenu) SetAsFixed() {
+func (e *ContextMenu) FixedMenu(x, y int) {
 	e.fixed = true
+	e.bodyX = x
+	e.bodyY = y
 }
 
 func (e *ContextMenu) Stage(stage *stage.Stage) {
@@ -67,7 +79,7 @@ func (e *ContextMenu) setupInit() {
 	}
 
 	if _, found := e.setup["gridGridTemplateColumns"]; !found {
-		e.setup["gridGridTemplateColumns"] = "repeat(2, 1fr)"
+		e.setup["gridGridTemplateColumns"] = "repeat(3, 1fr)"
 	}
 
 	if _, found := e.setup["gridGap"]; !found {
@@ -82,8 +94,8 @@ func (e *ContextMenu) setupInit() {
 		e.setup["cellTextAlign"] = "center"
 	}
 
-	if _, found := e.setup["cellCursor"]; !found {
-		e.setup["cellCursor"] = "pointer"
+	if _, found := e.setup["cursor"]; !found {
+		e.setup["cursor"] = "pointer"
 	}
 
 	if _, found := e.setup["cellBorder"]; !found {
@@ -178,6 +190,10 @@ func (e *ContextMenu) setupInit() {
 		e.setup["submenuPadding"] = "5px"
 	}
 
+	if _, found := e.setup["menuPadding"]; !found {
+		e.setup["menuPadding"] = "5px"
+	}
+
 	if _, found := e.setup["submenuDisplay"]; !found {
 		e.setup["submenuDisplay"] = "none"
 	}
@@ -189,62 +205,233 @@ func (e *ContextMenu) setupInit() {
 	if _, found := e.setup["submenuZIndex"]; !found {
 		e.setup["submenuZIndex"] = "1001"
 	}
+
+	if _, found := e.setup["menuZIndex"]; !found {
+		e.setup["menuZIndex"] = "1000"
+	}
+
+	if _, found := e.setup["menuTitle"]; !found {
+		e.setup["menuTitle"] = "Menu"
+	}
+
+	if _, found := e.setup["menuMoveIcon"]; !found {
+		e.setup["menuMoveIcon"] = "◇"
+	}
+
+	if _, found := e.setup["menuMoveLabel"]; !found {
+		e.setup["menuMoveLabel"] = "Move"
+	}
+
+	if _, found := e.setup["menuMinimizeIcon"]; !found {
+		e.setup["menuMinimizeIcon"] = "▾"
+	}
+
+	if _, found := e.setup["menuMinimizeLabel"]; !found {
+		e.setup["menuMinimizeLabel"] = "Minimize"
+	}
+
+	if _, found := e.setup["menuCloseIcon"]; !found {
+		e.setup["menuCloseIcon"] = "⊗"
+	}
+
+	if _, found := e.setup["menuCloseLabel"]; !found {
+		e.setup["menuCloseLabel"] = "Close"
+	}
+
+	if _, found := e.setup["headerBackground"]; !found {
+		e.setup["headerBackground"] = "#e0e0e0"
+	}
+
+	if _, found := e.setup["headerPadding"]; !found {
+		e.setup["headerPadding"] = "4px 8px"
+	}
+
+	if _, found := e.setup["headerMargin"]; !found {
+		e.setup["headerMargin"] = "-5px -5px 0px -5px"
+	}
+
+	if _, found := e.setup["contentGap"]; !found {
+		e.setup["contentGap"] = "8px"
+	}
+
+	if _, found := e.setup["contentPadding"]; !found {
+		e.setup["contentPadding"] = "2px"
+	}
 }
 
 func (e *ContextMenu) Init() {
 	e.setupInit()
 
+	e.body = factoryBrowser.NewTagDiv()
+	e.body.AddStyle("position", "absolute")
+	e.body.AddStyle("background", e.setup["backgroundColor"])
+	e.body.AddStyle("border", e.setup["border"])
+	e.body.AddStyle("boxShadow", e.setup["shadow"])
+	e.body.AddStyle("padding", e.setup["menuPadding"])
+	e.body.AddStyle("zIndex", e.setup["menuZIndex"])
+
+	dragIcon := factoryBrowser.NewTagSpan().
+		AddStyle("cursor", "move").
+		Title(e.setup["menuMoveLabel"]).
+		Html(e.setup["menuMoveIcon"])
+	e.headerAddDragListener(dragIcon)
+
+	minimizeIcon := factoryBrowser.NewTagSpan().
+		AddStyle("cursor", e.setup["cursor"]).
+		Title(e.setup["menuMinimizeLabel"]).
+		Html(e.setup["menuMinimizeIcon"])
+	e.headerAddMinimizeListener(minimizeIcon)
+
+	closeIcon := factoryBrowser.NewTagSpan().
+		AddStyle("cursor", e.setup["cursor"]).
+		Title(e.setup["menuCloseLabel"]).
+		Html(e.setup["menuCloseIcon"])
+	e.headerAddCloseListener(closeIcon)
+
+	e.header = factoryBrowser.NewTagDiv().Append(
+		factoryBrowser.NewTagSpan().Html(e.setup["menuTitle"]),
+		factoryBrowser.NewTagSpan().
+			AddStyle("display", "flex").
+			AddStyle("gap", "8px").
+			Append(
+				factoryBrowser.NewTagSpan().Html("&nbsp;"),
+				dragIcon,
+				minimizeIcon,
+				closeIcon,
+			),
+	)
+	e.header.AddStyle("display", "flex")
+	e.header.AddStyle("justify-content", "space-between")
+	e.header.AddStyle("align-items", "center")
+	e.header.AddStyle("background", e.setup["headerBackground"])
+	e.header.AddStyle("padding", e.setup["headerPadding"])
+	e.header.AddStyle("margin", e.setup["headerMargin"])
+	e.header.AddStyle("font-family", e.setup["fontFamily"])
+	e.header.AddStyle("font-weight", "bold")
+	e.header.AddStyle("user-select", "none")
+
+	e.content = factoryBrowser.NewTagDiv()
+	e.content.AddStyle("display", "grid")
+	e.content.AddStyle("gap", e.setup["contentGap"])
+	e.content.AddStyle("padding", e.setup["contentPadding"])
+	e.content.FadeFunc(e.fadeProgress)
+
+	e.body.Append(
+		e.header,
+		e.content,
+	)
+
 	e.menu = factoryBrowser.NewTagDiv()
-	e.menu.AddStyle("position", "absolute")
-	e.menu.AddStyle("background", e.setup["backgroundColor"])
-	e.menu.AddStyle("border", e.setup["border"])
-	e.menu.AddStyle("boxShadow", e.setup["shadow"])
-	e.menu.AddStyle("padding", "5px")
-	e.menu.AddStyle("zIndex", "1000")
+	e.content.Append(e.menu)
 
-	//e.hide()
+	e.body.HideForFade()
+	e.body.FadeFunc(func(_ float64) {
+		e.adjustContentWidth()
+	})
 
-	//pai := factoryBrowser.NewTagDiv().Class("panel open")
-	//header := factoryBrowser.NewTagDiv().Class("panel open").Append(
-	//	factoryBrowser.NewTagDiv().Class("panelHeader").Append(
-	//		factoryBrowser.NewTagDiv().Class("headerText").Html("Control panel"),
-	//		factoryBrowser.NewTagDiv().AddStyle("cursor", "move").Html("◇"),
-	//		factoryBrowser.NewTagDiv().Html("&nbsp;"),
-	//		factoryBrowser.NewTagDiv().AddStyle("cursor", "pointer").Html("▾"),
-	//		factoryBrowser.NewTagDiv().Html("&nbsp;"),
-	//		factoryBrowser.NewTagDiv().AddStyle("cursor", "pointer").Html("⊗"),
-	//	),
+	e.stage.Append(e.body)
+	e.body.Fade(300 * time.Millisecond)
 
-	//factoryBrowser.NewTagDiv().Class("panelBody").Append(
-	//	factoryBrowser.NewTagDiv().Class("panelCel").Append(
-	//		factoryBrowser.NewTagDiv().Class("labelCel").Append(
-	//			factoryBrowser.NewTagDiv().Class("labelText").Html("Easing tween time"),
-	//			factoryBrowser.NewTagDiv().Class("closeIcon").Html("ˇ"),
-	//		),
-	//		factoryBrowser.NewTagDiv().Class("compCel").Append(
-	//			factoryBrowser.NewTagDiv().Class("component"),
-	//			factoryBrowser.NewTagDiv().Class("component").Append(e.menu),
-	//		),
-	//	),
-	//),
-	//)
-
-	e.stage.Append(e.menu)
-
-	if e.fixed {
-		e.menu.AddStyle("top", "50px")
-		e.menu.AddStyle("left", "10px")
+	if !e.fixed {
 		e.hide()
 		js.Global().Get("document").Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			e.hide()
 			return nil
 		}))
+
+		return
 	}
+
+	e.body.AddStyle("left", fmt.Sprintf("%vpx", e.bodyX))
+	e.body.AddStyle("top", fmt.Sprintf("%vpx", e.bodyY))
+}
+
+func (e *ContextMenu) fadeProgress(progress float64) {
+	e.adjustContentWidth()
+
+	if progress == 1.0 {
+		if e.content.FadeStatus() {
+			e.fadeShowContent()
+			return
+		}
+
+		e.fadeHideContent()
+	}
+}
+
+func (e *ContextMenu) fadeShowContent() {
+	e.content.AddStyle("visibility", "visible")
+	e.menu.AddStyle("visibility", "visible")
+
+	e.body.AddStyle("padding", e.setup["menuPadding"])
+	e.content.AddStyle("padding", e.setup["contentPadding"])
+}
+
+func (e *ContextMenu) fadeHideContent() {
+	e.content.AddStyle("visibility", "hidden")
+	e.menu.AddStyle("visibility", "hidden")
+
+	e.body.AddStyle("padding", "0")
+	e.content.AddStyle("padding", "0")
+}
+
+func (e *ContextMenu) headerAddDragListener(dragIcon *html.TagSpan) {
+	dragIcon.Get().Call("addEventListener", "mousedown", js.FuncOf(func(this js.Value, args []js.Value) any {
+		e.isDragging = true
+		e.offsetX = args[0].Get("clientX").Int() - e.body.Get().Call("getBoundingClientRect").Get("left").Int()
+		e.offsetY = args[0].Get("clientY").Int() - e.body.Get().Call("getBoundingClientRect").Get("top").Int()
+		return nil
+	}))
+
+	js.Global().Get("document").Call("addEventListener", "mousemove", js.FuncOf(func(this js.Value, args []js.Value) any {
+		if e.isDragging {
+			e.body.AddStyle("left", fmt.Sprintf("%vpx", args[0].Get("clientX").Int()-e.offsetX))
+			e.body.AddStyle("top", fmt.Sprintf("%vpx", args[0].Get("clientY").Int()-e.offsetY))
+		}
+		return nil
+	}))
+
+	js.Global().Get("document").Call("addEventListener", "mouseup", js.FuncOf(func(this js.Value, args []js.Value) any {
+		e.isDragging = false
+		return nil
+	}))
+}
+
+func (e *ContextMenu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
+	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
+		args[0].Call("stopPropagation")
+		e.content.Fade(300 * time.Millisecond)
+
+		return nil
+	}))
+}
+
+func (e *ContextMenu) headerAddCloseListener(closeIcon *html.TagSpan) {
+	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
+		args[0].Call("stopPropagation")
+
+		e.body.Fade(200 * time.Millisecond)
+		go func() {
+			time.Sleep(2 * time.Second)
+			e.body.Fade(200 * time.Millisecond)
+		}()
+
+		return nil
+	}))
+}
+
+func (e *ContextMenu) adjustContentWidth() {
+	menuRect := e.menu.Get().Call("getBoundingClientRect")
+	width := menuRect.Get("width").Int()
+	height := menuRect.Get("height").Int()
+	e.content.AddStyle("width", fmt.Sprintf("%vpx", width))
+	e.content.AddStyle("height", fmt.Sprintf("%vpx", height))
 }
 
 func (e *ContextMenu) Menu(options []Options) {
 	e.menu.Html("")
 	e.mountMenu(options, e.menu)
+	e.adjustContentWidth()
 }
 
 func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
@@ -265,7 +452,7 @@ func (e *ContextMenu) mountMenu(options []Options, container *html.TagDiv) {
 			for _, item := range option.Items {
 				cell := factoryBrowser.NewTagDiv()
 				cell.AddStyle("textAlign", e.setup["cellTextAlign"])
-				cell.AddStyle("cursor", e.setup["cellCursor"])
+				cell.AddStyle("cursor", e.setup["cursor"])
 				cell.AddStyle("border", e.setup["cellBorder"])
 				cell.AddStyle("borderRadius", e.setup["cellBorderRadius"])
 				cell.AddStyle("padding", e.setup["cellPadding"])
@@ -469,11 +656,13 @@ func (e *ContextMenu) AttachMenu(element js.Value) {
 }
 
 func (e *ContextMenu) show(x, y int) {
-	e.menu.AddStyle("display", "block")
-	e.menu.AddStyle("left", "0px")
-	e.menu.AddStyle("top", "0px")
+	e.body.AddStyle("display", "block")
+	e.body.AddStyle("left", "0px")
+	e.body.AddStyle("top", "0px")
 
-	bbox := e.menu.Get().Call("getBoundingClientRect")
+	e.adjustContentWidth()
+
+	bbox := e.body.Get().Call("getBoundingClientRect")
 	menuWidth := bbox.Get("width").Int()
 	menuHeight := bbox.Get("height").Int()
 	screenWidth := js.Global().Get("window").Get("innerWidth").Int()
@@ -492,12 +681,12 @@ func (e *ContextMenu) show(x, y int) {
 	adjustedX = e.max(adjustedX, 0)
 	adjustedY = e.max(adjustedY, 0)
 
-	e.menu.AddStyle("left", strconv.FormatInt(int64(adjustedX), 10)+"px")
-	e.menu.AddStyle("top", strconv.FormatInt(int64(adjustedY), 10)+"px")
+	e.body.AddStyle("left", strconv.FormatInt(int64(adjustedX), 10)+"px")
+	e.body.AddStyle("top", strconv.FormatInt(int64(adjustedY), 10)+"px")
 }
 
 func (e *ContextMenu) hide() {
-	e.menu.AddStyle("display", "none")
+	e.body.AddStyle("display", "none")
 }
 
 func (e *ContextMenu) max(x, y int) (max int) {
@@ -514,6 +703,7 @@ func main() {
 
 	contextMenu := new(ContextMenu)
 	contextMenu.Stage(stage)
+	contextMenu.FixedMenu(200, 200)
 	contextMenu.Init()
 	contextMenu.AttachMenu(js.Global().Get("document"))
 	contextMenu.Menu([]Options{
@@ -528,138 +718,138 @@ func main() {
 					Label: "cat",
 					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
 				},
-				{
-					Label: "cat",
-					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-					Type:  "grid",
-					Submenu: []Options{
-						{
-							Type: "grid",
-							Items: []Options{
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-								},
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-									Type:  "grid",
-									Submenu: []Options{
-										{
-											Type: "grid",
-											Items: []Options{
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-												},
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-												},
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-												},
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-												},
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-												},
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-													Type:  "grid",
-													Submenu: []Options{
-														{
-															Type: "grid",
-															Items: []Options{
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																},
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																},
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																},
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																},
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																	Type:  "grid",
-																	Submenu: []Options{
-																		{
-																			Type: "grid",
-																			Items: []Options{
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																				},
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																				},
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																				},
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																				},
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																				},
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																				},
-																			},
-																		},
-																	},
-																},
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																},
-															},
-														},
-													},
-												},
-											},
-										},
-									},
-								},
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-								},
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-								},
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-								},
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-								},
-							},
-						},
-					},
-				},
+				//{
+				//	Label: "cat",
+				//	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//	Type:  "grid",
+				//	Submenu: []Options{
+				//		{
+				//			Type: "grid",
+				//			Items: []Options{
+				//				{
+				//					Label: "cat",
+				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//				},
+				//				{
+				//					Label: "cat",
+				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//					Type:  "grid",
+				//					Submenu: []Options{
+				//						{
+				//							Type: "grid",
+				//							Items: []Options{
+				//								{
+				//									Label: "cat",
+				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//								},
+				//								{
+				//									Label: "cat",
+				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//								},
+				//								{
+				//									Label: "cat",
+				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//								},
+				//								{
+				//									Label: "cat",
+				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//								},
+				//								{
+				//									Label: "cat",
+				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//								},
+				//								{
+				//									Label: "cat",
+				//									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//									Type:  "grid",
+				//									Submenu: []Options{
+				//										{
+				//											Type: "grid",
+				//											Items: []Options{
+				//												{
+				//													Label: "cat",
+				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//												},
+				//												{
+				//													Label: "cat",
+				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//												},
+				//												{
+				//													Label: "cat",
+				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//												},
+				//												{
+				//													Label: "cat",
+				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//												},
+				//												{
+				//													Label: "cat",
+				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//													Type:  "grid",
+				//													Submenu: []Options{
+				//														{
+				//															Type: "grid",
+				//															Items: []Options{
+				//																{
+				//																	Label: "cat",
+				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//																},
+				//																{
+				//																	Label: "cat",
+				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//																},
+				//																{
+				//																	Label: "cat",
+				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//																},
+				//																{
+				//																	Label: "cat",
+				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//																},
+				//																{
+				//																	Label: "cat",
+				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//																},
+				//																{
+				//																	Label: "cat",
+				//																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//																},
+				//															},
+				//														},
+				//													},
+				//												},
+				//												{
+				//													Label: "cat",
+				//													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//												},
+				//											},
+				//										},
+				//									},
+				//								},
+				//							},
+				//						},
+				//					},
+				//				},
+				//				{
+				//					Label: "cat",
+				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//				},
+				//				{
+				//					Label: "cat",
+				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//				},
+				//				{
+				//					Label: "cat",
+				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//				},
+				//				{
+				//					Label: "cat",
+				//					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+				//				},
+				//			},
+				//		},
+				//	},
+				//},
 				{
 					Label: "cat",
 					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",

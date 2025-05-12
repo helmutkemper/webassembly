@@ -288,6 +288,8 @@ type TagDiv struct {
 	//
 	// Acionado quando o usuário clica duas vezes no botão do ponteiro principal.
 	fnDoubleClick *js.Func
+
+	fadeFunc func(float64)
 }
 
 // Reference
@@ -2903,6 +2905,40 @@ func (e *TagDiv) HideForFade() (ref *TagDiv) {
 	return e
 }
 
+func (e *TagDiv) ShowForFade() (ref *TagDiv) {
+	if e.GetData("goWasmFade") == "false" {
+		return
+	}
+
+	e.selfElement.Get("style").Set("opacity", e.GetData("goWasmFadeOpacity"))
+	e.selfElement.Get("style").Set("transform", e.GetData("goWasmFadeTransform"))
+	e.Data(map[string]string{"goWasmFade": "false"})
+	return e
+}
+
+// FadeFunc
+//
+// # English
+//
+// Receives the func(progress float64) pointer to be performed at the end of each frame.
+//
+//	Input:
+//	  Animation progress between 0.0 and 1.0
+//
+// Português
+//
+//	Entrada:
+//	  Progresso da animação entre 0.0 e 1.0
+//
+// Recebe o ponteiro da função func(progress float64) a ser executada ao final de cada frame.
+func (e *TagDiv) FadeFunc(f func(float64)) {
+	e.fadeFunc = f
+}
+
+func (e *TagDiv) FadeStatus() (open bool) {
+	return e.GetData("goWasmFade") == "false"
+}
+
 // Fade #replicar
 //
 // English:
@@ -2939,11 +2975,18 @@ func (e *TagDiv) Fade(duration time.Duration) (ref *TagDiv) {
 	fade = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		elapsed := time.Since(start)
 		progress := float64(elapsed.Milliseconds()) / float64(duration.Milliseconds())
-		faded := e.GetData("goWasmFade")
 
 		if progress > 1.0 {
 			progress = 1.0
 		}
+
+		if e.fadeFunc != nil {
+			defer func(progress float64) {
+				e.fadeFunc(progress)
+			}(progress)
+		}
+
+		faded := e.GetData("goWasmFade")
 
 		if faded == "true" {
 			if progress >= 1 {

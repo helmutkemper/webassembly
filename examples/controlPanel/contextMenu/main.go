@@ -35,7 +35,7 @@ type ComponentMenu struct {
 	buttonDrag     bool
 	buttonMinimize bool
 	buttonClose    bool
-	subMenu        []*html.TagDiv
+	subMenuToClose []*html.TagDiv
 }
 
 func (e *ComponentMenu) HideButtons(drag, minimize, close bool) {
@@ -296,7 +296,7 @@ func (e *ComponentMenu) setupInit() {
 }
 
 func (e *ComponentMenu) Init() {
-	e.subMenu = make([]*html.TagDiv, 0)
+	e.subMenuToClose = make([]*html.TagDiv, 0)
 
 	e.setupInit()
 
@@ -447,6 +447,21 @@ func (e *ComponentMenu) fadeShowContent() {
 
 	e.body.AddStyle("padding", e.setup["menuPadding"])
 	e.content.AddStyle("padding", e.setup["contentPadding"])
+}
+
+// closeAllSubMenus
+//
+// English:
+//
+//	Closes all submenus after the click, as the fixed menu does not have the hide() function
+//
+// Português:
+//
+//	Fecha todos os submenus após o click, pois o menu fixo não tem a função hide()
+func (e *ComponentMenu) closeAllSubMenus() {
+	for k := range e.subMenuToClose {
+		e.subMenuToClose[k].AddStyle("display", "none")
+	}
 }
 
 // fadeHideContent
@@ -624,6 +639,8 @@ func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 					subMenu.AddStyle("whiteSpace", e.setup["submenuWhiteSpace"])
 					subMenu.AddStyle("zIndex", e.setup["submenuZIndex"])
 
+					e.subMenuToClose = append(e.subMenuToClose, subMenu)
+
 					e.mountMenu(item.Submenu, subMenu)
 					cell.Append(subMenu)
 
@@ -643,8 +660,12 @@ func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 				} else {
 					cell.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 						args[0].Call("stopPropagation")
+
+						cell.AddStyle("background", "transparent")
+						cell.AddStyle("border", e.setup["border"])
 						if !item.Action.IsUndefined() {
-							js.ValueOf(item.Action).Invoke() // todo: fazer
+							js.ValueOf(item.Action).Invoke()
+							e.closeAllSubMenus()
 						}
 						if !e.fixed {
 							e.hide()
@@ -708,6 +729,8 @@ func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 			subMenu.AddStyle("whiteSpace", e.setup["submenuWhiteSpace"])
 			subMenu.AddStyle("zIndex", e.setup["submenuZIndex"])
 
+			e.subMenuToClose = append(e.subMenuToClose, subMenu)
+
 			e.mountMenu(option.Submenu, subMenu)
 
 			item.Append(subMenu)
@@ -724,7 +747,8 @@ func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 			item.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 				args[0].Call("stopPropagation")
 				if !option.Action.IsUndefined() {
-					js.ValueOf(option.Action).Invoke() // todo: fazer
+					js.ValueOf(option.Action).Invoke()
+					e.closeAllSubMenus()
 				}
 				if !e.fixed {
 					e.hide()

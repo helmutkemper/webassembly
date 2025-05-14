@@ -24,8 +24,10 @@ type ComponentMenu struct {
 	header         *html.TagDiv
 	content        *html.TagDiv
 	menu           *html.TagDiv
-	setup          map[string]string
+	subMenuToClose []*html.TagDiv
 	stage          *stage.Stage
+	setup          map[string]string
+	options        []Options
 	fixed          bool
 	bodyX          int
 	bodyY          int
@@ -35,7 +37,6 @@ type ComponentMenu struct {
 	buttonDrag     bool
 	buttonMinimize bool
 	buttonClose    bool
-	subMenuToClose []*html.TagDiv
 }
 
 func (e *ComponentMenu) HideButtons(drag, minimize, close bool) {
@@ -45,9 +46,7 @@ func (e *ComponentMenu) HideButtons(drag, minimize, close bool) {
 }
 
 func (e *ComponentMenu) Menu(options []Options) {
-	e.menu.Html("")
-	e.mountMenu(options, e.menu)
-	e.adjustContentWidth()
+	e.options = options
 }
 
 func (e *ComponentMenu) AttachMenu(element js.Value) {
@@ -94,12 +93,20 @@ func (e *ComponentMenu) setupInit() {
 		e.setup = make(map[string]string)
 	}
 
+	if _, found := e.setup["border-radius"]; !found {
+		e.setup["border-radius"] = "10px"
+	}
+
+	if _, found := e.setup["bodyShadow"]; !found {
+		e.setup["bodyShadow"] = "0 8px 16px rgba(0, 0, 0, 0.2)"
+	}
+
 	if _, found := e.setup["shadow"]; !found {
 		e.setup["shadow"] = "-1px -1px 10px rgba(0,0,0,0.2)"
 	}
 
 	if _, found := e.setup["border"]; !found {
-		e.setup["border"] = "0px solid #ccc"
+		e.setup["border"] = "1px solid #ccc"
 	}
 
 	if _, found := e.setup["backgroundColor"]; !found {
@@ -135,7 +142,7 @@ func (e *ComponentMenu) setupInit() {
 	}
 
 	if _, found := e.setup["cellBorder"]; !found {
-		e.setup["cellBorder"] = e.setup["border"]
+		e.setup["cellBorder"] = "0px solid #ccc"
 	}
 
 	if _, found := e.setup["cellBorderRadius"]; !found {
@@ -198,10 +205,6 @@ func (e *ComponentMenu) setupInit() {
 		e.setup["itemAlignItems"] = "center"
 	}
 
-	if _, found := e.setup["submenuPosition"]; !found {
-		e.setup["submenuPosition"] = "absolute"
-	}
-
 	if _, found := e.setup["submenuLeft"]; !found {
 		e.setup["submenuLeft"] = "100%"
 	}
@@ -230,20 +233,16 @@ func (e *ComponentMenu) setupInit() {
 		e.setup["menuPadding"] = "5px"
 	}
 
-	if _, found := e.setup["submenuDisplay"]; !found {
-		e.setup["submenuDisplay"] = "none"
-	}
-
 	if _, found := e.setup["submenuWhiteSpace"]; !found {
 		e.setup["submenuWhiteSpace"] = "nowrap"
 	}
 
 	if _, found := e.setup["submenuZIndex"]; !found {
-		e.setup["submenuZIndex"] = "1001"
+		e.setup["submenuZIndex"] = "1001" // todo: fazer
 	}
 
 	if _, found := e.setup["menuZIndex"]; !found {
-		e.setup["menuZIndex"] = "1000"
+		e.setup["menuZIndex"] = "1000" // todo: fazer
 	}
 
 	if _, found := e.setup["menuTitle"]; !found {
@@ -275,11 +274,11 @@ func (e *ComponentMenu) setupInit() {
 	}
 
 	if _, found := e.setup["headerBackground"]; !found {
-		e.setup["headerBackground"] = "#e0e0e0"
+		e.setup["headerBackground"] = "#fff"
 	}
 
 	if _, found := e.setup["headerPadding"]; !found {
-		e.setup["headerPadding"] = "4px 8px"
+		e.setup["headerPadding"] = "7px 4px"
 	}
 
 	if _, found := e.setup["headerMargin"]; !found {
@@ -302,9 +301,10 @@ func (e *ComponentMenu) Init() {
 
 	e.body = factoryBrowser.NewTagDiv()
 	e.body.AddStyle("position", "absolute")
+	e.body.AddStyle("border-radius", e.setup["border-radius"])
 	e.body.AddStyle("background", e.setup["backgroundColor"])
 	e.body.AddStyle("border", e.setup["border"])
-	e.body.AddStyle("boxShadow", e.setup["shadow"])
+	e.body.AddStyle("boxShadow", e.setup["bodyShadow"])
 	e.body.AddStyle("padding", e.setup["menuPadding"])
 	e.body.AddStyle("zIndex", e.setup["menuZIndex"])
 
@@ -340,7 +340,7 @@ func (e *ComponentMenu) Init() {
 	e.header.AddStyle("align-items", "center")
 	e.header.AddStyle("background", e.setup["headerBackground"])
 	e.header.AddStyle("padding", e.setup["headerPadding"])
-	e.header.AddStyle("margin", e.setup["headerMargin"])
+	//e.header.AddStyle("margin", e.setup["headerMargin"])
 	e.header.AddStyle("font-family", e.setup["fontFamily"])
 	e.header.AddStyle("font-weight", "bold")
 	e.header.AddStyle("user-select", "none")
@@ -385,12 +385,18 @@ func (e *ComponentMenu) Init() {
 			e.hide()
 			return nil
 		}))
-
-		return
+	} else {
+		e.body.AddStyle("left", fmt.Sprintf("%vpx", e.bodyX))
+		e.body.AddStyle("top", fmt.Sprintf("%vpx", e.bodyY))
 	}
 
-	e.body.AddStyle("left", fmt.Sprintf("%vpx", e.bodyX))
-	e.body.AddStyle("top", fmt.Sprintf("%vpx", e.bodyY))
+	e.Remount()
+}
+
+func (e *ComponentMenu) Remount() {
+	e.menu.Html("")
+	e.mountMenu(e.options, e.menu)
+	e.adjustContentWidth()
 }
 
 // bodyFadeProgress
@@ -628,14 +634,15 @@ func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 
 				if item.Submenu != nil && len(item.Submenu) > 0 {
 					subMenu := factoryBrowser.NewTagDiv()
-					subMenu.AddStyle("position", e.setup["submenuPosition"])
+					subMenu.AddStyle("position", "absolute")
+					subMenu.AddStyle("border-radius", e.setup["border-radius"])
 					subMenu.AddStyle("left", e.setup["submenuLeft"])
 					subMenu.AddStyle("top", e.setup["submenuTop"])
 					subMenu.AddStyle("background", e.setup["backgroundColor"])
 					subMenu.AddStyle("border", e.setup["submenuBorder"])
 					subMenu.AddStyle("boxShadow", e.setup["submenuBoxShadow"])
 					subMenu.AddStyle("padding", e.setup["submenuPadding"])
-					subMenu.AddStyle("display", e.setup["submenuDisplay"])
+					subMenu.AddStyle("display", "none")
 					subMenu.AddStyle("whiteSpace", e.setup["submenuWhiteSpace"])
 					subMenu.AddStyle("zIndex", e.setup["submenuZIndex"])
 
@@ -652,7 +659,7 @@ func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 
 					cell.Get().Call("addEventListener", "mouseleave", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 						cell.AddStyle("background", "transparent")
-						cell.AddStyle("border", e.setup["border"])
+						cell.AddStyle("border", e.setup["cellBorder"])
 						subMenu.AddStyle("display", "none")
 
 						return nil
@@ -662,7 +669,7 @@ func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 						args[0].Call("stopPropagation")
 
 						cell.AddStyle("background", "transparent")
-						cell.AddStyle("border", e.setup["border"])
+						cell.AddStyle("border", e.setup["cellBorder"])
 						if !item.Action.IsUndefined() {
 							js.ValueOf(item.Action).Invoke()
 							e.closeAllSubMenus()
@@ -675,13 +682,13 @@ func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 
 					cell.Get().Call("addEventListener", "mouseenter", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 						cell.AddStyle("background", e.setup["submenuBackground"])
-						cell.AddStyle("border", e.setup["border"])
+						cell.AddStyle("border", e.setup["cellBorder"])
 						return nil
 					}))
 
 					cell.Get().Call("addEventListener", "mouseleave", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 						cell.AddStyle("background", "transparent")
-						cell.AddStyle("border", e.setup["border"])
+						cell.AddStyle("border", e.setup["cellBorder"])
 						return nil
 					}))
 				}
@@ -718,14 +725,15 @@ func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 			item.AddStyle("alignItems", e.setup["itemAlignItems"])
 
 			subMenu := factoryBrowser.NewTagDiv()
-			subMenu.AddStyle("position", e.setup["submenuPosition"])
+			subMenu.AddStyle("position", "absolute")
+			subMenu.AddStyle("border-radius", e.setup["border-radius"])
 			subMenu.AddStyle("left", e.setup["submenuLeft"])
 			subMenu.AddStyle("top", e.setup["submenuTop"])
 			subMenu.AddStyle("background", e.setup["backgroundColor"])
 			subMenu.AddStyle("border", e.setup["submenuBorder"])
 			subMenu.AddStyle("boxShadow", e.setup["submenuBoxShadow"])
 			subMenu.AddStyle("padding", e.setup["submenuPadding"])
-			subMenu.AddStyle("display", e.setup["submenuDisplay"])
+			subMenu.AddStyle("display", "none")
 			subMenu.AddStyle("whiteSpace", e.setup["submenuWhiteSpace"])
 			subMenu.AddStyle("zIndex", e.setup["submenuZIndex"])
 
@@ -861,9 +869,8 @@ func main() {
 	contextMenu := new(ComponentMenu)
 	contextMenu.Stage(stage)
 	contextMenu.HideButtons(false, false, false)
-	contextMenu.FixedMenu(50, 50)
+	//contextMenu.FixedMenu(50, 10)
 	contextMenu.AttachMenu(js.Global().Get("document"))
-	contextMenu.Init()
 	contextMenu.Menu([]Options{
 		{
 			Type: "grid",
@@ -1214,6 +1221,7 @@ func main() {
 			},
 		},
 	})
+	contextMenu.Init()
 
 	done := make(chan struct{})
 	done <- struct{}{}

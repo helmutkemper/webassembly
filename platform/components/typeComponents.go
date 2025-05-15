@@ -34,6 +34,8 @@ func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 	typeof := reflect.TypeOf(el)
 	e.createDivsFather()
 
+	e.panelFather.HideForFade()
+
 	err = e.process(element, typeof)
 	if err != nil {
 		//file, line, funcName := runTimeUtil.Trace()
@@ -49,8 +51,6 @@ func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 
 func (e *Components) createDivsFather() {
 	e.panelFather = factoryBrowser.NewTagDiv().Class("panel")
-	e.panelFather.HideForFade()
-
 	e.panelBody = factoryBrowser.NewTagDiv().Class("panelBody")
 }
 
@@ -66,7 +66,7 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 		typeof = typeof.Elem()
 	}
 
-	if element.CanInterface() {
+	if element.CanInterface() && element.Kind() == reflect.Struct {
 		for i := 0; i != element.NumField(); i += 1 {
 			fieldVal := element.Field(i)
 			fieldTyp := typeof.Field(i)
@@ -78,9 +78,22 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 			tagRaw := fieldTyp.Tag.Get("wasmPanel")
 			if tagRaw != "" {
 				tagData := new(tag)
-				tagData.init(tagRaw)
+				if err = tagData.init(tagRaw); err != nil {
+					err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+					return
+				}
 
 				switch tagData.Type {
+				case "contextMenu":
+					divCompCel := factoryBrowser.NewTagDiv().Class("compCel")
+					err = e.processContextMenu(element, fieldVal, fieldTyp.Type, tagData, divCompCel)
+					if err != nil {
+						//file, line, funcName := runTimeUtil.Trace()
+						//err = errors.Join(fmt.Errorf("%v(line: %v).processComponent().error: %v", funcName, line, err))
+						//err = errors.Join(fmt.Errorf("file: %v", file), err)
+						return
+					}
+
 				case "headerText":
 					dragIcon, minimizeIcon, closeIcon := e.processHeaderText(fieldVal, tagData.Label, e.panelFather)
 					e.processHeaderTextAddMinimizeListener(minimizeIcon)
@@ -155,458 +168,545 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 	return
 }
 
+func (e *Components) processContextMenu(parentElement, element reflect.Value, typeof reflect.Type, tagData *tag, father *html.TagDiv) (err error) {
+
+	menuComponent := Menu{}
+
+	if !element.CanInterface() {
+		err = fmt.Errorf("component.Menu (%v) cannot be transformed into an interface", parentElement.Type().Name())
+		return
+	}
+
+	if element.Kind() != reflect.Pointer {
+		err = fmt.Errorf("component.Menu (%v) requires a pointer to the component, example", parentElement.Type().Name())
+		err = errors.Join(err, fmt.Errorf("type %v struct {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:contextMenu;label:...\"`", typeof.Name(), element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("}"))
+		return
+	}
+
+	// populates the pointer, if it is nil
+	if element.CanSet() && element.IsNil() {
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
+	}
+
+	// passes from pointer to element
+	element = element.Elem()
+
+	// Checks if the import of `components.Menu` was done
+	if fieldMenu := element.FieldByName("Menu"); !fieldMenu.IsValid() {
+		err = fmt.Errorf("error: component %v needs to embed `components.Menu` directly", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.Menu"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         Label     string        `wasmPanel:\"type:label\"`"))
+		err = errors.Join(err, fmt.Errorf("         Icon      string        `wasmPanel:\"type:icon\"`"))
+		err = errors.Join(err, fmt.Errorf("         IconLeft  string        `wasmPanel:\"type:iconLeft\"`"))
+		err = errors.Join(err, fmt.Errorf("         IconRight string        `wasmPanel:\"type:iconRight\"`"))
+		err = errors.Join(err, fmt.Errorf("         Type      string        `wasmPanel:\"type:type\"`"))
+		err = errors.Join(err, fmt.Errorf("         Items     []MenuOptions `wasmPanel:\"type:options\"`"))
+		err = errors.Join(err, fmt.Errorf("         Action    js.Func       `wasmPanel:\"type:action\"`"))
+		err = errors.Join(err, fmt.Errorf("         Submenu   []MenuOptions `wasmPanel:\"type:subMenu\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	} else {
+		// Initialize Board
+		newInstance := reflect.New(fieldMenu.Type())
+		fieldMenu.Set(newInstance.Elem())
+
+		// Initializes the two input tags within Board
+		menuComponent.body = father
+
+		// populates the component.Board within the user component
+		componentBoard := element.FieldByName("Menu")
+		componentBoard.Set(reflect.ValueOf(menuComponent))
+	}
+
+	for i := 0; i != element.NumField(); i += 1 {
+		var fieldTyp reflect.StructField
+		fieldVal := element.Field(i)
+		_ = fieldVal
+		if typeof.Kind() == reflect.Pointer {
+			fieldTyp = typeof.Elem().Field(i)
+		} else {
+			fieldTyp = typeof.Field(i)
+		}
+
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagData := new(tag)
+			if err = tagData.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
+
+			switch tagData.Type {
+			}
+		}
+	}
+
+	return
+}
+
 func (e *Components) processComponent(parentElement, element reflect.Value, typeof reflect.Type, tagData *tag, father *html.TagDiv) (err error) {
 
 	boardComponent := Board{}
 
-	if element.CanInterface() {
+	if !element.CanInterface() {
+		err = fmt.Errorf("component.Board (%v) cannot be transformed into an interface", parentElement.Type().Name())
+		return
+	}
 
-		if element.Kind() != reflect.Pointer {
-			err = fmt.Errorf("component.Board (%v) requires a pointer to the component, example", parentElement.Type().Name())
-			err = errors.Join(err, fmt.Errorf("type %v struct {", parentElement.Type().Name()))
-			err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:range;label:...\"`", typeof.Name(), element.Type().Name()))
-			err = errors.Join(err, fmt.Errorf("}"))
-			return
-		}
+	if element.Kind() != reflect.Pointer {
+		err = fmt.Errorf("component.Board (%v) requires a pointer to the component, example", parentElement.Type().Name())
+		err = errors.Join(err, fmt.Errorf("type %v struct {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:range;label:...\"`", typeof.Name(), element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("}"))
+		return
+	}
 
-		// populates the pointer, if it is nil
-		if element.CanSet() && element.IsNil() {
-			newInstance := reflect.New(element.Type().Elem())
-			element.Set(newInstance)
-		}
+	// populates the pointer, if it is nil
+	if element.CanSet() && element.IsNil() {
+		newInstance := reflect.New(element.Type().Elem())
+		element.Set(newInstance)
+	}
 
-		// passes from pointer to element
-		element = element.Elem()
+	// passes from pointer to element
+	element = element.Elem()
 
-		// Checks if the import of `components.Board` was done
-		if fieldBoard := element.FieldByName("Board"); !fieldBoard.IsValid() {
-			err = fmt.Errorf("error: component %v needs to embed `components.Board` directly", element.Type().Name())
-			err = errors.Join(err, fmt.Errorf("       Example:"))
-			err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
-			err = errors.Join(err, fmt.Errorf("         components.Board"))
-			err = errors.Join(err, fmt.Errorf("         "))
-			err = errors.Join(err, fmt.Errorf("         Dragging *DraggingEffect   `wasmPanel:\"type:range;label:effect\"`"))
-			err = errors.Join(err, fmt.Errorf("         Tween    *TweenSelect      `wasmPanel:\"type:select;label:Tween function\"`"))
-			err = errors.Join(err, fmt.Errorf("         Start    *EasingTweenStart `wasmPanel:\"type:button;label:start easing tween\"`"))
-			err = errors.Join(err, fmt.Errorf("       }"))
-			return
+	// Checks if the import of `components.Board` was done
+	if fieldBoard := element.FieldByName("Board"); !fieldBoard.IsValid() {
+		err = fmt.Errorf("error: component %v needs to embed `components.Board` directly", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.Board"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         Dragging *DraggingEffect   `wasmPanel:\"type:range;label:effect\"`"))
+		err = errors.Join(err, fmt.Errorf("         Tween    *TweenSelect      `wasmPanel:\"type:select;label:Tween function\"`"))
+		err = errors.Join(err, fmt.Errorf("         Start    *EasingTweenStart `wasmPanel:\"type:button;label:start easing tween\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	} else {
+		// Initialize Board
+		newInstance := reflect.New(fieldBoard.Type())
+		fieldBoard.Set(newInstance.Elem())
+
+		// Initializes the two input tags within Board
+		boardComponent.__divTag = father
+
+		// populates the component.Board within the user component
+		componentBoard := element.FieldByName("Board")
+		componentBoard.Set(reflect.ValueOf(boardComponent))
+	}
+
+	for i := 0; i != element.NumField(); i += 1 {
+		divComponent := factoryBrowser.NewTagDiv().Class("component")
+
+		var fieldTyp reflect.StructField
+		fieldVal := element.Field(i)
+		if typeof.Kind() == reflect.Pointer {
+			fieldTyp = typeof.Elem().Field(i)
 		} else {
-			// Initialize Board
-			newInstance := reflect.New(fieldBoard.Type())
-			fieldBoard.Set(newInstance.Elem())
-
-			// Initializes the two input tags within Board
-			boardComponent.__divTag = father
-
-			// populates the component.Board within the user component
-			componentBoard := element.FieldByName("Board")
-			componentBoard.Set(reflect.ValueOf(boardComponent))
+			fieldTyp = typeof.Field(i)
 		}
 
-		for i := 0; i != element.NumField(); i += 1 {
-			divComponent := factoryBrowser.NewTagDiv().Class("component")
-
-			var fieldTyp reflect.StructField
-			fieldVal := element.Field(i)
-			if typeof.Kind() == reflect.Pointer {
-				fieldTyp = typeof.Elem().Field(i)
-			} else {
-				fieldTyp = typeof.Field(i)
+		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if tagRaw != "" {
+			tagData := new(tag)
+			if err = tagData.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
 			}
 
-			tagRaw := fieldTyp.Tag.Get("wasmPanel")
-			if tagRaw != "" {
-				tagData := new(tag)
-				tagData.init(tagRaw)
-
-				switch tagData.Type {
-				case "range":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Range (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:range;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Range (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentRange(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "osm":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Osm (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:osm;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Osm (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentOsm(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "button":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Button (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:button;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Button (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentButton(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "select":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Select (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:select;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Select (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentSelect(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "radio":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Radio (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:radio;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Radio (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentRadio(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "checkbox":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Checkbox (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:checkbox;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Checkbox (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentCheckbox(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "color":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Color (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:color;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Color (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentColor(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "date":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Date (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:date;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Date (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentDate(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "week":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Week (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:week;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Week (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentWeek(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "text":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Text (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:text;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Text (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentText(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "qrcode":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.QRCode (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:qrcode;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.QRCode (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentQRCode(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "url":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Url (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:url;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Url (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentUrl(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "tel":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Tel (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:tel;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Tel (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentTel(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "email":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Email (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:email;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Email (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentMail(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "time":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Time (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:time;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Time (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentTime(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "month":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Month (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:month;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Month (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentMonth(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "password":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Password (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:password;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Password (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentPassword(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "mail":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.Mail (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:mail;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.Mail (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentMail(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				case "textArea":
-
-					if fieldVal.Kind() != reflect.Pointer {
-						err = fmt.Errorf("component.TextArea (%v) requires a pointer to the component, example", fieldVal.Type().Name())
-						err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:text;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
-						err = errors.Join(err, fmt.Errorf("}"))
-						return
-					}
-
-					if !fieldVal.CanSet() || !fieldVal.CanInterface() {
-						err = fmt.Errorf("component.TextArea (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
-						return
-					}
-
-					err = e.processComponentTextArea(fieldVal, tagData, divComponent)
-					if err != nil {
-						return
-					}
-
-				default:
-					//log.Printf(">>>>>>>> %v", tagData.Type)
+			switch tagData.Type {
+			case "range":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Range (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:range;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
 				}
-			}
 
-			father.Append(divComponent)
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Range (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentRange(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "osm":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Osm (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:osm;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Osm (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentOsm(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "button":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Button (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:button;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Button (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentButton(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "select":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Select (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:select;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Select (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentSelect(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "radio":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Radio (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:radio;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Radio (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentRadio(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "checkbox":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Checkbox (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:checkbox;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Checkbox (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentCheckbox(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "color":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Color (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:color;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Color (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentColor(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "date":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Date (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:date;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Date (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentDate(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "week":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Week (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:week;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Week (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentWeek(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "text":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Text (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:text;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Text (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentText(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "qrcode":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.QRCode (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:qrcode;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.QRCode (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentQRCode(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "url":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Url (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:url;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Url (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentUrl(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "tel":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Tel (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:tel;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Tel (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentTel(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "email":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Email (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:email;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Email (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentMail(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "time":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Time (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:time;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Time (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentTime(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "month":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Month (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:month;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Month (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentMonth(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "password":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Password (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:password;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Password (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentPassword(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "mail":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.Mail (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:mail;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.Mail (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentMail(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			case "textArea":
+
+				if fieldVal.Kind() != reflect.Pointer {
+					err = fmt.Errorf("component.TextArea (%v) requires a pointer to the component, example", fieldVal.Type().Name())
+					err = errors.Join(err, fmt.Errorf("type %v struct {", element.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:text;label:...\"`", fieldTyp.Name, fieldVal.Type().Name()))
+					err = errors.Join(err, fmt.Errorf("}"))
+					return
+				}
+
+				if !fieldVal.CanSet() || !fieldVal.CanInterface() {
+					err = fmt.Errorf("component.TextArea (%v) requires a public field, '%v' with the first letter capitalized", fieldTyp.Name, strings.ToUpper(fieldTyp.Name[:1])+fieldTyp.Name[1:])
+					return
+				}
+
+				err = e.processComponentTextArea(fieldVal, tagData, divComponent)
+				if err != nil {
+					return
+				}
+
+			default:
+				//log.Printf(">>>>>>>> %v", tagData.Type)
+			}
 		}
+
+		father.Append(divComponent)
 	}
 
 	return
@@ -683,7 +783,11 @@ func (e *Components) searchFieldByTagType(typeName, eventName string, element re
 		tagDataInternal := new(tag)
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
-			tagDataInternal.init(tagRaw)
+			if err := tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				log.Printf("%v", err) // todo: melhorar isto
+				return
+			}
 		}
 
 		if tagDataInternal.Type == typeName && eventName == "" {
@@ -857,7 +961,10 @@ func (e *Components) processComponentOsm(element reflect.Value, tagDataFather *t
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -1160,7 +1267,10 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -1384,7 +1494,10 @@ func (e *Components) processComponentColor(element reflect.Value, tagDataFather 
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -1545,7 +1658,10 @@ func (e *Components) processComponentDate(element reflect.Value, tagDataFather *
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -1706,7 +1822,10 @@ func (e *Components) processComponentText(element reflect.Value, tagDataFather *
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -1865,7 +1984,10 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -1962,7 +2084,10 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -2202,7 +2327,10 @@ func (e *Components) processComponentUrl(element reflect.Value, tagDataFather *t
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -2365,7 +2493,10 @@ func (e *Components) processComponentTel(element reflect.Value, tagDataFather *t
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -2528,7 +2659,10 @@ func (e *Components) processComponentMail(element reflect.Value, tagDataFather *
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -2691,7 +2825,10 @@ func (e *Components) processComponentTime(element reflect.Value, tagDataFather *
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -2858,7 +2995,10 @@ func (e *Components) processComponentMonth(element reflect.Value, tagDataFather 
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -3019,7 +3159,10 @@ func (e *Components) processComponentWeek(element reflect.Value, tagDataFather *
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -3180,7 +3323,10 @@ func (e *Components) processComponentPassword(element reflect.Value, tagDataFath
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -3343,7 +3489,10 @@ func (e *Components) processComponentTextArea(element reflect.Value, tagDataFath
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -3473,8 +3622,8 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 	// Move element to pointer struct
 	element = element.Elem()
 
-	// Checks if the import of `components.Range` was done
-	if fieldRange := element.FieldByName("Button"); !fieldRange.IsValid() {
+	// Checks if the import of `components.Button` was done
+	if fieldButton := element.FieldByName("Button"); !fieldButton.IsValid() {
 		err = fmt.Errorf("error: component %v needs to embed `components.Button` directly", element.Type().Name())
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type OnClickEvent struct {"))
@@ -3494,8 +3643,8 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 		return
 	} else {
 		// Initialize Range
-		newInstance := reflect.New(fieldRange.Type())
-		fieldRange.Set(newInstance.Elem())
+		newInstance := reflect.New(fieldButton.Type())
+		fieldButton.Set(newInstance.Elem())
 
 		// Initializes the two input tags within Range
 		buttonComponent.__buttonTag = inputButton
@@ -3512,7 +3661,10 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 
@@ -3643,7 +3795,10 @@ func (e *Components) verifyTypesComponentSelect(element reflect.Value) (err erro
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 			case "value":
@@ -3719,7 +3874,10 @@ func (e *Components) verifyTypesComponentSelect(element reflect.Value) (err erro
 					tagRaw := fieldTyp.Tag.Get("wasmPanel")
 					if tagRaw != "" {
 						tagDataInternal := new(tag)
-						tagDataInternal.init(tagRaw)
+						if err = tagDataInternal.init(tagRaw); err != nil {
+							err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+							return
+						}
 
 						switch tagDataInternal.Type {
 						case "label":
@@ -3874,7 +4032,10 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 			case "inputTagSelect":
@@ -4096,7 +4257,10 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 			case "value":
@@ -4108,7 +4272,10 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 					tagRaw := fieldTyp.Tag.Get("wasmPanel")
 					if tagRaw != "" {
 						tagDataInternal := new(tag)
-						tagDataInternal.init(tagRaw)
+						if err = tagDataInternal.init(tagRaw); err != nil {
+							err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+							return
+						}
 
 						switch tagDataInternal.Type {
 						case "inputTagLabel":
@@ -4143,7 +4310,10 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 			//case "inputTagRadio":
@@ -4452,7 +4622,10 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 			case "value":
@@ -4464,7 +4637,10 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 					tagRaw := fieldTyp.Tag.Get("wasmPanel")
 					if tagRaw != "" {
 						tagDataInternal := new(tag)
-						tagDataInternal.init(tagRaw)
+						if err = tagDataInternal.init(tagRaw); err != nil {
+							err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+							return
+						}
 
 						switch tagDataInternal.Type {
 						case "inputTagLabel":
@@ -4499,7 +4675,10 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 		tagRaw := fieldTyp.Tag.Get("wasmPanel")
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
-			tagDataInternal.init(tagRaw)
+			if err = tagDataInternal.init(tagRaw); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
 
 			switch tagDataInternal.Type {
 			//case "inputTagCheckbox":

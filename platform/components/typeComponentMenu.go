@@ -1,4 +1,4 @@
-package main
+package components
 
 import (
 	"fmt"
@@ -10,16 +10,16 @@ import (
 	"time"
 )
 
-type Options struct {
+type options struct {
 	Label   string
 	Icon    string
 	Type    string
-	Items   []Options
+	Items   []options
 	Action  js.Func
-	Submenu []Options
+	Submenu []options
 }
 
-type ComponentMenu struct {
+type Menu struct {
 	body           *html.TagDiv
 	header         *html.TagDiv
 	content        *html.TagDiv
@@ -27,7 +27,7 @@ type ComponentMenu struct {
 	subMenuToClose []*html.TagDiv
 	stage          *stage.Stage
 	setup          map[string]string
-	options        []Options
+	options        []options
 	fixed          bool
 	bodyX          int
 	bodyY          int
@@ -39,17 +39,17 @@ type ComponentMenu struct {
 	buttonClose    bool
 }
 
-func (e *ComponentMenu) HideButtons(drag, minimize, close bool) {
+func (e *Menu) HideButtons(drag, minimize, close bool) {
 	e.buttonDrag = drag
 	e.buttonMinimize = minimize
 	e.buttonClose = close
 }
 
-func (e *ComponentMenu) Menu(options []Options) {
+func (e *Menu) Menu(options []options) {
 	e.options = options
 }
 
-func (e *ComponentMenu) AttachMenu(element js.Value) {
+func (e *Menu) AttachMenu(element js.Value) {
 	if e.fixed {
 		return
 	}
@@ -61,17 +61,17 @@ func (e *ComponentMenu) AttachMenu(element js.Value) {
 	}))
 }
 
-func (e *ComponentMenu) FixedMenu(x, y int) {
+func (e *Menu) FixedMenu(x, y int) {
 	e.fixed = true
 	e.bodyX = x
 	e.bodyY = y
 }
 
-func (e *ComponentMenu) Stage(stage *stage.Stage) {
+func (e *Menu) Stage(stage *stage.Stage) {
 	e.stage = stage
 }
 
-func (e *ComponentMenu) Css(key, value string) {
+func (e *Menu) Css(key, value string) {
 	if e.setup == nil {
 		e.setup = make(map[string]string)
 	}
@@ -88,7 +88,7 @@ func (e *ComponentMenu) Css(key, value string) {
 // Português:
 //
 //	Configura o css do menu
-func (e *ComponentMenu) setupInit() {
+func (e *Menu) setupInit() {
 	if e.setup == nil {
 		e.setup = make(map[string]string)
 	}
@@ -294,7 +294,7 @@ func (e *ComponentMenu) setupInit() {
 	}
 }
 
-func (e *ComponentMenu) Init() {
+func (e *Menu) Init() {
 	e.subMenuToClose = make([]*html.TagDiv, 0)
 
 	e.setupInit()
@@ -402,7 +402,7 @@ func (e *ComponentMenu) Init() {
 // Português:
 //
 //	Remonta o menu com novos dados
-func (e *ComponentMenu) ReInit() {
+func (e *Menu) ReInit() {
 	e.menu.Html("")
 	e.mountMenu(e.options, e.menu)
 	e.adjustContentWidth()
@@ -417,7 +417,7 @@ func (e *ComponentMenu) ReInit() {
 // Português:
 //
 //	Adjusts the menu content when the Div.Fade() function works during the close function
-func (e *ComponentMenu) bodyFadeProgress(progress float64) {
+func (e *Menu) bodyFadeProgress(progress float64) {
 	e.adjustContentWidth()
 
 	if progress == 1.0 && !e.content.FadeStatus() {
@@ -434,7 +434,7 @@ func (e *ComponentMenu) bodyFadeProgress(progress float64) {
 // Português:
 //
 //	Adjusts the menu content when the Div.Fade() function works during the minimize function
-func (e *ComponentMenu) contentFadeProgress(progress float64) {
+func (e *Menu) contentFadeProgress(progress float64) {
 	e.adjustContentWidth()
 
 	if progress == 1.0 {
@@ -456,7 +456,7 @@ func (e *ComponentMenu) contentFadeProgress(progress float64) {
 // Português:
 //
 //	Mostra e ajusta o conteúdo do menu quando a função div.Fade() termina
-func (e *ComponentMenu) fadeShowContent() {
+func (e *Menu) fadeShowContent() {
 	e.content.AddStyle("visibility", "visible")
 	e.menu.AddStyle("visibility", "visible")
 
@@ -473,7 +473,7 @@ func (e *ComponentMenu) fadeShowContent() {
 // Português:
 //
 //	Fecha todos os submenus após o click, pois o menu fixo não tem a função hide()
-func (e *ComponentMenu) closeAllSubMenus() {
+func (e *Menu) closeAllSubMenus() {
 	for k := range e.subMenuToClose {
 		e.subMenuToClose[k].AddStyle("display", "none")
 	}
@@ -488,7 +488,7 @@ func (e *ComponentMenu) closeAllSubMenus() {
 // Português:
 //
 //	Esconde e ajusta o conteúdo do menu quando a função div.Fade() termina
-func (e *ComponentMenu) fadeHideContent() {
+func (e *Menu) fadeHideContent() {
 	e.content.AddStyle("visibility", "hidden")
 	e.menu.AddStyle("visibility", "hidden")
 
@@ -505,7 +505,7 @@ func (e *ComponentMenu) fadeHideContent() {
 // Português:
 //
 //	Adiciona o listener para o botão de mover
-func (e *ComponentMenu) headerAddDragListener(dragIcon *html.TagSpan) {
+func (e *Menu) headerAddDragListener(dragIcon *html.TagSpan) {
 	dragIcon.Get().Call("addEventListener", "mousedown", js.FuncOf(func(this js.Value, args []js.Value) any {
 		e.isDragging = true
 		e.offsetX = args[0].Get("clientX").Int() - e.body.Get().Call("getBoundingClientRect").Get("left").Int()
@@ -536,7 +536,7 @@ func (e *ComponentMenu) headerAddDragListener(dragIcon *html.TagSpan) {
 // Português:
 //
 //	Adiciona o listener para o botão de minimizar
-func (e *ComponentMenu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
+func (e *Menu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
 	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
 		e.content.Fade(300 * time.Millisecond)
@@ -554,7 +554,7 @@ func (e *ComponentMenu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
 // Português:
 //
 //	Adiciona o listener para o botão de fechar
-func (e *ComponentMenu) headerAddCloseListener(closeIcon *html.TagSpan) {
+func (e *Menu) headerAddCloseListener(closeIcon *html.TagSpan) {
 	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
 
@@ -577,7 +577,7 @@ func (e *ComponentMenu) headerAddCloseListener(closeIcon *html.TagSpan) {
 // Português:
 //
 //	Ajusta o comprimento do menu quando ele abre por div.Fade()
-func (e *ComponentMenu) adjustContentWidth() {
+func (e *Menu) adjustContentWidth() {
 	menuRect := e.menu.Get().Call("getBoundingClientRect")
 	width := menuRect.Get("width").Int()
 	height := menuRect.Get("height").Int()
@@ -594,7 +594,7 @@ func (e *ComponentMenu) adjustContentWidth() {
 // Português:
 //
 //	Monta o menu e os submenu
-func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
+func (e *Menu) mountMenu(options []options, container *html.TagDiv) {
 	for _, option := range options {
 		if option.Label == "-" {
 			divider := factoryBrowser.NewTagHr()
@@ -787,7 +787,7 @@ func (e *ComponentMenu) mountMenu(options []Options, container *html.TagDiv) {
 // Português:
 //
 //	Ajusta a posição top e left do submenu que abre para que o mesmo permaneça visível na tela
-func (e *ComponentMenu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
+func (e *Menu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
 	subMenu.AddStyle("display", "block")
 
 	window := js.Global().Get("window")
@@ -826,7 +826,7 @@ func (e *ComponentMenu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
 // Português:
 //
 //	Mostra o menu quando o menu contextual é acionado pelo mouse
-func (e *ComponentMenu) show(x, y int) {
+func (e *Menu) show(x, y int) {
 	e.body.AddStyle("display", "block")
 	e.body.AddStyle("left", "0px")
 	e.body.AddStyle("top", "0px")
@@ -859,379 +859,14 @@ func (e *ComponentMenu) show(x, y int) {
 // hide
 //
 // Esconde o menu quando este é configurado para ser um menu contextual
-func (e *ComponentMenu) hide() {
+func (e *Menu) hide() {
 	e.body.AddStyle("display", "none")
 }
 
-func (e *ComponentMenu) max(x, y int) (max int) {
+func (e *Menu) max(x, y int) (max int) {
 	if x > y {
 		return x
 	}
 
 	return y
-}
-
-func main() {
-
-	stage := factoryBrowser.NewStage()
-
-	contextMenu := new(ComponentMenu)
-	contextMenu.Stage(stage)
-	contextMenu.HideButtons(false, false, false)
-	contextMenu.FixedMenu(50, 10)
-	contextMenu.AttachMenu(js.Global().Get("document"))
-	contextMenu.Menu([]Options{
-		{
-			Type: "grid",
-			Items: []Options{
-				{
-					Label: "cat",
-					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						println("Função chamada!")
-						return nil
-					}),
-				},
-				{
-					Label: "cat",
-					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						println("Função chamada!")
-						return nil
-					}),
-				},
-				{
-					Label: "cat",
-					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-					Type:  "grid",
-					Submenu: []Options{
-						{
-							Type: "grid",
-							Items: []Options{
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-										println("Função chamada!")
-										return nil
-									}),
-								},
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-									Type:  "grid",
-									Submenu: []Options{
-										{
-											Type: "grid",
-											Items: []Options{
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-														println("Função chamada!")
-														return nil
-													}),
-												},
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-														println("Função chamada!")
-														return nil
-													}),
-												},
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-														println("Função chamada!")
-														return nil
-													}),
-												},
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-														println("Função chamada!")
-														return nil
-													}),
-												},
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-														println("Função chamada!")
-														return nil
-													}),
-												},
-												{
-													Label: "cat",
-													Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-													Type:  "grid",
-													Submenu: []Options{
-														{
-															Type: "grid",
-															Items: []Options{
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																	Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																		println("Função chamada!")
-																		return nil
-																	}),
-																},
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																	Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																		println("Função chamada!")
-																		return nil
-																	}),
-																},
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																	Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																		println("Função chamada!")
-																		return nil
-																	}),
-																},
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																	Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																		println("Função chamada!")
-																		return nil
-																	}),
-																},
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																	Type:  "grid",
-																	Submenu: []Options{
-																		{
-																			Type: "grid",
-																			Items: []Options{
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																						println("Função chamada!")
-																						return nil
-																					}),
-																				},
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																						println("Função chamada!")
-																						return nil
-																					}),
-																				},
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																						println("Função chamada!")
-																						return nil
-																					}),
-																				},
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																						println("Função chamada!")
-																						return nil
-																					}),
-																				},
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																						println("Função chamada!")
-																						return nil
-																					}),
-																				},
-																				{
-																					Label: "cat",
-																					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																						println("Função chamada!")
-																						return nil
-																					}),
-																				},
-																			},
-																		},
-																	},
-																},
-																{
-																	Label: "cat",
-																	Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-																	Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-																		println("Função chamada!")
-																		return nil
-																	}),
-																},
-															},
-														},
-													},
-												},
-											},
-										},
-									},
-								},
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-										println("Função chamada!")
-										return nil
-									}),
-								},
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-										println("Função chamada!")
-										return nil
-									}),
-								},
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-										println("Função chamada!")
-										return nil
-									}),
-								},
-								{
-									Label: "cat",
-									Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-										println("Função chamada!")
-										return nil
-									}),
-								},
-							},
-						},
-					},
-				},
-				{
-					Label: "cat",
-					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						println("Função chamada!")
-						return nil
-					}),
-				},
-				{
-					Label: "cat",
-					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						println("Função chamada!")
-						return nil
-					}),
-				},
-				{
-					Label: "cat",
-					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						println("Função chamada!")
-						return nil
-					}),
-				},
-			},
-		},
-		{
-			Label: "Option 1",
-			Submenu: []Options{
-				{
-					Label: "Option 1",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						println("Função chamada!")
-						return nil
-					}),
-				},
-				{
-					Label: "Option 2",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						println("Função chamada!")
-						return nil
-					}),
-				},
-			},
-		},
-		{
-			Label: "Option 2",
-			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-				println("Função chamada!")
-				return nil
-			}),
-		},
-		{
-			Label: "-",
-		},
-		{
-			Label: "Option 3",
-			Submenu: []Options{
-				{
-					Type: "grid",
-					Items: []Options{
-						{
-							Label: "cat",
-							Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-								println("Função chamada!")
-								return nil
-							}),
-						},
-						{
-							Label: "cat",
-							Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-								println("Função chamada!")
-								return nil
-							}),
-						},
-						{
-							Label: "cat",
-							Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-								println("Função chamada!")
-								return nil
-							}),
-						},
-						{
-							Label: "cat",
-							Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-								println("Função chamada!")
-								return nil
-							}),
-						},
-						{
-							Label: "cat",
-							Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-								println("Função chamada!")
-								return nil
-							}),
-						},
-						{
-							Label: "cat",
-							Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-								println("Função chamada!")
-								return nil
-							}),
-						},
-					},
-				},
-			},
-		},
-	})
-	contextMenu.Init()
-
-	done := make(chan struct{})
-	done <- struct{}{}
 }

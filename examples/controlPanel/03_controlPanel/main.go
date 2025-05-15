@@ -9,6 +9,7 @@ import (
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"github.com/helmutkemper/webassembly/platform/factoryEasingTween"
 	"math"
+	"syscall/js"
 	"time"
 )
 
@@ -24,8 +25,22 @@ func (e *ComponentControlPanel) Init() (panel *html.TagDiv, err error) {
 }
 
 type ControlPanel struct {
-	Header string `wasmPanel:"type:headerText;label:Control panel"`
-	Body   *Body  `wasmPanel:"type:panelBody"`
+	Options *MenuOptions `wasmPanel:"type:contextMenu;label:Menu;left:10;top:10;drag:true;minimize:true;close:true"`
+	Header  string       `wasmPanel:"type:headerText;label:Control panel"`
+	Body    *Body        `wasmPanel:"type:panelBody"`
+}
+
+type MenuOptions struct {
+	components.Menu
+
+	Label     string        `wasmPanel:"type:label"`
+	Icon      string        `wasmPanel:"type:icon"`
+	IconLeft  string        `wasmPanel:"type:iconLeft"`
+	IconRight string        `wasmPanel:"type:iconRight"`
+	Type      string        `wasmPanel:"type:type"`
+	Items     []MenuOptions `wasmPanel:"type:options"`
+	Action    js.Func       `wasmPanel:"type:action"`
+	Submenu   []MenuOptions `wasmPanel:"type:subMenu"`
 }
 
 type Body struct {

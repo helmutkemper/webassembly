@@ -1,9 +1,19 @@
 package components
 
 import (
+	"fmt"
 	"strings"
 )
 
+// tag
+//
+// English:
+//
+//	Process the tag `wasmPanel`
+//
+// Português:
+//
+//	Processa a tag `wasmPanel`
 type tag struct {
 	Event         string
 	Type          string
@@ -28,27 +38,57 @@ type tag struct {
 	Latitude      string
 	Longitude     string
 	Zoom          string
+	Icon          string
+	IconRight     string
+	IconLeft      string
+	Menu          string
+	SubMenu       string
+	Action        string
+	Left          string
+	Top           string
+	Drag          string
+	Minimize      string
+	Close         string
+	Options       string
 }
 
+// getTagKeyValue
+//
+// English:
+//
+//	Separates tag elements using point and comma as a separator. Eg.: `wasmPanel:"type:headerText;label:Control panel"`
+//
+// Português:
+//
+//	Separa os elementos da tag, usando ponto e vírgula como separador. Ex.: `wasmPanel:"type:headerText;label:Control panel"`
 func (e *tag) getTagKeyValue(data string, isolationData []Isolation) (key, value string) {
 	pairKeyValue := strings.Split(data, ":")
 	key = pairKeyValue[0]
 	value = pairKeyValue[1]
 
 	for k := range isolationData {
-		value = strings.Replace(value, string(isolationData[k].key), string(isolationData[k].value), -1)
+		value = strings.Replace(value, isolationData[k].key, isolationData[k].value, -1)
 	}
 
 	return
 }
 
-func (e *tag) init(tagRaw string) {
+// init
+//
+// English:
+//
+//	Receives the data RAW and returns the processed data
+//
+// Português:
+//
+//	Recebe o dado raw e devolve o dado processado
+func (e *tag) init(tagRaw string) (err error) {
 
 	isolate := Isolation{}
 	output, isolationData := isolate.isolate(tagRaw)
 	result := isolate.exchangeForKey(output, isolationData)
 
-	list := strings.Split(string(result), ";")
+	list := strings.Split(result, ";")
 	for k := range list {
 		key, value := e.getTagKeyValue(list[k], isolationData)
 		switch key {
@@ -92,6 +132,33 @@ func (e *tag) init(tagRaw string) {
 			e.Background = value
 		case "disableBorder":
 			e.DisableBorder = value
+		case "icon":
+			e.Icon = value
+		case "iconRight":
+			e.IconRight = value
+		case "iconLeft":
+			e.IconLeft = value
+		case "menu":
+			e.Menu = value
+		case "subMenu":
+			e.SubMenu = value
+		case "action":
+			e.Action = value
+		case "left":
+			e.Left = value
+		case "top":
+			e.Top = value
+		case "drag":
+			e.Drag = value
+		case "minimize":
+			e.Minimize = value
+		case "close":
+			e.Close = value
+		case "options":
+			e.Options = value
+		default:
+			err = fmt.Errorf("a tag was not processed correctly for the key: %v, full value: `%v`", key, tagRaw)
+			return
 		}
 	}
 

@@ -1,6 +1,7 @@
 package components
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -15,6 +16,7 @@ import (
 //
 //	Processa a tag `wasmPanel`
 type tag struct {
+	Attach        string
 	Event         string
 	Type          string
 	Min           string
@@ -61,8 +63,13 @@ type tag struct {
 // Português:
 //
 //	Separa os elementos da tag, usando ponto e vírgula como separador. Ex.: `wasmPanel:"type:headerText;label:Control panel"`
-func (e *tag) getTagKeyValue(data string, isolationData []Isolation) (key, value string) {
+func (e *tag) getTagKeyValue(data string, isolationData []Isolation) (err error, key, value string) {
 	pairKeyValue := strings.Split(data, ":")
+	if len(pairKeyValue) != 2 {
+		err = fmt.Errorf("error: the data `%v` has an invalid tag key/value pair", data)
+		return
+	}
+
 	key = pairKeyValue[0]
 	value = pairKeyValue[1]
 
@@ -88,10 +95,18 @@ func (e *tag) init(tagRaw string) (err error) {
 	output, isolationData := isolate.isolate(tagRaw)
 	result := isolate.exchangeForKey(output, isolationData)
 
+	result = strings.TrimRight(result, ";")
 	list := strings.Split(result, ";")
 	for k := range list {
-		key, value := e.getTagKeyValue(list[k], isolationData)
+		var key, value string
+		if err, key, value = e.getTagKeyValue(list[k], isolationData); err != nil {
+			err = errors.Join(fmt.Errorf("the raw `%v` data tag has processed width error", tagRaw), err)
+			return
+		}
+
 		switch key {
+		case "attach":
+			e.Attach = value
 		case "event":
 			e.Event = value
 		case "label":

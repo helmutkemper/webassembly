@@ -56,6 +56,8 @@ func (e *Components) createDivsFather() {
 
 func (e *Components) process(element reflect.Value, typeof reflect.Type) (err error) {
 
+	elementPrt := element
+
 	if element.Kind() == reflect.Pointer {
 		if element.CanSet() && element.IsNil() {
 			newInstance := reflect.New(element.Type().Elem())
@@ -84,16 +86,6 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 				}
 
 				switch tagData.Type {
-				case "contextMenu":
-					divCompCel := factoryBrowser.NewTagDiv().Class("compCel")
-					err = e.processContextMenu(element, fieldVal, fieldTyp.Type, tagData, divCompCel)
-					if err != nil {
-						//file, line, funcName := runTimeUtil.Trace()
-						//err = errors.Join(fmt.Errorf("%v(line: %v).processComponent().error: %v", funcName, line, err))
-						//err = errors.Join(fmt.Errorf("file: %v", file), err)
-						return
-					}
-
 				case "headerText":
 					dragIcon, minimizeIcon, closeIcon := e.processHeaderText(fieldVal, tagData.Label, e.panelFather)
 					e.processHeaderTextAddMinimizeListener(minimizeIcon)
@@ -122,6 +114,17 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 
 				case "compCel":
 					// ignore
+				case "contextMenu":
+					divCompCel := factoryBrowser.NewTagDiv().Class("compCel")
+
+					err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, tagData, divCompCel)
+					if err != nil {
+						//file, line, funcName := runTimeUtil.Trace()
+						//err = errors.Join(fmt.Errorf("%v(line: %v).processComponent().error: %v", funcName, line, err))
+						//err = errors.Join(fmt.Errorf("file: %v", file), err)
+						return
+					}
+
 				case "component":
 					divCompCel := factoryBrowser.NewTagDiv().Class("compCel")
 
@@ -168,85 +171,235 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 	return
 }
 
-func (e *Components) processContextMenu(parentElement, element reflect.Value, typeof reflect.Type, tagData *tag, father *html.TagDiv) (err error) {
+func (e *Components) GetFather() (father *html.TagDiv) {
+	return e.panelFather
+}
 
-	menuComponent := Menu{}
+func (e *Components) processContextMenu(parentElementPtr, parentElement, element reflect.Value, typeof reflect.StructField, tagData *tag, father *html.TagDiv) (err error) {
+
+	//log.Printf("parentElement: %v", parentElement.Type().Name())
+	//log.Printf("element: %v", element.Type().Name())
+	//log.Printf("typeof: %v", typeof.Name)
+	log.Printf("---------------------------------------------------")
+	compMenu := new(Menu)
+	menuOptions := make([]options, 0)
 
 	if !element.CanInterface() {
-		err = fmt.Errorf("component.Menu (%v) cannot be transformed into an interface", parentElement.Type().Name())
+		err = fmt.Errorf("component.Menu (%v.%+v) cannot be transformed into an interface", parentElement.Type().Name(), typeof.Name)
 		return
 	}
 
 	if element.Kind() != reflect.Pointer {
 		err = fmt.Errorf("component.Menu (%v) requires a pointer to the component, example", parentElement.Type().Name())
 		err = errors.Join(err, fmt.Errorf("type %v struct {", parentElement.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:contextMenu;label:...\"`", typeof.Name(), element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("  components.Menu"))
+		err = errors.Join(err, fmt.Errorf("  "))
+		err = errors.Join(err, fmt.Errorf("  %v *%v `wasmPanel:\"type:contextMenu;label:...\"`", typeof.Name, typeof.Type))
 		err = errors.Join(err, fmt.Errorf("}"))
 		return
 	}
 
-	// populates the pointer, if it is nil
-	if element.CanSet() && element.IsNil() {
-		newInstance := reflect.New(element.Type().Elem())
-		element.Set(newInstance)
-	}
-
-	// passes from pointer to element
-	element = element.Elem()
-
 	// Checks if the import of `components.Menu` was done
-	if fieldMenu := element.FieldByName("Menu"); !fieldMenu.IsValid() {
+	var fieldBoard reflect.Value
+	if fieldBoard = parentElement.FieldByName("Menu"); !fieldBoard.IsValid() {
 		err = fmt.Errorf("error: component %v needs to embed `components.Menu` directly", element.Type().Name())
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         components.Menu"))
 		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         Label     string        `wasmPanel:\"type:label\"`"))
-		err = errors.Join(err, fmt.Errorf("         Icon      string        `wasmPanel:\"type:icon\"`"))
-		err = errors.Join(err, fmt.Errorf("         IconLeft  string        `wasmPanel:\"type:iconLeft\"`"))
-		err = errors.Join(err, fmt.Errorf("         IconRight string        `wasmPanel:\"type:iconRight\"`"))
-		err = errors.Join(err, fmt.Errorf("         Type      string        `wasmPanel:\"type:type\"`"))
-		err = errors.Join(err, fmt.Errorf("         Items     []MenuOptions `wasmPanel:\"type:options\"`"))
-		err = errors.Join(err, fmt.Errorf("         Action    js.Func       `wasmPanel:\"type:action\"`"))
-		err = errors.Join(err, fmt.Errorf("         Submenu   []MenuOptions `wasmPanel:\"type:subMenu\"`"))
+		err = errors.Join(err, fmt.Errorf("         ContextMenu *[]MenuOptions `wasmPanel:\"type:contextMenu\"`"))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		return
-	} else {
-		// Initialize Board
-		newInstance := reflect.New(fieldMenu.Type())
-		fieldMenu.Set(newInstance.Elem())
-
-		// Initializes the two input tags within Board
-		menuComponent.body = father
-
-		// populates the component.Board within the user component
-		componentBoard := element.FieldByName("Menu")
-		componentBoard.Set(reflect.ValueOf(menuComponent))
 	}
 
-	for i := 0; i != element.NumField(); i += 1 {
-		var fieldTyp reflect.StructField
-		fieldVal := element.Field(i)
-		_ = fieldVal
-		if typeof.Kind() == reflect.Pointer {
-			fieldTyp = typeof.Elem().Field(i)
-		} else {
-			fieldTyp = typeof.Field(i)
+	tagDataInternal := new(tag)
+	tagRaw := typeof.Tag.Get("wasmPanel")
+	if tagRaw != "" {
+		if err = tagDataInternal.init(tagRaw); err != nil {
+			err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+			return
 		}
+		//log.Printf("tagDataInternal: %+v", tagDataInternal)
 
-		tagRaw := fieldTyp.Tag.Get("wasmPanel")
+		if !(tagDataInternal.Type == "contextMenu" && tagDataInternal.Func != "") {
+			return
+		}
+	}
+
+	if parentElementPtr.IsNil() {
+		newInstance := reflect.New(parentElementPtr.Type().Elem())
+		parentElementPtr.Set(newInstance)
+	}
+
+	// Initializes the pointer if it is nil
+	// It initializes the menu content so that it can be populated in the Init() function
+	//if element.IsNil() {
+	//	newInstance := reflect.New(element.Type().Elem())
+	//	element.Set(newInstance)
+	//}
+
+	// passes from pointer to element
+	element = element.Elem()
+
+	// Ensure the method exists
+	log.Printf("attach: %v", tagDataInternal.Attach)
+	log.Printf("name: %v", parentElementPtr.Type().Name())
+	log.Printf("name: %v", parentElement.Type().Name())
+	//log.Printf("name: %v", element.Type().Name())
+
+	var attach *html.TagDiv
+	switch strings.ToLower(tagDataInternal.Attach) {
+	case "components":
+		attach = e.GetFather()
+	default:
+		if fieldBoard = parentElement.FieldByName(tagDataInternal.Attach); fieldBoard.IsValid() {
+			log.Printf("componentes is valid")
+			menuMethod := parentElement.MethodByName("GetFather")
+			if !menuMethod.IsValid() {
+				// todo: o que fazer
+			}
+			menuMethod.Call(nil)
+
+			returnValues := menuMethod.Call(nil)
+			if len(returnValues) == 0 || !returnValues[0].Type().ConvertibleTo(reflect.TypeOf((*html.TagDiv)(nil)).Elem()) {
+				err = fmt.Errorf("menuMethod did not return the expected *html.TagDiv")
+				return
+			}
+
+			attach, _ = returnValues[0].Interface().(*html.TagDiv)
+
+		} // todo: o que fazer quando não é válido
+
+	}
+
+	for i := 0; i < parentElement.NumField(); i++ {
+		//field := parentElement.Field(i)
+		fieldType := parentElement.Type().Field(i)
+
+		tagRaw := fieldType.Tag.Get("wasmPanel")
 		if tagRaw != "" {
-			tagData := new(tag)
 			if err = tagData.init(tagRaw); err != nil {
 				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
 				return
 			}
 
-			switch tagData.Type {
+			log.Printf("name field: %+v", fieldType.Name)
+		}
+	}
+
+	initMenuMethod := parentElementPtr.MethodByName(tagDataInternal.Func)
+	if initMenuMethod.IsValid() {
+		// Call the Menu method with menuOptions
+		initMenuMethod.Call(nil)
+		//err = fmt.Errorf("menu method not found in type: %v", parentElement.Type().Name())
+		//return
+	}
+
+	//log.Printf("element: %v", element.Type().Name())
+	//log.Printf("element: %v", element.Kind())
+
+	for structKey := 0; structKey != parentElement.NumField(); structKey += 1 {
+
+		fieldVal := parentElement.Field(structKey)
+		fieldType := parentElement.Type().Field(structKey)
+		tagValue := fieldType.Tag.Get("wasmPanel")
+
+		if tagValue != "" {
+			tagData := new(tag)
+			if err = tagData.init(tagValue); err != nil {
+				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				return
+			}
+
+			if tagData.Type == "contextMenu" {
+				if menuOptions, err = e.processSliceMenuOptions(element, fieldVal); err != nil {
+					return
+				}
 			}
 		}
 	}
 
+	stage := factoryBrowser.NewStage()
+	compMenu.Menu(menuOptions)
+	compMenu.Stage(stage)
+	compMenu.AttachMenu(attach.Get())
+	compMenu.Init()
+	return
+	//menuMethod := fieldBoard.MethodByName("Menu")
+	//if !menuMethod.IsValid() {
+	//	err = fmt.Errorf("menu method not found in type: %v", fieldBoard.Type().Name())
+	//	return
+	//}
+	//
+	//// Call the Menu method with menuOptions
+	//menuMethod.Call([]reflect.Value{reflect.ValueOf(menuOptions)})
+	//fieldBoard.MethodByName("Menu").Call([]reflect.Value{reflect.ValueOf(menuOptions)})
+	//fieldBoard.MethodByName("Stage").Call([]reflect.Value{reflect.ValueOf(stage)})
+	//fieldBoard.MethodByName("AttachMenu").Call([]reflect.Value{reflect.ValueOf(stage)})
+	//fieldBoard.MethodByName("Init").Call(nil)
+
+	return
+}
+
+func (e *Components) processSliceMenuOptions(element, fieldVal reflect.Value) (menuOptions []options, err error) {
+	A := fieldVal.Kind() == reflect.Ptr && fieldVal.Elem().Kind() == reflect.Slice
+	B := fieldVal.Kind() == reflect.Slice
+	if !(A || B) {
+		return
+	}
+
+	tagData := new(tag)
+	menuOptions = make([]options, 0)
+
+	if fieldVal.Kind() == reflect.Ptr {
+		fieldVal = fieldVal.Elem()
+	}
+
+	if fieldVal.Kind() == reflect.Slice {
+		for i := 0; i < fieldVal.Len(); i++ {
+			item := fieldVal.Index(i)
+
+			menuOptItem := options{}
+
+			for j := 0; j < item.NumField(); j++ {
+				field := item.Field(j)
+				fieldType := item.Type().Field(j)
+
+				tagRaw := fieldType.Tag.Get("wasmPanel")
+				if tagRaw != "" {
+					if err = tagData.init(tagRaw); err != nil {
+						err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+						return
+					}
+
+					switch tagData.Type {
+					case "label":
+						menuOptItem.Label = field.String()
+					case "icon":
+						menuOptItem.Icon = field.String()
+					case "iconLeft":
+						menuOptItem.IconLeft = field.String()
+					case "iconRight":
+						menuOptItem.IconRight = field.String()
+					case "type":
+						menuOptItem.Type = field.String()
+					case "options":
+						if menuOptItem.Items, err = e.processSliceMenuOptions(element, field); err != nil {
+							return
+						}
+					case "action":
+						menuOptItem.Action = field.Interface().(js.Func)
+					case "subMenu":
+						if menuOptItem.Submenu, err = e.processSliceMenuOptions(element, field); err != nil {
+							return
+						}
+					}
+				}
+			}
+
+			menuOptions = append(menuOptions, menuOptItem)
+		}
+	}
 	return
 }
 

@@ -2,6 +2,7 @@ package easingTween
 
 import (
 	"github.com/helmutkemper/webassembly/interfaces"
+	"syscall/js"
 	"time"
 )
 
@@ -438,6 +439,23 @@ func (el *Tween) tickerRunnerPrepare(startValue, endValue float64) {
 
 	if el.engineHasFunction == false {
 		el.engineHasFunction = true
+
+		// requestAnimationFrame does not leave the animation as cool as it should be, but using thread makes the animation
+		// find strange breaks, so I left both methods
+		var animationFrame js.Func
+		animationFrame = js.FuncOf(func(this js.Value, args []js.Value) any {
+			select {
+			case <-el.chanEnd:
+				el.engineHasFunction = false
+				el.chanEnd = make(chan struct{}, 2)
+				return nil
+			default:
+				el.tickerRunnerRun()
+				js.Global().Call("requestAnimationFrame", animationFrame)
+			}
+			return nil
+		})
+		js.Global().Call("requestAnimationFrame", animationFrame)
 
 		go func(el *Tween) {
 			for {

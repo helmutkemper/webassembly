@@ -115,10 +115,6 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 						return
 					}
 
-					if err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, e.panelFather); err != nil {
-						return
-					}
-
 				case "compCel":
 					// ignore
 				case "component":
@@ -132,16 +128,7 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 						return
 					}
 
-					//err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, tagData, nil)
-					//if err != nil {
-					//	//file, line, funcName := runTimeUtil.Trace()
-					//	//err = errors.Join(fmt.Errorf("%v(line: %v).processComponent().error: %v", funcName, line, err))
-					//	//err = errors.Join(fmt.Errorf("file: %v", file), err)
-					//	return
-					//}
-
 					panelCel := factoryBrowser.NewTagDiv().Class("panelCel")
-
 					closeIcon := e.processLabelCel(tagData.Label, panelCel)
 					e.processLabelCelAddCloseListener(closeIcon)
 
@@ -169,11 +156,11 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 					}
 				}
 
-				if tagData.Search("Type", "panel") {
-					//st := factoryBrowser.NewStage()
-					//if err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, tagData, st); err != nil {
-					//	return
-					//}
+				switch tagData.Type {
+				case "panel", "mainMenu":
+					if err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, e.panelFather); err != nil {
+						return
+					}
 				}
 			}
 		}
@@ -188,13 +175,16 @@ func (e *Components) GetFather() (father *html.TagDiv) {
 
 func (e *Components) processContextMenu(parentElementPtr, parentElement, element reflect.Value, typeof reflect.StructField, father html.Compatible) (err error) {
 
-	contextMenuData := e.searchStruct(parentElementPtr, "Menu", "Type", "contextMenu")
-	a := contextMenuData.componentFound
-	b := contextMenuData.fieldFound
+	var componentMenuData searchStructRet
+	componentMenuData = e.searchStruct(parentElementPtr, "Menu", "Type", "contextMenu")
+	a := componentMenuData.componentFound
+	b := componentMenuData.fieldFound
 
 	if !(a || b) {
 		return
 	}
+
+	var explanation string = "contextMenu"
 
 	if !element.CanInterface() {
 		err = fmt.Errorf("component.Menu (%v.%+v) cannot be transformed into an interface", parentElement.Type().Name(), typeof.Name)
@@ -206,10 +196,10 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 		err = errors.Join(err, fmt.Errorf("     type %v struct {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("       components.Menu"))
 		err = errors.Join(err, fmt.Errorf("       "))
-		err = errors.Join(err, fmt.Errorf("       %v *%v `wasmPanel:\"type:contextMenu;...\"`", typeof.Name, typeof.Type))
+		err = errors.Join(err, fmt.Errorf("       %v *%v `wasmPanel:\"type:%v;...\"`", typeof.Name, typeof.Type, explanation))
 		err = errors.Join(err, fmt.Errorf("     }"))
 		err = errors.Join(err, fmt.Errorf("     func (e *%v) InitMenu() {", parentElement.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("       e.ContMenu = getMenuData()"))
+		err = errors.Join(err, fmt.Errorf("       e.MenuData = getMenuData()"))
 		err = errors.Join(err, fmt.Errorf("     }"))
 		return
 	}
@@ -221,54 +211,54 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         components.Menu"))
 		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         ContextMenu *[]MenuOptions `wasmPanel:\"type:contextMenu;func:InitMenu\"`"))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:%v;func:InitMenu\"`", explanation))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("         e.ContMenu = getMenuData()"))
+		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		return
 	}
 
-	if contextMenuData.tagData.Func == "" {
+	if componentMenuData.tagData.Func == "" {
 		err = fmt.Errorf("error: component %v has an embed `components.Menu` correctily", parentElement.Type().Name())
-		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:contextMenu\"` does not contain the name of the function to configure the menu when this initializate"))
+		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:%v\"` does not contain the name of the function to configure the menu when this initializate", explanation))
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         components.Menu"))
 		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         ContextMenu *[]MenuOptions `wasmPanel:\"type:contextMenu;func:InitMenu\"`"))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:%v;func:InitMenu\"`", explanation))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("         e.ContMenu = getMenuData()"))
+		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		return
 	}
 
-	menuMethod := parentElementPtr.MethodByName(contextMenuData.tagData.Func)
+	menuMethod := parentElementPtr.MethodByName(componentMenuData.tagData.Func)
 	if !menuMethod.IsValid() {
 		err = fmt.Errorf("error: component %v has an embed `components.Menu` correctily", element.Type().Name())
-		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:contextMenu\"` contain a function that cannot be called."))
+		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:%v\"` contain a function that cannot be called.", explanation))
 		err = errors.Join(err, fmt.Errorf("       See if the name contained in the tag is the same name as the function."))
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         components.Menu"))
 		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         ContextMenu *[]MenuOptions `wasmPanel:\"type:contextMenu;func:%v\"`", contextMenuData.tagData.Func))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:%v;func:%v\"`", explanation, componentMenuData.tagData.Func))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		return
 	}
 
 	var menuOptions []options
-	parentElementPtr.MethodByName(contextMenuData.tagData.Func).Call(nil)
-	if menuOptions, err = e.processSliceMenuOptions(element, contextMenuData.sliceElement); err != nil {
+	parentElementPtr.MethodByName(componentMenuData.tagData.Func).Call(nil)
+	if menuOptions, err = e.processSliceMenuOptions(element, componentMenuData.sliceElement); err != nil {
 		return
 	}
 
-	st := factoryBrowser.NewStage()
-
 	contextMenu := Menu{}
 	contextMenu.Menu(menuOptions)
-	contextMenu.Stage(st)
 	contextMenu.AttachMenu(father)
 	contextMenu.Init()
 
@@ -536,10 +526,6 @@ func (e *Components) processComponent(parentElement, element reflect.Value, type
 
 				err = e.processComponentRange(fieldVal, tagData, divComponent)
 				if err != nil {
-					return
-				}
-
-				if err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, divComponent); err != nil {
 					return
 				}
 
@@ -900,6 +886,18 @@ func (e *Components) processComponent(parentElement, element reflect.Value, type
 
 				err = e.processComponentTextArea(fieldVal, tagData, divComponent)
 				if err != nil {
+					return
+				}
+
+			default:
+				//log.Printf(">>>>>>>> %v", tagData.Type)
+			}
+
+			switch tagData.Type {
+			case "range", "osm", "button", "select", "radio", "checkbox", "color",
+				"date", "week", "text", "qrcode", "url", "tel", "email", "time",
+				"month", "password", "mail", "textArea":
+				if err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, divComponent); err != nil {
 					return
 				}
 

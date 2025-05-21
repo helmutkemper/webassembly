@@ -17,39 +17,12 @@ import (
 func getMenuSimple() (options *[]MenuOptions) {
 	return &[]MenuOptions{
 		{
-			Label: "Label 1",
-			//Icon:      "icon 1",
-			//IconLeft:  "icon left 1",
-			//IconRight: "icon right 1",
-			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 1 ok"); return nil }),
-		},
-		{
-			Label: "Label 2",
-			//Icon:      "icon 1",
-			//IconLeft:  "icon left 1",
-			//IconRight: "icon right 1",
-			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 2 ok"); return nil }),
-		},
-		{
-			Label: "Label 3",
-			//Icon:      "icon 1",
-			//IconLeft:  "icon left 1",
-			//IconRight: "icon right 1",
-			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 3 ok"); return nil }),
-		},
-		{
-			Label: "Label 4",
-			//Icon:      "icon 1",
-			//IconLeft:  "icon left 1",
-			//IconRight: "icon right 1",
-			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 4 ok"); return nil }),
-		},
-		{
-			Label: "Label 5",
-			//Icon:      "icon 1",
-			//IconLeft:  "icon left 1",
-			//IconRight: "icon right 1",
-			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 5 ok"); return nil }),
+			Label: "Run Animation",
+			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+				value := controlPanel.GetRangeValue()
+				runAnimation(value)
+				return nil
+			}),
 		},
 	}
 }
@@ -236,12 +209,34 @@ func getMenuComplex() (options *[]MenuOptions) {
 	}
 }
 
+type Menu struct {
+	components.Components
+	components.Menu
+
+	ContMenu *[]MenuOptions `wasmPanel:"type:mainMenu;func:InitMenu;label:Main Menu;top:5px;left:5px"`
+}
+
+func (e *Menu) Init() (panel *html.TagDiv, err error) {
+	panel, err = e.Components.Init(e)
+	return
+}
+
+func (e *Menu) InitMenu() {
+	e.ContMenu = getMenuComplex()
+}
+
 type ComponentControlPanel struct {
 	components.Components
 	components.Menu
 
 	Panel    *ControlPanel  `wasmPanel:"type:panel"`
 	ContMenu *[]MenuOptions `wasmPanel:"type:contextMenu;func:InitMenu"`
+
+	breadCrumbsRange *html.TagInputRange
+}
+
+func (e *ComponentControlPanel) GetRangeValue() (value float64) {
+	return e.breadCrumbsRange.GetValue()
 }
 
 func (e *ComponentControlPanel) InitMenu() {
@@ -250,23 +245,14 @@ func (e *ComponentControlPanel) InitMenu() {
 
 func (e *ComponentControlPanel) Init() (panel *html.TagDiv, err error) {
 	panel, err = e.Components.Init(e)
+
+	e.breadCrumbsRange = controlPanel.Panel.Body.BoatAnimation.Dragging.TagRange
 	return
 }
 
 type ControlPanel struct {
 	Header string `wasmPanel:"type:headerText;label:Control panel"`
 	Body   *Body  `wasmPanel:"type:panelBody"`
-}
-
-type MenuOptions struct {
-	Label     string        `wasmPanel:"type:label"`
-	Icon      string        `wasmPanel:"type:icon"`
-	IconLeft  string        `wasmPanel:"type:iconLeft"`
-	IconRight string        `wasmPanel:"type:iconRight"`
-	Type      string        `wasmPanel:"type:type"`
-	Items     []MenuOptions `wasmPanel:"type:options"`
-	Action    js.Func       `wasmPanel:"type:action"`
-	Submenu   []MenuOptions `wasmPanel:"type:subMenu"`
 }
 
 type Body struct {
@@ -305,6 +291,10 @@ type OnChangeEvent struct {
 func (e *OnChangeEvent) OnChangeEvent(event OnChangeEvent, controlPanel *ControlPanel) {
 	var value = event.Value
 
+	runAnimation(value)
+}
+
+func runAnimation(value float64) {
 	factoryEasingTween.NewRandom(
 		time.Duration(value)*time.Second,
 		0,
@@ -316,8 +306,21 @@ func (e *OnChangeEvent) OnChangeEvent(event OnChangeEvent, controlPanel *Control
 		SetDoNotReverseMotion()
 }
 
+type MenuOptions struct {
+	Label     string        `wasmPanel:"type:label"`
+	Icon      string        `wasmPanel:"type:icon"`
+	IconLeft  string        `wasmPanel:"type:iconLeft"`
+	IconRight string        `wasmPanel:"type:iconRight"`
+	Type      string        `wasmPanel:"type:type"`
+	Items     []MenuOptions `wasmPanel:"type:options"`
+	Action    js.Func       `wasmPanel:"type:action"`
+	Submenu   []MenuOptions `wasmPanel:"type:subMenu"`
+}
+
 var canvas *html.TagCanvas
 var tagDivRocket *html.TagDiv
+
+var controlPanel = new(ComponentControlPanel)
 
 func main() {
 	var err error
@@ -325,26 +328,9 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	controlPanel := new(ComponentControlPanel)
-	//controlPanel.Panel = new(ControlPanel)
-	//controlPanel.Panel.Body = new(Body)
-	//controlPanel.Panel.Body.ContMenu = &[]MenuOptions{
-	//	{
-	//		Label:     "Label 1",
-	//		Icon:      "icon 1",
-	//		IconLeft:  "icon left 1",
-	//		IconRight: "icon right 1",
-	//		Type:      "type 1",
-	//	},
-	//}
 	if panel, err = controlPanel.Init(); err != nil {
 		panic(err)
 	}
-
-	//log.Printf("controlPanel.Panel: %v", controlPanel.Panel)
-	//log.Printf("controlPanel.Panel.Body: %v", controlPanel.Panel.Body)
-	//log.Printf("controlPanel.Panel.Body.ContMenu: %v", controlPanel.Panel.Body.ContMenu)
-	//log.Printf("controlPanel.Panel.Header: %v", controlPanel.Panel.Header)
 
 	canvas = factoryBrowser.NewTagCanvas(stage.GetWidth(), stage.GetHeight())
 	stage.Append(canvas)
@@ -360,6 +346,7 @@ func main() {
 
 	tagDivRocket = factoryBrowser.NewTagDiv().
 		Class("animate").
+		AddStyle("image-rendering", "auto").
 		AddPointsToEasingTween(bezier).
 		SetDeltaX(-25).
 		SetDeltaY(-25).

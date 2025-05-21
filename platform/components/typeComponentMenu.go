@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/browser/stage"
 	"strconv"
 	"syscall/js"
 	"time"
 )
+
+var GlobalMenuList []*Menu
 
 type options struct {
 	Label     string
@@ -28,7 +29,6 @@ type Menu struct {
 	__content        *html.TagDiv
 	__menu           *html.TagDiv
 	__subMenuToClose []*html.TagDiv
-	__stage          *stage.Stage
 	__setup          map[string]string
 	__options        []options
 	__fixed          bool
@@ -53,12 +53,13 @@ func (e *Menu) Menu(options []options) {
 	e.__options = options
 }
 
-func (e *Menu) AttachMenu(element html.Compatible) { // todo: html.Compatible
+func (e *Menu) AttachMenu(element html.Compatible) {
 	if e.__fixed {
 		return
 	}
 
 	element.Get().Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		e.hide()
 		args[0].Call("preventDefault")
 		args[0].Call("stopPropagation")
 		e.show(args[0].Get("clientX").Int(), args[0].Get("clientY").Int())
@@ -70,10 +71,6 @@ func (e *Menu) FixedMenu(x, y int) {
 	e.__fixed = true
 	e.__bodyX = x
 	e.__bodyY = y
-}
-
-func (e *Menu) Stage(stage *stage.Stage) {
-	e.__stage = stage
 }
 
 func (e *Menu) Css(key, value string) {
@@ -291,6 +288,15 @@ func (e *Menu) setupInit() {
 	}
 }
 
+// changeZIndex
+//
+// English:
+//
+//	Updates the zIndex property of all elements in the menu to ensure proper stacking order.
+//
+// Português:
+//
+//	Atualiza a propriedade zIndex de todos os elementos no menu para garantir que sejam empilhados de forma correta
 func (e *Menu) changeZIndex() {
 	nextIndex := e.getNextZIndex()
 
@@ -299,7 +305,44 @@ func (e *Menu) changeZIndex() {
 	}
 }
 
+// recordsTheMenuGlobally
+//
+// English:
+//
+//	Register globally all menus created so that they are closed when another menu contextual is opened
+//
+// Português:
+//
+//	Registra globalmente todos os menus criados para que eles sejam fechados quando um outro contextual menu é aberto
+func (e *Menu) recordsTheMenuGlobally() {
+	if GlobalMenuList == nil {
+		GlobalMenuList = make([]*Menu, 0)
+	}
+	GlobalMenuList = append(GlobalMenuList, e)
+}
+
+// hidesAllRegisteredGloballyMenus
+//
+// English:
+//
+//	Closes all open contextual menus
+//
+// Português:
+//
+//	Fecha todos os menus contextuais abertos
+func (e *Menu) hidesAllRegisteredGloballyMenus() {
+	for k := range GlobalMenuList {
+		if GlobalMenuList[k].__fixed {
+			continue
+		}
+
+		GlobalMenuList[k].hide()
+	}
+}
+
 func (e *Menu) Init() {
+	e.recordsTheMenuGlobally()
+
 	e.__subMenuToClose = make([]*html.TagDiv, 0)
 	e.__zIndexList = make([]*html.TagDiv, 0)
 
@@ -388,7 +431,8 @@ func (e *Menu) Init() {
 	e.__body.HideForFade()
 	e.__body.FadeFunc(e.bodyFadeProgress)
 
-	e.__stage.Append(e.__body)
+	stage := factoryBrowser.NewStage()
+	stage.Append(e.__body)
 	e.__body.Fade(300 * time.Millisecond)
 
 	if !e.__fixed {
@@ -834,6 +878,15 @@ func (e *Menu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
 	}
 }
 
+// getNextZIndex
+//
+// English:
+//
+//	Looking for all graphic elements in the document and then calculates the next Zindex
+//
+// Português:
+//
+//	Procura todos os elementos gráficos no documento e em seguida calcula o próximo zIndex
 func (e *Menu) getNextZIndex() int {
 
 	maxZIndex := 0
@@ -866,6 +919,9 @@ func (e *Menu) getNextZIndex() int {
 //
 //	Mostra o menu quando o menu contextual é acionado pelo mouse
 func (e *Menu) show(x, y int) {
+
+	e.hidesAllRegisteredGloballyMenus()
+
 	e.__body.AddStyle("display", "block")
 	e.__body.AddStyle("left", "0px")
 	e.__body.AddStyle("top", "0px")

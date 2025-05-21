@@ -278,11 +278,10 @@ type BoatAdjust struct {
 	components.Menu
 
 	Dragging *DraggingEffect `wasmPanel:"type:range;label:time (s)"`
-	ContMenu *[]MenuOptions  `wasmPanel:"type:contextMenu;func:InitMenu;attach:Board"`
+	ContMenu *[]MenuOptions  `wasmPanel:"type:contextMenu;func:InitMenu"`
 }
 
 func (e *BoatAdjust) InitMenu() {
-	defer log.Printf("InitMenu(): entrou!")
 	e.ContMenu = getMenuSimple()
 }
 

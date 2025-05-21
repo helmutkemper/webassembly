@@ -19,6 +19,13 @@ import (
 // todo: padrão da fábrica, autocomplete off
 // todo: number de range, onFocusOut se value == null, valur = min
 
+type searchStructRet struct {
+	sliceElement   reflect.Value
+	componentFound bool
+	fieldFound     bool
+	tagData        *tag
+}
+
 type Components struct {
 	ref         interface{}
 	panelFather *html.TagDiv
@@ -288,7 +295,7 @@ func (e *Components) debugStruct(element reflect.Value) {
 			log.Printf("pointer is nil")
 			return
 		}
-		element = element.Elem() // Desreferenciando o ponteiro
+		element = element.Elem()
 	}
 
 	if element.Kind() == reflect.Struct {
@@ -301,13 +308,6 @@ func (e *Components) debugStruct(element reflect.Value) {
 	} else {
 		log.Printf("element is not a struct or a pointer to struct, kind: %s", element.Kind())
 	}
-}
-
-type searchStructRet struct {
-	sliceElement   reflect.Value
-	componentFound bool
-	fieldFound     bool
-	tagData        *tag
 }
 
 // searchStruct

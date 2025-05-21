@@ -14,17 +14,48 @@ import (
 	"time"
 )
 
-type ComponentControlPanel struct {
-	components.Components
-	components.Menu
-
-	Panel    *ControlPanel  `wasmPanel:"type:panel"`
-	ContMenu *[]MenuOptions `wasmPanel:"type:contextMenu;func:InitMenu;attach:components"`
+func getMenuSimple() (options *[]MenuOptions) {
+	return &[]MenuOptions{
+		{
+			Label: "Label 1",
+			//Icon:      "icon 1",
+			//IconLeft:  "icon left 1",
+			//IconRight: "icon right 1",
+			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 1 ok"); return nil }),
+		},
+		{
+			Label: "Label 2",
+			//Icon:      "icon 1",
+			//IconLeft:  "icon left 1",
+			//IconRight: "icon right 1",
+			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 2 ok"); return nil }),
+		},
+		{
+			Label: "Label 3",
+			//Icon:      "icon 1",
+			//IconLeft:  "icon left 1",
+			//IconRight: "icon right 1",
+			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 3 ok"); return nil }),
+		},
+		{
+			Label: "Label 4",
+			//Icon:      "icon 1",
+			//IconLeft:  "icon left 1",
+			//IconRight: "icon right 1",
+			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 4 ok"); return nil }),
+		},
+		{
+			Label: "Label 5",
+			//Icon:      "icon 1",
+			//IconLeft:  "icon left 1",
+			//IconRight: "icon right 1",
+			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 5 ok"); return nil }),
+		},
+	}
 }
 
-func (e *ComponentControlPanel) InitMenu() {
-	defer log.Printf("InitMenu(): entrou!")
-	e.ContMenu = &[]MenuOptions{
+func getMenuComplex() (options *[]MenuOptions) {
+	return &[]MenuOptions{
 		{
 			Type: "grid",
 			Items: []MenuOptions{
@@ -205,6 +236,18 @@ func (e *ComponentControlPanel) InitMenu() {
 	}
 }
 
+type ComponentControlPanel struct {
+	components.Components
+	components.Menu
+
+	Panel    *ControlPanel  `wasmPanel:"type:panel"`
+	ContMenu *[]MenuOptions `wasmPanel:"type:contextMenu;func:InitMenu"`
+}
+
+func (e *ComponentControlPanel) InitMenu() {
+	e.ContMenu = getMenuComplex()
+}
+
 func (e *ComponentControlPanel) Init() (panel *html.TagDiv, err error) {
 	panel, err = e.Components.Init(e)
 	return
@@ -235,27 +278,12 @@ type BoatAdjust struct {
 	components.Menu
 
 	Dragging *DraggingEffect `wasmPanel:"type:range;label:time (s)"`
-	ContMenu *[]MenuOptions  `wasmPanel:"type:contextMenu;func:InitMenu;attach:board"`
+	ContMenu *[]MenuOptions  `wasmPanel:"type:contextMenu;func:InitMenu;attach:Board"`
 }
 
 func (e *BoatAdjust) InitMenu() {
 	defer log.Printf("InitMenu(): entrou!")
-	e.ContMenu = &[]MenuOptions{
-		{
-			Label: "Label 1",
-			//Icon:      "icon 1",
-			//IconLeft:  "icon left 1",
-			//IconRight: "icon right 1",
-			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 1 ok"); return nil }),
-		},
-		{
-			Label: "Label 2",
-			//Icon:      "icon 1",
-			//IconLeft:  "icon left 1",
-			//IconRight: "icon right 1",
-			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 2 ok"); return nil }),
-		},
-	}
+	e.ContMenu = getMenuSimple()
 }
 
 type DraggingEffect struct {

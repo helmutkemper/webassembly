@@ -22,6 +22,7 @@ type options struct {
 }
 
 type Menu struct {
+	__zIndexList     []*html.TagDiv
 	__body           *html.TagDiv
 	__header         *html.TagDiv
 	__content        *html.TagDiv
@@ -39,6 +40,7 @@ type Menu struct {
 	__buttonDrag     bool
 	__buttonMinimize bool
 	__buttonClose    bool
+	__escapeFunction js.Func
 }
 
 func (e *Menu) HideButtons(drag, minimize, close bool) {
@@ -51,13 +53,14 @@ func (e *Menu) Menu(options []options) {
 	e.__options = options
 }
 
-func (e *Menu) AttachMenu(element js.Value) {
+func (e *Menu) AttachMenu(element html.Compatible) { // todo: html.Compatible
 	if e.__fixed {
 		return
 	}
 
-	element.Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	element.Get().Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		args[0].Call("preventDefault")
+		args[0].Call("stopPropagation")
 		e.show(args[0].Get("clientX").Int(), args[0].Get("clientY").Int())
 		return nil
 	}))
@@ -239,14 +242,6 @@ func (e *Menu) setupInit() {
 		e.__setup["submenuWhiteSpace"] = "nowrap"
 	}
 
-	if _, found := e.__setup["submenuZIndex"]; !found {
-		e.__setup["submenuZIndex"] = "1001" // todo: fazer
-	}
-
-	if _, found := e.__setup["menuZIndex"]; !found {
-		e.__setup["menuZIndex"] = "1000" // todo: fazer
-	}
-
 	if _, found := e.__setup["menuTitle"]; !found {
 		e.__setup["menuTitle"] = "Menu"
 	}
@@ -296,8 +291,24 @@ func (e *Menu) setupInit() {
 	}
 }
 
+func (e *Menu) changeZIndex() {
+	nextIndex := e.getNextZIndex()
+
+	for k := range e.__zIndexList {
+		e.__zIndexList[k].AddStyle("zIndex", nextIndex+k)
+	}
+}
+
 func (e *Menu) Init() {
 	e.__subMenuToClose = make([]*html.TagDiv, 0)
+	e.__zIndexList = make([]*html.TagDiv, 0)
+
+	e.__escapeFunction = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if args[0].Get("key").String() == "Escape" {
+			e.hide()
+		}
+		return nil
+	})
 
 	e.setupInit()
 
@@ -308,8 +319,8 @@ func (e *Menu) Init() {
 	e.__body.AddStyle("border", e.__setup["border"])
 	e.__body.AddStyle("boxShadow", e.__setup["bodyShadow"])
 	e.__body.AddStyle("padding", e.__setup["menuPadding"])
-	e.__body.AddStyle("zIndex", e.__setup["menuZIndex"])
 	e.__body.AddStyle("user-select", "none")
+	e.__zIndexList = append(e.__zIndexList, e.__body)
 
 	dragIcon := factoryBrowser.NewTagSpan()
 	if !e.__buttonDrag {
@@ -343,7 +354,6 @@ func (e *Menu) Init() {
 	e.__header.AddStyle("align-items", "center")
 	e.__header.AddStyle("background", e.__setup["headerBackground"])
 	e.__header.AddStyle("padding", e.__setup["headerPadding"])
-	//e.__header.AddStyle("margin", e.__setup["headerMargin"])
 	e.__header.AddStyle("font-family", e.__setup["fontFamily"])
 	e.__header.AddStyle("font-weight", "bold")
 
@@ -632,6 +642,7 @@ func (e *Menu) mountMenu(options []options, container *html.TagDiv) {
 				text := factoryBrowser.NewTagDiv()
 				text.AddStyle("fontSize", e.__setup["textFontSize"])
 				text.AddStyle("fontFamily", e.__setup["fontFamily"])
+				text.AddStyle("white-space", "nowrap")
 				if item.Submenu != nil && len(item.Submenu) > 0 {
 					text.Html(fmt.Sprintf("<span style=\"flex:1; text-align:left;\">%v</span><span style=\"text-align:right;\">%v</span>", item.Label, e.__setup["itemTextContent"]))
 					text.AddStyle("display", e.__setup["itemDisplay"])
@@ -655,7 +666,8 @@ func (e *Menu) mountMenu(options []options, container *html.TagDiv) {
 					subMenu.AddStyle("padding", e.__setup["submenuPadding"])
 					subMenu.AddStyle("display", "none")
 					subMenu.AddStyle("whiteSpace", e.__setup["submenuWhiteSpace"])
-					subMenu.AddStyle("zIndex", e.__setup["submenuZIndex"])
+					subMenu.AddStyle("white-space", "nowrap")
+					e.__zIndexList = append(e.__zIndexList, subMenu)
 
 					e.__subMenuToClose = append(e.__subMenuToClose, subMenu)
 
@@ -719,6 +731,7 @@ func (e *Menu) mountMenu(options []options, container *html.TagDiv) {
 		item.AddStyle("padding", e.__setup["itemPadding"])
 		item.AddStyle("cursor", e.__setup["itemCursor"])
 		item.AddStyle("position", e.__setup["itemPosition"])
+		item.AddStyle("white-space", "nowrap")
 
 		item.Get().Call("addEventListener", "mouseenter", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			item.AddStyle("background", e.__setup["submenuBackground"])
@@ -746,7 +759,9 @@ func (e *Menu) mountMenu(options []options, container *html.TagDiv) {
 			subMenu.AddStyle("padding", e.__setup["submenuPadding"])
 			subMenu.AddStyle("display", "none")
 			subMenu.AddStyle("whiteSpace", e.__setup["submenuWhiteSpace"])
-			subMenu.AddStyle("zIndex", e.__setup["submenuZIndex"])
+			subMenu.AddStyle("white-space", "nowrap")
+			//subMenu.AddStyle("zIndex", e.__setup["submenuZIndex"])
+			e.__zIndexList = append(e.__zIndexList, subMenu)
 
 			e.__subMenuToClose = append(e.__subMenuToClose, subMenu)
 
@@ -819,6 +834,28 @@ func (e *Menu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
 	}
 }
 
+func (e *Menu) getNextZIndex() int {
+
+	maxZIndex := 0
+	elements := js.Global().Get("document").Call("getElementsByTagName", "*")
+	length := elements.Length()
+
+	for i := 0; i < length; i++ {
+		element := elements.Index(i)
+		style := js.Global().Get("window").Call("getComputedStyle", element)
+		zIndex := style.Get("zIndex").String()
+		if zIndex != "auto" {
+			if parsedZIndex, err := strconv.Atoi(zIndex); err == nil {
+				if parsedZIndex > maxZIndex {
+					maxZIndex = parsedZIndex
+				}
+			}
+		}
+	}
+
+	return maxZIndex + 1
+}
+
 // show
 //
 // English:
@@ -856,6 +893,10 @@ func (e *Menu) show(x, y int) {
 
 	e.__body.AddStyle("left", strconv.FormatInt(int64(adjustedX), 10)+"px")
 	e.__body.AddStyle("top", strconv.FormatInt(int64(adjustedY), 10)+"px")
+
+	js.Global().Get("document").Call("addEventListener", "keydown", e.__escapeFunction)
+
+	e.changeZIndex()
 }
 
 // hide
@@ -863,6 +904,7 @@ func (e *Menu) show(x, y int) {
 // Esconde o menu quando este é configurado para ser um menu contextual
 func (e *Menu) hide() {
 	e.__body.AddStyle("display", "none")
+	js.Global().Get("document").Call("removeEventListener", "keydown", e.__escapeFunction)
 }
 
 func (e *Menu) max(x, y int) (max int) {

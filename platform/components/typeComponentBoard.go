@@ -1,6 +1,8 @@
 package components
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+)
 
 type Board struct {
 	__divTag *html.TagDiv

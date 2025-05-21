@@ -3,6 +3,7 @@ package components
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -77,6 +78,29 @@ func (e *tag) getTagKeyValue(data string, isolationData []Isolation) (err error,
 		value = strings.Replace(value, isolationData[k].key, isolationData[k].value, -1)
 	}
 
+	return
+}
+
+// Search
+//
+// English:
+//
+//	Search for a key / value combination within the tag
+//
+// Português:
+//
+//	Procura por uma combinação chave / valor dentro da tag
+func (e *tag) Search(key, value string) (found bool) {
+	element := reflect.ValueOf(*e)
+	for i := 0; i < element.NumField(); i++ {
+
+		a := element.Type().Field(i).Name == key
+		b := element.Field(i).String() == value
+
+		if a && b {
+			return true
+		}
+	}
 	return
 }
 

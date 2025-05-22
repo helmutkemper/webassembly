@@ -209,28 +209,14 @@ func getMenuComplex() (options *[]MenuOptions) {
 	}
 }
 
-type Menu struct {
-	components.Components
-	components.Menu
-
-	ContMenu *[]MenuOptions `wasmPanel:"type:mainMenu;func:InitMenu;label:Main Menu;top:5px;left:5px"`
-}
-
-func (e *Menu) Init() (panel *html.TagDiv, err error) {
-	panel, err = e.Components.Init(e)
-	return
-}
-
-func (e *Menu) InitMenu() {
-	e.ContMenu = getMenuComplex()
-}
-
 type ComponentControlPanel struct {
 	components.Components
-	components.Menu
+	components.ContextMenu
+	components.MainMenu
 
-	Panel    *ControlPanel  `wasmPanel:"type:panel"`
-	ContMenu *[]MenuOptions `wasmPanel:"type:contextMenu;func:InitMenu"`
+	Panel   *ControlPanel  `wasmPanel:"type:panel;top:100;left:200"`
+	Context *[]MenuOptions `wasmPanel:"type:contextMenu;func:InitMenu;columns:4"`
+	Menu    *[]MenuOptions `wasmPanel:"type:mainMenu;func:InitMainMenu;label:Main Menu;top:200;left:5;columns:3"`
 
 	breadCrumbsRange *html.TagInputRange
 }
@@ -240,7 +226,10 @@ func (e *ComponentControlPanel) GetRangeValue() (value float64) {
 }
 
 func (e *ComponentControlPanel) InitMenu() {
-	e.ContMenu = getMenuComplex()
+	e.Context = getMenuComplex()
+}
+func (e *ComponentControlPanel) InitMainMenu() {
+	e.Menu = getMenuComplex()
 }
 
 func (e *ComponentControlPanel) Init() (panel *html.TagDiv, err error) {
@@ -261,10 +250,10 @@ type Body struct {
 
 type BoatAdjust struct {
 	components.Board
-	components.Menu
+	components.ContextMenu
 
 	Dragging *DraggingEffect `wasmPanel:"type:range;label:time (s)"`
-	ContMenu *[]MenuOptions  `wasmPanel:"type:contextMenu;func:InitMenu"`
+	ContMenu *[]MenuOptions  `wasmPanel:"type:contextMenu;func:InitMenu;columns:3"`
 }
 
 func (e *BoatAdjust) InitMenu() {
@@ -307,14 +296,14 @@ func runAnimation(value float64) {
 }
 
 type MenuOptions struct {
-	Label     string        `wasmPanel:"type:label"`
-	Icon      string        `wasmPanel:"type:icon"`
-	IconLeft  string        `wasmPanel:"type:iconLeft"`
-	IconRight string        `wasmPanel:"type:iconRight"`
-	Type      string        `wasmPanel:"type:type"`
-	Items     []MenuOptions `wasmPanel:"type:options"`
-	Action    js.Func       `wasmPanel:"type:action"`
-	Submenu   []MenuOptions `wasmPanel:"type:subMenu"`
+	Label string `wasmPanel:"type:label"`
+	Icon  string `wasmPanel:"type:icon"`
+	//IconLeft  string        `wasmPanel:"type:iconLeft"`
+	//IconRight string        `wasmPanel:"type:iconRight"`
+	Type    string        `wasmPanel:"type:type"`
+	Items   []MenuOptions `wasmPanel:"type:options"`
+	Action  js.Func       `wasmPanel:"type:action"`
+	Submenu []MenuOptions `wasmPanel:"type:subMenu"`
 }
 
 var canvas *html.TagCanvas

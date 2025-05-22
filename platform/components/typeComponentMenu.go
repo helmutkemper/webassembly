@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var GlobalMenuList []*Menu
+var GlobalMenuList []*menu
 
 type options struct {
 	Label     string
@@ -22,7 +22,15 @@ type options struct {
 	Submenu   []options
 }
 
-type Menu struct {
+type MainMenu struct {
+	menu
+}
+
+type ContextMenu struct {
+	menu
+}
+
+type menu struct {
 	__zIndexList     []*html.TagDiv
 	__body           *html.TagDiv
 	__header         *html.TagDiv
@@ -43,17 +51,17 @@ type Menu struct {
 	__escapeFunction js.Func
 }
 
-func (e *Menu) HideButtons(drag, minimize, close bool) {
+func (e *menu) HideButtons(drag, minimize, close bool) {
 	e.__buttonDrag = drag
 	e.__buttonMinimize = minimize
 	e.__buttonClose = close
 }
 
-func (e *Menu) Menu(options []options) {
+func (e *menu) Menu(options []options) {
 	e.__options = options
 }
 
-func (e *Menu) AttachMenu(element html.Compatible) {
+func (e *menu) AttachMenu(element html.Compatible) {
 	if e.__fixed {
 		return
 	}
@@ -67,13 +75,13 @@ func (e *Menu) AttachMenu(element html.Compatible) {
 	}))
 }
 
-func (e *Menu) FixedMenu(x, y int) {
+func (e *menu) FixedMenu(x, y int) {
 	e.__fixed = true
 	e.__bodyX = x
 	e.__bodyY = y
 }
 
-func (e *Menu) Css(key, value string) {
+func (e *menu) Css(key, value string) {
 	if e.__setup == nil {
 		e.__setup = make(map[string]string)
 	}
@@ -90,7 +98,7 @@ func (e *Menu) Css(key, value string) {
 // Português:
 //
 //	Configura o css do menu
-func (e *Menu) setupInit() {
+func (e *menu) setupInit() {
 	if e.__setup == nil {
 		e.__setup = make(map[string]string)
 	}
@@ -297,7 +305,7 @@ func (e *Menu) setupInit() {
 // Português:
 //
 //	Atualiza a propriedade zIndex de todos os elementos no menu para garantir que sejam empilhados de forma correta
-func (e *Menu) changeZIndex() {
+func (e *menu) changeZIndex() {
 	nextIndex := e.getNextZIndex()
 
 	for k := range e.__zIndexList {
@@ -314,9 +322,9 @@ func (e *Menu) changeZIndex() {
 // Português:
 //
 //	Registra globalmente todos os menus criados para que eles sejam fechados quando um outro contextual menu é aberto
-func (e *Menu) recordsTheMenuGlobally() {
+func (e *menu) recordsTheMenuGlobally() {
 	if GlobalMenuList == nil {
-		GlobalMenuList = make([]*Menu, 0)
+		GlobalMenuList = make([]*menu, 0)
 	}
 	GlobalMenuList = append(GlobalMenuList, e)
 }
@@ -330,7 +338,7 @@ func (e *Menu) recordsTheMenuGlobally() {
 // Português:
 //
 //	Fecha todos os menus contextuais abertos
-func (e *Menu) hidesAllRegisteredGloballyMenus() {
+func (e *menu) hidesAllRegisteredGloballyMenus() {
 	for k := range GlobalMenuList {
 		if GlobalMenuList[k].__fixed {
 			continue
@@ -340,7 +348,7 @@ func (e *Menu) hidesAllRegisteredGloballyMenus() {
 	}
 }
 
-func (e *Menu) Init() {
+func (e *menu) Init() {
 	e.recordsTheMenuGlobally()
 
 	e.__subMenuToClose = make([]*html.TagDiv, 0)
@@ -458,7 +466,7 @@ func (e *Menu) Init() {
 // Português:
 //
 //	Remonta o menu com novos dados
-func (e *Menu) ReInit() {
+func (e *menu) ReInit() {
 	e.__menu.Html("")
 	e.mountMenu(e.__options, e.__menu)
 	e.adjustContentWidth()
@@ -473,7 +481,7 @@ func (e *Menu) ReInit() {
 // Português:
 //
 //	Adjusts the menu content when the Div.Fade() function works during the close function
-func (e *Menu) bodyFadeProgress(progress float64) {
+func (e *menu) bodyFadeProgress(progress float64) {
 	e.adjustContentWidth()
 
 	if progress == 1.0 && !e.__content.FadeStatus() {
@@ -490,7 +498,7 @@ func (e *Menu) bodyFadeProgress(progress float64) {
 // Português:
 //
 //	Adjusts the menu content when the Div.Fade() function works during the minimize function
-func (e *Menu) contentFadeProgress(progress float64) {
+func (e *menu) contentFadeProgress(progress float64) {
 	e.adjustContentWidth()
 
 	if progress == 1.0 {
@@ -512,7 +520,7 @@ func (e *Menu) contentFadeProgress(progress float64) {
 // Português:
 //
 //	Mostra e ajusta o conteúdo do menu quando a função div.Fade() termina
-func (e *Menu) fadeShowContent() {
+func (e *menu) fadeShowContent() {
 	e.__content.AddStyle("visibility", "visible")
 	e.__menu.AddStyle("visibility", "visible")
 
@@ -529,7 +537,7 @@ func (e *Menu) fadeShowContent() {
 // Português:
 //
 //	Fecha todos os submenus após o click, pois o menu fixo não tem a função hide()
-func (e *Menu) closeAllSubMenus() {
+func (e *menu) closeAllSubMenus() {
 	for k := range e.__subMenuToClose {
 		e.__subMenuToClose[k].AddStyle("display", "none")
 	}
@@ -544,7 +552,7 @@ func (e *Menu) closeAllSubMenus() {
 // Português:
 //
 //	Esconde e ajusta o conteúdo do menu quando a função div.Fade() termina
-func (e *Menu) fadeHideContent() {
+func (e *menu) fadeHideContent() {
 	e.__content.AddStyle("visibility", "hidden")
 	e.__menu.AddStyle("visibility", "hidden")
 
@@ -561,7 +569,7 @@ func (e *Menu) fadeHideContent() {
 // Português:
 //
 //	Adiciona o listener para o botão de mover
-func (e *Menu) headerAddDragListener(dragIcon *html.TagSpan) {
+func (e *menu) headerAddDragListener(dragIcon *html.TagSpan) {
 	dragIcon.Get().Call("addEventListener", "mousedown", js.FuncOf(func(this js.Value, args []js.Value) any {
 		e.__isDragging = true
 		e.__offsetX = args[0].Get("clientX").Int() - e.__body.Get().Call("getBoundingClientRect").Get("left").Int()
@@ -592,7 +600,7 @@ func (e *Menu) headerAddDragListener(dragIcon *html.TagSpan) {
 // Português:
 //
 //	Adiciona o listener para o botão de minimizar
-func (e *Menu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
+func (e *menu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
 	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
 		e.__content.Fade(300 * time.Millisecond)
@@ -610,7 +618,7 @@ func (e *Menu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
 // Português:
 //
 //	Adiciona o listener para o botão de fechar
-func (e *Menu) headerAddCloseListener(closeIcon *html.TagSpan) {
+func (e *menu) headerAddCloseListener(closeIcon *html.TagSpan) {
 	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
 
@@ -633,7 +641,7 @@ func (e *Menu) headerAddCloseListener(closeIcon *html.TagSpan) {
 // Português:
 //
 //	Ajusta o comprimento do menu quando ele abre por div.Fade()
-func (e *Menu) adjustContentWidth() {
+func (e *menu) adjustContentWidth() {
 	menuRect := e.__menu.Get().Call("getBoundingClientRect")
 	width := menuRect.Get("width").Int()
 	height := menuRect.Get("height").Int()
@@ -650,7 +658,7 @@ func (e *Menu) adjustContentWidth() {
 // Português:
 //
 //	Monta o menu e os submenu
-func (e *Menu) mountMenu(options []options, container *html.TagDiv) {
+func (e *menu) mountMenu(options []options, container *html.TagDiv) {
 	for _, option := range options {
 		if option.Label == "-" {
 			divider := factoryBrowser.NewTagHr()
@@ -848,7 +856,7 @@ func (e *Menu) mountMenu(options []options, container *html.TagDiv) {
 // Português:
 //
 //	Ajusta a posição top e left do submenu que abre para que o mesmo permaneça visível na tela
-func (e *Menu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
+func (e *menu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
 	subMenu.AddStyle("display", "block")
 
 	window := js.Global().Get("window")
@@ -887,7 +895,7 @@ func (e *Menu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
 // Português:
 //
 //	Procura todos os elementos gráficos no documento e em seguida calcula o próximo zIndex
-func (e *Menu) getNextZIndex() int {
+func (e *menu) getNextZIndex() int {
 
 	maxZIndex := 0
 	elements := js.Global().Get("document").Call("getElementsByTagName", "*")
@@ -918,7 +926,7 @@ func (e *Menu) getNextZIndex() int {
 // Português:
 //
 //	Mostra o menu quando o menu contextual é acionado pelo mouse
-func (e *Menu) show(x, y int) {
+func (e *menu) show(x, y int) {
 
 	e.hidesAllRegisteredGloballyMenus()
 
@@ -958,12 +966,12 @@ func (e *Menu) show(x, y int) {
 // hide
 //
 // Esconde o menu quando este é configurado para ser um menu contextual
-func (e *Menu) hide() {
+func (e *menu) hide() {
 	e.__body.AddStyle("display", "none")
 	js.Global().Get("document").Call("removeEventListener", "keydown", e.__escapeFunction)
 }
 
-func (e *Menu) max(x, y int) (max int) {
+func (e *menu) max(x, y int) (max int) {
 	if x > y {
 		return x
 	}

@@ -53,6 +53,7 @@ type tag struct {
 	Minimize      string
 	Close         string
 	Options       string
+	Columns       string
 }
 
 // getTagKeyValue
@@ -195,6 +196,8 @@ func (e *tag) init(tagRaw string) (err error) {
 			e.Close = value
 		case "options":
 			e.Options = value
+		case "columns":
+			e.Columns = value
 		default:
 			err = fmt.Errorf("a tag was not processed correctly for the key: %v, full value: `%v`", key, tagRaw)
 			return

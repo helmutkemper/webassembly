@@ -102,6 +102,42 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 					// Espera criar panelHeader para que panelBody fique abaixo
 					e.panelFather.Append(e.panelBody)
 				case "panel":
+					//log.Printf("top: %v", tagData.Top)
+					//log.Printf("left: %v", tagData.Left)
+					//
+					//var x, y int64
+					//x, err = strconv.ParseInt(componentMenuData.tagData.Left, 10, 64)
+					//if err != nil {
+					//	err = fmt.Errorf("=error: component %v has an embed `components.Menu` correctily", element.Type().Name())
+					//	err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` contain a left property that cannot be converted. The value must be an integer"))
+					//	err = errors.Join(err, fmt.Errorf("       Example:"))
+					//	err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+					//	err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
+					//	err = errors.Join(err, fmt.Errorf("         "))
+					//	err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:%v;top:%v\"`", componentMenuData.tagData.Func, componentMenuData.tagData.Left, componentMenuData.tagData.Top))
+					//	err = errors.Join(err, fmt.Errorf("       }"))
+					//	err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
+					//	err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
+					//	err = errors.Join(err, fmt.Errorf("       }"))
+					//	return
+					//}
+					//
+					//y, err = strconv.ParseInt(componentMenuData.tagData.Top, 10, 64)
+					//if err != nil {
+					//	err = fmt.Errorf("==error: component %v has an embed `components.Menu` correctily", element.Type().Name())
+					//	err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` contain a top property that cannot be converted. The value must be an integer"))
+					//	err = errors.Join(err, fmt.Errorf("       Example:"))
+					//	err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+					//	err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
+					//	err = errors.Join(err, fmt.Errorf("         "))
+					//	err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:%v;top:%v\"`", componentMenuData.tagData.Func, componentMenuData.tagData.Left, componentMenuData.tagData.Top))
+					//	err = errors.Join(err, fmt.Errorf("       }"))
+					//	err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
+					//	err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
+					//	err = errors.Join(err, fmt.Errorf("       }"))
+					//	return
+					//}
+
 					if fieldVal.Kind() == reflect.Pointer {
 						if fieldVal.CanSet() && fieldVal.IsNil() {
 							newInstance := reflect.New(fieldVal.Type().Elem())
@@ -157,8 +193,14 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 				}
 
 				switch tagData.Type {
-				case "panel", "mainMenu":
+				case "panel":
+					// Put the context menu on the main panel
 					if err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, e.panelFather); err != nil {
+						return
+					}
+
+				case "mainMenu":
+					if err = e.processMainMenu(elementPrt, element, fieldVal, fieldTyp); err != nil {
 						return
 					}
 				}
@@ -176,15 +218,13 @@ func (e *Components) GetFather() (father *html.TagDiv) {
 func (e *Components) processContextMenu(parentElementPtr, parentElement, element reflect.Value, typeof reflect.StructField, father html.Compatible) (err error) {
 
 	var componentMenuData searchStructRet
-	componentMenuData = e.searchStruct(parentElementPtr, "Menu", "Type", "contextMenu")
+	componentMenuData = e.searchStruct(parentElementPtr, "ContextMenu", "Type", "contextMenu")
 	a := componentMenuData.componentFound
 	b := componentMenuData.fieldFound
 
 	if !(a || b) {
 		return
 	}
-
-	var explanation string = "contextMenu"
 
 	if !element.CanInterface() {
 		err = fmt.Errorf("component.Menu (%v.%+v) cannot be transformed into an interface", parentElement.Type().Name(), typeof.Name)
@@ -194,9 +234,9 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 	if element.Kind() != reflect.Pointer {
 		err = fmt.Errorf("component.Menu (%v) requires a pointer to the component, example", parentElement.Type().Name())
 		err = errors.Join(err, fmt.Errorf("     type %v struct {", parentElement.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("       components.Menu"))
+		err = errors.Join(err, fmt.Errorf("       components.ContextMenu"))
 		err = errors.Join(err, fmt.Errorf("       "))
-		err = errors.Join(err, fmt.Errorf("       %v *%v `wasmPanel:\"type:%v;...\"`", typeof.Name, typeof.Type, explanation))
+		err = errors.Join(err, fmt.Errorf("       %v *%v `wasmPanel:\"type:contextMenu;...\"`", typeof.Name, typeof.Type))
 		err = errors.Join(err, fmt.Errorf("     }"))
 		err = errors.Join(err, fmt.Errorf("     func (e *%v) InitMenu() {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("       e.MenuData = getMenuData()"))
@@ -209,9 +249,9 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 		err = fmt.Errorf("error: component %v needs to embed `components.Menu` directly", parentElement.Type().Name())
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("         components.Menu"))
+		err = errors.Join(err, fmt.Errorf("         components.ContextMenu"))
 		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:%v;func:InitMenu\"`", explanation))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:contextMenu;func:InitMenu\"`"))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
@@ -221,12 +261,12 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 
 	if componentMenuData.tagData.Func == "" {
 		err = fmt.Errorf("error: component %v has an embed `components.Menu` correctily", parentElement.Type().Name())
-		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:%v\"` does not contain the name of the function to configure the menu when this initializate", explanation))
+		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:contextMenu\"` does not contain the name of the function to configure the menu when this initializate"))
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("         components.Menu"))
+		err = errors.Join(err, fmt.Errorf("         components.ContextMenu"))
 		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:%v;func:InitMenu\"`", explanation))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:contextMenu;func:InitMenu\"`"))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
@@ -237,13 +277,13 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 	menuMethod := parentElementPtr.MethodByName(componentMenuData.tagData.Func)
 	if !menuMethod.IsValid() {
 		err = fmt.Errorf("error: component %v has an embed `components.Menu` correctily", element.Type().Name())
-		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:%v\"` contain a function that cannot be called.", explanation))
+		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:contextMenu\"` contain a function that cannot be called."))
 		err = errors.Join(err, fmt.Errorf("       See if the name contained in the tag is the same name as the function."))
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("         components.Menu"))
+		err = errors.Join(err, fmt.Errorf("         components.ContextMenu"))
 		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:%v;func:%v\"`", explanation, componentMenuData.tagData.Func))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:contextMenu;func:%v\"`", componentMenuData.tagData.Func))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
@@ -257,12 +297,154 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 		return
 	}
 
-	contextMenu := Menu{}
+	if componentMenuData.tagData.Columns == "" {
+		componentMenuData.tagData.Columns = "2"
+	}
+
+	contextMenu := ContextMenu{}
 	contextMenu.Menu(menuOptions)
 	contextMenu.AttachMenu(father)
+	contextMenu.Css("gridGridTemplateColumns", fmt.Sprintf("repeat(%v, 1fr)", componentMenuData.tagData.Columns))
 	contextMenu.Init()
 
-	menuElement := parentElement.FieldByName("Menu")
+	menuElement := parentElement.FieldByName("ContextMenu")
+	if !menuElement.CanSet() {
+		err = fmt.Errorf("error: component %v has an embed `components.Menu` correctily", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("         However, there was a problem when transferring the menu created to the existing component"))
+		return
+	}
+
+	menuElement.Set(reflect.ValueOf(contextMenu))
+	return
+}
+
+func (e *Components) processMainMenu(parentElementPtr, parentElement, element reflect.Value, typeof reflect.StructField) (err error) {
+
+	var componentMenuData searchStructRet
+	componentMenuData = e.searchStruct(parentElementPtr, "MainMenu", "Type", "mainMenu")
+	a := componentMenuData.componentFound
+	b := componentMenuData.fieldFound
+
+	if !(a || b) {
+		return
+	}
+
+	if !element.CanInterface() {
+		err = fmt.Errorf("component.Menu (%v.%+v) cannot be transformed into an interface", parentElement.Type().Name(), typeof.Name)
+		return
+	}
+
+	if element.Kind() != reflect.Pointer {
+		err = fmt.Errorf("component.Menu (%v) requires a pointer to the component, example", parentElement.Type().Name())
+		err = errors.Join(err, fmt.Errorf("     type %v struct {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("       components.MainMenu"))
+		err = errors.Join(err, fmt.Errorf("       "))
+		err = errors.Join(err, fmt.Errorf("       %v *%v `wasmPanel:\"type:mainMenu;...\"`", typeof.Name, typeof.Type))
+		err = errors.Join(err, fmt.Errorf("     }"))
+		err = errors.Join(err, fmt.Errorf("     func (e *%v) InitMenu() {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("       e.MenuData = getMenuData()"))
+		err = errors.Join(err, fmt.Errorf("     }"))
+		return
+	}
+
+	// Checks if the import of `components.Menu` is fine, using XOR logic
+	if (a || b) && !(a && b) {
+		err = fmt.Errorf("---error: component %v needs to embed `components.Menu` directly", parentElement.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:InitMenu;left:10;top:10\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	}
+
+	if componentMenuData.tagData.Func == "" {
+		err = fmt.Errorf("--error: component %v has an embed `components.Menu` correctily", parentElement.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` does not contain the name of the function to configure the menu when this initializate"))
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:InitMenu;left:10;top:10\"`"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	}
+
+	menuMethod := parentElementPtr.MethodByName(componentMenuData.tagData.Func)
+	if !menuMethod.IsValid() {
+		err = fmt.Errorf("-error: component %v has an embed `components.Menu` correctily", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` contain a function that cannot be called."))
+		err = errors.Join(err, fmt.Errorf("       See if the name contained in the tag is the same name as the function."))
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:10;top:10\"`", componentMenuData.tagData.Func))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	}
+
+	var x, y int64
+	x, err = strconv.ParseInt(componentMenuData.tagData.Left, 10, 64)
+	if err != nil {
+		err = fmt.Errorf("=error: component %v has an embed `components.Menu` correctily", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` contain a left property that cannot be converted. The value must be an integer"))
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:%v;top:%v\"`", componentMenuData.tagData.Func, componentMenuData.tagData.Left, componentMenuData.tagData.Top))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	}
+
+	y, err = strconv.ParseInt(componentMenuData.tagData.Top, 10, 64)
+	if err != nil {
+		err = fmt.Errorf("==error: component %v has an embed `components.Menu` correctily", element.Type().Name())
+		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` contain a top property that cannot be converted. The value must be an integer"))
+		err = errors.Join(err, fmt.Errorf("       Example:"))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
+		err = errors.Join(err, fmt.Errorf("         "))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:%v;top:%v\"`", componentMenuData.tagData.Func, componentMenuData.tagData.Left, componentMenuData.tagData.Top))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
+		err = errors.Join(err, fmt.Errorf("       }"))
+		return
+	}
+
+	var menuOptions []options
+	parentElementPtr.MethodByName(componentMenuData.tagData.Func).Call(nil)
+	if menuOptions, err = e.processSliceMenuOptions(element, componentMenuData.sliceElement); err != nil {
+		return
+	}
+
+	if componentMenuData.tagData.Columns == "" {
+		componentMenuData.tagData.Columns = "2"
+	}
+
+	contextMenu := MainMenu{}
+	contextMenu.Menu(menuOptions)
+	contextMenu.FixedMenu(int(x), int(y))
+	contextMenu.Css("menuTitle", componentMenuData.tagData.Label)
+	contextMenu.Css("gridGridTemplateColumns", fmt.Sprintf("repeat(%v, 1fr)", componentMenuData.tagData.Columns))
+	contextMenu.Init()
+
+	menuElement := parentElement.FieldByName("MainMenu")
 	if !menuElement.CanSet() {
 		err = fmt.Errorf("error: component %v has an embed `components.Menu` correctily", element.Type().Name())
 		err = errors.Join(err, fmt.Errorf("         However, there was a problem when transferring the menu created to the existing component"))

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/stage"
 	"strconv"
 	"syscall/js"
 	"time"
@@ -40,14 +41,15 @@ type menu struct {
 	__setup          map[string]string
 	__options        []options
 	__fixed          bool
-	__bodyX          int
-	__bodyY          int
+	__bodyX          string
+	__bodyY          string
 	__isDragging     bool
 	__offsetX        int
 	__offsetY        int
 	__buttonDrag     bool
 	__buttonMinimize bool
 	__buttonClose    bool
+	__autoZIndex     bool
 	__escapeFunction js.Func
 }
 
@@ -75,10 +77,18 @@ func (e *menu) AttachMenu(element html.Compatible) {
 	}))
 }
 
-func (e *menu) FixedMenu(x, y int) {
+func (e *menu) FixedMenu(x, y any) {
 	e.__fixed = true
-	e.__bodyX = x
-	e.__bodyY = y
+	if converted, ok := x.(string); !ok {
+		e.__bodyX = strconv.FormatInt(int64(x.(int)), 10) + "px"
+	} else {
+		e.__bodyX = converted
+	}
+	if converted, ok := y.(string); !ok {
+		e.__bodyY = strconv.FormatInt(int64(x.(int)), 10)
+	} else {
+		e.__bodyY = converted
+	}
 }
 
 func (e *menu) Css(key, value string) {
@@ -306,7 +316,7 @@ func (e *menu) setupInit() {
 //
 //	Atualiza a propriedade zIndex de todos os elementos no menu para garantir que sejam empilhados de forma correta
 func (e *menu) changeZIndex() {
-	nextIndex := e.getNextZIndex()
+	nextIndex := stage.GetNextZIndex()
 
 	for k := range e.__zIndexList {
 		e.__zIndexList[k].AddStyle("zIndex", nextIndex+k)
@@ -349,6 +359,7 @@ func (e *menu) hidesAllRegisteredGloballyMenus() {
 }
 
 func (e *menu) Init() {
+	e.__autoZIndex = true
 	e.recordsTheMenuGlobally()
 
 	e.__subMenuToClose = make([]*html.TagDiv, 0)
@@ -372,6 +383,15 @@ func (e *menu) Init() {
 	e.__body.AddStyle("padding", e.__setup["menuPadding"])
 	e.__body.AddStyle("user-select", "none")
 	e.__zIndexList = append(e.__zIndexList, e.__body)
+
+	e.__body.Get().Call("addEventListener", "mouseover", js.FuncOf(func(this js.Value, args []js.Value) any {
+		if !e.__autoZIndex {
+			return nil
+		}
+
+		e.__body.AddStyle("zIndex", stage.GetNextZIndex())
+		return nil
+	}))
 
 	dragIcon := factoryBrowser.NewTagSpan()
 	if !e.__buttonDrag {
@@ -600,8 +620,8 @@ func (e *menu) headerAddDragListener(dragIcon *html.TagSpan) {
 // Português:
 //
 //	Adiciona o listener para o botão de minimizar
-func (e *menu) headerAddMinimizeListener(closeIcon *html.TagSpan) {
-	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
+func (e *menu) headerAddMinimizeListener(minimizeIcon *html.TagSpan) {
+	minimizeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
 		e.__content.Fade(300 * time.Millisecond)
 
@@ -884,37 +904,6 @@ func (e *menu) adjustSubMenuPosition(subMenu, cell *html.TagDiv) {
 		subMenu.AddStyle("top", "0")
 		subMenu.AddStyle("bottom", "auto")
 	}
-}
-
-// getNextZIndex
-//
-// English:
-//
-//	Looking for all graphic elements in the document and then calculates the next Zindex
-//
-// Português:
-//
-//	Procura todos os elementos gráficos no documento e em seguida calcula o próximo zIndex
-func (e *menu) getNextZIndex() int {
-
-	maxZIndex := 0
-	elements := js.Global().Get("document").Call("getElementsByTagName", "*")
-	length := elements.Length()
-
-	for i := 0; i < length; i++ {
-		element := elements.Index(i)
-		style := js.Global().Get("window").Call("getComputedStyle", element)
-		zIndex := style.Get("zIndex").String()
-		if zIndex != "auto" {
-			if parsedZIndex, err := strconv.Atoi(zIndex); err == nil {
-				if parsedZIndex > maxZIndex {
-					maxZIndex = parsedZIndex
-				}
-			}
-		}
-	}
-
-	return maxZIndex + 1
 }
 
 // show

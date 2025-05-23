@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/stage"
 	"github.com/helmutkemper/webassembly/mathUtil"
 	"github.com/helmutkemper/webassembly/qrcode"
 	"image/color"
@@ -31,14 +32,184 @@ type Components struct {
 	panelFather *html.TagDiv
 	panelBody   *html.TagDiv
 
+	setupPanel       map[string]string
+	setupBody        map[string]string
+	setupPanelHeader map[string]string
+
+	autoZIndex bool
 	isDragging bool
 	offsetX    int
 	offsetY    int
+	minimized  bool
+}
+
+func (e *Components) CssPanelHeader(key, value string) {
+	if e.setupPanelHeader == nil {
+		e.setupPanelHeader = make(map[string]string)
+	}
+
+	e.setupPanelHeader[key] = value
+}
+
+func (e *Components) CssPanel(key, value string) {
+	if e.setupPanel == nil {
+		e.setupPanel = make(map[string]string)
+	}
+
+	e.setupPanel[key] = value
+}
+
+func (e *Components) CssBody(key, value string) {
+	if e.setupBody == nil {
+		e.setupBody = make(map[string]string)
+	}
+
+	e.setupBody[key] = value
+}
+
+func (e *Components) setupPanelHeaderInit() {
+	if e.setupPanelHeader == nil {
+		e.setupPanelHeader = make(map[string]string)
+	}
+
+	if _, found := e.setupPanelHeader["display"]; !found {
+		e.setupPanelHeader["display"] = "flex"
+	}
+
+	if _, found := e.setupPanelHeader["alignItems"]; !found {
+		e.setupPanelHeader["alignItems"] = "center"
+	}
+
+	//if _, found := e.setupPanelHeader["borderBottom"]; !found {
+	//	e.setupPanelHeader["borderBottom"] = "1px solid #ccc"
+	//}
+
+	if _, found := e.setupPanelHeader["paddingBottom"]; !found {
+		e.setupPanelHeader["paddingBottom"] = "5px"
+	}
+}
+
+func (e *Components) setupBodyInit() {
+	if e.setupBody == nil {
+		e.setupBody = make(map[string]string)
+	}
+
+	if _, found := e.setupBody["display"]; !found {
+		e.setupBody["display"] = "block"
+	}
+
+	if _, found := e.setupBody["maxHeight"]; !found {
+		e.setupBody["maxHeight"] = "90vh"
+	}
+
+	if _, found := e.setupBody["overflowY"]; !found {
+		e.setupBody["overflowY"] = "auto"
+	}
+
+	if _, found := e.setupBody["padding"]; !found {
+		e.setupBody["padding"] = "0 10px"
+	}
+
+	if _, found := e.setupBody["boxSizing"]; !found {
+		e.setupBody["boxSizing"] = "border-box"
+	}
+
+	if _, found := e.setupBody["border"]; !found {
+		e.setupBody["border"] = "none"
+	}
+
+	if _, found := e.setupBody["scrollbarWidth"]; !found {
+		e.setupBody["scrollbarWidth"] = "thin"
+	}
+
+	if _, found := e.setupBody["scrollbarColor"]; !found {
+		e.setupBody["scrollbarColor"] = "#888 transparent"
+	}
+
+	//if _, found := e.setupBody[""]; !found {
+	//	e.setupBody[""] = ""
+	//}
+
+	e.applyCss()
+}
+
+func (e *Components) setupPanelInit() {
+	if e.setupPanel == nil {
+		e.setupPanel = make(map[string]string)
+	}
+
+	if _, found := e.setupPanel["width"]; !found {
+		e.setupPanel["width"] = "350px"
+	}
+
+	if _, found := e.setupPanel["borderRadius"]; !found {
+		e.setupPanel["borderRadius"] = "10px"
+	}
+
+	if _, found := e.setupPanel["boxShadow"]; !found {
+		e.setupPanel["boxShadow"] = "0 8px 16px rgba(0, 0, 0, 0.2)"
+	}
+
+	if _, found := e.setupPanel["border"]; !found {
+		e.setupPanel["border"] = "1px solid #ccc"
+	}
+
+	if _, found := e.setupPanel["padding"]; !found {
+		e.setupPanel["padding"] = "10px"
+	}
+
+	if _, found := e.setupPanel["backgroundColor"]; !found {
+		e.setupPanel["backgroundColor"] = "#fff"
+	}
+
+	if _, found := e.setupPanel["maxHeight"]; !found {
+		e.setupPanel["maxHeight"] = "90vh"
+	}
+
+	if _, found := e.setupPanel["overflowY"]; !found {
+		e.setupPanel["overflowY"] = "auto"
+	}
+
+	if _, found := e.setupPanel["position"]; !found {
+		e.setupPanel["position"] = "fixed"
+	}
+
+	if _, found := e.setupPanel["margin"]; !found {
+		e.setupPanel["margin"] = "10px"
+	}
+
+	//if _, found := e.setupPanel[""]; !found {
+	//	e.setupPanel[""] = ""
+	//}
+
+	e.applyCss()
+}
+
+func (e *Components) applyCss() {
+	if e.panelFather == nil {
+		return
+	}
+
+	if e.panelBody == nil {
+		return
+	}
+
+	for k := range e.setupPanel {
+		e.panelFather.AddStyle(k, e.setupPanel[k])
+	}
+
+	for k := range e.setupBody {
+		e.panelBody.AddStyle(k, e.setupBody[k])
+	}
 }
 
 func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 	element := reflect.ValueOf(el)
 	typeof := reflect.TypeOf(el)
+	e.setupPanelInit()
+	e.setupBodyInit()
+	e.setupPanelHeaderInit()
+
 	e.createDivsFather()
 
 	e.panelFather.HideForFade()
@@ -57,8 +228,22 @@ func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 }
 
 func (e *Components) createDivsFather() {
+	e.autoZIndex = true
+
 	e.panelFather = factoryBrowser.NewTagDiv().Class("panel")
+	e.panelFather.AddStyle("userSelect", "none")
+	e.panelFather.Get().Call("addEventListener", "mouseover", js.FuncOf(func(this js.Value, args []js.Value) any {
+		if !e.autoZIndex {
+			return nil
+		}
+		e.panelFather.AddStyle("zIndex", stage.GetNextZIndex())
+		return nil
+	}))
+
 	e.panelBody = factoryBrowser.NewTagDiv().Class("panelBody")
+	e.panelBody.AddStyle("display", "block")
+
+	e.applyCss()
 }
 
 func (e *Components) process(element reflect.Value, typeof reflect.Type) (err error) {
@@ -95,48 +280,25 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 				switch tagData.Type {
 				case "headerText":
 					dragIcon, minimizeIcon, closeIcon := e.processHeaderText(fieldVal, tagData.Label, e.panelFather)
+					e.processHeaderTextAddDragListener(dragIcon)
 					e.processHeaderTextAddMinimizeListener(minimizeIcon)
 					e.processHeaderTextAddCloseListener(closeIcon)
-					e.processHeaderTextAddDragListener(dragIcon)
 					e.Show()
 					// Espera criar panelHeader para que panelBody fique abaixo
 					e.panelFather.Append(e.panelBody)
 				case "panel":
-					//log.Printf("top: %v", tagData.Top)
-					//log.Printf("left: %v", tagData.Left)
-					//
-					//var x, y int64
-					//x, err = strconv.ParseInt(componentMenuData.tagData.Left, 10, 64)
-					//if err != nil {
-					//	err = fmt.Errorf("=error: component %v has an embed `components.Menu` correctily", element.Type().Name())
-					//	err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` contain a left property that cannot be converted. The value must be an integer"))
-					//	err = errors.Join(err, fmt.Errorf("       Example:"))
-					//	err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
-					//	err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
-					//	err = errors.Join(err, fmt.Errorf("         "))
-					//	err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:%v;top:%v\"`", componentMenuData.tagData.Func, componentMenuData.tagData.Left, componentMenuData.tagData.Top))
-					//	err = errors.Join(err, fmt.Errorf("       }"))
-					//	err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
-					//	err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
-					//	err = errors.Join(err, fmt.Errorf("       }"))
-					//	return
-					//}
-					//
-					//y, err = strconv.ParseInt(componentMenuData.tagData.Top, 10, 64)
-					//if err != nil {
-					//	err = fmt.Errorf("==error: component %v has an embed `components.Menu` correctily", element.Type().Name())
-					//	err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` contain a top property that cannot be converted. The value must be an integer"))
-					//	err = errors.Join(err, fmt.Errorf("       Example:"))
-					//	err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
-					//	err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
-					//	err = errors.Join(err, fmt.Errorf("         "))
-					//	err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:%v;top:%v\"`", componentMenuData.tagData.Func, componentMenuData.tagData.Left, componentMenuData.tagData.Top))
-					//	err = errors.Join(err, fmt.Errorf("       }"))
-					//	err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
-					//	err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
-					//	err = errors.Join(err, fmt.Errorf("       }"))
-					//	return
-					//}
+
+					if tagData.Top == "" {
+						tagData.Top = "5px"
+					}
+
+					if tagData.Left == "" {
+						tagData.Left = "5px"
+					}
+
+					e.panelFather.AddStyle("top", tagData.Top)
+					e.panelFather.AddStyle("left", tagData.Left)
+					e.panelFather.AddStyle("zIndex", stage.GetNextZIndex())
 
 					if fieldVal.Kind() == reflect.Pointer {
 						if fieldVal.CanSet() && fieldVal.IsNil() {
@@ -244,9 +406,9 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 		return
 	}
 
-	// Checks if the import of `components.Menu` is fine, using XOR logic
+	// Checks if the import of `components.ContextMenu` is fine, using XOR logic
 	if (a || b) && !(a && b) {
-		err = fmt.Errorf("error: component %v needs to embed `components.Menu` directly", parentElement.Type().Name())
+		err = fmt.Errorf("error: component %v needs to embed `components.ContextMenu` directly", parentElement.Type().Name())
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         components.ContextMenu"))
@@ -260,7 +422,7 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 	}
 
 	if componentMenuData.tagData.Func == "" {
-		err = fmt.Errorf("error: component %v has an embed `components.Menu` correctily", parentElement.Type().Name())
+		err = fmt.Errorf("error: component %v has an embed `components.ContextMenu` correctily", parentElement.Type().Name())
 		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:contextMenu\"` does not contain the name of the function to configure the menu when this initializate"))
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
@@ -276,7 +438,7 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 
 	menuMethod := parentElementPtr.MethodByName(componentMenuData.tagData.Func)
 	if !menuMethod.IsValid() {
-		err = fmt.Errorf("error: component %v has an embed `components.Menu` correctily", element.Type().Name())
+		err = fmt.Errorf("error: component %v has an embed `components.ContextMenu` correctily", element.Type().Name())
 		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:contextMenu\"` contain a function that cannot be called."))
 		err = errors.Join(err, fmt.Errorf("       See if the name contained in the tag is the same name as the function."))
 		err = errors.Join(err, fmt.Errorf("       Example:"))
@@ -309,7 +471,7 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 
 	menuElement := parentElement.FieldByName("ContextMenu")
 	if !menuElement.CanSet() {
-		err = fmt.Errorf("error: component %v has an embed `components.Menu` correctily", element.Type().Name())
+		err = fmt.Errorf("error: component %v has an embed `components.ContextMenu` correctily", element.Type().Name())
 		err = errors.Join(err, fmt.Errorf("         However, there was a problem when transferring the menu created to the existing component"))
 		return
 	}
@@ -347,14 +509,14 @@ func (e *Components) processMainMenu(parentElementPtr, parentElement, element re
 		return
 	}
 
-	// Checks if the import of `components.Menu` is fine, using XOR logic
+	// Checks if the import of `components.ContextMenu` is fine, using XOR logic
 	if (a || b) && !(a && b) {
-		err = fmt.Errorf("---error: component %v needs to embed `components.Menu` directly", parentElement.Type().Name())
+		err = fmt.Errorf("error: component %v needs to embed `components.ContextMenu` directly", parentElement.Type().Name())
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
 		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:InitMenu;left:10;top:10\"`"))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:InitMenu;left:10px;top:10px\"`"))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
@@ -363,13 +525,13 @@ func (e *Components) processMainMenu(parentElementPtr, parentElement, element re
 	}
 
 	if componentMenuData.tagData.Func == "" {
-		err = fmt.Errorf("--error: component %v has an embed `components.Menu` correctily", parentElement.Type().Name())
+		err = fmt.Errorf("error: component %v has an embed `components.ContextMenu` correctily", parentElement.Type().Name())
 		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` does not contain the name of the function to configure the menu when this initializate"))
 		err = errors.Join(err, fmt.Errorf("       Example:"))
 		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
 		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:InitMenu;left:10;top:10\"`"))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:InitMenu;left:10px;top:10px\"`"))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
@@ -379,47 +541,14 @@ func (e *Components) processMainMenu(parentElementPtr, parentElement, element re
 
 	menuMethod := parentElementPtr.MethodByName(componentMenuData.tagData.Func)
 	if !menuMethod.IsValid() {
-		err = fmt.Errorf("-error: component %v has an embed `components.Menu` correctily", element.Type().Name())
+		err = fmt.Errorf("error: component %v has an embed `components.ContextMenu` correctily", parentElement.Type().Name())
 		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` contain a function that cannot be called."))
 		err = errors.Join(err, fmt.Errorf("       See if the name contained in the tag is the same name as the function."))
 		err = errors.Join(err, fmt.Errorf("       Example:"))
-		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
+		err = errors.Join(err, fmt.Errorf("       type %v struct {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
 		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:10;top:10\"`", componentMenuData.tagData.Func))
-		err = errors.Join(err, fmt.Errorf("       }"))
-		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
-		err = errors.Join(err, fmt.Errorf("       }"))
-		return
-	}
-
-	var x, y int64
-	x, err = strconv.ParseInt(componentMenuData.tagData.Left, 10, 64)
-	if err != nil {
-		err = fmt.Errorf("=error: component %v has an embed `components.Menu` correctily", element.Type().Name())
-		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` contain a left property that cannot be converted. The value must be an integer"))
-		err = errors.Join(err, fmt.Errorf("       Example:"))
-		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
-		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:%v;top:%v\"`", componentMenuData.tagData.Func, componentMenuData.tagData.Left, componentMenuData.tagData.Top))
-		err = errors.Join(err, fmt.Errorf("       }"))
-		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
-		err = errors.Join(err, fmt.Errorf("       }"))
-		return
-	}
-
-	y, err = strconv.ParseInt(componentMenuData.tagData.Top, 10, 64)
-	if err != nil {
-		err = fmt.Errorf("==error: component %v has an embed `components.Menu` correctily", element.Type().Name())
-		err = errors.Join(err, fmt.Errorf("       However, `wasmPanel:\"type:mainMenu\"` contain a top property that cannot be converted. The value must be an integer"))
-		err = errors.Join(err, fmt.Errorf("       Example:"))
-		err = errors.Join(err, fmt.Errorf("       type %v struct {", element.Type().Name()))
-		err = errors.Join(err, fmt.Errorf("         components.MainMenu"))
-		err = errors.Join(err, fmt.Errorf("         "))
-		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:%v;top:%v\"`", componentMenuData.tagData.Func, componentMenuData.tagData.Left, componentMenuData.tagData.Top))
+		err = errors.Join(err, fmt.Errorf("         MenuData *[]MenuOptions `wasmPanel:\"type:mainMenu;func:%v;left:10px;top:10px\"`", componentMenuData.tagData.Func))
 		err = errors.Join(err, fmt.Errorf("       }"))
 		err = errors.Join(err, fmt.Errorf("       func (e *%v) InitMenu() {", parentElement.Type().Name()))
 		err = errors.Join(err, fmt.Errorf("         e.MenuData = getMenuData()"))
@@ -437,21 +566,21 @@ func (e *Components) processMainMenu(parentElementPtr, parentElement, element re
 		componentMenuData.tagData.Columns = "2"
 	}
 
-	contextMenu := MainMenu{}
-	contextMenu.Menu(menuOptions)
-	contextMenu.FixedMenu(int(x), int(y))
-	contextMenu.Css("menuTitle", componentMenuData.tagData.Label)
-	contextMenu.Css("gridGridTemplateColumns", fmt.Sprintf("repeat(%v, 1fr)", componentMenuData.tagData.Columns))
-	contextMenu.Init()
+	mainMenu := MainMenu{}
+	mainMenu.Menu(menuOptions)
+	mainMenu.FixedMenu(componentMenuData.tagData.Left, componentMenuData.tagData.Top)
+	mainMenu.Css("menuTitle", componentMenuData.tagData.Label)
+	mainMenu.Css("gridGridTemplateColumns", fmt.Sprintf("repeat(%v, 1fr)", componentMenuData.tagData.Columns))
+	mainMenu.Init()
 
 	menuElement := parentElement.FieldByName("MainMenu")
 	if !menuElement.CanSet() {
-		err = fmt.Errorf("error: component %v has an embed `components.Menu` correctily", element.Type().Name())
+		err = fmt.Errorf("error: component %v has an embed `components.ContextMenu` correctily", element.Type().Name())
 		err = errors.Join(err, fmt.Errorf("         However, there was a problem when transferring the menu created to the existing component"))
 		return
 	}
 
-	menuElement.Set(reflect.ValueOf(contextMenu))
+	menuElement.Set(reflect.ValueOf(mainMenu))
 	return
 }
 
@@ -5313,7 +5442,13 @@ func (e *Components) processHeaderTextAddDragListener(dragIcon *html.TagDiv) {
 func (e *Components) processHeaderTextAddMinimizeListener(minimizeIcon *html.TagDiv) {
 	minimizeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		args[0].Call("stopPropagation")
-		e.panelFather.Get().Get("classList").Call("toggle", "open")
+
+		display := "none"
+		if e.minimized {
+			display = "block"
+		}
+		e.minimized = !e.minimized
+		e.panelBody.AddStyle("display", display)
 
 		return nil
 	}))
@@ -5344,7 +5479,6 @@ func (e *Components) processHeaderText(element reflect.Value, defaultText string
 
 	text, ok = element.Interface().(string)
 	if ok && text != "" {
-
 		defaultText = text
 	}
 
@@ -5358,16 +5492,21 @@ func (e *Components) processHeaderText(element reflect.Value, defaultText string
 	closeIcon = factoryBrowser.NewTagDiv().AddStyle("cursor", "pointer").Html("⊗")
 	dragIcon = factoryBrowser.NewTagDiv().AddStyle("cursor", "move").Html("◇")
 	minimizeIcon = factoryBrowser.NewTagDiv().AddStyle("cursor", "pointer").Html("▾")
-	father.Append(
-		factoryBrowser.NewTagDiv().Class("panelHeader").Append(
-			factoryBrowser.NewTagDiv().Class("headerText").Html(defaultText),
-			dragIcon,
-			factoryBrowser.NewTagDiv().Html("&nbsp;"),
-			minimizeIcon,
-			factoryBrowser.NewTagDiv().Html("&nbsp;"),
-			closeIcon,
-		),
+	panelHeader := factoryBrowser.NewTagDiv().Class("panelHeader").Append(
+		factoryBrowser.NewTagDiv().Class("headerText").Html(defaultText),
+		dragIcon,
+		factoryBrowser.NewTagDiv().Html("&nbsp;"),
+		minimizeIcon,
+		factoryBrowser.NewTagDiv().Html("&nbsp;"),
+		closeIcon,
 	)
+	father.Append(
+		panelHeader,
+	)
+
+	for k := range e.setupPanelHeader {
+		panelHeader.AddStyle(k, e.setupPanelHeader[k])
+	}
 
 	return
 }

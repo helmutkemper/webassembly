@@ -214,11 +214,11 @@ type ComponentControlPanel struct {
 	components.ContextMenu
 	components.MainMenu
 
-	Panel   *ControlPanel  `wasmPanel:"type:panel;top:100;left:200"`
+	Panel   *ControlPanel  `wasmPanel:"type:panel;top:100px;left:200px"`
 	Context *[]MenuOptions `wasmPanel:"type:contextMenu;func:InitMenu;columns:4"`
 	Menu    *[]MenuOptions `wasmPanel:"type:mainMenu;func:InitMainMenu;label:Main Menu;top:200;left:5;columns:3"`
 
-	breadCrumbsRange *html.TagInputRange
+	breadCrumbsRange *html.TagInputNumber
 }
 
 func (e *ComponentControlPanel) GetRangeValue() (value float64) {
@@ -228,6 +228,7 @@ func (e *ComponentControlPanel) GetRangeValue() (value float64) {
 func (e *ComponentControlPanel) InitMenu() {
 	e.Context = getMenuComplex()
 }
+
 func (e *ComponentControlPanel) InitMainMenu() {
 	e.Menu = getMenuComplex()
 }
@@ -235,7 +236,7 @@ func (e *ComponentControlPanel) InitMainMenu() {
 func (e *ComponentControlPanel) Init() (panel *html.TagDiv, err error) {
 	panel, err = e.Components.Init(e)
 
-	e.breadCrumbsRange = controlPanel.Panel.Body.BoatAnimation.Dragging.TagRange
+	e.breadCrumbsRange = controlPanel.Panel.Body.BoatAnimation.Dragging.TagNumber
 	return
 }
 
@@ -252,21 +253,55 @@ type BoatAdjust struct {
 	components.Board
 	components.ContextMenu
 
-	Dragging *DraggingEffect `wasmPanel:"type:range;label:time (s)"`
-	ContMenu *[]MenuOptions  `wasmPanel:"type:contextMenu;func:InitMenu;columns:3"`
+	Dragging *DraggingEffect   `wasmPanel:"type:range;label:time (s)"`
+	Start    *EasingTweenStart `wasmPanel:"type:button;label:start easing tween"`
+	ContMenu *[]MenuOptions    `wasmPanel:"type:contextMenu;func:InitMenu;columns:3"`
 }
 
 func (e *BoatAdjust) InitMenu() {
 	e.ContMenu = getMenuSimple()
 }
 
+type EasingTweenStart struct {
+	components.Button
+
+	Label      string        `wasmPanel:"type:value;label:Start"`
+	RunCommand *OnClickEvent `wasmPanel:"type:listener;event:click;func:OnClickEvent"`
+}
+
+func (e *EasingTweenStart) Init() {
+	e.Value("Initialized")
+}
+
+type OnClickEvent struct {
+	IsTrusted bool   `wasmGet:"isTrusted"`
+	Value     string `wasmGet:"value"`
+}
+
+func (e *OnClickEvent) OnClickEvent(event OnClickEvent, controlPanel *ControlPanel) {
+	ref := controlPanel.Body.BoatAnimation.Dragging.TagNumber
+
+	var value = ref.GetValue()
+	runAnimation(value)
+}
+
 type DraggingEffect struct {
 	components.Range
 
-	TagRange   *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
-	TagNumber  *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
-	Time       float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:15"`
-	TimeChange *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+	TagRange    *html.TagInputRange  `wasmPanel:"type:inputTagRange"`
+	TagNumber   *html.TagInputNumber `wasmPanel:"type:inputTagNumber"`
+	Time        float64              `wasmPanel:"type:value;min:2;max:50;step:1;default:15"`
+	TimeChange  *OnChangeEvent       `wasmPanel:"type:listener;event:change;func:OnChangeEvent"`
+	RangeChange *OnChangeEvent       `wasmPanel:"type:listener;event:input;func:OnInputEvent"`
+}
+
+func (e *DraggingEffect) MathematicalFormula(min, max, value float64) (result float64) {
+	return (max - value) + min
+}
+
+func (e *DraggingEffect) Init() {
+	//e.TagNumber.Value(e.MathematicalFormula(2, 50, e.TagRange.GetValue()))
+	e.TagRange.Value(e.MathematicalFormula(2, 50, e.TagNumber.GetValue()))
 }
 
 type OnChangeEvent struct {
@@ -278,9 +313,27 @@ type OnChangeEvent struct {
 }
 
 func (e *OnChangeEvent) OnChangeEvent(event OnChangeEvent, controlPanel *ControlPanel) {
-	var value = event.Value
+	ref := controlPanel.Body.BoatAnimation.Dragging
+	var value float64
+
+	switch event.Type {
+	case "range":
+		value = ref.MathematicalFormula(event.Min, event.Max, event.Value)
+	case "number":
+		value = event.Value
+	}
 
 	runAnimation(value)
+}
+
+func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, controlPanel *ControlPanel) {
+	ref := controlPanel.Body.BoatAnimation.Dragging
+	switch event.Type {
+	case "range":
+		ref.TagNumber.Value(ref.MathematicalFormula(event.Min, event.Max, ref.TagRange.GetValue()))
+	case "number":
+		ref.TagRange.Value(ref.MathematicalFormula(event.Min, event.Max, ref.TagNumber.GetValue()))
+	}
 }
 
 func runAnimation(value float64) {

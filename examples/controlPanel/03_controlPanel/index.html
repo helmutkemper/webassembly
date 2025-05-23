@@ -98,31 +98,29 @@
     }
 
     .panel {
-      width: var(--panel-width);
-      border-radius: var(--panel-border-radius);
-      box-shadow: var(--panel-box-shadow);
-      border: 1px solid var(--panel-border);
-      padding: 10px;
-      background-color: var(--panel-bg);
-      z-index: 1000;
-      user-select: none;
-      max-height: 90vh;
-      overflow-y: auto;
-      position: fixed;
-      top: 0px;
-      left: 0px;
-      margin: 10px;
+      /*width: var(--panel-width);*/
+      /*border-radius: var(--panel-border-radius);*/
+      /*box-shadow: var(--panel-box-shadow);*/
+      /*border: 1px solid var(--panel-border);*/
+      /*padding: 10px;*/
+      /*background-color: var(--panel-bg);*/
+      /*max-height: 90vh;*/
+      /*!*overflow-y: auto;*!*/
+      /*position: fixed;*/
+      /*top: 0px;*/
+      /*left: 0px;*/
+      /*margin: 10px;*/
     }
 
     .panel .panelBody {
-      display: none;
-      max-height: 90vh; /* Define a altura máxima */
-      overflow-y: auto; /* Adiciona rolagem vertical */
-      padding: 0 10px; /* Padding lateral para espaçamento */
-      box-sizing: border-box;
-      border: none; /* Remove as bordas */
-      scrollbar-width: thin; /* Para Firefox */
-      scrollbar-color: var(--scrollbar-bg) transparent; /* Para Firefox */
+      /*display: none;*/
+      /*max-height: 90vh; !* Define a altura máxima *!*/
+      /*!*overflow-y: auto; !* Adiciona rolagem vertical *!*!*/
+      /*padding: 0 10px; !* Padding lateral para espaçamento *!*/
+      /*box-sizing: border-box;*/
+      /*border: none; !* Remove as bordas *!*/
+      /*scrollbar-width: thin; !* Para Firefox *!*/
+      /*scrollbar-color: var(--scrollbar-bg) transparent; !* Para Firefox *!*/
     }
 
     .panelBody::-webkit-scrollbar {
@@ -145,14 +143,14 @@
     }
 
     .panel.open .panelBody {
-      display: block;
+      /*display: block;*/
     }
 
     .panel .panelHeader {
-      display: flex;
-      align-items: center;
-      /*border-bottom: 1px solid #ccc;*/
-      padding-bottom: 5px;
+      /*display: flex;*/
+      /*align-items: center;*/
+      /*!*border-bottom: 1px solid #ccc;*!*/
+      /*padding-bottom: 5px;*/
     }
 
     .panel .panelHeader .headerText {
@@ -162,7 +160,7 @@
     }
 
     .panelContent {
-      display: none;
+      /*display: none;*/
     }
 
     .panel.open .panelContent {

@@ -278,7 +278,7 @@ type OnClickEvent struct {
 	Value     string `wasmGet:"value"`
 }
 
-func (e *OnClickEvent) OnClickEvent(event OnClickEvent, controlPanel *ControlPanel) {
+func (e *OnClickEvent) OnClickEvent(_ OnClickEvent, controlPanel *ControlPanel) {
 	ref := controlPanel.Body.BoatAnimation.Dragging.TagNumber
 
 	var value = ref.GetValue()

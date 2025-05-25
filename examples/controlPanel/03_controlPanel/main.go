@@ -247,6 +247,26 @@ type ControlPanel struct {
 
 type Body struct {
 	BoatAnimation *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	A             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	B             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	C             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	D             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	E             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	F             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	G             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	H             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	I             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	J             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	K             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	L             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	M             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	N             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	O             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	P             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	Q             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	R             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	S             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
+	T             *BoatAdjust `wasmPanel:"type:component;label:Easing tween time"`
 }
 
 type BoatAdjust struct {

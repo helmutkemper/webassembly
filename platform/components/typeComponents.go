@@ -28,9 +28,10 @@ type searchStructRet struct {
 }
 
 type Components struct {
-	ref         interface{}
-	panelFather *html.TagDiv
-	panelBody   *html.TagDiv
+	ref                interface{}
+	panelFather        *html.TagDiv
+	panelFatherContent *html.TagDiv
+	panelBody          *html.TagDiv
 
 	setupPanel       map[string]string
 	setupBody        map[string]string
@@ -102,6 +103,10 @@ func (e *Components) setupBodyInit() {
 		e.setupBody["maxHeight"] = "90vh"
 	}
 
+	if _, found := e.setupBody["flex"]; !found {
+		e.setupBody["flex"] = "1 1 auto"
+	}
+
 	if _, found := e.setupBody["overflowY"]; !found {
 		e.setupBody["overflowY"] = "auto"
 	}
@@ -147,7 +152,7 @@ func (e *Components) setupPanelInit() {
 	}
 
 	if _, found := e.setupPanel["boxShadow"]; !found {
-		e.setupPanel["boxShadow"] = "0 8px 16px rgba(0, 0, 0, 0.2)"
+		e.setupPanel["boxShadow"] = "0 3px 6px rgba(0, 0, 0, 0.3)"
 	}
 
 	if _, found := e.setupPanel["border"]; !found {
@@ -163,11 +168,15 @@ func (e *Components) setupPanelInit() {
 	}
 
 	if _, found := e.setupPanel["maxHeight"]; !found {
-		e.setupPanel["maxHeight"] = "90vh"
+		e.setupPanel["maxHeight"] = "80vh"
+	}
+
+	if _, found := e.setupPanel["flex"]; !found {
+		e.setupPanel["flex"] = "0 0 auto"
 	}
 
 	if _, found := e.setupPanel["overflowY"]; !found {
-		e.setupPanel["overflowY"] = "auto"
+		e.setupPanel["overflowY"] = "none"
 	}
 
 	if _, found := e.setupPanel["position"]; !found {
@@ -176,6 +185,14 @@ func (e *Components) setupPanelInit() {
 
 	if _, found := e.setupPanel["margin"]; !found {
 		e.setupPanel["margin"] = "10px"
+	}
+
+	if _, found := e.setupPanel["flexDirection"]; !found {
+		e.setupPanel["flexDirection"] = "column"
+	}
+
+	if _, found := e.setupPanel["display"]; !found {
+		e.setupPanel["display"] = "flex"
 	}
 
 	//if _, found := e.setupPanel[""]; !found {
@@ -201,6 +218,21 @@ func (e *Components) applyCss() {
 	for k := range e.setupBody {
 		e.panelBody.AddStyle(k, e.setupBody[k])
 	}
+
+	head := new(html.TagHead).
+		Css(".panel .compCel .inputNumber::-webkit-outer-spin-button, "+
+			".panel .compCel .inputNumber::-webkit-inner-spin-button", "-webkit-appearance", "none").
+		Css(".panel .compCel .inputNumber::-webkit-outer-spin-button, "+
+			".panel .compCel .inputNumber::-webkit-inner-spin-button", "margin", 0).
+		Css(".panel .compCel .inputNumber", "-moz-appearance", "textfield").
+		Css(".panelBody::-webkit-scrollbar-thumb:hover", "background-color", "#555").
+		Css(".panelBody::-webkit-scrollbar-thumb", "background-color", "#888").        // Bar color
+		Css(".panelBody::-webkit-scrollbar-thumb", "border-radius", "10px").           // Rounded edges
+		Css(".panelBody::-webkit-scrollbar-thumb", "border", "2px solid transparent"). // Spacing
+		Css(".panelBody::-webkit-scrollbar-thumb", "background-clip", "content-box").  // Adjusts the background
+		Css(".panelBody::-webkit-scrollbar-track", "background", "transparent").
+		Css(".panelBody::-webkit-scrollbar", "width", "8px")
+	head.CssAppend()
 }
 
 func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
@@ -239,6 +271,8 @@ func (e *Components) createDivsFather() {
 		e.panelFather.AddStyle("zIndex", stage.GetNextZIndex())
 		return nil
 	}))
+	e.panelFatherContent = factoryBrowser.NewTagDiv()
+	e.panelFather.Append(e.panelFatherContent)
 
 	e.panelBody = factoryBrowser.NewTagDiv().Class("panelBody")
 	e.panelBody.AddStyle("display", "block")
@@ -279,7 +313,7 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 
 				switch tagData.Type {
 				case "headerText":
-					dragIcon, minimizeIcon, closeIcon := e.processHeaderText(fieldVal, tagData.Label, e.panelFather)
+					dragIcon, minimizeIcon, closeIcon := e.processHeaderText(fieldVal, tagData.Label, e.panelFatherContent)
 					e.processHeaderTextAddDragListener(dragIcon)
 					e.processHeaderTextAddMinimizeListener(minimizeIcon)
 					e.processHeaderTextAddCloseListener(closeIcon)
@@ -316,7 +350,11 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 				case "compCel":
 					// ignore
 				case "component":
-					divCompCel := factoryBrowser.NewTagDiv().Class("compCel")
+					divCompCel := factoryBrowser.NewTagDiv().
+						Class("compCel")
+					//AddStyle("display","flex").
+					//AddStyle("align-items","center").
+					//AddStyle("margin","5px 0")
 
 					err = e.processComponent(element, fieldVal, fieldTyp.Type, tagData, divCompCel)
 					if err != nil {
@@ -326,7 +364,14 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 						return
 					}
 
-					panelCel := factoryBrowser.NewTagDiv().Class("panelCel")
+					panelCel := factoryBrowser.NewTagDiv().
+						Class("panelCel").
+						AddStyle("borderRadius", "10px").
+						AddStyle("boxShadow", "0 3px 6px rgba(0, 0, 0, 0.3)").
+						AddStyle("border", "1px solid #aaa").
+						AddStyle("margin", "10px 0").
+						AddStyle("padding", "10px").
+						AddStyle("backgroundColor", "#f9f9f9")
 					closeIcon := e.processLabelCel(tagData.Label, panelCel)
 					e.processLabelCelAddCloseListener(closeIcon)
 
@@ -357,7 +402,7 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 				switch tagData.Type {
 				case "panel":
 					// Put the context menu on the main panel
-					if err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, e.panelFather); err != nil {
+					if err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, e.panelFatherContent); err != nil {
 						return
 					}
 
@@ -801,7 +846,7 @@ func (e *Components) processComponent(parentElement, element reflect.Value, type
 	//}
 
 	for i := 0; i != element.NumField(); i += 1 {
-		divComponent := factoryBrowser.NewTagDiv().Class("component").AddStyle("pointer-events", "auto")
+		divComponent := factoryBrowser.NewTagDiv().Class("component").AddStyle("pointerEvents", "auto")
 
 		var fieldTyp reflect.StructField
 		fieldVal := element.Field(i)
@@ -1252,10 +1297,18 @@ func (e *Components) processLabelCel(label string, father *html.TagDiv) (closeIc
 
 	closeIcon = factoryBrowser.NewTagDiv().Class("closeIcon").Text("ˇ")
 	father.Append(
-		factoryBrowser.NewTagDiv().Class("labelCel").Append(
-			factoryBrowser.NewTagDiv().Class("labelText").Text(label),
-			closeIcon,
-		),
+		factoryBrowser.NewTagDiv().Class("labelCel").
+			AddStyle("display", "flex").
+			AddStyle("justify-content", "space-between").
+			AddStyle("align-items", "center").
+			AddStyle("border-bottom", "1px solid #ddd").
+			AddStyle("padding-bottom", 0).
+			AddStyle("margin-bottom", 0).
+			Append(
+				factoryBrowser.NewTagDiv().Class("labelText").
+					AddStyle("font-weight", "bold").Text(label),
+				closeIcon,
+			),
 	)
 
 	return
@@ -1705,8 +1758,12 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 	elementOriginal := element
 	rangeComponent := Range{}
 
-	inputRange := factoryBrowser.NewTagInputRange().Class("inputRange")
-	inputNumber := factoryBrowser.NewTagInputNumber().Class("inputNumber") //.Min(eMin).Max(eMax).Step(eStep).Value(rangeVal).ListenerAdd(generic.KEventChange, captureData, listenerFunc).ListenerDebug(true)
+	inputRange := factoryBrowser.NewTagInputRange().Class("inputRange").
+		AddStyle("flex", 2).
+		AddStyle("margin", "0 10px") // todo: remover daqui
+	inputNumber := factoryBrowser.NewTagInputNumber().Class("inputNumber").
+		AddStyle("width", "80px").
+		AddStyle("textAlign", "center") // todo: remover daqui
 
 	// Initializes the pointer if it is nil
 	if element.IsNil() {
@@ -4122,7 +4179,8 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 	elementOriginal := element
 	buttonComponent := Button{}
 
-	inputButton := factoryBrowser.NewTagInputButton().Class("inputButton") // .Value("-- ok --")
+	inputButton := factoryBrowser.NewTagInputButton().
+		Class("inputButton")
 
 	// Initializes the pointer if it is nil
 	if element.IsNil() {
@@ -5493,7 +5551,12 @@ func (e *Components) processHeaderText(element reflect.Value, defaultText string
 	dragIcon = factoryBrowser.NewTagDiv().AddStyle("cursor", "move").Html("◇")
 	minimizeIcon = factoryBrowser.NewTagDiv().AddStyle("cursor", "pointer").Html("▾")
 	panelHeader := factoryBrowser.NewTagDiv().Class("panelHeader").Append(
-		factoryBrowser.NewTagDiv().Class("headerText").Html(defaultText),
+		factoryBrowser.NewTagDiv().
+			Class("headerText").
+			AddStyle("fontWeight", "bold").
+			AddStyle("flex", 1).
+			//AddStyle("textAlign", "center").
+			Html(defaultText),
 		dragIcon,
 		factoryBrowser.NewTagDiv().Html("&nbsp;"),
 		minimizeIcon,

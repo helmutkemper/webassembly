@@ -98,6 +98,28 @@
     }
 
     .panel {
+      /*max-height: 80vh;            !* Tamanho máximo do container *!*/
+      /*border: 1px solid #ccc;*/
+      /*box-sizing: border-box;*/
+
+      /*display: flex;*/
+      /*flex-direction: column;*/
+
+      /* NÃO usar overflow aqui! */
+    }
+
+    /*.panelBody {*/
+    /*  flex: 1 1 auto;              !* Ocupa o restante da altura *!*/
+    /*  overflow-y: auto;           !* Só aqui a barra de rolagem *!*/
+    /*  padding-right: 10px;       !* Opcional: espaço para não colar no scroll *!*/
+    /*  box-sizing: border-box;*/
+
+    /*  !* Ajuste estético opcional *!*/
+    /*  margin-bottom: 10px;        !* Espaço inferior *!*/
+    /*}*/
+
+
+    .panel {
       /*width: var(--panel-width);*/
       /*border-radius: var(--panel-border-radius);*/
       /*box-shadow: var(--panel-box-shadow);*/
@@ -113,34 +135,34 @@
     }
 
     .panel .panelBody {
-      /*display: none;*/
-      /*max-height: 90vh; !* Define a altura máxima *!*/
-      /*!*overflow-y: auto; !* Adiciona rolagem vertical *!*!*/
-      /*padding: 0 10px; !* Padding lateral para espaçamento *!*/
-      /*box-sizing: border-box;*/
-      /*border: none; !* Remove as bordas *!*/
-      /*scrollbar-width: thin; !* Para Firefox *!*/
-      /*scrollbar-color: var(--scrollbar-bg) transparent; !* Para Firefox *!*/
+      display: none;
+      max-height: 90vh; /* Define a altura máxima */
+      /*overflow-y: auto; !* Adiciona rolagem vertical *!*/
+      padding: 0 10px; /* Padding lateral para espaçamento */
+      box-sizing: border-box;
+      border: none; /* Remove as bordas */
+      scrollbar-width: thin; /* Para Firefox */
+      scrollbar-color: var(--scrollbar-bg) transparent; /* Para Firefox */
     }
 
-    .panelBody::-webkit-scrollbar {
-      width: 8px; /* Largura da barra de rolagem */
-    }
+    /*.panelBody::-webkit-scrollbar {*/
+    /*  width: 8px; !* Largura da barra de rolagem *!*/
+    /*}*/
 
-    .panelBody::-webkit-scrollbar-track {
-      background: transparent; /* Fundo transparente */
-    }
+    /*.panelBody::-webkit-scrollbar-track {*/
+    /*  background: transparent; !* Fundo transparente *!*/
+    /*}*/
 
-    .panelBody::-webkit-scrollbar-thumb {
-      background-color: var(--scrollbar-bg); /* Cor da barra */
-      border-radius: 10px; /* Bordas arredondadas */
-      border: 2px solid transparent; /* Espaçamento */
-      background-clip: content-box; /* Ajusta o fundo */
-    }
+    /*.panelBody::-webkit-scrollbar-thumb {*/
+    /*  background-color: var(--scrollbar-bg); !* Cor da barra *!*/
+    /*  border-radius: 10px; !* Bordas arredondadas *!*/
+    /*  border: 2px solid transparent; !* Espaçamento *!*/
+    /*  background-clip: content-box; !* Ajusta o fundo *!*/
+    /*}*/
 
-    .panelBody::-webkit-scrollbar-thumb:hover {
-      background-color: var(--scrollbar-thumb); /* Cor ao passar o mouse */
-    }
+    /*.panelBody::-webkit-scrollbar-thumb:hover {*/
+    /*  background-color: var(--scrollbar-thumb); !* Cor ao passar o mouse *!*/
+    /*}*/
 
     .panel.open .panelBody {
       /*display: block;*/
@@ -153,37 +175,37 @@
       /*padding-bottom: 5px;*/
     }
 
-    .panel .panelHeader .headerText {
-      font-weight: bold;
-      flex: 1;
-      /*text-align: center;*/
-    }
+    /*.panel .panelHeader .headerText {*/
+    /*  font-weight: bold;*/
+    /*  flex: 1;*/
+    /*  !*text-align: center;*!*/
+    /*}*/
 
     .panelContent {
       /*display: none;*/
     }
 
     .panel.open .panelContent {
-      display: block;
+      /*display: block;*/
     }
 
     .panel .panelCel {
-      border-radius: var(--cel-border-radius);
-      box-shadow: var(--cel-box-shadow);
-      border: 1px solid var(--comp-border);
-      margin: 10px 0;
-      padding: 10px;
-      background-color: var(--comp-bg);
+      /*border-radius: var(--cel-border-radius);*/
+      /*box-shadow: var(--cel-box-shadow);*/
+      /*border: 1px solid var(--comp-border);*/
+      /*margin: 10px 0;*/
+      /*padding: 10px;*/
+      /*background-color: var(--comp-bg);*/
     }
 
-    .panel .labelCel {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 0px;
-      margin-bottom: 0px;
-    }
+    /*.panel .labelCel {*/
+    /*  display: flex;*/
+    /*  justify-content: space-between;*/
+    /*  align-items: center;*/
+    /*  border-bottom: 1px solid #ddd;*/
+    /*  padding-bottom: 0px;*/
+    /*  margin-bottom: 0px;*/
+    /*}*/
 
     .panel .labelCel.open {
       border-bottom: 1px solid #ddd;
@@ -193,13 +215,13 @@
       border-bottom: 0px solid #ddd;
     }
 
-    .panel .labelText {
-      font-weight: bold;
-    }
+    /*.panel .labelText {*/
+    /*  font-weight: bold;*/
+    /*}*/
 
-    .panel .closeIcon {
-      cursor: pointer;
-    }
+    /*.panel .closeIcon {*/
+    /*  cursor: pointer;*/
+    /*}*/
 
     .panel .compCel .component {
       display: flex;
@@ -260,33 +282,24 @@
 
 
 
-    .panel .compCel .inputRange {
-      flex: 2;
-      margin: 0 10px;
-    }
 
-    .panel .compCel .inputNumber {
-      width: 80px;
-    }
 
-    .panel .compCel .inputNumber {
-      text-align: center;
-    }
+
+
+
 
     /* Remover as setas de controle no Chrome, Safari, Edge e Opera */
-    .panel .compCel .inputNumber::-webkit-outer-spin-button,
-    .panel .compCel .inputNumber::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+    /*.panel .compCel .inputNumber::-webkit-outer-spin-button, .panel .compCel .inputNumber::-webkit-inner-spin-button {*/
+    /*  -webkit-appearance: none;*/
+    /*  margin: 0;*/
+    /*}*/
 
     /* Remover as setas de controle no Firefox */
-    .panel .compCel .inputNumber {
-      -moz-appearance: textfield;
-    }
+    /*.panel .compCel .inputNumber {*/
+    /*  -moz-appearance: textfield;*/
+    /*}*/
 
-    .panel .compCel .inputButton,
-    .panel .compCel .inputSelect {
+    .panel .compCel .inputButton, .panel .compCel .inputSelect {
       width: auto;
       margin-left: 10px;
     }

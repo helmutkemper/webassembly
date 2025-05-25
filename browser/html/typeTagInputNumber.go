@@ -324,6 +324,11 @@ func (e *TagInputNumber) Class(class ...string) (ref *TagInputNumber) {
 	return e
 }
 
+func (e *TagInputNumber) AddStyle(key string, value any) (ref *TagInputNumber) {
+	e.selfElement.Get("style").Set(key, value)
+	return e
+}
+
 // ContentEditable
 //
 // English:

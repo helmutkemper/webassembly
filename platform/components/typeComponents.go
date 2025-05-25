@@ -352,9 +352,6 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 				case "component":
 					divCompCel := factoryBrowser.NewTagDiv().
 						Class("compCel")
-					//AddStyle("display","flex").
-					//AddStyle("align-items","center").
-					//AddStyle("margin","5px 0")
 
 					err = e.processComponent(element, fieldVal, fieldTyp.Type, tagData, divCompCel)
 					if err != nil {
@@ -846,7 +843,11 @@ func (e *Components) processComponent(parentElement, element reflect.Value, type
 	//}
 
 	for i := 0; i != element.NumField(); i += 1 {
-		divComponent := factoryBrowser.NewTagDiv().Class("component").AddStyle("pointerEvents", "auto")
+		divComponent := factoryBrowser.NewTagDiv().Class("component").
+			AddStyle("pointerEvents", "auto").
+			AddStyle("display", "flex").
+			AddStyle("align-items", "center").
+			AddStyle("margin", "5px 0")
 
 		var fieldTyp reflect.StructField
 		fieldVal := element.Field(i)
@@ -1728,7 +1729,7 @@ func (e *Components) processComponentOsm(element reflect.Value, tagDataFather *t
 	osmComponent.__canvasTag.Get().Call("addEventListener", "mousedown", js.FuncOf(osmComponent.onMouseDown))
 
 	father.Append(
-		//factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		//factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputOsm,
 	)
 
@@ -1987,7 +1988,7 @@ func (e *Components) processComponentRange(element reflect.Value, tagDataFather 
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputRange,
 		inputNumber,
 	)
@@ -2152,7 +2153,7 @@ func (e *Components) processComponentColor(element reflect.Value, tagDataFather 
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputColor,
 	)
 
@@ -2316,7 +2317,7 @@ func (e *Components) processComponentDate(element reflect.Value, tagDataFather *
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputDate,
 	)
 
@@ -2482,7 +2483,7 @@ func (e *Components) processComponentText(element reflect.Value, tagDataFather *
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputText,
 	)
 
@@ -2806,7 +2807,7 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 	}
 
 	father.Append(
-		//factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		//factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		tagCanvas,
 	)
 
@@ -2987,7 +2988,7 @@ func (e *Components) processComponentUrl(element reflect.Value, tagDataFather *t
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputUrl,
 	)
 
@@ -3153,7 +3154,7 @@ func (e *Components) processComponentTel(element reflect.Value, tagDataFather *t
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputTel,
 	)
 
@@ -3319,7 +3320,7 @@ func (e *Components) processComponentMail(element reflect.Value, tagDataFather *
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputMail,
 	)
 
@@ -3489,7 +3490,7 @@ func (e *Components) processComponentTime(element reflect.Value, tagDataFather *
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputTime,
 	)
 
@@ -3653,7 +3654,7 @@ func (e *Components) processComponentMonth(element reflect.Value, tagDataFather 
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputMonth,
 	)
 
@@ -3817,7 +3818,7 @@ func (e *Components) processComponentWeek(element reflect.Value, tagDataFather *
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputWeek,
 	)
 
@@ -3983,7 +3984,7 @@ func (e *Components) processComponentPassword(element reflect.Value, tagDataFath
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputPassword,
 	)
 
@@ -4149,7 +4150,7 @@ func (e *Components) processComponentTextArea(element reflect.Value, tagDataFath
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagDataFather.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagDataFather.Label),
 		inputTextArea,
 	)
 
@@ -4331,7 +4332,7 @@ func (e *Components) processComponentButton(element reflect.Value, tagData *tag,
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagData.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagData.Label),
 		inputButton,
 	)
 
@@ -4724,7 +4725,7 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagData.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagData.Label),
 		inputSelect,
 	)
 
@@ -4996,7 +4997,7 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 							sliceValue.Set(reflect.Append(sliceValue, newElem))
 
 							inputDivRadio.Append(
-								factoryBrowser.NewTagSpan().Append(inputLabel),
+								factoryBrowser.NewTagSpan().AddStyle("flex", 1).Append(inputLabel),
 							)
 						}
 					}
@@ -5077,7 +5078,7 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 						inputLabel.Text(label).Append(inputRadio)
 
 						inputDivRadio.Append(
-							factoryBrowser.NewTagSpan().Append(inputLabel),
+							factoryBrowser.NewTagSpan().AddStyle("flex", 1).Append(inputLabel),
 						)
 
 						//inputSelect.NewOption(label, value, disabled, selected)
@@ -5089,7 +5090,7 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagData.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagData.Label),
 		inputDivRadio,
 	)
 
@@ -5361,7 +5362,7 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 							sliceValue.Set(reflect.Append(sliceValue, newElem))
 
 							inputDivCheckbox.Append(
-								factoryBrowser.NewTagSpan().Append(inputLabel),
+								factoryBrowser.NewTagSpan().AddStyle("flex", 1).Append(inputLabel),
 							)
 						}
 					}
@@ -5442,7 +5443,7 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 						inputLabel.Text(label).Append(inputCheckbox)
 
 						inputDivCheckbox.Append(
-							factoryBrowser.NewTagSpan().Append(inputLabel),
+							factoryBrowser.NewTagSpan().AddStyle("flex", 1).Append(inputLabel),
 						)
 
 						//inputSelect.NewOption(label, value, disabled, selected)
@@ -5454,7 +5455,7 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 	}
 
 	father.Append(
-		factoryBrowser.NewTagSpan().Text(tagData.Label),
+		factoryBrowser.NewTagSpan().AddStyle("flex", 1).Text(tagData.Label),
 		inputDivCheckbox,
 	)
 

@@ -1297,6 +1297,10 @@ func (e *Components) processLabelCel(label string, father *html.TagDiv) (closeIc
 	// </div>
 
 	closeIcon = factoryBrowser.NewTagDiv().Class("closeIcon").Text("ˇ")
+	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		//log.Printf("close")
+		return nil
+	}))
 	father.Append(
 		factoryBrowser.NewTagDiv().Class("labelCel").
 			AddStyle("display", "flex").
@@ -1569,7 +1573,7 @@ func (e *Components) processComponentOsm(element reflect.Value, tagDataFather *t
 					latitude = defaultValue
 				}
 
-				log.Printf("latitude: %v", latitude)
+				//log.Printf("latitude: %v", latitude)
 
 			// Checks if the value tag was created
 			case "longitude":
@@ -1598,7 +1602,7 @@ func (e *Components) processComponentOsm(element reflect.Value, tagDataFather *t
 					longitude = defaultValue
 				}
 
-				log.Printf("longitude: %v", longitude)
+				//log.Printf("longitude: %v", longitude)
 
 			case "zoom":
 
@@ -1647,8 +1651,8 @@ func (e *Components) processComponentOsm(element reflect.Value, tagDataFather *t
 					//	tagCanvas = new(html.TagCanvas)
 					//}
 
-					log.Printf("width: %v", width)
-					log.Printf("height: %v", height)
+					//log.Printf("width: %v", width)
+					//log.Printf("height: %v", height)
 					osmComponent.__canvasTag.Init(int(width), int(height))
 					osmComponent.__canvasTag.Id(mathUtil.GetUID())
 
@@ -2561,6 +2565,7 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 			switch tagDataInternal.Type {
 
 			case "disableBorder":
+
 				if !fieldVal.IsValid() {
 
 				} else if disableBorder, ok := fieldVal.Interface().(bool); ok {
@@ -2619,7 +2624,7 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 
 			case "level":
 
-				if !fieldVal.IsValid() {
+				if !fieldVal.IsValid() || fieldVal.Int() == 0 {
 					qrCodeRecoveryLevel = 2
 				} else if level, ok := fieldVal.Interface().(int); ok {
 
@@ -2700,6 +2705,9 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 					qrCodeSize = int(size)
 				}
 
+				if qrCodeSize == 0 {
+					qrCodeSize = 298
+				}
 				tagCanvas.Init(qrCodeSize, qrCodeSize)
 
 				if qrCodeRecoveryLevel == 0 && tagDataInternal.Level != "" {
@@ -3184,7 +3192,13 @@ func (e *Components) processComponentMail(element reflect.Value, tagDataFather *
 	elementOriginal := element
 	mailComponent := Mail{}
 
-	inputMail := factoryBrowser.NewTagInputEMail().Class("component .component-mail")
+	inputMail := factoryBrowser.NewTagInputEMail().
+		Class("component-mail").
+		AddStyle("display", "flex").
+		AddStyle("justifyContent", "space-between").
+		AddStyle("alignItems", "center").
+		AddStyle("margin-left", "10px").
+		AddStyle("width", "calc(60% - 20px)")
 
 	// Initializes the pointer if it is nil
 	if element.IsNil() {

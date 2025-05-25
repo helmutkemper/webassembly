@@ -247,7 +247,6 @@ func (e *TagHead) CssAppend() (ref *TagHead) {
 		css += "}\n"
 	}
 	style.Set("innerHTML", css)
-	log.Printf("css: %v", css)
 
 	document.Get("head").Call("appendChild", style)
 	return e

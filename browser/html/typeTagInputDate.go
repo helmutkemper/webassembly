@@ -793,6 +793,11 @@ func (e *TagInputDate) CreateElement(tag Tag) (ref *TagInputDate) {
 	return e
 }
 
+func (e *TagInputDate) AddStyle(key string, value any) (ref *TagInputDate) {
+	e.selfElement.Get("style").Set(key, value)
+	return e
+}
+
 // AppendById
 //
 // English:

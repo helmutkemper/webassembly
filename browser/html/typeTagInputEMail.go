@@ -1480,6 +1480,11 @@ func (e *TagInputMail) SetY(y int) (ref *TagInputMail) {
 	return e
 }
 
+func (e *TagInputMail) AddStyle(key string, value any) (ref *TagInputMail) {
+	e.selfElement.Get("style").Set(key, value)
+	return e
+}
+
 func (e *TagInputMail) Get() (el js.Value) {
 	return e.selfElement
 }

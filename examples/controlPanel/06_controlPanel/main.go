@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/platform/algorithm"
@@ -9,20 +8,259 @@ import (
 	"github.com/helmutkemper/webassembly/platform/easingTween"
 	"github.com/helmutkemper/webassembly/platform/factoryAlgorithm"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
+	"github.com/helmutkemper/webassembly/platform/factoryEasingTween"
 	"log"
 	"math"
+	"syscall/js"
 	"time"
 )
 
+type MenuOptions struct {
+	Label string `wasmPanel:"type:label"`
+	Icon  string `wasmPanel:"type:icon"`
+	//IconLeft  string        `wasmPanel:"type:iconLeft"`
+	//IconRight string        `wasmPanel:"type:iconRight"`
+	Type    string        `wasmPanel:"type:type"`
+	Items   []MenuOptions `wasmPanel:"type:options"`
+	Action  js.Func       `wasmPanel:"type:action"`
+	Submenu []MenuOptions `wasmPanel:"type:subMenu"`
+}
+
+func getMenuSimple() (options *[]MenuOptions) {
+	return &[]MenuOptions{
+		{
+			Label: "Run Animation",
+			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+				value := controlPanel.GetRangeValue()
+				runAnimation(value)
+				return nil
+			}),
+		},
+	}
+}
+
+func getMenuComplex() (options *[]MenuOptions) {
+	return &[]MenuOptions{
+		{
+			Type: "grid",
+			Items: []MenuOptions{
+				{
+					Label:  "Cat 1",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
+				},
+				{
+					Label:  "Cat 2",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 2"); return nil }),
+				},
+				{
+					Label:  "Cat 3",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 3"); return nil }),
+				},
+				{
+					Label:  "Cat 4",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 4"); return nil }),
+				},
+				{
+					Label:  "Cat 5",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 5"); return nil }),
+				},
+				{
+					Label:  "Cat 6",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 6"); return nil }),
+				},
+			},
+		},
+		{
+			Label: "-",
+		},
+		{
+			Label: "Label 1",
+			//Icon:      "icon 1",
+			//IconLeft:  "icon left 1",
+			//IconRight: "icon right 1",
+			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 1 ok"); return nil }),
+		},
+		{
+			Label: "Label 2",
+			//Icon:      "icon 1",
+			//IconLeft:  "icon left 1",
+			//IconRight: "icon right 1",
+			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 2 ok"); return nil }),
+			Submenu: []MenuOptions{
+				{
+					Label: "Label 1",
+					//Icon:      "icon 1",
+					//IconLeft:  "icon left 1",
+					//IconRight: "icon right 1",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 1 ok"); return nil }),
+				},
+				{
+					Label: "Label 2",
+					//Icon:      "icon 1",
+					//IconLeft:  "icon left 1",
+					//IconRight: "icon right 1",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 2 ok"); return nil }),
+					Submenu: []MenuOptions{
+						{
+							Type: "grid",
+							Items: []MenuOptions{
+								{
+									Label:  "Cat 1",
+									Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
+								},
+								{
+									Label:  "Cat 2",
+									Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 2"); return nil }),
+								},
+								{
+									Label:  "Cat 3",
+									Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 3"); return nil }),
+								},
+								{
+									Label:  "Cat 4",
+									Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 4"); return nil }),
+								},
+								{
+									Label:  "Cat 5",
+									Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 5"); return nil }),
+								},
+								{
+									Label:  "Cat 6",
+									Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+									Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 6"); return nil }),
+									Submenu: []MenuOptions{
+										{
+											Type: "grid",
+											Items: []MenuOptions{
+												{
+													Label:  "Cat 1",
+													Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
+												},
+												{
+													Label:  "Cat 2",
+													Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 2"); return nil }),
+												},
+												{
+													Label:  "Cat 3",
+													Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 3"); return nil }),
+												},
+												{
+													Label:  "Cat 4",
+													Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 4"); return nil }),
+												},
+												{
+													Label:  "Cat 5",
+													Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 5"); return nil }),
+												},
+												{
+													Label:  "Cat 6",
+													Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+													Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 6"); return nil }),
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			Type: "grid",
+			Items: []MenuOptions{
+				{
+					Label:  "Cat 1",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
+				},
+				{
+					Label:  "Cat 2",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 2"); return nil }),
+				},
+				{
+					Label:  "Cat 3",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 3"); return nil }),
+				},
+				{
+					Label:  "Cat 4",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 4"); return nil }),
+				},
+				{
+					Label:  "Cat 5",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 5"); return nil }),
+				},
+				{
+					Label:  "Cat 6",
+					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 6"); return nil }),
+				},
+			},
+		},
+	}
+}
+
+func runAnimation(value float64) {
+	factoryEasingTween.NewRandom(
+		time.Duration(value)*time.Second,
+		0,
+		1000000,
+		tagDivRocket.EasingTweenWalkingAndRotateIntoPoints,
+		0,
+	).
+		SetArgumentsFunc(any(tagDivRocket)).
+		SetDoNotReverseMotion()
+}
+
 type ComponentControlPanel struct {
 	components.Components
+	components.ContextMenu
+	components.MainMenu
 
-	Panel *ControlPanel `wasmPanel:"type:panel"`
+	Panel   *ControlPanel  `wasmPanel:"type:panel;top:100px;left:200px"`
+	Context *[]MenuOptions `wasmPanel:"type:contextMenu;func:InitMenu;columns:4"`
+	Menu    *[]MenuOptions `wasmPanel:"type:mainMenu;func:InitMainMenu;label:Main Menu;top:200;left:5;columns:3"`
+
+	breadCrumbsRange *html.TagInputNumber
 }
 
 func (e *ComponentControlPanel) Init() (panel *html.TagDiv, err error) {
 	panel, err = e.Components.Init(e)
+	e.breadCrumbsRange = controlPanel.Panel.Body.BoatAnimation.Dragging.TagNumber
 	return
+}
+
+func (e *ComponentControlPanel) InitMenu() {
+	e.Context = getMenuComplex()
+}
+
+func (e *ComponentControlPanel) InitMainMenu() {
+	e.Menu = getMenuComplex()
+}
+
+func (e *ComponentControlPanel) GetRangeValue() (value float64) {
+	return e.breadCrumbsRange.GetValue()
 }
 
 type ControlPanel struct {
@@ -31,10 +269,10 @@ type ControlPanel struct {
 }
 
 type Body struct {
-	//BoatAnimation *BoatAdjust `wasmPanel:"type:component;label:Boat dragging effect"`
-	//SimpleForm    *SimpleForm `wasmPanel:"type:component;label:simple form"`
-	//Share         *ShareForm  `wasmPanel:"type:component;label:Share"`
-	Osm *OsmForm `wasmPanel:"type:component;label:Osm"`
+	BoatAnimation *BoatAdjust `wasmPanel:"type:component;label:Boat dragging effect"`
+	SimpleForm    *SimpleForm `wasmPanel:"type:component;label:simple form"`
+	Share         *ShareForm  `wasmPanel:"type:component;label:Share"`
+	Osm           *OsmForm    `wasmPanel:"type:component;label:Osm"`
 }
 
 type DraggingEffect struct {
@@ -56,21 +294,27 @@ type OnChangeEvent struct {
 }
 
 func (e *OnChangeEvent) OnChange(event OnChangeEvent, reference *ControlPanel) {
-	//ref := reference.BoatAnimation.Dragging
-
-	//log.Printf("reference.TagNumber.GetValue(): %v", ref.TagNumber.GetValue())
-	//log.Printf("reference.TagRange.GetValue(): %v", ref.TagRange.GetValue())
+	//ref := reference.Body.BoatAnimation.Dragging
+	//value := 0.0
+	//switch event.Type {
+	//case "range":
+	//	value = ref.TagNumber.GetValue()
+	//case "number":
+	//	value = ref.TagNumber.GetValue()
+	//}
+	//
+	//runAnimation(value)
 }
 
-//func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference *ControlPanel) {
-//	ref := reference.Body.BoatAnimation.Dragging
-//	switch event.Type {
-//	case "range":
-//		ref.TagNumber.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagRange.GetValue()))
-//	case "number":
-//		ref.TagRange.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagNumber.GetValue()))
-//	}
-//}
+func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference *ControlPanel) {
+	ref := reference.Body.BoatAnimation.Dragging
+	switch event.Type {
+	case "range":
+		ref.TagNumber.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagRange.GetValue()))
+	case "number":
+		ref.TagRange.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagNumber.GetValue()))
+	}
+}
 
 func (e *DraggingEffect) RangeCalcFormula(min, max, value float64) (result float64) {
 	return (max - value) + min
@@ -119,7 +363,7 @@ type OsmConf struct {
 	Latitude  float64         `wasmPanel:"type:latitude;default:-27.428935"`
 	Longitude float64         `wasmPanel:"type:longitude;default:-48.465274"`
 	Zoom      int64           `wasmPanel:"type:zoom;width:300;height:300;default:13"`
-	Url       string          `wasmPanel:"type:url;default:https://tile.openstreetmap.org/%d/%d/%d.png"`
+	Url       string          `wasmPanel:"type:url;default:https\://tile.openstreetmap.org/%d/%d/%d.png"`
 	Change    *OnOsmEvent     `wasmPanel:"type:listener;event:click;func:OnChangeEvent"`
 }
 
@@ -133,10 +377,16 @@ func (e *OnOsmEvent) OnChangeEvent(event OnOsmEvent, reference *ControlPanel) {
 
 type BoatAdjust struct {
 	components.Board
+	components.ContextMenu
 
 	Dragging *DraggingEffect   `wasmPanel:"type:range;label:effect"`
 	Tween    *TweenSelect      `wasmPanel:"type:select;label:Tween function"`
 	Start    *EasingTweenStart `wasmPanel:"type:button;label:start easing tween"`
+	ContMenu *[]MenuOptions    `wasmPanel:"type:contextMenu;func:InitMenu;columns:3"`
+}
+
+func (e *BoatAdjust) InitMenu() {
+	e.ContMenu = getMenuSimple()
 }
 
 type TextAreaForm struct {
@@ -175,7 +425,7 @@ type QRCodeForm struct {
 	components.QRCode
 
 	CanvasTag     *html.TagCanvas `wasmPanel:"type:TagCanvas"`
-	QRCodeValue   string          `wasmPanel:"type:value;size:309;level:4;color:#000000;background:#00ff00;default:Hello Word!"`
+	QRCodeValue   string          `wasmPanel:"type:value;level:4;color:#ff0000;background:#00ff00;default:Hello Word!"`
 	RecoveryLevel int             `wasmPanel:"type:level"`
 	Color         string          `wasmPanel:"type:color"`
 	Background    string          `wasmPanel:"type:background"`
@@ -187,13 +437,13 @@ type OnQRCodeEvent struct {
 	//Value string `wasmGet:"value"`
 }
 
-//func (e *OnQRCodeEvent) OnChangeEvent(event OnQRCodeEvent, reference *ControlPanel) {
-//	ref := reference.Body.Share
-//
-//	ref.QRCode.SetColor("#ff00ff")
-//	ref.QRCode.SetBackground("#ffff00")
-//	ref.QRCode.SetValue(time.Now().Format(time.TimeOnly))
-//}
+func (e *OnQRCodeEvent) OnChangeEvent(event OnQRCodeEvent, reference *ControlPanel) {
+	ref := reference.Body.Share
+
+	ref.QRCode.SetColor("#ff00ff")
+	ref.QRCode.SetBackground("#ffff00")
+	ref.QRCode.SetValue(time.Now().Format(time.TimeOnly))
+}
 
 type UrlForm struct {
 	components.Url
@@ -376,8 +626,8 @@ type ListRadio struct {
 }
 
 func (e *ListRadio) Init() {
-	data, _ := json.Marshal(&e.List)
-	log.Printf("%s", data)
+	//data, _ := json.Marshal(&e.List)
+	//log.Printf("%s", data)
 
 	//(*e.List)[0].TagRadio.Checked(true)
 	//(*e.List)[0].TagLabel.Text("Vivo! >> ").Append((*e.List)[0].TagRadio)
@@ -408,8 +658,8 @@ type ListCheckbox struct {
 }
 
 func (e *ListCheckbox) Init() {
-	data, _ := json.Marshal(&e.List)
-	log.Printf("%s", data)
+	//data, _ := json.Marshal(&e.List)
+	//log.Printf("%s", data)
 
 	(*e.List)[0].TagRadio.Checked(true)
 	(*e.List)[0].TagLabel.Text("Vivo! >> ").Append((*e.List)[0].TagRadio)
@@ -576,41 +826,43 @@ type OnClickEvent struct {
 	tween *easingTween.Tween
 }
 
-//func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel) {
-//	ref := reference.Body.BoatAnimation
-//	//log.Printf("Trusted: %v", event.IsTrusted)
-//	//log.Printf("Value:   %v", event.Value)
-//
-//	var value = ref.Dragging.TagNumber.GetValue()
-//
-//	ref.Start.Value("Stop")
-//	if e.tween != nil {
-//		e.tween.End()
-//
-//		return
-//	}
-//
-//	e.tween = new(easingTween.Tween)
-//	e.tween.SetDuration(time.Duration(value)*time.Second).
-//		SetValues(0, 1000000).
-//		SetOnStepFunc(tagDivRocket.EasingTweenWalkingAndRotateIntoPoints()).
-//		SetLoops(0).
-//		SetArgumentsFunc(any(tagDivRocket)).
-//		SetTweenFunc(ref.Tween.Change.function).
-//		SetDoNotReverseMotion().
-//		//todo: criar uma função onTermination
-//		SetOnEndFunc(func(_ float64, _ interface{}) {
-//			e.tween = nil
-//			ref.Start.Value("Restart")
-//		}).
-//		Start()
-//}
+func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel) {
+	ref := reference.Body.BoatAnimation
+	//log.Printf("Trusted: %v", event.IsTrusted)
+	//log.Printf("Value:   %v", event.Value)
+
+	var value = ref.Dragging.TagNumber.GetValue()
+
+	ref.Start.TagButton.Disabled(true)
+	ref.Start.Value("Wait")
+	if e.tween != nil {
+		e.tween.End()
+		return
+	}
+
+	e.tween = new(easingTween.Tween)
+	e.tween.SetDuration(time.Duration(value)*time.Second).
+		SetValues(0, 1000000).
+		SetOnStepFunc(tagDivRocket.EasingTweenWalkingAndRotateIntoPoints()).
+		SetLoops(0).
+		SetArgumentsFunc(any(tagDivRocket)).
+		SetTweenFunc(ref.Tween.Change.function).
+		SetDoNotReverseMotion().
+		//todo: criar uma função onTermination
+		SetOnEndFunc(func(_ float64, _ interface{}) {
+			e.tween = nil
+			ref.Start.TagButton.Disabled(false)
+			ref.Start.Value("Restart")
+		}).
+		Start()
+}
 
 type EasingTweenStart struct {
 	components.Button
 
-	Label      string        `wasmPanel:"type:value;label:Start"`
-	RunCommand *OnClickEvent `wasmPanel:"type:listener;event:click;func:OnClickEvent"`
+	TagButton  *html.TagInputButton `wasmPanel:"type:inputTagButton"`
+	Label      string               `wasmPanel:"type:value;label:Start"`
+	RunCommand *OnClickEvent        `wasmPanel:"type:listener;event:click;func:OnClickEvent"`
 }
 
 func (e *EasingTweenStart) Init() {
@@ -620,6 +872,8 @@ func (e *EasingTweenStart) Init() {
 var canvas *html.TagCanvas
 var tagDivRocket *html.TagDiv
 
+var controlPanel = new(ComponentControlPanel)
+
 func main() {
 
 	var err error
@@ -627,43 +881,6 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	controlPanel := ComponentControlPanel{
-		Panel: &ControlPanel{
-			Body: &Body{
-				//SimpleForm: &SimpleForm{
-				//	Checkbox: &ListCheckbox{
-				//		List: &[]CheckboxType{
-				//			{
-				//				TagRadio: factoryBrowser.NewTagInputCheckBox(),
-				//				TagLabel: factoryBrowser.NewTagLabel(),
-				//				Label:    "label1",
-				//				Value:    "Value_1",
-				//				Disabled: false,
-				//				Selected: false,
-				//			},
-				//			{
-				//				TagRadio: factoryBrowser.NewTagInputCheckBox(),
-				//				TagLabel: factoryBrowser.NewTagLabel(),
-				//				Label:    "label2",
-				//				Value:    "Value_2",
-				//				Disabled: false,
-				//				Selected: true,
-				//			},
-				//		},
-				//	},
-				//},
-				//Share: &ShareForm{
-				//	QRCode: &QRCodeForm{
-				//		QRCodeValue:   "frankenstein",
-				//		RecoveryLevel: 1,
-				//		Color:         "#ffffff",
-				//		Background:    "#000000",
-				//		DisableBorder: true,
-				//	},
-				//},
-			},
-		},
-	}
 	if panel, err = controlPanel.Init(); err != nil {
 		panic(err)
 	}
@@ -682,6 +899,7 @@ func main() {
 
 	tagDivRocket = factoryBrowser.NewTagDiv().
 		Class("animate").
+		AddStyle("image-rendering", "auto").
 		AddPointsToEasingTween(bezier).
 		SetDeltaX(-25).
 		SetDeltaY(-25).

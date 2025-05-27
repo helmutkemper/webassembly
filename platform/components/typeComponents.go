@@ -449,19 +449,6 @@ func (e *Components) GetFather() (father *html.TagDiv) {
 
 func (e *Components) processContextMenu(parentElementPtr, parentElement, element reflect.Value, typeof reflect.StructField, father html.Compatible) (err error) {
 
-	// The menu is created for each element contained in the panel (concept failure)
-	// This code checks and avoids multiple menus
-	//menuElement := parentElement.FieldByName("ContextMenu")
-	//if menuElement.IsValid() {
-	//	menuMethod := menuElement.MethodByName("GetMenu")
-	//	if menuMethod.IsValid() {
-	//		ops := menuMethod.Call(nil)
-	//		if !ops[0].IsZero() {
-	//			return
-	//		}
-	//	}
-	//}
-
 	var componentMenuData searchStructRet
 	componentMenuData = e.searchStruct(parentElementPtr, "ContextMenu", "Type", "contextMenu")
 	a := componentMenuData.componentFound

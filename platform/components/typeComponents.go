@@ -42,6 +42,8 @@ type Components struct {
 	offsetX    int
 	offsetY    int
 	minimized  bool
+
+	afterInit []func()
 }
 
 func (e *Components) CssPanelHeader(key, value string) {
@@ -143,6 +145,14 @@ func (e *Components) setupPanelInit() {
 		e.setupPanel = make(map[string]string)
 	}
 
+	if _, found := e.setupPanel["textFontSize"]; !found {
+		e.setupPanel["textFontSize"] = "12px"
+	}
+
+	if _, found := e.setupPanel["fontFamily"]; !found {
+		e.setupPanel["fontFamily"] = "Arial, sans-serif"
+	}
+
 	if _, found := e.setupPanel["width"]; !found {
 		e.setupPanel["width"] = "350px"
 	}
@@ -235,7 +245,19 @@ func (e *Components) applyCss() {
 	head.CssAppend()
 }
 
+func (e *Components) addAfterInit(f func()) {
+	e.afterInit = append(e.afterInit, f)
+}
+
+func (e *Components) runAfterInit() {
+	for _, f := range e.afterInit {
+		f()
+	}
+}
+
 func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
+	e.afterInit = make([]func(), 0)
+
 	element := reflect.ValueOf(el)
 	typeof := reflect.TypeOf(el)
 	e.setupPanelInit()
@@ -254,6 +276,8 @@ func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 		return
 	}
 
+	e.runAfterInit()
+
 	e.panelFather.Fade(200 * time.Millisecond)
 
 	return e.panelFather, err
@@ -262,7 +286,9 @@ func (e *Components) Init(el any) (panel *html.TagDiv, err error) {
 func (e *Components) createDivsFather() {
 	e.autoZIndex = true
 
-	e.panelFather = factoryBrowser.NewTagDiv().Class("panel")
+	e.panelFather = factoryBrowser.NewTagDiv().
+		Class("panel").
+		Data(map[string]string{"cell": "panel"})
 	e.panelFather.AddStyle("userSelect", "none")
 	e.panelFather.Get().Call("addEventListener", "mouseover", js.FuncOf(func(this js.Value, args []js.Value) any {
 		if !e.autoZIndex {
@@ -351,7 +377,8 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 					// ignore
 				case "component":
 					divCompCel := factoryBrowser.NewTagDiv().
-						Class("compCel")
+						Class("compCel").
+						Data(map[string]string{"cell": "main"})
 
 					err = e.processComponent(element, fieldVal, fieldTyp.Type, tagData, divCompCel)
 					if err != nil {
@@ -368,7 +395,8 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 						AddStyle("border", "1px solid #aaa").
 						AddStyle("margin", "10px 0").
 						AddStyle("padding", "10px").
-						AddStyle("backgroundColor", "#f9f9f9")
+						AddStyle("backgroundColor", "#f9f9f9").
+						Data(map[string]string{"cell": "cell"})
 					closeIcon := e.processLabelCel(tagData.Label, panelCel)
 					e.processLabelCelAddCloseListener(closeIcon)
 
@@ -397,7 +425,7 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 				}
 
 				switch tagData.Type {
-				case "panel":
+				case "panel", "component":
 					// Put the context menu on the main panel
 					if err = e.processContextMenu(elementPrt, element, fieldVal, fieldTyp, e.panelFatherContent); err != nil {
 						return
@@ -420,6 +448,19 @@ func (e *Components) GetFather() (father *html.TagDiv) {
 }
 
 func (e *Components) processContextMenu(parentElementPtr, parentElement, element reflect.Value, typeof reflect.StructField, father html.Compatible) (err error) {
+
+	// The menu is created for each element contained in the panel (concept failure)
+	// This code checks and avoids multiple menus
+	//menuElement := parentElement.FieldByName("ContextMenu")
+	//if menuElement.IsValid() {
+	//	menuMethod := menuElement.MethodByName("GetMenu")
+	//	if menuMethod.IsValid() {
+	//		ops := menuMethod.Call(nil)
+	//		if !ops[0].IsZero() {
+	//			return
+	//		}
+	//	}
+	//}
 
 	var componentMenuData searchStructRet
 	componentMenuData = e.searchStruct(parentElementPtr, "ContextMenu", "Type", "contextMenu")
@@ -505,21 +546,64 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 		componentMenuData.tagData.Columns = "2"
 	}
 
-	contextMenu := ContextMenu{}
-	contextMenu.Menu(menuOptions)
-	contextMenu.AttachMenu(father)
-	contextMenu.Css("gridGridTemplateColumns", fmt.Sprintf("repeat(%v, 1fr)", componentMenuData.tagData.Columns))
-	contextMenu.Init()
+	node := father.Get()
 
-	menuElement := parentElement.FieldByName("ContextMenu")
-	if !menuElement.CanSet() {
-		err = fmt.Errorf("error: component %v has an embed `components.ContextMenu` correctily", element.Type().Name())
-		err = errors.Join(err, fmt.Errorf("         However, there was a problem when transferring the menu created to the existing component"))
-		return
+	f := func() {
+		node = e.dataSetNavigate(node)
+
+		// comment block - start
+		// The menu is created for each element within the panel (initial project concept failure)
+		// This code makes only one contextual menu added to node
+		// Concept failure: If a second contextual menu is added, it will be ignored
+		if cell := node.Get("dataset").Get("hasContextMenu"); !cell.IsUndefined() && cell.String() != "" {
+			return
+		}
+
+		node.Get("dataset").Set("hasContextMenu", "true")
+		// comment block - end
+
+		contextMenu := ContextMenu{}
+		contextMenu.Menu(menuOptions)
+		contextMenu.AttachMenuJs(node)
+		contextMenu.Css("gridGridTemplateColumns", fmt.Sprintf("repeat(%v, 1fr)", componentMenuData.tagData.Columns))
+		contextMenu.Init()
+
+		menuElement := parentElement.FieldByName("ContextMenu")
+		if !menuElement.CanSet() {
+			err = fmt.Errorf("error: component %v has an embed `components.ContextMenu` correctily", element.Type().Name())
+			err = errors.Join(err, fmt.Errorf("         However, there was a problem when transferring the menu created to the existing component"))
+			return
+		}
+
+		menuElement.Set(reflect.ValueOf(contextMenu))
+	}
+	e.addAfterInit(f)
+
+	return
+}
+
+// dataSetNavigate Navigates to Div Father, Cell or Panel
+//
+// This function can only be used after the appendChild() command, because before it the div is floating, so it is
+// performed inside an afterInit() function block
+func (e *Components) dataSetNavigate(node js.Value) (append js.Value) {
+	if cell := node.Get("dataset").Get("cell"); !cell.IsUndefined() {
+		if cell.String() == "panel" || cell.String() == "cell" {
+			return node
+		}
 	}
 
-	menuElement.Set(reflect.ValueOf(contextMenu))
-	return
+	parent := node.Get("parentElement")
+	if !parent.IsNull() {
+		return e.dataSetNavigate(parent)
+	}
+
+	parent = node.Get("parentNode")
+	if !parent.IsNull() {
+		return e.dataSetNavigate(parent)
+	}
+
+	return node
 }
 
 func (e *Components) processMainMenu(parentElementPtr, parentElement, element reflect.Value, typeof reflect.StructField) (err error) {
@@ -763,7 +847,7 @@ func (e *Components) processSliceMenuOptions(element, sliceData reflect.Value) (
 func (e *Components) processComponent(parentElement, element reflect.Value, typeof reflect.Type, tagData *tag, father *html.TagDiv) (err error) {
 
 	boardComponent := Board{}
-	//elementPrt := element
+	elementPrt := element
 
 	if !element.CanInterface() {
 		err = fmt.Errorf("component.Board (%v) cannot be transformed into an interface", parentElement.Type().Name())
@@ -785,7 +869,7 @@ func (e *Components) processComponent(parentElement, element reflect.Value, type
 	}
 
 	// passes from pointer to element
-	elementPrt := element
+	//elementPrt := element
 	element = element.Elem()
 
 	// Checks if the import of `components.Board` was done
@@ -847,7 +931,8 @@ func (e *Components) processComponent(parentElement, element reflect.Value, type
 			AddStyle("pointerEvents", "auto").
 			AddStyle("display", "flex").
 			AddStyle("align-items", "center").
-			AddStyle("margin", "5px 0")
+			AddStyle("margin", "5px 0").
+			Data(map[string]string{"cell": "component"})
 
 		var fieldTyp reflect.StructField
 		fieldVal := element.Field(i)
@@ -1273,19 +1358,20 @@ func (e *Components) processLabelCelAddCloseListener(closeIcon *html.TagDiv) {
 	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		args[0].Call("stopPropagation")
 
-		// this.closest('.panelCel')
-		panelCel := this.Call("closest", ".panelCel")
+		node := this.Get("parentNode").Get("parentNode")
+		children := node.Get("children")
+		child := children.Index(1)
 
-		// let compCel = panelCel ? panelCel.querySelector('.compCel') : null
-		var compCel js.Value
-		if !panelCel.IsNull() && !panelCel.IsUndefined() {
-			compCel = panelCel.Call("querySelector", ".compCel")
+		display := child.Get("style").Get("display").String()
+		if display != "none" {
+			child.Get("dataset").Set("display", display)
+			child.Get("style").Set("display", "none")
+			return nil
 		}
 
-		// if (compCel) { compCel.classList.toggle('hidden'); }
-		if !compCel.IsNull() && !compCel.IsUndefined() {
-			compCel.Get("classList").Call("toggle", "hidden")
-		}
+		display = child.Get("dataset").Get("display").String()
+		child.Get("style").Set("display", display)
+		child.Get("dataset").Set("display", "")
 		return nil
 	}))
 }
@@ -1297,10 +1383,6 @@ func (e *Components) processLabelCel(label string, father *html.TagDiv) (closeIc
 	// </div>
 
 	closeIcon = factoryBrowser.NewTagDiv().Class("closeIcon").Text("ˇ")
-	closeIcon.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		//log.Printf("close")
-		return nil
-	}))
 	father.Append(
 		factoryBrowser.NewTagDiv().Class("labelCel").
 			AddStyle("display", "flex").
@@ -1461,7 +1543,8 @@ func (e *Components) processComponentOsm(element reflect.Value, tagDataFather *t
 	//tagCanvas.Id(mathUtil.GetUID())
 
 	// todo: mudar nome de inputOsm
-	inputOsm := factoryBrowser.NewTagDiv().Class("inputOsm") //.Append(tagCanvas)
+	inputOsm := factoryBrowser.NewTagDiv().Class("inputOsm").
+		Data(map[string]string{"cell": "osm"}) //.Append(tagCanvas)
 
 	// Initializes the pointer if it is nil
 	if element.IsNil() {
@@ -4762,7 +4845,9 @@ func (e *Components) processComponentSelect(element reflect.Value, tagData *tag,
 
 func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, father *html.TagDiv) (err error) {
 
-	inputDivRadio := factoryBrowser.NewTagDiv().Class("inputRadio")
+	inputDivRadio := factoryBrowser.NewTagDiv().
+		Class("inputRadio").
+		Data(map[string]string{"cell": "inputRadio"})
 
 	elementOriginal := element
 	radioComponent := Radio{}
@@ -5127,7 +5212,9 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 
 func (e *Components) processComponentCheckbox(element reflect.Value, tagData *tag, father *html.TagDiv) (err error) {
 
-	inputDivCheckbox := factoryBrowser.NewTagDiv().Class("inputCheckbox")
+	inputDivCheckbox := factoryBrowser.NewTagDiv().
+		Class("inputCheckbox").
+		Data(map[string]string{"cell": "inputCheckbox"})
 
 	elementOriginal := element
 	checkboxComponent := Checkbox{}

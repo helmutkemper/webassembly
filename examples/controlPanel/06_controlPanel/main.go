@@ -8,7 +8,6 @@ import (
 	"github.com/helmutkemper/webassembly/platform/easingTween"
 	"github.com/helmutkemper/webassembly/platform/factoryAlgorithm"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
-	"github.com/helmutkemper/webassembly/platform/factoryEasingTween"
 	"log"
 	"math"
 	"syscall/js"
@@ -31,8 +30,7 @@ func getMenuSimple() (options *[]MenuOptions) {
 		{
 			Label: "Run Animation",
 			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-				value := controlPanel.GetRangeValue()
-				runAnimation(value)
+				runAnimation(GlobalControlPanel)
 				return nil
 			}),
 		},
@@ -221,16 +219,33 @@ func getMenuComplex() (options *[]MenuOptions) {
 	}
 }
 
-func runAnimation(value float64) {
-	factoryEasingTween.NewRandom(
-		time.Duration(value)*time.Second,
-		0,
-		1000000,
-		tagDivRocket.EasingTweenWalkingAndRotateIntoPoints,
-		0,
-	).
+func runAnimation(reference *ComponentControlPanel) {
+	ref := reference.Panel.Body.BoatAnimation
+
+	var value = ref.Dragging.TagNumber.GetValue()
+
+	ref.Start.TagButton.Disabled(true)
+	ref.Start.Value("Wait")
+	if GlobalTween != nil {
+		GlobalTween.End()
+		return
+	}
+
+	GlobalTween = new(easingTween.Tween)
+	GlobalTween.SetDuration(time.Duration(value)*time.Second).
+		SetValues(0, 1000000).
+		SetOnStepFunc(tagDivRocket.EasingTweenWalkingAndRotateIntoPoints()).
+		SetLoops(0).
 		SetArgumentsFunc(any(tagDivRocket)).
-		SetDoNotReverseMotion()
+		SetTweenFunc(ref.Tween.Change.function).
+		SetDoNotReverseMotion().
+		//todo: criar uma função onTermination
+		SetOnEndFunc(func(_ float64, _ interface{}) {
+			GlobalTween = nil
+			ref.Start.TagButton.Disabled(false)
+			ref.Start.Value("Restart")
+		}).
+		Start()
 }
 
 type ComponentControlPanel struct {
@@ -247,7 +262,7 @@ type ComponentControlPanel struct {
 
 func (e *ComponentControlPanel) Init() (panel *html.TagDiv, err error) {
 	panel, err = e.Components.Init(e)
-	e.breadCrumbsRange = controlPanel.Panel.Body.BoatAnimation.Dragging.TagNumber
+	e.breadCrumbsRange = GlobalControlPanel.Panel.Body.BoatAnimation.Dragging.TagNumber
 	return
 }
 
@@ -285,6 +300,15 @@ type DraggingEffect struct {
 	RangeChange  *OnChangeEvent       `wasmPanel:"type:listener;event:input;func:OnInputEvent"`
 }
 
+func (e *DraggingEffect) RangeCalcFormula(min, max, value float64) (result float64) {
+	return (max - value) + min
+}
+
+func (e *DraggingEffect) Init() {
+	e.TagNumber.Value(e.RangeCalcFormula(2, 50, e.TagRange.GetValue()))
+	e.TagRange.Value(e.RangeCalcFormula(2, 50, e.TagNumber.GetValue()))
+}
+
 type OnChangeEvent struct {
 	IsTrusted bool    `wasmGet:"isTrusted"`
 	Value     float64 `wasmGet:"value"`
@@ -294,6 +318,8 @@ type OnChangeEvent struct {
 }
 
 func (e *OnChangeEvent) OnChange(event OnChangeEvent, reference *ControlPanel) {
+	return
+
 	//ref := reference.Body.BoatAnimation.Dragging
 	//value := 0.0
 	//switch event.Type {
@@ -302,8 +328,8 @@ func (e *OnChangeEvent) OnChange(event OnChangeEvent, reference *ControlPanel) {
 	//case "number":
 	//	value = ref.TagNumber.GetValue()
 	//}
-	//
-	//runAnimation(value)
+
+	//runAnimation(GlobalControlPanel)
 }
 
 func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference *ControlPanel) {
@@ -314,15 +340,6 @@ func (e *OnChangeEvent) OnInputEvent(event OnChangeEvent, reference *ControlPane
 	case "number":
 		ref.TagRange.Value(ref.RangeCalcFormula(event.Min, event.Max, ref.TagNumber.GetValue()))
 	}
-}
-
-func (e *DraggingEffect) RangeCalcFormula(min, max, value float64) (result float64) {
-	return (max - value) + min
-}
-
-func (e *DraggingEffect) Init() {
-	e.TagNumber.Value(e.RangeCalcFormula(2, 50, e.TagRange.GetValue()))
-	e.TagRange.Value(e.RangeCalcFormula(2, 50, e.TagNumber.GetValue()))
 }
 
 type SimpleForm struct {
@@ -822,8 +839,6 @@ type TweenType struct {
 type OnClickEvent struct {
 	IsTrusted bool   `wasmGet:"isTrusted"`
 	Value     string `wasmGet:"value"`
-
-	tween *easingTween.Tween
 }
 
 func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel) {
@@ -835,13 +850,13 @@ func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel)
 
 	ref.Start.TagButton.Disabled(true)
 	ref.Start.Value("Wait")
-	if e.tween != nil {
-		e.tween.End()
+	if GlobalTween != nil {
+		GlobalTween.End()
 		return
 	}
 
-	e.tween = new(easingTween.Tween)
-	e.tween.SetDuration(time.Duration(value)*time.Second).
+	GlobalTween = new(easingTween.Tween)
+	GlobalTween.SetDuration(time.Duration(value)*time.Second).
 		SetValues(0, 1000000).
 		SetOnStepFunc(tagDivRocket.EasingTweenWalkingAndRotateIntoPoints()).
 		SetLoops(0).
@@ -850,7 +865,7 @@ func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel)
 		SetDoNotReverseMotion().
 		//todo: criar uma função onTermination
 		SetOnEndFunc(func(_ float64, _ interface{}) {
-			e.tween = nil
+			GlobalTween = nil
 			ref.Start.TagButton.Disabled(false)
 			ref.Start.Value("Restart")
 		}).
@@ -872,7 +887,8 @@ func (e *EasingTweenStart) Init() {
 var canvas *html.TagCanvas
 var tagDivRocket *html.TagDiv
 
-var controlPanel = new(ComponentControlPanel)
+var GlobalTween = new(easingTween.Tween)
+var GlobalControlPanel = new(ComponentControlPanel)
 
 func main() {
 
@@ -881,7 +897,7 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	if panel, err = controlPanel.Init(); err != nil {
+	if panel, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)
 	}
 

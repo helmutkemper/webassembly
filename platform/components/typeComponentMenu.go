@@ -63,12 +63,30 @@ func (e *menu) Menu(options []options) {
 	e.__options = options
 }
 
+func (e menu) GetMenu() (options []options) {
+	return e.__options
+}
+
 func (e *menu) AttachMenu(element html.Compatible) {
 	if e.__fixed {
 		return
 	}
 
 	element.Get().Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		e.hide()
+		args[0].Call("preventDefault")
+		args[0].Call("stopPropagation")
+		e.show(args[0].Get("clientX").Int(), args[0].Get("clientY").Int())
+		return nil
+	}))
+}
+
+func (e *menu) AttachMenuJs(element js.Value) {
+	if e.__fixed {
+		return
+	}
+
+	element.Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		e.hide()
 		args[0].Call("preventDefault")
 		args[0].Call("stopPropagation")

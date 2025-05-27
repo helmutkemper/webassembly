@@ -511,7 +511,7 @@ func (e *TagDiv) ContentEditable(editable bool) (ref *TagDiv) {
 //	    usuário.
 func (e *TagDiv) Data(data map[string]string) (ref *TagDiv) {
 	for k, v := range data {
-		e.selfElement.Set("data-"+k, v)
+		e.selfElement.Get("dataset").Set(k, v)
 	}
 	return e
 }
@@ -570,7 +570,7 @@ func (e *TagDiv) Data(data map[string]string) (ref *TagDiv) {
 //	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
 //	    usuário.
 func (e *TagDiv) GetData(key string) (value string) {
-	return e.selfElement.Get("data-" + key).String()
+	return e.selfElement.Get("dataset").Get(key).String()
 }
 
 // Dir #global
@@ -996,6 +996,10 @@ func (e *TagDiv) GetStyleInt(key string) (value int) {
 
 	return int(valueI64)
 	return e.selfElement.Get("style").Get(key).Int()
+}
+
+func (e *TagDiv) GetStyle(key string) (value string) {
+	return e.selfElement.Get("style").Get(key).String()
 }
 
 // TabIndex #global

@@ -10,6 +10,7 @@ import (
 	"github.com/helmutkemper/webassembly/qrcode"
 	"image/color"
 	"log"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -5109,6 +5110,8 @@ func (e *Components) processComponentRadio(element reflect.Value, tagData *tag, 
 							if optionTagRaw != "" {
 								optionTag := new(tag)
 								optionTag.init(optionTagRaw)
+								log.Printf("raw: %v", optionTagRaw)
+								os.Exit(9)
 
 								switch optionTag.Type {
 								case "inputTagLabel":
@@ -5476,6 +5479,8 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 							if optionTagRaw != "" {
 								optionTag := new(tag)
 								optionTag.init(optionTagRaw)
+								log.Printf("raw: %v", optionTagRaw)
+								os.Exit(8)
 
 								switch optionTag.Type {
 								case "inputTagLabel":

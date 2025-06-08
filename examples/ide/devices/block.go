@@ -207,7 +207,7 @@ func (e *Block) Init() (err error) {
 
 	e.dragEnabledSupport()
 	e.resizeEnabledSupport()
-	//e.SetSelectEnabled(e.selected) // todo: descomentar
+	e.SetSelectEnabled(e.selected)
 
 	return
 }
@@ -389,7 +389,7 @@ func (e *Block) initEvents() {
 
 	stopDrag = js.FuncOf(func(this js.Value, args []js.Value) interface{} { // feito
 		isDragging = false
-		e.block.AddStyle("cursor", "grab")
+		e.block.AddStyle("cursor", "")
 
 		js.Global().Call("removeEventListener", "mousemove", drag)
 		js.Global().Call("removeEventListener", "mouseup", stopDrag)

@@ -78,8 +78,8 @@ func (e *GenericDevice) Init() (err error) {
 
 	//e.block.SetPosition(e.x, e.y)
 	//e.block.SetSize(e.width, e.height)
-	e.block.SetDragEnabled(false)
-	e.block.SetResizeEnabled(true) // todo: false
+	e.block.SetDragEnabled(true)
+	e.block.SetResizeEnabled(false) // todo: false
 	e.block.SetHorizontalMinimumSize(e.horizontalMinimumSize)
 	e.block.SetVerticalMinimumSize(e.verticalMinimumSize)
 

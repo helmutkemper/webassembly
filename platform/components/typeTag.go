@@ -194,7 +194,7 @@ func (e *tag) init(tagRaw string) (err error) {
 			e.Minimize = value
 		case "close":
 			e.Close = value
-		case "options":
+		case "options": // todo: MenuOptions?
 			e.Options = value
 		case "columns":
 			e.Columns = value

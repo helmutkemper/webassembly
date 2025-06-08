@@ -54,7 +54,7 @@ func (e *DoubleLoopArrow) Init() (err error) {
 	e.borderArrow = factoryBrowser.NewTagSvgPath().
 		Fill("none").
 		Stroke(e.arrowColor).
-		StrokeWidth(3).
+		StrokeWidth(5).
 		StrokeLineCap(html.KSvgStrokeLinecapRound).
 		StrokeLineJoin(html.KSvgStrokeLinejoinRound).
 		MarkerEnd("url(#borderArrow)")
@@ -81,11 +81,11 @@ func (e *DoubleLoopArrow) Init() (err error) {
 }
 
 func (e *DoubleLoopArrow) Update(width, height int) (err error) {
-	e.WarningMark.Update(width, height)
+	_ = e.WarningMark.Update(width, height)
 	e.svg.ViewBox([]int{0.0, 0.0, width, height})
 
 	margin := 10
-	r := 20
+	r := 30
 
 	// Define the double loop arrow path data
 	arrow := []string{

@@ -141,7 +141,7 @@ func (e *Block) SetHeight(height int) {
 //}
 
 func (e *Block) SetName(name string) (err error) {
-	e.name, err = utils.VerifyName(name)
+	e.name, err = e.SequentialId.GetId(name)
 	return
 }
 
@@ -227,6 +227,7 @@ func (e *Block) createBlock(x, y, width, height int) {
 
 	e.selectDiv = factoryBrowser.NewTagDiv().
 		AddStyle("position", "absolute").
+		AddStyle("display", "none").
 		AddStyle("top", "0px").
 		AddStyle("left", "0px").
 		AddStyle("width", fmt.Sprintf("%dpx", width)).
@@ -307,17 +308,26 @@ func (e *Block) max(a, b int) (max int) {
 	return b
 }
 
-func (e *Block) SetSelectEnabled(enabled bool) {
-	e.selected = enabled
-	e.selectDiv.AddStyleConditional(enabled, "display", "block", "none")
+func (e *Block) SetSelectEnabled(selected bool) {
+	e.selected = selected
 
-	if enabled && e.resizeEnabled {
+	if !e.initialized {
+		return
+	}
+
+	if selected && !e.resizeEnabled {
+		e.selectDiv.AddStyleConditional(selected, "display", "block", "none")
 		e.SetResizeEnabled(false)
 	}
 }
 
 func (e *Block) SetResizeEnabled(enabled bool) {
 	e.resizeEnabled = enabled
+
+	if !e.initialized {
+		return
+	}
+
 	e.resizeEnabledSupport()
 	if enabled && e.selected {
 		e.SetSelectEnabled(false)
@@ -337,6 +347,11 @@ func (e *Block) resizeEnabledSupport() {
 
 func (e *Block) SetDragEnabled(enabled bool) {
 	e.dragEnabled = enabled
+
+	if !e.initialized {
+		return
+	}
+
 	e.dragEnabledSupport()
 
 	if enabled && e.dragEnabled {
@@ -353,7 +368,7 @@ func (e *Block) dragEnabledSupport() {
 		return
 	}
 
-	//e.block.AddStyleConditional(e.dragEnabled, "cursor", "grab", "")
+	e.block.AddStyleConditional(e.dragEnabled, "cursor", "grab", "")
 }
 
 func (e *Block) initEvents() {
@@ -415,17 +430,6 @@ func (e *Block) initEvents() {
 	}))
 
 	resizeHorizontal := func(element js.Value, name string) {
-		/*
-		   bug:
-		   [tl]--------------[tr]
-		     |                |
-		     |                |
-		     |                |
-		   [bl]--------------[br]
-
-		   If I drag TR or BR left, and the size is below minimum, the block is dragged left.
-		*/
-
 		dx := element.Get("screenX").Int() - startX
 		newLeft := startLeft
 		newWidth := startWidth
@@ -442,23 +446,26 @@ func (e *Block) initEvents() {
 			newLeft = e.max(0, startLeft+dx)
 		}
 
+		// [tl]--------------[tr]
+		//   |                |
+		//   |                |
+		//   |                |
+		// [bl]--------------[br]
+		//
+		// Prevents the effect:
+		//   When drag TR or BR left, and the size is below minimum, the block is dragged left.
+		if newWidth < e.blockHorizontalMinimumSize {
+			return
+		}
+
+		newWidth = e.max(e.blockHorizontalMinimumSize, newWidth)
+
 		e.block.AddStyle("left", fmt.Sprintf("%dpx", newLeft))
-		e.block.AddStyle("width", fmt.Sprintf("%dpx", e.max(e.blockHorizontalMinimumSize, newWidth)))
-		e.selectDiv.AddStyle("width", fmt.Sprintf("%dpx", e.max(e.blockHorizontalMinimumSize, newWidth)))
+		e.block.AddStyle("width", fmt.Sprintf("%dpx", newWidth))
+		e.selectDiv.AddStyle("width", fmt.Sprintf("%dpx", newWidth))
 	}
 
 	resizeVertical := func(element js.Value, name string) {
-		/*
-		   bug:
-		   [tl]--------------[tr]
-		     |                |
-		     |                |
-		     |                |
-		   [bl]--------------[br]
-
-		   If I drag TL or TR down, and the size is below minimum, the block is dragged down.
-		*/
-
 		dy := element.Get("screenY").Int() - startY
 		newTop := startTop
 		newHeight := startHeight
@@ -475,9 +482,23 @@ func (e *Block) initEvents() {
 			newTop = e.max(0, startTop+dy)
 		}
 
+		// [tl]--------------[tr]
+		//   |                |
+		//   |                |
+		//   |                |
+		// [bl]--------------[br]
+		//
+		// Prevents the effect:
+		//   When drag TL or TR down, and the size is below minimum, the block is dragged down.
+		if newHeight < e.blockVerticalMinimumSize {
+			return
+		}
+
+		newHeight = e.max(e.blockVerticalMinimumSize, newHeight)
+
 		e.block.AddStyle("top", fmt.Sprintf("%dpx", newTop))
-		e.block.AddStyle("height", fmt.Sprintf("%dpx", e.max(e.blockVerticalMinimumSize, newHeight)))
-		e.selectDiv.AddStyle("height", fmt.Sprintf("%dpx", e.max(e.blockVerticalMinimumSize, newHeight)))
+		e.block.AddStyle("height", fmt.Sprintf("%dpx", newHeight))
+		e.selectDiv.AddStyle("height", fmt.Sprintf("%dpx", newHeight))
 	}
 
 	resizeMouseMove = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
@@ -493,7 +514,7 @@ func (e *Block) initEvents() {
 
 		width := e.block.GetOffsetWidth()
 		height := e.block.GetOffsetHeight()
-		e.OnResize(element, width, height) // todo: virar ponteiro de func
+		e.OnResize(element, width, height)
 
 		return nil
 	})

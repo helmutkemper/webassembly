@@ -94,12 +94,12 @@ func (e *Connection) GetIdentity() (identity Identity) {
 
 func (e *Connection) SetX(x int) {
 	e.x = x
-	e.mouseArea.AddStyle("left", fmt.Sprintf("%dpx", x))
+	e.mouseArea.AddStyle("left", fmt.Sprintf("%dpx", x-e.spaceAreaHorizontal))
 }
 
 func (e *Connection) SetY(y int) {
 	e.y = y
-	e.mouseArea.AddStyle("top", fmt.Sprintf("%dpx", y))
+	e.mouseArea.AddStyle("top", fmt.Sprintf("%dpx", y-e.spaceAreaVertical))
 }
 
 func (e *Connection) Create(x, y, width, height int, color color.RGBA) {

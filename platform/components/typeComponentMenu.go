@@ -12,15 +12,15 @@ import (
 
 var GlobalMenuList []*menu
 
-type options struct {
+type MenuOptions struct {
 	Label     string
 	Icon      string
 	IconLeft  string
 	IconRight string
 	Type      string
-	Items     []options
+	Items     []MenuOptions
 	Action    js.Func
-	Submenu   []options
+	Submenu   []MenuOptions
 }
 
 type MainMenu struct {
@@ -39,7 +39,7 @@ type menu struct {
 	__menu           *html.TagDiv
 	__subMenuToClose []*html.TagDiv
 	__setup          map[string]string
-	__options        []options
+	__options        []MenuOptions
 	__fixed          bool
 	__bodyX          string
 	__bodyY          string
@@ -59,11 +59,11 @@ func (e *menu) HideButtons(drag, minimize, close bool) {
 	e.__buttonClose = close
 }
 
-func (e *menu) Menu(options []options) {
+func (e *menu) Menu(options []MenuOptions) {
 	e.__options = options
 }
 
-func (e menu) GetMenu() (options []options) {
+func (e menu) GetMenu() (options []MenuOptions) {
 	return e.__options
 }
 
@@ -107,6 +107,26 @@ func (e *menu) FixedMenu(x, y any) {
 	} else {
 		e.__bodyY = converted
 	}
+}
+
+func (e *menu) Columns(size int) {
+	if size <= 2 {
+		size = 2
+	}
+
+	if e.__setup == nil {
+		e.__setup = make(map[string]string)
+	}
+
+	e.__setup["gridGridTemplateColumns"] = fmt.Sprintf("repeat(%v, 1fr)", size)
+}
+
+func (e *menu) Title(title string) {
+	if e.__setup == nil {
+		e.__setup = make(map[string]string)
+	}
+
+	e.__setup["menuTitle"] = title
 }
 
 func (e *menu) Css(key, value string) {
@@ -696,7 +716,7 @@ func (e *menu) adjustContentWidth() {
 // Português:
 //
 //	Monta o menu e os submenu
-func (e *menu) mountMenu(options []options, container *html.TagDiv) {
+func (e *menu) mountMenu(options []MenuOptions, container *html.TagDiv) {
 	for _, option := range options {
 		if option.Label == "-" {
 			divider := factoryBrowser.NewTagHr()

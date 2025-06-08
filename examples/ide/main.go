@@ -10,13 +10,12 @@ func main() {
 
 	sequentialId := new(utils.SequentialId)
 
-	device := new(devices.GenericDevice)
+	device := new(devices.StatementLoop)
 	device.SetSequentialId(sequentialId)
 	device.SetPosition(50, 50)
-	device.SetSize(400, 400)
 	device.SetFatherId("container")
-	device.SetName("loop")
-	device.Init()
+	_ = device.SetName("loop")
+	_ = device.Init()
 
 	//wm.SetWarning(true)
 	//wm.flashMark()

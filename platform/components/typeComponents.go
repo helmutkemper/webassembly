@@ -525,7 +525,7 @@ func (e *Components) processContextMenu(parentElementPtr, parentElement, element
 		return
 	}
 
-	var menuOptions []options
+	var menuOptions []MenuOptions
 	parentElementPtr.MethodByName(componentMenuData.tagData.Func).Call(nil)
 	if menuOptions, err = e.processSliceMenuOptions(element, componentMenuData.sliceElement); err != nil {
 		return
@@ -671,7 +671,7 @@ func (e *Components) processMainMenu(parentElementPtr, parentElement, element re
 		return
 	}
 
-	var menuOptions []options
+	var menuOptions []MenuOptions
 	parentElementPtr.MethodByName(componentMenuData.tagData.Func).Call(nil)
 	if menuOptions, err = e.processSliceMenuOptions(element, componentMenuData.sliceElement); err != nil {
 		return
@@ -771,7 +771,7 @@ func (e *Components) searchStruct(searchElement reflect.Value, componentName, ta
 	return
 }
 
-func (e *Components) processSliceMenuOptions(element, sliceData reflect.Value) (menuOptions []options, err error) {
+func (e *Components) processSliceMenuOptions(element, sliceData reflect.Value) (menuOptions []MenuOptions, err error) {
 	A := sliceData.Kind() == reflect.Ptr && sliceData.Elem().Kind() == reflect.Slice
 	B := sliceData.Kind() == reflect.Slice
 	if !(A || B) {
@@ -779,7 +779,7 @@ func (e *Components) processSliceMenuOptions(element, sliceData reflect.Value) (
 	}
 
 	tagData := new(tag)
-	menuOptions = make([]options, 0)
+	menuOptions = make([]MenuOptions, 0)
 
 	if sliceData.Kind() == reflect.Ptr {
 		sliceData = sliceData.Elem()
@@ -789,7 +789,7 @@ func (e *Components) processSliceMenuOptions(element, sliceData reflect.Value) (
 		for i := 0; i < sliceData.Len(); i++ {
 			item := sliceData.Index(i)
 
-			menuOptItem := options{}
+			menuOptItem := MenuOptions{}
 
 			for j := 0; j < item.NumField(); j++ {
 				field := item.Field(j)
@@ -813,7 +813,7 @@ func (e *Components) processSliceMenuOptions(element, sliceData reflect.Value) (
 						menuOptItem.IconRight = field.String()
 					case "type":
 						menuOptItem.Type = field.String()
-					case "options":
+					case "options": //todo: MenuOptions?
 						if menuOptItem.Items, err = e.processSliceMenuOptions(element, field); err != nil {
 							return
 						}

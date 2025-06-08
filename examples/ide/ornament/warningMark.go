@@ -60,6 +60,7 @@ func (e *WarningMark) GetWarningMark() *html.TagSvg {
 // @param warning true to show the warning mark, false to hide it
 func (e *WarningMark) SetWarning(warning bool) {
 	if warning == e.warningEnabled {
+		e.svgWarning.AddStyle("visibility", "hidden")
 		return
 	}
 

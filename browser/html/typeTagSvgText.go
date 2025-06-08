@@ -215,6 +215,47 @@ func (e *TagSvgText) Init() (ref *TagSvgText) {
 	return e
 }
 
+// MarkerEnd
+//
+// English:
+//
+// The marker-end attribute defines the arrowhead or polymarker that will be drawn at the final vertex of the given
+// shape.
+//
+//	Input:
+//	  value: the arrowhead or polymarker that will be drawn
+//	    string: (e.g. "url(#triangle)")
+//
+// For all shape elements, except <polyline> and <path>, the last vertex is the same as the first vertex. In this case,
+// if the value of marker-start and marker-end are both not none, then two markers will be rendered on that final
+// vertex.
+// For <path> elements, for each closed subpath, the last vertex is the same as the first vertex. marker-end is only
+// rendered on the final vertex of the path data.
+//
+// Notes:
+//   - As a presentation attribute, marker-end can be used as a CSS property.
+//
+// Português:
+//
+// O atributo marker-end define a ponta de seta ou polimarcador que será desenhado no vértice final da forma dada.
+//
+//	Entrada:
+//	  value: a ponta de seta ou polimarcador que será desenhado
+//	    string: (e.g. "url(#triangle)")
+//
+// Para todos os elementos de forma, exceto <polyline> e <path>, o último vértice é o mesmo que o primeiro vértice.
+// Nesse caso, se o valor de marker-start e marker-end não for nenhum, então dois marcadores serão renderizados nesse
+// vértice final.
+// Para elementos <path>, para cada subcaminho fechado, o último vértice é igual ao primeiro vértice.
+// O final do marcador é renderizado apenas no vértice final dos dados do caminho.
+//
+// Notas:
+//   - Como atributo de apresentação, o marker-end pode ser usado como uma propriedade CSS.
+func (e *TagSvgText) MarkerEnd(value interface{}) (ref *TagSvgText) {
+	e.selfElement.Call("setAttribute", "marker-end", value)
+	return e
+}
+
 func (e *TagSvgText) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
@@ -2991,6 +3032,11 @@ func (e *TagSvgText) TextLength(value interface{}) (ref *TagSvgText) {
 // Adiciona um texto simples ao conteúdo da tag.
 func (e *TagSvgText) Text(value string) (ref *TagSvgText) {
 	e.selfElement.Set("textContent", value)
+	return e
+}
+
+func (e *TagSvgText) UserSelect(value string) (ref *TagSvgText) {
+	e.selfElement.Set("userSelect", value)
 	return e
 }
 

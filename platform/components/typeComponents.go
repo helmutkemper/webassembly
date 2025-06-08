@@ -347,6 +347,7 @@ func (e *Components) process(element reflect.Value, typeof reflect.Type) (err er
 					e.Show()
 					// Espera criar panelHeader para que panelBody fique abaixo
 					e.panelFather.Append(e.panelBody)
+
 				case "panel":
 
 					if tagData.Top == "" {
@@ -5284,7 +5285,7 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
 			if err = tagDataInternal.init(tagRaw); err != nil {
-				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				err = fmt.Errorf("1 error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
 				return
 			}
 
@@ -5299,7 +5300,7 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 					if tagRaw != "" {
 						tagDataInternal := new(tag)
 						if err = tagDataInternal.init(tagRaw); err != nil {
-							err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+							err = fmt.Errorf("2 error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
 							return
 						}
 
@@ -5337,7 +5338,7 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 		if tagRaw != "" {
 			tagDataInternal := new(tag)
 			if err = tagDataInternal.init(tagRaw); err != nil {
-				err = fmt.Errorf("error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
+				err = fmt.Errorf("3 error: the component %v has an error in one of the tags. the answer during processing was: %v", element.Type().Name(), err)
 				return
 			}
 
@@ -5478,9 +5479,10 @@ func (e *Components) processComponentCheckbox(element reflect.Value, tagData *ta
 							optionTagRaw := optionTyp.Tag.Get("wasmPanel")
 							if optionTagRaw != "" {
 								optionTag := new(tag)
-								optionTag.init(optionTagRaw)
-								log.Printf("raw: %v", optionTagRaw)
-								os.Exit(8)
+								if err = optionTag.init(optionTagRaw); err != nil {
+									err = fmt.Errorf("4 error: the component %v has an error in one of the tags. the answer during processing was: %v", optionVal.Type().Name(), err)
+									return
+								}
 
 								switch optionTag.Type {
 								case "inputTagLabel":

@@ -5,6 +5,7 @@ import (
 	"log"
 	"reflect"
 	"strconv"
+	"strings"
 	"syscall/js"
 )
 
@@ -637,12 +638,14 @@ func (e *TagSvgPath) Cursor(value interface{}) (ref *TagSvgPath) {
 //
 // d é um atributo de apresentação e, portanto, também pode ser usado como uma propriedade CSS.
 func (e *TagSvgPath) D(d interface{}) (ref *TagSvgPath) {
-	if converted, ok := d.(*SvgPath); ok {
+	switch converted := d.(type) {
+	case string:
+		e.selfElement.Call("setAttribute", "d", converted)
+	case []string:
+		e.selfElement.Call("setAttribute", "d", strings.Join(converted, " "))
+	case *SvgPath:
 		e.selfElement.Call("setAttribute", "d", converted.String())
-		return e
 	}
-
-	e.selfElement.Call("setAttribute", "d", d)
 	return e
 }
 

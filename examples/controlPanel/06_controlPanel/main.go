@@ -678,8 +678,8 @@ func (e *ListCheckbox) Init() {
 	//data, _ := json.Marshal(&e.List)
 	//log.Printf("%s", data)
 
-	(*e.List)[0].TagRadio.Checked(true)
-	(*e.List)[0].TagLabel.Text("Vivo! >> ").Append((*e.List)[0].TagRadio)
+	//(*e.List)[0].TagRadio.Checked(true)
+	//(*e.List)[0].TagLabel.Text("Vivo! >> ").Append((*e.List)[0].TagRadio)
 }
 
 type CheckboxType struct {
@@ -850,10 +850,6 @@ func (e *OnClickEvent) OnClickEvent(event OnClickEvent, reference *ControlPanel)
 
 	ref.Start.TagButton.Disabled(true)
 	ref.Start.Value("Wait")
-	if GlobalTween != nil {
-		GlobalTween.End()
-		return
-	}
 
 	GlobalTween = new(easingTween.Tween)
 	GlobalTween.SetDuration(time.Duration(value)*time.Second).
@@ -887,8 +883,49 @@ func (e *EasingTweenStart) Init() {
 var canvas *html.TagCanvas
 var tagDivRocket *html.TagDiv
 
-var GlobalTween = new(easingTween.Tween)
+var GlobalTween *easingTween.Tween
 var GlobalControlPanel = new(ComponentControlPanel)
+
+func init() {
+	//GlobalControlPanel = &ComponentControlPanel{
+	//	Panel: &ControlPanel{
+	//		Body: &Body{
+	//			SimpleForm: &SimpleForm{
+	//				Checkbox: &ListCheckbox{
+	//					List: &[]CheckboxType{
+	//						{
+	//							TagRadio: factoryBrowser.NewTagInputCheckBox(),
+	//							TagLabel: factoryBrowser.NewTagLabel(),
+	//							Label:    "label1",
+	//							Value:    "Value_1",
+	//							Disabled: false,
+	//							Selected: false,
+	//						},
+	//						{
+	//							TagRadio: factoryBrowser.NewTagInputCheckBox(),
+	//							TagLabel: factoryBrowser.NewTagLabel(),
+	//							Label:    "label2",
+	//							Value:    "Value_2",
+	//							Disabled: false,
+	//							Selected: true,
+	//						},
+	//					},
+	//				},
+	//			},
+	//			Share: &ShareForm{
+	//				QRCode: &QRCodeForm{
+	//					QRCodeValue:   "frankenstein",
+	//					RecoveryLevel: 1,
+	//					Color:         "#ffffff",
+	//					Background:    "#000000",
+	//					DisableBorder: true,
+	//				},
+	//			},
+	//		},
+	//	},
+	//}
+
+}
 
 func main() {
 

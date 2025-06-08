@@ -2686,6 +2686,11 @@ func (e *TagSvg) Style(value string) (ref *TagSvg) {
 	return e
 }
 
+func (e *TagSvg) AddStyle(key string, value any) (ref *TagSvg) {
+	e.selfElement.Get("style").Set(key, value)
+	return e
+}
+
 // #styling end -------------------------------------------------------------------------------------------------------
 
 // Height
@@ -2799,8 +2804,20 @@ func (e *TagSvg) PreserveAspectRatio(ratio, meet interface{}) (ref *TagSvg) {
 // Os números, que são separados por espaço em branco e ou vírgula, especificam um retângulo no espaço do usuário que é
 // mapeado para os limites da janela de visualização estabelecida para o elemento SVG associado (não a janela de
 // visualização do navegador).
+// todo: olhar todos os viewbox
 func (e *TagSvg) ViewBox(value interface{}) (ref *TagSvg) {
-	if converted, ok := value.([]float64); ok {
+	switch converted := value.(type) {
+	case []int:
+		var valueStr = ""
+		for _, v := range converted {
+			valueStr += strconv.FormatInt(int64(v), 10) + " "
+		}
+
+		var length = len(valueStr) - 1
+
+		e.selfElement.Call("setAttribute", "viewBox", valueStr[:length])
+		return e
+	case []float64:
 		var valueStr = ""
 		for _, v := range converted {
 			valueStr += strconv.FormatFloat(v, 'g', -1, 64) + " "
@@ -2810,10 +2827,11 @@ func (e *TagSvg) ViewBox(value interface{}) (ref *TagSvg) {
 
 		e.selfElement.Call("setAttribute", "viewBox", valueStr[:length])
 		return e
-	}
 
-	e.selfElement.Call("setAttribute", "viewBox", value)
-	return e
+	default:
+		e.selfElement.Call("setAttribute", "viewBox", value)
+		return e
+	}
 }
 
 // Width

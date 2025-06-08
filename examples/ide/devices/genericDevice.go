@@ -5,7 +5,10 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
 	"github.com/helmutkemper/webassembly/examples/ide/utils"
+	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"log"
+	"reflect"
+	"syscall/js"
 )
 
 type GenericDevice struct {
@@ -19,7 +22,6 @@ type GenericDevice struct {
 	id                    string
 	connStop              *connection.Connection
 	debugMode             bool
-	x, y, width, height   int
 
 	sequentialId utils.SequentialInterface
 }
@@ -54,12 +56,12 @@ func (e *GenericDevice) Init() (err error) {
 	e.horizontalMinimumSize = 100
 	e.verticalMinimumSize = 100
 
-	if e.width == 0 {
-		e.width = e.defaultWidth
+	if e.block.width == 0 {
+		e.block.width = e.defaultWidth
 	}
 
-	if e.height == 0 {
-		e.height = e.defaultHeight
+	if e.block.height == 0 {
+		e.block.height = e.defaultHeight
 	}
 
 	err = e.block.SetName("GenericDevice")
@@ -76,7 +78,7 @@ func (e *GenericDevice) Init() (err error) {
 
 	//e.block.SetPosition(e.x, e.y)
 	//e.block.SetSize(e.width, e.height)
-	e.block.SetDragEnabled(true)
+	e.block.SetDragEnabled(false)
 	e.block.SetResizeEnabled(true) // todo: false
 	e.block.SetHorizontalMinimumSize(e.horizontalMinimumSize)
 	e.block.SetVerticalMinimumSize(e.verticalMinimumSize)
@@ -90,6 +92,21 @@ func (e *GenericDevice) Init() (err error) {
 	_ = e.block.Init()
 
 	e.block.id = e.id
+
+	e.connStop = new(connection.Connection)
+	e.connStop.Create(e.block.width-50-4, e.block.height-40-2, 4, 3, factoryColor.NewRed())
+	e.connStop.SetFather(e.block.GetElement())
+	e.connStop.SetAsInput()
+	e.connStop.SetName("stop")
+	e.connStop.SetDataType(reflect.Bool)
+	//e.connStop.SetAcceptedNotConnected(true)
+	e.connStop.SetBlocked(false)
+	e.connStop.Init()
+
+	e.block.SetOnResize(func(element js.Value, width, height int) {
+		e.connStop.SetX(width - 50 - 8 - 4)
+		e.connStop.SetY(height - 40 - 8 - 2)
+	})
 
 	return nil
 }

@@ -60,6 +60,8 @@ type Block struct {
 	resizers []*html.TagDiv
 
 	ornament ornament.Draw
+
+	onResizeFunc func(element js.Value, width, height int)
 }
 
 func (e *Block) SetFatherId(fatherId string) {
@@ -85,6 +87,10 @@ func (e *Block) SetID(id string) (err error) {
 
 func (e *Block) GetID() (id string) {
 	return e.id
+}
+
+func (e *Block) GetElement() (element *html.TagDiv) {
+	return e.block
 }
 
 func (e *Block) SetX(x int) {
@@ -347,7 +353,7 @@ func (e *Block) dragEnabledSupport() {
 		return
 	}
 
-	e.block.AddStyleConditional(e.dragEnabled, "cursor", "grab", "default")
+	//e.block.AddStyleConditional(e.dragEnabled, "cursor", "grab", "")
 }
 
 func (e *Block) initEvents() {
@@ -528,4 +534,12 @@ func (e *Block) initEvents() {
 	e.resizerBottomRight.Get().Call("addEventListener", "mousedown", resizeFunc)
 }
 
-func (e *Block) OnResize(element js.Value, width, height int) {}
+func (e *Block) SetOnResize(f func(element js.Value, width, height int)) {
+	e.onResizeFunc = f
+}
+
+func (e *Block) OnResize(element js.Value, width, height int) {
+	if e.onResizeFunc != nil {
+		e.onResizeFunc(element, width, height)
+	}
+}

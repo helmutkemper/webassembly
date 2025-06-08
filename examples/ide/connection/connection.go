@@ -27,6 +27,7 @@ type Connection struct {
 	height               int
 	color                color.RGBA
 	name                 string
+	containerId          string
 	isInput              bool
 	isBlocked            bool
 	container            *html.TagDiv
@@ -39,6 +40,11 @@ type Connection struct {
 	spaceAreaColor       color.RGBA
 	autoIDObj            utils.SequentialId
 	autoID               string
+}
+
+func (e *Connection) SetFather(father *html.TagDiv) {
+	e.container = father
+	e.containerId = father.GetId()
 }
 
 func (e *Connection) SetName(name string) (err error) {
@@ -56,6 +62,18 @@ func (e *Connection) GetAsInput() (isInput bool) {
 
 func (e *Connection) SetBlocked(isBlocked bool) {
 	e.isBlocked = isBlocked
+
+	if e.mouseArea == nil {
+		return
+	}
+
+	if e.isBlocked {
+		e.mouseArea.AddStyle("cursor", "not-allowed")
+		return
+	}
+
+	e.mouseArea.AddStyle("cursor", "crosshair")
+	return
 }
 
 func (e *Connection) GetBlocked() (isBlocked bool) {
@@ -93,7 +111,10 @@ func (e *Connection) Create(x, y, width, height int, color color.RGBA) {
 }
 
 func (e *Connection) Init() {
-	id := e.container.GetId() + "_" + e.name
+	id := e.containerId + "_" + e.name
+
+	e.spaceAreaHorizontal = 8
+	e.spaceAreaVertical = 8
 
 	e.autoID = utils.GetRandomId()
 
@@ -116,23 +137,17 @@ func (e *Connection) Init() {
 		AddStyle("backgroundColor", e.color)
 	e.mouseArea.Append(e.connection)
 
-	e.mouseArea.Get().Call("addEventListener", "mouseenter", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		if e.isBlocked {
-			e.mouseArea.AddStyle("cursor", "not-allowed")
-			return nil
-		}
-
-		e.mouseArea.AddStyle("cursor", "crosshair")
-		return nil
-	}))
-
-	e.mouseArea.Get().Call("addEventListener", "mouseenter", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		e.mouseArea.AddStyle("cursor", "default")
-		return nil
-	}))
-
 	e.mouseArea.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		log.Printf("%+v", e.GetIdentity())
 		return nil
 	}))
+
+	e.container.Append(e.mouseArea)
+
+	if e.isBlocked {
+		e.mouseArea.AddStyle("cursor", "not-allowed")
+		return
+	}
+
+	e.mouseArea.AddStyle("cursor", "crosshair")
 }

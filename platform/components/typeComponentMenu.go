@@ -51,6 +51,7 @@ type menu struct {
 	__buttonClose    bool
 	__autoZIndex     bool
 	__escapeFunction js.Func
+	__updateFunc     func() (options []MenuOptions)
 }
 
 func (e *menu) HideButtons(drag, minimize, close bool) {
@@ -63,7 +64,12 @@ func (e *menu) Menu(options []MenuOptions) {
 	e.__options = options
 }
 
-func (e menu) GetMenu() (options []MenuOptions) {
+func (e *menu) MenuFunc(f func() (options []MenuOptions)) {
+	e.__updateFunc = f
+	e.__options = f()
+}
+
+func (e *menu) GetMenu() (options []MenuOptions) {
 	return e.__options
 }
 
@@ -525,6 +531,10 @@ func (e *menu) Init() {
 //
 //	Remonta o menu com novos dados
 func (e *menu) ReInit() {
+	if e.__updateFunc != nil {
+		e.__options = e.__updateFunc()
+	}
+
 	e.__menu.Html("")
 	e.mountMenu(e.__options, e.__menu)
 	e.adjustContentWidth()

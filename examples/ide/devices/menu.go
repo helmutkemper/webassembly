@@ -6,9 +6,18 @@ import (
 )
 
 type Menu struct {
-	node    html.Compatible
-	content []components.MenuOptions
-	title   string
+	contextMenu *components.ContextMenu
+	node        html.Compatible
+	contentFunc func() (options []components.MenuOptions)
+	title       string
+}
+
+func (e *Menu) ReInit() {
+	if e.contextMenu == nil {
+		return
+	}
+
+	e.contextMenu.ReInit()
 }
 
 func (e *Menu) SetTitle(title string) {
@@ -19,16 +28,16 @@ func (e *Menu) SetNode(node html.Compatible) {
 	e.node = node
 }
 
-func (e *Menu) SetContent(content []components.MenuOptions) {
-	e.content = content
+func (e *Menu) SetContentFunc(f func() (content []components.MenuOptions)) {
+	e.contentFunc = f
 }
 
 func (e *Menu) Init() {
 
-	contextMenu := new(components.ContextMenu)
-	contextMenu.Title(e.title)
-	contextMenu.Menu(e.content)
-	contextMenu.AttachMenu(e.node)
-	contextMenu.Columns(3)
-	contextMenu.Init()
+	e.contextMenu = new(components.ContextMenu)
+	e.contextMenu.Title(e.title)
+	e.contextMenu.MenuFunc(e.contentFunc)
+	e.contextMenu.AttachMenu(e.node)
+	e.contextMenu.Columns(3)
+	e.contextMenu.Init()
 }

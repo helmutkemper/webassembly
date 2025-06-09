@@ -3,6 +3,7 @@ package devices
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
+	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
 	"github.com/helmutkemper/webassembly/examples/ide/utils"
 	"github.com/helmutkemper/webassembly/platform/components"
@@ -13,8 +14,10 @@ import (
 )
 
 type StatementLoop struct {
-	block Block
+	block block.Block
 	menu  Menu
+
+	debugSelected bool
 
 	defaultWidth          int
 	defaultHeight         int
@@ -29,7 +32,7 @@ type StatementLoop struct {
 }
 
 func (e *StatementLoop) Get() (container *html.TagDiv) {
-	return e.block.container
+	return e.block.GetIdeStage()
 }
 
 func (e *StatementLoop) SetFatherId(fatherId string) {
@@ -52,8 +55,112 @@ func (e *StatementLoop) SetSequentialId(sequentialId utils.SequentialInterface) 
 	e.sequentialId = sequentialId
 }
 
+func (e *StatementLoop) getMenuLabel(condition bool, labelTrue, labelFalse string) (label string) {
+	if condition {
+		return labelTrue
+	}
+
+	return labelFalse
+}
+
 func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
 	content = []components.MenuOptions{
+		{
+			Label: "Debug",
+			Submenu: []components.MenuOptions{
+				{
+					Label: e.getMenuLabel(e.debugSelected, "Unselect", "Select"),
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+						e.debugSelected = !e.debugSelected
+						e.block.SetSelected(e.debugSelected)
+						e.menu.ReInit()
+
+						return nil
+					}),
+				},
+				{
+					Label:  "Resize",
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { e.block.SetResize(true); return nil }),
+				},
+			},
+		},
+		{
+			Label: "Debug",
+			Submenu: []components.MenuOptions{
+				{
+					Type: "grid",
+					Items: []components.MenuOptions{
+						{
+							Label:  "Cat 1",
+							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
+						},
+						{
+							Label:  "Cat 2",
+							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 2"); return nil }),
+						},
+						{
+							Label:  "Cat 3",
+							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 3"); return nil }),
+						},
+						{
+							Label:  "Cat 4",
+							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 4"); return nil }),
+						},
+						{
+							Label:  "Cat 5",
+							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 5"); return nil }),
+						},
+						{
+							Label:  "Cat 6",
+							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 6"); return nil }),
+							Submenu: []components.MenuOptions{
+								{
+									Type: "grid",
+									Items: []components.MenuOptions{
+										{
+											Label:  "Cat 1",
+											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
+										},
+										{
+											Label:  "Cat 2",
+											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 2"); return nil }),
+										},
+										{
+											Label:  "Cat 3",
+											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 3"); return nil }),
+										},
+										{
+											Label:  "Cat 4",
+											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 4"); return nil }),
+										},
+										{
+											Label:  "Cat 5",
+											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 5"); return nil }),
+										},
+										{
+											Label:  "Cat 6",
+											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 6"); return nil }),
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 		{
 			Type: "grid",
 			Items: []components.MenuOptions{
@@ -242,12 +349,12 @@ func (e *StatementLoop) Init() (err error) {
 	e.horizontalMinimumSize = 400
 	e.verticalMinimumSize = 300
 
-	if e.block.width == 0 {
-		e.block.width = e.defaultWidth
+	if e.block.GetWidth() == 0 {
+		e.block.SetWidth(e.defaultWidth)
 	}
 
-	if e.block.height == 0 {
-		e.block.height = e.defaultHeight
+	if e.block.GetHeight() == 0 {
+		e.block.SetHeight(e.defaultHeight)
 	}
 
 	err = e.block.SetName("StatementLoop")
@@ -261,10 +368,10 @@ func (e *StatementLoop) Init() (err error) {
 	}
 
 	e.block.SetDragEnabled(true)
-	e.block.SetResizeEnabled(true)
-	e.block.SetSelectEnabled(true)
-	e.block.SetHorizontalMinimumSize(e.horizontalMinimumSize)
-	e.block.SetVerticalMinimumSize(e.verticalMinimumSize)
+	//e.block.SetEnableResize(true)
+	//e.block.SetSelected(true)
+	e.block.SetMinimumWidth(e.horizontalMinimumSize)
+	e.block.SetMinimumHeight(e.verticalMinimumSize)
 
 	e.ornamentDraw = new(doubleLoopArrow.DoubleLoopArrow)
 	e.ornamentDraw.SetWarningMarkMargin(20)
@@ -274,15 +381,17 @@ func (e *StatementLoop) Init() (err error) {
 
 	_ = e.block.Init()
 
-	e.block.id = e.id
+	if err = e.block.SetID(e.id); err != nil {
+		return
+	}
 
 	e.connStop = new(connection.Connection)
-	e.connStop.Create(e.block.width-50-4, e.block.height-40-2, 4, 3, factoryColor.NewRed())
-	e.connStop.SetFather(e.block.GetElement())
+	e.connStop.Create(e.block.GetWidth()-50-4, e.block.GetHeight()-40-2, 4, 3, factoryColor.NewRed())
+	e.connStop.SetFather(e.block.GetDeviceDiv())
 	e.connStop.SetAsInput()
 	_ = e.connStop.SetName("stop")
 	e.connStop.SetDataType(reflect.Bool)
-	//e.connStop.SetAcceptedNotConnected(true) // todo: fazer
+	e.connStop.SetAcceptedNotConnected(true)
 	e.connStop.SetBlocked(false)
 	e.connStop.Init()
 
@@ -291,9 +400,9 @@ func (e *StatementLoop) Init() (err error) {
 		e.connStop.SetY(height - 40 - 2)
 	})
 
-	e.menu.SetNode(e.block.block)
+	e.menu.SetNode(e.block.GetDeviceDiv())
 	e.menu.SetTitle("Loop")
-	e.menu.SetContent(e.getMenu())
+	e.menu.SetContentFunc(e.getMenu)
 	e.menu.Init()
 
 	return nil

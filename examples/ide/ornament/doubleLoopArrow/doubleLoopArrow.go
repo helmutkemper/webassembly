@@ -33,10 +33,12 @@ func (e *DoubleLoopArrow) SetBackgroundColor(color color.RGBA) {
 	e.backgroundContent.Fill(e.backgroundColor)
 }
 
+// GetSvg Returns the SVG tag with the element design
 func (e *DoubleLoopArrow) GetSvg() (svg *html.TagSvg) {
 	return e.svg
 }
 
+// Init Initializes the element design
 func (e *DoubleLoopArrow) Init() (err error) {
 	_ = e.WarningMark.Init()
 
@@ -80,44 +82,46 @@ func (e *DoubleLoopArrow) Init() (err error) {
 	return
 }
 
+// Update Updates the dimensions of the element design
 func (e *DoubleLoopArrow) Update(width, height int) (err error) {
 	_ = e.WarningMark.Update(width, height)
 	e.svg.ViewBox([]int{0.0, 0.0, width, height})
 
 	margin := 10
 	r := 30
+	s := 40
 
 	// Define the double loop arrow path data
 	arrow := []string{
 		// Draw the top-right arrow
 		// Base part of the arrow
-		fmt.Sprintf("M %v %v", margin+r, margin),
+		fmt.Sprintf("M %v %v", margin+s, margin),
 		"l 15 7",
 
 		// Arrowhead
-		fmt.Sprintf("M %v %v", margin+r, margin),
+		fmt.Sprintf("M %v %v", margin+s, margin),
 		"l 15 -7",
 
 		// Curved body of the arrow
-		fmt.Sprintf("M %v %v", margin+r, margin),
+		fmt.Sprintf("M %v %v", margin+s, margin),
 		fmt.Sprintf("H %v", width-margin-r),
 		fmt.Sprintf("Q %v %v, %v %v", width-margin, margin, width-margin, margin+r),
-		fmt.Sprintf("V %v", height-margin-r),
+		fmt.Sprintf("V %v", height-margin-s),
 
 		// Draw the bottom-left arrow
 		// Base part of the arrow
-		fmt.Sprintf("M %v %v", width-margin-r, height-margin),
+		fmt.Sprintf("M %v %v", width-margin-s, height-margin),
 		"l -15 7",
 
 		// Arrowhead
-		fmt.Sprintf("M %v %v", width-margin-r, height-margin),
+		fmt.Sprintf("M %v %v", width-margin-s, height-margin),
 		"l -15 -7",
 
 		// Curved body of the arrow
-		fmt.Sprintf("M %v %v", width-margin-r, height-margin),
+		fmt.Sprintf("M %v %v", width-margin-s, height-margin),
 		fmt.Sprintf("H %v", margin+r),
 		fmt.Sprintf("Q %v %v, %v %v", margin, height-margin, margin, height-margin-r),
-		fmt.Sprintf("V %v", margin+r),
+		fmt.Sprintf("V %v", margin+s),
 	}
 	e.borderArrow.D(arrow)
 
@@ -136,7 +140,7 @@ func (e *DoubleLoopArrow) Update(width, height int) (err error) {
 	}
 	e.backgroundContent.D(background)
 
-	// Define variables
+	// draw the stop button
 	cr := 5.0
 	cx := 20.0
 	cy := 20.0

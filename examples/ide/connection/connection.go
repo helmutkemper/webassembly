@@ -12,12 +12,13 @@ import (
 )
 
 type Identity struct {
-	FatherID  string
-	Id        string
-	Name      string
-	IsInput   bool
-	ConnType  reflect.Kind
-	IsBlocked bool
+	Father               *html.TagDiv
+	Id                   string
+	Name                 string
+	IsInput              bool
+	ConnType             reflect.Kind
+	IsBlocked            bool
+	AcceptedNotConnected bool
 }
 
 type Connection struct {
@@ -30,7 +31,7 @@ type Connection struct {
 	containerId          string
 	isInput              bool
 	isBlocked            bool
-	container            *html.TagDiv
+	father               *html.TagDiv
 	connection           *html.TagDiv
 	mouseArea            *html.TagDiv
 	dataType             reflect.Kind
@@ -43,7 +44,7 @@ type Connection struct {
 }
 
 func (e *Connection) SetFather(father *html.TagDiv) {
-	e.container = father
+	e.father = father
 	e.containerId = father.GetId()
 }
 
@@ -58,6 +59,10 @@ func (e *Connection) SetAsInput() {
 
 func (e *Connection) GetAsInput() (isInput bool) {
 	return e.isInput
+}
+
+func (e *Connection) SetAcceptedNotConnected(accept bool) {
+	e.acceptedNotConnected = accept
 }
 
 func (e *Connection) SetBlocked(isBlocked bool) {
@@ -89,7 +94,15 @@ func (e *Connection) GetDataType() (dataType reflect.Kind) {
 }
 
 func (e *Connection) GetIdentity() (identity Identity) {
-	return Identity{} // todo: fazer
+	return Identity{
+		Father:               e.father,
+		Id:                   e.containerId,
+		Name:                 e.name,
+		IsInput:              e.isInput,
+		ConnType:             e.dataType,
+		IsBlocked:            e.isBlocked,
+		AcceptedNotConnected: e.acceptedNotConnected,
+	}
 }
 
 func (e *Connection) SetX(x int) {
@@ -142,7 +155,7 @@ func (e *Connection) Init() {
 		return nil
 	}))
 
-	e.container.Append(e.mouseArea)
+	e.father.Append(e.mouseArea)
 
 	if e.isBlocked {
 		e.mouseArea.AddStyle("cursor", "not-allowed")

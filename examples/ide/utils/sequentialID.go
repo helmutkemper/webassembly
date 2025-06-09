@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"sync"
 )
 
@@ -24,6 +25,13 @@ func (e *SequentialId) GetId(base string) (id string, err error) {
 		err = errors.New("base is required")
 		return
 	}
+
+	var re *regexp.Regexp
+	if re, err = regexp.Compile("^(.*?)(_[0-9]+)$"); err != nil {
+		return
+	}
+
+	base = re.ReplaceAllString(base, "$1")
 
 	e.mu.Lock()
 	defer e.mu.Unlock()

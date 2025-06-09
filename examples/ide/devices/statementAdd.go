@@ -4,7 +4,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
-	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
+	"github.com/helmutkemper/webassembly/examples/ide/ornament/math"
 	"github.com/helmutkemper/webassembly/examples/ide/utils"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"log"
@@ -12,7 +12,7 @@ import (
 	"syscall/js"
 )
 
-type StatementLoop struct {
+type StatementAdd struct {
 	block block.Block
 	menu  Menu
 
@@ -22,39 +22,41 @@ type StatementLoop struct {
 	defaultHeight         int
 	horizontalMinimumSize int
 	verticalMinimumSize   int
-	ornamentDraw          *doubleLoopArrow.DoubleLoopArrow
+	ornamentDraw          *math.OrnamentAdd
 	id                    string
-	connStop              *connection.Connection
+	inputA                *connection.Connection
+	inputB                *connection.Connection
+	output                *connection.Connection
 	debugMode             bool
 
 	sequentialId utils.SequentialInterface
 }
 
-func (e *StatementLoop) Get() (container *html.TagDiv) {
+func (e *StatementAdd) Get() (container *html.TagDiv) {
 	return e.block.GetIdeStage()
 }
 
-func (e *StatementLoop) SetFatherId(fatherId string) {
+func (e *StatementAdd) SetFatherId(fatherId string) {
 	e.block.SetFatherId(fatherId)
 }
 
-func (e *StatementLoop) SetName(name string) (err error) {
+func (e *StatementAdd) SetName(name string) (err error) {
 	return e.block.SetName(name)
 }
 
-func (e *StatementLoop) SetPosition(x, y int) {
+func (e *StatementAdd) SetPosition(x, y int) {
 	e.block.SetPosition(x, y)
 }
 
-func (e *StatementLoop) SetSize(wight, height int) {
+func (e *StatementAdd) SetSize(wight, height int) {
 	e.block.SetSize(wight, height)
 }
 
-func (e *StatementLoop) SetSequentialId(sequentialId utils.SequentialInterface) {
+func (e *StatementAdd) SetSequentialId(sequentialId utils.SequentialInterface) {
 	e.sequentialId = sequentialId
 }
 
-func (e *StatementLoop) getMenuLabel(condition *bool, labelTrue, labelFalse string) (label string) {
+func (e *StatementAdd) getMenuLabel(condition *bool, labelTrue, labelFalse string) (label string) {
 	defer func() {
 		*condition = !*condition
 	}()
@@ -66,7 +68,7 @@ func (e *StatementLoop) getMenuLabel(condition *bool, labelTrue, labelFalse stri
 	return labelFalse
 }
 
-func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
+func (e *StatementAdd) getMenu() (content []components.MenuOptions) {
 	content = []components.MenuOptions{
 		{
 			Label: "Debug",
@@ -344,11 +346,44 @@ func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
 	return
 }
 
-func (e *StatementLoop) Init() (err error) {
-	e.defaultWidth = 500
-	e.defaultHeight = 400
-	e.horizontalMinimumSize = 400
-	e.verticalMinimumSize = 300
+func (e *StatementAdd) makeConnections() {
+	e.inputA = new(connection.Connection)
+	e.inputA.Create(2, 15)
+	e.inputA.SetFather(e.block.GetDeviceDiv())
+	e.inputA.SetAsInput()
+	_ = e.inputA.SetName("inputA")
+	e.inputA.SetDataType(reflect.Int)
+	e.inputA.SetAcceptedNotConnected(false)
+	e.inputA.SetBlocked(false)
+	e.inputA.Init()
+
+	e.inputB = new(connection.Connection)
+	e.inputB.Create(2, e.block.GetHeight()-15-5)
+	e.inputB.SetFather(e.block.GetDeviceDiv())
+	e.inputB.SetAsInput()
+	_ = e.inputB.SetName("inputB")
+	e.inputB.SetDataType(reflect.Int)
+	e.inputB.SetAcceptedNotConnected(false)
+	e.inputB.SetBlocked(false)
+	e.inputB.Init()
+
+	e.output = new(connection.Connection)
+	e.output.Create(e.block.GetWidth()-10, e.block.GetHeight()/2-2)
+	e.output.SetFather(e.block.GetDeviceDiv())
+	e.output.SetAsInput()
+	_ = e.output.SetName("output")
+	e.output.SetDataType(reflect.Int)
+	e.output.SetAcceptedNotConnected(false)
+	e.output.SetBlocked(false)
+	e.output.Init()
+}
+
+func (e *StatementAdd) Init() (err error) {
+	size := 60
+	e.defaultWidth = size
+	e.defaultHeight = size
+	e.horizontalMinimumSize = size
+	e.verticalMinimumSize = size
 
 	if e.block.GetWidth() == 0 {
 		e.block.SetWidth(e.defaultWidth)
@@ -358,23 +393,26 @@ func (e *StatementLoop) Init() (err error) {
 		e.block.SetHeight(e.defaultHeight)
 	}
 
-	err = e.block.SetName("StatementLoop")
+	err = e.block.SetName("StatementAdd")
 	if err != nil {
+		log.Printf("e.block.SetName(\"StatementAdd\"): %v", err)
 		return
 	}
 
 	e.id, err = e.sequentialId.GetId(e.block.GetName())
 	if err != nil {
+		log.Printf("e.sequentialId.GetId(e.block.GetName()): %v", err)
 		return
 	}
 
 	e.block.SetDragEnabled(true)
+	e.block.SetResizeBlocked(true)
 	//e.block.SetEnableResize(true)
 	//e.block.SetSelected(true)
 	e.block.SetMinimumWidth(e.horizontalMinimumSize)
 	e.block.SetMinimumHeight(e.verticalMinimumSize)
 
-	e.ornamentDraw = new(doubleLoopArrow.DoubleLoopArrow)
+	e.ornamentDraw = new(math.OrnamentAdd)
 	e.ornamentDraw.SetWarningMarkMargin(20)
 	_ = e.ornamentDraw.Init()
 
@@ -383,23 +421,16 @@ func (e *StatementLoop) Init() (err error) {
 	_ = e.block.Init()
 
 	if err = e.block.SetID(e.id); err != nil {
+		log.Printf("e.block.SetID(e.id): %s", err)
 		return
 	}
 
-	e.connStop = new(connection.Connection)
-	e.connStop.Create(e.block.GetWidth()-57, e.block.GetHeight()-42)
-	e.connStop.SetFather(e.block.GetDeviceDiv())
-	e.connStop.SetAsInput()
-	_ = e.connStop.SetName("stop")
-	e.connStop.SetDataType(reflect.Bool)
-	e.connStop.SetAcceptedNotConnected(true)
-	e.connStop.SetBlocked(false)
-	e.connStop.Init()
+	e.makeConnections()
 
-	e.block.SetOnResize(func(element js.Value, width, height int) {
-		e.connStop.SetX(width - 57)
-		e.connStop.SetY(height - 42)
-	})
+	//e.block.SetOnResize(func(element js.Value, width, height int) {
+	//	e.inputA.SetX(width - 50 - 4)
+	//	e.inputA.SetY(height - 40 - 2)
+	//})
 
 	e.menu.SetNode(e.block.GetDeviceDiv())
 	e.menu.SetTitle("Loop")

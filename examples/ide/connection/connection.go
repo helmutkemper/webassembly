@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/utils"
+	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"image/color"
 	"log"
 	"reflect"
@@ -87,6 +88,56 @@ func (e *Connection) GetBlocked() (isBlocked bool) {
 
 func (e *Connection) SetDataType(dataType reflect.Kind) {
 	e.dataType = dataType
+
+	switch e.dataType {
+	case reflect.Bool:
+		e.color = factoryColor.NewGreen()
+	case reflect.Int:
+		e.color = factoryColor.NewBlue()
+	case reflect.Int8:
+		e.color = factoryColor.NewBlue()
+	case reflect.Int16:
+		e.color = factoryColor.NewBlue()
+	case reflect.Int32:
+		e.color = factoryColor.NewBlue()
+	case reflect.Int64:
+		e.color = factoryColor.NewBlue()
+	case reflect.Uint:
+		e.color = factoryColor.NewBlueViolet()
+	case reflect.Uint8:
+		e.color = factoryColor.NewBlueViolet()
+	case reflect.Uint16:
+		e.color = factoryColor.NewBlueViolet()
+	case reflect.Uint32:
+		e.color = factoryColor.NewBlueViolet()
+	case reflect.Uint64:
+		e.color = factoryColor.NewBlueViolet()
+	case reflect.Uintptr:
+		e.color = factoryColor.NewBlueViolet()
+	case reflect.Float32:
+		e.color = factoryColor.NewYellowGreen()
+	case reflect.Float64:
+		e.color = factoryColor.NewYellowGreen()
+	case reflect.Complex64:
+		e.color = factoryColor.NewAntiqueWhite()
+	case reflect.Complex128:
+		e.color = factoryColor.NewAntiqueWhite()
+	case reflect.Array:
+		e.color = factoryColor.NewDarkMagenta()
+	case reflect.Chan:
+	case reflect.Func:
+	case reflect.Interface:
+	case reflect.Map:
+	case reflect.Pointer:
+	case reflect.Slice:
+		e.color = factoryColor.NewDarkMagenta()
+	case reflect.String:
+		e.color = factoryColor.NewMediumTurquoise()
+	case reflect.Struct:
+		e.color = factoryColor.NewGainsboro()
+	case reflect.UnsafePointer:
+	}
+
 }
 
 func (e *Connection) GetDataType() (dataType reflect.Kind) {
@@ -115,12 +166,11 @@ func (e *Connection) SetY(y int) {
 	e.mouseArea.AddStyle("top", fmt.Sprintf("%dpx", y-e.spaceAreaVertical))
 }
 
-func (e *Connection) Create(x, y, width, height int, color color.RGBA) {
+func (e *Connection) Create(x, y int) {
 	e.x = x
 	e.y = y
-	e.width = width
-	e.height = height
-	e.color = color
+	e.width = 6
+	e.height = 4
 }
 
 func (e *Connection) Init() {

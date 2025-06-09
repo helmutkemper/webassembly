@@ -3035,8 +3035,18 @@ func (e *TagSvgText) Text(value string) (ref *TagSvgText) {
 	return e
 }
 
-func (e *TagSvgText) UserSelect(value string) (ref *TagSvgText) {
-	e.selfElement.Set("userSelect", value)
+func (e *TagSvgText) UserSelectNone() (ref *TagSvgText) {
+	e.selfElement.Get("style").Set("userSelect", "none")
+	return e
+}
+
+func (e *TagSvgText) UserSelectText() (ref *TagSvgText) {
+	e.selfElement.Get("style").Set("userSelect", "text")
+	return e
+}
+
+func (e *TagSvgText) UserSelectAll() (ref *TagSvgText) {
+	e.selfElement.Get("style").Set("userSelect", "all")
 	return e
 }
 

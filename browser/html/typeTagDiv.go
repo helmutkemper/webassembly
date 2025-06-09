@@ -1374,13 +1374,30 @@ func (e *TagDiv) CreateElement(tag Tag) (ref *TagDiv) {
 //	       document.body.appendChild(p);
 func (e *TagDiv) AppendById(appendId string) (ref *TagDiv) {
 
-	toAppend := js.Global().Get("document").Call("getElementById", appendId)
+	doc := js.Global().Get("document")
+	toAppend := doc.Call("getElementById", appendId)
 	if toAppend.IsUndefined() == true || toAppend.IsNull() == true {
 		log.Print(KIdToAppendNotFound, appendId)
 		return e
 	}
 
 	toAppend.Call("appendChild", e.selfElement)
+	return e
+}
+
+// Import
+//
+// English:
+//
+// Take the ID of a div that already exists and matters it to the TagDiv that has been properly initialized.
+//
+// Português:
+//
+// Pega o ID de uma div que já existe e o importa para a TagDiv que tenha sido devidamente inicializada.
+func (e *TagDiv) Import(tagId string) (ref *TagDiv) {
+	doc := js.Global().Get("document")
+	toImport := doc.Call("getElementById", tagId)
+	e.selfElement = toImport
 	return e
 }
 

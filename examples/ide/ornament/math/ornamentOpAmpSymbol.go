@@ -126,8 +126,8 @@ func (e *OrnamentOpAmpSymbol) GetSymbolColor() color.RGBA {
 }
 
 // Init initializes the SVG element and its content
-func (e *OrnamentOpAmpSymbol) Init() {
-	e.WarningMark.Init()
+func (e *OrnamentOpAmpSymbol) Init() (err error) {
+	_ = e.WarningMark.Init()
 
 	e.deviceBorderColor = color.RGBA{R: 15, G: 48, B: 216, A: 255}
 	e.deviceBackgroundColor = color.RGBA{R: 253, G: 255, B: 23, A: 255}
@@ -157,20 +157,25 @@ func (e *OrnamentOpAmpSymbol) Init() {
 		FontFamily(e.deviceSymbolFontFamily).
 		FontWeight(e.deviceSymbolFontWeight).
 		Text(e.deviceSymbolText).
-		UserSelect("none")
+		UserSelectNone()
 	e.svg.Append(e.deviceSymbol)
 
 	e.svg.Append(e.WarningMark.GetWarningMark())
 	e.SetWarning(false)
+	return
 }
 
-func (e *OrnamentOpAmpSymbol) Update(width, height float64) {
-	e.WarningMark.Update(width, height)
+func (e *OrnamentOpAmpSymbol) GetSvg() (svg *html.TagSvg) {
+	return e.svg
+}
 
-	e.svg.ViewBox([]float64{0.0, 0.0, width, height})
+func (e *OrnamentOpAmpSymbol) Update(width, height int) (err error) {
+	_ = e.WarningMark.Update(width, height)
+
+	e.svg.ViewBox([]int{0.0, 0.0, width, height})
 
 	// draw the triangle
-	border := 4.0
+	border := 8
 	device := []string{
 		fmt.Sprintf("M %v %v", 0+border, 0+border),
 		fmt.Sprintf("L %v %v", width-border, height/2),
@@ -181,15 +186,17 @@ func (e *OrnamentOpAmpSymbol) Update(width, height float64) {
 	e.deviceBorder.D(device)
 
 	// calculate the center of the triangle
-	a := [2]float64{0 + border, 0 + border}
-	b := [2]float64{width - border, height / 2}
-	c := [2]float64{0 + border, height - border}
+	a := [2]int{0 + border, 0 + border}
+	b := [2]int{width - border, height / 2}
+	c := [2]int{0 + border, height - border}
 
 	// center of the triangle
 	xc := (a[0] + b[0] + c[0]) / 3
 	yc := (a[1] + b[1] + c[1]) / 3
 
 	// update deviceSymbol position
-	e.deviceSymbol.X(xc + float64(e.deviceAdjustX))
-	e.deviceSymbol.Y(yc + float64(e.deviceAdjustY))
+	e.deviceSymbol.X(xc + e.deviceAdjustX)
+	e.deviceSymbol.Y(yc + e.deviceAdjustY)
+
+	return
 }

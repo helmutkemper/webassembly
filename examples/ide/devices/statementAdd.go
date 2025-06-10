@@ -276,7 +276,7 @@ func (e *StatementAdd) makeConnections() {
 	e.output = new(connection.Connection)
 	e.output.Create(e.block.GetWidth()-10, e.block.GetHeight()/2-2)
 	e.output.SetFather(e.block.GetDeviceDiv())
-	e.output.SetAsInput()
+	e.output.SetAsOutput()
 	_ = e.output.SetName("output")
 	e.output.SetDataType(reflect.Int)
 	e.output.SetAcceptedNotConnected(false)

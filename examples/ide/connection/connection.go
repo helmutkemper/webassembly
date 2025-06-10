@@ -58,6 +58,10 @@ func (e *Connection) SetAsInput() {
 	e.isInput = true
 }
 
+func (e *Connection) SetAsOutput() {
+	e.isInput = false
+}
+
 func (e *Connection) GetAsInput() (isInput bool) {
 	return e.isInput
 }

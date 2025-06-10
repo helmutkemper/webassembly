@@ -69,100 +69,6 @@ func (e *StatementLoop) getMenuLabel(condition *bool, labelTrue, labelFalse stri
 func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
 	content = []components.MenuOptions{
 		{
-			Label: "Debug",
-			Submenu: []components.MenuOptions{
-				{
-					Label: e.getMenuLabel(&e.debugSelected, "Select", "Unselect"),
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						e.block.SetSelected(!e.debugSelected)
-						e.menu.ReInit()
-						return nil
-					}),
-				},
-				{
-					Label:  "Resize",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { e.block.SetResize(true); return nil }),
-				},
-			},
-		},
-		{
-			Label: "Debug",
-			Submenu: []components.MenuOptions{
-				{
-					Type: "grid",
-					Items: []components.MenuOptions{
-						{
-							Label:  "Cat 1",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
-						},
-						{
-							Label:  "Cat 2",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 2"); return nil }),
-						},
-						{
-							Label:  "Cat 3",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 3"); return nil }),
-						},
-						{
-							Label:  "Cat 4",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 4"); return nil }),
-						},
-						{
-							Label:  "Cat 5",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 5"); return nil }),
-						},
-						{
-							Label:  "Cat 6",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 6"); return nil }),
-							Submenu: []components.MenuOptions{
-								{
-									Type: "grid",
-									Items: []components.MenuOptions{
-										{
-											Label:  "Cat 1",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
-										},
-										{
-											Label:  "Cat 2",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 2"); return nil }),
-										},
-										{
-											Label:  "Cat 3",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 3"); return nil }),
-										},
-										{
-											Label:  "Cat 4",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 4"); return nil }),
-										},
-										{
-											Label:  "Cat 5",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 5"); return nil }),
-										},
-										{
-											Label:  "Cat 6",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 6"); return nil }),
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		{
 			Type: "grid",
 			Items: []components.MenuOptions{
 				{
@@ -341,10 +247,14 @@ func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
 		},
 	}
 
+	content = append(e.block.GetMenuDebug(), content...)
 	return
 }
 
 func (e *StatementLoop) Init() (err error) {
+	e.SetFatherId("graphicGopherIde")
+	_ = e.SetName("stmLoop")
+
 	e.defaultWidth = 500
 	e.defaultHeight = 400
 	e.horizontalMinimumSize = 400
@@ -368,7 +278,7 @@ func (e *StatementLoop) Init() (err error) {
 		return
 	}
 
-	e.block.SetDragEnabled(true)
+	e.block.SetDrag(true)
 	//e.block.SetEnableResize(true)
 	//e.block.SetSelected(true)
 	e.block.SetMinimumWidth(e.horizontalMinimumSize)

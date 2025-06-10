@@ -16,8 +16,6 @@ type StatementAdd struct {
 	block block.Block
 	menu  Menu
 
-	debugSelected bool
-
 	defaultWidth          int
 	defaultHeight         int
 	horizontalMinimumSize int
@@ -30,6 +28,10 @@ type StatementAdd struct {
 	debugMode             bool
 
 	sequentialId utils.SequentialInterface
+}
+
+func (e *StatementAdd) SelectedInvert() {
+	e.block.SelectedInvert()
 }
 
 func (e *StatementAdd) Get() (container *html.TagDiv) {
@@ -56,12 +58,8 @@ func (e *StatementAdd) SetSequentialId(sequentialId utils.SequentialInterface) {
 	e.sequentialId = sequentialId
 }
 
-func (e *StatementAdd) getMenuLabel(condition *bool, labelTrue, labelFalse string) (label string) {
-	defer func() {
-		*condition = !*condition
-	}()
-
-	if *condition {
+func (e *StatementAdd) getMenuLabel(condition bool, labelTrue, labelFalse string) (label string) {
+	if condition {
 		return labelTrue
 	}
 
@@ -70,100 +68,6 @@ func (e *StatementAdd) getMenuLabel(condition *bool, labelTrue, labelFalse strin
 
 func (e *StatementAdd) getMenu() (content []components.MenuOptions) {
 	content = []components.MenuOptions{
-		{
-			Label: "Debug",
-			Submenu: []components.MenuOptions{
-				{
-					Label: e.getMenuLabel(&e.debugSelected, "Select", "Unselect"),
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						e.block.SetSelected(!e.debugSelected)
-						e.menu.ReInit()
-						return nil
-					}),
-				},
-				{
-					Label:  "Resize",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { e.block.SetResize(true); return nil }),
-				},
-			},
-		},
-		{
-			Label: "Debug",
-			Submenu: []components.MenuOptions{
-				{
-					Type: "grid",
-					Items: []components.MenuOptions{
-						{
-							Label:  "Cat 1",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
-						},
-						{
-							Label:  "Cat 2",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 2"); return nil }),
-						},
-						{
-							Label:  "Cat 3",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 3"); return nil }),
-						},
-						{
-							Label:  "Cat 4",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 4"); return nil }),
-						},
-						{
-							Label:  "Cat 5",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 5"); return nil }),
-						},
-						{
-							Label:  "Cat 6",
-							Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-							Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 6"); return nil }),
-							Submenu: []components.MenuOptions{
-								{
-									Type: "grid",
-									Items: []components.MenuOptions{
-										{
-											Label:  "Cat 1",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
-										},
-										{
-											Label:  "Cat 2",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 2"); return nil }),
-										},
-										{
-											Label:  "Cat 3",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 3"); return nil }),
-										},
-										{
-											Label:  "Cat 4",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 4"); return nil }),
-										},
-										{
-											Label:  "Cat 5",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 5"); return nil }),
-										},
-										{
-											Label:  "Cat 6",
-											Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-											Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 6"); return nil }),
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
 		{
 			Type: "grid",
 			Items: []components.MenuOptions{
@@ -343,6 +247,8 @@ func (e *StatementAdd) getMenu() (content []components.MenuOptions) {
 		},
 	}
 
+	content = append(e.block.GetMenuDebug(), content...)
+
 	return
 }
 
@@ -379,6 +285,9 @@ func (e *StatementAdd) makeConnections() {
 }
 
 func (e *StatementAdd) Init() (err error) {
+	e.SetFatherId("graphicGopherIde")
+	_ = e.SetName("stmAdd")
+
 	size := 60
 	e.defaultWidth = size
 	e.defaultHeight = size
@@ -405,7 +314,7 @@ func (e *StatementAdd) Init() (err error) {
 		return
 	}
 
-	e.block.SetDragEnabled(true)
+	e.block.SetDrag(true)
 	e.block.SetResizeBlocked(true)
 	//e.block.SetEnableResize(true)
 	//e.block.SetSelected(true)
@@ -433,7 +342,7 @@ func (e *StatementAdd) Init() (err error) {
 	//})
 
 	e.menu.SetNode(e.block.GetDeviceDiv())
-	e.menu.SetTitle("Loop")
+	e.menu.SetTitle("Add Statement")
 	e.menu.SetContentFunc(e.getMenu)
 	e.menu.Init()
 

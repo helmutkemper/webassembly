@@ -6,6 +6,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/utils"
+	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"image/color"
 	"strings"
@@ -65,6 +66,138 @@ type Block struct {
 	ornament ornament.Draw
 
 	onResizeFunc func(element js.Value, width, height int)
+}
+
+// SetDragBlocked Disables the use of the drag tool
+func (e *Block) SetDragBlocked(blocked bool) {
+	e.dragBlocked = blocked
+}
+
+// DragBlockedInvert Invert the drag tool enable status. Note: Used in the menu
+func (e *Block) DragBlockedInvert() {
+	e.dragBlocked = !e.dragBlocked
+}
+
+// GetDragBlocked Return the drag tool enable status
+func (e *Block) GetDragBlocked() (blocked bool) {
+	return e.dragBlocked
+}
+
+// GetDrag Return the drag tool status
+func (e *Block) GetDrag() (enabled bool) {
+	return e.dragEnabled
+}
+
+// SetDragInvert Invert the drag tool status. Note: Used in the menu
+func (e *Block) SetDragInvert() {
+	e.dragEnabled = !e.dragEnabled
+}
+
+// SetDrag Enables the device's drag tool
+func (e *Block) SetDrag(enabled bool) {
+	e.dragEnabled = enabled
+
+	if !e.initialized {
+		return
+	}
+
+	if e.dragBlocked {
+		e.dragEnabled = false
+	}
+
+	e.dragCursorChange()
+
+	if e.dragEnabled {
+		e.SetResize(true)
+	}
+
+	if e.dragEnabled && e.selected {
+		e.SetSelected(false)
+	}
+}
+
+// ResizeInverter Invert the resize tool status
+func (e *Block) ResizeInverter() {
+	e.resizeEnabled = !e.resizeEnabled
+}
+
+// GetResize Return the resize tool status
+func (e *Block) GetResize() (enabled bool) {
+	return e.resizeEnabled
+}
+
+// SetResize Defines the resize tool status
+func (e *Block) SetResize(enabled bool) {
+	e.resizeEnabled = enabled
+
+	if !e.initialized {
+		return
+	}
+
+	if e.resizeBlocked {
+		e.resizeEnabled = false
+	}
+
+	e.resizeEnabledDraw()
+	if enabled && e.selected {
+		e.SetSelected(false)
+	}
+}
+
+// ResizeBlockedInvert Invert the status from disables resize tool. Note: Used in the menu
+func (e *Block) ResizeBlockedInvert() {
+	e.resizeBlocked = !e.resizeBlocked
+}
+
+// GetResizeBlocked Return the status from disables resize tool
+func (e *Block) GetResizeBlocked() (blocked bool) {
+	return e.resizeBlocked
+}
+
+// SetResizeBlocked Disables the use of the resize tool
+func (e *Block) SetResizeBlocked(blocked bool) {
+	e.resizeBlocked = blocked
+}
+
+// SelectBlockedInvert Invert the status of the selection tool lock. Note: Used in the menu
+func (e *Block) SelectBlockedInvert() {
+	e.selectBlocked = !e.selectBlocked
+}
+
+// GetSelectBlocked Returns the status of the selection tool lock
+func (e *Block) GetSelectBlocked() (blocked bool) {
+	return e.selectBlocked
+}
+
+// SetSelectBlocked Lock the use of the selection tool
+func (e *Block) SetSelectBlocked(blocked bool) {
+	e.selectBlocked = blocked
+}
+
+// SelectedInvert Invert the status of the selection tool. Note: Used in the menu
+func (e *Block) SelectedInvert() {
+	e.SetSelected(!e.selected)
+}
+
+// SetSelected Defines if the device selection tool is active
+func (e *Block) SetSelected(selected bool) {
+	e.selected = selected
+
+	if !e.initialized {
+		return
+	}
+
+	if e.selectBlocked {
+		e.selected = false
+	}
+
+	e.selectDiv.AddStyleConditional(e.selected, "display", "block", "none")
+	e.SetResize(false)
+}
+
+// GetSelected Return the select tool status
+func (e *Block) GetSelected() (selected bool) {
+	return e.selected
 }
 
 // createBlock Prepare all divs and CSS
@@ -278,7 +411,7 @@ func (e *Block) initEvents() {
 	// Removes events when the drag ends
 	stopDrag = js.FuncOf(func(this js.Value, args []js.Value) interface{} { // feito
 		isDragging = false
-		e.block.AddStyle("cursor", "")
+		e.block.AddStyle("cursor", "grab")
 
 		js.Global().Call("removeEventListener", "mousemove", drag)
 		js.Global().Call("removeEventListener", "mouseup", stopDrag)
@@ -482,34 +615,6 @@ func (e *Block) resizeEnabledDraw() {
 	e.resizerBottomRight.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
 }
 
-// SetDragBlocked Disables the use of the drag tool
-func (e *Block) SetDragBlocked(blocked bool) {
-	e.dragBlocked = blocked
-}
-
-// SetDragEnabled Enables the device's drag tool
-func (e *Block) SetDragEnabled(enabled bool) {
-	e.dragEnabled = enabled
-
-	if !e.initialized {
-		return
-	}
-
-	if e.dragBlocked {
-		e.dragEnabled = false
-	}
-
-	e.dragCursorChange()
-
-	if e.dragEnabled {
-		e.SetResize(true)
-	}
-
-	if e.dragEnabled && e.selected {
-		e.SetSelected(false)
-	}
-}
-
 // SetFatherId Receives the div ID used as a stage for the IDE and puts it to occupy the entire browser area
 func (e *Block) SetFatherId(fatherId string) {
 	e.fatherId = fatherId
@@ -572,50 +677,6 @@ func (e *Block) SetPosition(x, y int) {
 	e.SetY(y)
 }
 
-// SetResize Defines if the device resize tool is active
-func (e *Block) SetResize(enabled bool) {
-	e.resizeEnabled = enabled
-
-	if !e.initialized {
-		return
-	}
-
-	if e.resizeBlocked {
-		e.resizeEnabled = false
-	}
-
-	e.resizeEnabledDraw()
-	if enabled && e.selected {
-		e.SetSelected(false)
-	}
-}
-
-// SetResizeBlocked Disables the use of the resize tool
-func (e *Block) SetResizeBlocked(blocked bool) {
-	e.resizeBlocked = blocked
-}
-
-// SetSelectBlocked Disables the use of the selection tool
-func (e *Block) SetSelectBlocked(blocked bool) {
-	e.selectBlocked = blocked
-}
-
-// SetSelected Defines if the device selection tool is active
-func (e *Block) SetSelected(selected bool) {
-	e.selected = selected
-
-	if !e.initialized {
-		return
-	}
-
-	if e.selectBlocked {
-		e.selected = false
-	}
-
-	e.selectDiv.AddStyleConditional(selected, "display", "block", "none")
-	e.SetResize(false)
-}
-
 // SetSize Defines the height and width of the device
 func (e *Block) SetSize(width, height int) {
 	e.SetWidth(width)
@@ -656,5 +717,71 @@ func (e *Block) updateOrnament() (err error) {
 	width := e.block.GetOffsetWidth()
 	height := e.block.GetOffsetHeight()
 	_ = e.ornament.Update(width, height)
+	return
+}
+
+func (e *Block) getMenuLabel(condition bool, labelTrue, labelFalse string) (label string) {
+	if condition {
+		return labelTrue
+	}
+
+	return labelFalse
+}
+
+func (e *Block) GetMenuDebug() (options []components.MenuOptions) {
+	// mover para o topo
+	// mover para cima
+	// mover para baixo
+	// mover para o fim
+	options = []components.MenuOptions{
+		{
+			Label: "Debug",
+			Submenu: []components.MenuOptions{
+				{
+					Label: e.getMenuLabel(e.GetSelected(), "Unselect", "Select"),
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+						e.SetSelected(!e.GetSelected())
+						return nil
+					}),
+				},
+				{
+					Label: e.getMenuLabel(e.GetSelectBlocked(), "Select lock disable", "Select lock enable"),
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+						e.SetSelectBlocked(!e.GetSelectBlocked())
+						return nil
+					}),
+				},
+				{
+					Label: e.getMenuLabel(e.GetResize(), "Resize disable", "Resize enable"),
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+						e.SetResize(!e.GetResize())
+						return nil
+					}),
+				},
+				{
+					Label: e.getMenuLabel(e.GetResizeBlocked(), "Resize lock disable", "Resize lock enable"),
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+						e.SetResizeBlocked(!e.GetResizeBlocked())
+						return nil
+					}),
+				},
+				{
+					Label: e.getMenuLabel(e.GetDrag(), "Drag disable", "Drag enable"),
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+						e.SetDrag(!e.GetDrag())
+						return nil
+					}),
+				},
+				{
+					Label: e.getMenuLabel(e.GetDragBlocked(), "Drag lock disable", "Drag lock enable"),
+					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+						e.SetDragBlocked(!e.GetDragBlocked())
+						return nil
+					}),
+				},
+			},
+		},
+	}
+
 	return
 }

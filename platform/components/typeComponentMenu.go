@@ -79,6 +79,7 @@ func (e *menu) AttachMenu(element html.Compatible) {
 	}
 
 	element.Get().Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		e.ReInit()
 		e.hide()
 		args[0].Call("preventDefault")
 		args[0].Call("stopPropagation")

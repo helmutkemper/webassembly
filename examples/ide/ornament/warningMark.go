@@ -6,22 +6,20 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/drawUtils"
 	"github.com/helmutkemper/webassembly/examples/ide/easterEgg"
-	"github.com/helmutkemper/webassembly/platform/factoryColor"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesConnectionColor"
 	"image/color"
 	"time"
 )
 
-type WarningMark struct {
+// WarningMarkExclamation Responsible for drawing the alert plate symbol, with an exclamation in the middle, warning
+// in case of error
+type WarningMarkExclamation struct {
 	easterEgg.MorseCode
 
 	warningBackgroundColor  color.RGBA
 	warningBorderColor      color.RGBA
 	warningExclamationColor color.RGBA
-	warningFlashEnabled     bool
 	warningEnabled          bool
-	warningFlashDuration    float64
-	warningFlashInterval    float64
-	warningFlashUpdate      float64
 	warningMarkMargin       int
 	warningOpacity          float64
 	flashTicker             *time.Ticker
@@ -32,33 +30,23 @@ type WarningMark struct {
 	exclamation             *html.TagSvgPath
 }
 
-// SetWarningMarkFlash enables or disables the warning mark flash
-// @param flashEnabled true to enable the flash, false to disable it
-func (e *WarningMark) SetWarningMarkFlash(flashEnabled bool) {
-	e.warningFlashEnabled = flashEnabled
-}
-
-// SetWarningMarkMargin sets the margin of the warning mark
-// @param margin The margin value
-func (e *WarningMark) SetWarningMarkMargin(margin int) {
+// SetWarningMarkMargin sets the margin, in pixels, of the warning mark
+func (e *WarningMarkExclamation) SetWarningMarkMargin(margin int) {
 	e.warningMarkMargin = margin
 }
 
-// GetWarningMarkMargin returns the margin of the warning mark
-// @returns The margin value
-func (e *WarningMark) GetWarningMarkMargin() int {
+// GetWarningMarkMargin returns the margin, in pixels, of the warning mark
+func (e *WarningMarkExclamation) GetWarningMarkMargin() int {
 	return e.warningMarkMargin
 }
 
 // GetWarningMark returns the SVG element of the warning mark
-// @returns The SVG element of the warning mark
-func (e *WarningMark) GetWarningMark() *html.TagSvg {
+func (e *WarningMarkExclamation) GetWarningMark() *html.TagSvg {
 	return e.svgWarning
 }
 
 // SetWarning sets the visibility of the warning mark
-// @param warning true to show the warning mark, false to hide it
-func (e *WarningMark) SetWarning(warning bool) {
+func (e *WarningMarkExclamation) SetWarning(warning bool) {
 	if warning == e.warningEnabled {
 		e.svgWarning.AddStyle("visibility", "hidden")
 		return
@@ -77,26 +65,20 @@ func (e *WarningMark) SetWarning(warning bool) {
 }
 
 // GetWarning returns the visibility of the warning mark
-// @returns true if the warning mark is visible, false otherwise
-func (e *WarningMark) GetWarning() bool {
+func (e *WarningMarkExclamation) GetWarning() bool {
 	return e.warningEnabled
 }
 
-func (e *WarningMark) Init() (err error) {
+// Init Initializes the instance
+func (e *WarningMarkExclamation) Init() (err error) {
 	e.MorseCode.Init()
 
-	e.warningBackgroundColor = factoryColor.NewWhite()
-	e.warningBorderColor = factoryColor.NewRed()
-	e.warningExclamationColor = factoryColor.NewBlack()
+	e.warningBackgroundColor = rulesConnectionColor.KTrafficSignBackgroundColor
+	e.warningBorderColor = rulesConnectionColor.KTrafficSignBorderColor
+	e.warningExclamationColor = rulesConnectionColor.KTrafficSignWarningExclamationColor
 	e.warningOpacity = 0.5
 
-	e.warningFlashEnabled = false
 	e.warningEnabled = false
-	e.warningFlashDuration = 0.6
-	e.warningFlashInterval = 0.15
-	e.warningFlashUpdate = 1.0
-
-	//e.warningMarkMargin = 0.0
 
 	e.svgWarning = factoryBrowser.NewTagSvg().
 		Opacity(e.warningOpacity).
@@ -123,14 +105,16 @@ func (e *WarningMark) Init() (err error) {
 	return
 }
 
-func (e *WarningMark) min(a, b int) int {
+// min Returns the minimum value
+func (e *WarningMarkExclamation) min(a, b int) int {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func (e *WarningMark) Update(width, height int) (err error) {
+// Update Draw the image
+func (e *WarningMarkExclamation) Update(width, height int) (err error) {
 	e.svgWarning.ViewBox([]int{0, 0, width, height})
 	marginInternal := 0
 	r := e.min(width-marginInternal-2.0*e.warningMarkMargin, height-marginInternal-2.0*e.warningMarkMargin) / 2.0
@@ -189,15 +173,7 @@ func (e *WarningMark) Update(width, height int) (err error) {
 	return
 }
 
-func (e *WarningMark) appendManySlices(list ...[]bool) (slice []bool) {
-	slice = make([]bool, 0)
-	for i := 0; i < len(list); i++ {
-		slice = append(slice, list[i]...)
-	}
-
-	return
-}
-
-func (e *WarningMark) flashMark() {
-	e.MorseCode.FlashMarkSoS(e.svgWarning)
+// flashMark Makes the warning indication blinking
+func (e *WarningMarkExclamation) flashMark() {
+	e.MorseCode.FlashMarkErrorMsg(e.svgWarning)
 }

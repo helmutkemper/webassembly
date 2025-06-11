@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/utils"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
@@ -14,12 +15,9 @@ import (
 )
 
 type Block struct {
-	utils.SequentialId
-
-	id       string
-	autoId   string
-	fatherId string
-	name     string
+	id     string
+	autoId string
+	name   string
 
 	x      int
 	y      int
@@ -66,6 +64,16 @@ type Block struct {
 	ornament ornament.Draw
 
 	onResizeFunc func(element js.Value, width, height int)
+}
+
+// GetInitialized Returns if the instance is ready for use
+func (e *Block) GetInitialized() bool {
+	return e.initialized
+}
+
+// SetWarning sets the visibility of the warning mark
+func (e *Block) SetWarning(warning bool) {
+	e.ornament.SetWarning(warning)
 }
 
 // SetDragBlocked Disables the use of the drag tool
@@ -327,11 +335,9 @@ func (e *Block) GetY() (y int) {
 
 // Init Initializes the generic functions of the device
 func (e *Block) Init() (err error) {
-	var base string
-	if base, err = e.SequentialId.GetId(e.name); err != nil {
-		return
-	}
-	if e.id, err = utils.VerifyUniqueId(base); err != nil {
+	var id string
+	id = rulesSequentialId.GetIdFromBase(e.name)
+	if e.id, err = utils.VerifyUniqueId(id); err != nil {
 		return
 	}
 
@@ -617,12 +623,11 @@ func (e *Block) resizeEnabledDraw() {
 
 // SetFatherId Receives the div ID used as a stage for the IDE and puts it to occupy the entire browser area
 func (e *Block) SetFatherId(fatherId string) {
-	e.fatherId = fatherId
 	e.ideStage = factoryBrowser.NewTagDiv().
 		Import(fatherId).
 		AddStyle("position", "relative").
-		AddStyle("width", "100vw").
-		AddStyle("height", "100vh")
+		AddStyle("width", "100vw"). // todo: transformar isto em algo chamado uma única vez e em outro lugar
+		AddStyle("height", "100vh") // todo: transformar isto em algo chamado uma única vez e em outro lugar
 }
 
 // SetHeight Defines the height property of the device
@@ -652,8 +657,8 @@ func (e *Block) SetMinimumWidth(width int) {
 }
 
 // SetName Defines a unique name for the device [compulsory]
-func (e *Block) SetName(name string) (err error) {
-	e.name, err = e.SequentialId.GetId(name)
+func (e *Block) SetName(name string) {
+	e.name = rulesSequentialId.GetIdFromBase(name)
 	return
 }
 

@@ -8,8 +8,10 @@ import (
 	"image/color"
 )
 
+// OrnamentOpAmpSymbol Responsible for drawing the operational amplifier symbol used in analog electronics for mathematical
+// operations
 type OrnamentOpAmpSymbol struct {
-	ornament.WarningMark
+	ornament.WarningMarkExclamation
 
 	deviceBorderColor     color.RGBA
 	deviceBackgroundColor color.RGBA
@@ -26,6 +28,11 @@ type OrnamentOpAmpSymbol struct {
 	svg          *html.TagSvg
 	deviceBorder *html.TagSvgPath
 	deviceSymbol *html.TagSvgText
+}
+
+// SetWarning sets the visibility of the warning mark
+func (e *OrnamentOpAmpSymbol) SetWarning(warning bool) {
+	e.WarningMarkExclamation.SetWarning(warning)
 }
 
 // SetAdjustX defines the X adjustment of the symbol
@@ -127,7 +134,7 @@ func (e *OrnamentOpAmpSymbol) GetSymbolColor() color.RGBA {
 
 // Init initializes the SVG element and its content
 func (e *OrnamentOpAmpSymbol) Init() (err error) {
-	_ = e.WarningMark.Init()
+	_ = e.WarningMarkExclamation.Init()
 
 	e.deviceBorderColor = color.RGBA{R: 15, G: 48, B: 216, A: 255}
 	e.deviceBackgroundColor = color.RGBA{R: 253, G: 255, B: 23, A: 255}
@@ -160,17 +167,19 @@ func (e *OrnamentOpAmpSymbol) Init() (err error) {
 		UserSelectNone()
 	e.svg.Append(e.deviceSymbol)
 
-	e.svg.Append(e.WarningMark.GetWarningMark())
+	e.svg.Append(e.WarningMarkExclamation.GetWarningMark())
 	e.SetWarning(false)
 	return
 }
 
+// GetSvg Returns the SVG used as a base in the ornament
 func (e *OrnamentOpAmpSymbol) GetSvg() (svg *html.TagSvg) {
 	return e.svg
 }
 
+// Update Desenha o ornamento
 func (e *OrnamentOpAmpSymbol) Update(width, height int) (err error) {
-	_ = e.WarningMark.Update(width, height)
+	_ = e.WarningMarkExclamation.Update(width, height)
 
 	e.svg.ViewBox([]int{0.0, 0.0, width, height})
 

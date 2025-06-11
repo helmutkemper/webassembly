@@ -5,7 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
-	"github.com/helmutkemper/webassembly/examples/ide/utils"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"log"
 	"reflect"
@@ -26,8 +26,15 @@ type StatementLoop struct {
 	id                    string
 	connStop              *connection.Connection
 	debugMode             bool
+}
 
-	sequentialId utils.SequentialInterface
+// SetWarning sets the visibility of the warning mark
+func (e *StatementLoop) SetWarning(warning bool) {
+	if !e.block.GetInitialized() {
+		return
+	}
+
+	e.block.SetWarning(warning)
 }
 
 func (e *StatementLoop) Get() (container *html.TagDiv) {
@@ -38,8 +45,8 @@ func (e *StatementLoop) SetFatherId(fatherId string) {
 	e.block.SetFatherId(fatherId)
 }
 
-func (e *StatementLoop) SetName(name string) (err error) {
-	return e.block.SetName(name)
+func (e *StatementLoop) SetName(name string) {
+	e.block.SetName(name)
 }
 
 func (e *StatementLoop) SetPosition(x, y int) {
@@ -48,10 +55,6 @@ func (e *StatementLoop) SetPosition(x, y int) {
 
 func (e *StatementLoop) SetSize(wight, height int) {
 	e.block.SetSize(wight, height)
-}
-
-func (e *StatementLoop) SetSequentialId(sequentialId utils.SequentialInterface) {
-	e.sequentialId = sequentialId
 }
 
 func (e *StatementLoop) getMenuLabel(condition *bool, labelTrue, labelFalse string) (label string) {
@@ -253,7 +256,7 @@ func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
 
 func (e *StatementLoop) Init() (err error) {
 	e.SetFatherId("graphicGopherIde")
-	_ = e.SetName("stmLoop")
+	e.SetName("stmLoop")
 
 	e.defaultWidth = 500
 	e.defaultHeight = 400
@@ -268,15 +271,8 @@ func (e *StatementLoop) Init() (err error) {
 		e.block.SetHeight(e.defaultHeight)
 	}
 
-	err = e.block.SetName("StatementLoop")
-	if err != nil {
-		return
-	}
-
-	e.id, err = e.sequentialId.GetId(e.block.GetName())
-	if err != nil {
-		return
-	}
+	e.block.SetName("StatementLoop")
+	e.id = rulesSequentialId.GetIdFromBase(e.block.GetName())
 
 	e.block.SetDrag(true)
 	//e.block.SetEnableResize(true)
@@ -285,7 +281,7 @@ func (e *StatementLoop) Init() (err error) {
 	e.block.SetMinimumHeight(e.verticalMinimumSize)
 
 	e.ornamentDraw = new(doubleLoopArrow.DoubleLoopArrow)
-	e.ornamentDraw.SetWarningMarkMargin(20)
+	e.ornamentDraw.SetWarningMarkMargin(15)
 	_ = e.ornamentDraw.Init()
 
 	e.block.SetOrnament(e.ornamentDraw)

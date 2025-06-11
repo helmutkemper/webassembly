@@ -5,7 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/math"
-	"github.com/helmutkemper/webassembly/examples/ide/utils"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"log"
 	"reflect"
@@ -26,8 +26,15 @@ type StatementAdd struct {
 	inputB                *connection.Connection
 	output                *connection.Connection
 	debugMode             bool
+}
 
-	sequentialId utils.SequentialInterface
+// SetWarning sets the visibility of the warning mark
+func (e *StatementAdd) SetWarning(warning bool) {
+	if !e.block.GetInitialized() {
+		return
+	}
+
+	e.block.SetWarning(warning)
 }
 
 func (e *StatementAdd) SelectedInvert() {
@@ -42,8 +49,8 @@ func (e *StatementAdd) SetFatherId(fatherId string) {
 	e.block.SetFatherId(fatherId)
 }
 
-func (e *StatementAdd) SetName(name string) (err error) {
-	return e.block.SetName(name)
+func (e *StatementAdd) SetName(name string) {
+	e.block.SetName(name)
 }
 
 func (e *StatementAdd) SetPosition(x, y int) {
@@ -52,10 +59,6 @@ func (e *StatementAdd) SetPosition(x, y int) {
 
 func (e *StatementAdd) SetSize(wight, height int) {
 	e.block.SetSize(wight, height)
-}
-
-func (e *StatementAdd) SetSequentialId(sequentialId utils.SequentialInterface) {
-	e.sequentialId = sequentialId
 }
 
 func (e *StatementAdd) getMenuLabel(condition bool, labelTrue, labelFalse string) (label string) {
@@ -286,7 +289,7 @@ func (e *StatementAdd) makeConnections() {
 
 func (e *StatementAdd) Init() (err error) {
 	e.SetFatherId("graphicGopherIde")
-	_ = e.SetName("stmAdd")
+	e.SetName("stmAdd")
 
 	size := 60
 	e.defaultWidth = size
@@ -302,17 +305,9 @@ func (e *StatementAdd) Init() (err error) {
 		e.block.SetHeight(e.defaultHeight)
 	}
 
-	err = e.block.SetName("StatementAdd")
-	if err != nil {
-		log.Printf("e.block.SetName(\"StatementAdd\"): %v", err)
-		return
-	}
+	e.block.SetName("StatementAdd")
 
-	e.id, err = e.sequentialId.GetId(e.block.GetName())
-	if err != nil {
-		log.Printf("e.sequentialId.GetId(e.block.GetName()): %v", err)
-		return
-	}
+	e.id = rulesSequentialId.GetIdFromBase(e.block.GetName())
 
 	e.block.SetDrag(true)
 	e.block.SetResizeBlocked(true)
@@ -322,7 +317,7 @@ func (e *StatementAdd) Init() (err error) {
 	e.block.SetMinimumHeight(e.verticalMinimumSize)
 
 	e.ornamentDraw = new(math.OrnamentAdd)
-	e.ornamentDraw.SetWarningMarkMargin(20)
+	e.ornamentDraw.SetWarningMarkMargin(0)
 	_ = e.ornamentDraw.Init()
 
 	e.block.SetOrnament(e.ornamentDraw)

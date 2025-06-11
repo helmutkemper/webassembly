@@ -8,8 +8,9 @@ import (
 	"image/color"
 )
 
+// DoubleLoopArrow Responsible for drawing the ornament used in the loop function, a box with two rounded arrows
 type DoubleLoopArrow struct {
-	ornament.WarningMark
+	ornament.WarningMarkExclamation
 
 	arrowColor      color.RGBA
 	backgroundColor color.RGBA
@@ -19,6 +20,11 @@ type DoubleLoopArrow struct {
 	borderArrow       *html.TagSvgPath
 	stopButtonCircle  *html.TagSvgPath
 	stopButtonBorder  *html.TagSvgPath
+}
+
+// SetWarning sets the visibility of the warning mark
+func (e *DoubleLoopArrow) SetWarning(warning bool) {
+	e.WarningMarkExclamation.SetWarning(warning)
 }
 
 // SetArrowColor defines the color of the arrow used as a border.
@@ -40,10 +46,10 @@ func (e *DoubleLoopArrow) GetSvg() (svg *html.TagSvg) {
 
 // Init Initializes the element design
 func (e *DoubleLoopArrow) Init() (err error) {
-	_ = e.WarningMark.Init()
+	_ = e.WarningMarkExclamation.Init()
 
 	e.arrowColor = color.RGBA{R: 255, G: 120, B: 0, A: 255}
-	e.backgroundColor = color.RGBA{R: 240, G: 233, B: 200, A: 255}
+	e.backgroundColor = color.RGBA{R: 255, G: 240, B: 240, A: 255}
 
 	e.svg = factoryBrowser.NewTagSvg()
 
@@ -82,9 +88,9 @@ func (e *DoubleLoopArrow) Init() (err error) {
 	return
 }
 
-// Update Updates the dimensions of the element design
+// Update Draw the element design
 func (e *DoubleLoopArrow) Update(width, height int) (err error) {
-	_ = e.WarningMark.Update(width, height)
+	_ = e.WarningMarkExclamation.Update(width, height)
 	e.svg.ViewBox([]int{0.0, 0.0, width, height})
 
 	margin := 10

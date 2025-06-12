@@ -242,6 +242,14 @@ func (e *menu) setupInit() {
 		e.__setup["textFontSize"] = "12px"
 	}
 
+	if _, found := e.__setup["labelFontSize"]; !found {
+		e.__setup["labelFontSize"] = "14px"
+	}
+
+	if _, found := e.__setup["labelFontWeight"]; !found {
+		e.__setup["labelFontWeight"] = "bold"
+	}
+
 	if _, found := e.__setup["fontFamily"]; !found {
 		e.__setup["fontFamily"] = "Arial, sans-serif"
 	}
@@ -361,10 +369,9 @@ func (e *menu) setupInit() {
 //
 //	Atualiza a propriedade zIndex de todos os elementos no menu para garantir que sejam empilhados de forma correta
 func (e *menu) changeZIndex() {
-	nextIndex := stage.GetNextZIndex()
-
 	for k := range e.__zIndexList {
-		e.__zIndexList[k].AddStyle("zIndex", nextIndex+k)
+		nextIndex := stage.GetNextZIndex()
+		e.__zIndexList[k].AddStyle("zIndex", nextIndex)
 	}
 }
 
@@ -520,6 +527,7 @@ func (e *menu) Init() {
 	}
 
 	e.ReInit()
+	e.changeZIndex()
 }
 
 // ReInit
@@ -854,14 +862,19 @@ func (e *menu) mountMenu(options []MenuOptions, container *html.TagDiv) {
 		item.AddStyle("position", e.__setup["itemPosition"])
 		item.AddStyle("white-space", "nowrap")
 
-		item.Get().Call("addEventListener", "mouseenter", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			item.AddStyle("background", e.__setup["submenuBackground"])
-			return nil
-		}))
-		item.Get().Call("addEventListener", "mouseleave", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			item.AddStyle("background", "transparent")
-			return nil
-		}))
+		if option.Type != "label" {
+			item.Get().Call("addEventListener", "mouseenter", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+				item.AddStyle("background", e.__setup["submenuBackground"])
+				return nil
+			}))
+			item.Get().Call("addEventListener", "mouseleave", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+				item.AddStyle("background", "transparent")
+				return nil
+			}))
+		} else {
+			item.AddStyle("fontWeight", e.__setup["labelFontWeight"])
+			item.AddStyle("fontSize", e.__setup["labelFontSize"])
+		}
 
 		// submenu em linha
 		if option.Submenu != nil && len(option.Submenu) > 0 {

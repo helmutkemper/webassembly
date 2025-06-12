@@ -40,6 +40,10 @@ func getMenuSimple() (options *[]MenuOptions) {
 func getMenuComplex() (options *[]MenuOptions) {
 	return &[]MenuOptions{
 		{
+			Type:  "label",
+			Label: "Statement:",
+		},
+		{
 			Type: "grid",
 			Items: []MenuOptions{
 				{
@@ -78,11 +82,12 @@ func getMenuComplex() (options *[]MenuOptions) {
 			Label: "-",
 		},
 		{
-			Label: "Label 1",
+			Type:  "label",
+			Label: "Label 1:",
 			//Icon:      "icon 1",
 			//IconLeft:  "icon left 1",
 			//IconRight: "icon right 1",
-			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 1 ok"); return nil }),
+			//Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 1 ok"); return nil }),
 		},
 		{
 			Label: "Label 2",
@@ -92,11 +97,12 @@ func getMenuComplex() (options *[]MenuOptions) {
 			Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 2 ok"); return nil }),
 			Submenu: []MenuOptions{
 				{
-					Label: "Label 1",
+					Type:  "label",
+					Label: "Label 1:",
 					//Icon:      "icon 1",
 					//IconLeft:  "icon left 1",
 					//IconRight: "icon right 1",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 1 ok"); return nil }),
+					//Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("action 1 ok"); return nil }),
 				},
 				{
 					Label: "Label 2",

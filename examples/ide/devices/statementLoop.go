@@ -6,6 +6,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"log"
 	"reflect"
@@ -255,7 +256,7 @@ func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
 }
 
 func (e *StatementLoop) Init() (err error) {
-	e.SetFatherId("graphicGopherIde")
+	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmLoop")
 
 	e.defaultWidth = 500

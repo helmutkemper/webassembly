@@ -6,6 +6,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/math"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"log"
 	"reflect"
@@ -288,7 +289,7 @@ func (e *StatementAdd) makeConnections() {
 }
 
 func (e *StatementAdd) Init() (err error) {
-	e.SetFatherId("graphicGopherIde")
+	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmAdd")
 
 	size := 60

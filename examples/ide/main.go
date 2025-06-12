@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/examples/ide/devices"
-	"github.com/helmutkemper/webassembly/examples/ide/ornament"
+	"github.com/helmutkemper/webassembly/examples/ide/wireFrame"
 )
 
 func main() {
@@ -23,13 +23,9 @@ func main() {
 	stage.Append(stmLoop.Get())
 	stage.Append(stmAdd.Get())
 
-	wire := new(ornament.WireFrame)
-	wire.Init()
-
-	spider := new(ornament.Connections)
-	spider.SetOrnament(wire)
-	spider.SetFatherId("graphicGopherIde")
-	spider.Init()
+	manager := new(wireFrame.Manager)
+	manager.SetFatherId("graphicGopherIde")
+	manager.Init()
 
 	done := make(chan struct{})
 	<-done

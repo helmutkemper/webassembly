@@ -1190,6 +1190,10 @@ func (e *TagDiv) GetStyleInt(key string) (value int) {
 }
 
 func (e *TagDiv) GetStyle(key string) (value string) {
+	if e.selfElement.Get("style").Get(key).IsUndefined() {
+		return ""
+	}
+
 	return e.selfElement.Get("style").Get(key).String()
 }
 

@@ -2657,6 +2657,37 @@ func (e *TagSvgPath) Style(value string) (ref *TagSvgPath) {
 	return e
 }
 
+func (e *TagSvgPath) AddStyle(key string, value any) (ref *TagSvgPath) {
+	switch converted := value.(type) {
+	case string:
+		e.selfElement.Get("style").Set(key, converted)
+	case color.RGBA:
+		e.selfElement.Get("style").Set(key, RGBAToJs(converted))
+	default:
+		e.selfElement.Get("style").Set(key, converted)
+	}
+	return e
+}
+
+func (e *TagSvgPath) AddStyleConditional(condition bool, key string, trueValue, falseValue any) (ref *TagSvgPath) {
+	var value any
+	if condition {
+		value = trueValue
+	} else {
+		value = falseValue
+	}
+
+	switch converted := value.(type) {
+	case string:
+		e.selfElement.Get("style").Set(key, converted)
+	case color.RGBA:
+		e.selfElement.Get("style").Set(key, RGBAToJs(converted))
+	default:
+		e.selfElement.Get("style").Set(key, converted)
+	}
+	return e
+}
+
 // #styling end -------------------------------------------------------------------------------------------------------
 
 // PathLength

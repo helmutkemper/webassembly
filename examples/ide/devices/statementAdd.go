@@ -29,6 +29,10 @@ type StatementAdd struct {
 	debugMode             bool
 }
 
+func (e *StatementAdd) ToPng() (pngData js.Value) {
+	return e.ornamentDraw.ToPng()
+}
+
 // SetWarning sets the visibility of the warning mark
 func (e *StatementAdd) SetWarning(warning bool) {
 	if !e.block.GetInitialized() {

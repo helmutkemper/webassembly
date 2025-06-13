@@ -6,6 +6,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"image/color"
+	"syscall/js"
 )
 
 // DoubleLoopArrow Responsible for drawing the ornament used in the loop function, a box with two rounded arrows
@@ -20,6 +21,10 @@ type DoubleLoopArrow struct {
 	borderArrow       *html.TagSvgPath
 	stopButtonCircle  *html.TagSvgPath
 	stopButtonBorder  *html.TagSvgPath
+}
+
+func (e *DoubleLoopArrow) ToPng() (pngData js.Value) {
+	return e.svg.ToPng()
 }
 
 // SetWarning sets the visibility of the warning mark

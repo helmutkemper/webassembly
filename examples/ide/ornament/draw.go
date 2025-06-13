@@ -1,6 +1,9 @@
 package ornament
 
-import "github.com/helmutkemper/webassembly/browser/html"
+import (
+	"github.com/helmutkemper/webassembly/browser/html"
+	"syscall/js"
+)
 
 // Draw Draw the visual elements of the device
 type Draw interface {
@@ -16,4 +19,6 @@ type Draw interface {
 
 	// SetWarning sets the visibility of the warning mark
 	SetWarning(warning bool)
+
+	ToPng() (pngData js.Value)
 }

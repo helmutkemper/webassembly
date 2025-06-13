@@ -29,6 +29,18 @@ type StatementLoop struct {
 	debugMode             bool
 }
 
+func (e *StatementLoop) GetWidth() (width int) {
+	return e.block.GetWidth()
+}
+
+func (e *StatementLoop) GetHeight() (height int) {
+	return e.block.GetHeight()
+}
+
+func (e *StatementLoop) ToPng() (pngData js.Value) {
+	return e.ornamentDraw.ToPng()
+}
+
 // SetWarning sets the visibility of the warning mark
 func (e *StatementLoop) SetWarning(warning bool) {
 	if !e.block.GetInitialized() {
@@ -259,10 +271,10 @@ func (e *StatementLoop) Init() (err error) {
 	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmLoop")
 
-	e.defaultWidth = 500
-	e.defaultHeight = 400
-	e.horizontalMinimumSize = 400
-	e.verticalMinimumSize = 300
+	e.defaultWidth = 100
+	e.defaultHeight = 100
+	e.horizontalMinimumSize = 40
+	e.verticalMinimumSize = 30
 
 	if e.block.GetWidth() == 0 {
 		e.block.SetWidth(e.defaultWidth)

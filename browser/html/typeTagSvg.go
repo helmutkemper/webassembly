@@ -7,6 +7,7 @@ import (
 	"log"
 	"reflect"
 	"strconv"
+	"sync"
 	"syscall/js"
 )
 
@@ -23,7 +24,7 @@ import (
 //
 // Português:
 //
-// O elemento svg é um contêiner que define um novo sistema de coordenadas e viewport. Ele é usado como o elemento mais
+// O elemento svg é um container que define um novo sistema de coordenadas e viewport. Ele é usado como o elemento mais
 // externo dos documentos SVG, mas também pode ser usado para incorporar um fragmento SVG dentro de um documento SVG
 // ou HTML.
 //
@@ -2815,6 +2816,11 @@ func (e *TagSvg) ViewBox(value interface{}) (ref *TagSvg) {
 
 		var length = len(valueStr) - 1
 
+		if len(converted) == 4 {
+			e.width = converted[2]
+			e.height = converted[3]
+		}
+
 		e.selfElement.Call("setAttribute", "viewBox", valueStr[:length])
 		return e
 	case []float64:
@@ -2824,6 +2830,11 @@ func (e *TagSvg) ViewBox(value interface{}) (ref *TagSvg) {
 		}
 
 		var length = len(valueStr) - 1
+
+		if len(converted) == 4 {
+			e.width = int(converted[2])
+			e.height = int(converted[3])
+		}
 
 		e.selfElement.Call("setAttribute", "viewBox", valueStr[:length])
 		return e
@@ -4948,4 +4959,107 @@ func (e *TagSvg) ListenerAddReflect(event string, params []interface{}, function
 func (e *TagSvg) ListenerRemove(event string) (ref *TagSvg) {
 	e.commonEvents.ListenerRemove(event)
 	return e
+}
+
+// ToPngResized
+//
+// English:
+//
+//	 Transform the SVG in `PNG Data` to be used with `img.src = pngData`.
+//
+//		Input:
+//		  width and height: Final size or image scale.
+//
+//	   Rules:
+//	     * If the values are lower or equal to 5.0 the image will have its size multiplied by the past value.
+//	         In this case, both values should be less than or equal to 5.0;
+//	     * If the values are greater than 5.0, this will be the size of the image;
+//	     * If the values are equal to zero, the image will have the original size.
+//
+//	   Example:
+//	     js.Global().Get("document").Call("getElementById", "test").Set("src", url)
+//
+// Português:
+//
+//	 Transforma um SVG em `PNG Data` para ser usado com `img.src = pngData`.
+//
+//		Input:
+//		  width and height: Tamanho final ou escala da imagem.
+//
+//	   Regras:
+//	     * Caso os valores sejam menores ou iguais a 5.0 a imagem terá seu tamanho multiplicado pelo valor passado.
+//	         Nesse caso, os dois valores devem ser menores ou iguais a 5.0;
+//	     * Caso os valores sejam maiores do que 5.0, este será o tamanho da imagem;
+//	     * Caso os valores sejam iguais a zero, a imagem terá o tamanho original.
+//
+//	   Exemplo:
+//	     js.Global().Get("document").Call("getElementById", "test").Set("src", url)
+func (e *TagSvg) ToPngResized(width, height float64) (pngData js.Value) {
+	serializer := js.Global().Get("XMLSerializer").New()
+	svgText := serializer.Call("serializeToString", e.selfElement)
+
+	blob := js.Global().Get("Blob").New(
+		[]interface{}{svgText},
+		map[string]interface{}{
+			"type": "image/svg+xml;charset=utf-8",
+		},
+	)
+	url := js.Global().Get("URL").Call("createObjectURL", blob)
+
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+
+	img := js.Global().Get("Image").New()
+	img.Set("onload", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+
+		canvas := js.Global().Get("document").Call("createElement", "canvas")
+
+		ctx := canvas.Call("getContext", "2d")
+
+		if width == 0.0 && height == 0.0 {
+			ctx.Call("drawImage", img, 0, 0)
+		} else if width <= 5.0 && height <= 5.0 {
+			width = float64(e.width) * width
+			height = float64(e.height) * height
+
+			canvas.Set("width", width)
+			canvas.Set("height", height)
+
+			ctx.Call("drawImage", img, 0, 0, int(width), int(height))
+		} else {
+			canvas.Set("width", width)
+			canvas.Set("height", height)
+
+			ctx.Call("drawImage", img, 0, 0, int(width), int(height))
+		}
+
+		pngData = canvas.Call("toDataURL", "image/png")
+		js.Global().Get("URL").Call("revokeObjectURL", url)
+
+		wg.Done()
+		return nil
+	}))
+	img.Set("src", url)
+
+	wg.Wait()
+	return pngData
+}
+
+// ToPng
+//
+// English:
+//
+//	Transform the SVG in `PNG Data` to be used with `img.src = pngData`.
+//
+//	  Example:
+//	    js.Global().Get("document").Call("getElementById", "test").Set("src", url)
+//
+// Português:
+//
+//	Transforma um SVG em `PNG Data` para ser usado com `img.src = pngData`.
+//
+//	  Exemplo:
+//	    js.Global().Get("document").Call("getElementById", "test").Set("src", url)
+func (e *TagSvg) ToPng() (pngData js.Value) {
+	return e.ToPngResized(0.0, 0.0)
 }

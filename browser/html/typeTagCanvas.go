@@ -132,6 +132,10 @@ func (el *TagCanvas) Init(width, height int) (ref *TagCanvas) {
 	return el
 }
 
+func (el *TagCanvas) getPngData() (pngDataJs js.Value) {
+	return el.selfElement.Call("toDataURL", "image/png")
+}
+
 func (el *TagCanvas) Size() (width, height int) {
 	return el.width, el.height
 }

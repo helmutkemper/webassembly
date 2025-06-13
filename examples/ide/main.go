@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/stage"
 	"github.com/helmutkemper/webassembly/examples/ide/devices"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"log"
@@ -112,30 +113,36 @@ func getMenuComplex() (options *[]MenuOptions) {
 }
 
 var GlobalControlPanel = new(ComponentControlPanel)
+var mainStage *stage.Stage
 
 func main() {
 
 	var err error
-	var panel *html.TagDiv
 
 	stmLoop := new(devices.StatementLoop)
 	stmLoop.SetPosition(50, 50)
 	_ = stmLoop.Init()
+	url := stmLoop.ToPng()
 	//stmLoop.SetWarning(true)
 
-	stmAdd := new(devices.StatementAdd)
-	stmAdd.SetPosition(200, 200)
-	_ = stmAdd.Init()
+	//stmAdd := new(devices.StatementAdd)
+	//stmAdd.SetPosition(200, 200)
+	//_ = stmAdd.Init()
 
-	stage := factoryBrowser.NewStage()
-	stage.Append(stmLoop.Get())
-	stage.Append(stmAdd.Get())
-
-	if panel, err = GlobalControlPanel.Init(); err != nil {
+	mainStage = factoryBrowser.NewStage()
+	//mainStage.Append(stmLoop.Get())
+	//mainStage.Append(stmAdd.Get())
+	factoryBrowser.NewTagSvg()
+	if _, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)
 	}
 
-	stage.Append(panel)
+	document := js.Global().Get("document")
+	document.Call("getElementById", "test").Set("src", url)
+	//document.Call("getElementById", "test").Get("style").Set("width", stmLoop.GetWidth())
+	//document.Call("getElementById", "test").Get("style").Set("height", stmLoop.GetHeight())
+
+	//mainStage.Append(panel)
 
 	done := make(chan struct{})
 	<-done

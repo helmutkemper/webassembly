@@ -6,6 +6,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"image/color"
+	"syscall/js"
 )
 
 // OrnamentOpAmpSymbol Responsible for drawing the operational amplifier symbol used in analog electronics for mathematical
@@ -28,6 +29,10 @@ type OrnamentOpAmpSymbol struct {
 	svg          *html.TagSvg
 	deviceBorder *html.TagSvgPath
 	deviceSymbol *html.TagSvgText
+}
+
+func (e *OrnamentOpAmpSymbol) ToPng() (pngData js.Value) {
+	return e.svg.ToPng()
 }
 
 // SetWarning sets the visibility of the warning mark

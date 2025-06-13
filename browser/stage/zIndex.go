@@ -15,7 +15,6 @@ import (
 //
 //	Procura todos os elementos gráficos no documento e em seguida calcula o próximo zIndex
 func GetNextZIndex() int {
-
 	maxZIndex := 0
 	elements := js.Global().Get("document").Call("getElementsByTagName", "*")
 	length := elements.Length()

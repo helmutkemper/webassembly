@@ -16,4 +16,6 @@ const (
 	//
 	//  Creates a larger area to facilitate the click by the user
 	KHeightArea = KHeight + 6
+
+	KConnectionPrefix = "connection"
 )

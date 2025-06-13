@@ -2,14 +2,12 @@ package devices
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"log"
-	"reflect"
 	"syscall/js"
 )
 
@@ -25,8 +23,8 @@ type StatementLoop struct {
 	verticalMinimumSize   int
 	ornamentDraw          *doubleLoopArrow.DoubleLoopArrow
 	id                    string
-	connStop              *connection.Connection
-	debugMode             bool
+	//connStop              *connection.Connection
+	debugMode bool
 }
 
 func (e *StatementLoop) GetWidth() (width int) {
@@ -295,6 +293,30 @@ func (e *StatementLoop) Init() (err error) {
 
 	e.ornamentDraw = new(doubleLoopArrow.DoubleLoopArrow)
 	e.ornamentDraw.SetWarningMarkMargin(15)
+
+	// Connection stop loop
+	e.ornamentDraw.SetClickFunc(js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		data := this.Call("getConnData")
+		log.Printf("FatherId: %v", data.Get("FatherId").String())
+		log.Printf("Name: %v", data.Get("Name").String())
+		log.Printf("DataType: %v", data.Get("DataType").String())
+		log.Printf("NotConnected: %v", data.Get("NotConnected").Bool())
+		log.Printf("LookedUp: %v", data.Get("LookedUp").Bool())
+		log.Printf("IsADataInput: %v", data.Get("IsADataInput").Bool())
+		log.Printf("Top: %v", data.Get("Top").Int())
+		log.Printf("Left: %v", data.Get("Left").Int())
+		return nil
+	}))
+	e.ornamentDraw.SetStopButtonSetAsDataInput(true)
+	e.ornamentDraw.SetStopButtonConnectionLockedUp(false)
+	e.ornamentDraw.SetStopButtonAcceptNotConnected(true)
+	e.ornamentDraw.SetStopButtonName("stopLoop")
+	e.ornamentDraw.SetStopButtonDataType("bool")
+	e.ornamentDraw.SetStopButtonFatherId(e.id)
+	if err = e.ornamentDraw.GetConnectionError(); err != nil {
+		return
+	}
+
 	_ = e.ornamentDraw.Init()
 
 	e.block.SetOrnament(e.ornamentDraw)
@@ -305,20 +327,30 @@ func (e *StatementLoop) Init() (err error) {
 		return
 	}
 
-	e.connStop = new(connection.Connection)
-	e.connStop.Create(e.block.GetWidth()-57, e.block.GetHeight()-42)
-	e.connStop.SetFather(e.block.GetDeviceDiv())
-	e.connStop.SetAsInput()
-	_ = e.connStop.SetName("stop")
-	e.connStop.SetDataType(reflect.Bool)
-	e.connStop.SetAcceptedNotConnected(true)
-	e.connStop.SetBlocked(false)
-	e.connStop.Init()
+	//e.connStop = new(connection.Connection)
+	//e.connStop.Create(e.block.GetWidth()-57, e.block.GetHeight()-42)
+	//e.connStop.SetFather(e.block.GetDeviceDiv())
+	//e.connStop.SetAsInput()
+	//_ = e.connStop.SetName("stop")
+	//e.connStop.SetDataType(reflect.Bool)
+	//e.connStop.SetAcceptedNotConnected(true)
+	//e.connStop.SetBlocked(false)
+	//e.connStop.Init()
+	//
+	//e.block.SetOnResize(func(element js.Value, width, height int) {
+	//	e.connStop.SetX(width - 57)
+	//	e.connStop.SetY(height - 42)
+	//})
 
-	e.block.SetOnResize(func(element js.Value, width, height int) {
-		e.connStop.SetX(width - 57)
-		e.connStop.SetY(height - 42)
-	})
+	//e.ornamentDraw.SetStopButtonMouseClick(js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	//	log.Printf("name: %v", this.Get("dataset").Get("name"))
+	//	log.Printf("type: %v", this.Get("dataset").Get("type"))
+	//	log.Printf("notConnected: %v", this.Get("dataset").Get("notConnected"))
+	//	log.Printf("locked: %v", this.Get("dataset").Get("locked"))
+	//	log.Printf("fatherId: %v", this.Get("dataset").Get("fatherId"))
+	//	log.Printf("direction: %v", this.Get("dataset").Get("direction"))
+	//	return nil
+	//}))
 
 	e.menu.SetNode(e.block.GetDeviceDiv())
 	e.menu.SetTitle("Loop")
@@ -327,3 +359,5 @@ func (e *StatementLoop) Init() (err error) {
 
 	return nil
 }
+
+func (e *StatementLoop) onConnectionClick() {}

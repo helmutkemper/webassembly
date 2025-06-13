@@ -1,171 +1,181 @@
 package connection
 
 import (
-	"fmt"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
-	"github.com/helmutkemper/webassembly/examples/ide/utils"
-	"image/color"
-	"log"
-	"reflect"
+	"strconv"
 	"syscall/js"
 )
 
-type Identity struct {
-	Father               *html.TagDiv
-	Id                   string
-	Name                 string
-	IsInput              bool
-	ConnType             reflect.Kind
-	IsBlocked            bool
-	AcceptedNotConnected bool
-}
-
+// Connection
+//
+//	Note: GetError() pega todos os erros de todas as conexões, porém, este código foi feito para ser usado durante o setup da IDE, não foi feito para ser usado pelo usuário final
 type Connection struct {
-	x                    int
-	y                    int
-	width                int
-	height               int
-	color                color.RGBA
-	name                 string
-	containerId          string
-	isInput              bool
-	isBlocked            bool
-	father               *html.TagDiv
-	connection           *html.TagDiv
-	mouseArea            *html.TagDiv
-	dataType             reflect.Kind
-	acceptedNotConnected bool
-	spaceAreaVertical    int
-	spaceAreaHorizontal  int
-	spaceAreaColor       color.RGBA
-	autoID               string
+	connection *html.TagSvgPath
+
+	clickFunc    js.Func
+	fatherId     string
+	name         string
+	dataType     string
+	notConnected string
+	lookedUp     string
+	isADataInput string
+	x            int
+	y            int
 }
 
-func (e *Connection) SetFather(father *html.TagDiv) {
-	e.father = father
-	e.containerId = father.GetId()
+type Data struct {
+	FatherId     string
+	Name         string
+	DataType     string
+	NotConnected bool
+	LookedUp     bool
+	IsADataInput bool
 }
 
-func (e *Connection) SetName(name string) (err error) {
-	e.name, err = utils.VerifyName(name)
-	return
-}
+func (e *Connection) Init() {
+	e.connection = factoryBrowser.NewTagSvgPath()
+	e.connection.DataKey(rulesConnection.KConnectionPrefix+"Name", e.name)
+	e.connection.DataKey(rulesConnection.KConnectionPrefix+"DataType", e.dataType)
+	e.connection.DataKey(rulesConnection.KConnectionPrefix+"AcceptNoConnection", e.dataType)
+	e.connection.DataKey(rulesConnection.KConnectionPrefix+"LookedUp", e.lookedUp)
+	e.connection.DataKey(rulesConnection.KConnectionPrefix+"IsDataInput", e.isADataInput)
+	e.connection.DataKey(rulesConnection.KConnectionPrefix+"FatherId", e.fatherId)
 
-func (e *Connection) SetAsInput() {
-	e.isInput = true
-}
-
-func (e *Connection) SetAsOutput() {
-	e.isInput = false
-}
-
-func (e *Connection) GetAsInput() (isInput bool) {
-	return e.isInput
-}
-
-func (e *Connection) SetAcceptedNotConnected(accept bool) {
-	e.acceptedNotConnected = accept
-}
-
-func (e *Connection) SetBlocked(isBlocked bool) {
-	e.isBlocked = isBlocked
-
-	if e.mouseArea == nil {
-		return
-	}
-
-	if e.isBlocked {
-		e.mouseArea.AddStyle("cursor", "not-allowed")
-		return
-	}
-
-	e.mouseArea.AddStyle("cursor", "crosshair")
-	return
-}
-
-func (e *Connection) GetBlocked() (isBlocked bool) {
-	return e.isBlocked
-}
-
-func (e *Connection) SetDataType(dataType reflect.Kind) {
-	e.dataType = dataType
-
-	e.color = rulesConnection.TypeToColor(dataType)
-}
-
-func (e *Connection) GetDataType() (dataType reflect.Kind) {
-	return e.dataType
-}
-
-func (e *Connection) GetIdentity() (identity Identity) {
-	return Identity{
-		Father:               e.father,
-		Id:                   e.containerId,
-		Name:                 e.name,
-		IsInput:              e.isInput,
-		ConnType:             e.dataType,
-		IsBlocked:            e.isBlocked,
-		AcceptedNotConnected: e.acceptedNotConnected,
+	if !e.clickFunc.IsNull() {
+		e.connection.Get().Set("getConnData", js.FuncOf(e.getConnectionFunc))
+		e.connection.Get().Call("addEventListener", "click", e.clickFunc)
 	}
 }
 
 func (e *Connection) SetX(x int) {
-	e.x = x
-	e.mouseArea.AddStyle("left", fmt.Sprintf("%dpx", x-e.spaceAreaHorizontal))
+	e.connection.DataKey(rulesConnection.KConnectionPrefix+"Top", strconv.FormatInt(int64(x), 10))
+}
+
+func (e *Connection) GetX() (x int) {
+	xI64, _ := strconv.ParseInt(e.connection.GetData(rulesConnection.KConnectionPrefix+"Top"), 10, 64)
+	return int(xI64)
 }
 
 func (e *Connection) SetY(y int) {
-	e.y = y
-	e.mouseArea.AddStyle("top", fmt.Sprintf("%dpx", y-e.spaceAreaVertical))
+	e.connection.DataKey(rulesConnection.KConnectionPrefix+"Left", strconv.FormatInt(int64(y), 10))
 }
 
-func (e *Connection) Create(x, y int) {
-	e.x = x
-	e.y = y
-	e.width = 6
-	e.height = 4
+func (e *Connection) GetY() (y int) {
+	yI64, _ := strconv.ParseInt(e.connection.GetData(rulesConnection.KConnectionPrefix+"Left"), 10, 64)
+	return int(yI64)
 }
 
-func (e *Connection) Init() {
-	id := e.containerId + "_" + e.name
+// mapToJsObject Transforms a go map into an js object accepted by wasm go
+//
+//	Note:
+//	  * The js.FuncOf(...).Call(...) receives and return interface{}, but only types that runtime go knows how to
+//	    convert to js work correctly.
+//	    Valid types for return: int, float64, bool, string, nil, e js.Value.
+func (e *Connection) mapToJsObject(data map[string]interface{}) js.Value {
+	obj := js.Global().Get("Object").New()
+	for k, v := range data {
+		obj.Set(k, v)
+	}
+	return obj
+}
 
-	e.spaceAreaHorizontal = 8
-	e.spaceAreaVertical = 8
+func (e *Connection) getConnectionFunc(_ js.Value, _ []js.Value) interface{} {
+	ret := map[string]interface{}{
+		"FatherId":     e.GetFatherId(),
+		"Name":         e.GetName(),
+		"DataType":     e.GetDataType(),
+		"NotConnected": e.GetAcceptNotConnected(),
+		"LookedUp":     e.GetConnectionLockedUp(),
+		"IsADataInput": e.GetAsDataInput(),
+		"Top":          e.GetX(),
+		"Left":         e.GetY(),
+	}
+	return e.mapToJsObject(ret)
+}
 
-	e.autoID = utils.GetRandomId()
+func (e *Connection) SetClickFunc(f js.Func) {
+	e.clickFunc = f
+}
 
-	e.mouseArea = factoryBrowser.NewTagDiv().
-		Id(id+"_space").
-		AddStyle("position", "absolute").
-		AddStyle("left", fmt.Sprintf("%dpx", e.x-e.spaceAreaHorizontal)).
-		AddStyle("top", fmt.Sprintf("%dpx", e.y-e.spaceAreaVertical)).
-		AddStyle("width", fmt.Sprintf("%dpx", e.width+2*e.spaceAreaHorizontal)).
-		AddStyle("height", fmt.Sprintf("%dpx", e.height+2*e.spaceAreaVertical)).
-		AddStyle("backgroundColor", e.spaceAreaColor)
+func (e *Connection) SetFatherId(id string) {
+	e.fatherId = id
+}
 
-	e.connection = factoryBrowser.NewTagDiv().
-		Id(id+"_connection").
-		AddStyle("position", "absolute").
-		AddStyle("left", fmt.Sprintf("%dpx", e.spaceAreaHorizontal)).
-		AddStyle("top", fmt.Sprintf("%dpx", e.spaceAreaVertical)).
-		AddStyle("width", fmt.Sprintf("%dpx", e.width)).
-		AddStyle("height", fmt.Sprintf("%dpx", e.height)).
-		AddStyle("backgroundColor", e.color)
-	e.mouseArea.Append(e.connection)
+func (e *Connection) GetFatherId() (id string) {
+	return e.connection.GetData(rulesConnection.KConnectionPrefix + "FatherId")
+}
 
-	e.mouseArea.Get().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		log.Printf("%+v", e.GetIdentity())
-		return nil
-	}))
+func (e *Connection) GetSvgPath() (svgPath *html.TagSvgPath) {
+	return e.connection
+}
 
-	e.father.Append(e.mouseArea)
+func (e *Connection) SetReference(reference *html.TagSvgPath) {
+	e.connection = reference
+}
 
-	if e.isBlocked {
-		e.mouseArea.AddStyle("cursor", "not-allowed")
-		return
+func (e *Connection) SetAsDataInput(dataInput bool) {
+	e.isADataInput = "output"
+
+	if dataInput {
+		e.isADataInput = "input"
+	}
+}
+
+func (e *Connection) GetAsDataInput() (dataInput bool) {
+	if e.connection.GetData(rulesConnection.KConnectionPrefix+"IsDataInput") == "input" {
+		return true
 	}
 
-	e.mouseArea.AddStyle("cursor", "crosshair")
+	return false
+}
+
+func (e *Connection) SetConnectionLockedUp(lockedUp bool) {
+	e.lookedUp = strconv.FormatBool(lockedUp)
+}
+
+func (e *Connection) GetConnectionLockedUp() (lockedUp bool) {
+	if e.connection.GetData(rulesConnection.KConnectionPrefix+"LookedUp") == "true" {
+		return true
+	}
+
+	return false
+}
+
+func (e *Connection) SetAcceptNotConnected(accept bool) {
+	e.notConnected = "trowError"
+
+	if accept {
+		e.notConnected = "accept"
+	}
+}
+
+func (e *Connection) GetAcceptNotConnected() (accept bool) {
+	if e.connection.GetData(rulesConnection.KConnectionPrefix+"AcceptNoConnection") == "trowError" {
+		return true
+	}
+
+	return false
+}
+
+func (e *Connection) SetName(name string) {
+	e.name = name
+}
+
+func (e *Connection) GetName() (name string) {
+	return e.connection.GetData(rulesConnection.KConnectionPrefix + "Name")
+}
+
+func (e *Connection) SetDataType(connType string) {
+	rulesConnection.TypeVerify(connType)
+	e.dataType = connType
+}
+
+func (e *Connection) GetDataType() (connType string) {
+	return e.connection.GetData(rulesConnection.KConnectionPrefix + "DataType")
+}
+
+func (e *Connection) GetError() (err error) {
+	return rulesConnection.GetError()
 }

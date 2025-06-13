@@ -2,14 +2,12 @@ package devices
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/math"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"log"
-	"reflect"
 	"syscall/js"
 )
 
@@ -23,10 +21,10 @@ type StatementAdd struct {
 	verticalMinimumSize   int
 	ornamentDraw          *math.OrnamentAdd
 	id                    string
-	inputA                *connection.Connection
-	inputB                *connection.Connection
-	output                *connection.Connection
-	debugMode             bool
+	//inputA                *connection.Connection
+	//inputB                *connection.Connection
+	//output                *connection.Connection
+	debugMode bool
 }
 
 func (e *StatementAdd) ToPng() (pngData js.Value) {
@@ -261,35 +259,35 @@ func (e *StatementAdd) getMenu() (content []components.MenuOptions) {
 }
 
 func (e *StatementAdd) makeConnections() {
-	e.inputA = new(connection.Connection)
-	e.inputA.Create(2, 15)
-	e.inputA.SetFather(e.block.GetDeviceDiv())
-	e.inputA.SetAsInput()
-	_ = e.inputA.SetName("inputA")
-	e.inputA.SetDataType(reflect.Int)
-	e.inputA.SetAcceptedNotConnected(false)
-	e.inputA.SetBlocked(false)
-	e.inputA.Init()
-
-	e.inputB = new(connection.Connection)
-	e.inputB.Create(2, e.block.GetHeight()-15-5)
-	e.inputB.SetFather(e.block.GetDeviceDiv())
-	e.inputB.SetAsInput()
-	_ = e.inputB.SetName("inputB")
-	e.inputB.SetDataType(reflect.Int)
-	e.inputB.SetAcceptedNotConnected(false)
-	e.inputB.SetBlocked(false)
-	e.inputB.Init()
-
-	e.output = new(connection.Connection)
-	e.output.Create(e.block.GetWidth()-10, e.block.GetHeight()/2-2)
-	e.output.SetFather(e.block.GetDeviceDiv())
-	e.output.SetAsOutput()
-	_ = e.output.SetName("output")
-	e.output.SetDataType(reflect.Int)
-	e.output.SetAcceptedNotConnected(false)
-	e.output.SetBlocked(false)
-	e.output.Init()
+	//e.inputA = new(connection.Connection)
+	//e.inputA.Create(2, 15)
+	//e.inputA.SetFather(e.block.GetDeviceDiv())
+	//e.inputA.SetAsInput()
+	//_ = e.inputA.SetName("inputA")
+	//e.inputA.SetDataType(reflect.Int)
+	//e.inputA.SetAcceptedNotConnected(false)
+	//e.inputA.SetBlocked(false)
+	//e.inputA.Init()
+	//
+	//e.inputB = new(connection.Connection)
+	//e.inputB.Create(2, e.block.GetHeight()-15-5)
+	//e.inputB.SetFather(e.block.GetDeviceDiv())
+	//e.inputB.SetAsInput()
+	//_ = e.inputB.SetName("inputB")
+	//e.inputB.SetDataType(reflect.Int)
+	//e.inputB.SetAcceptedNotConnected(false)
+	//e.inputB.SetBlocked(false)
+	//e.inputB.Init()
+	//
+	//e.output = new(connection.Connection)
+	//e.output.Create(e.block.GetWidth()-10, e.block.GetHeight()/2-2)
+	//e.output.SetFather(e.block.GetDeviceDiv())
+	//e.output.SetAsOutput()
+	//_ = e.output.SetName("output")
+	//e.output.SetDataType(reflect.Int)
+	//e.output.SetAcceptedNotConnected(false)
+	//e.output.SetBlocked(false)
+	//e.output.Init()
 }
 
 func (e *StatementAdd) Init() (err error) {

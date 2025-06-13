@@ -38,7 +38,7 @@ func (e *StatementLoop) GetHeight() (height int) {
 }
 
 func (e *StatementLoop) ToPng() (pngData js.Value) {
-	return e.ornamentDraw.ToPng()
+	return e.ornamentDraw.ToPngResized(float64(e.block.GetWidth()), float64(e.block.GetHeight()))
 }
 
 // SetWarning sets the visibility of the warning mark

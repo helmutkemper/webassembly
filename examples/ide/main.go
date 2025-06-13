@@ -125,13 +125,14 @@ func main() {
 	url := stmLoop.ToPng()
 	//stmLoop.SetWarning(true)
 
-	//stmAdd := new(devices.StatementAdd)
-	//stmAdd.SetPosition(200, 200)
-	//_ = stmAdd.Init()
+	stmAdd := new(devices.StatementAdd)
+	stmAdd.SetPosition(200, 200)
+	_ = stmAdd.Init()
+	//url = stmAdd.ToPng()
 
 	mainStage = factoryBrowser.NewStage()
-	//mainStage.Append(stmLoop.Get())
-	//mainStage.Append(stmAdd.Get())
+	mainStage.Append(stmLoop.Get())
+	mainStage.Append(stmAdd.Get())
 	factoryBrowser.NewTagSvg()
 	if _, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)

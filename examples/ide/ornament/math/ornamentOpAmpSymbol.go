@@ -18,6 +18,8 @@ type OrnamentOpAmpSymbol struct {
 	deviceBackgroundColor color.RGBA
 	deviceSymbolColor     color.RGBA
 
+	width         int
+	height        int
 	deviceAdjustX int
 	deviceAdjustY int
 
@@ -31,8 +33,16 @@ type OrnamentOpAmpSymbol struct {
 	deviceSymbol *html.TagSvgText
 }
 
-func (e *OrnamentOpAmpSymbol) ToPng() (pngData js.Value) {
-	return e.svg.ToPng()
+func (e *OrnamentOpAmpSymbol) GetWidth() int {
+	return e.width
+}
+
+func (e *OrnamentOpAmpSymbol) GetHeight() int {
+	return e.height
+}
+
+func (e *OrnamentOpAmpSymbol) ToPngResized(width, height float64) (pngData js.Value) {
+	return e.svg.ToPngResized(width, height)
 }
 
 // SetWarning sets the visibility of the warning mark
@@ -184,6 +194,9 @@ func (e *OrnamentOpAmpSymbol) GetSvg() (svg *html.TagSvg) {
 
 // Update Desenha o ornamento
 func (e *OrnamentOpAmpSymbol) Update(width, height int) (err error) {
+	e.width = width
+	e.height = height
+
 	_ = e.WarningMarkExclamation.Update(width, height)
 
 	e.svg.ViewBox([]int{0.0, 0.0, width, height})

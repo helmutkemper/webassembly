@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesConnectionColor"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
 	"github.com/helmutkemper/webassembly/examples/ide/utils"
 	"image/color"
 	"log"
@@ -92,7 +92,7 @@ func (e *Connection) GetBlocked() (isBlocked bool) {
 func (e *Connection) SetDataType(dataType reflect.Kind) {
 	e.dataType = dataType
 
-	e.color = rulesConnectionColor.TypeToColor(dataType)
+	e.color = rulesConnection.TypeToColor(dataType)
 }
 
 func (e *Connection) GetDataType() (dataType reflect.Kind) {

@@ -5,7 +5,9 @@ import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
 	"image/color"
+	"reflect"
 	"syscall/js"
 )
 
@@ -16,15 +18,17 @@ type DoubleLoopArrow struct {
 	arrowColor      color.RGBA
 	backgroundColor color.RGBA
 
-	svg               *html.TagSvg
-	backgroundContent *html.TagSvgPath
-	borderArrow       *html.TagSvgPath
-	stopButtonCircle  *html.TagSvgPath
-	stopButtonBorder  *html.TagSvgPath
+	svg                      *html.TagSvg
+	backgroundContent        *html.TagSvgPath
+	borderArrow              *html.TagSvgPath
+	stopButtonCircle         *html.TagSvgPath
+	stopButtonBorder         *html.TagSvgPath
+	stopButtonConnection     *html.TagSvgPath
+	stopButtonConnectionArea *html.TagSvgPath
 }
 
-func (e *DoubleLoopArrow) ToPng() (pngData js.Value) {
-	return e.svg.ToPng()
+func (e *DoubleLoopArrow) ToPngResized(width, height float64) (pngData js.Value) {
+	return e.svg.ToPngResized(width, height)
 }
 
 // SetWarning sets the visibility of the warning mark
@@ -87,10 +91,44 @@ func (e *DoubleLoopArrow) Init() (err error) {
 		MarkerEnd("url(#stopButtonBorder)")
 	e.svg.Append(e.stopButtonBorder)
 
+	e.stopButtonConnection = factoryBrowser.NewTagSvgPath().
+		Fill(rulesConnection.TypeToColor(reflect.Bool)).
+		Stroke("none").
+		MarkerEnd("url(#stopButtonConnection)")
+	e.svg.Append(e.stopButtonConnection)
+
+	e.stopButtonConnectionArea = factoryBrowser.NewTagSvgPath().
+		Fill("transparent").
+		Stroke("none").
+		AddStyle("cursor", "crosshair").
+		MarkerEnd("url(#stopButtonConnection)")
+	e.svg.Append(e.stopButtonConnectionArea)
+
 	e.svg.Append(e.GetWarningMark())
 	e.SetWarning(false)
 
 	return
+}
+
+// AddStopButtonDataKey
+//
+// Add a key type `key/value` that can be used at the event `mouse click`: `this.Get("dataset").Get(key).String()`
+func (e *DoubleLoopArrow) AddStopButtonDataKey(key, value string) {
+	e.stopButtonConnectionArea.DataKey(key, value)
+}
+
+// GetStopButtonDataKey
+//
+// Returns the value saved to the `key/value` key
+func (e *DoubleLoopArrow) GetStopButtonDataKey(key string) (value string) {
+	return e.stopButtonConnectionArea.GetData(key)
+}
+
+// SetStopButtonMouseClick Receives the function of mouse event
+//
+//	Data can be passed with the AddStopButtonDataKey function and recovered with `this.Get("dataset").Get(key).String()`
+func (e *DoubleLoopArrow) SetStopButtonMouseClick(f js.Func) {
+	e.stopButtonConnectionArea.Get().Call("addEventListener", "click", f)
 }
 
 // Update Draw the element design
@@ -184,6 +222,24 @@ func (e *DoubleLoopArrow) Update(width, height int) (err error) {
 		"z",
 	}
 	e.stopButtonBorder.D(stopButtonBorderPath)
+
+	stopButtonConnectionPath := []string{
+		fmt.Sprintf("M %v %v", width-57, height-42),
+		fmt.Sprintf("l %v 0", rulesConnection.KWidth),
+		fmt.Sprintf("l 0 %v", rulesConnection.KHeight),
+		fmt.Sprintf("l -%v 0", rulesConnection.KWidth),
+		fmt.Sprintf("l 0 -%v", rulesConnection.KHeight),
+	}
+	e.stopButtonConnection.D(stopButtonConnectionPath)
+
+	stopButtonConnectionAreaPath := []string{
+		fmt.Sprintf("M %v %v", width-57-(rulesConnection.KWidthArea-rulesConnection.KWidth)/2, height-42-(rulesConnection.KHeightArea-rulesConnection.KHeight)/2),
+		fmt.Sprintf("l %v 0", rulesConnection.KWidthArea),
+		fmt.Sprintf("l 0 %v", rulesConnection.KHeightArea),
+		fmt.Sprintf("l -%v 0", rulesConnection.KWidthArea),
+		fmt.Sprintf("l 0 -%v", rulesConnection.KHeightArea),
+	}
+	e.stopButtonConnectionArea.D(stopButtonConnectionAreaPath)
 
 	return
 }

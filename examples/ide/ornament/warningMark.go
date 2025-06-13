@@ -6,7 +6,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/drawUtils"
 	"github.com/helmutkemper/webassembly/examples/ide/easterEgg"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesConnectionColor"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
 	"image/color"
 	"time"
 )
@@ -16,6 +16,8 @@ import (
 type WarningMarkExclamation struct {
 	easterEgg.MorseCode
 
+	width                   int
+	height                  int
 	warningBackgroundColor  color.RGBA
 	warningBorderColor      color.RGBA
 	warningExclamationColor color.RGBA
@@ -73,9 +75,9 @@ func (e *WarningMarkExclamation) GetWarning() bool {
 func (e *WarningMarkExclamation) Init() (err error) {
 	e.MorseCode.Init()
 
-	e.warningBackgroundColor = rulesConnectionColor.KTrafficSignBackgroundColor
-	e.warningBorderColor = rulesConnectionColor.KTrafficSignBorderColor
-	e.warningExclamationColor = rulesConnectionColor.KTrafficSignWarningExclamationColor
+	e.warningBackgroundColor = rulesConnection.KTrafficSignBackgroundColor
+	e.warningBorderColor = rulesConnection.KTrafficSignBorderColor
+	e.warningExclamationColor = rulesConnection.KTrafficSignWarningExclamationColor
 	e.warningOpacity = 0.5
 
 	e.warningEnabled = false
@@ -113,8 +115,19 @@ func (e *WarningMarkExclamation) min(a, b int) int {
 	return b
 }
 
+func (e *WarningMarkExclamation) GetWidth() int {
+	return e.width
+}
+
+func (e *WarningMarkExclamation) GetHeight() int {
+	return e.height
+}
+
 // Update Draw the image
 func (e *WarningMarkExclamation) Update(width, height int) (err error) {
+	e.width = width
+	e.height = height
+
 	e.svgWarning.ViewBox([]int{0, 0, width, height})
 	marginInternal := 0
 	r := e.min(width-marginInternal-2.0*e.warningMarkMargin, height-marginInternal-2.0*e.warningMarkMargin) / 2.0

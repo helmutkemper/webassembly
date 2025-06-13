@@ -1,4 +1,4 @@
-package rulesConnectionColor
+package rulesConnection
 
 import (
 	"github.com/helmutkemper/webassembly/platform/factoryColor"

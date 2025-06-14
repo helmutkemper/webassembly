@@ -34,14 +34,18 @@ type Data struct {
 	IsADataInput bool
 }
 
-func (e *Connection) Init() {
-	e.connection = factoryBrowser.NewTagSvgPath()
-	e.connection.DataKey(rulesConnection.KConnectionPrefix+"Name", e.name)
-	e.connection.DataKey(rulesConnection.KConnectionPrefix+"DataType", e.dataType)
-	e.connection.DataKey(rulesConnection.KConnectionPrefix+"AcceptNoConnection", e.dataType)
-	e.connection.DataKey(rulesConnection.KConnectionPrefix+"LookedUp", e.lookedUp)
-	e.connection.DataKey(rulesConnection.KConnectionPrefix+"IsDataInput", e.isADataInput)
-	e.connection.DataKey(rulesConnection.KConnectionPrefix+"FatherId", e.fatherId)
+func (e *Connection) Init(markEnd string) {
+	e.connection = factoryBrowser.NewTagSvgPath().
+		DataKey(rulesConnection.KConnectionPrefix+"Name", e.name).
+		DataKey(rulesConnection.KConnectionPrefix+"DataType", e.dataType).
+		DataKey(rulesConnection.KConnectionPrefix+"AcceptNoConnection", e.dataType).
+		DataKey(rulesConnection.KConnectionPrefix+"LookedUp", e.lookedUp).
+		DataKey(rulesConnection.KConnectionPrefix+"IsDataInput", e.isADataInput).
+		DataKey(rulesConnection.KConnectionPrefix+"FatherId", e.fatherId).
+		Fill("transparent").
+		Stroke("none").
+		AddStyle("cursor", "crosshair").
+		MarkerEnd(markEnd)
 
 	if !e.clickFunc.IsNull() {
 		e.connection.Get().Set("getConnData", js.FuncOf(e.getConnectionFunc))

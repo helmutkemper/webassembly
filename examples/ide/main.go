@@ -125,7 +125,7 @@ func main() {
 	//stmLoop.SetWarning(true)
 
 	stmAdd := new(devices.StatementAdd)
-	stmAdd.SetPosition(200, 200)
+	stmAdd.SetPosition(100, 100)
 	_ = stmAdd.Init()
 	url = stmAdd.ToPng()
 

@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
+	"github.com/helmutkemper/webassembly/examples/ide/connection/factoryConnection"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
 	"image/color"
@@ -123,18 +124,10 @@ func (e *DoubleLoopArrow) Init() (err error) {
 		MarkerEnd("url(#stopButtonBorder)")
 	e.svg.Append(e.stopButtonBorder)
 
-	e.stopButtonConnection = factoryBrowser.NewTagSvgPath().
-		Fill(rulesConnection.TypeToColor("bool")).
-		Stroke("none").
-		MarkerEnd("url(#stopButtonConnection)")
+	e.stopButtonConnection = factoryConnection.NewConnection("bool", "url(#stopButtonConnection)")
 	e.svg.Append(e.stopButtonConnection)
 
-	e.stopButtonConnectionArea.Init()
-	e.stopButtonConnectionArea.GetSvgPath().
-		Fill("transparent").
-		Stroke("none").
-		AddStyle("cursor", "crosshair").
-		MarkerEnd("url(#stopButtonConnection)")
+	e.stopButtonConnectionArea.Init("url(#stopButtonConnectionArea)")
 	e.svg.Append(e.stopButtonConnectionArea.GetSvgPath())
 
 	e.svg.Append(e.GetWarningMark())
@@ -235,23 +228,8 @@ func (e *DoubleLoopArrow) Update(width, height int) (err error) {
 	}
 	e.stopButtonBorder.D(stopButtonBorderPath)
 
-	stopButtonConnectionPath := []string{
-		fmt.Sprintf("M %v %v", width-57, height-42),
-		fmt.Sprintf("l %v 0", rulesConnection.KWidth),
-		fmt.Sprintf("l 0 %v", rulesConnection.KHeight),
-		fmt.Sprintf("l -%v 0", rulesConnection.KWidth),
-		fmt.Sprintf("l 0 -%v", rulesConnection.KHeight),
-	}
-	e.stopButtonConnection.D(stopButtonConnectionPath)
-
-	stopButtonConnectionAreaPath := []string{
-		fmt.Sprintf("M %v %v", width-57-(rulesConnection.KWidthArea-rulesConnection.KWidth)/2, height-42-(rulesConnection.KHeightArea-rulesConnection.KHeight)/2),
-		fmt.Sprintf("l %v 0", rulesConnection.KWidthArea),
-		fmt.Sprintf("l 0 %v", rulesConnection.KHeightArea),
-		fmt.Sprintf("l -%v 0", rulesConnection.KWidthArea),
-		fmt.Sprintf("l 0 -%v", rulesConnection.KHeightArea),
-	}
-	e.stopButtonConnectionArea.GetSvgPath().D(stopButtonConnectionAreaPath)
+	e.stopButtonConnection.D(rulesConnection.GetPathDraw(width-57, height-42))
+	e.stopButtonConnectionArea.GetSvgPath().D(rulesConnection.GetPathAreaDraw(width-57, height-42))
 
 	e.stopButtonConnectionArea.SetX(width - 57)
 	e.stopButtonConnectionArea.SetY(height - 42)

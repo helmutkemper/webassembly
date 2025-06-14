@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/examples/ide/connection"
+	"github.com/helmutkemper/webassembly/examples/ide/connection/factoryConnection"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
 	"image/color"
 	"syscall/js"
 )
@@ -28,9 +31,15 @@ type OrnamentOpAmpSymbol struct {
 	deviceSymbolFontFamily string
 	deviceSymbolFontWeight string
 
-	svg          *html.TagSvg
-	deviceBorder *html.TagSvgPath
-	deviceSymbol *html.TagSvgText
+	svg                  *html.TagSvg
+	deviceBorder         *html.TagSvgPath
+	deviceSymbol         *html.TagSvgText
+	inputXConnection     *html.TagSvgPath
+	inputXConnectionArea connection.Connection
+	inputYConnection     *html.TagSvgPath
+	inputYConnectionArea connection.Connection
+	outputConnection     *html.TagSvgPath
+	outputConnectionArea connection.Connection
 }
 
 func (e *OrnamentOpAmpSymbol) GetWidth() int {
@@ -182,6 +191,24 @@ func (e *OrnamentOpAmpSymbol) Init() (err error) {
 		UserSelectNone()
 	e.svg.Append(e.deviceSymbol)
 
+	e.inputXConnection = factoryConnection.NewConnection("int", "url(#inputXConnection)")
+	e.svg.Append(e.inputXConnection)
+
+	e.inputXConnectionArea.Init("url(#inputXConnectionArea)")
+	e.svg.Append(e.inputXConnectionArea.GetSvgPath())
+
+	e.inputYConnection = factoryConnection.NewConnection("int", "url(#inputYConnection)")
+	e.svg.Append(e.inputYConnection)
+
+	e.inputYConnectionArea.Init("url(#inputYConnectionArea)")
+	e.svg.Append(e.inputYConnectionArea.GetSvgPath())
+
+	e.outputConnection = factoryConnection.NewConnection("int", "url(#outputConnection)")
+	e.svg.Append(e.outputConnection)
+
+	e.outputConnectionArea.Init("url(#stopButtonConnection)")
+	e.svg.Append(e.outputConnectionArea.GetSvgPath())
+
 	e.svg.Append(e.WarningMarkExclamation.GetWarningMark())
 	e.SetWarning(false)
 	return
@@ -224,6 +251,15 @@ func (e *OrnamentOpAmpSymbol) Update(width, height int) (err error) {
 	// update deviceSymbol position
 	e.deviceSymbol.X(xc + e.deviceAdjustX)
 	e.deviceSymbol.Y(yc + e.deviceAdjustY)
+
+	e.inputXConnection.D(rulesConnection.GetPathDraw(2, 15))
+	e.inputXConnectionArea.GetSvgPath().D(rulesConnection.GetPathAreaDraw(2, 15))
+
+	e.inputYConnection.D(rulesConnection.GetPathDraw(2, e.height-18))
+	e.inputYConnectionArea.GetSvgPath().D(rulesConnection.GetPathAreaDraw(2, e.height-18))
+
+	e.outputConnection.D(rulesConnection.GetPathDraw(e.width-12, e.height/2-2))
+	e.outputConnectionArea.GetSvgPath().D(rulesConnection.GetPathAreaDraw(e.width-12, e.height/2-2))
 
 	return
 }

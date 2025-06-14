@@ -199,7 +199,7 @@ func (e *OrnamentOpAmpSymbol) Update(width, height int) (err error) {
 
 	_ = e.WarningMarkExclamation.Update(width, height)
 
-	e.svg.ViewBox([]int{0.0, 0.0, width, height})
+	//e.svg.ViewBox([]int{0.0, 0.0, width, height})
 
 	// draw the triangle
 	border := 8

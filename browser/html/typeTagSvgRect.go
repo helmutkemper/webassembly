@@ -212,6 +212,169 @@ func (e *TagSvgRect) Init() (ref *TagSvgRect) {
 	return e
 }
 
+// Data #global #replicar
+//
+// English:
+//
+//	Used to store custom data private to the page or application.
+//
+//	 Input:
+//	   data: custom data private to the page or application.
+//
+// The data-* attributes is used to store custom data private to the page or application.
+// The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
+// The stored (custom) data can then be used in the page's JavaScript to create a more engaging user
+// experience (without any Ajax calls or server-side database queries).
+//
+// The data-* attributes consist of two parts:
+//
+//	The attribute name should not contain any uppercase letters, and must be at least one character
+//	long after the prefix "data-";
+//	The attribute value can be any string.
+//
+//	Note:
+//	  * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
+//
+// Português:
+//
+//	Usado para armazenar dados personalizados privados para a página ou aplicativo.
+//
+//	 Entrada:
+//	   data: dados personalizados privados para a página ou aplicativo.
+//
+// Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
+// aplicativo;
+// Os atributos de dados nos dão a capacidade de incorporar atributos de dados personalizados em todos
+// os elementos HTML;
+// Os dados armazenados (personalizados) podem ser usados no JavaScript da página para criar uma
+// experiência de usuário mais envolvente (sem chamadas Ajax ou consultas de banco de dados do lado do
+// servidor).
+//
+// Os atributos de dados consistem em duas partes:
+//
+//	O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+//	prefixo "data-";
+//	O valor do atributo pode ser qualquer string.
+//
+//	Nota:
+//	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
+//	    usuário.
+func (e *TagSvgRect) Data(data map[string]string) (ref *TagSvgRect) {
+	for k, v := range data {
+		e.selfElement.Get("dataset").Set(k, v)
+	}
+	return e
+}
+
+// DataKey #global #replicar
+//
+// English:
+//
+//	Used to store custom data private to the page or application.
+//
+//	 Input:
+//	   data: custom data private to the page or application.
+//
+// The data-* attributes is used to store custom data private to the page or application.
+// The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
+// The stored (custom) data can then be used in the page's JavaScript to create a more engaging user
+// experience (without any Ajax calls or server-side database queries).
+//
+// The data-* attributes consist of two parts:
+//
+//	The attribute name should not contain any uppercase letters, and must be at least one character
+//	long after the prefix "data-";
+//	The attribute value can be any string.
+//
+//	Note:
+//	  * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
+//
+// Português:
+//
+//	Usado para armazenar dados personalizados privados para a página ou aplicativo.
+//
+//	 Entrada:
+//	   data: dados personalizados privados para a página ou aplicativo.
+//
+// Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
+// aplicativo;
+// Os atributos de dados nos dão a capacidade de incorporar atributos de dados personalizados em todos
+// os elementos HTML;
+// Os dados armazenados (personalizados) podem ser usados no JavaScript da página para criar uma
+// experiência de usuário mais envolvente (sem chamadas Ajax ou consultas de banco de dados do lado do
+// servidor).
+//
+// Os atributos de dados consistem em duas partes:
+//
+//	O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+//	prefixo "data-";
+//	O valor do atributo pode ser qualquer string.
+//
+//	Nota:
+//	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
+//	    usuário.
+func (e *TagSvgRect) DataKey(key, value string) (ref *TagSvgRect) {
+	e.selfElement.Get("dataset").Set(key, value)
+	return e
+}
+
+// GetData #global #replicar
+//
+// English:
+//
+//		Used to get custom data private to the page or application.
+//
+//		 Input:
+//		   key: custom key of data to get
+//
+//	  Output:
+//	    value: value of custom data
+//
+// The data-* attributes is used to store custom data private to the page or application.
+// The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
+// The stored (custom) data can then be used in the page's JavaScript to create a more engaging user
+// experience (without any Ajax calls or server-side database queries).
+//
+// The data-* attributes consist of two parts:
+//
+//	The attribute name should not contain any uppercase letters, and must be at least one character
+//	long after the prefix "data-";
+//	The attribute value can be any string.
+//
+//	Note:
+//	  * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
+//
+// Português:
+//
+//		Usado para armazenar dados personalizados privados para a página ou aplicativo.
+//
+//		 Entrada:
+//		   key: chave personalizada de dados para obter
+//
+//	  Saída:
+//	    value: valor do dado personalizado
+//
+// Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
+// aplicativo;
+// Os atributos de dados nos dão a capacidade de incorporar atributos de dados personalizados em todos
+// os elementos HTML;
+// Os dados armazenados (personalizados) podem ser usados no JavaScript da página para criar uma
+// experiência de usuário mais envolvente (sem chamadas Ajax ou consultas de banco de dados do lado do
+// servidor).
+//
+// Os atributos de dados consistem em duas partes:
+//
+//	O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+//	prefixo "data-";
+//	O valor do atributo pode ser qualquer string.
+//
+//	Nota:
+//	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
+//	    usuário.
+func (e *TagSvgRect) GetData(key string) (value string) {
+	return e.selfElement.Get("dataset").Get(key).String()
+}
+
 func (e *TagSvgRect) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
@@ -2652,28 +2815,88 @@ func (e *TagSvgRect) Class(class string) (ref *TagSvgRect) {
 	return e
 }
 
-// Style
+// Style #global
 //
 // English:
 //
-// The style attribute allows to style an element using CSS declarations.
+//	Specifies an inline CSS style for an element.
 //
-//	Input:
-//	  value: allows to style an element using CSS declarations
+// The style attribute will override any style set globally, e.g. styles specified in the <style> tag
+// or in an external style sheet.
 //
-// It functions identically to the style attribute in HTML.
+// The style attribute can be used on any HTML element (it will validate on any HTML element.
+// However, it is not necessarily useful).
 //
 // Português:
 //
-// O atributo style permite estilizar um elemento usando declarações CSS.
+//	Especifica um estilo CSS embutido para um elemento
 //
-//	Entrada:
-//	  value: permite estilizar um elemento usando declarações CSS
+// O atributo style substituirá qualquer conjunto de estilos globalmente, por exemplo estilos
+// especificados na tag <style> ou em uma folha de estilo externa.
 //
-// Funciona de forma idêntica ao atributo style em HTML.
-func (e *TagSvgRect) Style(value string) (ref *TagSvgRect) {
-	e.selfElement.Call("setAttribute", "style", value)
+// O atributo style pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
+// No entanto, não é necessariamente útil).
+func (e *TagSvgRect) Style(style string) (ref *TagSvgRect) {
+	e.selfElement.Set("style", style)
 	return e
+}
+
+func (e *TagSvgRect) AddStyle(key string, value any) (ref *TagSvgRect) {
+	switch converted := value.(type) {
+	case string:
+		e.selfElement.Get("style").Set(key, converted)
+	case color.RGBA:
+		e.selfElement.Get("style").Set(key, RGBAToJs(converted))
+	default:
+		e.selfElement.Get("style").Set(key, converted)
+	}
+	return e
+}
+
+func (e *TagSvgRect) AddStyleConditional(condition bool, key string, trueValue, falseValue any) (ref *TagSvgRect) {
+	var value any
+	if condition {
+		value = trueValue
+	} else {
+		value = falseValue
+	}
+
+	switch converted := value.(type) {
+	case string:
+		e.selfElement.Get("style").Set(key, converted)
+	case color.RGBA:
+		e.selfElement.Get("style").Set(key, RGBAToJs(converted))
+	default:
+		e.selfElement.Get("style").Set(key, converted)
+	}
+	return e
+}
+
+func (e *TagSvgRect) GetStyleInt(key string) (value int) {
+	valueStr := e.selfElement.Get("style").Get(key).String()
+	i := len(valueStr) - 1
+	for ; i > 0; i -= 1 {
+		char := valueStr[i]
+		if char >= 0x30 && char <= 0x39 {
+			break
+		}
+	}
+	valueI64, err := strconv.ParseInt(valueStr[:i+1], 10, 64)
+	if err != nil {
+		log.Printf("GetStyleInt().ParseInt(%v).error: %v", valueStr[:i+1], err)
+		return
+	}
+
+	return int(valueI64)
+	return e.selfElement.Get("style").Get(key).Int()
+}
+
+func (e *TagSvgRect) GetStyle(key string) (value string) {
+	if e.selfElement.Get("style").Get(key).IsUndefined() {
+		return ""
+	}
+
+	return e.selfElement.Get("style").Get(key).String()
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------

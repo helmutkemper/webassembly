@@ -48,7 +48,7 @@ func (e *StatementLoop) SetWarning(warning bool) {
 	e.block.SetWarning(warning)
 }
 
-func (e *StatementLoop) Get() (container *html.TagDiv) {
+func (e *StatementLoop) Get() (container *html.TagSvg) {
 	return e.block.GetIdeStage()
 }
 
@@ -269,10 +269,10 @@ func (e *StatementLoop) Init() (err error) {
 	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmLoop")
 
-	e.defaultWidth = 100
-	e.defaultHeight = 100
-	e.horizontalMinimumSize = 40
-	e.verticalMinimumSize = 30
+	e.defaultWidth = 400
+	e.defaultHeight = 300
+	e.horizontalMinimumSize = 200
+	e.verticalMinimumSize = 150
 
 	if e.block.GetWidth() == 0 {
 		e.block.SetWidth(e.defaultWidth)

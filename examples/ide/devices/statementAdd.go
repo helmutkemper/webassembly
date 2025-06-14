@@ -44,7 +44,7 @@ func (e *StatementAdd) SelectedInvert() {
 	e.block.SelectedInvert()
 }
 
-func (e *StatementAdd) Get() (container *html.TagDiv) {
+func (e *StatementAdd) Get() (container *html.TagSvg) {
 	return e.block.GetIdeStage()
 }
 

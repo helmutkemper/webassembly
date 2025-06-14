@@ -16,7 +16,7 @@ type manager struct {
 
 	id       string
 	block    *html.TagDiv
-	ideStage *html.TagDiv
+	ideStage *html.TagSvg
 
 	listenerClick js.Func
 	listenerMove  js.Func
@@ -88,11 +88,11 @@ func (e *manager) SetOrnament(ornament CursorControl) {
 // SetFatherId Receives the div ID used as a stage for the IDE and puts it to occupy the entire browser area
 func (e *manager) SetFatherId(fatherId string) {
 	e.fatherId = fatherId
-	e.ideStage = factoryBrowser.NewTagDiv().
-		Import(fatherId).
-		AddStyle("position", "relative").
-		AddStyle("width", "100vw"). // todo: transformar isto em algo chamado uma única vez e em outro lugar
-		AddStyle("height", "100vh") // todo: transformar isto em algo chamado uma única vez e em outro lugar
+	e.ideStage = factoryBrowser.NewTagSvg().
+		Import(fatherId) //.
+	//AddStyle("position", "relative").
+	//AddStyle("width", "100vw"). // todo: transformar isto em algo chamado uma única vez e em outro lugar
+	//AddStyle("height", "100vh") // todo: transformar isto em algo chamado uma única vez e em outro lugar
 }
 
 func (e *manager) initEvents() {

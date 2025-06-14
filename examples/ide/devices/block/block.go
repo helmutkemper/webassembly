@@ -1,7 +1,6 @@
 package block
 
 import (
-	"fmt"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
@@ -49,17 +48,15 @@ type Block struct {
 	resizerColor      color.RGBA
 	resizerFlashColor color.RGBA
 
-	ideStage *html.TagDiv
-	block    *html.TagDiv
+	ideStage *html.TagSvg
+	block    *html.TagSvg
 
-	resizerTopLeft     *html.TagDiv
-	resizerTopRight    *html.TagDiv
-	resizerBottomLeft  *html.TagDiv
-	resizerBottomRight *html.TagDiv
+	resizerTopLeft     *html.TagSvgRect
+	resizerTopRight    *html.TagSvgRect
+	resizerBottomLeft  *html.TagSvgRect
+	resizerBottomRight *html.TagSvgRect
 
-	selectDiv *html.TagDiv
-
-	resizers []*html.TagDiv
+	selectDiv *html.TagSvgRect
 
 	ornament ornament.Draw
 
@@ -210,78 +207,75 @@ func (e *Block) GetSelected() (selected bool) {
 
 // createBlock Prepare all divs and CSS
 func (e *Block) createBlock(x, y, width, height int) {
-	e.resizers = make([]*html.TagDiv, 0)
-
-	e.block = factoryBrowser.NewTagDiv().
+	e.block = factoryBrowser.NewTagSvg().
 		Id(e.id).
 		//Class(e.classListName).
 		AddStyle("position", "absolute").
-		AddStyle("top", fmt.Sprintf("%dpx", x)).
-		AddStyle("left", fmt.Sprintf("%dpx", y)).
-		AddStyle("width", fmt.Sprintf("%dpx", width)).
-		AddStyle("height", fmt.Sprintf("%dpx", height))
+		X(x).
+		Y(y).
+		Width(width).
+		Height(height)
 	e.ideStage.Append(e.block)
 
-	e.selectDiv = factoryBrowser.NewTagDiv().
-		AddStyle("position", "absolute").
-		AddStyle("display", "none").
-		AddStyle("top", "0px").
-		AddStyle("left", "0px").
-		AddStyle("width", fmt.Sprintf("%dpx", width)).
-		AddStyle("height", fmt.Sprintf("%dpx", height)).
-		AddStyle("border", "1px dashed red").
-		AddStyle("background", "transparent")
-	e.block.Append(e.selectDiv)
+	e.selectDiv = factoryBrowser.NewTagSvgRect().
+		X(x).
+		Y(y).
+		Width(width).
+		Height(height).
+		Fill("none").Stroke("red").StrokeDasharray([]float64{4}).StrokeWidth(1).
+		//AddStyle("position", "absolute").
+		AddStyle("display", "none")
+	//AddStyle("border", "1px dashed red").
+	//AddStyle("background", "transparent")
+	e.ideStage.Append(e.selectDiv)
 
-	e.resizerTopLeft = factoryBrowser.NewTagDiv().
+	e.resizerTopLeft = factoryBrowser.NewTagSvgRect().
 		DataKey("name", "top-left").
-		AddStyle("position", "absolute").
-		AddStyle("width", fmt.Sprintf("%dpx", e.resizerWidth)).
-		AddStyle("height", fmt.Sprintf("%dpx", e.resizerHeight)).
-		AddStyle("background-color", e.resizerColor).
-		AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
-		AddStyle("top", fmt.Sprintf("%dpx", e.resizerDistance)).
-		AddStyle("left", fmt.Sprintf("%dpx", e.resizerDistance)).
-		AddStyle("cursor", "nwse-resize")
-	e.block.Append(e.resizerTopLeft)
+		X(x + e.resizerDistance).
+		Y(y + e.resizerDistance).
+		Width(e.resizerWidth).
+		Height(e.resizerHeight).Fill("red")
+	//AddStyle("position", "absolute").
+	//AddStyle("background-color", e.resizerColor).
+	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
+	//AddStyle("cursor", "nwse-resize")
+	e.ideStage.Append(e.resizerTopLeft)
 
-	e.resizerTopRight = factoryBrowser.NewTagDiv().
+	e.resizerTopRight = factoryBrowser.NewTagSvgRect().
 		DataKey("name", "top-right").
-		AddStyle("position", "absolute").
-		AddStyle("width", fmt.Sprintf("%dpx", e.resizerWidth)).
-		AddStyle("height", fmt.Sprintf("%dpx", e.resizerHeight)).
-		AddStyle("background-color", e.resizerColor).
-		AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
-		AddStyle("top", fmt.Sprintf("%dpx", e.resizerDistance)).
-		AddStyle("right", fmt.Sprintf("%dpx", e.resizerDistance)).
-		AddStyle("cursor", "nesw-resize")
-	e.block.Append(e.resizerTopRight)
+		X(x + width + e.resizerDistance).
+		Y(y + e.resizerDistance).
+		Width(e.resizerWidth).
+		Height(e.resizerHeight).Fill("red")
+	//AddStyle("position", "absolute").
+	//AddStyle("background-color", e.resizerColor).
+	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
+	//AddStyle("cursor", "nesw-resize")
+	e.ideStage.Append(e.resizerTopRight)
 
-	e.resizerBottomLeft = factoryBrowser.NewTagDiv().
+	e.resizerBottomLeft = factoryBrowser.NewTagSvgRect().
 		DataKey("name", "bottom-left").
-		AddStyle("position", "absolute").
-		AddStyle("width", fmt.Sprintf("%dpx", e.resizerWidth)).
-		AddStyle("height", fmt.Sprintf("%dpx", e.resizerHeight)).
-		AddStyle("background-color", e.resizerColor).
-		AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
-		AddStyle("bottom", fmt.Sprintf("%dpx", e.resizerDistance)).
-		AddStyle("left", fmt.Sprintf("%dpx", e.resizerDistance)).
-		AddStyle("cursor", "nesw-resize")
-	e.block.Append(e.resizerBottomLeft)
+		X(x + e.resizerDistance).
+		Y(y + height + e.resizerDistance).
+		Width(e.resizerWidth).
+		Height(e.resizerHeight).Fill("red")
+	//AddStyle("position", "absolute").
+	//AddStyle("background-color", e.resizerColor).
+	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
+	//AddStyle("cursor", "nesw-resize")
+	e.ideStage.Append(e.resizerBottomLeft)
 
-	e.resizerBottomRight = factoryBrowser.NewTagDiv().
+	e.resizerBottomRight = factoryBrowser.NewTagSvgRect().
 		DataKey("name", "bottom-right").
-		AddStyle("position", "absolute").
-		AddStyle("width", fmt.Sprintf("%dpx", e.resizerWidth)).
-		AddStyle("height", fmt.Sprintf("%dpx", e.resizerHeight)).
-		AddStyle("background-color", e.resizerColor).
-		AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
-		AddStyle("bottom", fmt.Sprintf("%dpx", e.resizerDistance)).
-		AddStyle("right", fmt.Sprintf("%dpx", e.resizerDistance)).
-		AddStyle("cursor", "nwse-resize")
-	e.block.Append(e.resizerBottomRight)
-
-	_ = e.updateOrnament()
+		X(x + width + e.resizerDistance).
+		Y(y + height + e.resizerDistance).
+		Width(e.resizerWidth).
+		Height(e.resizerHeight).Fill("red")
+	//AddStyle("position", "absolute").
+	//AddStyle("background-color", e.resizerColor).
+	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
+	//AddStyle("cursor", "nwse-resize")
+	e.ideStage.Append(e.resizerBottomRight)
 }
 
 // dragCursorChange Change the cursor when the device is being dragged
@@ -294,7 +288,7 @@ func (e *Block) dragCursorChange() {
 }
 
 // GetDeviceDiv Returns the div from device
-func (e *Block) GetDeviceDiv() (element *html.TagDiv) {
+func (e *Block) GetDeviceDiv() (element *html.TagSvg) {
 	return e.block
 }
 
@@ -309,7 +303,7 @@ func (e *Block) GetID() (id string) {
 }
 
 // GetIdeStage Returns to Div where IDE is drawn
-func (e *Block) GetIdeStage() (ideStage *html.TagDiv) {
+func (e *Block) GetIdeStage() (ideStage *html.TagSvg) {
 	return e.ideStage
 }
 
@@ -361,15 +355,15 @@ func (e *Block) Init() (err error) {
 
 	e.initialized = true
 
-	e.block.AddStyle("left", fmt.Sprintf("%dpx", e.x))
-	e.block.AddStyle("top", fmt.Sprintf("%dpx", e.y))
-	e.block.AddStyle("width", fmt.Sprintf("%dpx", e.width))
-	e.block.AddStyle("height", fmt.Sprintf("%dpx", e.height))
+	e.block.X(e.x)
+	e.block.Y(e.y)
+	e.block.Width(e.width)
+	e.block.Height(e.height)
 
 	if e.ornament != nil {
 		svg := e.ornament.GetSvg()
 		e.block.Append(svg)
-		_ = e.updateOrnament()
+		_ = e.ornament.Update(e.width, e.height)
 	}
 
 	e.dragCursorChange()
@@ -387,18 +381,38 @@ func (e *Block) initEvents() {
 	// add / remove event listener requires pointers, so the variable should be initialized in this way
 	var drag, stopDrag, resizeMouseMove, stopResize js.Func
 
+	moveResizersX := func(x, width int) {
+		e.resizerTopLeft.X(x + e.resizerDistance)
+		e.resizerTopRight.X(x + width + e.resizerDistance)
+		e.resizerBottomLeft.X(x + e.resizerDistance)
+		e.resizerBottomRight.X(x + width + e.resizerDistance)
+	}
+
+	moveResizersY := func(y, height int) {
+		e.resizerTopLeft.Y(y + e.resizerDistance)
+		e.resizerTopRight.Y(y + e.resizerDistance)
+		e.resizerBottomLeft.Y(y + height + e.resizerDistance)
+		e.resizerBottomRight.Y(y + height + e.resizerDistance)
+	}
+
 	// Calculates the X position of the drag
 	dragX := func(element js.Value) {
 		dx := element.Get("screenX").Int() - startX
 		newLeft := e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
-		e.block.AddStyle("left", fmt.Sprintf("%dpx", newLeft))
+		e.block.X(newLeft)
+		e.selectDiv.X(newLeft)
+
+		moveResizersX(newLeft, e.width)
 	}
 
 	// Calculates the Y position of the drag
 	dragY := func(element js.Value) {
 		dy := element.Get("screenY").Int() - startY
 		newTop := e.min(e.max(0, startTop+dy), e.ideStage.GetClientHeight()-e.block.GetOffsetHeight())
-		e.block.AddStyle("top", fmt.Sprintf("%dpx", newTop))
+		e.block.Y(newTop)
+		e.selectDiv.Y(newTop)
+
+		moveResizersY(newTop, e.height)
 	}
 
 	// Joins the calculations of X and Y of the drag
@@ -462,12 +476,12 @@ func (e *Block) initEvents() {
 		newWidth := startWidth
 
 		if name == "bottom-right" {
-			newWidth = e.min(startWidth+dx, e.ideStage.Get().Get("clientWidth").Int()-startLeft)
+			newWidth = e.min(startWidth+dx, e.ideStage.GetClientWidth()-startLeft)
 		} else if name == "bottom-left" {
 			newWidth = e.min(startWidth-dx, startLeft+startWidth)
 			newLeft = e.max(0, startLeft+dx)
 		} else if name == "top-right" {
-			newWidth = e.min(startWidth+dx, e.ideStage.Get().Get("clientWidth").Int()-startLeft)
+			newWidth = e.min(startWidth+dx, e.ideStage.GetClientWidth()-startLeft)
 		} else if name == "top-left" {
 			newWidth = e.min(startWidth-dx, startLeft+startWidth)
 			newLeft = e.max(0, startLeft+dx)
@@ -489,9 +503,15 @@ func (e *Block) initEvents() {
 
 		newWidth = e.max(e.blockMinimumWidth, newWidth)
 
-		e.block.AddStyle("left", fmt.Sprintf("%dpx", newLeft))
-		e.block.AddStyle("width", fmt.Sprintf("%dpx", newWidth))
-		e.selectDiv.AddStyle("width", fmt.Sprintf("%dpx", newWidth))
+		e.x = newLeft
+		e.width = newWidth
+
+		e.block.X(newLeft)
+		e.block.Width(newWidth)
+		e.selectDiv.X(newLeft)
+		e.selectDiv.Width(newWidth)
+
+		moveResizersX(newLeft, newWidth)
 	}
 
 	resizeVertical := func(element js.Value, name string) {
@@ -500,9 +520,9 @@ func (e *Block) initEvents() {
 		newHeight := startHeight
 
 		if name == "bottom-right" {
-			newHeight = e.min(startHeight+dy, e.ideStage.Get().Get("clientHeight").Int()-startTop)
+			newHeight = e.min(startHeight+dy, e.ideStage.GetClientHeight()-startTop)
 		} else if name == "bottom-left" {
-			newHeight = e.min(startHeight+dy, e.ideStage.Get().Get("clientHeight").Int()-newTop)
+			newHeight = e.min(startHeight+dy, e.ideStage.GetClientHeight()-newTop)
 		} else if name == "top-right" {
 			newHeight = e.min(startHeight-dy, startTop+startHeight)
 			newTop = e.max(0, startTop+dy)
@@ -527,9 +547,15 @@ func (e *Block) initEvents() {
 
 		newHeight = e.max(e.blockMinimumHeight, newHeight)
 
-		e.block.AddStyle("top", fmt.Sprintf("%dpx", newTop))
-		e.block.AddStyle("height", fmt.Sprintf("%dpx", newHeight))
-		e.selectDiv.AddStyle("height", fmt.Sprintf("%dpx", newHeight))
+		e.y = newTop
+		e.height = newHeight
+
+		e.block.Y(newTop)
+		e.block.Height(newHeight)
+		e.selectDiv.Y(newTop)
+		e.selectDiv.Height(newHeight)
+
+		moveResizersY(newTop, newHeight)
 	}
 
 	resizeMouseMove = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
@@ -541,7 +567,7 @@ func (e *Block) initEvents() {
 		resizerName := e.block.Get().Get("dataset").Get("resizeName").String()
 		resizeHorizontal(element, resizerName)
 		resizeVertical(element, resizerName)
-		_ = e.updateOrnament()
+		_ = e.ornament.Update(e.width, e.height)
 
 		width := e.block.GetOffsetWidth()
 		height := e.block.GetOffsetHeight()
@@ -623,11 +649,11 @@ func (e *Block) resizeEnabledDraw() {
 
 // SetFatherId Receives the div ID used as a stage for the IDE and puts it to occupy the entire browser area
 func (e *Block) SetFatherId(fatherId string) {
-	e.ideStage = factoryBrowser.NewTagDiv().
-		Import(fatherId).
-		AddStyle("position", "relative").
-		AddStyle("width", "100vw"). // todo: transformar isto em algo chamado uma única vez e em outro lugar
-		AddStyle("height", "100vh") // todo: transformar isto em algo chamado uma única vez e em outro lugar
+	e.ideStage = factoryBrowser.NewTagSvg().
+		Import(fatherId) //.
+	//AddStyle("position", "relative").
+	//AddStyle("width", "100vw"). // todo: transformar isto em algo chamado uma única vez e em outro lugar
+	//AddStyle("height", "100vh") // todo: transformar isto em algo chamado uma única vez e em outro lugar
 }
 
 // SetHeight Defines the height property of the device
@@ -637,7 +663,7 @@ func (e *Block) SetHeight(height int) {
 		return
 	}
 
-	e.block.AddStyle("height", fmt.Sprintf("%dpx", height))
+	e.block.Height(height)
 }
 
 // SetID Define the device's div ID
@@ -695,7 +721,7 @@ func (e *Block) SetWidth(width int) {
 		return
 	}
 
-	e.block.AddStyle("width", fmt.Sprintf("%dpx", width))
+	e.block.Width(width)
 }
 
 // SetX Define a coordenada x da tela do navegador
@@ -704,7 +730,8 @@ func (e *Block) SetX(x int) {
 		e.x = x
 		return
 	}
-	e.block.AddStyle("left", fmt.Sprintf("%dpx", x))
+
+	e.block.X(x)
 }
 
 // SetY Set the coordinate X of the browser screen
@@ -714,15 +741,7 @@ func (e *Block) SetY(y int) {
 		return
 	}
 
-	e.block.AddStyle("top", fmt.Sprintf("%dpx", y))
-}
-
-// updateOrnament Resize the device's SVG design
-func (e *Block) updateOrnament() (err error) {
-	width := e.block.GetOffsetWidth()
-	height := e.block.GetOffsetHeight()
-	_ = e.ornament.Update(width, height)
-	return
+	e.block.Y(y)
 }
 
 func (e *Block) getMenuLabel(condition bool, labelTrue, labelFalse string) (label string) {

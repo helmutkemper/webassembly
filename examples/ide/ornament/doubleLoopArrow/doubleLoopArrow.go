@@ -146,7 +146,7 @@ func (e *DoubleLoopArrow) Init() (err error) {
 // Update Draw the element design
 func (e *DoubleLoopArrow) Update(width, height int) (err error) {
 	_ = e.WarningMarkExclamation.Update(width, height)
-	e.svg.ViewBox([]int{0.0, 0.0, width, height})
+	//e.svg.ViewBox([]int{0, 0, width, height})
 
 	margin := 10
 	r := 30

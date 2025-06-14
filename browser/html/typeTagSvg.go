@@ -223,6 +223,22 @@ func (e *TagSvg) Init() (ref *TagSvg) {
 	return e
 }
 
+// Import
+//
+// English:
+//
+// Take the ID of a div that already exists and matters it to the TagSvg that has been properly initialized.
+//
+// Português:
+//
+// Pega o ID de uma div que já existe e o importa para a TagSvg que tenha sido devidamente inicializada.
+func (e *TagSvg) Import(tagId string) (ref *TagSvg) {
+	doc := js.Global().Get("document")
+	toImport := doc.Call("getElementById", tagId)
+	e.selfElement = toImport
+	return e
+}
+
 func (e *TagSvg) prepareStageReference() {
 	e.stage = js.Global().Get("document").Get("body")
 }
@@ -2688,36 +2704,311 @@ func (e *TagSvg) Style(value string) (ref *TagSvg) {
 }
 
 func (e *TagSvg) AddStyle(key string, value any) (ref *TagSvg) {
-	e.selfElement.Get("style").Set(key, value)
+	switch converted := value.(type) {
+	case string:
+		e.selfElement.Get("style").Set(key, converted)
+	case color.RGBA:
+		e.selfElement.Get("style").Set(key, RGBAToJs(converted))
+	default:
+		e.selfElement.Get("style").Set(key, converted)
+	}
+	return e
+}
+
+func (e *TagSvg) AddStyleConditional(condition bool, key string, trueValue, falseValue any) (ref *TagSvg) {
+	var value any
+	if condition {
+		value = trueValue
+	} else {
+		value = falseValue
+	}
+
+	switch converted := value.(type) {
+	case string:
+		e.selfElement.Get("style").Set(key, converted)
+	case color.RGBA:
+		e.selfElement.Get("style").Set(key, RGBAToJs(converted))
+	default:
+		e.selfElement.Get("style").Set(key, converted)
+	}
 	return e
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------
 
-// Height
+// GetOffsetWidth #global #replicar
 //
 // English:
 //
-//	The height attribute defines the vertical length of an element in the user coordinate system.
-//	     float32: 1.0 = "100%"
-//	     any other type: interface{}
+//	The offsetWidth read-only property of the HTMLElement interface returns the layout width of an element as an integer.
+//
+//	Typically, offsetWidth is a measurement in pixels of the element's CSS width, including any borders, padding, and
+//	vertical scrollbars (if rendered). It does not include the width of pseudo-elements such as ::before or ::after.
+//
+//	If the element is hidden (for example, by setting style.display on the element or one of its ancestors to "none"),
+//	then 0 is returned.
 //
 // Português:
 //
-//	O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
-//	     float32: 1.0 = "100%"
-//	     qualquer outro tipo: interface{}
-func (e *TagSvg) Height(height interface{}) (ref *TagSvg) {
-	defer e.UpdateBoundingClientRect()
+//	A propriedade offsetWidth, somente leitura, da interface do HTMLElement retorna a largura do layout de um elemento
+//	como um número inteiro.
+//
+//	Normalmente, offsetWidth é uma medição em pixels da largura do CSS no elemento, incluindo bordas, preenchimento e
+//	barras de rolagem vertical (se renderizadas). Não inclui a largura dos elementos pseudo-elementos como ::before ou
+//	::after.
+//
+//	Se o elemento estiver oculto (por exemplo, definindo o style.display no elemento ou um de seus antecessores para
+//	"none"), então 0 será retornado.
+func (e *TagSvg) GetOffsetWidth() (width int) {
+	return e.selfElement.Call("getBoundingClientRect").Get("width").Int()
+}
 
-	if converted, ok := height.(float32); ok {
-		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
-		e.selfElement.Call("setAttribute", "height", p)
-		return e
+func (e *TagSvg) GetClientWidth() (width int) {
+	return e.selfElement.Get("clientWidth").Int()
+}
+
+func (e *TagSvg) GetClientHeight() (height int) {
+	return e.selfElement.Get("clientHeight").Int()
+}
+
+// GetOffsetHeight #global #replicar
+//
+// English:
+//
+//	The offsetHeight read-only property of the HTMLElement interface returns the layout height of an element as an integer.
+//
+//	Typically, offsetHeight is a measurement in pixels of the element's CSS height, including any borders, padding, and
+//	horizontal scrollbars (if rendered). It does not include the height of pseudo-elements such as ::before or ::after.
+//
+//	If the element is hidden (for example, by setting style.display on the element or one of its ancestors to "none"),
+//	then 0 is returned.
+//
+// Português:
+//
+//	A propriedade offsetHeight, somente leitura, da interface do HTMLElement retorna a altura do layout de um elemento
+//	como um número inteiro.
+//
+//	Normalmente, offsetHeight é uma medição em pixels da altura do CSS no elemento, incluindo bordas, preenchimento e
+//	barras de rolagem horizontal (se renderizadas). Não inclui a altura dos elementos pseudo-elementos como ::before ou
+//	::after.
+//
+//	Se o elemento estiver oculto (por exemplo, definindo o style.display no elemento ou um de seus antecessores para
+//	"none"), então 0 será retornado.
+func (e *TagSvg) GetOffsetHeight() (height int) {
+	return e.selfElement.Call("getBoundingClientRect").Get("height").Int()
+}
+
+// GetOffsetLeft #global #replicar
+//
+// English:
+//
+//	The offsetLeft read-only property of the HTMLElement interface returns the number of pixels that the upper left
+//	corner of the current element is offset to the left within the HTMLElement.offsetParent node.
+//
+//	For block-level elements, offsetTop, offsetLeft, offsetWidth, and offsetHeight describe the border box of an element
+//	relative to the offsetParent.
+//
+//	However, for inline-level elements (such as <span>) that can wrap from one line to the next, offsetTop and
+//	offsetLeft describe the positions of the first border box (use Element.getClientRects() to get its width and
+//	height), while offsetWidth and offsetHeight describe the dimensions of the bounding border box (use
+//	Element.getBoundingClientRect() to get its position). Therefore, a box with the left, top, width and height of
+//	offsetLeft, offsetTop, offsetWidth and offsetHeight will not be a bounding box for a span with wrapped text.
+//
+// Português:
+//
+//	A propriedade, somente leitura, offsetleft da interface HTMLElement retorna o número de pixels de que o canto
+//	superior esquerdo do elemento atual é deslocado à esquerda dentro do HTMLElement.offsetParent node.
+//
+//	Para elementos block-level, offsetTop, offsetLeft, offsetWidth e offsetHeight descreve a borda da caixa de um
+//	elemento em relação ao offsetParent.
+//
+//	No entanto, para elementos inline-level (como <span>) que podem envolver de uma linha para a seguinte, offsetTop e
+//	offsetLeft descrevem as posições da primeira borda da caixa (use Element.getClientRects() para obter sua largura e
+//	altura), enquanto offsetWidth descreve as dimensões da borda da caixa ligante (use Element.getBoundingClientRect()
+//	para pegar a posição). Portanto, uma caixa com left, top, width e height de offsetLeft, offsetTop, offsetWidth e
+//	offsetHeight não será uma caixa delimitadora para um período com texto embrulhado.
+func (e *TagSvg) GetOffsetLeft() (left int) {
+	return e.selfElement.Call("getBoundingClientRect").Get("left").Int()
+}
+
+// GetOffsetTop #global #replicar
+//
+// English:
+//
+//	The offsetTop read-only property of the HTMLElement interface returns the distance from the outer border of the
+//	current element (including its margin) to the top padding edge of the offsetParent, the closest positioned ancestor
+//	element.
+//
+// Português:
+//
+//	A propriedade, somente leitura, offsetTop da interface HTMLElement retorna a distância da borda externa do elemento
+//	atual (incluindo sua margem) à borda superior do preenchimento do offsetParent, o elemento ancestral posicionado
+//	mais próximo.
+func (e *TagSvg) GetOffsetTop() (top int) {
+	return e.selfElement.Call("getBoundingClientRect").Get("top").Int()
+}
+
+// Data #global #replicar
+//
+// English:
+//
+//	Used to store custom data private to the page or application.
+//
+//	 Input:
+//	   data: custom data private to the page or application.
+//
+// The data-* attributes is used to store custom data private to the page or application.
+// The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
+// The stored (custom) data can then be used in the page's JavaScript to create a more engaging user
+// experience (without any Ajax calls or server-side database queries).
+//
+// The data-* attributes consist of two parts:
+//
+//	The attribute name should not contain any uppercase letters, and must be at least one character
+//	long after the prefix "data-";
+//	The attribute value can be any string.
+//
+//	Note:
+//	  * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
+//
+// Português:
+//
+//	Usado para armazenar dados personalizados privados para a página ou aplicativo.
+//
+//	 Entrada:
+//	   data: dados personalizados privados para a página ou aplicativo.
+//
+// Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
+// aplicativo;
+// Os atributos de dados nos dão a capacidade de incorporar atributos de dados personalizados em todos
+// os elementos HTML;
+// Os dados armazenados (personalizados) podem ser usados no JavaScript da página para criar uma
+// experiência de usuário mais envolvente (sem chamadas Ajax ou consultas de banco de dados do lado do
+// servidor).
+//
+// Os atributos de dados consistem em duas partes:
+//
+//	O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+//	prefixo "data-";
+//	O valor do atributo pode ser qualquer string.
+//
+//	Nota:
+//	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
+//	    usuário.
+func (e *TagSvg) Data(data map[string]string) (ref *TagSvg) {
+	for k, v := range data {
+		e.selfElement.Get("dataset").Set(k, v)
 	}
-
-	e.selfElement.Call("setAttribute", "height", height)
 	return e
+}
+
+// DataKey #global #replicar
+//
+// English:
+//
+//	Used to store custom data private to the page or application.
+//
+//	 Input:
+//	   data: custom data private to the page or application.
+//
+// The data-* attributes is used to store custom data private to the page or application.
+// The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
+// The stored (custom) data can then be used in the page's JavaScript to create a more engaging user
+// experience (without any Ajax calls or server-side database queries).
+//
+// The data-* attributes consist of two parts:
+//
+//	The attribute name should not contain any uppercase letters, and must be at least one character
+//	long after the prefix "data-";
+//	The attribute value can be any string.
+//
+//	Note:
+//	  * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
+//
+// Português:
+//
+//	Usado para armazenar dados personalizados privados para a página ou aplicativo.
+//
+//	 Entrada:
+//	   data: dados personalizados privados para a página ou aplicativo.
+//
+// Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
+// aplicativo;
+// Os atributos de dados nos dão a capacidade de incorporar atributos de dados personalizados em todos
+// os elementos HTML;
+// Os dados armazenados (personalizados) podem ser usados no JavaScript da página para criar uma
+// experiência de usuário mais envolvente (sem chamadas Ajax ou consultas de banco de dados do lado do
+// servidor).
+//
+// Os atributos de dados consistem em duas partes:
+//
+//	O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+//	prefixo "data-";
+//	O valor do atributo pode ser qualquer string.
+//
+//	Nota:
+//	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
+//	    usuário.
+func (e *TagSvg) DataKey(key, value string) (ref *TagSvg) {
+	e.selfElement.Get("dataset").Set(key, value)
+	return e
+}
+
+// GetData #global #replicar
+//
+// English:
+//
+//		Used to get custom data private to the page or application.
+//
+//		 Input:
+//		   key: custom key of data to get
+//
+//	  Output:
+//	    value: value of custom data
+//
+// The data-* attributes is used to store custom data private to the page or application.
+// The data-* attributes gives us the ability to embed custom data attributes on all HTML elements.
+// The stored (custom) data can then be used in the page's JavaScript to create a more engaging user
+// experience (without any Ajax calls or server-side database queries).
+//
+// The data-* attributes consist of two parts:
+//
+//	The attribute name should not contain any uppercase letters, and must be at least one character
+//	long after the prefix "data-";
+//	The attribute value can be any string.
+//
+//	Note:
+//	  * Custom attributes prefixed with "data-" will be completely ignored by the user agent.
+//
+// Português:
+//
+//		Usado para armazenar dados personalizados privados para a página ou aplicativo.
+//
+//		 Entrada:
+//		   key: chave personalizada de dados para obter
+//
+//	  Saída:
+//	    value: valor do dado personalizado
+//
+// Os atributos de dados são usados para armazenar dados personalizados privados para a página ou
+// aplicativo;
+// Os atributos de dados nos dão a capacidade de incorporar atributos de dados personalizados em todos
+// os elementos HTML;
+// Os dados armazenados (personalizados) podem ser usados no JavaScript da página para criar uma
+// experiência de usuário mais envolvente (sem chamadas Ajax ou consultas de banco de dados do lado do
+// servidor).
+//
+// Os atributos de dados consistem em duas partes:
+//
+//	O nome do atributo não deve conter letras maiúsculas e deve ter pelo menos um caractere após o
+//	prefixo "data-";
+//	O valor do atributo pode ser qualquer string.
+//
+//	Nota:
+//	  * Atributos personalizados prefixados com "data-" serão completamente ignorados pelo agente do
+//	    usuário.
+func (e *TagSvg) GetData(key string) (value string) {
+	return e.selfElement.Get("dataset").Get(key).String()
 }
 
 // PreserveAspectRatio
@@ -2864,15 +3155,41 @@ func (e *TagSvg) ViewBox(value interface{}) (ref *TagSvg) {
 //	  value: o comprimento horizontal de um elemento
 //	    float32: 1.0 = "100%"
 //	    qualquer outro tipo: interface{}
-func (e *TagSvg) Width(value interface{}) (ref *TagSvg) {
+func (e *TagSvg) Width(width interface{}) (ref *TagSvg) {
 	defer e.UpdateBoundingClientRect()
-	if converted, ok := value.(float32); ok {
+	if converted, ok := width.(float32); ok {
 		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
 		e.selfElement.Call("setAttribute", "width", p)
 		return e
 	}
 
-	e.selfElement.Call("setAttribute", "width", value)
+	e.selfElement.Call("setAttribute", "width", width)
+	return e
+}
+
+// Height
+//
+// English:
+//
+//	The height attribute defines the vertical length of an element in the user coordinate system.
+//	     float32: 1.0 = "100%"
+//	     any other type: interface{}
+//
+// Português:
+//
+//	O atributo height define o comprimento vertical de um elemento no sistema de coordenadas do usuário.
+//	     float32: 1.0 = "100%"
+//	     qualquer outro tipo: interface{}
+func (e *TagSvg) Height(height interface{}) (ref *TagSvg) {
+	defer e.UpdateBoundingClientRect()
+
+	if converted, ok := height.(float32); ok {
+		p := strconv.FormatFloat(100.0*float64(converted), 'g', -1, 64) + "%"
+		e.selfElement.Call("setAttribute", "height", p)
+		return e
+	}
+
+	e.selfElement.Call("setAttribute", "height", height)
 	return e
 }
 
@@ -3124,8 +3441,9 @@ func (e *TagSvg) CollisionBoundingBox(elemnt CollisionBoundingBox) (collision bo
 //
 // Português:
 //
-// Atualiza as coordenadas e as dimeções da caixa de limites do elemento.
+// Atualiza as coordenadas e as dimensões da caixa de limites do elemento.
 func (e *TagSvg) UpdateBoundingClientRect() (ref *TagSvg) {
+	// todo: este desenha está errado nas outras tags (revisar tudo)
 	// https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
 	//
 	//                    ⋀                ⋀
@@ -3135,10 +3453,10 @@ func (e *TagSvg) UpdateBoundingClientRect() (ref *TagSvg) {
 	//                    ⋁                |
 	// <---- x/left ----> +--------------+ | ---
 	//                    |              | |   ⋀
-	//                    |              | | width
+	//                    |              | | height
 	//                    |              | ⋁   ⋁
 	//                    +--------------+ -----
-	//                    | <- right ->  |
+	//                    | <- width ->  |
 	// <--------- right bbox ----------> |
 
 	bbox := e.selfElement.Call("getBoundingClientRect")
@@ -3147,8 +3465,8 @@ func (e *TagSvg) UpdateBoundingClientRect() (ref *TagSvg) {
 	e.heightBBox = bbox.Get("right").Int()
 	e.bottom = bbox.Get("bottom").Int()
 
-	e.height = e.heightBBox - e.x
-	e.width = e.bottom - e.y
+	e.height = e.bottom - e.y
+	e.width = e.heightBBox - e.y
 
 	return e
 }

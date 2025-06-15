@@ -121,17 +121,13 @@ func main() {
 	stmLoop := new(devices.StatementLoop)
 	stmLoop.SetPosition(50, 50)
 	_ = stmLoop.Init()
-	url := stmLoop.ToPng()
+	//url := stmLoop.ToPng()
 	//stmLoop.SetWarning(true)
 
 	stmAdd := new(devices.StatementAdd)
-	stmAdd.SetPosition(100, 100)
+	stmAdd.SetPosition(300, 300)
 	_ = stmAdd.Init()
-	url = stmAdd.ToPng()
-
-	//mainStage = factoryBrowser.NewStage()
-	//mainStage.Append(stmLoop.Get())
-	//mainStage.Append(stmAdd.Get())
+	url := stmAdd.ToPng()
 
 	if _, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)

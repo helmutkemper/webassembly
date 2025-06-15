@@ -12,7 +12,7 @@ type Draw interface {
 	Init() (err error)
 
 	// Update Draw the element design
-	Update(width, height int) (err error)
+	Update(x, y, width, height int) (err error)
 
 	// GetSvg Returns the SVG tag with the element design
 	GetSvg() (svg *html.TagSvg)

@@ -12,7 +12,7 @@ func (e *OrnamentAdd) Init() (err error) {
 	return
 }
 
-func (e *OrnamentAdd) Update(width, height int) (err error) {
-	_ = e.OrnamentOpAmpSymbol.Update(width, height)
+func (e *OrnamentAdd) Update(x, y, width, height int) (err error) {
+	_ = e.OrnamentOpAmpSymbol.Update(x, y, width, height)
 	return
 }

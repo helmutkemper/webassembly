@@ -124,7 +124,7 @@ func (e *WarningMarkExclamation) GetHeight() int {
 }
 
 // Update Draw the image
-func (e *WarningMarkExclamation) Update(width, height int) (err error) {
+func (e *WarningMarkExclamation) Update(_, _, width, height int) (err error) {
 	e.width = width
 	e.height = height
 

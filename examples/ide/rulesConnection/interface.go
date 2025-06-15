@@ -8,7 +8,7 @@ type RulesDataType interface {
 	GetError() (err error)
 
 	// Verify Check the syntax looking for errors
-	Verify(dataType string)
+	Verify(dataType string) (err error)
 
 	// TypeToColor For each type of data, numerical, string, boolean ... a visual identity color is attributed
 	//

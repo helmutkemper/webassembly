@@ -222,11 +222,10 @@ func (e *Block) createBlock(x, y, width, height int) {
 		Y(y).
 		Width(width).
 		Height(height).
-		Fill("none").Stroke("red").StrokeDasharray([]float64{4}).StrokeWidth(1).
-		//AddStyle("position", "absolute").
+		Fill("none").Stroke("red").
+		StrokeDasharray([]float64{4}).
+		StrokeWidth(1).
 		AddStyle("display", "none")
-	//AddStyle("border", "1px dashed red").
-	//AddStyle("background", "transparent")
 	e.ideStage.Append(e.selectDiv)
 
 	e.resizerTopLeft = factoryBrowser.NewTagSvgRect().
@@ -234,11 +233,9 @@ func (e *Block) createBlock(x, y, width, height int) {
 		X(x + e.resizerDistance).
 		Y(y + e.resizerDistance).
 		Width(e.resizerWidth).
-		Height(e.resizerHeight).Fill("red")
-	//AddStyle("position", "absolute").
-	//AddStyle("background-color", e.resizerColor).
-	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
-	//AddStyle("cursor", "nwse-resize")
+		Height(e.resizerHeight).
+		Fill(e.resizerColor).
+		Cursor("nwse-resize")
 	e.ideStage.Append(e.resizerTopLeft)
 
 	e.resizerTopRight = factoryBrowser.NewTagSvgRect().
@@ -246,11 +243,10 @@ func (e *Block) createBlock(x, y, width, height int) {
 		X(x + width + e.resizerDistance).
 		Y(y + e.resizerDistance).
 		Width(e.resizerWidth).
-		Height(e.resizerHeight).Fill("red")
-	//AddStyle("position", "absolute").
-	//AddStyle("background-color", e.resizerColor).
+		Height(e.resizerHeight).
+		Fill(e.resizerColor).
+		Cursor("nesw-resize")
 	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
-	//AddStyle("cursor", "nesw-resize")
 	e.ideStage.Append(e.resizerTopRight)
 
 	e.resizerBottomLeft = factoryBrowser.NewTagSvgRect().
@@ -258,11 +254,10 @@ func (e *Block) createBlock(x, y, width, height int) {
 		X(x + e.resizerDistance).
 		Y(y + height + e.resizerDistance).
 		Width(e.resizerWidth).
-		Height(e.resizerHeight).Fill("red")
-	//AddStyle("position", "absolute").
-	//AddStyle("background-color", e.resizerColor).
+		Height(e.resizerHeight).
+		Fill(e.resizerColor).
+		Cursor("nesw-resize")
 	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
-	//AddStyle("cursor", "nesw-resize")
 	e.ideStage.Append(e.resizerBottomLeft)
 
 	e.resizerBottomRight = factoryBrowser.NewTagSvgRect().
@@ -270,7 +265,9 @@ func (e *Block) createBlock(x, y, width, height int) {
 		X(x + width + e.resizerDistance).
 		Y(y + height + e.resizerDistance).
 		Width(e.resizerWidth).
-		Height(e.resizerHeight).Fill("red")
+		Height(e.resizerHeight).
+		Fill(e.resizerColor).
+		Cursor("nwse-resize")
 	//AddStyle("position", "absolute").
 	//AddStyle("background-color", e.resizerColor).
 	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
@@ -363,7 +360,7 @@ func (e *Block) Init() (err error) {
 	if e.ornament != nil {
 		svg := e.ornament.GetSvg()
 		e.block.Append(svg)
-		_ = e.ornament.Update(e.width, e.height)
+		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 	}
 
 	e.dragCursorChange()
@@ -399,6 +396,7 @@ func (e *Block) initEvents() {
 	dragX := func(element js.Value) {
 		dx := element.Get("screenX").Int() - startX
 		newLeft := e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
+		e.x = newLeft
 		e.block.X(newLeft)
 		e.selectDiv.X(newLeft)
 
@@ -409,6 +407,7 @@ func (e *Block) initEvents() {
 	dragY := func(element js.Value) {
 		dy := element.Get("screenY").Int() - startY
 		newTop := e.min(e.max(0, startTop+dy), e.ideStage.GetClientHeight()-e.block.GetOffsetHeight())
+		e.y = newTop
 		e.block.Y(newTop)
 		e.selectDiv.Y(newTop)
 
@@ -425,6 +424,8 @@ func (e *Block) initEvents() {
 		element := args[0]
 		dragX(element)
 		dragY(element)
+
+		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 		return nil
 	})
 
@@ -472,6 +473,7 @@ func (e *Block) initEvents() {
 
 	resizeHorizontal := func(element js.Value, name string) {
 		dx := element.Get("screenX").Int() - startX
+
 		newLeft := startLeft
 		newWidth := startWidth
 
@@ -485,6 +487,14 @@ func (e *Block) initEvents() {
 		} else if name == "top-left" {
 			newWidth = e.min(startWidth-dx, startLeft+startWidth)
 			newLeft = e.max(0, startLeft+dx)
+		} else if name == "top-middle" {
+
+		} else if name == "bottom-middle" {
+
+		} else if name == "left-middle" {
+
+		} else if name == "right-middle" {
+
 		}
 
 		// [tl]           [tr]
@@ -529,6 +539,14 @@ func (e *Block) initEvents() {
 		} else if name == "top-left" {
 			newHeight = e.min(startHeight-dy, startTop+startHeight)
 			newTop = e.max(0, startTop+dy)
+		} else if name == "top-middle" {
+
+		} else if name == "bottom-middle" {
+
+		} else if name == "left-middle" {
+
+		} else if name == "right-middle" {
+
 		}
 
 		// [tl]           [tr]
@@ -567,7 +585,7 @@ func (e *Block) initEvents() {
 		resizerName := e.block.Get().Get("dataset").Get("resizeName").String()
 		resizeHorizontal(element, resizerName)
 		resizeVertical(element, resizerName)
-		_ = e.ornament.Update(e.width, e.height)
+		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 
 		width := e.block.GetOffsetWidth()
 		height := e.block.GetOffsetHeight()

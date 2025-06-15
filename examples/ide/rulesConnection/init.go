@@ -38,5 +38,5 @@ var conversion RulesDataType
 var TypeToColor func(dataType string) (color color.RGBA)
 
 // TypeVerify Check the syntax looking for errors
-var TypeVerify func(dataType string)
+var TypeVerify func(dataType string) (err error)
 var GetError func() (err error)

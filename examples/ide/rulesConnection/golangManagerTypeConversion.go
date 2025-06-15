@@ -18,13 +18,14 @@ func (e *golangManagerTypeConversion) GetError() (err error) {
 }
 
 // Verify Check the syntax looking for errors
-func (e *golangManagerTypeConversion) Verify(dataType string) {
+func (e *golangManagerTypeConversion) Verify(dataType string) (err error) {
 	switch dataType {
 	case "bool", "int", "int64", "uint", "uint64", "float64",
 		"slice", "string", "struct":
 	default:
-		e.err = errors.Join(e.err, fmt.Errorf("unknown data type `%s` for `%v`", dataType, TypeOfDataCurrentlyInEffect))
+		err = errors.Join(e.err, fmt.Errorf("unknown data type `%s` for `%v`", dataType, TypeOfDataCurrentlyInEffect))
 	}
+	return
 }
 
 // TypeToColor For each type of data, numerical, string, boolean ... a visual identity color is attributed

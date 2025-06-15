@@ -2,6 +2,7 @@ package devices
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
@@ -294,25 +295,33 @@ func (e *StatementLoop) Init() (err error) {
 	e.ornamentDraw = new(doubleLoopArrow.DoubleLoopArrow)
 	e.ornamentDraw.SetWarningMarkMargin(15)
 
-	// Connection stop loop
-	e.ornamentDraw.SetClickFunc(js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		data := this.Call("getConnData")
-		log.Printf("FatherId: %v", data.Get("FatherId").String())
-		log.Printf("Name: %v", data.Get("Name").String())
-		log.Printf("DataType: %v", data.Get("DataType").String())
-		log.Printf("NotConnected: %v", data.Get("NotConnected").Bool())
-		log.Printf("LookedUp: %v", data.Get("LookedUp").Bool())
-		log.Printf("IsADataInput: %v", data.Get("IsADataInput").Bool())
-		log.Printf("Top: %v", data.Get("Top").Int())
-		log.Printf("Left: %v", data.Get("Left").Int())
-		return nil
-	}))
-	e.ornamentDraw.SetStopButtonSetAsDataInput(true)
-	e.ornamentDraw.SetStopButtonConnectionLockedUp(false)
-	e.ornamentDraw.SetStopButtonAcceptNotConnected(true)
-	e.ornamentDraw.SetStopButtonName("stopLoop")
-	e.ornamentDraw.SetStopButtonDataType("bool")
-	e.ornamentDraw.SetStopButtonFatherId(e.id)
+	stopButton := connection.Setup{
+		FatherId:           e.id,
+		Name:               "stopButton",
+		DataType:           "bool",
+		AcceptNotConnected: true,
+		LookedUp:           false,
+		IsADataInput:       true,
+		ClickFunc: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			data := this.Call("getConnData")
+			log.Printf("FatherId: %v", data.Get("FatherId").String())
+			log.Printf("Name: %v", data.Get("Name").String())
+			log.Printf("DataType: %v", data.Get("DataType").String())
+			log.Printf("AcceptNotConnected: %v", data.Get("AcceptNotConnected").Bool())
+			log.Printf("LookedUp: %v", data.Get("LookedUp").Bool())
+			log.Printf("IsADataInput: %v", data.Get("IsADataInput").Bool())
+			log.Printf("Top: %v", data.Get("Top").Int())
+			log.Printf("Left: %v", data.Get("Left").Int())
+			return nil
+		}),
+	}
+	if err = stopButton.Verify(); err != nil {
+		log.Printf("stopButton.Verify: %v", err)
+		return
+	}
+
+	e.ornamentDraw.StopButtonSetup(stopButton)
+
 	if err = e.ornamentDraw.GetConnectionError(); err != nil {
 		return
 	}

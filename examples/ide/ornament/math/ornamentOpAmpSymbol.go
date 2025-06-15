@@ -42,6 +42,18 @@ type OrnamentOpAmpSymbol struct {
 	outputConnectionArea connection.Connection
 }
 
+func (e *OrnamentOpAmpSymbol) InputXSetup(setup connection.Setup) {
+	e.inputXConnectionArea.Setup(setup)
+}
+
+func (e *OrnamentOpAmpSymbol) InputYSetup(setup connection.Setup) {
+	e.inputYConnectionArea.Setup(setup)
+}
+
+func (e *OrnamentOpAmpSymbol) OutputSetup(setup connection.Setup) {
+	e.outputConnectionArea.Setup(setup)
+}
+
 func (e *OrnamentOpAmpSymbol) GetWidth() int {
 	return e.width
 }
@@ -220,11 +232,11 @@ func (e *OrnamentOpAmpSymbol) GetSvg() (svg *html.TagSvg) {
 }
 
 // Update Desenha o ornamento
-func (e *OrnamentOpAmpSymbol) Update(width, height int) (err error) {
+func (e *OrnamentOpAmpSymbol) Update(x, y, width, height int) (err error) {
 	e.width = width
 	e.height = height
 
-	_ = e.WarningMarkExclamation.Update(width, height)
+	_ = e.WarningMarkExclamation.Update(x, y, width, height)
 
 	//e.svg.ViewBox([]int{0.0, 0.0, width, height})
 
@@ -254,12 +266,15 @@ func (e *OrnamentOpAmpSymbol) Update(width, height int) (err error) {
 
 	e.inputXConnection.D(rulesConnection.GetPathDraw(2, 15))
 	e.inputXConnectionArea.GetSvgPath().D(rulesConnection.GetPathAreaDraw(2, 15))
+	e.inputXConnectionArea.SetXY(x+2, y+15)
 
 	e.inputYConnection.D(rulesConnection.GetPathDraw(2, e.height-18))
 	e.inputYConnectionArea.GetSvgPath().D(rulesConnection.GetPathAreaDraw(2, e.height-18))
+	e.inputYConnectionArea.SetXY(x+2, y+e.height-18)
 
 	e.outputConnection.D(rulesConnection.GetPathDraw(e.width-12, e.height/2-2))
 	e.outputConnectionArea.GetSvgPath().D(rulesConnection.GetPathAreaDraw(e.width-12, e.height/2-2))
+	e.outputConnectionArea.SetXY(x+e.width-12, y+e.height/2-2)
 
 	return
 }

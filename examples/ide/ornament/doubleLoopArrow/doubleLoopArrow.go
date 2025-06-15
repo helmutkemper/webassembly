@@ -32,32 +32,8 @@ func (e *DoubleLoopArrow) GetConnectionError() (err error) {
 	return rulesConnection.GetError()
 }
 
-func (e *DoubleLoopArrow) SetClickFunc(f js.Func) {
-	e.stopButtonConnectionArea.SetClickFunc(f)
-}
-
-func (e *DoubleLoopArrow) SetStopButtonSetAsDataInput(dataInput bool) {
-	e.stopButtonConnectionArea.SetAsDataInput(dataInput)
-}
-
-func (e *DoubleLoopArrow) SetStopButtonConnectionLockedUp(lockedUp bool) {
-	e.stopButtonConnectionArea.SetConnectionLockedUp(lockedUp)
-}
-
-func (e *DoubleLoopArrow) SetStopButtonAcceptNotConnected(accept bool) {
-	e.stopButtonConnectionArea.SetAcceptNotConnected(accept)
-}
-
-func (e *DoubleLoopArrow) SetStopButtonName(name string) {
-	e.stopButtonConnectionArea.SetName(name)
-}
-
-func (e *DoubleLoopArrow) SetStopButtonDataType(connType string) {
-	e.stopButtonConnectionArea.SetDataType(connType)
-}
-
-func (e *DoubleLoopArrow) SetStopButtonFatherId(fatherId string) {
-	e.stopButtonConnectionArea.SetFatherId(fatherId)
+func (e *DoubleLoopArrow) StopButtonSetup(setup connection.Setup) {
+	e.stopButtonConnectionArea.Setup(setup)
 }
 
 func (e *DoubleLoopArrow) ToPngResized(width, height float64) (pngData js.Value) {
@@ -137,8 +113,8 @@ func (e *DoubleLoopArrow) Init() (err error) {
 }
 
 // Update Draw the element design
-func (e *DoubleLoopArrow) Update(width, height int) (err error) {
-	_ = e.WarningMarkExclamation.Update(width, height)
+func (e *DoubleLoopArrow) Update(x, y, width, height int) (err error) {
+	_ = e.WarningMarkExclamation.Update(x, y, width, height)
 	//e.svg.ViewBox([]int{0, 0, width, height})
 
 	margin := 10
@@ -198,8 +174,8 @@ func (e *DoubleLoopArrow) Update(width, height int) (err error) {
 	cr := 5.0
 	cx := 20.0
 	cy := 20.0
-	x := int(float64(width) - float64(margin) - 2.0*cr - 1.5*cx)
-	y := int(float64(height) - float64(margin) - 2.0*cr - 1.5*cy)
+	xp := int(float64(width) - float64(margin) - 2.0*cr - 1.5*cx)
+	yp := int(float64(height) - float64(margin) - 2.0*cr - 1.5*cy)
 	L := 2*cr + 10
 
 	// Define the path data for the stop button circle
@@ -214,8 +190,8 @@ func (e *DoubleLoopArrow) Update(width, height int) (err error) {
 
 	// Define the path data for the stop button border
 	stopButtonBorderPath := []string{
-		fmt.Sprintf("M %v %v", int(float64(x)-cr-5.0), int(float64(y)-cr-5)),
-		fmt.Sprintf("M %v %v", x+5, y),
+		fmt.Sprintf("M %v %v", int(float64(xp)-cr-5.0), int(float64(yp)-cr-5)),
+		fmt.Sprintf("M %v %v", xp+5, yp),
 		fmt.Sprintf("h %v", L-10),
 		"a 5,5 0 0 1 5,5",
 		fmt.Sprintf("v %v", L-10),
@@ -230,9 +206,7 @@ func (e *DoubleLoopArrow) Update(width, height int) (err error) {
 
 	e.stopButtonConnection.D(rulesConnection.GetPathDraw(width-57, height-42))
 	e.stopButtonConnectionArea.GetSvgPath().D(rulesConnection.GetPathAreaDraw(width-57, height-42))
-
-	e.stopButtonConnectionArea.SetX(width - 57)
-	e.stopButtonConnectionArea.SetY(height - 42)
+	e.stopButtonConnectionArea.SetXY(x+width-57, y+height-42)
 
 	return
 }

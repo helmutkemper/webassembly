@@ -2,6 +2,7 @@ package devices
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/math"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
@@ -258,38 +259,6 @@ func (e *StatementAdd) getMenu() (content []components.MenuOptions) {
 	return
 }
 
-func (e *StatementAdd) makeConnections() {
-	//e.inputA = new(connection.Connection)
-	//e.inputA.Create(2, 15)
-	//e.inputA.SetFather(e.block.GetDeviceDiv())
-	//e.inputA.SetAsInput()
-	//_ = e.inputA.SetName("inputA")
-	//e.inputA.SetDataType(reflect.Int)
-	//e.inputA.SetAcceptedNotConnected(false)
-	//e.inputA.SetBlocked(false)
-	//e.inputA.Init()
-	//
-	//e.inputB = new(connection.Connection)
-	//e.inputB.Create(2, e.block.GetHeight()-15-5)
-	//e.inputB.SetFather(e.block.GetDeviceDiv())
-	//e.inputB.SetAsInput()
-	//_ = e.inputB.SetName("inputB")
-	//e.inputB.SetDataType(reflect.Int)
-	//e.inputB.SetAcceptedNotConnected(false)
-	//e.inputB.SetBlocked(false)
-	//e.inputB.Init()
-	//
-	//e.output = new(connection.Connection)
-	//e.output.Create(e.block.GetWidth()-10, e.block.GetHeight()/2-2)
-	//e.output.SetFather(e.block.GetDeviceDiv())
-	//e.output.SetAsOutput()
-	//_ = e.output.SetName("output")
-	//e.output.SetDataType(reflect.Int)
-	//e.output.SetAcceptedNotConnected(false)
-	//e.output.SetBlocked(false)
-	//e.output.Init()
-}
-
 func (e *StatementAdd) Init() (err error) {
 	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmAdd")
@@ -321,6 +290,85 @@ func (e *StatementAdd) Init() (err error) {
 
 	e.ornamentDraw = new(math.OrnamentAdd)
 	e.ornamentDraw.SetWarningMarkMargin(0)
+
+	inputXSetup := connection.Setup{
+		FatherId:           e.id,
+		Name:               "inputX",
+		DataType:           "int",
+		AcceptNotConnected: false,
+		LookedUp:           false,
+		IsADataInput:       true,
+		ClickFunc: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			data := this.Call("getConnData")
+			log.Printf("FatherId: %v", data.Get("FatherId").String())
+			log.Printf("Name: %v", data.Get("Name").String())
+			log.Printf("DataType: %v", data.Get("DataType").String())
+			log.Printf("AcceptNotConnected: %v", data.Get("AcceptNotConnected").Bool())
+			log.Printf("LookedUp: %v", data.Get("LookedUp").Bool())
+			log.Printf("IsADataInput: %v", data.Get("IsADataInput").Bool())
+			log.Printf("Top: %v", data.Get("Top").Int())
+			log.Printf("Left: %v", data.Get("Left").Int())
+			return nil
+		}),
+	}
+	if err = inputXSetup.Verify(); err != nil {
+		log.Printf("stopButton.Verify: %v", err)
+		return
+	}
+	e.ornamentDraw.InputXSetup(inputXSetup)
+
+	inputYSetup := connection.Setup{
+		FatherId:           e.id,
+		Name:               "inputY",
+		DataType:           "int",
+		AcceptNotConnected: false,
+		LookedUp:           false,
+		IsADataInput:       true,
+		ClickFunc: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			data := this.Call("getConnData")
+			log.Printf("FatherId: %v", data.Get("FatherId").String())
+			log.Printf("Name: %v", data.Get("Name").String())
+			log.Printf("DataType: %v", data.Get("DataType").String())
+			log.Printf("AcceptNotConnected: %v", data.Get("AcceptNotConnected").Bool())
+			log.Printf("LookedUp: %v", data.Get("LookedUp").Bool())
+			log.Printf("IsADataInput: %v", data.Get("IsADataInput").Bool())
+			log.Printf("Top: %v", data.Get("Top").Int())
+			log.Printf("Left: %v", data.Get("Left").Int())
+			return nil
+		}),
+	}
+	if err = inputYSetup.Verify(); err != nil {
+		log.Printf("stopButton.Verify: %v", err)
+		return
+	}
+	e.ornamentDraw.InputYSetup(inputYSetup)
+
+	outputSetup := connection.Setup{
+		FatherId:           e.id,
+		Name:               "output",
+		DataType:           "int",
+		AcceptNotConnected: false,
+		LookedUp:           false,
+		IsADataInput:       false,
+		ClickFunc: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			data := this.Call("getConnData")
+			log.Printf("FatherId: %v", data.Get("FatherId").String())
+			log.Printf("Name: %v", data.Get("Name").String())
+			log.Printf("DataType: %v", data.Get("DataType").String())
+			log.Printf("AcceptNotConnected: %v", data.Get("AcceptNotConnected").Bool())
+			log.Printf("LookedUp: %v", data.Get("LookedUp").Bool())
+			log.Printf("IsADataInput: %v", data.Get("IsADataInput").Bool())
+			log.Printf("Top: %v", data.Get("Top").Int())
+			log.Printf("Left: %v", data.Get("Left").Int())
+			return nil
+		}),
+	}
+	if err = outputSetup.Verify(); err != nil {
+		log.Printf("stopButton.Verify: %v", err)
+		return
+	}
+	e.ornamentDraw.OutputSetup(outputSetup)
+
 	_ = e.ornamentDraw.Init()
 
 	e.block.SetOrnament(e.ornamentDraw)
@@ -331,8 +379,6 @@ func (e *StatementAdd) Init() (err error) {
 		log.Printf("e.block.SetID(e.id): %s", err)
 		return
 	}
-
-	e.makeConnections()
 
 	//e.block.SetOnResize(func(element js.Value, width, height int) {
 	//	e.inputA.SetX(width - 50 - 4)

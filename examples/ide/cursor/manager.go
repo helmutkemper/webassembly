@@ -89,10 +89,10 @@ func (e *manager) SetOrnament(ornament CursorControl) {
 func (e *manager) SetFatherId(fatherId string) {
 	e.fatherId = fatherId
 	e.ideStage = factoryBrowser.NewTagSvg().
-		Import(fatherId) //.
-	//AddStyle("position", "relative").
-	//AddStyle("width", "100vw"). // todo: transformar isto em algo chamado uma única vez e em outro lugar
-	//AddStyle("height", "100vh") // todo: transformar isto em algo chamado uma única vez e em outro lugar
+		Import(fatherId).
+		AddStyle("position", "relative").
+		AddStyle("width", "100vw"). // todo: transformar isto em algo chamado uma única vez e em outro lugar
+		AddStyle("height", "100vh") // todo: transformar isto em algo chamado uma única vez e em outro lugar
 }
 
 func (e *manager) initEvents() {
@@ -141,6 +141,11 @@ func (e *manager) Init() {
 
 	e.listenerClick = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		element := args[0]
+		touch := element.Get("changedTouches").Index(0)
+		if !touch.IsNull() {
+			element = touch
+		}
+
 		x := element.Get("clientX").Int()
 		y := element.Get("clientY").Int()
 		log.Println("x:", x, "y:", y)
@@ -152,6 +157,11 @@ func (e *manager) Init() {
 
 	e.listenerMove = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		element := args[0]
+		touch := element.Get("changedTouches").Index(0)
+		if !touch.IsNull() {
+			element = touch
+		}
+
 		x := element.Get("clientX").Int()
 		y := element.Get("clientY").Int()
 		width := e.block.GetClientWidth()

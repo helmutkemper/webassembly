@@ -63,7 +63,7 @@ func (e *WarningMarkExclamation) SetWarning(warning bool) {
 	e.svgWarning.AddStyle("visibility", visibility)
 
 	// Trigger the flash mark functionality
-	e.flashMark()
+	e.flashMark(warning)
 }
 
 // GetWarning returns the visibility of the warning mark
@@ -128,12 +128,12 @@ func (e *WarningMarkExclamation) Update(_, _, width, height int) (err error) {
 	e.width = width
 	e.height = height
 
-	e.svgWarning.ViewBox([]int{0, 0, width, height})
+	//e.svgWarning.ViewBox([]int{0, 0, width, height})
 	marginInternal := 0
 	r := e.min(width-marginInternal-2.0*e.warningMarkMargin, height-marginInternal-2.0*e.warningMarkMargin) / 2.0
 	rotation := 0.0 // -math.Pi / 2;
-	pointsExternal := drawUtils.Polygon(6, r, width, height, rotation)
-	pointsInternal := drawUtils.Polygon(6, r-5, width, height, rotation)
+	pointsExternal := drawUtils.Polygon(6, r, width/2, height/2, rotation)
+	pointsInternal := drawUtils.Polygon(6, r-5, width/2, height/2, rotation)
 
 	hexagonExternalPath := []string{
 		fmt.Sprintf("M %v %v", pointsExternal[0][0], pointsExternal[0][1]), // Move to the first point
@@ -187,6 +187,11 @@ func (e *WarningMarkExclamation) Update(_, _, width, height int) (err error) {
 }
 
 // flashMark Makes the warning indication blinking
-func (e *WarningMarkExclamation) flashMark() {
-	e.MorseCode.FlashMarkErrorMsg(e.svgWarning)
+func (e *WarningMarkExclamation) flashMark(warning bool) {
+	if warning {
+		e.MorseCode.FlashMarkErrorMsg(e.svgWarning)
+		return
+	}
+
+	e.MorseCode.FlashEnd()
 }

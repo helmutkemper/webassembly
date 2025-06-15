@@ -78,14 +78,15 @@ func (e *menu) AttachMenu(element html.Compatible) {
 		return
 	}
 
-	element.Get().Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	f := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		e.ReInit()
 		e.hide()
 		args[0].Call("preventDefault")
 		args[0].Call("stopPropagation")
 		e.show(args[0].Get("clientX").Int(), args[0].Get("clientY").Int())
 		return nil
-	}))
+	})
+	element.Get().Call("addEventListener", "contextmenu", f)
 }
 
 func (e *menu) AttachMenuJs(element js.Value) {
@@ -93,13 +94,14 @@ func (e *menu) AttachMenuJs(element js.Value) {
 		return
 	}
 
-	element.Call("addEventListener", "contextmenu", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	f := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		e.hide()
 		args[0].Call("preventDefault")
 		args[0].Call("stopPropagation")
 		e.show(args[0].Get("clientX").Int(), args[0].Get("clientY").Int())
 		return nil
-	}))
+	})
+	element.Call("addEventListener", "contextmenu", f)
 }
 
 func (e *menu) FixedMenu(x, y any) {
@@ -433,7 +435,7 @@ func (e *menu) Init() {
 	e.__body.AddStyle("border", e.__setup["border"])
 	e.__body.AddStyle("boxShadow", e.__setup["bodyShadow"])
 	e.__body.AddStyle("padding", e.__setup["menuPadding"])
-	e.__body.AddStyle("user-select", "none")
+	e.__body.AddStyle("userSelect", "none")
 	e.__zIndexList = append(e.__zIndexList, e.__body)
 
 	e.__body.Get().Call("addEventListener", "mouseover", js.FuncOf(func(this js.Value, args []js.Value) any {
@@ -477,14 +479,16 @@ func (e *menu) Init() {
 	e.__header.AddStyle("align-items", "center")
 	e.__header.AddStyle("background", e.__setup["headerBackground"])
 	e.__header.AddStyle("padding", e.__setup["headerPadding"])
-	e.__header.AddStyle("font-family", e.__setup["fontFamily"])
-	e.__header.AddStyle("font-weight", "bold")
+	e.__header.AddStyle("fontFamily", e.__setup["fontFamily"])
+	e.__header.AddStyle("fontWeight", "bold")
+	e.__header.AddStyle("userSelect", "none")
 
 	if e.__fixed {
 		e.__header.Append(
 			factoryBrowser.NewTagSpan().
 				AddStyle("display", "flex").
 				AddStyle("gap", "8px").
+				AddStyle("userSelect", "none").
 				Append(
 					factoryBrowser.NewTagSpan().Html("&nbsp;"),
 					dragIcon,
@@ -498,6 +502,7 @@ func (e *menu) Init() {
 	e.__content.AddStyle("display", "grid")
 	e.__content.AddStyle("gap", e.__setup["contentGap"])
 	e.__content.AddStyle("padding", e.__setup["contentPadding"])
+	e.__content.AddStyle("userSelect", "none")
 	e.__content.FadeFunc(e.contentFadeProgress)
 
 	e.__body.Append(
@@ -505,7 +510,8 @@ func (e *menu) Init() {
 		e.__content,
 	)
 
-	e.__menu = factoryBrowser.NewTagDiv()
+	e.__menu = factoryBrowser.NewTagDiv().
+		AddStyle("userSelect", "none")
 	e.__content.Append(e.__menu)
 
 	e.__body.HideForFade()

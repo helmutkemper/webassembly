@@ -11,6 +11,8 @@ import (
 // MorseCode Makes an SVG blink in code morse
 type MorseCode struct {
 	flashInterval int
+	ticker        *time.Ticker
+	flashStop     chan struct{}
 
 	dit      []bool
 	dah      []bool
@@ -67,25 +69,50 @@ type MorseCode struct {
 	n9 []bool
 }
 
+func (e *MorseCode) FlashEnd() {
+	if e.ticker != nil {
+		e.ticker.Stop()
+		e.ticker = nil
+
+		e.flashStop <- struct{}{}
+	}
+}
+
 // FlashMarkErrorMsg Faz um SVG piscar enviando um SOS
 func (e *MorseCode) FlashMarkErrorMsg(svg *html.TagSvg) {
 
 	viewingStandard, _ := e.TextToMorse("please, correct the error before running this code.  ")
-	ticker := time.NewTicker(time.Duration(e.flashInterval) * time.Millisecond)
+
+	if e.ticker != nil {
+		e.ticker.Stop()
+		e.flashStop <- struct{}{}
+	}
+
+	e.ticker = time.NewTicker(time.Duration(e.flashInterval) * time.Millisecond)
 
 	go func() {
 		localViewingStandard := make([]bool, len(viewingStandard))
 		copy(localViewingStandard, viewingStandard)
 
+		svg.AddStyle("visibility", "visible")
+		time.Sleep(1 * time.Minute)
+
 		for {
 			select {
-			case <-ticker.C:
+			case <-e.flashStop:
+				return
+
+			case <-e.ticker.C:
 				view := localViewingStandard[0]
 				localViewingStandard = localViewingStandard[1:]
 
 				if len(localViewingStandard) == 0 {
 					localViewingStandard = make([]bool, len(viewingStandard))
 					copy(localViewingStandard, viewingStandard)
+
+					svg.AddStyle("visibility", "visible")
+					time.Sleep(1 * time.Minute)
+					continue
 				}
 
 				if view {
@@ -103,7 +130,7 @@ func (e *MorseCode) FlashMarkErrorMsg(svg *html.TagSvg) {
 func (e *MorseCode) Init() {
 
 	// Waiting time for each boolean used on code morse
-	e.flashInterval = 80
+	e.flashInterval = 60
 
 	e.dit = []bool{true, true, false, false}
 	// The duration of a dah is three times the duration of a dit

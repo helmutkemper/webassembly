@@ -121,8 +121,8 @@ func main() {
 	stmLoop := new(devices.StatementLoop)
 	stmLoop.SetPosition(50, 450)
 	_ = stmLoop.Init()
-	url := stmLoop.ToPng()
-	//stmLoop.SetWarning(true)
+	//url := stmLoop.ToPng()
+	stmLoop.SetWarning(true)
 
 	//stmAdd := new(devices.StatementAdd)
 	//stmAdd.SetPosition(300, 300)
@@ -133,8 +133,8 @@ func main() {
 		panic(err)
 	}
 
-	document := js.Global().Get("document")
-	document.Call("getElementById", "test").Set("src", url)
+	//document := js.Global().Get("document")
+	//document.Call("getElementById", "test").Set("src", url)
 	//document.Call("getElementById", "test").Get("style").Set("width", stmLoop.GetWidth())
 	//document.Call("getElementById", "test").Get("style").Set("height", stmLoop.GetHeight())
 

@@ -477,9 +477,15 @@ func (e *Block) initEvents() {
 		if !isDragging {
 			return nil
 		}
+		element := args[0]
+
+		touch := element.Get("changedTouches")
+		if !touch.IsUndefined() {
+			element = touch.Index(0)
+		}
 
 		e.block.AddStyle("cursor", "grabbing")
-		element := args[0]
+
 		dragX(element)
 		dragY(element)
 
@@ -493,7 +499,10 @@ func (e *Block) initEvents() {
 		e.block.AddStyle("cursor", "grab")
 
 		js.Global().Call("removeEventListener", "mousemove", drag)
+		js.Global().Call("removeEventListener", "touchmove", drag)
+
 		js.Global().Call("removeEventListener", "mouseup", stopDrag)
+		js.Global().Call("removeEventListener", "touchend", stopDrag)
 		return nil
 	})
 
@@ -502,6 +511,11 @@ func (e *Block) initEvents() {
 		element := args[0]
 		if !e.dragEnabled || strings.Contains(element.Get("classList").String(), "resizer") {
 			return nil
+		}
+
+		touch := element.Get("changedTouches")
+		if !touch.IsUndefined() {
+			element = touch.Index(0)
 		}
 
 		isDragging = true
@@ -513,15 +527,15 @@ func (e *Block) initEvents() {
 		// The movement of the mouse must be captured from the document and not the dragged element, or when the mouse moves
 		// very fast, the drag to
 		js.Global().Call("addEventListener", "mousemove", drag)
-		js.Global().Call("addEventListener", "touchmove", drag, false)
+		js.Global().Call("addEventListener", "touchmove", drag)
 
 		js.Global().Call("addEventListener", "mouseup", stopDrag)
-		js.Global().Call("addEventListener", "touchend", stopDrag, false)
+		js.Global().Call("addEventListener", "touchend", stopDrag)
 
 		return nil
 	})
 	e.block.Get().Call("addEventListener", "mousedown", dragFunc)
-	e.block.Get().Call("addEventListener", "touchstart", dragFunc, false)
+	e.block.Get().Call("addEventListener", "touchstart", dragFunc)
 
 	// When the resizing tool is activated, four rectangles are designed in the corners of the device.
 	// These rectangles are called top-right e top-left, bottom-right, bottom-left.
@@ -662,7 +676,10 @@ func (e *Block) initEvents() {
 	stopResize = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		isResizing = false
 		js.Global().Call("removeEventListener", "mousemove", resizeMouseMove)
+		js.Global().Call("removeEventListener", "touchmove", resizeMouseMove)
+
 		js.Global().Call("removeEventListener", "mouseup", stopResize)
+		js.Global().Call("removeEventListener", "touchend", stopResize)
 		return nil
 	})
 

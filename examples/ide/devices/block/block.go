@@ -215,7 +215,8 @@ func (e *Block) createBlock(x, y, width, height int) {
 	e.block = factoryBrowser.NewTagSvg().
 		Id(e.id).
 		//Class(e.classListName).
-		AddStyle("position", "absolute").
+		//AddStyle("position", "absolute").
+		//AddStyle("touchAction", "none").
 		X(x).
 		Y(y).
 		Width(width).
@@ -228,7 +229,7 @@ func (e *Block) createBlock(x, y, width, height int) {
 		Width(width).
 		Height(height).
 		Fill("none").Stroke("red").
-		StrokeDasharray([]float64{4, 1, 1, 4}).
+		StrokeDasharray([]int{4}).
 		StrokeWidth(1).
 		AddStyle("display", "none")
 	e.ideStage.Append(e.selectDiv)
@@ -497,7 +498,7 @@ func (e *Block) initEvents() {
 	})
 
 	// Adds the device drag event when the mouse pointer is pressed
-	e.block.Get().Call("addEventListener", "mousedown", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	dragFunc := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		element := args[0]
 		if !e.dragEnabled || strings.Contains(element.Get("classList").String(), "resizer") {
 			return nil
@@ -512,10 +513,15 @@ func (e *Block) initEvents() {
 		// The movement of the mouse must be captured from the document and not the dragged element, or when the mouse moves
 		// very fast, the drag to
 		js.Global().Call("addEventListener", "mousemove", drag)
+		js.Global().Call("addEventListener", "touchmove", drag, false)
+
 		js.Global().Call("addEventListener", "mouseup", stopDrag)
+		js.Global().Call("addEventListener", "touchend", stopDrag, false)
 
 		return nil
-	}))
+	})
+	e.block.Get().Call("addEventListener", "mousedown", dragFunc)
+	e.block.Get().Call("addEventListener", "touchstart", dragFunc, false)
 
 	// When the resizing tool is activated, four rectangles are designed in the corners of the device.
 	// These rectangles are called top-right e top-left, bottom-right, bottom-left.

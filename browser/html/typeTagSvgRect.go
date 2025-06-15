@@ -2181,10 +2181,20 @@ func (e *TagSvgRect) Stroke(value interface{}) (ref *TagSvgRect) {
 //	Notas:
 //	  * Como atributo de apresentação, o stroke-dasharray pode ser usado como uma propriedade CSS.
 func (e *TagSvgRect) StrokeDasharray(value interface{}) (ref *TagSvgRect) {
-	if converted, ok := value.([]float64); ok {
+	switch converted := value.(type) {
+	case []float64:
 		str := ""
 		for _, v := range converted {
 			str += strconv.FormatFloat(v, 'g', -1, 64) + " "
+		}
+		length := len(str) - 1
+
+		e.selfElement.Call("setAttribute", "stroke-dasharray", str[:length])
+		return e
+	case []int:
+		str := ""
+		for _, v := range converted {
+			str += strconv.FormatInt(int64(v), 10) + " "
 		}
 		length := len(str) - 1
 

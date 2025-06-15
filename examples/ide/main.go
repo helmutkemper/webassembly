@@ -119,15 +119,15 @@ func main() {
 	var err error
 
 	stmLoop := new(devices.StatementLoop)
-	stmLoop.SetPosition(50, 50)
+	stmLoop.SetPosition(50, 450)
 	_ = stmLoop.Init()
-	//url := stmLoop.ToPng()
+	url := stmLoop.ToPng()
 	//stmLoop.SetWarning(true)
 
-	stmAdd := new(devices.StatementAdd)
-	stmAdd.SetPosition(300, 300)
-	_ = stmAdd.Init()
-	url := stmAdd.ToPng()
+	//stmAdd := new(devices.StatementAdd)
+	//stmAdd.SetPosition(300, 300)
+	//_ = stmAdd.Init()
+	//url := stmAdd.ToPng()
 
 	if _, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)

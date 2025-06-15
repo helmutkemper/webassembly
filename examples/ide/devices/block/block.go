@@ -56,6 +56,11 @@ type Block struct {
 	resizerBottomLeft  *html.TagSvgRect
 	resizerBottomRight *html.TagSvgRect
 
+	resizerTopMiddle    *html.TagSvgRect
+	resizerBottomMiddle *html.TagSvgRect
+	resizerLeftMiddle   *html.TagSvgRect
+	resizerRightMiddle  *html.TagSvgRect
+
 	selectDiv *html.TagSvgRect
 
 	ornament ornament.Draw
@@ -223,7 +228,7 @@ func (e *Block) createBlock(x, y, width, height int) {
 		Width(width).
 		Height(height).
 		Fill("none").Stroke("red").
-		StrokeDasharray([]float64{4}).
+		StrokeDasharray([]float64{4, 1, 1, 4}).
 		StrokeWidth(1).
 		AddStyle("display", "none")
 	e.ideStage.Append(e.selectDiv)
@@ -273,6 +278,48 @@ func (e *Block) createBlock(x, y, width, height int) {
 	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
 	//AddStyle("cursor", "nwse-resize")
 	e.ideStage.Append(e.resizerBottomRight)
+
+	//----------------------------------------------------
+
+	e.resizerTopMiddle = factoryBrowser.NewTagSvgRect().
+		DataKey("name", "top-middle").
+		X(x + width/2 + e.resizerDistance).
+		Y(y + e.resizerDistance).
+		Width(e.resizerWidth).
+		Height(e.resizerHeight).
+		Fill(e.resizerColor).
+		Cursor("ns-resize")
+	e.ideStage.Append(e.resizerTopMiddle)
+
+	e.resizerBottomMiddle = factoryBrowser.NewTagSvgRect().
+		DataKey("name", "bottom-middle").
+		X(x + width/2 + e.resizerDistance).
+		Y(y + height + e.resizerDistance).
+		Width(e.resizerWidth).
+		Height(e.resizerHeight).
+		Fill(e.resizerColor).
+		Cursor("ns-resize")
+	e.ideStage.Append(e.resizerBottomMiddle)
+
+	e.resizerLeftMiddle = factoryBrowser.NewTagSvgRect().
+		DataKey("name", "left-middle").
+		X(x + e.resizerDistance).
+		Y(y + height/2 + e.resizerDistance).
+		Width(e.resizerWidth).
+		Height(e.resizerHeight).
+		Fill(e.resizerColor).
+		Cursor("ew-resize")
+	e.ideStage.Append(e.resizerLeftMiddle)
+
+	e.resizerRightMiddle = factoryBrowser.NewTagSvgRect().
+		DataKey("name", "right-middle").
+		X(x + width + e.resizerDistance).
+		Y(y + height/2 + e.resizerDistance).
+		Width(e.resizerWidth).
+		Height(e.resizerHeight).
+		Fill(e.resizerColor).
+		Cursor("ew-resize")
+	e.ideStage.Append(e.resizerRightMiddle)
 }
 
 // dragCursorChange Change the cursor when the device is being dragged
@@ -383,6 +430,11 @@ func (e *Block) initEvents() {
 		e.resizerTopRight.X(x + width + e.resizerDistance)
 		e.resizerBottomLeft.X(x + e.resizerDistance)
 		e.resizerBottomRight.X(x + width + e.resizerDistance)
+
+		e.resizerTopMiddle.X(x + width/2 + e.resizerDistance)
+		e.resizerBottomMiddle.X(x + width/2 + e.resizerDistance)
+		e.resizerLeftMiddle.X(x + e.resizerDistance)
+		e.resizerRightMiddle.X(x + width + e.resizerDistance)
 	}
 
 	moveResizersY := func(y, height int) {
@@ -390,6 +442,11 @@ func (e *Block) initEvents() {
 		e.resizerTopRight.Y(y + e.resizerDistance)
 		e.resizerBottomLeft.Y(y + height + e.resizerDistance)
 		e.resizerBottomRight.Y(y + height + e.resizerDistance)
+
+		e.resizerTopMiddle.Y(y + e.resizerDistance)
+		e.resizerBottomMiddle.Y(y + height + e.resizerDistance)
+		e.resizerLeftMiddle.Y(y + height/2 + e.resizerDistance)
+		e.resizerRightMiddle.Y(y + height/2 + e.resizerDistance)
 	}
 
 	// Calculates the X position of the drag
@@ -488,13 +545,14 @@ func (e *Block) initEvents() {
 			newWidth = e.min(startWidth-dx, startLeft+startWidth)
 			newLeft = e.max(0, startLeft+dx)
 		} else if name == "top-middle" {
-
+			return
 		} else if name == "bottom-middle" {
-
+			return
 		} else if name == "left-middle" {
-
+			newWidth = e.min(startWidth-dx, startLeft+startWidth)
+			newLeft = e.max(0, startLeft+dx)
 		} else if name == "right-middle" {
-
+			newWidth = e.min(startWidth+dx, e.ideStage.GetClientWidth()-startLeft)
 		}
 
 		// [tl]           [tr]
@@ -540,13 +598,14 @@ func (e *Block) initEvents() {
 			newHeight = e.min(startHeight-dy, startTop+startHeight)
 			newTop = e.max(0, startTop+dy)
 		} else if name == "top-middle" {
-
+			newHeight = e.min(startHeight-dy, startTop+startHeight)
+			newTop = e.max(0, startTop+dy)
 		} else if name == "bottom-middle" {
-
+			newHeight = e.min(startHeight+dy, e.ideStage.GetClientHeight()-newTop)
 		} else if name == "left-middle" {
-
+			return
 		} else if name == "right-middle" {
-
+			return
 		}
 
 		// [tl]           [tr]
@@ -628,6 +687,11 @@ func (e *Block) initEvents() {
 	e.resizerTopRight.Get().Call("addEventListener", "mousedown", resizeFunc)
 	e.resizerBottomLeft.Get().Call("addEventListener", "mousedown", resizeFunc)
 	e.resizerBottomRight.Get().Call("addEventListener", "mousedown", resizeFunc)
+
+	e.resizerTopMiddle.Get().Call("addEventListener", "mousedown", resizeFunc)
+	e.resizerBottomMiddle.Get().Call("addEventListener", "mousedown", resizeFunc)
+	e.resizerLeftMiddle.Get().Call("addEventListener", "mousedown", resizeFunc)
+	e.resizerRightMiddle.Get().Call("addEventListener", "mousedown", resizeFunc)
 }
 
 // max Returns the maximum value
@@ -663,6 +727,11 @@ func (e *Block) resizeEnabledDraw() {
 	e.resizerTopRight.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
 	e.resizerBottomLeft.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
 	e.resizerBottomRight.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
+
+	e.resizerTopMiddle.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
+	e.resizerBottomMiddle.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
+	e.resizerLeftMiddle.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
+	e.resizerRightMiddle.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
 }
 
 // SetFatherId Receives the div ID used as a stage for the IDE and puts it to occupy the entire browser area

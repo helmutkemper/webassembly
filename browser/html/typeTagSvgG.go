@@ -2657,28 +2657,88 @@ func (e *TagSvgG) Class(class string) (ref *TagSvgG) {
 	return e
 }
 
-// Style
+// Style #global
 //
 // English:
 //
-// The style attribute allows to style an element using CSS declarations.
+//	Specifies an inline CSS style for an element.
 //
-//	Input:
-//	  value: allows to style an element using CSS declarations
+// The style attribute will override any style set globally, e.g. styles specified in the <style> tag
+// or in an external style sheet.
 //
-// It functions identically to the style attribute in HTML.
+// The style attribute can be used on any HTML element (it will validate on any HTML element.
+// However, it is not necessarily useful).
 //
 // Português:
 //
-// O atributo style permite estilizar um elemento usando declarações CSS.
+//	Especifica um estilo CSS embutido para um elemento
 //
-//	Entrada:
-//	  value: permite estilizar um elemento usando declarações CSS
+// O atributo style substituirá qualquer conjunto de estilos globalmente, por exemplo estilos
+// especificados na tag <style> ou em uma folha de estilo externa.
 //
-// Funciona de forma idêntica ao atributo style em HTML.
-func (e *TagSvgG) Style(value string) (ref *TagSvgG) {
-	e.selfElement.Call("setAttribute", "style", value)
+// O atributo style pode ser usado em qualquer elemento HTML (vai validar em qualquer elemento HTML.
+// No entanto, não é necessariamente útil).
+func (e *TagSvgG) Style(style string) (ref *TagSvgG) {
+	e.selfElement.Set("style", style)
 	return e
+}
+
+func (e *TagSvgG) AddStyle(key string, value any) (ref *TagSvgG) {
+	switch converted := value.(type) {
+	case string:
+		e.selfElement.Get("style").Set(key, converted)
+	case color.RGBA:
+		e.selfElement.Get("style").Set(key, RGBAToJs(converted))
+	default:
+		e.selfElement.Get("style").Set(key, converted)
+	}
+	return e
+}
+
+func (e *TagSvgG) AddStyleConditional(condition bool, key string, trueValue, falseValue any) (ref *TagSvgG) {
+	var value any
+	if condition {
+		value = trueValue
+	} else {
+		value = falseValue
+	}
+
+	switch converted := value.(type) {
+	case string:
+		e.selfElement.Get("style").Set(key, converted)
+	case color.RGBA:
+		e.selfElement.Get("style").Set(key, RGBAToJs(converted))
+	default:
+		e.selfElement.Get("style").Set(key, converted)
+	}
+	return e
+}
+
+func (e *TagSvgG) GetStyleInt(key string) (value int) {
+	valueStr := e.selfElement.Get("style").Get(key).String()
+	i := len(valueStr) - 1
+	for ; i > 0; i -= 1 {
+		char := valueStr[i]
+		if char >= 0x30 && char <= 0x39 {
+			break
+		}
+	}
+	valueI64, err := strconv.ParseInt(valueStr[:i+1], 10, 64)
+	if err != nil {
+		log.Printf("GetStyleInt().ParseInt(%v).error: %v", valueStr[:i+1], err)
+		return
+	}
+
+	return int(valueI64)
+	return e.selfElement.Get("style").Get(key).Int()
+}
+
+func (e *TagSvgG) GetStyle(key string) (value string) {
+	if e.selfElement.Get("style").Get(key).IsUndefined() {
+		return ""
+	}
+
+	return e.selfElement.Get("style").Get(key).String()
 }
 
 // #styling end -------------------------------------------------------------------------------------------------------

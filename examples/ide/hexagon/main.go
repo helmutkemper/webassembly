@@ -164,7 +164,7 @@ func (e *HexagonDraw) Init() {
 	e.rotation = 0.0
 	e.sides = 6
 	e.space = 10
-	e.radius = 70
+	e.radius = 100
 	e.polygon = make([]Polygon, 0)
 
 	e.svg = factoryBrowser.NewTagSvg().
@@ -319,7 +319,7 @@ func (e *HexagonDraw) Draw() *HexagonDraw {
 
 		t := fmt.Sprintf("C: %v, L: %v", polygon.col, polygon.row)
 		font := factoryFontFamily.NewArialBlack()
-		fontSize := 16
+		fontSize := 30
 		w, h := textUtil.GetTextSize(
 			t,
 			font,
@@ -329,9 +329,9 @@ func (e *HexagonDraw) Draw() *HexagonDraw {
 		)
 		text := factoryBrowser.NewTagSvgText().
 			X(polygon.cx - w/2).
-			Y(polygon.cy + h/2).
+			Y(polygon.cy + h/3).
 			FontSize(fontSize).
-			FontFamily(factoryFontFamily.NewArialBlack()).
+			FontFamily(font).
 			Text(t)
 		g.Append(text)
 

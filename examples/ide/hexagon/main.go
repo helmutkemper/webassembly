@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/webassembly/browser/factoryFontFamily"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConversion"
 	"github.com/helmutkemper/webassembly/hexagon"
 	"github.com/helmutkemper/webassembly/textUtil"
+	"log"
 )
 
 type CalcSystem interface {
@@ -43,8 +43,8 @@ func (e *SvgCell) SetCalcSystem(calcSystem CalcSystem) {
 }
 
 func (e *SvgCell) Init() {
-	e.fontSize = 16
-	e.fontFamily = factoryFontFamily.NewArial()
+	e.fontSize = 20
+	e.fontFamily = textUtil.KFontAwesomeSolid
 	e.fontWeight = html.KFontWeightRuleNormal
 	e.fontStyle = html.KFontStyleRuleNormal
 
@@ -92,30 +92,30 @@ func (e *SvgCell) SetColRow(col, row int) {
 }
 
 func (e *SvgCell) SetText(text string) {
-
 	fontWeight := e.fontWeight.String()
 	fontStyle := e.fontStyle.String()
-	fontSize := fmt.Sprintf("%dpx", e.fontSize)
 
-	e.fontFamily = textUtil.KFontAwesomeRegular
-
-	width, height := textUtil.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, fontSize)
+	width, height := textUtil.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize)
+	log.Printf("w: %v, h: %v", width, height)
 
 	cx, cy := e.calcSystem.GetCenter()
 
-	//e.svgText.X(cx - width/2).
-	//	Y(cy + height/2 - height/5).
-	//	Text(text)
-
-	icon := factoryBrowser.NewTagSvgText().
-		Text("\uf0ea").
-		FontSize(fontSize).
+	e.svgText.X(cx - width/2).
+		Y(cy + height/2 - height/5).
+		Text(text).
+		FontSize(e.fontSize).
 		FontFamily(e.fontFamily).
-		FontWeight(fontWeight).
-		X(cx - width/2).
-		Y(cy + height/2 - height/5)
+		FontWeight(fontWeight)
 
-	e.svg.Append(icon)
+	//icon := factoryBrowser.NewTagSvgText().
+	//	Text(text).
+	//	FontSize(fontSize).
+	//	FontFamily(e.fontFamily).
+	//	FontWeight(fontWeight).
+	//	X(cx - width/2).
+	//	Y(cy + height/2 - height/5)
+	//
+	//e.svg.Append(icon)
 }
 
 func (e *SvgCell) GetSvg() (tagSvg *html.TagSvg) {
@@ -286,7 +286,8 @@ func main() {
 
 	for _, p := range table {
 		h.Draw(p[1], p[0])
-		h.DrawText(fmt.Sprintf("%v,%v", p[0], p[1]))
+		//h.DrawText(fmt.Sprintf("%v,%v", p[0], p[1]))
+		h.DrawText("\uf197")
 		stage.Append(h.GetSvg())
 	}
 

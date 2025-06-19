@@ -16,23 +16,25 @@ import (
 )
 
 // Point represents a 2D position in pixel or screen space.
+//
 // It is typically used to store the result of hex-to-pixel conversion,
 // define layout sizes, or calculate hex corner positions for rendering.
 //
-// - X: horizontal position.
-// - Y: vertical position.
+//   - X: horizontal position.
+//   - Y: vertical position.
 type Point struct {
 	X float64 // X coordinate in 2D space
 	Y float64 // Y coordinate in 2D space
 }
 
 // Hex represents a cube coordinate (q, r, s) used to model positions in a hexagonal grid.
+//
 // Cube coordinates satisfy the constraint q + r + s = 0, allowing for unambiguous positioning
 // and efficient computation of directions, distances, and neighbors.
 //
-// - Q: corresponds to the "column" axis.
-// - R: corresponds to the "row" axis.
-// - S: the third axis, derived from Q and R (S = -Q - R).
+//   - Q: corresponds to the "column" axis.
+//   - R: corresponds to the "row" axis.
+//   - S: the third axis, derived from Q and R (S = -Q - R).
 type Hex struct {
 	Q int // Column coordinate
 	R int // Row coordinate
@@ -40,6 +42,7 @@ type Hex struct {
 }
 
 // NewHex creates a new Hex using the given integer cube coordinates (q, r, s).
+//
 // It validates that the cube coordinate constraint q + r + s == 0 is satisfied,
 // which is a requirement for valid hexagonal grid positions.
 //
@@ -52,6 +55,7 @@ func NewHex(q, r, s int) (hex Hex, err error) {
 }
 
 // FractionalHex represents a cube coordinate using floating-point values.
+//
 // This type is used for intermediate or in-between positions on the hex grid,
 // such as during interpolation (e.g., when drawing a line between two hexes).
 //
@@ -62,6 +66,7 @@ type FractionalHex struct {
 }
 
 // NewFractionalHex creates a new FractionalHex with the given floating-point cube coordinates (q, r, s).
+//
 // It validates that the coordinates approximately satisfy the constraint q + r + s ≈ 0,
 // which is required for all valid hex coordinates in cube space.
 //
@@ -74,28 +79,29 @@ func NewFractionalHex(q, r, s float64) (FractionalHex, error) {
 	return FractionalHex{Q: q, R: r, S: s}, nil
 }
 
-// OffsetCoord represents a coordinate in offset grid systems.
-// OffsetCoord represents a hex coordinate in the offset coordinate system.
+// OffsetCoordinate represents a hex coordinate in the offset coordinate system.
+//
 // This system uses a standard (row, column) grid with staggered rows or columns,
 // depending on whether the offset is "even" or "odd" (defined by constants EVEN/ODD).
 //
 // Common offset layouts include:
-// - even-q / odd-q: columns are aligned, and rows are offset.
-// - even-r / odd-r: rows are aligned, and columns are offset.
+//   - even-q / odd-q: columns are aligned, and rows are offset.
+//   - even-r / odd-r: rows are aligned, and columns are offset.
 //
 // This format is useful for integrating hex grids with typical 2D array data structures.
-type OffsetCoord struct {
+type OffsetCoordinate struct {
 	Col, Row int // Column and row in the offset coordinate system
 }
 
-// DoubledCoord represents a hex coordinate using the doubled coordinate system.
+// DoubledCoordinate represents a hex coordinate using the doubled coordinate system.
+//
 // This system separates adjacent rows or columns by two units instead of one,
 // allowing for simple indexing and storage of hex grids in a 2D array.
 //
 // There are two types of doubled coordinates:
-// - q-doubled: even columns (Col) spaced by 2, rows (Row) unchanged.
-// - r-doubled: even rows (Row) spaced by 2, columns (Col) unchanged.
-type DoubledCoord struct {
+//   - q-doubled: even columns (Col) spaced by 2, rows (Row) unchanged.
+//   - r-doubled: even rows (Row) spaced by 2, columns (Col) unchanged.
+type DoubledCoordinate struct {
 	Col, Row int // Column and row in the doubled coordinate system
 }
 
@@ -113,6 +119,7 @@ type Orientation struct {
 }
 
 // Layout defines how hexagons are positioned and transformed on the screen.
+//
 //   - Orientation specifies whether the hexes are pointy-topped or flat-topped,
 //     along with the transformation matrices for converting between hex and pixel space.
 //   - Size defines the radius (width and height) of a single hexagon in screen units (pixels).
@@ -126,23 +133,30 @@ const (
 	// EVEN (1): Used for even-q or even-r offset coordinates.
 	//
 	// EVEN and ODD are constants for offset grid types.
+	//
 	// Constants representing the offset layout modes for hex grids.
+	//
 	// These are used in functions that convert between offset and cube coordinates.
 	EVEN = 1
 
 	// ODD  (-1): Used for odd-q or odd-r offset coordinates.
 	//
 	// EVEN and ODD are constants for offset grid types.
+	//
 	// Constants representing the offset layout modes for hex grids.
+	//
 	// These are used in functions that convert between offset and cube coordinates.
 	ODD = -1
 )
 
-// LayoutPointy defines a pointy-topped hex orientation.
 // LayoutPointy defines the orientation matrix for pointy-topped hexagons.
+//
 // The F* values form the forward transformation matrix (hex → pixel).
+//
 // The B* values form the inverse transformation matrix (pixel → hex).
+//
 // StartAngle defines the initial rotation offset (in hex corner generation).
+//
 // This orientation is used when hexagons are arranged with a vertex (point) facing up.
 var LayoutPointy = Orientation{
 	F0: math.Sqrt(3),     // horizontal scale factor for q
@@ -156,10 +170,12 @@ var LayoutPointy = Orientation{
 	StartAngle: 0.5, // offset used when computing hex corner positions (in radians)
 }
 
-// LayoutFlat defines a flat-topped hex orientation.
 // LayoutFlat defines the orientation matrix for flat-topped hexagons.
+//
 // The F* values form the forward transformation matrix (hex → pixel).
+//
 // The B* values form the inverse transformation matrix (pixel → hex).
+//
 // This orientation is used when hexagons are arranged with their flat sides on the top and bottom.
 var LayoutFlat = Orientation{
 	F0: 3.0 / 2.0,          // horizontal scale factor for q
@@ -172,6 +188,7 @@ var LayoutFlat = Orientation{
 }
 
 // HexAdd returns the result of adding two hex coordinates `a` and `b`.
+//
 // This is a vector addition in cube coordinates and is used for operations
 // like moving to neighbors or composing movement vectors.
 func HexAdd(a, b Hex) Hex {
@@ -179,20 +196,25 @@ func HexAdd(a, b Hex) Hex {
 }
 
 // HexSubtract returns the result of subtracting hex `b` from hex `a`.
+//
 // This produces a vector (in cube coordinates) that represents the offset from `b` to `a`.
+//
 // Commonly used to compute distance or direction between two hexes.
 func HexSubtract(a, b Hex) Hex {
 	return Hex{Q: a.Q - b.Q, R: a.R - b.R, S: a.S - b.S}
 }
 
 // HexScale multiplies each component of the hex coordinate `a` by a scalar factor `k`.
+//
 // This scales the hex outward from the origin, effectively moving it `k` steps in its direction.
+//
 // Useful for extending a direction vector or generating hex rings.
 func HexScale(a Hex, k int) Hex {
 	return Hex{Q: a.Q * k, R: a.R * k, S: a.S * k}
 }
 
 // HexRotateLeft rotates a hex coordinate 60 degrees counter-clockwise (to the left) around the origin.
+//
 // This is done by cyclically permuting and negating the cube coordinates (q, r, s),
 // while maintaining the invariant q + r + s = 0.
 func HexRotateLeft(a Hex) Hex {
@@ -200,6 +222,7 @@ func HexRotateLeft(a Hex) Hex {
 }
 
 // HexRotateRight rotates a hex coordinate 60 degrees clockwise around the origin.
+//
 // This operation permutes and negates the cube coordinates to achieve a rotation,
 // preserving the constraint q + r + s = 0.
 func HexRotateRight(a Hex) Hex {
@@ -207,8 +230,10 @@ func HexRotateRight(a Hex) Hex {
 }
 
 // HexDirections defines the six primary movement directions in a hex grid using cube coordinates.
+//
 // Each entry represents a unit vector pointing to one of the six neighboring hexes,
 // ordered typically in a clockwise or counter-clockwise fashion starting from the right.
+//
 // These directions are used for navigation, pathfinding, and neighbor lookup.
 var HexDirections = []Hex{
 	{Q: 1, S: -1}, // Direction 0: east
@@ -220,21 +245,27 @@ var HexDirections = []Hex{
 }
 
 // HexDirection returns the unit vector (as a Hex) representing the direction specified by the index (0–5).
+//
 // Each direction corresponds to one of the six adjacent directions in a hex grid using cube coordinates.
+//
 // The returned Hex can be added to another hex to move in that direction.
 func HexDirection(direction int) Hex {
 	return HexDirections[direction]
 }
 
 // HexNeighbor returns the neighboring hex of a given hex in one of the six adjacent directions.
+//
 // The `direction` parameter should be an integer from 0 to 5, corresponding to one of the six cardinal directions.
+//
 // It works by adding the appropriate directional vector (from HexDirection) to the current hex.
 func HexNeighbor(hex Hex, direction int) Hex {
 	return HexAdd(hex, HexDirection(direction))
 }
 
 // HexDiagonals defines the six possible diagonal directions in a hex grid using cube coordinates.
+//
 // Unlike direct neighbors (which are adjacent), diagonal directions jump over one hex.
+//
 // These vectors can be added to a hex to find its diagonal neighbors.
 var HexDiagonals = []Hex{
 	{Q: 2, R: -1, S: -1}, {Q: 1, R: -2, S: 1}, {Q: -1, R: -1, S: 2},
@@ -242,6 +273,7 @@ var HexDiagonals = []Hex{
 }
 
 // HexDiagonalNeighbor returns the diagonal neighbor of a hex in a given direction.
+//
 // Direction is an index (0–5) into the predefined HexDiagonals array,
 // which contains the six possible diagonal offset vectors.
 func HexDiagonalNeighbor(hex Hex, direction int) Hex {
@@ -249,7 +281,9 @@ func HexDiagonalNeighbor(hex Hex, direction int) Hex {
 }
 
 // HexLength computes the distance from the origin (0,0,0) to the given hex in cube coordinates.
+//
 // The formula sums the absolute values of q, r, and s, and divides by 2.
+//
 // This works because in a hex grid, the sum of the three coordinates is always zero (q + r + s = 0),
 // so the length of a hex vector is half the total displacement.
 func HexLength(hex Hex) int {
@@ -257,16 +291,20 @@ func HexLength(hex Hex) int {
 }
 
 // HexDistance calculates the distance between two hexes `a` and `b`.
+//
 // It does this by subtracting `b` from `a` to get the offset vector,
 // then computing the length of that vector in cube space.
+//
 // The result is the minimum number of steps between the two hexes.
 func HexDistance(a, b Hex) int {
 	return HexLength(HexSubtract(a, b))
 }
 
 // HexLerp performs linear interpolation between two fractional hex coordinates (a and b).
+//
 // The parameter `t` should be between 0.0 and 1.0, where 0.0 returns `a`, 1.0 returns `b`,
 // and values in between return a point along the line connecting them.
+//
 // This is commonly used for animations or drawing paths in a hex grid.
 func HexLerp(a, b FractionalHex, t float64) FractionalHex {
 	return FractionalHex{
@@ -277,7 +315,9 @@ func HexLerp(a, b FractionalHex, t float64) FractionalHex {
 }
 
 // HexRound converts a fractional hex coordinate (FractionalHex) to the nearest integer hex (Hex).
+//
 // It first rounds each component (q, r, s) independently to the nearest integer.
+//
 // Then, it adjusts the component with the largest rounding difference to ensure q + r + s = 0,
 // preserving the invariant required by cube coordinates.
 func HexRound(h FractionalHex) Hex {
@@ -301,8 +341,11 @@ func HexRound(h FractionalHex) Hex {
 }
 
 // HexLineDraw returns a list of hexes that form a straight line from hex `a` to hex `b`.
+//
 // It works by interpolating between `a` and `b` in fractional hex space, then rounding each step to the nearest hex.
-// Small nudges (1e-6) are added to both endpoints to avoid rounding errors that can occur when points lie exactly on hex boundaries.
+//
+// Small nudges (1e-6) are added to both endpoints to avoid rounding errors that can occur when points lie exactly on
+// hex boundaries.
 func HexLineDraw(a, b Hex) []Hex {
 	N := HexDistance(a, b)
 	aNudge := FractionalHex{float64(a.Q) + 1e-6, float64(a.R) + 1e-6, float64(a.S) - 2e-6}
@@ -315,23 +358,27 @@ func HexLineDraw(a, b Hex) []Hex {
 	return results
 }
 
-// QOffsetFromCube converts a cube coordinate (Hex) to a column-based offset coordinate (OffsetCoord).
+// QOffsetFromCube converts a cube coordinate (Hex) to a column-based offset coordinate (OffsetCoordinate).
+//
 // The `offset` parameter must be either EVEN (+1) or ODD (-1), indicating the layout's staggered column mode.
+//
 // This function is used for "even-q" or "odd-q" layouts where columns are aligned vertically,
 // and rows are staggered up or down based on the column parity.
-func QOffsetFromCube(offset int, h Hex) OffsetCoord {
+func QOffsetFromCube(offset int, h Hex) OffsetCoordinate {
 	if offset != EVEN && offset != ODD {
 		panic("offset must be EVEN (+1) or ODD (-1)")
 	}
 	col := h.Q
 	row := h.R + (h.Q+offset*(h.Q&1))/2
-	return OffsetCoord{col, row}
+	return OffsetCoordinate{col, row}
 }
 
 // QOffsetToCube converts an offset coordinate (column-based) to a cube coordinate (Hex).
+//
 // The `offset` parameter must be either EVEN (+1) or ODD (-1), defining the offset type.
+//
 // This conversion is commonly used for "even-q" or "odd-q" layouts where columns are offset vertically.
-func QOffsetToCube(offset int, h OffsetCoord) Hex {
+func QOffsetToCube(offset int, h OffsetCoordinate) Hex {
 	if offset != EVEN && offset != ODD {
 		panic("offset must be EVEN (+1) or ODD (-1)")
 	}
@@ -341,22 +388,26 @@ func QOffsetToCube(offset int, h OffsetCoord) Hex {
 	return Hex{q, r, s}
 }
 
-// ROffsetFromCube converts a cube coordinate (Hex) to a row-based offset coordinate (OffsetCoord).
+// ROffsetFromCube converts a cube coordinate (Hex) to a row-based offset coordinate (OffsetCoordinate).
+//
 // The `offset` parameter must be either EVEN (+1) or ODD (-1), specifying the type of offset used.
+//
 // This conversion is typically used for "even-r" or "odd-r" layouts where rows are offset horizontally.
-func ROffsetFromCube(offset int, h Hex) OffsetCoord {
+func ROffsetFromCube(offset int, h Hex) OffsetCoordinate {
 	if offset != EVEN && offset != ODD {
 		panic("offset must be EVEN (+1) or ODD (-1)")
 	}
 	col := h.Q + (h.R+offset*(h.R&1))/2
 	row := h.R
-	return OffsetCoord{col, row}
+	return OffsetCoordinate{col, row}
 }
 
-// ROffsetToCube converts a row-based offset coordinate (OffsetCoord) to a cube coordinate (Hex).
+// ROffsetToCube converts a row-based offset coordinate (OffsetCoordinate) to a cube coordinate (Hex).
+//
 // The `offset` parameter must be either EVEN (+1) or ODD (-1), indicating the row offset mode.
+//
 // This is used in "even-r" or "odd-r" layouts where horizontal rows are staggered.
-func ROffsetToCube(offset int, h OffsetCoord) Hex {
+func ROffsetToCube(offset int, h OffsetCoordinate) Hex {
 	if offset != EVEN && offset != ODD {
 		panic("offset must be EVEN (+1) or ODD (-1)")
 	}
@@ -366,34 +417,41 @@ func ROffsetToCube(offset int, h OffsetCoord) Hex {
 	return Hex{q, r, s}
 }
 
-// QDoubledFromCube converts a cube coordinate (Hex) to a column-based doubled coordinate (DoubledCoord).
+// QDoubledFromCube converts a cube coordinate (Hex) to a column-based doubled coordinate (DoubledCoordinate).
+//
 // This is used in "doubled-q" layouts where columns are doubled and rows are continuous.
+//
 // The formula shifts rows based on the column (q) to flatten the staggered structure.
-func QDoubledFromCube(h Hex) DoubledCoord {
-	return DoubledCoord{h.Q, 2*h.R + h.Q}
+func QDoubledFromCube(h Hex) DoubledCoordinate {
+	return DoubledCoordinate{h.Q, 2*h.R + h.Q}
 }
 
-// QDoubledToCube converts a column-based doubled coordinate (DoubledCoord) back to a cube coordinate (Hex).
+// QDoubledToCube converts a column-based doubled coordinate (DoubledCoordinate) back to a cube coordinate (Hex).
+//
 // This function reverses the transformation applied by QDoubledFromCube.
 // It is used in "doubled-q" layouts where columns are doubled and rows are linear.
-func QDoubledToCube(h DoubledCoord) Hex {
+func QDoubledToCube(h DoubledCoordinate) Hex {
 	q := h.Col
 	r := (h.Row - h.Col) / 2
 	s := -q - r
 	return Hex{q, r, s}
 }
 
-// RDoubledFromCube converts a cube coordinate (Hex) to a row-based doubled coordinate (DoubledCoord).
+// RDoubledFromCube converts a cube coordinate (Hex) to a row-based doubled coordinate (DoubledCoordinate).
+//
 // This is used in "doubled-r" layouts where rows are doubled and columns are continuous.
+//
 // The formula shifts columns based on the row (r) to linearize the staggered layout.
-func RDoubledFromCube(h Hex) DoubledCoord {
-	return DoubledCoord{2*h.Q + h.R, h.R}
+func RDoubledFromCube(h Hex) DoubledCoordinate {
+	return DoubledCoordinate{2*h.Q + h.R, h.R}
 }
 
-// RDoubledToCube converts a row-based doubled coordinate (DoubledCoord) back to a cube coordinate (Hex).
+// RDoubledToCube converts a row-based doubled coordinate (DoubledCoordinate) back to a cube coordinate (Hex).
+//
 // This function reverses the transformation performed by RDoubledFromCube.
+//
 // It is used in "doubled-r" layouts where rows are doubled and columns are linear.
-func RDoubledToCube(h DoubledCoord) Hex {
+func RDoubledToCube(h DoubledCoordinate) Hex {
 	q := (h.Col - h.Row) / 2
 	r := h.Row
 	s := -q - r
@@ -401,8 +459,10 @@ func RDoubledToCube(h DoubledCoord) Hex {
 }
 
 // HexToPixel converts a hex coordinate (Hex) to a 2D pixel position (Point).
+//
 // It uses the layout's orientation, size, and origin to compute the pixel location.
-// This is commonly used to render hexagons on screen by mapping grid positions to pixel space.
+//
+// This is commonly used to render hexagons on screen by mapping grid positions to pixel space (center).
 func HexToPixel(layout Layout, h Hex) Point {
 	M := layout.Orientation
 	size := layout.Size
@@ -413,14 +473,18 @@ func HexToPixel(layout Layout, h Hex) Point {
 }
 
 // PixelToHex converts a 2D pixel position (Point) to the nearest hex coordinate (Hex).
+//
 // It delegates to PixelToHexFractional and then rounds the result to the nearest integer hex.
+//
 // This is useful for detecting which hex was clicked or hovered in a graphical interface.
 func PixelToHex(layout Layout, p Point) Hex {
 	return HexRound(PixelToHexFractional(layout, p))
 }
 
 // PixelToHexFractional converts a 2D pixel position (Point) to a fractional hex coordinate (FractionalHex).
+//
 // It applies the inverse transformation defined by the layout's orientation, size, and origin.
+//
 // This is useful when precise hex positions are needed (e.g., interpolation or smooth cursor tracking).
 func PixelToHexFractional(layout Layout, p Point) FractionalHex {
 	M := layout.Orientation
@@ -433,7 +497,9 @@ func PixelToHexFractional(layout Layout, p Point) FractionalHex {
 }
 
 // HexCornerOffset calculates the 2D offset from the center of a hex to one of its corners.
+//
 // The corner index should be in the range [0, 5].
+//
 // This function uses the layout's orientation and size to compute the angle and length of the corner vector.
 func HexCornerOffset(layout Layout, corner int) Point {
 	M := layout.Orientation
@@ -443,7 +509,9 @@ func HexCornerOffset(layout Layout, corner int) Point {
 }
 
 // PolygonCorners returns the 2D pixel coordinates of the six corners of a given hex.
+//
 // It first calculates the center of the hex using HexToPixel, then adds the offset for each corner.
+//
 // This is typically used to draw the hexagon shape in a 2D rendering context (e.g., SVG or canvas).
 func PolygonCorners(layout Layout, h Hex) []Point {
 	corners := []Point{}
@@ -456,6 +524,7 @@ func PolygonCorners(layout Layout, h Hex) []Point {
 }
 
 // AbsInt returns the absolute value of an integer.
+//
 // If x is negative, it returns -x; otherwise, it returns x as-is.
 func AbsInt(x int) int {
 	if x < 0 {

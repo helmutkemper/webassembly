@@ -5,417 +5,299 @@ import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/factoryFontFamily"
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/mathUtil"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesConversion"
+	"github.com/helmutkemper/webassembly/hexagon"
 	"github.com/helmutkemper/webassembly/textUtil"
-	"image/color"
-	"math"
-	"syscall/js"
 )
 
-type Point struct {
-	X, Y float64
+type CalcSystem interface {
+	GetColRow() (col, row int)
+	GetCenter() (x, y int)
+	SetRowCol(col, row int)
+	GetPath() (path []string)
 }
 
-type Circle struct {
+type DrawCell interface {
+	Init()
+	SetColRow(col, row int)
+	SetText(text string)
+	GetSvg() (tagSvg *html.TagSvg)
 }
 
-func (e Circle) PointInside(pt, c Point, r float64) bool {
-	// d = √((Xp - Xc)² + (Yp - Yc)²)
-	d := math.Sqrt(math.Pow(pt.X-c.X, 2) + math.Pow(pt.Y-c.Y, 2))
-	return d < r
+type SvgCell struct {
+	svg      *html.TagSvg
+	svgGroup *html.TagSvgG
+	svgPath  *html.TagSvgPath
+	svgText  *html.TagSvgText
+
+	fontFamily string
+	fontSize   int
+	fontWeight html.FontWeightRule
+	fontStyle  html.FontStyleRule
+
+	calcSystem CalcSystem
 }
 
-type Vertex struct {
-	v1 Point
-	v2 Point
-	v3 Point
+func (e *SvgCell) SetCalcSystem(calcSystem CalcSystem) {
+	e.calcSystem = calcSystem
 }
 
-func (e *Vertex) Set(c, p1, p2 Point) {
-	e.v1.X = c.X
-	e.v1.Y = c.Y
+func (e *SvgCell) Init() {
+	e.fontSize = 16
+	e.fontFamily = factoryFontFamily.NewArial()
+	e.fontWeight = html.KFontWeightRuleNormal
+	e.fontStyle = html.KFontStyleRuleNormal
 
-	e.v2.X = p1.X
-	e.v2.Y = p1.Y
+	e.svg = factoryBrowser.NewTagSvg().
+		Append(
+			factoryBrowser.NewTagSvgFilter().Id("blur1").Append(
+				factoryBrowser.NewTagSvgFeOffset().Dx(1).Dy(1),
+				factoryBrowser.NewTagSvgFeBlend().In2(html.KSvgIn2SourceAlpha),
+				factoryBrowser.NewTagSvgFeGaussianBlur().
+					StdDeviation(2).In(html.KSvgInStrokePaint),
+			),
+			//	factoryBrowser.NewTagSvgFilter().Id("blur2").Append(
+			//		factoryBrowser.NewTagSvgFeOffset().Dx(2).Dy(2),
+			//		factoryBrowser.NewTagSvgFeBlend().In2("offOut"),
+			//		factoryBrowser.NewTagSvgFeGaussianBlur().StdDeviation(2),
+			//	),
+			//	factoryBrowser.NewTagSvgFilter().Id("blur3").Append(
+			//		factoryBrowser.NewTagSvgFeGaussianBlur().StdDeviation(0.5),
+			//	),
+		)
 
-	e.v3.X = p2.X
-	e.v3.Y = p2.Y
+	e.svgGroup = factoryBrowser.NewTagSvgG()
+
+	e.svgPath = factoryBrowser.NewTagSvgPath().
+		Fill("yellow").
+		Stroke("black").
+		StrokeWidth(1) //.
+	//Filter("url(#blur1)")
+	e.svgGroup.Append(e.svgPath)
+
+	e.svgText = factoryBrowser.NewTagSvgText().
+		FontSize(e.fontSize).
+		FontFamily(e.fontFamily).
+		FontWeight(e.fontWeight).
+		FontStyle(e.fontStyle)
+	e.svgGroup.Append(e.svgText)
+
+	e.svg.Append(e.svgGroup)
 }
 
-func (e *Vertex) GetXY() (p1, p2 Point) {
-	return e.v2, e.v3
+func (e *SvgCell) SetColRow(col, row int) {
+	e.calcSystem.SetRowCol(col, row)
+	path := e.calcSystem.GetPath()
+	e.svgPath.D(path)
 }
 
-type Triangle struct {
-	v1, v2, v3 Point
+func (e *SvgCell) SetText(text string) {
+
+	fontWeight := e.fontWeight.String()
+	fontStyle := e.fontStyle.String()
+	fontSize := fmt.Sprintf("%dpx", e.fontSize)
+
+	e.fontFamily = textUtil.KFontAwesomeRegular
+
+	width, height := textUtil.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, fontSize)
+
+	cx, cy := e.calcSystem.GetCenter()
+
+	//e.svgText.X(cx - width/2).
+	//	Y(cy + height/2 - height/5).
+	//	Text(text)
+
+	icon := factoryBrowser.NewTagSvgText().
+		Text("\uf0ea").
+		FontSize(fontSize).
+		FontFamily(e.fontFamily).
+		FontWeight(fontWeight).
+		X(cx - width/2).
+		Y(cy + height/2 - height/5)
+
+	e.svg.Append(icon)
 }
 
-func (e Triangle) sign(p1, p2, p3 Point) float64 {
-	return (p1.X-p3.X)*(p2.Y-p3.Y) - (p2.X-p3.X)*(p1.Y-p3.Y)
+func (e *SvgCell) GetSvg() (tagSvg *html.TagSvg) {
+	return e.svg
 }
 
-func (e Triangle) PointInside(pt Point, v Vertex) bool {
-	d1 := e.sign(pt, v.v1, v.v2)
-	d2 := e.sign(pt, v.v2, v.v3)
-	d3 := e.sign(pt, v.v3, v.v1)
+type Hexagon struct {
+	// Column and row in the doubled coordinate system
+	col, row int
 
-	hasNeg := d1 < 0 || d2 < 0 || d3 < 0
-	hasPos := d1 > 0 || d2 > 0 || d3 > 0
+	// X and Y coordinates in 2D space
+	cx, cy int
 
-	return !(hasNeg && hasPos)
+	// Layout defines how hexagons are positioned and transformed on the screen.
+	//
+	//   - Orientation specifies whether the hexes are pointy-topped or flat-topped,
+	//     along with the transformation matrices for converting between hex and pixel space.
+	//   - Size defines the radius (width and height) of a single hexagon in screen units (pixels).
+	//   - Origin specifies the pixel coordinate where the hex grid origin (0,0,0) will be drawn.
+	layout hexagon.Layout
+
+	// Point represents a 2D position in pixel or screen space.
+	//
+	// It is typically used to store the result of hex-to-pixel conversion,
+	// define layout sizes, or calculate hex corner positions for rendering.
+	//
+	//   - X: horizontal position.
+	//   - Y: vertical position.
+	point hexagon.Point
+
+	// Hex represents a cube coordinate (q, r, s) used to model positions in a hexagonal grid.
+	//
+	// Cube coordinates satisfy the constraint q + r + s = 0, allowing for unambiguous positioning
+	// and efficient computation of directions, distances, and neighbors.
+	//
+	//   - Q: corresponds to the "column" axis.
+	//   - R: corresponds to the "row" axis.
+	//   - S: the third axis, derived from Q and R (S = -Q - R).
+	hex hexagon.Hex
 }
 
-type Polygon struct {
-	objTriangle Triangle
-	box         Box
-	triangles   []Vertex
-	col         int
-	row         int
-	cx          int
-	cy          int
-}
-
-func (e *Polygon) PointInside(pt Point) bool {
-	if !e.box.PointInside(pt) {
-		return false
+func (e *Hexagon) Init(x, y, size int) {
+	e.layout = hexagon.Layout{
+		Orientation: hexagon.LayoutFlat,
+		Size:        hexagon.Point{X: float64(size), Y: float64(size)},
+		Origin:      hexagon.Point{X: float64(x), Y: float64(y)},
 	}
-
-	for _, t := range e.triangles {
-		if e.objTriangle.PointInside(pt, t) {
-			return true
-		}
-	}
-
-	return false
 }
 
-func (e *Polygon) GetVertex() (v []Vertex) {
-	return e.triangles
-}
-
-func (e *Polygon) SetVertex(c, p1, p2 Point) {
-	v := Vertex{}
-	v.Set(c, p1, p2)
-
-	if e.triangles == nil {
-		e.triangles = make([]Vertex, 0)
-	}
-
-	e.triangles = append(e.triangles, v)
-}
-
-func (e *Polygon) SetAddr(col, row int) {
-	e.col = col
-	e.row = row
-}
-
-func (e *Polygon) GetAddr() (col, row int) {
+func (e *Hexagon) GetColRow() (col, row int) {
 	return e.col, e.row
 }
 
-func (e *Polygon) SetCenter(x, y int) {
-	e.cx = x
-	e.cy = y
-}
-
-func (e *Polygon) GetCenter() (x, y int) {
+func (e *Hexagon) GetCenter() (x, y int) {
 	return e.cx, e.cy
 }
 
-func (e *Polygon) SetBox(c Point, r float64) {
-	e.box.Set(c, r)
+func (e *Hexagon) SetRowCol(col, row int) {
+	e.col = col
+	e.row = row
+	e.convertManager(e.col, e.row)
 }
 
-type Box struct {
-	topLeft     Point
-	bottomRight Point
+func (e *Hexagon) colRowToHex(col, row int) (hex hexagon.Hex) {
+	return hexagon.QDoubledToCube(hexagon.DoubledCoordinate{Col: col, Row: row})
 }
 
-func (e *Box) Set(c Point, r float64) {
-	e.topLeft.X = c.X - r
-	e.topLeft.Y = c.Y - r
-
-	e.bottomRight.X = c.X + r
-	e.bottomRight.Y = c.Y + r
+func (e *Hexagon) convertManager(col, row int) {
+	e.col = col
+	e.row = row
+	e.hex = e.colRowToHex(col, row)
+	e.point = hexagon.HexToPixel(e.layout, e.hex)
+	e.cx = rulesConversion.FloatToInt(e.point.X)
+	e.cy = rulesConversion.FloatToInt(e.point.Y)
 }
 
-func (e *Box) PointInside(pt Point) bool {
-	if !(e.topLeft.X <= pt.X && e.bottomRight.X >= pt.X) {
-		return false
-	}
-
-	if !(e.topLeft.Y <= pt.Y && e.bottomRight.Y >= pt.Y) {
-		return false
-	}
-	return true
-}
-
-type HexagonDraw struct {
-	svg            *html.TagSvg
-	polygon        []Polygon
-	currentPolygon *Polygon
-	rotation       float64
-	sides          int
-	space          int
-	radius         int
-}
-
-func (e *HexagonDraw) Init() {
-	e.rotation = 0.0
-	e.sides = 6
-	e.space = 10
-	e.radius = 100
-	e.polygon = make([]Polygon, 0)
-
-	e.svg = factoryBrowser.NewTagSvg().
-		Width("100vw").
-		Height("100vh").
-		Append(
-			factoryBrowser.NewTagSvgFilter().Id("blur1").Append(
-				factoryBrowser.NewTagSvgFeOffset().Dx(4).Dy(3),
-				factoryBrowser.NewTagSvgFeBlend().In2("offOut"),
-				factoryBrowser.NewTagSvgFeGaussianBlur().StdDeviation(8),
-			),
-			factoryBrowser.NewTagSvgFilter().Id("blur2").Append(
-				factoryBrowser.NewTagSvgFeOffset().Dx(2).Dy(2),
-				factoryBrowser.NewTagSvgFeBlend().In2("offOut"),
-				factoryBrowser.NewTagSvgFeGaussianBlur().StdDeviation(2),
-			),
-			factoryBrowser.NewTagSvgFilter().Id("blur3").Append(
-				factoryBrowser.NewTagSvgFeGaussianBlur().StdDeviation(0.5),
-			),
-		)
-}
-
-// calculatePolygon generates the points of a regular polygon given the number of sides, radius, width, height and rotation
-func (e *HexagonDraw) calculatePolygon(sides, radius, cx, cy int, rotation float64) [][]int {
-	// Centro do canvas
-
-	// Gerar os pontos do polígono
-	points := make([][]int, 0, sides+1)
-	for i := 0; i <= sides; i++ {
-		angle := (2*math.Pi*float64(i))/float64(sides) + rotation
-		x := float64(cx) + float64(radius)*math.Sin(angle)
-		y := float64(cy) + float64(radius)*math.Cos(angle)
-		points = append(points, []int{mathUtil.FloatToInt(x), mathUtil.FloatToInt(y)})
-
-		if i != 0 {
-			e.currentPolygon.SetVertex(
-				Point{X: float64(cx), Y: float64(cy)},
-				Point{X: x, Y: y},
-				Point{X: float64(points[i-1][0]), Y: float64(points[i-1][1])},
-			)
+func (e *Hexagon) GetPath() (path []string) {
+	points := hexagon.PolygonCorners(e.layout, e.hex)
+	for k, point := range points {
+		if k == 0 {
+			path = append(path, fmt.Sprintf("M %.2f,%.2f ", point.X, point.Y))
+			continue
 		}
+
+		path = append(path, fmt.Sprintf("L %.2f,%.2f ", point.X, point.Y))
 	}
-
-	e.polygon = append(e.polygon, *e.currentPolygon)
-	return points
-}
-
-func (e *HexagonDraw) Point() {
-
-}
-
-func (e *HexagonDraw) CenterToXY(row, col, r int) (x int, y int) {
-
-	//               . . . . . . .             --+--
-	//             .       r        .            |
-	//          .r                    r.
-	//       .                            .
-	//    .                                 .    h   1
-	//    .                                 .    e   .
-	//    .r               .               r.    i   5
-	//    .               . .               .    g   *
-	//    .              .   .              .    h   r
-	//       .  r      r.     .r      r  .       t
-	//          .      .       .      .
-	//             .  .    r    .  .
-	//               . . . . . . .               |
-	//    |-          width = √3*r          -| --+--
-
-	w := float64(r) * math.Sqrt(3)
-	h := float64(r) * 1.5
-	cx := float64(col) * w
-
-	// approaches the left border
-	//cx -= w / 2.0
-
-	if row%2 == 1 {
-		cx += w / 2
-	}
-
-	cy := float64(row) * h
-
-	// approaches the top
-	//cy -= 1.0 / 4.0 * h
-
-	x = mathUtil.FloatToInt(cx)
-	y = mathUtil.FloatToInt(cy)
-
+	path = append(path, "z")
 	return
 }
 
-func (e *HexagonDraw) Make(col, row int) {
-	x, y := e.CenterToXY(row, col, e.radius)
+type HexagonDraw struct {
+	svg    *html.TagSvg
+	sides  int
+	space  int
+	radius int
+	layout hexagon.Layout
 
-	e.currentPolygon = new(Polygon)
-	e.currentPolygon.SetAddr(col, row)
-	e.currentPolygon.SetBox(Point{X: float64(x), Y: float64(y)}, float64(e.radius))
-	e.currentPolygon.SetCenter(x, y)
-
-	e.calculatePolygon(e.sides, e.radius-e.space, x, y, e.rotation)
+	drawSystem DrawCell
 }
 
-func (e *HexagonDraw) Draw() *HexagonDraw {
-	for _, polygon := range e.polygon {
-		hexagonExternalPath := make([]string, 0)
-
-		for k, vertex := range polygon.triangles {
-			p1, _ := vertex.GetXY()
-
-			switch k {
-			case 0:
-				hexagonExternalPath = append(
-					hexagonExternalPath,
-					fmt.Sprintf("M %v %v", p1.X, p1.Y), // Move to the first point
-				)
-			default:
-				hexagonExternalPath = append(hexagonExternalPath, fmt.Sprintf("L %v %v", p1.X, p1.Y)) // Draw lines to remaining points
-			}
-		}
-
-		hexagonExternalPath = append(hexagonExternalPath, "z") // Close the path
-
-		g := factoryBrowser.NewTagSvgG()
-
-		path := factoryBrowser.NewTagSvgPath().
-			Fill("none").
-			Stroke("black").
-			StrokeWidth(1).
-			Filter("url(#blur2)")
-		path.D(hexagonExternalPath)
-		g.Append(path)
-
-		path = factoryBrowser.NewTagSvgPath().
-			Fill("none").
-			Stroke("black").
-			StrokeWidth(1).
-			Filter("url(#blur1)")
-		path.D(hexagonExternalPath)
-		g.Append(path)
-
-		path = factoryBrowser.NewTagSvgPath().
-			Fill("white").
-			Stroke(color.RGBA{
-				R: 0,
-				G: 0,
-				B: 0,
-				A: 255,
-			}).
-			StrokeWidth(2).
-			Filter("url(#blur3)")
-		path.D(hexagonExternalPath)
-		g.Append(path)
-
-		t := fmt.Sprintf("C: %v, L: %v", polygon.col, polygon.row)
-		font := factoryFontFamily.NewArialBlack()
-		fontSize := 30
-		w, h := textUtil.GetTextSize(
-			t,
-			font,
-			false,
-			false,
-			fontSize,
-		)
-		text := factoryBrowser.NewTagSvgText().
-			X(polygon.cx - w/2).
-			Y(polygon.cy + h/3).
-			FontSize(fontSize).
-			FontFamily(font).
-			Text(t)
-		g.Append(text)
-
-		e.svg.Append(g)
-	}
-
-	return e
+func (e *HexagonDraw) SetDrawSystem(system DrawCell) {
+	e.drawSystem = system
 }
 
-func (e *HexagonDraw) ReDraw(cx, cy, r int) {
-	circle := factoryBrowser.NewTagSvgCircle().
-		Cx(cx).
-		Cy(cy).
-		R(r).
-		Fill("none").
-		Stroke("red").
-		StrokeWidth(1)
-	e.svg.Append(circle)
+func (e *HexagonDraw) Init() {
+	e.sides = 6
+	e.space = 10
+	e.radius = 100
+
+	e.svg = factoryBrowser.NewTagSvg().
+		Width("100vw").
+		Height("100vh")
 }
 
-func (e *HexagonDraw) Test(x, y int) {
-
-	for _, polygon := range e.polygon {
-		if polygon.PointInside(Point{float64(x), float64(y)}) {
-			cx, cy := polygon.GetCenter()
-			e.ReDraw(cx, cy, 20)
-			vList := polygon.GetVertex()
-
-			for _, v := range vList {
-				p := []string{
-					fmt.Sprintf("M %v %v", int(v.v1.X), int(v.v1.Y)),
-					fmt.Sprintf("L %v %v", int(v.v2.X), int(v.v2.Y)),
-					fmt.Sprintf("L %v %v", int(v.v3.X), int(v.v3.Y)),
-				}
-
-				path := factoryBrowser.NewTagSvgPath().
-					Fill("none").
-					Stroke("red").
-					StrokeWidth(1).
-					D(p)
-				e.svg.Append(path)
-			}
-		}
-
-	}
+func (e *HexagonDraw) DrawText(text string) {
+	e.drawSystem.SetText(text)
 }
+
+func (e *HexagonDraw) Draw(col, row int) {
+	e.drawSystem.Init()
+	e.drawSystem.SetColRow(col, row)
+
+	e.svg.Append(e.drawSystem.GetSvg())
+}
+
+func (e *HexagonDraw) GetSvg() (tagSvg *html.TagSvg) {
+	return e.svg
+}
+
+const faStar = "\uf005"
 
 func main() {
 
+	textUtil.InjectFontAwesomeCSS()
+
+	stage := factoryBrowser.NewStage()
+
+	hex := new(Hexagon)
+	hex.Init(50, 50, 30)
+
+	cell := new(SvgCell)
+	cell.SetCalcSystem(hex)
+	cell.Init()
+
 	h := new(HexagonDraw)
+	h.SetDrawSystem(cell)
 	h.Init()
 
 	table := [][]int{
 
-		{0, 0}, {0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5},
-		{1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5},
-		{2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5},
-		{3, 0}, {3, 1}, {3, 2}, {3, 3}, {3, 4}, {3, 5},
-		{4, 0}, {4, 1}, {4, 2}, {4, 3}, {4, 4}, {4, 5},
-		{5, 0}, {5, 1}, {5, 2}, {5, 3}, {5, 4}, {5, 5},
-		{6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {6, 5},
-		{7, 0}, {7, 1}, {7, 2}, {7, 3}, {7, 4}, {7, 5},
-		{8, 0}, {8, 1}, {8, 2}, {8, 3}, {8, 4}, {8, 5},
+		{0, 0}, {0, 2}, {0, 4}, {0, 6},
+		{1, 1}, {1, 3}, {1, 5},
+		{2, 0}, {2, 2}, {2, 4}, {2, 6},
+		{3, 1}, {3, 3}, {3, 5},
+		{4, 0}, {4, 2}, {4, 4}, {4, 6},
+		//{0, 0}, {0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5},
+		//{1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5},
+		//{2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5},
+		//{3, 0}, {3, 1}, {3, 2}, {3, 3}, {3, 4}, {3, 5},
+		//{4, 0}, {4, 1}, {4, 2}, {4, 3}, {4, 4}, {4, 5},
+		//{5, 0}, {5, 1}, {5, 2}, {5, 3}, {5, 4}, {5, 5},
+		//{6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {6, 5},
+		//{7, 0}, {7, 1}, {7, 2}, {7, 3}, {7, 4}, {7, 5},
+		//{8, 0}, {8, 1}, {8, 2}, {8, 3}, {8, 4}, {8, 5},
 
 		//{3, 1}, {3, 2}, {4, 3}, {5, 1}, {5, 2}, {4, 1}, {4, 2},
 	}
 
 	for _, p := range table {
-		h.Make(p[1], p[0])
+		h.Draw(p[1], p[0])
+		h.DrawText(fmt.Sprintf("%v,%v", p[0], p[1]))
+		stage.Append(h.GetSvg())
 	}
 
-	h.Draw()
-
-	js.Global().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
-		e := args[0]
-		x := e.Get("offsetX").Int()
-		y := e.Get("offsetY").Int()
-
-		h.Test(x, y)
-		return nil
-	}))
-
-	stage := factoryBrowser.NewStage()
-	stage.Append(h.svg)
+	//js.Global().Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
+	//	e := args[0]
+	//	x := e.Get("offsetX").Int()
+	//	y := e.Get("offsetY").Int()
+	//
+	//	h.Test(x, y)
+	//	return nil
+	//}))
 
 	done := make(chan struct{})
 	done <- struct{}{}

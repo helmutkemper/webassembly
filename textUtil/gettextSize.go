@@ -5,7 +5,24 @@ import (
 	"syscall/js"
 )
 
-func GetTextSize(text, fontFamily string, bold, italic bool, fontSize int) (width, height int) {
+// GetTextSize
+//
+// English:
+//
+//	Returns space in pixels, occupied by a text.
+//
+//	  Note:
+//	    * To measure fontawesome.com icon size, use the constant textUtil.KFontAwesomeRegular or
+//	      textUtil.KFontAwesomeSolid to use font-family="FARegular" or font-family="FASolid"
+//
+// Português:
+//
+//	Retorna o espaço, em pixels, ocupado por um texto
+//
+//	  Nota:
+//	    * para medir o tamanho de ícones da fontawesome.com, use as constantes textUtil.KFontAwesomeRegular ou
+//	      textUtil.KFontAwesomeSolid para usar font-family="FARegular" ou font-family="FASolid"
+func GetTextSize(text, fontFamily, fontWeight, fontStyle, fontSize string) (width, height int) {
 	doc := js.Global().Get("document")
 	svgNS := "http://www.w3.org/2000/svg"
 
@@ -20,13 +37,8 @@ func GetTextSize(text, fontFamily string, bold, italic bool, fontSize int) (widt
 	svgText.Call("setAttribute", "y", "0")
 	svgText.Call("setAttribute", "font-size", fmt.Sprintf("%dpx", fontSize))
 	svgText.Call("setAttribute", "font-family", fontFamily)
-
-	if bold {
-		svgText.Call("setAttribute", "font-weight", "bold")
-	}
-	if italic {
-		svgText.Call("setAttribute", "font-style", "italic")
-	}
+	svgText.Call("setAttribute", "font-weight", fontWeight)
+	svgText.Call("setAttribute", "font-style", fontStyle)
 
 	svg.Call("appendChild", svgText)
 	doc.Get("body").Call("appendChild", svg)

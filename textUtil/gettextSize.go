@@ -8,19 +8,22 @@ import (
 //
 // English:
 //
-//	Returns space in pixels, occupied by a text.
+//		Returns space in pixels, occupied by a text.
 //
-//	  Note:
-//	    * To measure fontawesome.com icon size, use the constant textUtil.KFontAwesomeRegular or
-//	      textUtil.KFontAwesomeSolid to use font-family="FARegular" or font-family="FASolid"
+//		  Note:
+//		    * To measure fontawesome.com icon size, use the constant textUtil.KFontAwesomeRegular or
+//		      textUtil.KFontAwesomeSolid to use font-family="FARegular" or font-family="FASolid"
+//	     * Some icons have a contour box incompatible with the cartoon contained in the icon and need manual correction.
 //
 // Português:
 //
-//	Retorna o espaço, em pixels, ocupado por um texto
+//		Retorna o espaço, em pixels, ocupado por um texto
 //
-//	  Nota:
-//	    * para medir o tamanho de ícones da fontawesome.com, use as constantes textUtil.KFontAwesomeRegular ou
-//	      textUtil.KFontAwesomeSolid para usar font-family="FARegular" ou font-family="FASolid"
+//		  Nota:
+//		    * Para medir o tamanho de ícones da fontawesome.com, use as constantes textUtil.KFontAwesomeRegular ou
+//		      textUtil.KFontAwesomeSolid para usar font-family="FARegular" ou font-family="FASolid";
+//	     * Alguns ícones apresentam uma caixa de contorno incompatível com o desenho contido no ícone e necessitam de
+//	       correção manual.
 func GetTextSize(text, fontFamily, fontWeight, fontStyle string, fontSize int) (width, height int) {
 	doc := js.Global().Get("document")
 	svgNS := "http://www.w3.org/2000/svg"

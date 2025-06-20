@@ -1,6 +1,7 @@
 package html
 
 import (
+	"fmt"
 	"github.com/helmutkemper/webassembly/browser/css"
 	"log"
 	"reflect"
@@ -60,6 +61,68 @@ type TagTextArea struct {
 	//
 	//  Indica o processo de arrasto do elemento.
 	isDragging bool
+}
+
+// GetWidth
+//
+// English:
+//
+//	Returns the width of the TagTextArea element as an integer.
+//
+// Português:
+//
+//	Retorna a largura do elemento TagTextArea como um número inteiro.
+func (e *TagTextArea) GetWidth() (width int) {
+	return e.width
+}
+
+// GetHeight
+//
+// English:
+//
+//	Returns the height of the TagTextArea element as an integer.
+//
+// Português:
+//
+//	Retorna a altura do elemento TagTextArea como um número inteiro.
+func (e *TagTextArea) GetHeight() (height int) {
+	return e.height
+}
+
+// ResizeToWindow
+//
+// English:
+//
+//	Resizes the SVG element to match the dimensions of the browser window.
+//
+// Português:
+//
+//	Redimensione o elemento SVG para corresponder às dimensões da janela do navegador.
+func (e *TagTextArea) ResizeToWindow() (ref *TagTextArea) {
+	window := js.Global()
+	e.width = window.Get("innerWidth").Int()
+	e.height = window.Get("innerHeight").Int()
+
+	e.selfElement.Call("setAttribute", "width", fmt.Sprintf("%vpx", e.width))
+	e.selfElement.Call("setAttribute", "height", fmt.Sprintf("%vpx", e.height))
+	e.selfElement.Call("setAttribute", "display", "block")
+	return e
+}
+
+// Import
+//
+// English:
+//
+// Take the ID of a div that already exists and matters it to the TagTextArea that has been properly initialized.
+//
+// Português:
+//
+// Pega o ID de uma div que já existe e o importa para a TagTextArea que tenha sido devidamente inicializada.
+func (e *TagTextArea) Import(tagId string) (ref *TagTextArea) {
+	doc := js.Global().Get("document")
+	toImport := doc.Call("getElementById", tagId)
+	e.selfElement = toImport
+	return e
 }
 
 // Reference

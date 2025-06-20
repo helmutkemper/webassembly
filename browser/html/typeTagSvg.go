@@ -223,6 +223,52 @@ func (e *TagSvg) Init() (ref *TagSvg) {
 	return e
 }
 
+// GetWidth
+//
+// English:
+//
+//	Returns the width of the TagSvg element as an integer.
+//
+// Português:
+//
+//	Retorna a largura do elemento TagSvg como um número inteiro.
+func (e *TagSvg) GetWidth() (width int) {
+	return e.width
+}
+
+// GetHeight
+//
+// English:
+//
+//	Returns the height of the TagSvg element as an integer.
+//
+// Português:
+//
+//	Retorna a altura do elemento TagSvg como um número inteiro.
+func (e *TagSvg) GetHeight() (height int) {
+	return e.height
+}
+
+// ResizeToWindow
+//
+// English:
+//
+//	Resizes the SVG element to match the dimensions of the browser window.
+//
+// Português:
+//
+//	Redimensione o elemento SVG para corresponder às dimensões da janela do navegador.
+func (e *TagSvg) ResizeToWindow() (ref *TagSvg) {
+	window := js.Global()
+	e.width = window.Get("innerWidth").Int()
+	e.height = window.Get("innerHeight").Int()
+
+	e.selfElement.Call("setAttribute", "width", fmt.Sprintf("%vpx", e.width))
+	e.selfElement.Call("setAttribute", "height", fmt.Sprintf("%vpx", e.height))
+	e.selfElement.Call("setAttribute", "display", "block")
+	return e
+}
+
 // Import
 //
 // English:
@@ -5283,35 +5329,43 @@ func (e *TagSvg) ListenerRemove(event string) (ref *TagSvg) {
 //
 // English:
 //
-//	 Transform the SVG in `PNG Data` to be used with `img.src = pngData`.
+//		 Transform the SVG in `PNG Data` to be used with `img.src = pngData`.
 //
-//		Input:
-//		  width and height: Final size or image scale.
+//			Input:
+//			  width and height: Final size or image scale.
 //
-//	   Rules:
-//	     * If the values are lower or equal to 5.0 the image will have its size multiplied by the past value.
-//	         In this case, both values should be less than or equal to 5.0;
-//	     * If the values are greater than 5.0, this will be the size of the image;
-//	     * If the values are equal to zero, the image will have the original size.
+//		   Rules:
+//		     * If the values are lower or equal to 5.0 the image will have its size multiplied by the past value.
+//		         In this case, both values should be less than or equal to 5.0;
+//		     * If the values are greater than 5.0, this will be the size of the image;
+//		     * If the values are equal to zero, the image will have the original size.
 //
-//	   Example:
-//	     js.Global().Get("document").Call("getElementById", "test").Set("src", url)
+//		   Example:
+//	      url := svg.ToPngResized(800, 600)
+//	      document := js.Global().Get("document")
+//		     document.Call("getElementById", "test").Set("src", url)
+//		     document.Call("getElementById", "test").Get("style").Set("width", svg.GetWidth())
+//		     document.Call("getElementById", "test").Get("style").Set("height", svg.GetHeight())
 //
 // Português:
 //
-//	 Transforma um SVG em `PNG Data` para ser usado com `img.src = pngData`.
+//		 Transforma um SVG em `PNG Data` para ser usado com `img.src = pngData`.
 //
-//		Input:
-//		  width and height: Tamanho final ou escala da imagem.
+//			Input:
+//			  width and height: Tamanho final ou escala da imagem.
 //
-//	   Regras:
-//	     * Caso os valores sejam menores ou iguais a 5.0 a imagem terá seu tamanho multiplicado pelo valor passado.
-//	         Nesse caso, os dois valores devem ser menores ou iguais a 5.0;
-//	     * Caso os valores sejam maiores do que 5.0, este será o tamanho da imagem;
-//	     * Caso os valores sejam iguais a zero, a imagem terá o tamanho original.
+//		   Regras:
+//		     * Caso os valores sejam menores ou iguais a 5.0 a imagem terá seu tamanho multiplicado pelo valor passado.
+//		         Nesse caso, os dois valores devem ser menores ou iguais a 5.0;
+//		     * Caso os valores sejam maiores do que 5.0, este será o tamanho da imagem;
+//		     * Caso os valores sejam iguais a zero, a imagem terá o tamanho original.
 //
-//	   Exemplo:
-//	     js.Global().Get("document").Call("getElementById", "test").Set("src", url)
+//		   Exemplo:
+//	      url := svg.ToPngResized(800, 600)
+//	      document := js.Global().Get("document")
+//		     document.Call("getElementById", "test").Set("src", url)
+//		     document.Call("getElementById", "test").Get("style").Set("width", svg.GetWidth())
+//		     document.Call("getElementById", "test").Get("style").Set("height", svg.GetHeight())
 func (e *TagSvg) ToPngResized(width, height float64) (pngData js.Value) {
 	serializer := js.Global().Get("XMLSerializer").New()
 	svgText := serializer.Call("serializeToString", e.selfElement)
@@ -5335,6 +5389,8 @@ func (e *TagSvg) ToPngResized(width, height float64) (pngData js.Value) {
 		ctx := canvas.Call("getContext", "2d")
 
 		if width == 0.0 && height == 0.0 {
+			canvas.Set("width", e.width)
+			canvas.Set("height", e.height)
 			ctx.Call("drawImage", img, 0, 0)
 		} else if width <= 5.0 && height <= 5.0 {
 			width = float64(e.width) * width

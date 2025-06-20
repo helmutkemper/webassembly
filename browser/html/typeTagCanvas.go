@@ -86,6 +86,27 @@ type TagCanvas struct {
 	MouseClientY int64 `wasmGetArg:"clientY"`
 }
 
+// Import
+//
+// English:
+//
+// Take the ID of a canvas that already exists and matters it to the TagCanvas that has been properly initialized.
+//
+// Português:
+//
+// Pega o ID de uma canvas que já existe e o importa para a TagCanvas que tenha sido devidamente inicializada.
+func (el *TagCanvas) Import(tagId string) (ref *TagCanvas) {
+	doc := js.Global().Get("document")
+	toImport := doc.Call("getElementById", tagId)
+	el.selfElement = toImport
+
+	el.context = el.selfElement.Call("getContext", "2d")
+	el.selfElement.Set("width", el.width)
+	el.selfElement.Set("height", el.height)
+
+	return el
+}
+
 // Reference
 //
 // English:
@@ -1751,6 +1772,11 @@ func (el *TagCanvas) FillRect(x, y, width, height int) (ref *TagCanvas) {
 //	    para renderizar o texto em outra cor/gradiente;
 //	  * A cor padrão do texto é preto.
 func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) {
+	if maxWidth == 0 {
+		el.context.Call("fillText", text, x, y)
+		return el
+	}
+
 	el.context.Call("fillText", text, x, y, maxWidth)
 	return el
 }

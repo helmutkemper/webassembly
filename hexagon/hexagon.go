@@ -178,13 +178,16 @@ var LayoutPointy = Orientation{
 //
 // This orientation is used when hexagons are arranged with their flat sides on the top and bottom.
 var LayoutFlat = Orientation{
-	F0: 3.0 / 2.0,          // horizontal scale factor for q
+	F0: 3.0 / 2.0, // horizontal scale factor for q
+	F1: 0.0,
 	F2: math.Sqrt(3) / 2.0, // vertical scale factor for q
 	F3: math.Sqrt(3),       // vertical scale factor for r
 
-	B0: 2.0 / 3.0,          // inverse horizontal factor for q
-	B2: -1.0 / 3.0,         // inverse horizontal factor for r
-	B3: math.Sqrt(3) / 3.0, // inverse vertical factor for r
+	B0:         2.0 / 3.0, // inverse horizontal factor for q
+	B1:         0.0,
+	B2:         -1.0 / 3.0,         // inverse horizontal factor for r
+	B3:         math.Sqrt(3) / 3.0, // inverse vertical factor for r
+	StartAngle: 0.0,
 }
 
 // HexAdd returns the result of adding two hex coordinates `a` and `b`.
@@ -434,7 +437,7 @@ func QDoubledToCube(h DoubledCoordinate) Hex {
 	q := h.Col
 	r := (h.Row - h.Col) / 2
 	s := -q - r
-	return Hex{q, r, s}
+	return Hex{Q: q, R: r, S: s}
 }
 
 // RDoubledFromCube converts a cube coordinate (Hex) to a row-based doubled coordinate (DoubledCoordinate).

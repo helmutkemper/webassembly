@@ -161,6 +161,22 @@ type TagImg struct {
 	rotateDelta float64
 }
 
+// Import
+//
+// English:
+//
+// Take the ID of an img that already exists and matters it to the TagImg that has been properly initialized.
+//
+// Português:
+//
+// Pega o ID de uma img que já existe e o importa para a TagImg que tenha sido devidamente inicializada.
+func (e *TagImg) Import(tagId string) (ref *TagImg) {
+	doc := js.Global().Get("document")
+	toImport := doc.Call("getElementById", tagId)
+	e.selfElement = toImport
+	return e
+}
+
 // Reference
 //
 // English:
@@ -1280,7 +1296,7 @@ func (e *TagImg) Sizes(sizes string) (ref *TagImg) {
 //	tratado como uma imagem candidata com um descritor de densidade de pixels 1x, a menos que uma
 //	imagem com esse descritor de densidade de pixels já esteja definida em srcset, ou a menos que
 //	srcset contenha descritores w.
-func (e *TagImg) Src(src string, waitLoad bool) (ref *TagImg) {
+func (e *TagImg) Src(src any, waitLoad bool) (ref *TagImg) {
 	e.selfElement.Set("src", src)
 
 	if waitLoad == true {

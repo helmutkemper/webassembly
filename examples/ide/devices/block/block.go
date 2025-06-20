@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/examples/ide/utils"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
@@ -66,6 +67,16 @@ type Block struct {
 	ornament ornament.Draw
 
 	onResizeFunc func(element js.Value, width, height int)
+
+	gridAdjust rulesStage.GridAdjust
+}
+
+func (e *Block) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
+	e.gridAdjust = gridAdjust
+}
+
+func (e *Block) adjustXYToGrid(x, y int) (cx, cy int) {
+	return e.gridAdjust.AdjustCenter(x, y)
 }
 
 // GetInitialized Returns if the instance is ready for use
@@ -212,6 +223,10 @@ func (e *Block) GetSelected() (selected bool) {
 
 // createBlock Prepare all divs and CSS
 func (e *Block) createBlock(x, y, width, height int) {
+
+	x, y = e.adjustXYToGrid(x, y)
+	width, height = e.adjustXYToGrid(width, height)
+
 	e.block = factoryBrowser.NewTagSvg().
 		Id(e.id).
 		//Class(e.classListName).
@@ -453,6 +468,10 @@ func (e *Block) initEvents() {
 	// Calculates the X position of the drag
 	dragX := func(element js.Value) {
 		dx := element.Get("screenX").Int() - startX
+		dy := element.Get("screenY").Int() - startY
+
+		dx, dy = e.adjustXYToGrid(dx, dy)
+
 		newLeft := e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
 		e.x = newLeft
 		e.block.X(newLeft)
@@ -463,7 +482,11 @@ func (e *Block) initEvents() {
 
 	// Calculates the Y position of the drag
 	dragY := func(element js.Value) {
+		dx := element.Get("screenX").Int() - startX
 		dy := element.Get("screenY").Int() - startY
+
+		dx, dy = e.adjustXYToGrid(dx, dy)
+
 		newTop := e.min(e.max(0, startTop+dy), e.ideStage.GetClientHeight()-e.block.GetOffsetHeight())
 		e.y = newTop
 		e.block.Y(newTop)
@@ -550,6 +573,9 @@ func (e *Block) initEvents() {
 
 	resizeHorizontal := func(element js.Value, name string) {
 		dx := element.Get("screenX").Int() - startX
+		dy := element.Get("screenY").Int() - startY
+
+		dx, dy = e.adjustXYToGrid(dx, dy)
 
 		newLeft := startLeft
 		newWidth := startWidth
@@ -603,7 +629,11 @@ func (e *Block) initEvents() {
 	}
 
 	resizeVertical := func(element js.Value, name string) {
+		dx := element.Get("screenX").Int() - startX
 		dy := element.Get("screenY").Int() - startY
+
+		dx, dy = e.adjustXYToGrid(dx, dy)
+
 		newTop := startTop
 		newHeight := startHeight
 

@@ -1,10 +1,14 @@
 package main
 
 import (
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/browser/stage"
 	"github.com/helmutkemper/webassembly/examples/ide/devices"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
+	"github.com/helmutkemper/webassembly/textUtil"
+	"github.com/helmutkemper/webassembly/windowUtils"
 	"log"
 	"syscall/js"
 )
@@ -115,10 +119,24 @@ var GlobalControlPanel = new(ComponentControlPanel)
 var mainStage *stage.Stage
 
 func main() {
-
 	var err error
 
+	windowUtils.InjectBodyNoMargin()
+	textUtil.InjectFontAwesomeCSS()
+
+	screenWidth, screenHeight := windowUtils.GetScreenSize()
+	mainSvg := factoryBrowser.NewTagSvg().
+		Import(rulesStage.KStageId).
+		X(0).
+		Y(0).
+		Width(screenWidth).
+		Height(screenHeight)
+
+	grid := new(rulesStage.Hexagon)
+	grid.Init(0, 0, 40)
+
 	stmLoop := new(devices.StatementLoop)
+	stmLoop.SetGridAdjust(grid)
 	stmLoop.SetPosition(50, 450)
 	_ = stmLoop.Init()
 	//url := stmLoop.ToPng()
@@ -139,6 +157,8 @@ func main() {
 	//document.Call("getElementById", "test").Get("style").Set("height", stmLoop.GetHeight())
 
 	//mainStage.Append(panel)
+
+	factoryBrowser.NewTagImg().Import("imgTest").Src(mainSvg.ToPng(), true)
 
 	done := make(chan struct{})
 	<-done

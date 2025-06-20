@@ -26,6 +26,13 @@ type StatementLoop struct {
 	id                    string
 	//connStop              *connection.Connection
 	debugMode bool
+
+	gridAdjust rulesStage.GridAdjust
+}
+
+func (e *StatementLoop) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
+	e.gridAdjust = gridAdjust
+	e.block.SetGridAdjust(gridAdjust)
 }
 
 func (e *StatementLoop) GetWidth() (width int) {
@@ -271,9 +278,14 @@ func (e *StatementLoop) Init() (err error) {
 	e.SetName("stmLoop")
 
 	e.defaultWidth = 400
-	e.defaultHeight = 300
+	e.defaultHeight = 320
+
+	e.defaultWidth, e.defaultHeight = e.gridAdjust.AdjustCenter(e.defaultWidth, e.defaultHeight)
+
 	e.horizontalMinimumSize = 200
 	e.verticalMinimumSize = 150
+
+	e.horizontalMinimumSize, e.verticalMinimumSize = e.gridAdjust.AdjustCenter(e.horizontalMinimumSize, e.verticalMinimumSize)
 
 	if e.block.GetWidth() == 0 {
 		e.block.SetWidth(e.defaultWidth)

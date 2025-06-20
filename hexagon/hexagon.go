@@ -105,6 +105,11 @@ type DoubledCoordinate struct {
 	Col, Row int // Column and row in the doubled coordinate system
 }
 
+// AxialCoordinate represents axial coordinates (q, r)
+type AxialCoordinate struct {
+	Q, R int
+}
+
 // Orientation defines the transformation matrices and angle offset
 // used to convert between hex coordinates (cube) and 2D pixel space.
 //
@@ -534,6 +539,477 @@ func AbsInt(x int) int {
 		return -x
 	}
 	return x
+}
+
+// DoubleWidthDistance calculates the distance between two hexes
+//
+// in a grid with double-width horizontal layout (even-q / odd-q)
+func DoubleWidthDistance(a, b OffsetCoordinate) int {
+	dcol := abs(a.Col - b.Col) // difference in columns
+	drow := abs(a.Row - b.Row) // difference in rows
+	return drow + max(0, (dcol-drow)/2)
+}
+
+// DoubleHeightDistance calculates the distance between two hexes
+//
+// in a grid with double-height vertical layout (even-r / odd-r)
+func DoubleHeightDistance(a, b OffsetCoordinate) int {
+	dcol := abs(a.Col - b.Col) // difference in columns
+	drow := abs(a.Row - b.Row) // difference in rows
+	return dcol + max(0, (drow-dcol)/2)
+}
+
+// OffsetDistance converts two offset hex coordinates to axial,
+// and returns the distance between them using axial distance formula.
+func OffsetDistance(a, b OffsetCoordinate) int {
+	ac := OffsetToAxial(a)
+	bc := OffsetToAxial(b)
+	return AxialDistance(ac, bc)
+}
+
+// OffsetToAxial converts offset coordinates to axial coordinates.
+// This example assumes "odd-r" layout (rows are offset).
+func OffsetToAxial(o OffsetCoordinate) AxialCoordinate {
+	col := o.Col
+	row := o.Row
+
+	q := col - (row-(row&1))/2
+	r := row
+
+	return AxialCoordinate{Q: q, R: r}
+}
+
+// Predefined axial direction vectors in clockwise order (starting from east)
+var axialDirectionVectors = []Hex{
+	{Q: +1, R: 0}, {Q: +1, R: -1}, {Q: 0, R: -1},
+	{Q: -1, R: 0}, {Q: -1, R: +1}, {Q: 0, R: +1},
+}
+
+// AxialDirection returns the unit vector for a given direction (0–5)
+func AxialDirection(direction int) Hex {
+	return axialDirectionVectors[direction]
+}
+
+// AxialAdd adds two axial coordinates (hex + vec)
+func AxialAdd(a, b Hex) Hex {
+	return Hex{
+		Q: a.Q + b.Q,
+		R: a.R + b.R,
+	}
+}
+
+// AxialNeighbor returns the neighbor of a hex in a given axial direction (0–5)
+func AxialNeighbor(hex Hex, direction int) Hex {
+	return AxialAdd(hex, AxialDirection(direction))
+}
+
+// Predefined cube direction vectors in clockwise order (starting from +q)
+var cubeDirectionVectors = []Cube{
+	{Q: +1, R: 0, S: -1},
+	{Q: +1, R: -1, S: 0},
+	{Q: 0, R: -1, S: +1},
+	{Q: -1, R: 0, S: +1},
+	{Q: -1, R: +1, S: 0},
+	{Q: 0, R: +1, S: -1},
+}
+
+// CubeDirection returns the unit vector for the given direction (0–5)
+func CubeDirection(direction int) Cube {
+	return cubeDirectionVectors[direction]
+}
+
+// CubeNeighbor returns the neighboring cube in the specified direction (0–5)
+func CubeNeighbor(cube Cube, direction int) Cube {
+	return CubeAdd(cube, CubeDirection(direction))
+}
+
+// abs returns the absolute value of an integer
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
+// AxialSubtract returns the vector difference between two axial coordinates
+func AxialSubtract(a, b AxialCoordinate) AxialCoordinate {
+	return AxialCoordinate{
+		Q: a.Q - b.Q,
+		R: a.R - b.R,
+	}
+}
+
+// AxialDistance returns the distance between two axial coordinates
+// using the standard axial distance formula
+func AxialDistance(a, b AxialCoordinate) int {
+	vec := AxialSubtract(a, b)
+
+	dq := abs(vec.Q)
+	dr := abs(vec.R)
+	ds := abs(vec.Q + vec.R) // since s = -q - r, so ds = abs(-dq - dr) = abs(q + r)
+
+	return (dq + dr + ds) / 2
+}
+
+// Cube represents cube coordinates for a hex (q, r, s) where q + r + s == 0
+type Cube Hex
+
+// CubeSubtract returns the vector difference between two cube coordinates
+func CubeSubtract(a, b Cube) Cube {
+	return Cube{
+		Q: a.Q - b.Q,
+		R: a.R - b.R,
+		S: a.S - b.S,
+	}
+}
+
+// CubeDistance returns the distance between two hexes in cube coordinates.
+// The distance is the maximum of the absolute differences along each axis.
+func CubeDistance(a, b Cube) int {
+	vec := CubeSubtract(a, b)
+
+	return maxCube(abs(vec.Q), abs(vec.R), abs(vec.S))
+
+	// Alternatively:
+	// return max(
+	//     abs(a.Q - b.Q),
+	//     abs(a.R - b.R),
+	//     abs(a.S - b.S),
+	// )
+}
+
+// Predefined cube diagonal directions (there are 6 diagonal directions)
+var cubeDiagonalVectors = []Cube{
+	{+2, -1, -1},
+	{+1, -2, +1},
+	{-1, -1, +2},
+	{-2, +1, +1},
+	{-1, +2, -1},
+	{+1, +1, -2},
+}
+
+// CubeAdd returns the result of adding two cube coordinates
+func CubeAdd(a, b Cube) Cube {
+	return Cube{
+		Q: a.Q + b.Q,
+		R: a.R + b.R,
+		S: a.S + b.S,
+	}
+}
+
+// CubeDiagonalNeighbor returns the cube coordinate in a diagonal direction
+//
+// direction must be in the range [0, 5]
+func CubeDiagonalNeighbor(cube Cube, direction int) (cume Cube, err error) {
+	if direction < 0 || direction >= len(cubeDiagonalVectors) {
+		return cube, errors.New("invalid cube direction")
+	}
+
+	return CubeAdd(cube, cubeDiagonalVectors[direction]), nil
+}
+
+// Predefined direction vectors for double-width layout
+var doubleWidthDirectionVectors = []DoubledCoordinate{
+	{+2, 0}, {+1, -1}, {-1, -1},
+	{-2, 0}, {-1, +1}, {+1, +1},
+}
+
+// Predefined direction vectors for double-height layout
+var doubleHeightDirectionVectors = []DoubledCoordinate{
+	{+1, +1}, {+1, -1}, {0, -2},
+	{-1, -1}, {-1, +1}, {0, +2},
+}
+
+// DoubleWidthAdd returns the result of adding two double-width hex coordinates
+func DoubleWidthAdd(a, b DoubledCoordinate) DoubledCoordinate {
+	return DoubledCoordinate{
+		Col: a.Col + b.Col,
+		Row: a.Row + b.Row,
+	}
+}
+
+// DoubleWidthNeighbor returns the neighbor of a double-width hex in a given direction
+// direction must be in [0..5]
+func DoubleWidthNeighbor(hex DoubledCoordinate, direction int) DoubledCoordinate {
+	vec := doubleWidthDirectionVectors[direction]
+	return DoubleWidthAdd(hex, vec)
+}
+
+// DoubleHeightAdd returns the result of adding two double-height hex coordinates
+func DoubleHeightAdd(a, b DoubledCoordinate) DoubledCoordinate {
+	return DoubledCoordinate{
+		Col: a.Col + b.Col,
+		Row: a.Row + b.Row,
+	}
+}
+
+// DoubleHeightNeighbor returns the neighbor of a double-height hex in a given direction
+// direction must be in [0..5]
+func DoubleHeightNeighbor(hex DoubledCoordinate, direction int) DoubledCoordinate {
+	vec := doubleHeightDirectionVectors[direction]
+	return DoubleHeightAdd(hex, vec)
+}
+
+// OddROffsetNeighbor OddR offset neighbor (odd-r layout: row parity affects direction)
+func OddROffsetNeighbor(hex OffsetCoordinate, direction int) OffsetCoordinate {
+	parity := hex.Row & 1
+	diff := oddRDirectionDifferences[parity][direction]
+	return OffsetCoordinate{
+		Col: hex.Col + diff[0],
+		Row: hex.Row + diff[1],
+	}
+}
+
+// EvenROffsetNeighbor EvenR offset neighbor (even-r layout: row parity affects direction)
+func EvenROffsetNeighbor(hex OffsetCoordinate, direction int) OffsetCoordinate {
+	parity := hex.Row & 1
+	diff := evenRDirectionDifferences[parity][direction]
+	return OffsetCoordinate{
+		Col: hex.Col + diff[0],
+		Row: hex.Row + diff[1],
+	}
+}
+
+// OddQOffsetNeighbor OddQ offset neighbor (odd-q layout: column parity affects direction)
+func OddQOffsetNeighbor(hex OffsetCoordinate, direction int) OffsetCoordinate {
+	parity := hex.Col & 1
+	diff := oddQDirectionDifferences[parity][direction]
+	return OffsetCoordinate{
+		Col: hex.Col + diff[0],
+		Row: hex.Row + diff[1],
+	}
+}
+
+// EvenQOffsetNeighbor EvenQ offset neighbor (even-q layout: column parity affects direction)
+func EvenQOffsetNeighbor(hex OffsetCoordinate, direction int) OffsetCoordinate {
+	parity := hex.Col & 1
+	diff := evenQDirectionDifferences[parity][direction]
+	return OffsetCoordinate{
+		Col: hex.Col + diff[0],
+		Row: hex.Row + diff[1],
+	}
+}
+
+// DoubleHeightToAxial Converts a double-height hex coordinate to an axial hex coordinate
+func DoubleHeightToAxial(hex DoubledCoordinate) Hex {
+	q := hex.Col
+	r := (hex.Row - hex.Col) / 2
+	return Hex{Q: q, R: r}
+}
+
+// AxialToDoubleHeight Converts an axial hex coordinate to a double-height hex coordinate
+func AxialToDoubleHeight(hex Hex) DoubledCoordinate {
+	col := hex.Q
+	row := 2*hex.R + hex.Q
+	return DoubledCoordinate{Col: col, Row: row}
+}
+
+// DoubleWidthToAxial Converts a double-width hex coordinate to an axial hex coordinate
+func DoubleWidthToAxial(hex DoubledCoordinate) Hex {
+	q := (hex.Col - hex.Row) / 2
+	r := hex.Row
+	return Hex{Q: q, R: r}
+}
+
+// AxialToDoubleWidth Converts an axial hex coordinate to a double-width hex coordinate
+func AxialToDoubleWidth(hex Hex) DoubledCoordinate {
+	col := 2*hex.Q + hex.R
+	row := hex.R
+	return DoubledCoordinate{Col: col, Row: row}
+}
+
+var oddRDirectionDifferences = [2][6][2]int{
+	// even rows
+	{
+		{+1, 0}, {0, -1}, {-1, -1},
+		{-1, 0}, {-1, +1}, {0, +1},
+	},
+	// odd rows
+	{
+		{+1, 0}, {+1, -1}, {0, -1},
+		{-1, 0}, {0, +1}, {+1, +1},
+	},
+}
+
+var evenRDirectionDifferences = [2][6][2]int{
+	// even rows
+	{
+		{+1, 0}, {+1, -1}, {0, -1},
+		{-1, 0}, {0, +1}, {+1, +1},
+	},
+	// odd rows
+	{
+		{+1, 0}, {0, -1}, {-1, -1},
+		{-1, 0}, {-1, +1}, {0, +1},
+	},
+}
+
+var oddQDirectionDifferences = [2][6][2]int{
+	// even cols
+	{
+		{+1, 0}, {+1, -1}, {0, -1},
+		{-1, -1}, {-1, 0}, {0, +1},
+	},
+	// odd cols
+	{
+		{+1, +1}, {+1, 0}, {0, -1},
+		{-1, 0}, {-1, +1}, {0, +1},
+	},
+}
+
+var evenQDirectionDifferences = [2][6][2]int{
+	// even cols
+	{
+		{+1, +1}, {+1, 0}, {0, -1},
+		{-1, 0}, {-1, +1}, {0, +1},
+	},
+	// odd cols
+	{
+		{+1, 0}, {+1, -1}, {0, -1},
+		{-1, -1}, {-1, 0}, {0, +1},
+	},
+}
+
+// maxCube returns the largest of three integers
+func maxCube(a, b, c int) int {
+	if a > b {
+		if a > c {
+			return a
+		}
+		return c
+	}
+	if b > c {
+		return b
+	}
+	return c
+}
+
+// max returns the larger of two integers
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func AxialToOddR(hex Hex) OffsetCoordinate {
+	col := hex.Q + (hex.R-(hex.R&1))/2
+	row := hex.R
+	return OffsetCoordinate{Col: col, Row: row}
+}
+
+func OddRToAxial(offset OffsetCoordinate) Hex {
+	q := offset.Col - (offset.Row-(offset.Row&1))/2
+	r := offset.Row
+	return Hex{Q: q, R: r}
+}
+
+func AxialToEvenR(hex Hex) OffsetCoordinate {
+	col := hex.Q + (hex.R+(hex.R&1))/2
+	row := hex.R
+	return OffsetCoordinate{Col: col, Row: row}
+}
+
+func EvenRToAxial(offset OffsetCoordinate) Hex {
+	q := offset.Col - (offset.Row+(offset.Row&1))/2
+	r := offset.Row
+	return Hex{Q: q, R: r}
+}
+
+func AxialToOddQ(hex Hex) OffsetCoordinate {
+	col := hex.Q
+	row := hex.R + (hex.Q-(hex.Q&1))/2
+	return OffsetCoordinate{Col: col, Row: row}
+}
+
+func OddQToAxial(offset OffsetCoordinate) Hex {
+	q := offset.Col
+	r := offset.Row - (offset.Col-(offset.Col&1))/2
+	return Hex{Q: q, R: r}
+}
+
+func AxialToEvenQ(hex Hex) OffsetCoordinate {
+	col := hex.Q
+	row := hex.R + (hex.Q+(hex.Q&1))/2
+	return OffsetCoordinate{Col: col, Row: row}
+}
+
+func EvenQToAxial(offset OffsetCoordinate) Hex {
+	q := offset.Col
+	r := offset.Row - (offset.Col+(offset.Col&1))/2
+	return Hex{Q: q, R: r}
+}
+
+func CubeToOddR(cube Cube) OffsetCoordinate {
+	col := cube.Q + (cube.R-(cube.R&1))/2
+	row := cube.R
+	return OffsetCoordinate{Col: col, Row: row}
+}
+
+func OddRToCube(offset OffsetCoordinate) Cube {
+	q := offset.Col - (offset.Row-(offset.Row&1))/2
+	r := offset.Row
+	s := -q - r
+	return Cube{Q: q, R: r, S: s}
+}
+
+func CubeToEvenR(cube Cube) OffsetCoordinate {
+	col := cube.Q + (cube.R+(cube.R&1))/2
+	row := cube.R
+	return OffsetCoordinate{Col: col, Row: row}
+}
+
+func EvenRToCube(offset OffsetCoordinate) Cube {
+	q := offset.Col - (offset.Row+(offset.Row&1))/2
+	r := offset.Row
+	s := -q - r
+	return Cube{Q: q, R: r, S: s}
+}
+
+func CubeToOddQ(cube Cube) OffsetCoordinate {
+	col := cube.Q
+	row := cube.R + (cube.Q-(cube.Q&1))/2
+	return OffsetCoordinate{Col: col, Row: row}
+}
+
+func OddQToCube(offset OffsetCoordinate) Cube {
+	q := offset.Col
+	r := offset.Row - (offset.Col-(offset.Col&1))/2
+	s := -q - r
+	return Cube{Q: q, R: r, S: s}
+}
+
+func CubeToEvenQ(cube Cube) OffsetCoordinate {
+	col := cube.Q
+	row := cube.R + (cube.Q+(cube.Q&1))/2
+	return OffsetCoordinate{Col: col, Row: row}
+}
+
+func EvenQToCube(offset OffsetCoordinate) Cube {
+	q := offset.Col
+	r := offset.Row - (offset.Col+(offset.Col&1))/2
+	s := -q - r
+	return Cube{Q: q, R: r, S: s}
+}
+
+// CubeToAxial converts a Cube coordinate to an Axial (Hex) coordinate
+func CubeToAxial(cube Cube) Hex {
+	return Hex{
+		Q: cube.Q,
+		R: cube.R,
+	}
+}
+
+// AxialToCube converts an Axial (Hex) coordinate to a Cube coordinate
+func AxialToCube(hex Hex) Cube {
+	q := hex.Q
+	r := hex.R
+	s := -q - r
+	return Cube{
+		Q: q,
+		R: r,
+		S: s,
+	}
 }
 
 //// Teste simples

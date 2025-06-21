@@ -2,7 +2,7 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/mathUtil"
+	"github.com/helmutkemper/webassembly/utilsMath"
 )
 
 // NewTagSvgFeTurbulence
@@ -20,7 +20,7 @@ import (
 func NewTagSvgFeTurbulence() (ref *html.TagSvgFeTurbulence) {
 	ref = &html.TagSvgFeTurbulence{}
 	ref.Init()
-	ref.Id(mathUtil.GetUID())
+	ref.Id(utilsMath.GetUID())
 
 	return ref
 }

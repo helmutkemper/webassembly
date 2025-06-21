@@ -2,8 +2,8 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/mathUtil"
 	"github.com/helmutkemper/webassembly/platform/globalEngine"
+	"github.com/helmutkemper/webassembly/utilsMath"
 )
 
 // NewTagSvgAnimateMotion
@@ -28,7 +28,7 @@ func NewTagSvgAnimateMotion() (ref *html.TagSvgAnimateMotion) {
 	ref = &html.TagSvgAnimateMotion{}
 	ref.Engine(globalEngine.Engine) //todo: fazer em todos
 	ref.Init()
-	ref.Id(mathUtil.GetUID())
+	ref.Id(utilsMath.GetUID())
 
 	return ref
 }

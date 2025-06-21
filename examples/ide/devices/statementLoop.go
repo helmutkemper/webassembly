@@ -30,6 +30,14 @@ type StatementLoop struct {
 	gridAdjust rulesStage.GridAdjust
 }
 
+func (e *StatementLoop) SetMainSvg(svg *html.TagSvg) {
+	e.block.SetMainSvg(svg)
+}
+
+func (e *StatementLoop) SetResizeButton(resizeButton block.ResizeButton) {
+	e.block.SetResizeButton(resizeButton)
+}
+
 func (e *StatementLoop) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
 	e.gridAdjust = gridAdjust
 	e.block.SetGridAdjust(gridAdjust)
@@ -377,6 +385,8 @@ func (e *StatementLoop) Init() (err error) {
 	e.menu.SetTitle("Loop")
 	e.menu.SetContentFunc(e.getMenu)
 	e.menu.Init()
+
+	e.block.SetResize(true)
 
 	return nil
 }

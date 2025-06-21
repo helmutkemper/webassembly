@@ -1,4 +1,4 @@
-package drawUtils
+package utilsDraw
 
 import "math"
 

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/drawUtils"
 	"github.com/helmutkemper/webassembly/examples/ide/easterEgg"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
+	"github.com/helmutkemper/webassembly/utilsDraw"
 	"image/color"
 	"time"
 )
@@ -132,25 +132,8 @@ func (e *WarningMarkExclamation) Update(_, _, width, height int) (err error) {
 	marginInternal := 0
 	r := e.min(width-marginInternal-2.0*e.warningMarkMargin, height-marginInternal-2.0*e.warningMarkMargin) / 2.0
 	rotation := 0.0 // -math.Pi / 2;
-	pointsExternal := drawUtils.Polygon(6, r, width/2, height/2, rotation)
-	pointsInternal := drawUtils.Polygon(6, r-5, width/2, height/2, rotation)
-
-	hexagonExternalPath := []string{
-		fmt.Sprintf("M %v %v", pointsExternal[0][0], pointsExternal[0][1]), // Move to the first point
-	}
-	for i := 1; i < len(pointsExternal); i++ {
-		hexagonExternalPath = append(hexagonExternalPath, fmt.Sprintf("L %v %v", pointsExternal[i][0], pointsExternal[i][1])) // Draw lines to remaining points
-	}
-	hexagonExternalPath = append(hexagonExternalPath, "z") // Close the path
-
-	// Draw the hexagon internal
-	hexagonInternalPath := []string{
-		fmt.Sprintf("M %v %v", pointsInternal[0][0], pointsInternal[0][1]), // Move to the first point
-	}
-	for i := 1; i < len(pointsInternal); i++ {
-		hexagonInternalPath = append(hexagonInternalPath, fmt.Sprintf("L %v %v", pointsInternal[i][0], pointsInternal[i][1])) // Draw lines to remaining points
-	}
-	hexagonInternalPath = append(hexagonInternalPath, "z") // Close the path
+	hexagonExternalPath := utilsDraw.PolygonPath(6, r, width/2, height/2, rotation)
+	hexagonInternalPath := utilsDraw.PolygonPath(6, r-5, width/2, height/2, rotation)
 
 	e.hexagonRed.D(append(hexagonExternalPath, hexagonInternalPath...))
 	e.hexagonWhite.D(hexagonInternalPath)
@@ -164,7 +147,7 @@ func (e *WarningMarkExclamation) Update(_, _, width, height int) (err error) {
 		{190, 260}, {190, 280}, {210, 280}, {210, 260}, {190, 260},
 	}
 	// The points are calculated in a box whit 400 x 400 and converted into vector
-	pl := drawUtils.PointsInTheBox(originalPoints, r, width, height, 0)
+	pl := utilsDraw.PointsInTheBox(originalPoints, r, width, height, 0)
 
 	exclamationMark := []string{
 		fmt.Sprintf("M %v %v", pl[0][0], pl[0][1]), // M 185 120

@@ -201,6 +201,22 @@ type TagSvgG struct {
 	fnFocusOut *js.Func
 }
 
+// Import
+//
+// English:
+//
+// Take the ID of a div that already exists and matters it to the TagSvgG that has been properly initialized.
+//
+// Português:
+//
+// Pega o ID de uma div que já existe e o importa para a TagSvgG que tenha sido devidamente inicializada.
+func (e *TagSvgG) Import(tagId string) (ref *TagSvgG) {
+	doc := js.Global().Get("document")
+	toImport := doc.Call("getElementById", tagId)
+	e.selfElement = toImport
+	return e
+}
+
 // Init
 //
 // English:

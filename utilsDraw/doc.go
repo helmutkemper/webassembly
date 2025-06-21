@@ -1,2 +1,2 @@
 // Package drawUtils is a utility package that provides methods for drawing and manipulating shapes
-package drawUtils
+package utilsDraw

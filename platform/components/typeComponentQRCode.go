@@ -2,8 +2,8 @@ package components
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/mathUtil"
 	"github.com/helmutkemper/webassembly/qrcode"
+	"github.com/helmutkemper/webassembly/utilsMath"
 	"image/color"
 )
 
@@ -121,7 +121,7 @@ func (e *QRCode) SetBackground(value any) (err error) {
 	case color.Color:
 		e.__background = converted
 	case string:
-		e.__background, err = mathUtil.HexToColor(converted)
+		e.__background, err = utilsMath.HexToColor(converted)
 		if err != nil {
 			e.__background = color.White
 		}
@@ -134,7 +134,7 @@ func (e *QRCode) SetColor(value any) (err error) {
 	case color.Color:
 		e.__color = converted
 	case string:
-		e.__color, err = mathUtil.HexToColor(converted)
+		e.__color, err = utilsMath.HexToColor(converted)
 		if err != nil {
 			e.__color = color.Black
 		}

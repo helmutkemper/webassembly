@@ -95,7 +95,7 @@ func (e *MorseCode) FlashMarkErrorMsg(svg *html.TagSvg) {
 		copy(localViewingStandard, viewingStandard)
 
 		svg.AddStyle("visibility", "visible")
-		time.Sleep(1 * time.Minute)
+		time.Sleep(10 * time.Minute)
 
 		for {
 			select {
@@ -111,7 +111,7 @@ func (e *MorseCode) FlashMarkErrorMsg(svg *html.TagSvg) {
 					copy(localViewingStandard, viewingStandard)
 
 					svg.AddStyle("visibility", "visible")
-					time.Sleep(1 * time.Minute)
+					time.Sleep(10 * time.Minute)
 					continue
 				}
 
@@ -140,16 +140,16 @@ func (e *MorseCode) Init() {
 	// splitter, 7x dit
 	e.splitter = []bool{false, false, false, false, false, false, false, false, false, false, false, false, false, false}
 
-	e.period = slices.Concat(e.dit, e.dah, e.dit, e.dah, e.dit, e.dah)           //.
-	e.comma = slices.Concat(e.dah, e.dah, e.dit, e.dit, e.dah, e.dah)            //,
-	e.questionMark = slices.Concat(e.dit, e.dit, e.dah, e.dah, e.dit, e.dit)     //?
-	e.colon = slices.Concat(e.dah, e.dah, e.dah, e.dit, e.dit, e.dit)            //:
-	e.semiColon = slices.Concat(e.dah, e.dit, e.dah, e.dit, e.dah, e.dit)        //;
-	e.dash = slices.Concat(e.dah, e.dit, e.dit, e.dit, e.dit, e.dah)             //-
-	e.apostrophe = slices.Concat(e.dit, e.dah, e.dah, e.dah, e.dah, e.dit)       //'
+	e.period = slices.Concat(e.dit, e.dah, e.dit, e.dah, e.dit, e.dah)           // .
+	e.comma = slices.Concat(e.dah, e.dah, e.dit, e.dit, e.dah, e.dah)            // ,
+	e.questionMark = slices.Concat(e.dit, e.dit, e.dah, e.dah, e.dit, e.dit)     // ?
+	e.colon = slices.Concat(e.dah, e.dah, e.dah, e.dit, e.dit, e.dit)            // :
+	e.semiColon = slices.Concat(e.dah, e.dit, e.dah, e.dit, e.dah, e.dit)        // ;
+	e.dash = slices.Concat(e.dah, e.dit, e.dit, e.dit, e.dit, e.dah)             // -
+	e.apostrophe = slices.Concat(e.dit, e.dah, e.dah, e.dah, e.dah, e.dit)       // '
 	e.slash = slices.Concat(e.dah, e.dit, e.dit, e.dah, e.dit)                   // /
-	e.quotationMark = slices.Concat(e.dit, e.dah, e.dit, e.dit, e.dah, e.dit)    //"
-	e.exclamationPoint = slices.Concat(e.dah, e.dit, e.dah, e.dit, e.dah, e.dah) //!
+	e.quotationMark = slices.Concat(e.dit, e.dah, e.dit, e.dit, e.dah, e.dit)    // "
+	e.exclamationPoint = slices.Concat(e.dah, e.dit, e.dah, e.dit, e.dah, e.dah) // !
 
 	e.a = slices.Concat(e.dit, e.dah)
 	e.b = slices.Concat(e.dah, e.dit, e.dit, e.dit)

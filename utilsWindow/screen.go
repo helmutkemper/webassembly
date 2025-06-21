@@ -1,4 +1,4 @@
-package windowUtils
+package utilsWindow
 
 import "syscall/js"
 

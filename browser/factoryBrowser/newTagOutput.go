@@ -2,7 +2,7 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/mathUtil"
+	"github.com/helmutkemper/webassembly/utilsMath"
 )
 
 // NewTagOutput
@@ -19,7 +19,7 @@ import (
 func NewTagOutput() (ref *html.TagOutput) {
 	ref = &html.TagOutput{}
 	ref.CreateElement(html.KTagMeter)
-	ref.Id(mathUtil.GetUID())
+	ref.Id(utilsMath.GetUID())
 
 	return ref
 }

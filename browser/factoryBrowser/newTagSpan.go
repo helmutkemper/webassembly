@@ -2,7 +2,7 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/mathUtil"
+	"github.com/helmutkemper/webassembly/utilsMath"
 )
 
 // NewTagSpan
@@ -21,7 +21,7 @@ import (
 func NewTagSpan() (ref *html.TagSpan) {
 	ref = new(html.TagSpan)
 	ref.Init()
-	ref.Id(mathUtil.GetUID())
+	ref.Id(utilsMath.GetUID())
 
 	return ref
 }
@@ -31,7 +31,7 @@ func NewTagSpanWithDelta(deltaX, deltaY int) (ref *html.TagSpan) {
 	ref.Init().
 		SetDeltaX(deltaX).
 		SetDeltaY(deltaY).
-		Id(mathUtil.GetUID())
+		Id(utilsMath.GetUID())
 
 	return ref
 }

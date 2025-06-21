@@ -2,7 +2,7 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/mathUtil"
+	"github.com/helmutkemper/webassembly/utilsMath"
 )
 
 // NewTagSvgDefs
@@ -29,7 +29,7 @@ import (
 func NewTagSvgDefs() (ref *html.TagSvgDefs) {
 	ref = &html.TagSvgDefs{}
 	ref.Init()
-	ref.Id(mathUtil.GetUID())
+	ref.Id(utilsMath.GetUID())
 
 	return ref
 }

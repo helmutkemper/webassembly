@@ -10,7 +10,6 @@ import (
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"image/color"
-	"strings"
 	"syscall/js"
 )
 
@@ -26,10 +25,7 @@ type Block struct {
 
 	initialized bool
 
-	resizerWidth    int
-	resizerHeight   int
-	resizerDistance int
-	resizerRadius   int
+	resizerRadius int
 
 	blockMinimumWidth  int
 	blockMinimumHeight int
@@ -51,24 +47,35 @@ type Block struct {
 
 	ideStage *html.TagSvg
 	block    *html.TagSvg
+	main     *html.TagSvg
 
-	resizerTopLeft     *html.TagSvgRect
-	resizerTopRight    *html.TagSvgRect
-	resizerBottomLeft  *html.TagSvgRect
-	resizerBottomRight *html.TagSvgRect
+	resizeButton ResizeButton
 
-	resizerTopMiddle    *html.TagSvgRect
-	resizerBottomMiddle *html.TagSvgRect
-	resizerLeftMiddle   *html.TagSvgRect
-	resizerRightMiddle  *html.TagSvgRect
+	resizerTopLeft     ResizeButton
+	resizerTopRight    ResizeButton
+	resizerBottomLeft  ResizeButton
+	resizerBottomRight ResizeButton
+
+	resizerTopMiddle    ResizeButton
+	resizerBottomMiddle ResizeButton
+	resizerLeftMiddle   ResizeButton
+	resizerRightMiddle  ResizeButton
 
 	selectDiv *html.TagSvgRect
 
 	ornament ornament.Draw
 
-	onResizeFunc func(element js.Value, width, height int)
+	onResizeFunc func(args []js.Value, width, height int)
 
 	gridAdjust rulesStage.GridAdjust
+}
+
+func (e *Block) SetMainSvg(svg *html.TagSvg) {
+	e.main = svg
+}
+
+func (e *Block) SetResizeButton(resizeButton ResizeButton) {
+	e.resizeButton = resizeButton
 }
 
 func (e *Block) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
@@ -229,9 +236,6 @@ func (e *Block) createBlock(x, y, width, height int) {
 
 	e.block = factoryBrowser.NewTagSvg().
 		Id(e.id).
-		//Class(e.classListName).
-		//AddStyle("position", "absolute").
-		//AddStyle("touchAction", "none").
 		X(x).
 		Y(y).
 		Width(width).
@@ -245,97 +249,66 @@ func (e *Block) createBlock(x, y, width, height int) {
 		Height(height).
 		Fill("none").Stroke("red").
 		StrokeDasharray([]int{4}).
-		StrokeWidth(1).
-		AddStyle("display", "none")
+		StrokeWidth(1)
 	e.ideStage.Append(e.selectDiv)
 
-	e.resizerTopLeft = factoryBrowser.NewTagSvgRect().
-		DataKey("name", "top-left").
-		X(x + e.resizerDistance).
-		Y(y + e.resizerDistance).
-		Width(e.resizerWidth).
-		Height(e.resizerHeight).
-		Fill(e.resizerColor).
-		Cursor("nwse-resize")
-	e.ideStage.Append(e.resizerTopLeft)
+	e.resizerTopLeft = e.resizeButton.GetNew()
+	e.resizerTopLeft.SetName("top-left")
+	e.resizerTopLeft.SetCursor("nwse-resize")
+	e.resizerTopLeft.SetCX(x)
+	e.resizerTopLeft.SetCY(y)
+	e.ideStage.Append(e.resizerTopLeft.GetSvg())
 
-	e.resizerTopRight = factoryBrowser.NewTagSvgRect().
-		DataKey("name", "top-right").
-		X(x + width + e.resizerDistance).
-		Y(y + e.resizerDistance).
-		Width(e.resizerWidth).
-		Height(e.resizerHeight).
-		Fill(e.resizerColor).
-		Cursor("nesw-resize")
-	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
-	e.ideStage.Append(e.resizerTopRight)
+	e.resizerTopRight = e.resizeButton.GetNew()
+	e.resizerTopRight.SetName("top-right")
+	e.resizerTopRight.SetCursor("nesw-resize")
+	e.resizerTopRight.SetCX(x + width)
+	e.resizerTopRight.SetCY(y)
+	e.ideStage.Append(e.resizerTopRight.GetSvg())
 
-	e.resizerBottomLeft = factoryBrowser.NewTagSvgRect().
-		DataKey("name", "bottom-left").
-		X(x + e.resizerDistance).
-		Y(y + height + e.resizerDistance).
-		Width(e.resizerWidth).
-		Height(e.resizerHeight).
-		Fill(e.resizerColor).
-		Cursor("nesw-resize")
-	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
-	e.ideStage.Append(e.resizerBottomLeft)
+	e.resizerBottomLeft = e.resizeButton.GetNew()
+	e.resizerBottomLeft.SetName("bottom-left")
+	e.resizerBottomLeft.SetCursor("nesw-resize")
+	e.resizerBottomLeft.SetCX(x)
+	e.resizerBottomLeft.SetCY(y + height)
+	e.ideStage.Append(e.resizerBottomLeft.GetSvg())
 
-	e.resizerBottomRight = factoryBrowser.NewTagSvgRect().
-		DataKey("name", "bottom-right").
-		X(x + width + e.resizerDistance).
-		Y(y + height + e.resizerDistance).
-		Width(e.resizerWidth).
-		Height(e.resizerHeight).
-		Fill(e.resizerColor).
-		Cursor("nwse-resize")
-	//AddStyle("position", "absolute").
-	//AddStyle("background-color", e.resizerColor).
-	//AddStyle("border-radius", fmt.Sprintf("%dpx", e.resizerRadius)).
-	//AddStyle("cursor", "nwse-resize")
-	e.ideStage.Append(e.resizerBottomRight)
+	e.resizerBottomRight = e.resizeButton.GetNew()
+	e.resizerBottomRight.SetName("bottom-right")
+	e.resizerBottomRight.SetCursor("nwse-resize")
+	e.resizerBottomRight.SetCX(x + width)
+	e.resizerBottomRight.SetCY(y + height)
+	e.ideStage.Append(e.resizerBottomRight.GetSvg())
 
 	//----------------------------------------------------
 
-	e.resizerTopMiddle = factoryBrowser.NewTagSvgRect().
-		DataKey("name", "top-middle").
-		X(x + width/2 + e.resizerDistance).
-		Y(y + e.resizerDistance).
-		Width(e.resizerWidth).
-		Height(e.resizerHeight).
-		Fill(e.resizerColor).
-		Cursor("ns-resize")
-	e.ideStage.Append(e.resizerTopMiddle)
+	e.resizerTopMiddle = e.resizeButton.GetNew()
+	e.resizerTopMiddle.SetName("top-middle")
+	e.resizerTopMiddle.SetCursor("ns-resize")
+	e.resizerTopMiddle.SetCX(x + width/2)
+	e.resizerTopMiddle.SetCY(y)
+	e.ideStage.Append(e.resizerTopMiddle.GetSvg())
 
-	e.resizerBottomMiddle = factoryBrowser.NewTagSvgRect().
-		DataKey("name", "bottom-middle").
-		X(x + width/2 + e.resizerDistance).
-		Y(y + height + e.resizerDistance).
-		Width(e.resizerWidth).
-		Height(e.resizerHeight).
-		Fill(e.resizerColor).
-		Cursor("ns-resize")
-	e.ideStage.Append(e.resizerBottomMiddle)
+	e.resizerBottomMiddle = e.resizeButton.GetNew()
+	e.resizerBottomMiddle.SetName("bottom-middle")
+	e.resizerBottomMiddle.SetCursor("ns-resize")
+	e.resizerBottomMiddle.SetCX(x + width/2)
+	e.resizerBottomMiddle.SetCY(y + height)
+	e.ideStage.Append(e.resizerBottomMiddle.GetSvg())
 
-	e.resizerLeftMiddle = factoryBrowser.NewTagSvgRect().
-		DataKey("name", "left-middle").
-		X(x + e.resizerDistance).
-		Y(y + height/2 + e.resizerDistance).
-		Width(e.resizerWidth).
-		Height(e.resizerHeight).
-		Fill(e.resizerColor).
-		Cursor("ew-resize")
-	e.ideStage.Append(e.resizerLeftMiddle)
+	e.resizerLeftMiddle = e.resizeButton.GetNew()
+	e.resizerLeftMiddle.SetName("left-middle")
+	e.resizerLeftMiddle.SetCursor("ew-resize")
+	e.resizerLeftMiddle.SetCX(x)
+	e.resizerLeftMiddle.SetCY(y + height/2)
+	e.ideStage.Append(e.resizerLeftMiddle.GetSvg())
 
-	e.resizerRightMiddle = factoryBrowser.NewTagSvgRect().
-		DataKey("name", "right-middle").
-		X(x + width + e.resizerDistance).
-		Y(y + height/2 + e.resizerDistance).
-		Width(e.resizerWidth).
-		Height(e.resizerHeight).
-		Fill(e.resizerColor).
-		Cursor("ew-resize")
-	e.ideStage.Append(e.resizerRightMiddle)
+	e.resizerRightMiddle = e.resizeButton.GetNew()
+	e.resizerRightMiddle.SetName("right-middle")
+	e.resizerRightMiddle.SetCursor("ew-resize")
+	e.resizerRightMiddle.SetCX(x + width)
+	e.resizerRightMiddle.SetCY(y + height/2)
+	e.ideStage.Append(e.resizerRightMiddle.GetSvg())
 }
 
 // dragCursorChange Change the cursor when the device is being dragged
@@ -397,9 +370,6 @@ func (e *Block) Init() (err error) {
 
 	e.autoId = utils.GetRandomId()
 
-	e.resizerWidth = 10
-	e.resizerHeight = 10
-	e.resizerDistance = -5
 	e.resizerRadius = 2
 
 	e.classListName = "block"
@@ -414,11 +384,6 @@ func (e *Block) Init() (err error) {
 	e.initEvents()
 
 	e.initialized = true
-
-	e.block.X(e.x)
-	e.block.Y(e.y)
-	e.block.Width(e.width)
-	e.block.Height(e.height)
 
 	if e.ornament != nil {
 		svg := e.ornament.GetSvg()
@@ -441,58 +406,66 @@ func (e *Block) initEvents() {
 	// add / remove event listener requires pointers, so the variable should be initialized in this way
 	var drag, stopDrag, resizeMouseMove, stopResize js.Func
 
-	moveResizersX := func(x, width int) {
-		e.resizerTopLeft.X(x + e.resizerDistance)
-		e.resizerTopRight.X(x + width + e.resizerDistance)
-		e.resizerBottomLeft.X(x + e.resizerDistance)
-		e.resizerBottomRight.X(x + width + e.resizerDistance)
+	moveResizersX := func() {
+		e.resizerTopLeft.SetCX(e.x)
+		e.resizerTopRight.SetCX(e.x + e.width)
+		e.resizerBottomLeft.SetCX(e.x)
+		e.resizerBottomRight.SetCX(e.x + e.width)
 
-		e.resizerTopMiddle.X(x + width/2 + e.resizerDistance)
-		e.resizerBottomMiddle.X(x + width/2 + e.resizerDistance)
-		e.resizerLeftMiddle.X(x + e.resizerDistance)
-		e.resizerRightMiddle.X(x + width + e.resizerDistance)
+		e.resizerTopMiddle.SetCX(e.x + e.width/2)
+		e.resizerBottomMiddle.SetCX(e.x + e.width/2)
+		e.resizerLeftMiddle.SetCX(e.x)
+		e.resizerRightMiddle.SetCX(e.x + e.width)
 	}
 
-	moveResizersY := func(y, height int) {
-		e.resizerTopLeft.Y(y + e.resizerDistance)
-		e.resizerTopRight.Y(y + e.resizerDistance)
-		e.resizerBottomLeft.Y(y + height + e.resizerDistance)
-		e.resizerBottomRight.Y(y + height + e.resizerDistance)
+	moveResizersY := func() {
+		e.resizerTopLeft.SetCY(e.y)
+		e.resizerTopRight.SetCY(e.y)
+		e.resizerBottomLeft.SetCY(e.y + e.height)
+		e.resizerBottomRight.SetCY(e.y + e.height)
 
-		e.resizerTopMiddle.Y(y + e.resizerDistance)
-		e.resizerBottomMiddle.Y(y + height + e.resizerDistance)
-		e.resizerLeftMiddle.Y(y + height/2 + e.resizerDistance)
-		e.resizerRightMiddle.Y(y + height/2 + e.resizerDistance)
+		e.resizerTopMiddle.SetCY(e.y)
+		e.resizerBottomMiddle.SetCY(e.y + e.height)
+		e.resizerLeftMiddle.SetCY(e.y + e.height/2)
+		e.resizerRightMiddle.SetCY(e.y + e.height/2)
 	}
 
 	// Calculates the X position of the drag
-	dragX := func(element js.Value) {
-		dx := element.Get("screenX").Int() - startX
-		dy := element.Get("screenY").Int() - startY
+	dragX := func(args []js.Value) (newLeft int) {
+
+		dx, dy := e.block.GetPointerPosition(args, e.main)
+
+		dx -= startX
+		dy -= startY
 
 		dx, dy = e.adjustXYToGrid(dx, dy)
 
-		newLeft := e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
+		newLeft = e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
 		e.x = newLeft
 		e.block.X(newLeft)
 		e.selectDiv.X(newLeft)
 
-		moveResizersX(newLeft, e.width)
+		moveResizersX()
+		return
 	}
 
 	// Calculates the Y position of the drag
-	dragY := func(element js.Value) {
-		dx := element.Get("screenX").Int() - startX
-		dy := element.Get("screenY").Int() - startY
+	dragY := func(args []js.Value) (newTop int) {
+
+		dx, dy := e.block.GetPointerPosition(args, e.main)
+
+		dx -= startX
+		dy -= startY
 
 		dx, dy = e.adjustXYToGrid(dx, dy)
 
-		newTop := e.min(e.max(0, startTop+dy), e.ideStage.GetClientHeight()-e.block.GetOffsetHeight())
+		newTop = e.min(e.max(0, startTop+dy), e.ideStage.GetClientHeight()-e.block.GetOffsetHeight())
 		e.y = newTop
 		e.block.Y(newTop)
 		e.selectDiv.Y(newTop)
 
-		moveResizersY(newTop, e.height)
+		moveResizersY()
+		return
 	}
 
 	// Joins the calculations of X and Y of the drag
@@ -500,65 +473,59 @@ func (e *Block) initEvents() {
 		if !isDragging {
 			return nil
 		}
-		element := args[0]
-
-		touch := element.Get("changedTouches")
-		if !touch.IsUndefined() {
-			element = touch.Index(0)
-		}
 
 		e.block.AddStyle("cursor", "grabbing")
 
-		dragX(element)
-		dragY(element)
+		dragX(args)
+		dragY(args)
 
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 		return nil
 	})
 
+	var pFunc func()
 	// Removes events when the drag ends
 	stopDrag = js.FuncOf(func(this js.Value, args []js.Value) interface{} { // feito
+		pFunc()
+		return nil
+	})
+	pFunc = func() {
 		isDragging = false
 		e.block.AddStyle("cursor", "grab")
 
 		js.Global().Call("removeEventListener", "mousemove", drag)
-		js.Global().Call("removeEventListener", "touchmove", drag)
+		js.Global().Call("removeEventListener", "touchmove", drag, false)
 
 		js.Global().Call("removeEventListener", "mouseup", stopDrag)
-		js.Global().Call("removeEventListener", "touchend", stopDrag)
-		return nil
-	})
+		js.Global().Call("removeEventListener", "touchend", stopDrag, false)
+		js.Global().Call("removeEventListener", "touchcancel", stopDrag, false)
+	}
 
 	// Adds the device drag event when the mouse pointer is pressed
 	dragFunc := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		element := args[0]
-		if !e.dragEnabled || strings.Contains(element.Get("classList").String(), "resizer") {
+		if !e.dragEnabled {
 			return nil
 		}
 
-		touch := element.Get("changedTouches")
-		if !touch.IsUndefined() {
-			element = touch.Index(0)
-		}
+		startX, startY = e.block.GetPointerPosition(args, e.main)
 
 		isDragging = true
-		startX = element.Get("screenX").Int()
-		startY = element.Get("screenY").Int()
 		startLeft = e.block.GetOffsetLeft()
 		startTop = e.block.GetOffsetTop()
 
 		// The movement of the mouse must be captured from the document and not the dragged element, or when the mouse moves
 		// very fast, the drag to
-		js.Global().Call("addEventListener", "mousemove", drag)
-		js.Global().Call("addEventListener", "touchmove", drag)
+		js.Global().Call("addEventListener", "mousemove", drag, map[string]any{"passive": true})
+		js.Global().Call("addEventListener", "touchmove", drag, map[string]any{"passive": true})
 
-		js.Global().Call("addEventListener", "mouseup", stopDrag)
-		js.Global().Call("addEventListener", "touchend", stopDrag)
+		js.Global().Call("addEventListener", "mouseup", stopDrag, map[string]any{"passive": true})
+		js.Global().Call("addEventListener", "touchend", stopDrag, map[string]any{"passive": true})
+		js.Global().Call("addEventListener", "touchcancel", stopDrag, map[string]any{"passive": true})
 
 		return nil
 	})
-	e.block.Get().Call("addEventListener", "mousedown", dragFunc)
-	e.block.Get().Call("addEventListener", "touchstart", dragFunc)
+	e.block.Get().Call("addEventListener", "mousedown", dragFunc, map[string]any{"passive": true})
+	e.block.Get().Call("addEventListener", "touchstart", dragFunc, map[string]any{"passive": true})
 
 	// When the resizing tool is activated, four rectangles are designed in the corners of the device.
 	// These rectangles are called top-right e top-left, bottom-right, bottom-left.
@@ -571,9 +538,11 @@ func (e *Block) initEvents() {
 	//    +-----------+
 	// [bl]           [br]
 
-	resizeHorizontal := func(element js.Value, name string) {
-		dx := element.Get("screenX").Int() - startX
-		dy := element.Get("screenY").Int() - startY
+	resizeHorizontal := func(args []js.Value, name string) {
+		dx, dy := e.block.GetPointerPosition(args, e.main)
+
+		dx -= startX
+		dy -= startY
 
 		dx, dy = e.adjustXYToGrid(dx, dy)
 
@@ -625,12 +594,14 @@ func (e *Block) initEvents() {
 		e.selectDiv.X(newLeft)
 		e.selectDiv.Width(newWidth)
 
-		moveResizersX(newLeft, newWidth)
+		moveResizersX()
 	}
 
-	resizeVertical := func(element js.Value, name string) {
-		dx := element.Get("screenX").Int() - startX
-		dy := element.Get("screenY").Int() - startY
+	resizeVertical := func(args []js.Value, name string) {
+		dx, dy := e.block.GetPointerPosition(args, e.main)
+
+		dx -= startX
+		dy -= startY
 
 		dx, dy = e.adjustXYToGrid(dx, dy)
 
@@ -682,7 +653,7 @@ func (e *Block) initEvents() {
 		e.selectDiv.Y(newTop)
 		e.selectDiv.Height(newHeight)
 
-		moveResizersY(newTop, newHeight)
+		moveResizersY()
 	}
 
 	resizeMouseMove = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
@@ -690,15 +661,14 @@ func (e *Block) initEvents() {
 			return nil
 		}
 
-		element := args[0]
 		resizerName := e.block.Get().Get("dataset").Get("resizeName").String()
-		resizeHorizontal(element, resizerName)
-		resizeVertical(element, resizerName)
+		resizeHorizontal(args, resizerName)
+		resizeVertical(args, resizerName)
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 
 		width := e.block.GetOffsetWidth()
 		height := e.block.GetOffsetHeight()
-		e.OnResize(element, width, height)
+		e.OnResize(args, width, height)
 
 		return nil
 	})
@@ -706,10 +676,11 @@ func (e *Block) initEvents() {
 	stopResize = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		isResizing = false
 		js.Global().Call("removeEventListener", "mousemove", resizeMouseMove)
-		js.Global().Call("removeEventListener", "touchmove", resizeMouseMove)
-
 		js.Global().Call("removeEventListener", "mouseup", stopResize)
-		js.Global().Call("removeEventListener", "touchend", stopResize)
+
+		js.Global().Call("removeEventListener", "touchmove", resizeMouseMove, false)
+		js.Global().Call("removeEventListener", "touchend", stopResize, false)
+		js.Global().Call("removeEventListener", "touchcancel", stopResize, false)
 		return nil
 	})
 
@@ -721,30 +692,43 @@ func (e *Block) initEvents() {
 		resizerName := this.Get("dataset").Get("name").String()
 		e.block.DataKey("resizeName", resizerName)
 
-		element := args[0]
-		element.Call("stopPropagation") // preventDefault
 		isResizing = true
-		startX = element.Get("screenX").Int()
-		startY = element.Get("screenY").Int()
+
+		startX, startY = e.block.GetPointerPosition(args, e.main)
+
 		startWidth = e.block.GetOffsetWidth()
 		startHeight = e.block.GetOffsetHeight()
 		startLeft = e.block.GetOffsetLeft()
 		startTop = e.block.GetOffsetTop()
 
-		js.Global().Call("addEventListener", "mousemove", resizeMouseMove)
-		js.Global().Call("addEventListener", "mouseup", stopResize)
+		js.Global().Call("addEventListener", "mousemove", resizeMouseMove, map[string]any{"passive": true})
+		js.Global().Call("addEventListener", "mouseup", stopResize, map[string]any{"passive": true})
+
+		js.Global().Call("addEventListener", "touchmove", resizeMouseMove, map[string]any{"passive": true})
+		js.Global().Call("addEventListener", "touchend", stopResize, map[string]any{"passive": true})
+		js.Global().Call("addEventListener", "touchcancel", stopResize, map[string]any{"passive": true})
 		return nil
 	})
 
-	e.resizerTopLeft.Get().Call("addEventListener", "mousedown", resizeFunc)
-	e.resizerTopRight.Get().Call("addEventListener", "mousedown", resizeFunc)
-	e.resizerBottomLeft.Get().Call("addEventListener", "mousedown", resizeFunc)
-	e.resizerBottomRight.Get().Call("addEventListener", "mousedown", resizeFunc)
+	e.resizerTopLeft.GetSvg().Get().Call("addEventListener", "mousedown", resizeFunc, map[string]any{"passive": true})
+	e.resizerTopRight.GetSvg().Get().Call("addEventListener", "mousedown", resizeFunc, map[string]any{"passive": true})
+	e.resizerBottomLeft.GetSvg().Get().Call("addEventListener", "mousedown", resizeFunc, map[string]any{"passive": true})
+	e.resizerBottomRight.GetSvg().Get().Call("addEventListener", "mousedown", resizeFunc, map[string]any{"passive": true})
 
-	e.resizerTopMiddle.Get().Call("addEventListener", "mousedown", resizeFunc)
-	e.resizerBottomMiddle.Get().Call("addEventListener", "mousedown", resizeFunc)
-	e.resizerLeftMiddle.Get().Call("addEventListener", "mousedown", resizeFunc)
-	e.resizerRightMiddle.Get().Call("addEventListener", "mousedown", resizeFunc)
+	e.resizerTopMiddle.GetSvg().Get().Call("addEventListener", "mousedown", resizeFunc, map[string]any{"passive": true})
+	e.resizerBottomMiddle.GetSvg().Get().Call("addEventListener", "mousedown", resizeFunc, map[string]any{"passive": true})
+	e.resizerLeftMiddle.GetSvg().Get().Call("addEventListener", "mousedown", resizeFunc, map[string]any{"passive": true})
+	e.resizerRightMiddle.GetSvg().Get().Call("addEventListener", "mousedown", resizeFunc, map[string]any{"passive": true})
+
+	e.resizerTopLeft.GetSvg().Get().Call("addEventListener", "touchstart", resizeFunc, map[string]any{"passive": true})
+	e.resizerTopRight.GetSvg().Get().Call("addEventListener", "touchstart", resizeFunc, map[string]any{"passive": true})
+	e.resizerBottomLeft.GetSvg().Get().Call("addEventListener", "touchstart", resizeFunc, map[string]any{"passive": true})
+	e.resizerBottomRight.GetSvg().Get().Call("addEventListener", "touchstart", resizeFunc, map[string]any{"passive": true})
+
+	e.resizerTopMiddle.GetSvg().Get().Call("addEventListener", "touchstart", resizeFunc, map[string]any{"passive": true})
+	e.resizerBottomMiddle.GetSvg().Get().Call("addEventListener", "touchstart", resizeFunc, map[string]any{"passive": true})
+	e.resizerLeftMiddle.GetSvg().Get().Call("addEventListener", "touchstart", resizeFunc, map[string]any{"passive": true})
+	e.resizerRightMiddle.GetSvg().Get().Call("addEventListener", "touchstart", resizeFunc, map[string]any{"passive": true})
 }
 
 // max Returns the maximum value
@@ -764,9 +748,9 @@ func (e *Block) min(a, b int) (min int) {
 }
 
 // OnResize cannot be shadowed by the main instance, so the function in SetOnResize
-func (e *Block) OnResize(element js.Value, width, height int) {
+func (e *Block) OnResize(args []js.Value, width, height int) {
 	if e.onResizeFunc != nil {
-		e.onResizeFunc(element, width, height)
+		e.onResizeFunc(args, width, height)
 	}
 }
 
@@ -776,24 +760,21 @@ func (e *Block) resizeEnabledDraw() {
 		return
 	}
 
-	e.resizerTopLeft.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
-	e.resizerTopRight.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
-	e.resizerBottomLeft.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
-	e.resizerBottomRight.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
+	e.resizerTopLeft.SetVisible(e.resizeEnabled)
+	e.resizerTopRight.SetVisible(e.resizeEnabled)
+	e.resizerBottomLeft.SetVisible(e.resizeEnabled)
+	e.resizerBottomRight.SetVisible(e.resizeEnabled)
 
-	e.resizerTopMiddle.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
-	e.resizerBottomMiddle.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
-	e.resizerLeftMiddle.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
-	e.resizerRightMiddle.AddStyleConditional(e.resizeEnabled, "display", "block", "none")
+	e.resizerTopMiddle.SetVisible(e.resizeEnabled)
+	e.resizerBottomMiddle.SetVisible(e.resizeEnabled)
+	e.resizerLeftMiddle.SetVisible(e.resizeEnabled)
+	e.resizerRightMiddle.SetVisible(e.resizeEnabled)
 }
 
 // SetFatherId Receives the div ID used as a stage for the IDE and puts it to occupy the entire browser area
 func (e *Block) SetFatherId(fatherId string) {
 	e.ideStage = factoryBrowser.NewTagSvg().
-		Import(fatherId) //.
-	//AddStyle("position", "relative").
-	//AddStyle("width", "100vw"). // todo: transformar isto em algo chamado uma única vez e em outro lugar
-	//AddStyle("height", "100vh") // todo: transformar isto em algo chamado uma única vez e em outro lugar
+		Import(fatherId)
 }
 
 // SetHeight Defines the height property of the device
@@ -831,7 +812,7 @@ func (e *Block) SetName(name string) {
 // SetOnResize Receives the pointer to a function to be invoked during resizing
 //
 //	This function is due to the fact that the OnResize function cannot be shadowed by the main instance
-func (e *Block) SetOnResize(f func(element js.Value, width, height int)) {
+func (e *Block) SetOnResize(f func(args []js.Value, width, height int)) {
 	e.onResizeFunc = f
 }
 

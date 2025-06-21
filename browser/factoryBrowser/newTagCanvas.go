@@ -2,7 +2,7 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/mathUtil"
+	"github.com/helmutkemper/webassembly/utilsMath"
 )
 
 // NewTagCanvas
@@ -25,7 +25,7 @@ func NewTagCanvas(size ...int) (ref *html.TagCanvas) {
 
 	ref = &html.TagCanvas{}
 	ref.Init(width, height)
-	ref.Id(mathUtil.GetUID())
+	ref.Id(utilsMath.GetUID())
 
 	return ref
 }

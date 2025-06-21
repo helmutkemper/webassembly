@@ -6,8 +6,8 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConversion"
 	"github.com/helmutkemper/webassembly/hexagon"
-	"github.com/helmutkemper/webassembly/textUtil"
-	"github.com/helmutkemper/webassembly/windowUtils"
+	"github.com/helmutkemper/webassembly/utilsText"
+	"github.com/helmutkemper/webassembly/utilsWindow"
 	"math"
 	"time"
 )
@@ -53,7 +53,7 @@ func (e *CanvasCell) SetCalcSystem(calcSystem CalcSystem) {
 
 func (e *CanvasCell) CanvasInit() {
 	e.fontSize = 24
-	e.fontFamily = textUtil.KFontAwesomeSolid
+	e.fontFamily = utilsText.KFontAwesomeSolid
 	e.fontWeight = html.KFontWeightRuleNormal
 	e.fontStyle = html.KFontStyleRuleNormal
 
@@ -104,7 +104,7 @@ func (e *CanvasCell) SetText(text string) {
 	fontWeight := e.fontWeight.String()
 	fontStyle := e.fontStyle.String()
 
-	width, height := textUtil.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize)
+	width, height := utilsText.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize)
 
 	cx, cy := e.calcSystem.GetCenter()
 
@@ -138,7 +138,7 @@ func (e *SvgCell) SetCalcSystem(calcSystem CalcSystem) {
 
 func (e *SvgCell) Init() {
 	e.fontSize = 12
-	e.fontFamily = textUtil.KFontAwesomeSolid
+	e.fontFamily = utilsText.KFontAwesomeSolid
 	e.fontWeight = html.KFontWeightRuleNormal
 	e.fontStyle = html.KFontStyleRuleNormal
 
@@ -195,7 +195,7 @@ func (e *SvgCell) SetText(text string) {
 	fontWeight := e.fontWeight.String()
 	fontStyle := e.fontStyle.String()
 
-	width, height := textUtil.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize)
+	width, height := utilsText.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize)
 
 	cx, cy := e.calcSystem.GetCenter()
 
@@ -377,14 +377,14 @@ func (e *HexagonDraw) GetSvg() (tagSvg *html.TagSvg) {
 
 func main() {
 
-	windowUtils.InjectBodyNoMargin()
-	textUtil.InjectFontAwesomeCSS()
+	utilsWindow.InjectBodyNoMargin()
+	utilsText.InjectFontAwesomeCSS()
 
 	time.Sleep(100 * time.Millisecond)
 
 	//document := js.Global().Get("document")
 
-	screenWidth, screenHeight := windowUtils.GetScreenSize()
+	screenWidth, screenHeight := utilsWindow.GetScreenSize()
 
 	stage := factoryBrowser.NewStage()
 

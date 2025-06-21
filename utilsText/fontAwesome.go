@@ -1,4 +1,4 @@
-package textUtil
+package utilsText
 
 import (
 	"sync"

@@ -3,8 +3,10 @@ package html
 import (
 	"fmt"
 	"github.com/helmutkemper/webassembly/browser/event/mouse"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesConversion"
 	"image/color"
 	"log"
+	"math"
 	"reflect"
 	"strconv"
 	"sync"
@@ -223,6 +225,86 @@ func (e *TagSvg) Init() (ref *TagSvg) {
 	return e
 }
 
+// GetPointerPosition #replicar
+//
+// English:
+//
+//	Converts mouse or touch coordinates to SVG coordinates using DOMPoint,
+//	compatible with modern browsers (recommended).
+//
+//	  Input:
+//	    args: args from listener
+//	    viewBoxFrom: SVG element that contains an viewBox, usually the main SVG element
+//
+// Português:
+//
+//	Converte coordenadas do mouse ou toque para coordenadas do SVG usando DOMPoint,
+//	compatível com navegadores modernos (recomendado).
+//
+//	  Entrada:
+//	    args: args do listener
+//	    viewBoxFrom: elemento svg que contém um viewBox, geralmente o elemento svg principal
+func (e *TagSvg) GetPointerPosition(args []js.Value, viewBoxFrom Compatible) (x int, y int) {
+	var clientX, clientY int
+	event := args[0]
+
+	touch := event.Get("changedTouches")
+	if !touch.IsUndefined() {
+		event = touch.Index(0)
+	}
+
+	clientX = event.Get("clientX").Int()
+	clientY = event.Get("clientY").Int()
+
+	// Cria um DOMPoint com as coordenadas
+	var domPointConstructor js.Value
+	if js.Global().Get("DOMPoint").Truthy() {
+		domPointConstructor = js.Global().Get("DOMPoint")
+	} else if js.Global().Get("DOMPointReadOnly").Truthy() {
+		domPointConstructor = js.Global().Get("DOMPointReadOnly")
+	} else {
+		log.Println("DOMPoint not available in this environment")
+		return clientX, clientY
+	}
+
+	if domPointConstructor.IsUndefined() {
+		log.Printf("domPointConstructor is undefined")
+		return clientX, clientY
+	}
+
+	point := domPointConstructor.New(clientX, clientY)
+
+	// Aplica a matriz de transformação inversa
+	matrix := viewBoxFrom.Get().Call("getScreenCTM").Call("inverse")
+	svgCoords := point.Call("matrixTransform", matrix)
+
+	newX := svgCoords.Get("x").Float()
+	newY := svgCoords.Get("y").Float()
+
+	a := matrix.Get("a").Float()
+	b := matrix.Get("b").Float()
+	c := matrix.Get("c").Float()
+	d := matrix.Get("d").Float()
+
+	scaleX := math.Sqrt(a*a + b*b)
+	scaleY := math.Sqrt(c*c + d*d)
+
+	log.Printf("scale: %v", scaleX)
+
+	return rulesConversion.FloatToInt(newX / scaleX), rulesConversion.FloatToInt(newY / scaleY)
+}
+
+//<svg id="svg-root" width="100vw" height="100vh" viewBox="0 0 800 600">
+//  <g id="movable-group">
+//    <path d="M..." fill="red" />
+//    <circle cx="..." cy="..." r="..." />
+//    <!-- outros elementos -->
+//  </g>
+//</svg>
+
+//<svg id="child1" ...></svg>
+//<svg id="child2" ...></svg>
+
 // GetWidth
 //
 // English:
@@ -297,7 +379,6 @@ func (e *TagSvg) CreateElement() (ref *TagSvg) {
 	}
 
 	e.selfElement.Call("setAttribute", "xmlns", "http://www.w3.org/2000/svg")
-
 	return e
 }
 
@@ -3173,6 +3254,7 @@ func (e *TagSvg) ViewBox(value interface{}) (ref *TagSvg) {
 			e.height = int(converted[3])
 		}
 
+		log.Printf("viewBox set: %v", valueStr[:length])
 		e.selfElement.Call("setAttribute", "viewBox", valueStr[:length])
 		return e
 

@@ -6,8 +6,8 @@ import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/browser/stage"
-	"github.com/helmutkemper/webassembly/mathUtil"
 	"github.com/helmutkemper/webassembly/qrcode"
+	"github.com/helmutkemper/webassembly/utilsMath"
 	"image/color"
 	"log"
 	"os"
@@ -1726,7 +1726,7 @@ func (e *Components) processComponentOsm(element reflect.Value, tagDataFather *t
 					//log.Printf("width: %v", width)
 					//log.Printf("height: %v", height)
 					osmComponent.__canvasTag.Init(int(width), int(height))
-					osmComponent.__canvasTag.Id(mathUtil.GetUID())
+					osmComponent.__canvasTag.Id(utilsMath.GetUID())
 
 				}
 
@@ -2656,7 +2656,7 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 						color = "#000000"
 					}
 
-					qrCodeColor, err = mathUtil.HexToColor(color)
+					qrCodeColor, err = utilsMath.HexToColor(color)
 					if err != nil {
 						err = fmt.Errorf("%v.%v type '%v', contains an error in the value: %v", element.Type().Name(), fieldTyp.Name, fieldVal.Kind(), err)
 						return
@@ -2674,7 +2674,7 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 						color = "#ffffff"
 					}
 
-					qrCodeBackground, err = mathUtil.HexToColor(color)
+					qrCodeBackground, err = utilsMath.HexToColor(color)
 					if err != nil {
 						err = fmt.Errorf("%v.%v type '%v', contains an error in the value: %v", element.Type().Name(), fieldTyp.Name, fieldVal.Kind(), err)
 						return
@@ -2810,7 +2810,7 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 				}
 
 				if qrCodeColor == nil && tagDataInternal.Color != "" {
-					qrCodeColor, err = mathUtil.HexToColor(tagDataInternal.Color)
+					qrCodeColor, err = utilsMath.HexToColor(tagDataInternal.Color)
 					if err != nil {
 						err = fmt.Errorf("%v.%v config 'color', error: %v", element.Type().Name(), fieldTyp.Name, err)
 						return
@@ -2820,7 +2820,7 @@ func (e *Components) processComponentQRCode(element reflect.Value, tagDataFather
 				}
 
 				if qrCodeBackground == nil && tagDataInternal.Background != "" {
-					qrCodeBackground, err = mathUtil.HexToColor(tagDataInternal.Background)
+					qrCodeBackground, err = utilsMath.HexToColor(tagDataInternal.Background)
 					if err != nil {
 						err = fmt.Errorf("%v.%v config 'color', error: %v", element.Type().Name(), fieldTyp.Name, err)
 						return

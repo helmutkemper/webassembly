@@ -54,7 +54,6 @@ func (e *Connection) Init(markEnd string) {
 		MarkerEnd(markEnd)
 
 	if !e.clickFunc.IsNull() {
-		log.Printf("entrou aqui!")
 		e.connection.Get().Set("getConnData", js.FuncOf(e.getConnectionFunc))
 		e.connection.Get().Call("addEventListener", "click", e.clickFunc)
 	} else {

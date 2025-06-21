@@ -2,7 +2,7 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/mathUtil"
+	"github.com/helmutkemper/webassembly/utilsMath"
 )
 
 // NewTagSvgFeDisplacementMap
@@ -33,7 +33,7 @@ import (
 func NewTagSvgFeDisplacementMap() (ref *html.TagSvgFeDisplacementMap) {
 	ref = &html.TagSvgFeDisplacementMap{}
 	ref.Init()
-	ref.Id(mathUtil.GetUID())
+	ref.Id(utilsMath.GetUID())
 
 	return ref
 }

@@ -2,7 +2,7 @@ package factoryBrowser
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
-	"github.com/helmutkemper/webassembly/mathUtil"
+	"github.com/helmutkemper/webassembly/utilsMath"
 )
 
 // NewTagInputImage
@@ -32,7 +32,7 @@ func NewTagInputImage() (ref *html.TagInputImage) {
 	ref = &html.TagInputImage{}
 	ref.CreateElement(html.KTagInput)
 	ref.Type(html.KInputTypeImage)
-	ref.Id(mathUtil.GetUID())
+	ref.Id(utilsMath.GetUID())
 
 	return ref
 }

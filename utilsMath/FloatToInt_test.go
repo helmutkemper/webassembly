@@ -1,4 +1,4 @@
-package mathUtil
+package utilsMath
 
 import (
 	"log"

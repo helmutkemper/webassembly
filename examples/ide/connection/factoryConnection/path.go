@@ -3,7 +3,7 @@ package factoryConnection
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
-	"github.com/helmutkemper/webassembly/mathUtil"
+	"github.com/helmutkemper/webassembly/utilsMath"
 )
 
 // NewConnection
@@ -20,7 +20,7 @@ import (
 func NewConnection(dataType, markEnd string) (ref *html.TagSvgPath) {
 	ref = &html.TagSvgPath{}
 	ref.Init()
-	ref.Id(mathUtil.GetUID())
+	ref.Id(utilsMath.GetUID())
 	ref.Fill(rulesConnection.TypeToColor(dataType))
 	ref.Stroke("none")
 	ref.MarkerEnd(markEnd)

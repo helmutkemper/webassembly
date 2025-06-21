@@ -8,38 +8,38 @@ type Density struct {
 	DensityValue  float64
 }
 
-func (el *Density) adjustDensity() {
-	if el.DensityFactor == 0 {
-		el.DensityFactor = 1
+func (e *Density) adjustDensity() {
+	if e.DensityFactor == 0 {
+		e.DensityFactor = 1
 	}
 
-	el.DensityValue = el.OriginalValue * el.DensityFactor
+	e.DensityValue = e.OriginalValue * e.DensityFactor
 }
 
-func (el *Density) Set(value float64) {
-	el.OriginalValue = value
-	el.adjustDensity()
+func (e *Density) Set(value float64) {
+	e.OriginalValue = value
+	e.adjustDensity()
 }
 
-func (el *Density) Add(value float64) {
-	el.OriginalValue += value
-	el.adjustDensity()
+func (e *Density) Add(value float64) {
+	e.OriginalValue += value
+	e.adjustDensity()
 }
 
-func (el *Density) Sub(value float64) {
-	el.OriginalValue -= value
-	el.adjustDensity()
+func (e *Density) Sub(value float64) {
+	e.OriginalValue -= value
+	e.adjustDensity()
 }
 
-func (el *Density) SetDensityFactor(value float64) {
-	el.DensityFactor = value
-	el.adjustDensity()
+func (e *Density) SetDensityFactor(value float64) {
+	e.DensityFactor = value
+	e.adjustDensity()
 }
 
-func (el Density) Get() float64 {
-	return el.DensityValue
+func (e Density) Get() float64 {
+	return e.DensityValue
 }
 
-func (el Density) String() string {
-	return strconv.FormatFloat(el.OriginalValue, 'g', -1, 64)
+func (e Density) String() string {
+	return strconv.FormatFloat(e.OriginalValue, 'g', -1, 64)
 }

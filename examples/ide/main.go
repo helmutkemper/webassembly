@@ -137,10 +137,11 @@ func main() {
 		X(0).
 		Y(0).
 		Width(screenWidth).
-		Height(screenHeight).
-		PreserveAspectRatio(html.KRatioXMinYMin, html.KMeetOrSliceReferenceMeet).
-		AddStyle("display", "block") //.
+		Height(screenHeight)
+	//PreserveAspectRatio(html.KRatioXMinYMin, html.KMeetOrSliceReferenceMeet).
 	//ViewBox([]float64{0, 0, 0.5 * float64(screenWidth), 0.5 * float64(screenHeight)})
+
+	//transform="translate(-cx, -cy) scale(sx, sy) translate(cx, cy)"
 
 	//go func() {
 	//	time.Sleep(1 * time.Second)
@@ -175,7 +176,7 @@ func main() {
 	}
 
 	resizeButton := new(block.ResizeButtonHexagon)
-	resizeButton.SetSize(20)
+	resizeButton.SetSize(10)
 	resizeButton.SetSides(6)
 	resizeButton.SetFillColor("red")
 	resizeButton.SetStrokeColor("green")
@@ -190,7 +191,7 @@ func main() {
 	stmLoop.SetResizeButton(resizeButton)
 	stmLoop.SetGridAdjust(hex)
 	stmLoop.SetMainSvg(mainSvg)
-	stmLoop.SetPosition(50, 50)
+	stmLoop.SetPosition(500, 500)
 	_ = stmLoop.Init()
 	//url := stmLoop.ToPng()
 

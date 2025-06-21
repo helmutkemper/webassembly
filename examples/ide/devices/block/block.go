@@ -431,7 +431,7 @@ func (e *Block) initEvents() {
 	}
 
 	// Calculates the X position of the drag
-	dragX := func(args []js.Value) (newLeft int) {
+	dragX := func(args []js.Value) {
 
 		dx, dy := e.block.GetPointerPosition(args, e.main)
 
@@ -440,7 +440,7 @@ func (e *Block) initEvents() {
 
 		dx, dy = e.adjustXYToGrid(dx, dy)
 
-		newLeft = e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
+		newLeft := e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
 		e.x = newLeft
 		e.block.X(newLeft)
 		e.selectDiv.X(newLeft)
@@ -450,7 +450,7 @@ func (e *Block) initEvents() {
 	}
 
 	// Calculates the Y position of the drag
-	dragY := func(args []js.Value) (newTop int) {
+	dragY := func(args []js.Value) {
 
 		dx, dy := e.block.GetPointerPosition(args, e.main)
 
@@ -459,7 +459,7 @@ func (e *Block) initEvents() {
 
 		dx, dy = e.adjustXYToGrid(dx, dy)
 
-		newTop = e.min(e.max(0, startTop+dy), e.ideStage.GetClientHeight()-e.block.GetOffsetHeight())
+		newTop := e.min(e.max(0, startTop+dy), e.ideStage.GetClientHeight()-e.block.GetOffsetHeight())
 		e.y = newTop
 		e.block.Y(newTop)
 		e.selectDiv.Y(newTop)

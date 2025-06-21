@@ -285,13 +285,13 @@ func (e *StatementLoop) Init() (err error) {
 	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmLoop")
 
-	e.defaultWidth = 400
-	e.defaultHeight = 320
+	e.defaultWidth = 200
+	e.defaultHeight = 100
 
 	e.defaultWidth, e.defaultHeight = e.gridAdjust.AdjustCenter(e.defaultWidth, e.defaultHeight)
 
-	e.horizontalMinimumSize = 200
-	e.verticalMinimumSize = 150
+	e.horizontalMinimumSize = 20
+	e.verticalMinimumSize = 15
 
 	e.horizontalMinimumSize, e.verticalMinimumSize = e.gridAdjust.AdjustCenter(e.horizontalMinimumSize, e.verticalMinimumSize)
 
@@ -386,7 +386,7 @@ func (e *StatementLoop) Init() (err error) {
 	e.menu.SetContentFunc(e.getMenu)
 	e.menu.Init()
 
-	e.block.SetResize(true)
+	//e.block.SetResize(true)
 
 	return nil
 }

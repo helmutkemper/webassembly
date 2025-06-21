@@ -3,10 +3,8 @@ package html
 import (
 	"fmt"
 	"github.com/helmutkemper/webassembly/browser/event/mouse"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesConversion"
 	"image/color"
 	"log"
-	"math"
 	"reflect"
 	"strconv"
 	"sync"
@@ -278,20 +276,10 @@ func (e *TagSvg) GetPointerPosition(args []js.Value, viewBoxFrom Compatible) (x 
 	matrix := viewBoxFrom.Get().Call("getScreenCTM").Call("inverse")
 	svgCoords := point.Call("matrixTransform", matrix)
 
-	newX := svgCoords.Get("x").Float()
-	newY := svgCoords.Get("y").Float()
+	newX := svgCoords.Get("x").Int()
+	newY := svgCoords.Get("y").Int()
 
-	a := matrix.Get("a").Float()
-	b := matrix.Get("b").Float()
-	c := matrix.Get("c").Float()
-	d := matrix.Get("d").Float()
-
-	scaleX := math.Sqrt(a*a + b*b)
-	scaleY := math.Sqrt(c*c + d*d)
-
-	log.Printf("scale: %v", scaleX)
-
-	return rulesConversion.FloatToInt(newX / scaleX), rulesConversion.FloatToInt(newY / scaleY)
+	return newX, newY
 }
 
 //<svg id="svg-root" width="100vw" height="100vh" viewBox="0 0 800 600">

@@ -6,7 +6,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/stage"
 	"github.com/helmutkemper/webassembly/examples/ide/devices"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/hexagon"
 	"github.com/helmutkemper/webassembly/platform/components"
@@ -149,14 +149,14 @@ func main() {
 	//	mainSvg.ViewBox([]float64{0, 0, 0.5 * float64(screenWidth), 0.5 * float64(screenHeight)})
 	//}()
 
-	size := rulesDesity.Density(30)
+	size := rulesDensity.Density(30)
 	hex := new(rulesStage.Hexagon)
 	hex.Init(0, 0, size)
 
 	cellCanvas := new(CanvasCell)
 	cellCanvas.SetCalcSystem(hex)
-	cellCanvas.SetWidth(rulesDesity.Density(screenWidth))
-	cellCanvas.SetHeight(rulesDesity.Density(screenHeight))
+	cellCanvas.SetWidth(rulesDensity.Density(screenWidth))
+	cellCanvas.SetHeight(rulesDensity.Density(screenHeight))
 	cellCanvas.CanvasInit()
 
 	hexCanvas := new(HexagonDraw)
@@ -242,21 +242,21 @@ func main() {
 
 type CanvasCell struct {
 	canvas                    *html.TagCanvas
-	canvasWidth, canvasHeight rulesDesity.Density
+	canvasWidth, canvasHeight rulesDensity.Density
 
 	fontFamily string
-	fontSize   rulesDesity.Density
+	fontSize   rulesDensity.Density
 	fontWeight html.FontWeightRule
 	fontStyle  html.FontStyleRule
 
 	calcSystem CalcSystem
 }
 
-func (e *CanvasCell) SetWidth(width rulesDesity.Density) {
+func (e *CanvasCell) SetWidth(width rulesDensity.Density) {
 	e.canvasWidth = width
 }
 
-func (e *CanvasCell) SetHeight(height rulesDesity.Density) {
+func (e *CanvasCell) SetHeight(height rulesDensity.Density) {
 	e.canvasHeight = height
 }
 
@@ -340,17 +340,17 @@ type DrawCell interface {
 
 type CalcSystem interface {
 	GetColRow() (col, row int)
-	GetCenter() (x, y rulesDesity.Density)
+	GetCenter() (x, y rulesDensity.Density)
 	SetRowCol(col, row int)
 	GetPath() (path []string)
-	GetPoints() (points [][2]rulesDesity.Density)
+	GetPoints() (points [][2]rulesDensity.Density)
 }
 
 type HexagonDraw struct {
 	svg    *html.TagSvg
 	canvas *html.TagCanvas
 	sides  int
-	space  rulesDesity.Density
+	space  rulesDensity.Density
 	radius int
 	layout hexagon.Layout
 

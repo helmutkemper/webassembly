@@ -4,7 +4,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"log"
 	"strconv"
 	"syscall/js"
@@ -23,8 +23,8 @@ type Connection struct {
 	notConnected string
 	lookedUp     string
 	isADataInput string
-	x            rulesDesity.Density
-	y            rulesDesity.Density
+	x            rulesDensity.Density
+	y            rulesDensity.Density
 }
 
 type Setup struct {
@@ -62,19 +62,19 @@ func (e *Connection) Init(markEnd string) {
 	}
 }
 
-func (e *Connection) SetXY(x, y rulesDesity.Density) {
+func (e *Connection) SetXY(x, y rulesDensity.Density) {
 	e.connection.DataKey(rulesConnection.KConnectionPrefix+"Top", strconv.FormatInt(int64(x), 10))
 	e.connection.DataKey(rulesConnection.KConnectionPrefix+"Left", strconv.FormatInt(int64(y), 10))
 }
 
-func (e *Connection) GetX() (x rulesDesity.Density) {
+func (e *Connection) GetX() (x rulesDensity.Density) {
 	xI64, _ := strconv.ParseInt(e.connection.GetData(rulesConnection.KConnectionPrefix+"Top"), 10, 64)
-	return rulesDesity.Density(xI64)
+	return rulesDensity.Density(xI64)
 }
 
-func (e *Connection) GetY() (y rulesDesity.Density) {
+func (e *Connection) GetY() (y rulesDensity.Density) {
 	yI64, _ := strconv.ParseInt(e.connection.GetData(rulesConnection.KConnectionPrefix+"Left"), 10, 64)
-	return rulesDesity.Density(yI64)
+	return rulesDensity.Density(yI64)
 }
 
 // mapToJsObject Transforms a go map into an js object accepted by wasm go

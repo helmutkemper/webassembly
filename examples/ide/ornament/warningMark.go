@@ -6,7 +6,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/easterEgg"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/utilsDraw"
 	"image/color"
 	"time"
@@ -17,13 +17,13 @@ import (
 type WarningMarkExclamation struct {
 	easterEgg.MorseCode
 
-	width                   rulesDesity.Density
-	height                  rulesDesity.Density
+	width                   rulesDensity.Density
+	height                  rulesDensity.Density
 	warningBackgroundColor  color.RGBA
 	warningBorderColor      color.RGBA
 	warningExclamationColor color.RGBA
 	warningEnabled          bool
-	warningMarkMargin       rulesDesity.Density
+	warningMarkMargin       rulesDensity.Density
 	warningOpacity          float64
 	flashTicker             *time.Ticker
 	stopTicker              *time.Ticker
@@ -34,12 +34,12 @@ type WarningMarkExclamation struct {
 }
 
 // SetWarningMarkMargin sets the margin, in pixels, of the warning mark
-func (e *WarningMarkExclamation) SetWarningMarkMargin(margin rulesDesity.Density) {
+func (e *WarningMarkExclamation) SetWarningMarkMargin(margin rulesDensity.Density) {
 	e.warningMarkMargin = margin
 }
 
 // GetWarningMarkMargin returns the margin, in pixels, of the warning mark
-func (e *WarningMarkExclamation) GetWarningMarkMargin() rulesDesity.Density {
+func (e *WarningMarkExclamation) GetWarningMarkMargin() rulesDensity.Density {
 	return e.warningMarkMargin
 }
 
@@ -109,28 +109,28 @@ func (e *WarningMarkExclamation) Init() (err error) {
 }
 
 // min Returns the minimum value
-func (e *WarningMarkExclamation) min(a, b rulesDesity.Density) rulesDesity.Density {
+func (e *WarningMarkExclamation) min(a, b rulesDensity.Density) rulesDensity.Density {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func (e *WarningMarkExclamation) GetWidth() rulesDesity.Density {
+func (e *WarningMarkExclamation) GetWidth() rulesDensity.Density {
 	return e.width
 }
 
-func (e *WarningMarkExclamation) GetHeight() rulesDesity.Density {
+func (e *WarningMarkExclamation) GetHeight() rulesDensity.Density {
 	return e.height
 }
 
 // Update Draw the image
-func (e *WarningMarkExclamation) Update(_, _, width, height rulesDesity.Density) (err error) {
+func (e *WarningMarkExclamation) Update(_, _, width, height rulesDensity.Density) (err error) {
 	e.width = width
 	e.height = height
 
 	//e.svgWarning.ViewBox([]int{0, 0, width, height})
-	marginInternal := rulesDesity.Density(0)
+	marginInternal := rulesDensity.Density(0)
 	r := e.min(width-marginInternal-2.0*e.warningMarkMargin, height-marginInternal-2.0*e.warningMarkMargin) / 2.0
 	rotation := 0.0 // -math.Pi / 2;
 	hexagonExternalPath := utilsDraw.PolygonPath(6, r, width/2, height/2, rotation)
@@ -143,7 +143,7 @@ func (e *WarningMarkExclamation) Update(_, _, width, height rulesDesity.Density)
 	// The points are based on the path of the image below, which makes an exclamation
 	// M 185 120 L 190 240 L 210 240 L 215 120 L 185 120 z
 	// M 190 260 L 190 280 L 210 280 L 210 260 L 190 260 z
-	originalPoints := [][]rulesDesity.Density{
+	originalPoints := [][]rulesDensity.Density{
 		{185, 120}, {190, 240}, {210, 240}, {215, 120}, {185, 120},
 		{190, 260}, {190, 280}, {210, 280}, {210, 260}, {190, 260},
 	}

@@ -2,13 +2,13 @@ package rulesStage
 
 import (
 	"fmt"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/hexagon"
 )
 
 type GridAdjust interface {
 	// AdjustCenter recalculates and returns the adjusted pixel coordinates (cx, cy) for the center of a hexagon based on inputs (x, y).
-	AdjustCenter(x, y rulesDesity.Density) (cx, cy rulesDesity.Density)
+	AdjustCenter(x, y int) (cx, cy int)
 }
 
 // Hexagon represents a hexagonal grid cell in both pixel and coordinate space.
@@ -18,7 +18,7 @@ type Hexagon struct {
 	col, row int
 
 	// X and Y coordinates in 2D space
-	cx, cy rulesDesity.Density
+	cx, cy rulesDensity.Density
 
 	// Layout defines how hexagons are positioned and transformed on the screen.
 	//
@@ -49,7 +49,7 @@ type Hexagon struct {
 }
 
 // Init initializes the hexagon with its layout based on the specified origin (x, y) and size.
-func (e *Hexagon) Init(x, y, size rulesDesity.Density) {
+func (e *Hexagon) Init(x, y, size rulesDensity.Density) {
 	e.layout = hexagon.Layout{
 		Orientation: hexagon.LayoutFlat,
 		Size:        hexagon.Point{X: float64(size), Y: float64(size)},
@@ -63,19 +63,20 @@ func (e *Hexagon) GetColRow() (col, row int) {
 }
 
 // GetCenter returns the pixel coordinates (x, y) of the center of the hexagon.
-func (e *Hexagon) GetCenter() (x, y rulesDesity.Density) {
+func (e *Hexagon) GetCenter() (x, y rulesDensity.Density) {
 	return e.cx, e.cy
 }
 
 // AdjustCenter recalculates and returns the adjusted pixel coordinates (cx, cy) for the center of a hexagon based on inputs (x, y).
-func (e *Hexagon) AdjustCenter(x, y rulesDesity.Density) (cx, cy rulesDesity.Density) {
+func (e *Hexagon) AdjustCenter(x, y int) (cx, cy int) {
+	return x, y
 	hex := e.colHexToRow(hexagon.Point{X: float64(x), Y: float64(y)})
 	point := hexagon.HexToPixel(e.layout, hex)
-	return rulesDesity.Density(point.X), rulesDesity.Density(point.Y)
+	return int(point.X), int(point.Y)
 }
 
 // SetPixelXY sets the hexagon's column and row based on the provided pixel coordinates (x, y).
-func (e *Hexagon) SetPixelXY(x, y rulesDesity.Density) {
+func (e *Hexagon) SetPixelXY(x, y rulesDensity.Density) {
 	hex := e.colHexToRow(hexagon.Point{X: float64(x), Y: float64(y)})
 	cord := hexagon.QDoubledFromCube(hex)
 	e.SetRowCol(cord.Col, cord.Row)
@@ -104,8 +105,8 @@ func (e *Hexagon) convertManager(col, row int) {
 	e.row = row
 	e.hex = e.colRowToHex(col, row)
 	e.point = hexagon.HexToPixel(e.layout, e.hex)
-	e.cx = rulesDesity.Density(e.point.X)
-	e.cy = rulesDesity.Density(e.point.Y)
+	e.cx = rulesDensity.Density(e.point.X)
+	e.cy = rulesDensity.Density(e.point.Y)
 }
 
 // GetPath generates a path for the hexagon's outline as a series of SVG-compatible commands based on its corners.
@@ -124,11 +125,11 @@ func (e *Hexagon) GetPath() (path []string) {
 }
 
 // GetPoints returns the 2D integer coordinates of the hexagon's corners based on its layout and position.
-func (e *Hexagon) GetPoints() (points [][2]rulesDesity.Density) {
+func (e *Hexagon) GetPoints() (points [][2]rulesDensity.Density) {
 	ps := hexagon.PolygonCorners(e.layout, e.hex)
-	points = make([][2]rulesDesity.Density, len(ps))
+	points = make([][2]rulesDensity.Density, len(ps))
 	for k, point := range ps {
-		points[k] = [2]rulesDesity.Density{rulesDesity.Density(point.X), rulesDesity.Density(point.Y)}
+		points[k] = [2]rulesDensity.Density{rulesDensity.Density(point.X), rulesDensity.Density(point.Y)}
 	}
 
 	return

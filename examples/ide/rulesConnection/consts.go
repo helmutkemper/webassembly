@@ -2,7 +2,7 @@ package rulesConnection
 
 import (
 	"fmt"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 )
 
 const (
@@ -25,22 +25,22 @@ const (
 	KConnectionPrefix = "connection"
 )
 
-func GetPathDraw(x, y rulesDesity.Density) (path []string) {
+func GetPathDraw(x, y rulesDensity.Density) (path []string) {
 	return []string{
 		fmt.Sprintf("M %v %v", x, y),
-		fmt.Sprintf("l %v 0", KWidth),
-		fmt.Sprintf("l 0 %v", KHeight),
-		fmt.Sprintf("l -%v 0", KWidth),
-		fmt.Sprintf("l 0 -%v", KHeight),
+		fmt.Sprintf("l %v 0", rulesDensity.Density(KWidth)),
+		fmt.Sprintf("l 0 %v", rulesDensity.Density(KHeight)),
+		fmt.Sprintf("l -%v 0", rulesDensity.Density(KWidth)),
+		fmt.Sprintf("l 0 -%v", rulesDensity.Density(KHeight)),
 	}
 }
 
-func GetPathAreaDraw(x, y rulesDesity.Density) (path []string) {
+func GetPathAreaDraw(x, y rulesDensity.Density) (path []string) {
 	return []string{
-		fmt.Sprintf("M %v %v", x-(KWidthArea-KWidth)/2, y-(KHeightArea-KHeight)/2),
-		fmt.Sprintf("l %v 0", KWidthArea),
-		fmt.Sprintf("l 0 %v", KHeightArea),
-		fmt.Sprintf("l -%v 0", KWidthArea),
-		fmt.Sprintf("l 0 -%v", KHeightArea),
+		fmt.Sprintf("M %v %v", x-rulesDensity.Density(KWidthArea-KWidth)/2, y-rulesDensity.Density(KHeightArea-KHeight)/2),
+		fmt.Sprintf("l %v 0", rulesDensity.Density(KWidthArea)),
+		fmt.Sprintf("l 0 %v", rulesDensity.Density(KHeightArea)),
+		fmt.Sprintf("l -%v 0", rulesDensity.Density(KWidthArea)),
+		fmt.Sprintf("l 0 -%v", rulesDensity.Density(KHeightArea)),
 	}
 }

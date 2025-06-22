@@ -5,7 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
@@ -19,10 +19,10 @@ type StatementLoop struct {
 
 	debugSelected bool
 
-	defaultWidth          rulesDesity.Density
-	defaultHeight         rulesDesity.Density
-	horizontalMinimumSize rulesDesity.Density
-	verticalMinimumSize   rulesDesity.Density
+	defaultWidth          rulesDensity.Density
+	defaultHeight         rulesDensity.Density
+	horizontalMinimumSize rulesDensity.Density
+	verticalMinimumSize   rulesDensity.Density
 	ornamentDraw          *doubleLoopArrow.DoubleLoopArrow
 	id                    string
 	//connStop              *connection.Connection
@@ -44,11 +44,11 @@ func (e *StatementLoop) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
 	e.block.SetGridAdjust(gridAdjust)
 }
 
-func (e *StatementLoop) GetWidth() (width rulesDesity.Density) {
+func (e *StatementLoop) GetWidth() (width rulesDensity.Density) {
 	return e.block.GetWidth()
 }
 
-func (e *StatementLoop) GetHeight() (height rulesDesity.Density) {
+func (e *StatementLoop) GetHeight() (height rulesDensity.Density) {
 	return e.block.GetHeight()
 }
 
@@ -77,11 +77,11 @@ func (e *StatementLoop) SetName(name string) {
 	e.block.SetName(name)
 }
 
-func (e *StatementLoop) SetPosition(x, y rulesDesity.Density) {
+func (e *StatementLoop) SetPosition(x, y rulesDensity.Density) {
 	e.block.SetPosition(x, y)
 }
 
-func (e *StatementLoop) SetSize(wight, height rulesDesity.Density) {
+func (e *StatementLoop) SetSize(wight, height rulesDensity.Density) {
 	e.block.SetSize(wight, height)
 }
 
@@ -289,12 +289,14 @@ func (e *StatementLoop) Init() (err error) {
 	e.defaultWidth = 200
 	e.defaultHeight = 100
 
-	e.defaultWidth, e.defaultHeight = e.gridAdjust.AdjustCenter(e.defaultWidth, e.defaultHeight)
+	defaultWidth, defaultHeight := e.gridAdjust.AdjustCenter(e.defaultWidth.GetInt(), e.defaultHeight.GetInt())
+	e.defaultWidth, e.defaultHeight = rulesDensity.Convert(defaultWidth), rulesDensity.Convert(defaultHeight)
 
-	e.horizontalMinimumSize = 20
-	e.verticalMinimumSize = 15
+	e.horizontalMinimumSize = 80
+	e.verticalMinimumSize = 60
 
-	e.horizontalMinimumSize, e.verticalMinimumSize = e.gridAdjust.AdjustCenter(e.horizontalMinimumSize, e.verticalMinimumSize)
+	horizontalMinimumSize, verticalMinimumSize := e.gridAdjust.AdjustCenter(e.horizontalMinimumSize.GetInt(), e.verticalMinimumSize.GetInt())
+	e.horizontalMinimumSize, e.verticalMinimumSize = rulesDensity.Convert(horizontalMinimumSize), rulesDensity.Convert(verticalMinimumSize)
 
 	if e.block.GetWidth() == 0 {
 		e.block.SetWidth(e.defaultWidth)

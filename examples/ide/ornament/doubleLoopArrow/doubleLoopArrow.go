@@ -8,7 +8,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/connection/factoryConnection"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"image/color"
 	"syscall/js"
 )
@@ -81,7 +81,7 @@ func (e *DoubleLoopArrow) Init() (err error) {
 	e.borderArrow = factoryBrowser.NewTagSvgPath().
 		Fill("none").
 		Stroke(e.arrowColor).
-		StrokeWidth(5).
+		StrokeWidth(rulesDensity.NewInt(5).GetInt()).
 		StrokeLineCap(html.KSvgStrokeLinecapRound).
 		StrokeLineJoin(html.KSvgStrokeLinejoinRound).
 		MarkerEnd("url(#borderArrow)")
@@ -90,14 +90,14 @@ func (e *DoubleLoopArrow) Init() (err error) {
 	e.stopButtonCircle = factoryBrowser.NewTagSvgPath().
 		Fill("red").
 		Stroke("red").
-		StrokeWidth(2).
+		StrokeWidth(rulesDensity.NewInt(2).GetInt()).
 		MarkerEnd("url(#stopButtonCircle)")
 	e.svg.Append(e.stopButtonCircle)
 
 	e.stopButtonBorder = factoryBrowser.NewTagSvgPath().
 		Fill("none").
 		Stroke("blue").
-		StrokeWidth(2).
+		StrokeWidth(rulesDensity.NewInt(2).GetInt()).
 		MarkerEnd("url(#stopButtonBorder)")
 	e.svg.Append(e.stopButtonBorder)
 
@@ -114,24 +114,24 @@ func (e *DoubleLoopArrow) Init() (err error) {
 }
 
 // Update Draw the element design
-func (e *DoubleLoopArrow) Update(x, y, width, height rulesDesity.Density) (err error) {
+func (e *DoubleLoopArrow) Update(x, y, width, height rulesDensity.Density) (err error) {
 	_ = e.WarningMarkExclamation.Update(x, y, width, height)
 	//e.svg.ViewBox([]int{0, 0, width, height})
 
-	margin := rulesDesity.Density(10)
-	r := rulesDesity.Density(30)
-	s := rulesDesity.Density(40)
+	margin := rulesDensity.Density(10)
+	r := rulesDensity.Density(30)
+	s := rulesDensity.Density(40)
 
 	// Define the double loop arrow path data
 	arrow := []string{
 		// Draw the top-right arrow
 		// Base part of the arrow
 		fmt.Sprintf("M %v %v", margin+s, margin),
-		"l 15 7",
+		fmt.Sprintf("l %v %v", rulesDensity.Density(15), rulesDensity.Density(7)),
 
 		// Arrowhead
 		fmt.Sprintf("M %v %v", margin+s, margin),
-		"l 15 -7",
+		fmt.Sprintf("l %v %v", rulesDensity.Density(15), rulesDensity.Density(-7)),
 
 		// Curved body of the arrow
 		fmt.Sprintf("M %v %v", margin+s, margin),
@@ -142,11 +142,11 @@ func (e *DoubleLoopArrow) Update(x, y, width, height rulesDesity.Density) (err e
 		// Draw the bottom-left arrow
 		// Base part of the arrow
 		fmt.Sprintf("M %v %v", width-margin-s, height-margin),
-		"l -15 7",
+		fmt.Sprintf("l %v %v", rulesDensity.Density(-15), rulesDensity.Density(7)),
 
 		// Arrowhead
 		fmt.Sprintf("M %v %v", width-margin-s, height-margin),
-		"l -15 -7",
+		fmt.Sprintf("l %v %v", rulesDensity.Density(-15), rulesDensity.Density(-7)),
 
 		// Curved body of the arrow
 		fmt.Sprintf("M %v %v", width-margin-s, height-margin),
@@ -172,42 +172,42 @@ func (e *DoubleLoopArrow) Update(x, y, width, height rulesDesity.Density) (err e
 	e.backgroundContent.D(background)
 
 	// draw the stop button
-	cr := rulesDesity.Density(5.0)
-	cx := rulesDesity.Density(20.0)
-	cy := rulesDesity.Density(20.0)
+	cr := rulesDensity.Density(5.0)
+	cx := rulesDensity.Density(20.0)
+	cy := rulesDensity.Density(20.0)
 	xp := width - margin - 2.0*cr - 1.5*cx
 	yp := height - margin - 2.0*cr - 1.5*cy
-	L := 2*cr + 10
+	L := 2*cr + rulesDensity.Density(10)
 
 	// Define the path data for the stop button circle
 	stopButtonCirclePath := []string{
 		fmt.Sprintf("M %v %v", width-margin-2.0*cr-cx, height-margin-2.0*cr-cy),
 		fmt.Sprintf("m -%v, 0", cr),
-		fmt.Sprintf("a %v, %v 0 1, 1 %v, 0", cr, cr, 2*cr),
-		fmt.Sprintf("a %v, %v 0 1, 1 -%v, 0", cr, cr, 2*cr),
+		fmt.Sprintf("a %v, %v 0 1, 1 %v, 0", cr, cr, 2*cr),  //--------------
+		fmt.Sprintf("a %v, %v 0 1, 1 -%v, 0", cr, cr, 2*cr), //--------------
 		"z",
 	}
 	e.stopButtonCircle.D(stopButtonCirclePath)
 
 	// Define the path data for the stop button border
 	stopButtonBorderPath := []string{
-		fmt.Sprintf("M %v %v", xp-cr-5.0, yp-cr-5),
-		fmt.Sprintf("M %v %v", xp+5, yp),
-		fmt.Sprintf("h %v", L-10),
-		"a 5,5 0 0 1 5,5",
-		fmt.Sprintf("v %v", L-10),
-		"a 5,5 0 0 1 -5,5",
-		fmt.Sprintf("h -%v", L-10),
-		"a 5,5 0 0 1 -5,-5",
-		fmt.Sprintf("v -%v", L-10),
-		"a 5,5 0 0 1 5,-5",
+		fmt.Sprintf("M %v %v", xp-cr-rulesDensity.Density(5), yp-cr-rulesDensity.Density(5)),                                                   //-----------------------
+		fmt.Sprintf("M %v %v", xp+rulesDensity.Density(5), yp),                                                                                 //-----------------------
+		fmt.Sprintf("h %v", L-rulesDensity.Density(10)),                                                                                        //-----------------------
+		fmt.Sprintf("a %v,%v 0 0 1 %v,%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)), //---------------------
+		fmt.Sprintf("v %v", L-(10)), //-----------------------
+		fmt.Sprintf("a %v,%v 0 0 1 -%v,%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)), //---------------------
+		fmt.Sprintf("h -%v", L-rulesDensity.Density(10)), //-----------------------
+		fmt.Sprintf("a %v,%v 0 0 1 -%v,-%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)), //---------------------
+		fmt.Sprintf("v -%v", L-(10)), //-----------------------
+		fmt.Sprintf("a %v,%v 0 0 1 %v,-%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)), //---------------------
 		"z",
 	}
 	e.stopButtonBorder.D(stopButtonBorderPath)
 
-	e.stopButtonConnection.D(rulesConnection.GetPathDraw(width-57, height-42))
-	e.stopButtonConnectionArea.GetSvgPath().D(rulesConnection.GetPathAreaDraw(width-57, height-42))
-	e.stopButtonConnectionArea.SetXY(x+width-57, y+height-42)
+	e.stopButtonConnection.D(rulesConnection.GetPathDraw(width-rulesDensity.Density(57), height-rulesDensity.Density(42)))
+	e.stopButtonConnectionArea.GetSvgPath().D(rulesConnection.GetPathAreaDraw(width-rulesDensity.Density(57), height-rulesDensity.Density(42)))
+	e.stopButtonConnectionArea.SetXY(x+width-rulesDensity.Density(57), y+height-rulesDensity.Density(42))
 
 	return
 }

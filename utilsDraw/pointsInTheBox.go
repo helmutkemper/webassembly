@@ -1,7 +1,7 @@
 package utilsDraw
 
 import (
-	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"math"
 )
 
@@ -21,8 +21,8 @@ import (
 //	size from center: Math.min(width-2*margin, height-2*margin) / 2;
 //
 //	width and height are the new width and height of the box
-func PointsInTheBox(points [][]rulesDesity.Density, size, width, height rulesDesity.Density, rotation float64) [][]rulesDesity.Density {
-	const infinity = rulesDesity.Density(math.MaxFloat32)
+func PointsInTheBox(points [][]rulesDensity.Density, size, width, height rulesDensity.Density, rotation float64) [][]rulesDensity.Density {
+	const infinity = rulesDensity.Density(math.MaxFloat32)
 	minX, maxX := infinity, -infinity
 	minY, maxY := infinity, -infinity
 
@@ -56,7 +56,7 @@ func PointsInTheBox(points [][]rulesDesity.Density, size, width, height rulesDes
 	cosA := math.Cos(rotation)
 	sinA := math.Sin(rotation)
 
-	pointsCalculated := make([][]rulesDesity.Density, 0, len(points))
+	pointsCalculated := make([][]rulesDensity.Density, 0, len(points))
 
 	// Recalcular os pontos
 	for _, point := range points {
@@ -74,13 +74,13 @@ func PointsInTheBox(points [][]rulesDesity.Density, size, width, height rulesDes
 		px := centerX + rotX
 		py := centerY + rotY
 
-		pointsCalculated = append(pointsCalculated, []rulesDesity.Density{rulesDesity.Density(px), rulesDesity.Density(py)})
+		pointsCalculated = append(pointsCalculated, []rulesDensity.Density{rulesDensity.Density(px), rulesDensity.Density(py)})
 	}
 
 	return pointsCalculated
 }
 
-func maximum(a, b rulesDesity.Density) rulesDesity.Density {
+func maximum(a, b rulesDensity.Density) rulesDensity.Density {
 	if a > b {
 		return a
 	}

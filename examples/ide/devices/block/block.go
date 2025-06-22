@@ -4,13 +4,14 @@ import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/examples/ide/utils"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"image/color"
+	"log"
 	"syscall/js"
 )
 
@@ -19,15 +20,15 @@ type Block struct {
 	autoId string
 	name   string
 
-	x      rulesDesity.Density
-	y      rulesDesity.Density
-	width  rulesDesity.Density
-	height rulesDesity.Density
+	x      rulesDensity.Density
+	y      rulesDensity.Density
+	width  rulesDensity.Density
+	height rulesDensity.Density
 
 	initialized bool
 
-	blockMinimumWidth  rulesDesity.Density
-	blockMinimumHeight rulesDesity.Density
+	blockMinimumWidth  rulesDensity.Density
+	blockMinimumHeight rulesDensity.Density
 
 	classListName string
 
@@ -64,7 +65,7 @@ type Block struct {
 
 	ornament ornament.Draw
 
-	onResizeFunc func(args []js.Value, width, height rulesDesity.Density)
+	onResizeFunc func(args []js.Value, width, height rulesDensity.Density)
 
 	gridAdjust rulesStage.GridAdjust
 }
@@ -81,7 +82,7 @@ func (e *Block) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
 	e.gridAdjust = gridAdjust
 }
 
-func (e *Block) adjustXYToGrid(x, y rulesDesity.Density) (cx, cy rulesDesity.Density) {
+func (e *Block) adjustXYToGrid(x, y int) (cx, cy int) {
 	return e.gridAdjust.AdjustCenter(x, y)
 }
 
@@ -228,17 +229,20 @@ func (e *Block) GetSelected() (selected bool) {
 }
 
 // createBlock Prepare all divs and CSS
-func (e *Block) createBlock(x, y, width, height rulesDesity.Density) {
+func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 
-	x, y = e.adjustXYToGrid(x, y)
-	width, height = e.adjustXYToGrid(width, height)
+	xInt, yInt := e.adjustXYToGrid(x.GetInt(), y.GetInt())
+	widthInt, heightInt := e.adjustXYToGrid(width.GetInt(), height.GetInt())
+
+	x, y = rulesDensity.Convert(xInt), rulesDensity.Convert(yInt)
+	width, height = rulesDensity.Convert(widthInt), rulesDensity.Convert(heightInt)
 
 	e.block = factoryBrowser.NewTagSvg().
 		Id(e.id).
-		X(2 * x.GetInt()).
-		Y(2 * y.GetInt()).
-		Width(2 * width.GetInt()).
-		Height(2 * height.GetInt())
+		X(x.GetInt()).
+		Y(y.GetInt()).
+		Width(width.GetInt()).
+		Height(height.GetInt())
 	e.ideStage.Append(e.block)
 
 	e.selectDiv = factoryBrowser.NewTagSvgRect().
@@ -265,6 +269,7 @@ func (e *Block) createBlock(x, y, width, height rulesDesity.Density) {
 	e.resizerTopRight.SetCY(y)
 	e.ideStage.Append(e.resizerTopRight.GetSvg())
 
+	log.Printf("y: %v height: %v", y.GetInt(), height.GetInt())
 	e.resizerBottomLeft = e.resizeButton.GetNew()
 	e.resizerBottomLeft.SetName("bottom-left")
 	e.resizerBottomLeft.SetCursor("nesw-resize")
@@ -325,7 +330,7 @@ func (e *Block) GetDeviceDiv() (element *html.TagSvg) {
 }
 
 // GetHeight returns the current height of the device.
-func (e *Block) GetHeight() (height rulesDesity.Density) {
+func (e *Block) GetHeight() (height rulesDensity.Density) {
 	return e.height
 }
 
@@ -345,17 +350,17 @@ func (e *Block) GetName() (name string) {
 }
 
 // GetWidth returns the current width of the device.
-func (e *Block) GetWidth() (width rulesDesity.Density) {
+func (e *Block) GetWidth() (width rulesDensity.Density) {
 	return e.width
 }
 
 // GetX Returns to coordinate X of the browser screen
-func (e *Block) GetX() (x rulesDesity.Density) {
+func (e *Block) GetX() (x rulesDensity.Density) {
 	return e.x
 }
 
 // GetY Returns to coordinate Y of the browser screen
-func (e *Block) GetY() (y rulesDesity.Density) {
+func (e *Block) GetY() (y rulesDensity.Density) {
 	return e.y
 }
 
@@ -398,7 +403,7 @@ func (e *Block) Init() (err error) {
 // initEvents initialize mouse events
 func (e *Block) initEvents() {
 	var isDragging, isResizing bool
-	var startX, startY, startWidth, startHeight, startLeft, startTop rulesDesity.Density
+	var startX, startY, startWidth, startHeight, startLeft, startTop int
 
 	// add / remove event listener requires pointers, so the variable should be initialized in this way
 	var drag, stopDrag, resizeMouseMove, stopResize js.Func
@@ -430,20 +435,17 @@ func (e *Block) initEvents() {
 	// Calculates the X position of the drag
 	dragX := func(args []js.Value) {
 
-		var dxD, dyD rulesDesity.Density
 		dx, dy := e.block.GetPointerPosition(args, e.main)
-		dxD = rulesDesity.Density(dx)
-		dyD = rulesDesity.Density(dy)
 
-		dxD -= startX
-		dyD -= startY
+		dx -= startX
+		dy -= startY
 
-		dxD, dyD = e.adjustXYToGrid(dxD, dyD)
+		dx, dy = e.adjustXYToGrid(dx, dy)
 
-		newLeft := e.min(e.max(0, startLeft+dxD), rulesDesity.Density(e.ideStage.GetClientWidth()-e.block.GetOffsetWidth()))
-		e.x = newLeft
-		e.block.X(newLeft.GetInt())
-		e.selectDiv.X(newLeft.GetInt())
+		newLeft := e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
+		e.x = rulesDensity.Convert(newLeft)
+		e.block.X(newLeft)
+		e.selectDiv.X(newLeft)
 
 		moveResizersX()
 		return
@@ -452,20 +454,17 @@ func (e *Block) initEvents() {
 	// Calculates the Y position of the drag
 	dragY := func(args []js.Value) {
 
-		var dxD, dyD rulesDesity.Density
 		dx, dy := e.block.GetPointerPosition(args, e.main)
-		dxD = rulesDesity.Density(dx)
-		dyD = rulesDesity.Density(dy)
 
-		dxD -= startX
-		dyD -= startY
+		dx -= startX
+		dy -= startY
 
-		dxD, dyD = e.adjustXYToGrid(dxD, dyD)
+		dx, dy = e.adjustXYToGrid(dx, dy)
 
-		newTop := e.min(e.max(0, startTop+dyD), rulesDesity.Density(e.ideStage.GetClientHeight()-e.block.GetOffsetHeight()))
-		e.y = newTop
-		e.block.Y(newTop.GetInt())
-		e.selectDiv.Y(newTop.GetInt())
+		newTop := e.min(e.max(0, startTop+dy), e.ideStage.GetClientHeight()-e.block.GetOffsetHeight())
+		e.y = rulesDensity.Convert(newTop)
+		e.block.Y(newTop)
+		e.selectDiv.Y(newTop)
 
 		moveResizersY()
 		return
@@ -510,13 +509,11 @@ func (e *Block) initEvents() {
 			return nil
 		}
 
-		stX, stY := e.block.GetPointerPosition(args, e.main)
-		startX = rulesDesity.Density(stX)
-		startY = rulesDesity.Density(stY)
+		startX, startY = e.block.GetPointerPosition(args, e.main)
 
 		isDragging = true
-		startLeft = rulesDesity.Density(e.block.GetOffsetLeft())
-		startTop = rulesDesity.Density(e.block.GetOffsetTop())
+		startLeft = e.block.GetOffsetLeft()
+		startTop = e.block.GetOffsetTop()
 
 		// The movement of the mouse must be captured from the document and not the dragged element, or when the mouse moves
 		// very fast, the drag to
@@ -545,36 +542,34 @@ func (e *Block) initEvents() {
 
 	resizeHorizontal := func(args []js.Value, name string) {
 		dx, dy := e.block.GetPointerPosition(args, e.main)
-		dxD := rulesDesity.Density(dx)
-		dyD := rulesDesity.Density(dy)
 
-		dxD -= startX
-		dyD -= startY
+		dx -= startX
+		dy -= startY
 
-		dxD, dyD = e.adjustXYToGrid(dxD, dyD)
+		dx, dy = e.adjustXYToGrid(dx, dy)
 
 		newLeft := startLeft
 		newWidth := startWidth
 
 		if name == "bottom-right" {
-			newWidth = e.min(startWidth+dxD, rulesDesity.Density(e.ideStage.GetClientWidth())-startLeft)
+			newWidth = e.min(startWidth+dx, e.ideStage.GetClientWidth()-startLeft)
 		} else if name == "bottom-left" {
-			newWidth = e.min(startWidth-dxD, startLeft+startWidth)
-			newLeft = e.max(0, startLeft+dxD)
+			newWidth = e.min(startWidth-dx, startLeft+startWidth)
+			newLeft = e.max(0, startLeft+dx)
 		} else if name == "top-right" {
-			newWidth = e.min(startWidth+dxD, rulesDesity.Density(e.ideStage.GetClientWidth())-startLeft)
+			newWidth = e.min(startWidth+dx, e.ideStage.GetClientWidth()-startLeft)
 		} else if name == "top-left" {
-			newWidth = e.min(startWidth-dxD, startLeft+startWidth)
-			newLeft = e.max(0, startLeft+dxD)
+			newWidth = e.min(startWidth-dx, startLeft+startWidth)
+			newLeft = e.max(0, startLeft+dx)
 		} else if name == "top-middle" {
 			return
 		} else if name == "bottom-middle" {
 			return
 		} else if name == "left-middle" {
-			newWidth = e.min(startWidth-dxD, startLeft+startWidth)
-			newLeft = e.max(0, startLeft+dxD)
+			newWidth = e.min(startWidth-dx, startLeft+startWidth)
+			newLeft = e.max(0, startLeft+dx)
 		} else if name == "right-middle" {
-			newWidth = e.min(startWidth+dxD, rulesDesity.Density(e.ideStage.GetClientWidth())-startLeft)
+			newWidth = e.min(startWidth+dx, e.ideStage.GetClientWidth()-startLeft)
 		}
 
 		// [tl]           [tr]
@@ -587,51 +582,52 @@ func (e *Block) initEvents() {
 		//
 		// Prevents the effect:
 		//   When drag TR or BR left, and the size is below minimum, the block is dragged left.
-		if newWidth < e.blockMinimumWidth {
+		if newWidth < e.blockMinimumWidth.GetInt() {
 			return
 		}
 
-		newWidth = e.max(e.blockMinimumWidth, newWidth)
+		newWidth = e.max(e.blockMinimumWidth.GetInt(), newWidth)
 
-		e.x = newLeft
-		e.width = newWidth
+		//newLeft = int(float64(newLeft) / rulesDensity.GetDensity())
+		//newWidth = int(float64(newWidth) / rulesDensity.GetDensity())
 
-		e.block.X(newLeft.GetInt())
-		e.block.Width(newWidth.GetInt())
-		e.selectDiv.X(newLeft.GetInt())
-		e.selectDiv.Width(newWidth.GetInt())
+		e.x = rulesDensity.Convert(newLeft)
+		e.width = rulesDensity.Convert(newWidth)
+
+		e.block.X(e.x.GetInt())
+		e.block.Width(e.width.GetInt())
+		e.selectDiv.X(e.x.GetInt())
+		e.selectDiv.Width(e.width.GetInt())
 
 		moveResizersX()
 	}
 
 	resizeVertical := func(args []js.Value, name string) {
 		dx, dy := e.block.GetPointerPosition(args, e.main)
-		dxD := rulesDesity.Density(dx)
-		dyD := rulesDesity.Density(dy)
 
-		dxD -= startX
-		dyD -= startY
+		dx -= startX
+		dy -= startY
 
-		dxD, dyD = e.adjustXYToGrid(dxD, dyD)
+		dx, dy = e.adjustXYToGrid(dx, dy)
 
 		newTop := startTop
 		newHeight := startHeight
 
 		if name == "bottom-right" {
-			newHeight = e.min(startHeight+dyD, rulesDesity.Density(e.ideStage.GetClientHeight())-startTop)
+			newHeight = e.min(startHeight+dy, e.ideStage.GetClientHeight()-startTop)
 		} else if name == "bottom-left" {
-			newHeight = e.min(startHeight+dyD, rulesDesity.Density(e.ideStage.GetClientHeight())-newTop)
+			newHeight = e.min(startHeight+dy, e.ideStage.GetClientHeight()-newTop)
 		} else if name == "top-right" {
-			newHeight = e.min(startHeight-dyD, startTop+startHeight)
-			newTop = e.max(0, startTop+dyD)
+			newHeight = e.min(startHeight-dy, startTop+startHeight)
+			newTop = e.max(0, startTop+dy)
 		} else if name == "top-left" {
-			newHeight = e.min(startHeight-dyD, startTop+startHeight)
-			newTop = e.max(0, startTop+dyD)
+			newHeight = e.min(startHeight-dy, startTop+startHeight)
+			newTop = e.max(0, startTop+dy)
 		} else if name == "top-middle" {
-			newHeight = e.min(startHeight-dyD, startTop+startHeight)
-			newTop = e.max(0, startTop+dyD)
+			newHeight = e.min(startHeight-dy, startTop+startHeight)
+			newTop = e.max(0, startTop+dy)
 		} else if name == "bottom-middle" {
-			newHeight = e.min(startHeight+dyD, rulesDesity.Density(e.ideStage.GetClientHeight())-newTop)
+			newHeight = e.min(startHeight+dy, e.ideStage.GetClientHeight()-newTop)
 		} else if name == "left-middle" {
 			return
 		} else if name == "right-middle" {
@@ -648,19 +644,19 @@ func (e *Block) initEvents() {
 		//
 		// Prevents the effect:
 		//   When drag TL or TR down, and the size is below minimum, the block is dragged down.
-		if newHeight < e.blockMinimumHeight {
+		if newHeight < e.blockMinimumHeight.GetInt() {
 			return
 		}
 
-		newHeight = e.max(e.blockMinimumHeight, newHeight)
+		newHeight = e.max(e.blockMinimumHeight.GetInt(), newHeight)
 
-		e.y = newTop
-		e.height = newHeight
+		e.y = rulesDensity.Convert(newTop)
+		e.height = rulesDensity.Convert(newHeight)
 
-		e.block.Y(newTop.GetInt())
-		e.block.Height(newHeight.GetInt())
-		e.selectDiv.Y(newTop.GetInt())
-		e.selectDiv.Height(newHeight.GetInt())
+		e.block.Y(e.y.GetInt())
+		e.block.Height(e.height.GetInt())
+		e.selectDiv.Y(e.y.GetInt())
+		e.selectDiv.Height(e.height.GetInt())
 
 		moveResizersY()
 	}
@@ -675,8 +671,8 @@ func (e *Block) initEvents() {
 		resizeVertical(args, resizerName)
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 
-		width := rulesDesity.Density(e.block.GetOffsetWidth())
-		height := rulesDesity.Density(e.block.GetOffsetHeight())
+		width := rulesDensity.Convert(e.block.GetOffsetWidth())
+		height := rulesDensity.Convert(e.block.GetOffsetHeight())
 		e.OnResize(args, width, height)
 
 		return nil
@@ -703,14 +699,12 @@ func (e *Block) initEvents() {
 
 		isResizing = true
 
-		stX, stY := e.block.GetPointerPosition(args, e.main)
-		startX = rulesDesity.Density(stX)
-		startY = rulesDesity.Density(stY)
+		startX, startY = e.block.GetPointerPosition(args, e.main)
 
-		startWidth = rulesDesity.Density(e.block.GetOffsetWidth())
-		startHeight = rulesDesity.Density(e.block.GetOffsetHeight())
-		startLeft = rulesDesity.Density(e.block.GetOffsetLeft())
-		startTop = rulesDesity.Density(e.block.GetOffsetTop())
+		startWidth = e.block.GetOffsetWidth()
+		startHeight = e.block.GetOffsetHeight()
+		startLeft = e.block.GetOffsetLeft()
+		startTop = e.block.GetOffsetTop()
 
 		js.Global().Call("addEventListener", "mousemove", resizeMouseMove, map[string]any{"passive": true})
 		js.Global().Call("addEventListener", "mouseup", stopResize, map[string]any{"passive": true})
@@ -743,7 +737,15 @@ func (e *Block) initEvents() {
 }
 
 // max Returns the maximum value
-func (e *Block) max(a, b rulesDesity.Density) (max rulesDesity.Density) {
+func (e *Block) maxD(a, b rulesDensity.Density) (max rulesDensity.Density) {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// max Returns the maximum value
+func (e *Block) max(a, b int) (max int) {
 	if a > b {
 		return a
 	}
@@ -751,7 +753,15 @@ func (e *Block) max(a, b rulesDesity.Density) (max rulesDesity.Density) {
 }
 
 // min Returns the minimum value
-func (e *Block) min(a, b rulesDesity.Density) (min rulesDesity.Density) {
+func (e *Block) min(a, b int) (min int) {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// min Returns the minimum value
+func (e *Block) minD(a, b rulesDensity.Density) (min rulesDensity.Density) {
 	if a < b {
 		return a
 	}
@@ -759,7 +769,7 @@ func (e *Block) min(a, b rulesDesity.Density) (min rulesDesity.Density) {
 }
 
 // OnResize cannot be shadowed by the main instance, so the function in SetOnResize
-func (e *Block) OnResize(args []js.Value, width, height rulesDesity.Density) {
+func (e *Block) OnResize(args []js.Value, width, height rulesDensity.Density) {
 	if e.onResizeFunc != nil {
 		e.onResizeFunc(args, width, height)
 	}
@@ -789,7 +799,7 @@ func (e *Block) SetFatherId(fatherId string) {
 }
 
 // SetHeight Defines the height property of the device
-func (e *Block) SetHeight(height rulesDesity.Density) {
+func (e *Block) SetHeight(height rulesDensity.Density) {
 	if !e.initialized {
 		e.height = height
 		return
@@ -805,12 +815,12 @@ func (e *Block) SetID(id string) (err error) {
 }
 
 // SetMinimumHeight Defines the minimum height of the device
-func (e *Block) SetMinimumHeight(height rulesDesity.Density) {
+func (e *Block) SetMinimumHeight(height rulesDensity.Density) {
 	e.blockMinimumHeight = height
 }
 
 // SetMinimumWidth Defines the minimum width of the device
-func (e *Block) SetMinimumWidth(width rulesDesity.Density) {
+func (e *Block) SetMinimumWidth(width rulesDensity.Density) {
 	e.blockMinimumWidth = width
 }
 
@@ -823,7 +833,7 @@ func (e *Block) SetName(name string) {
 // SetOnResize Receives the pointer to a function to be invoked during resizing
 //
 //	This function is due to the fact that the OnResize function cannot be shadowed by the main instance
-func (e *Block) SetOnResize(f func(args []js.Value, width, height rulesDesity.Density)) {
+func (e *Block) SetOnResize(f func(args []js.Value, width, height rulesDensity.Density)) {
 	e.onResizeFunc = f
 }
 
@@ -835,19 +845,19 @@ func (e *Block) SetOrnament(ornament ornament.Draw) {
 }
 
 // SetPosition Defines the coordinates (x, y) of the device
-func (e *Block) SetPosition(x, y rulesDesity.Density) {
+func (e *Block) SetPosition(x, y rulesDensity.Density) {
 	e.SetX(x)
 	e.SetY(y)
 }
 
 // SetSize Defines the height and width of the device
-func (e *Block) SetSize(width, height rulesDesity.Density) {
+func (e *Block) SetSize(width, height rulesDensity.Density) {
 	e.SetWidth(width)
 	e.SetHeight(height)
 }
 
 // SetWidth Defines the width property of the device
-func (e *Block) SetWidth(width rulesDesity.Density) {
+func (e *Block) SetWidth(width rulesDensity.Density) {
 	if !e.initialized {
 		e.width = width
 		return
@@ -857,7 +867,7 @@ func (e *Block) SetWidth(width rulesDesity.Density) {
 }
 
 // SetX Define a coordenada x da tela do navegador
-func (e *Block) SetX(x rulesDesity.Density) {
+func (e *Block) SetX(x rulesDensity.Density) {
 	if !e.initialized {
 		e.x = x
 		return
@@ -867,7 +877,7 @@ func (e *Block) SetX(x rulesDesity.Density) {
 }
 
 // SetY Set the coordinate X of the browser screen
-func (e *Block) SetY(y rulesDesity.Density) {
+func (e *Block) SetY(y rulesDensity.Density) {
 	if !e.initialized {
 		e.y = y
 		return

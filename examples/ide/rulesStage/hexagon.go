@@ -69,7 +69,6 @@ func (e *Hexagon) GetCenter() (x, y rulesDensity.Density) {
 
 // AdjustCenter recalculates and returns the adjusted pixel coordinates (cx, cy) for the center of a hexagon based on inputs (x, y).
 func (e *Hexagon) AdjustCenter(x, y int) (cx, cy int) {
-	return x, y
 	hex := e.colHexToRow(hexagon.Point{X: float64(x), Y: float64(y)})
 	point := hexagon.HexToPixel(e.layout, hex)
 	return int(point.X), int(point.Y)

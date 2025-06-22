@@ -6,6 +6,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/stage"
 	"github.com/helmutkemper/webassembly/examples/ide/devices"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/hexagon"
 	"github.com/helmutkemper/webassembly/platform/components"
@@ -148,14 +149,14 @@ func main() {
 	//	mainSvg.ViewBox([]float64{0, 0, 0.5 * float64(screenWidth), 0.5 * float64(screenHeight)})
 	//}()
 
-	size := 30
+	size := rulesDesity.Density(30)
 	hex := new(rulesStage.Hexagon)
 	hex.Init(0, 0, size)
 
 	cellCanvas := new(CanvasCell)
 	cellCanvas.SetCalcSystem(hex)
-	cellCanvas.SetWidth(screenWidth)
-	cellCanvas.SetHeight(screenHeight)
+	cellCanvas.SetWidth(rulesDesity.Density(screenWidth))
+	cellCanvas.SetHeight(rulesDesity.Density(screenHeight))
 	cellCanvas.CanvasInit()
 
 	hexCanvas := new(HexagonDraw)
@@ -191,7 +192,7 @@ func main() {
 	stmLoop.SetResizeButton(resizeButton)
 	stmLoop.SetGridAdjust(hex)
 	stmLoop.SetMainSvg(mainSvg)
-	stmLoop.SetPosition(500, 500)
+	stmLoop.SetPosition(50, 50)
 	_ = stmLoop.Init()
 	//url := stmLoop.ToPng()
 
@@ -241,21 +242,21 @@ func main() {
 
 type CanvasCell struct {
 	canvas                    *html.TagCanvas
-	canvasWidth, canvasHeight int
+	canvasWidth, canvasHeight rulesDesity.Density
 
 	fontFamily string
-	fontSize   int
+	fontSize   rulesDesity.Density
 	fontWeight html.FontWeightRule
 	fontStyle  html.FontStyleRule
 
 	calcSystem CalcSystem
 }
 
-func (e *CanvasCell) SetWidth(width int) {
+func (e *CanvasCell) SetWidth(width rulesDesity.Density) {
 	e.canvasWidth = width
 }
 
-func (e *CanvasCell) SetHeight(height int) {
+func (e *CanvasCell) SetHeight(height rulesDesity.Density) {
 	e.canvasHeight = height
 }
 
@@ -269,7 +270,7 @@ func (e *CanvasCell) CanvasInit() {
 	e.fontWeight = html.KFontWeightRuleNormal
 	e.fontStyle = html.KFontStyleRuleNormal
 
-	e.canvas = factoryBrowser.NewTagCanvas(e.canvasWidth, e.canvasHeight).
+	e.canvas = factoryBrowser.NewTagCanvas(e.canvasWidth.GetInt(), e.canvasHeight.GetInt()).
 		Import("canvas").
 		StrokeStyle(color.RGBA{R: 0x00, G: 0x00, B: 0x00, A: 0x20}) // todo: tirar daqui
 
@@ -277,7 +278,7 @@ func (e *CanvasCell) CanvasInit() {
 		html.Font{
 			Style:  e.fontStyle,
 			Weight: e.fontWeight,
-			Size:   e.fontSize,
+			Size:   e.fontSize.GetInt(),
 			Family: e.fontFamily,
 		},
 	)
@@ -301,14 +302,14 @@ func (e *CanvasCell) SetColRow(col, row int) {
 	for k, point := range points {
 
 		if k == 0 {
-			e.canvas.MoveTo(point[0], point[1])
+			e.canvas.MoveTo(point[0].GetInt(), point[1].GetInt())
 			continue
 		}
 
-		e.canvas.LineTo(point[0], point[1])
+		e.canvas.LineTo(point[0].GetInt(), point[1].GetInt())
 	}
 
-	e.canvas.LineTo(points[0][0], points[0][1])
+	e.canvas.LineTo(points[0][0].GetInt(), points[0][1].GetInt())
 	e.canvas.Stroke()
 }
 
@@ -316,14 +317,14 @@ func (e *CanvasCell) SetText(text string) {
 	fontWeight := e.fontWeight.String()
 	fontStyle := e.fontStyle.String()
 
-	width, height := utilsText.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize)
+	width, height := utilsText.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize.GetInt())
 
 	cx, cy := e.calcSystem.GetCenter()
 
 	x := cx - width/2
 	y := cy + height/2 - height/5
 	e.canvas.FillStyle("blue")
-	e.canvas.FillText(text, x, y, 0)
+	e.canvas.FillText(text, x.GetInt(), y.GetInt(), 0)
 }
 
 func (e *CanvasCell) GetElement() (tagCanvas any) {
@@ -339,17 +340,17 @@ type DrawCell interface {
 
 type CalcSystem interface {
 	GetColRow() (col, row int)
-	GetCenter() (x, y int)
+	GetCenter() (x, y rulesDesity.Density)
 	SetRowCol(col, row int)
 	GetPath() (path []string)
-	GetPoints() (points [][2]int)
+	GetPoints() (points [][2]rulesDesity.Density)
 }
 
 type HexagonDraw struct {
 	svg    *html.TagSvg
 	canvas *html.TagCanvas
 	sides  int
-	space  int
+	space  rulesDesity.Density
 	radius int
 	layout hexagon.Layout
 

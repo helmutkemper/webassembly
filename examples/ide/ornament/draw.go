@@ -2,6 +2,7 @@ package ornament
 
 import (
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
 	"syscall/js"
 )
 
@@ -12,7 +13,7 @@ type Draw interface {
 	Init() (err error)
 
 	// Update Draw the element design
-	Update(x, y, width, height int) (err error)
+	Update(x, y, width, height rulesDesity.Density) (err error)
 
 	// GetSvg Returns the SVG tag with the element design
 	GetSvg() (svg *html.TagSvg)

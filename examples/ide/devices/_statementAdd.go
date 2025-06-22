@@ -20,7 +20,7 @@ type StatementAdd struct {
 	defaultHeight         int
 	horizontalMinimumSize int
 	verticalMinimumSize   int
-	ornamentDraw          *math.OrnamentAdd
+	ornamentDraw          *_math.OrnamentAdd
 	id                    string
 	//inputA                *connection.Connection
 	//inputB                *connection.Connection
@@ -288,7 +288,7 @@ func (e *StatementAdd) Init() (err error) {
 	e.block.SetMinimumWidth(e.horizontalMinimumSize)
 	e.block.SetMinimumHeight(e.verticalMinimumSize)
 
-	e.ornamentDraw = new(math.OrnamentAdd)
+	e.ornamentDraw = new(_math.OrnamentAdd)
 	e.ornamentDraw.SetWarningMarkMargin(0)
 
 	inputXSetup := connection.Setup{

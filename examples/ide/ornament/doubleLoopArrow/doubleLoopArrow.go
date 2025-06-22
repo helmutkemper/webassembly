@@ -8,6 +8,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/connection/factoryConnection"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
 	"image/color"
 	"syscall/js"
 )
@@ -113,13 +114,13 @@ func (e *DoubleLoopArrow) Init() (err error) {
 }
 
 // Update Draw the element design
-func (e *DoubleLoopArrow) Update(x, y, width, height int) (err error) {
+func (e *DoubleLoopArrow) Update(x, y, width, height rulesDesity.Density) (err error) {
 	_ = e.WarningMarkExclamation.Update(x, y, width, height)
 	//e.svg.ViewBox([]int{0, 0, width, height})
 
-	margin := 10
-	r := 30
-	s := 40
+	margin := rulesDesity.Density(10)
+	r := rulesDesity.Density(30)
+	s := rulesDesity.Density(40)
 
 	// Define the double loop arrow path data
 	arrow := []string{
@@ -171,16 +172,16 @@ func (e *DoubleLoopArrow) Update(x, y, width, height int) (err error) {
 	e.backgroundContent.D(background)
 
 	// draw the stop button
-	cr := 5.0
-	cx := 20.0
-	cy := 20.0
-	xp := int(float64(width) - float64(margin) - 2.0*cr - 1.5*cx)
-	yp := int(float64(height) - float64(margin) - 2.0*cr - 1.5*cy)
+	cr := rulesDesity.Density(5.0)
+	cx := rulesDesity.Density(20.0)
+	cy := rulesDesity.Density(20.0)
+	xp := width - margin - 2.0*cr - 1.5*cx
+	yp := height - margin - 2.0*cr - 1.5*cy
 	L := 2*cr + 10
 
 	// Define the path data for the stop button circle
 	stopButtonCirclePath := []string{
-		fmt.Sprintf("M %v %v", int(float64(width)-float64(margin)-2.0*cr-cx), int(float64(height)-float64(margin)-2.0*cr-cy)),
+		fmt.Sprintf("M %v %v", width-margin-2.0*cr-cx, height-margin-2.0*cr-cy),
 		fmt.Sprintf("m -%v, 0", cr),
 		fmt.Sprintf("a %v, %v 0 1, 1 %v, 0", cr, cr, 2*cr),
 		fmt.Sprintf("a %v, %v 0 1, 1 -%v, 0", cr, cr, 2*cr),
@@ -190,7 +191,7 @@ func (e *DoubleLoopArrow) Update(x, y, width, height int) (err error) {
 
 	// Define the path data for the stop button border
 	stopButtonBorderPath := []string{
-		fmt.Sprintf("M %v %v", int(float64(xp)-cr-5.0), int(float64(yp)-cr-5)),
+		fmt.Sprintf("M %v %v", xp-cr-5.0, yp-cr-5),
 		fmt.Sprintf("M %v %v", xp+5, yp),
 		fmt.Sprintf("h %v", L-10),
 		"a 5,5 0 0 1 5,5",

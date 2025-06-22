@@ -1,6 +1,9 @@
 package utilsDraw
 
-import "math"
+import (
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+	"math"
+)
 
 // PointsInTheBox receives a list of points drawn in a square box and calculates the new coordinates for when the box is resized
 //
@@ -18,8 +21,8 @@ import "math"
 //	size from center: Math.min(width-2*margin, height-2*margin) / 2;
 //
 //	width and height are the new width and height of the box
-func PointsInTheBox(points [][]int, size, width, height int, rotation float64) [][]int {
-	const infinity = math.MaxInt
+func PointsInTheBox(points [][]rulesDesity.Density, size, width, height rulesDesity.Density, rotation float64) [][]rulesDesity.Density {
+	const infinity = rulesDesity.Density(math.MaxFloat32)
 	minX, maxX := infinity, -infinity
 	minY, maxY := infinity, -infinity
 
@@ -44,7 +47,7 @@ func PointsInTheBox(points [][]int, size, width, height int, rotation float64) [
 	shapeHeight := maxY - minY
 
 	// Escala baseada no menor lado da forma ajustada ao tamanho
-	scale := float64(size) / float64(max(shapeWidth, shapeHeight))
+	scale := float64(size) / float64(maximum(shapeWidth, shapeHeight))
 
 	// Centro do canvas
 	centerX := float64(width) / 2.0
@@ -53,7 +56,7 @@ func PointsInTheBox(points [][]int, size, width, height int, rotation float64) [
 	cosA := math.Cos(rotation)
 	sinA := math.Sin(rotation)
 
-	pointsCalculated := make([][]int, 0, len(points))
+	pointsCalculated := make([][]rulesDesity.Density, 0, len(points))
 
 	// Recalcular os pontos
 	for _, point := range points {
@@ -71,13 +74,13 @@ func PointsInTheBox(points [][]int, size, width, height int, rotation float64) [
 		px := centerX + rotX
 		py := centerY + rotY
 
-		pointsCalculated = append(pointsCalculated, []int{int(px), int(py)})
+		pointsCalculated = append(pointsCalculated, []rulesDesity.Density{rulesDesity.Density(px), rulesDesity.Density(py)})
 	}
 
 	return pointsCalculated
 }
 
-func max(a, b int) int {
+func maximum(a, b rulesDesity.Density) rulesDesity.Density {
 	if a > b {
 		return a
 	}

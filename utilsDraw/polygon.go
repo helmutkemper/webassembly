@@ -2,6 +2,7 @@ package utilsDraw
 
 import (
 	"fmt"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
 	"math"
 )
 
@@ -22,16 +23,16 @@ import (
 //	Cada ponto é calculado usando coordenadas polares, depois convertido para cartesiano.
 //
 //	O polígono pode ser rotacionado por um determinado ângulo (em radianos).
-func Polygon(sides, radius, cx, cy int, rotation float64) [][]int {
+func Polygon(sides int, radius, cx, cy rulesDesity.Density, rotation float64) [][]rulesDesity.Density {
 	// Centro do canvas
 
 	// Gerar os pontos do polígono
-	points := make([][]int, 0, sides+1)
+	points := make([][]rulesDesity.Density, 0, sides+1)
 	for i := 0; i <= sides; i++ {
 		angle := (2*math.Pi*float64(i))/float64(sides) + rotation
 		x := float64(cx) + float64(radius)*math.Cos(angle)
 		y := float64(cy) + float64(radius)*math.Sin(angle)
-		points = append(points, []int{int(x), int(y)})
+		points = append(points, []rulesDesity.Density{rulesDesity.Density(x), rulesDesity.Density(y)})
 	}
 
 	return points
@@ -50,7 +51,7 @@ func Polygon(sides, radius, cx, cy int, rotation float64) [][]int {
 //	Cria um slice de comandos SVG para desenhar um polígono fechado usando os pontos
 //	gerados pela função Polygon. Inicia com 'move to' (M),
 //	continua com 'line to' (L) para cada ponto, e termina com 'z' para fechar o formato.
-func PolygonPath(sides, radius, cx, cy int, rotation float64) (path []string) {
+func PolygonPath(sides int, radius, cx, cy rulesDesity.Density, rotation float64) (path []string) {
 	points := Polygon(sides, radius, cx, cy, rotation)
 
 	path = []string{

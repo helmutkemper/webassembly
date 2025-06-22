@@ -242,7 +242,7 @@ func (e *TagSvg) Init() (ref *TagSvg) {
 //	  Entrada:
 //	    args: args do listener
 //	    viewBoxFrom: elemento svg que contém um viewBox, geralmente o elemento svg principal
-func (e *TagSvg) GetPointerPosition(args []js.Value, viewBoxFrom Compatible) (x int, y int) {
+func (e *TagSvg) GetPointerPosition(args []js.Value, viewBoxFrom Compatible) (x, y int) {
 	var clientX, clientY int
 	event := args[0]
 
@@ -281,17 +281,6 @@ func (e *TagSvg) GetPointerPosition(args []js.Value, viewBoxFrom Compatible) (x 
 
 	return newX, newY
 }
-
-//<svg id="svg-root" width="100vw" height="100vh" viewBox="0 0 800 600">
-//  <g id="movable-group">
-//    <path d="M..." fill="red" />
-//    <circle cx="..." cy="..." r="..." />
-//    <!-- outros elementos -->
-//  </g>
-//</svg>
-
-//<svg id="child1" ...></svg>
-//<svg id="child2" ...></svg>
 
 // GetWidth
 //

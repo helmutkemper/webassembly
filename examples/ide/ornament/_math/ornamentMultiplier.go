@@ -1,4 +1,4 @@
-package math
+package _math
 
 type OrnamentMultiplier struct {
 	OrnamentOpAmpSymbol

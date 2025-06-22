@@ -3,6 +3,7 @@ package block
 import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
 	"github.com/helmutkemper/webassembly/utilsDraw"
 )
 
@@ -29,7 +30,7 @@ type ResizeButton interface {
 	//
 	//  Define a coordenada X (cx) do centro do hexágono.
 	//  Se o elemento SVG já estiver inicializado, sua posição X é atualizada de forma correspondente.
-	SetCX(cx int)
+	SetCX(cx rulesDesity.Density)
 
 	// SetCY
 	//
@@ -42,7 +43,7 @@ type ResizeButton interface {
 	//
 	//  Define a coordenada Y (cy) do centro do hexágono.
 	//  Se o elemento SVG já estiver inicializado, sua posição Y é atualizada de forma correspondente.
-	SetCY(cy int)
+	SetCY(cy rulesDesity.Density)
 
 	// SetSides
 	//
@@ -64,7 +65,7 @@ type ResizeButton interface {
 	// Português:
 	//
 	//  Define o raio (distância do centro ao vértice).
-	SetSize(size int)
+	SetSize(size rulesDesity.Density)
 
 	// SetRotation
 	//
@@ -108,7 +109,7 @@ type ResizeButton interface {
 	// Português:
 	//
 	//  Define a largura da borda do polígono.
-	SetStrokeWidth(width int)
+	SetStrokeWidth(width rulesDesity.Density)
 
 	// SetName
 	//
@@ -172,19 +173,19 @@ type ResizeButtonHexagon struct {
 	svg    *html.TagSvg     // SVG container element / Elemento container SVG
 	button *html.TagSvgPath // SVG path element / Elemento de caminho SVG
 
-	colorFill   any // Fill color / Cor de preenchimento
-	colorStroke any // Stroke color / Cor da borda
-	StrokeWidth int // Stroke width / Espessura da borda
+	colorFill   any                 // Fill color / Cor de preenchimento
+	colorStroke any                 // Stroke color / Cor da borda
+	StrokeWidth rulesDesity.Density // Stroke width / Espessura da borda
 
 	name    string // Name used as an identifier
 	cursor  any    // cursor represents the mouse pointer style or behavior for the element.
 	visible bool   // visible indicates whether the hexagon button is visible or hidden.
 
-	sides    int     // Number of sides / Número de lados
-	size     int     // Radius (size from center to vertex) / Raio (distância do centro ao vértice)
-	cx       int     // Center X (not used here) / Centro X (não utilizado aqui)
-	cy       int     // Center Y (não usado aqui) / Centro Y (não utilizado aqui)
-	rotation float64 // Rotation in radians / Rotação em radianos
+	sides    int                 // Number of sides / Número de lados
+	size     rulesDesity.Density // Radius (size from center to vertex) / Raio (distância do centro ao vértice)
+	cx       rulesDesity.Density // Center X (not used here) / Centro X (não utilizado aqui)
+	cy       rulesDesity.Density // Center Y (não usado aqui) / Centro Y (não utilizado aqui)
+	rotation float64             // Rotation in radians / Rotação em radianos
 }
 
 func (e *ResizeButtonHexagon) GetNew() (newResize *ResizeButtonHexagon) {
@@ -234,13 +235,13 @@ func (e *ResizeButtonHexagon) SetName(name string) {
 //
 //	Define a coordenada X (cx) do centro do hexágono.
 //	Se o elemento SVG já estiver inicializado, sua posição X é atualizada de forma correspondente.
-func (e *ResizeButtonHexagon) SetCX(cx int) {
+func (e *ResizeButtonHexagon) SetCX(cx rulesDesity.Density) {
 	e.cx = cx
 
 	// Only update position if SVG is already initialized
 	// Atualiza a posição apenas se o SVG já estiver inicializado
 	if e.svg != nil {
-		e.svg.X(cx - e.size)
+		e.svg.X(cx.GetInt() - e.size.GetInt())
 	}
 }
 
@@ -255,13 +256,13 @@ func (e *ResizeButtonHexagon) SetCX(cx int) {
 //
 //	Define a coordenada Y (cy) do centro do hexágono.
 //	Se o elemento SVG já estiver inicializado, sua posição Y é atualizada de forma correspondente.
-func (e *ResizeButtonHexagon) SetCY(cy int) {
+func (e *ResizeButtonHexagon) SetCY(cy rulesDesity.Density) {
 	e.cy = cy
 
 	// Only update position if SVG is already initialized
 	// Atualiza a posição apenas se o SVG já estiver inicializado
 	if e.svg != nil {
-		e.svg.Y(cy - e.size)
+		e.svg.Y(cy.GetInt() - e.size.GetInt())
 	}
 }
 
@@ -300,7 +301,7 @@ func (e *ResizeButtonHexagon) SetSides(sides int) {
 // Português:
 //
 //	Define o raio (distância do centro ao vértice).
-func (e *ResizeButtonHexagon) SetSize(size int) {
+func (e *ResizeButtonHexagon) SetSize(size rulesDesity.Density) {
 	e.size = size
 }
 
@@ -360,7 +361,7 @@ func (e *ResizeButtonHexagon) SetStrokeColor(color any) {
 // Português:
 //
 //	Define a largura da borda do polígono.
-func (e *ResizeButtonHexagon) SetStrokeWidth(width int) {
+func (e *ResizeButtonHexagon) SetStrokeWidth(width rulesDesity.Density) {
 	e.StrokeWidth = width
 
 	if e.svg != nil {
@@ -421,10 +422,10 @@ func (e *ResizeButtonHexagon) init() {
 	// Create SVG root element
 	// Cria o elemento SVG raiz
 	e.svg = factoryBrowser.NewTagSvg().
-		Width(2*e.size).
-		Height(2*e.size).
-		X(e.cx-e.size).
-		Y(e.cy).
+		Width(2*e.size.GetInt()).
+		Height(2*e.size.GetInt()).
+		X(e.cx.GetInt()-e.size.GetInt()).
+		Y(e.cy.GetInt()).
 		DataKey("name", e.name)
 
 	// Create and configure the path element
@@ -432,7 +433,7 @@ func (e *ResizeButtonHexagon) init() {
 	e.button = factoryBrowser.NewTagSvgPath().
 		Fill(e.colorFill).
 		Stroke(e.colorStroke).
-		StrokeWidth(e.StrokeWidth).
+		StrokeWidth(e.StrokeWidth.GetInt()).
 		D(path)
 
 	// Add the path to the SVG

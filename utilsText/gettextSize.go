@@ -1,6 +1,7 @@
 package utilsText
 
 import (
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
 	"syscall/js"
 )
 
@@ -24,7 +25,7 @@ import (
 //		      textUtil.KFontAwesomeSolid para usar font-family="FARegular" ou font-family="FASolid";
 //	     * Alguns ícones apresentam uma caixa de contorno incompatível com o desenho contido no ícone e necessitam de
 //	       correção manual.
-func GetTextSize(text, fontFamily, fontWeight, fontStyle string, fontSize int) (width, height int) {
+func GetTextSize(text, fontFamily, fontWeight, fontStyle string, fontSize int) (width, height rulesDesity.Density) {
 	doc := js.Global().Get("document")
 	svgNS := "http://www.w3.org/2000/svg"
 
@@ -47,8 +48,8 @@ func GetTextSize(text, fontFamily, fontWeight, fontStyle string, fontSize int) (
 	doc.Get("body").Call("appendChild", svg)
 
 	bbox := svgText.Call("getBBox")
-	width = bbox.Get("width").Int()
-	height = bbox.Get("height").Int()
+	width = rulesDesity.Density(bbox.Get("width").Int())
+	height = rulesDesity.Density(bbox.Get("height").Int())
 
 	doc.Get("body").Call("removeChild", svg)
 	return

@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
@@ -18,10 +19,10 @@ type StatementLoop struct {
 
 	debugSelected bool
 
-	defaultWidth          int
-	defaultHeight         int
-	horizontalMinimumSize int
-	verticalMinimumSize   int
+	defaultWidth          rulesDesity.Density
+	defaultHeight         rulesDesity.Density
+	horizontalMinimumSize rulesDesity.Density
+	verticalMinimumSize   rulesDesity.Density
 	ornamentDraw          *doubleLoopArrow.DoubleLoopArrow
 	id                    string
 	//connStop              *connection.Connection
@@ -43,11 +44,11 @@ func (e *StatementLoop) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
 	e.block.SetGridAdjust(gridAdjust)
 }
 
-func (e *StatementLoop) GetWidth() (width int) {
+func (e *StatementLoop) GetWidth() (width rulesDesity.Density) {
 	return e.block.GetWidth()
 }
 
-func (e *StatementLoop) GetHeight() (height int) {
+func (e *StatementLoop) GetHeight() (height rulesDesity.Density) {
 	return e.block.GetHeight()
 }
 
@@ -76,11 +77,11 @@ func (e *StatementLoop) SetName(name string) {
 	e.block.SetName(name)
 }
 
-func (e *StatementLoop) SetPosition(x, y int) {
+func (e *StatementLoop) SetPosition(x, y rulesDesity.Density) {
 	e.block.SetPosition(x, y)
 }
 
-func (e *StatementLoop) SetSize(wight, height int) {
+func (e *StatementLoop) SetSize(wight, height rulesDesity.Density) {
 	e.block.SetSize(wight, height)
 }
 

@@ -1,6 +1,9 @@
 package rulesConnection
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDesity"
+)
 
 const (
 	// KWidth Connection width
@@ -22,7 +25,7 @@ const (
 	KConnectionPrefix = "connection"
 )
 
-func GetPathDraw(x, y int) (path []string) {
+func GetPathDraw(x, y rulesDesity.Density) (path []string) {
 	return []string{
 		fmt.Sprintf("M %v %v", x, y),
 		fmt.Sprintf("l %v 0", KWidth),
@@ -32,7 +35,7 @@ func GetPathDraw(x, y int) (path []string) {
 	}
 }
 
-func GetPathAreaDraw(x, y int) (path []string) {
+func GetPathAreaDraw(x, y rulesDesity.Density) (path []string) {
 	return []string{
 		fmt.Sprintf("M %v %v", x-(KWidthArea-KWidth)/2, y-(KHeightArea-KHeight)/2),
 		fmt.Sprintf("l %v 0", KWidthArea),

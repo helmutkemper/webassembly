@@ -52,8 +52,8 @@ type Hexagon struct {
 func (e *Hexagon) Init(x, y, size rulesDensity.Density) {
 	e.layout = hexagon.Layout{
 		Orientation: hexagon.LayoutFlat,
-		Size:        hexagon.Point{X: float64(size), Y: float64(size)},
-		Origin:      hexagon.Point{X: float64(x), Y: float64(y)},
+		Size:        hexagon.Point{X: size.GetFloat(), Y: size.GetFloat()},
+		Origin:      hexagon.Point{X: x.GetFloat(), Y: y.GetFloat()},
 	}
 }
 
@@ -76,7 +76,7 @@ func (e *Hexagon) AdjustCenter(x, y int) (cx, cy int) {
 
 // SetPixelXY sets the hexagon's column and row based on the provided pixel coordinates (x, y).
 func (e *Hexagon) SetPixelXY(x, y rulesDensity.Density) {
-	hex := e.colHexToRow(hexagon.Point{X: float64(x), Y: float64(y)})
+	hex := e.colHexToRow(hexagon.Point{X: x.GetFloat(), Y: y.GetFloat()})
 	cord := hexagon.QDoubledFromCube(hex)
 	e.SetRowCol(cord.Col, cord.Row)
 }
@@ -104,8 +104,8 @@ func (e *Hexagon) convertManager(col, row int) {
 	e.row = row
 	e.hex = e.colRowToHex(col, row)
 	e.point = hexagon.HexToPixel(e.layout, e.hex)
-	e.cx = rulesDensity.Density(e.point.X)
-	e.cy = rulesDensity.Density(e.point.Y)
+	e.cx = rulesDensity.Convert(int(e.point.X))
+	e.cy = rulesDensity.Convert(int(e.point.Y))
 }
 
 // GetPath generates a path for the hexagon's outline as a series of SVG-compatible commands based on its corners.
@@ -128,7 +128,7 @@ func (e *Hexagon) GetPoints() (points [][2]rulesDensity.Density) {
 	ps := hexagon.PolygonCorners(e.layout, e.hex)
 	points = make([][2]rulesDensity.Density, len(ps))
 	for k, point := range ps {
-		points[k] = [2]rulesDensity.Density{rulesDensity.Density(point.X), rulesDensity.Density(point.Y)}
+		points[k] = [2]rulesDensity.Density{rulesDensity.Convert(int(point.X)), rulesDensity.Convert(int(point.Y))}
 	}
 
 	return

@@ -177,10 +177,10 @@ func main() {
 	}
 
 	resizeButton := new(block.ResizeButtonHexagon)
-	resizeButton.SetSize(10)
+	resizeButton.SetSize(6)
 	resizeButton.SetSides(6)
 	resizeButton.SetFillColor("red")
-	resizeButton.SetStrokeColor("none")
+	resizeButton.SetStrokeColor("green")
 	resizeButton.SetStrokeWidth(2)
 	//resizeButton.SetRotation(math.Pi / 4)
 	//resizeButton.SetCX(30)
@@ -236,6 +236,23 @@ func main() {
 	img.Get("style").Set("left", "0")
 	img.Get("style").Set("zIndex", "-1")
 	img.Get("style").Set("visibility", "hidden")
+
+	//for a := 0; a != 300; a += 15 {
+	//	for b := 0; b != 300; b += 15 {
+	//		var cxD, cyD = rulesDensity.Density(a), rulesDensity.Density(b)
+	//		cx, cy := hex.AdjustCenter(cxD.GetInt(), cyD.GetInt())
+	//		rec := factoryBrowser.NewTagSvg().
+	//			Append(
+	//				factoryBrowser.NewTagSvgRect().
+	//					X(cx - 3).
+	//					Y(cy - 3).
+	//					Width(6).
+	//					Height(6).
+	//					Fill("red"),
+	//			)
+	//		mainSvg.Append(rec)
+	//	}
+	//}
 
 	done := make(chan struct{})
 	<-done

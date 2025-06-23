@@ -298,12 +298,8 @@ func (e *StatementLoop) Init() (err error) {
 	horizontalMinimumSize, verticalMinimumSize := e.gridAdjust.AdjustCenter(e.horizontalMinimumSize.GetInt(), e.verticalMinimumSize.GetInt())
 	e.horizontalMinimumSize, e.verticalMinimumSize = rulesDensity.Convert(horizontalMinimumSize), rulesDensity.Convert(verticalMinimumSize)
 
-	if e.block.GetWidth() == 0 {
-		e.block.SetWidth(e.defaultWidth)
-	}
-
-	if e.block.GetHeight() == 0 {
-		e.block.SetHeight(e.defaultHeight)
+	if e.block.GetWidth() == 0 || e.block.GetHeight() == 0 {
+		e.block.SetSize(e.defaultWidth, e.defaultHeight)
 	}
 
 	e.block.SetName("StatementLoop")
@@ -389,7 +385,8 @@ func (e *StatementLoop) Init() (err error) {
 	e.menu.SetContentFunc(e.getMenu)
 	e.menu.Init()
 
-	//e.block.SetResize(true)
+	e.block.SetResize(true)
+	//e.block.SetSelected(true)
 
 	return nil
 }

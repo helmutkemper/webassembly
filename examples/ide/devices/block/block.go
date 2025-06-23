@@ -434,27 +434,13 @@ func (e *Block) initEvents() {
 		e.resizerRightMiddle.SetCY(e.y + e.height/2)
 	}
 
-	// Calculates the X position of the drag
-	dragX := func(args []js.Value) {
+	// Joins the calculations of X and Y of the drag
+	drag = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if !isDragging {
+			return nil
+		}
 
-		dx, dy := e.block.GetPointerPosition(args, e.main)
-
-		dx -= startX
-		dy -= startY
-
-		newLeft := e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
-		newLeft, dy = e.adjustXYToGrid(newLeft, dy)
-
-		e.x = rulesDensity.Convert(newLeft)
-		e.block.X(newLeft)
-		e.selectDiv.X(newLeft)
-
-		moveResizersX()
-		return
-	}
-
-	// Calculates the Y position of the drag
-	dragY := func(args []js.Value) {
+		e.block.AddStyle("cursor", "grabbing")
 
 		dx, dy := e.block.GetPointerPosition(args, e.main)
 
@@ -464,24 +450,13 @@ func (e *Block) initEvents() {
 		newTop := e.min(e.max(0, startTop+dy), e.ideStage.GetClientHeight()-e.block.GetOffsetHeight())
 		dx, newTop = e.adjustXYToGrid(dx, newTop)
 
-		e.y = rulesDensity.Convert(newTop)
-		e.block.Y(newTop)
-		e.selectDiv.Y(newTop)
+		newLeft := e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
+		newLeft, dy = e.adjustXYToGrid(newLeft, dy)
 
+		e.SetPosition(rulesDensity.Convert(newLeft), rulesDensity.Convert(newTop))
+
+		moveResizersX()
 		moveResizersY()
-		return
-	}
-
-	// Joins the calculations of X and Y of the drag
-	drag = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		if !isDragging {
-			return nil
-		}
-
-		e.block.AddStyle("cursor", "grabbing")
-
-		dragX(args)
-		dragY(args)
 
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 		return nil
@@ -514,8 +489,8 @@ func (e *Block) initEvents() {
 		startX, startY = e.block.GetPointerPosition(args, e.main)
 
 		isDragging = true
-		startLeft = e.block.GetOffsetLeft()
-		startTop = e.block.GetOffsetTop()
+		startLeft = e.x.GetInt()
+		startTop = e.y.GetInt()
 
 		// The movement of the mouse must be captured from the document and not the dragged element, or when the mouse moves
 		// very fast, the drag to
@@ -673,17 +648,19 @@ func (e *Block) initEvents() {
 		newLeft, newWidth := resizeHorizontal(args, resizerName)
 		newTop, newHeight := resizeVertical(args, resizerName)
 
+		log.Printf("b x: %v", e.x)
+
 		e.SetPosition(rulesDensity.Convert(newLeft), rulesDensity.Convert(newTop))
 		e.SetSize(rulesDensity.Convert(newWidth), rulesDensity.Convert(newHeight))
-
+		log.Printf("a x: %v", e.x)
 		moveResizersX()
 		moveResizersY()
 
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 
-		width := rulesDensity.Convert(e.block.GetOffsetWidth())
-		height := rulesDensity.Convert(e.block.GetOffsetHeight())
-		e.OnResize(args, width, height)
+		//width := rulesDensity.Convert(e.block.GetOffsetWidth())
+		//height := rulesDensity.Convert(e.block.GetOffsetHeight())
+		e.OnResize(args, e.width, e.height)
 
 		return nil
 	})
@@ -711,10 +688,10 @@ func (e *Block) initEvents() {
 
 		startX, startY = e.block.GetPointerPosition(args, e.main)
 
-		startWidth = e.block.GetOffsetWidth()
-		startHeight = e.block.GetOffsetHeight()
-		startLeft = e.block.GetOffsetLeft()
-		startTop = e.block.GetOffsetTop()
+		startWidth = e.width.GetInt()
+		startHeight = e.height.GetInt()
+		startLeft = e.x.GetInt()
+		startTop = e.y.GetInt()
 
 		js.Global().Call("addEventListener", "mousemove", resizeMouseMove, map[string]any{"passive": true})
 		js.Global().Call("addEventListener", "mouseup", stopResize, map[string]any{"passive": true})

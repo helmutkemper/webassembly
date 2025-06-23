@@ -149,7 +149,7 @@ func main() {
 	//	mainSvg.ViewBox([]float64{0, 0, 0.5 * float64(screenWidth), 0.5 * float64(screenHeight)})
 	//}()
 
-	size := rulesDensity.Density(30)
+	size := rulesDensity.Density(10)
 	hex := new(rulesStage.Hexagon)
 	hex.Init(0, 0, size)
 

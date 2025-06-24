@@ -17,10 +17,8 @@ func Load(stage *html.TagSvg, path string) {
 	svgG := factoryBrowser.NewTagSvgG()
 	img := factoryBrowser.NewTagSvgImage().HRef(path)
 	text := factoryBrowser.NewTagSvgText().Fill("white")
-	rect := factoryBrowser.NewTagSvgRect().Stroke("red").StrokeWidth(1)
 	svgG.Append(img)
 	svgG.Append(text)
-	svgG.Append(rect)
 	stage.Append(svgG)
 
 	img.Get().Call("addEventListener", "load", js.FuncOf(func(this js.Value, p []js.Value) interface{} {
@@ -56,7 +54,7 @@ func Load(stage *html.TagSvg, path string) {
 
 		t := "Mussum Ipsum, cacilds vidis litro abertis. Copo furadis é disculpa de bebadis, arcu quam euismod magna. Quem num gosta di mim que vai caçá sua turmis! Per aumento de cachacis, eu reclamis. Suco de cevadiss deixa as pessoas mais interessantis.\n\nDiuretics paradis num copo é motivis de denguis. Interagi no mé, cursus quis, vehicula ac nisi. Segunda-feiris nun dá, eu vô me pirulitá! Paisis, filhis, espiritis santis.\n\nPraesent vel viverra nisi. Mauris aliquet nunc non turpis scelerisque, eget. Interagi no mé, cursus quis, vehicula ac nisi. Pra lá, depois divoltis porris, paradis. Si u mundo tá muito paradis? Toma um mé que o mundo vai girarzis!"
 
-		textToBox := splitter(t, x, y, int(float64(widthImg)*0.6))
+		textToBox := splitter(t, x, y, int(float64(widthImg)*0.6), int(float64(heightImg)*0.15))
 
 		text.X(x).
 			Y(y).
@@ -71,14 +69,12 @@ func Load(stage *html.TagSvg, path string) {
 			text.Append(tspan)
 		}
 
-		rect.X(x).Y(y).Width(int(float64(widthImg) * 0.6)).Height(int(float64(heightImg) * 0.15))
-
 		return nil
 	}))
 
 }
 
-func splitter(text string, x, y, widthMax int) (tSpan []*html.TagSvgTSpan) {
+func splitter(text string, x, y, widthMax, heightMax int) (tSpan []*html.TagSvgTSpan) {
 	tSpan = make([]*html.TagSvgTSpan, 0)
 	textList := make([]string, 0)
 
@@ -99,7 +95,13 @@ func splitter(text string, x, y, widthMax int) (tSpan []*html.TagSvgTSpan) {
 		}
 	}
 
+	y += 10 //font size
+	heightActual := 0
 	for k, splittedText := range textList {
+		heightActual += height + 4
+		if heightActual > heightMax {
+			return
+		}
 		tSpan = append(
 			tSpan,
 			factoryBrowser.NewTagSvgTSpan().

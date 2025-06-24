@@ -156,6 +156,17 @@ type ResizeButton interface {
 	GetSvg() (svg *html.TagSvg)
 
 	GetNew() (new *ResizeButtonHexagon)
+
+	// GetSpace
+	//
+	// English:
+	//
+	//  Returns the space in pixels between the center of the resort image and the edge of the image
+	//
+	// Português:
+	//
+	//  Retorna o espaço em pixels entre o centro do da imagem resizer e a borda da imagem
+	GetSpace() (space rulesDensity.Density)
 }
 
 // ResizeButtonHexagon
@@ -185,6 +196,7 @@ type ResizeButtonHexagon struct {
 	size     rulesDensity.Density // Radius (size from center to vertex) / Raio (distância do centro ao vértice)
 	cx       rulesDensity.Density // Center X (not used here) / Centro X (não utilizado aqui)
 	cy       rulesDensity.Density // Center Y (não usado aqui) / Centro Y (não utilizado aqui)
+	space    rulesDensity.Density // Space between the center of the resize and the edge of the image
 	rotation float64              // Rotation in radians / Rotação em radianos
 }
 
@@ -203,8 +215,35 @@ func (e *ResizeButtonHexagon) GetNew() (newResize *ResizeButtonHexagon) {
 	n.SetCX(e.cx)
 	n.SetCY(e.cy)
 	n.rotation = e.rotation
+	n.space = e.space
 	n.init()
 	return n
+}
+
+// SetSpace
+//
+// English:
+//
+//	Defines the space in pixels between the center of the resort image and the edge of the image
+//
+// Português:
+//
+//	Define o espaço em pixels entre o centro do da imagem resizer e a borda da imagem
+func (e *ResizeButtonHexagon) SetSpace(space rulesDensity.Density) {
+	e.space = space
+}
+
+// GetSpace
+//
+// English:
+//
+//	Returns the space in pixels between the center of the resort image and the edge of the image
+//
+// Português:
+//
+//	Retorna o espaço em pixels entre o centro do da imagem resizer e a borda da imagem
+func (e *ResizeButtonHexagon) GetSpace() (space rulesDensity.Density) {
+	return e.space
 }
 
 // SetName

@@ -252,30 +252,30 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	e.resizerTopLeft = e.resizeButton.GetNew()
 	e.resizerTopLeft.SetName("top-left")
 	e.resizerTopLeft.SetCursor("nwse-resize")
-	e.resizerTopLeft.SetCX(x)
-	e.resizerTopLeft.SetCY(y)
+	e.resizerTopLeft.SetCX(x - e.resizerTopLeft.GetSpace())
+	e.resizerTopLeft.SetCY(y - e.resizerTopLeft.GetSpace())
 	e.ideStage.Append(e.resizerTopLeft.GetSvg())
 
 	e.resizerTopRight = e.resizeButton.GetNew()
 	e.resizerTopRight.SetName("top-right")
 	e.resizerTopRight.SetCursor("nesw-resize")
-	e.resizerTopRight.SetCX(x + width)
-	e.resizerTopRight.SetCY(y)
+	e.resizerTopRight.SetCX(x + width + e.resizerTopRight.GetSpace())
+	e.resizerTopRight.SetCY(y - e.resizerTopRight.GetSpace())
 	e.ideStage.Append(e.resizerTopRight.GetSvg())
 
 	log.Printf("y: %v height: %v", y.GetInt(), height.GetInt())
 	e.resizerBottomLeft = e.resizeButton.GetNew()
 	e.resizerBottomLeft.SetName("bottom-left")
 	e.resizerBottomLeft.SetCursor("nesw-resize")
-	e.resizerBottomLeft.SetCX(x)
-	e.resizerBottomLeft.SetCY(y + height)
+	e.resizerBottomLeft.SetCX(x - e.resizerBottomLeft.GetSpace())
+	e.resizerBottomLeft.SetCY(y + height + e.resizerBottomLeft.GetSpace())
 	e.ideStage.Append(e.resizerBottomLeft.GetSvg())
 
 	e.resizerBottomRight = e.resizeButton.GetNew()
 	e.resizerBottomRight.SetName("bottom-right")
 	e.resizerBottomRight.SetCursor("nwse-resize")
-	e.resizerBottomRight.SetCX(x + width)
-	e.resizerBottomRight.SetCY(y + height)
+	e.resizerBottomRight.SetCX(x + width + e.resizerBottomRight.GetSpace())
+	e.resizerBottomRight.SetCY(y + height + e.resizerBottomRight.GetSpace())
 	e.ideStage.Append(e.resizerBottomRight.GetSvg())
 
 	//----------------------------------------------------
@@ -284,27 +284,27 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	e.resizerTopMiddle.SetName("top-middle")
 	e.resizerTopMiddle.SetCursor("ns-resize")
 	e.resizerTopMiddle.SetCX(x + width/2)
-	e.resizerTopMiddle.SetCY(y)
+	e.resizerTopMiddle.SetCY(y - e.resizerTopMiddle.GetSpace())
 	e.ideStage.Append(e.resizerTopMiddle.GetSvg())
 
 	e.resizerBottomMiddle = e.resizeButton.GetNew()
 	e.resizerBottomMiddle.SetName("bottom-middle")
 	e.resizerBottomMiddle.SetCursor("ns-resize")
 	e.resizerBottomMiddle.SetCX(x + width/2)
-	e.resizerBottomMiddle.SetCY(y + height)
+	e.resizerBottomMiddle.SetCY(y + height + e.resizerBottomMiddle.GetSpace())
 	e.ideStage.Append(e.resizerBottomMiddle.GetSvg())
 
 	e.resizerLeftMiddle = e.resizeButton.GetNew()
 	e.resizerLeftMiddle.SetName("left-middle")
 	e.resizerLeftMiddle.SetCursor("ew-resize")
-	e.resizerLeftMiddle.SetCX(x)
+	e.resizerLeftMiddle.SetCX(x - e.resizerLeftMiddle.GetSpace())
 	e.resizerLeftMiddle.SetCY(y + height/2)
 	e.ideStage.Append(e.resizerLeftMiddle.GetSvg())
 
 	e.resizerRightMiddle = e.resizeButton.GetNew()
 	e.resizerRightMiddle.SetName("right-middle")
 	e.resizerRightMiddle.SetCursor("ew-resize")
-	e.resizerRightMiddle.SetCX(x + width)
+	e.resizerRightMiddle.SetCX(x + width + e.resizerRightMiddle.GetSpace())
 	e.resizerRightMiddle.SetCY(y + height/2)
 	e.ideStage.Append(e.resizerRightMiddle.GetSvg())
 }
@@ -407,15 +407,15 @@ func (e *Block) initEvents() {
 		e.selectDiv.X(e.x.GetInt())
 		e.selectDiv.Width(e.width.GetInt())
 
-		e.resizerTopLeft.SetCX(e.x)
-		e.resizerTopRight.SetCX(e.x + e.width)
-		e.resizerBottomLeft.SetCX(e.x)
-		e.resizerBottomRight.SetCX(e.x + e.width)
+		e.resizerTopLeft.SetCX(e.x - e.resizerTopLeft.GetSpace())
+		e.resizerTopRight.SetCX(e.x + e.width + e.resizerTopRight.GetSpace())
+		e.resizerBottomLeft.SetCX(e.x - e.resizerBottomLeft.GetSpace())
+		e.resizerBottomRight.SetCX(e.x + e.width + e.resizerBottomRight.GetSpace())
 
 		e.resizerTopMiddle.SetCX(e.x + e.width/2)
 		e.resizerBottomMiddle.SetCX(e.x + e.width/2)
-		e.resizerLeftMiddle.SetCX(e.x)
-		e.resizerRightMiddle.SetCX(e.x + e.width)
+		e.resizerLeftMiddle.SetCX(e.x - e.resizerLeftMiddle.GetSpace())
+		e.resizerRightMiddle.SetCX(e.x + e.width + e.resizerRightMiddle.GetSpace())
 	}
 
 	moveResizersY := func() {
@@ -423,13 +423,13 @@ func (e *Block) initEvents() {
 		e.selectDiv.Y(e.y.GetInt())
 		e.selectDiv.Height(e.height.GetInt())
 
-		e.resizerTopLeft.SetCY(e.y)
-		e.resizerTopRight.SetCY(e.y)
-		e.resizerBottomLeft.SetCY(e.y + e.height)
-		e.resizerBottomRight.SetCY(e.y + e.height)
+		e.resizerTopLeft.SetCY(e.y - e.resizerTopLeft.GetSpace())
+		e.resizerTopRight.SetCY(e.y - e.resizerTopRight.GetSpace())
+		e.resizerBottomLeft.SetCY(e.y + e.height + e.resizerBottomLeft.GetSpace())
+		e.resizerBottomRight.SetCY(e.y + e.height + e.resizerBottomRight.GetSpace())
 
-		e.resizerTopMiddle.SetCY(e.y)
-		e.resizerBottomMiddle.SetCY(e.y + e.height)
+		e.resizerTopMiddle.SetCY(e.y - e.resizerTopMiddle.GetSpace())
+		e.resizerBottomMiddle.SetCY(e.y + e.height + e.resizerBottomMiddle.GetSpace())
 		e.resizerLeftMiddle.SetCY(e.y + e.height/2)
 		e.resizerRightMiddle.SetCY(e.y + e.height/2)
 	}
@@ -647,8 +647,6 @@ func (e *Block) initEvents() {
 		resizerName := e.block.Get().Get("dataset").Get("resizeName").String()
 		newLeft, newWidth := resizeHorizontal(args, resizerName)
 		newTop, newHeight := resizeVertical(args, resizerName)
-
-		log.Printf("b x: %v", e.x)
 
 		e.SetPosition(rulesDensity.Convert(newLeft), rulesDensity.Convert(newTop))
 		e.SetSize(rulesDensity.Convert(newWidth), rulesDensity.Convert(newHeight))

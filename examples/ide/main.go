@@ -8,6 +8,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
+	"github.com/helmutkemper/webassembly/examples/ide/splashScreen"
 	"github.com/helmutkemper/webassembly/hexagon"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/utilsText"
@@ -137,19 +138,15 @@ func main() {
 		Import(rulesStage.KStageId).
 		X(0).
 		Y(0).
-		Width(screenWidth).
-		Height(screenHeight)
-	//PreserveAspectRatio(html.KRatioXMinYMin, html.KMeetOrSliceReferenceMeet).
-	//ViewBox([]float64{0, 0, 0.5 * float64(screenWidth), 0.5 * float64(screenHeight)})
+		Width(rulesDensity.Density(screenWidth).GetInt()).
+		Height(rulesDensity.Density(screenHeight).GetInt())
 
-	//transform="translate(-cx, -cy) scale(sx, sy) translate(cx, cy)"
+	splashScreen.Load(mainSvg, "./splashScreen/splashScreen.png")
 
-	//go func() {
-	//	time.Sleep(1 * time.Second)
-	//	mainSvg.ViewBox([]float64{0, 0, 0.5 * float64(screenWidth), 0.5 * float64(screenHeight)})
-	//}()
+	done := make(chan struct{})
+	<-done
 
-	size := rulesDensity.Density(10)
+	size := rulesDensity.Density(2)
 	hex := new(rulesStage.Hexagon)
 	hex.Init(0, 0, size)
 
@@ -163,8 +160,8 @@ func main() {
 	hexCanvas.SetDrawSystem(cellCanvas)
 	hexCanvas.Init()
 
-	for col := 0; col < int(float64(screenWidth)/(float64(size)*2.0*3.0/4.0))+2; col += 1 {
-		for row := 0; row < int(float64(screenHeight)/(float64(size)*math.Sqrt(3))+2)*2; row += 1 {
+	for col := 0; col < int(rulesDensity.Density(screenWidth).GetFloat()/(float64(size)*2.0*3.0/4.0))+2; col += 1 {
+		for row := 0; row < int(rulesDensity.Density(screenHeight).GetFloat()/(float64(size)*math.Sqrt(3))+2)*2; row += 1 {
 
 			if (col+row)%2 != 0 {
 				continue
@@ -177,11 +174,12 @@ func main() {
 	}
 
 	resizeButton := new(block.ResizeButtonHexagon)
-	resizeButton.SetSize(6)
+	resizeButton.SetSize(15)
 	resizeButton.SetSides(6)
 	resizeButton.SetFillColor("red")
 	resizeButton.SetStrokeColor("green")
 	resizeButton.SetStrokeWidth(2)
+	resizeButton.SetSpace(20)
 	//resizeButton.SetRotation(math.Pi / 4)
 	//resizeButton.SetCX(30)
 	//resizeButton.SetCY(30)
@@ -254,8 +252,6 @@ func main() {
 	//	}
 	//}
 
-	done := make(chan struct{})
-	<-done
 }
 
 type CanvasCell struct {
@@ -335,12 +331,12 @@ func (e *CanvasCell) SetText(text string) {
 	fontWeight := e.fontWeight.String()
 	fontStyle := e.fontStyle.String()
 
-	width, height := utilsText.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize.GetInt())
+	widthInt, heightInt := utilsText.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize.GetInt())
 
 	cx, cy := e.calcSystem.GetCenter()
 
-	x := cx - width/2
-	y := cy + height/2 - height/5
+	x := cx - rulesDensity.Convert(widthInt)/2
+	y := cy + rulesDensity.Convert(heightInt)/2 - rulesDensity.Convert(heightInt)/5
 	e.canvas.FillStyle("blue")
 	e.canvas.FillText(text, x.GetInt(), y.GetInt(), 0)
 }

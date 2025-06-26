@@ -301,7 +301,7 @@ func (e *StatementAdd) Init() (err error) {
 
 	e.id = rulesSequentialId.GetIdFromBase(e.block.GetName())
 
-	e.block.SetDrag(true)
+	//e.block.SetDrag(true)
 	e.block.SetResizeBlocked(true)
 	//e.block.SetEnableResize(true)
 	//e.block.SetSelected(true)

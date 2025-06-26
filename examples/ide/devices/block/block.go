@@ -143,15 +143,12 @@ func (e *Block) SetDrag(enabled bool) {
 		e.dragEnabled = false
 	}
 
+	e.draggerTopMiddle.GetSvg().AddStyleConditional(e.dragEnabled, "display", "block", "none")
+	e.draggerRightMiddle.GetSvg().AddStyleConditional(e.dragEnabled, "display", "block", "none")
+	e.draggerBottomMiddle.GetSvg().AddStyleConditional(e.dragEnabled, "display", "block", "none")
+	e.draggerLeftMiddle.GetSvg().AddStyleConditional(e.dragEnabled, "display", "block", "none")
+
 	e.dragCursorChange()
-
-	if e.dragEnabled {
-		e.SetResize(true)
-	}
-
-	if e.dragEnabled && e.selected {
-		e.SetSelected(false)
-	}
 }
 
 // ResizeInverter Invert the resize tool status
@@ -230,7 +227,7 @@ func (e *Block) SetSelected(selected bool) {
 	}
 
 	e.ornament.SetSelected(selected)
-	e.selectDiv.AddStyleConditional(e.selected, "display", "block", "none") // todo: descomentar
+	e.selectDiv.AddStyleConditional(e.selected, "display", "block", "none")
 	e.SetResize(false)
 }
 
@@ -324,7 +321,8 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	//e.draggerTopMiddle.SetCursor("ns-resize")
 	e.draggerTopMiddle.SetCX(x + width/2)
 	e.draggerTopMiddle.SetCY(y - e.draggerTopMiddle.GetSpace())
-	e.draggerTopMiddle.SetRotation(10)
+	e.draggerTopMiddle.SetRotation(-90)
+	e.draggerTopMiddle.SetVisible(false)
 	e.ideStage.Append(e.draggerTopMiddle.GetSvg())
 
 	e.draggerBottomMiddle = e.draggerButton.GetNew()
@@ -332,6 +330,8 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	//e.draggerBottomMiddle.SetCursor("ns-resize")
 	e.draggerBottomMiddle.SetCX(x + width/2)
 	e.draggerBottomMiddle.SetCY(y + height + e.draggerBottomMiddle.GetSpace())
+	e.draggerBottomMiddle.SetRotation(90)
+	e.draggerBottomMiddle.SetVisible(false)
 	e.ideStage.Append(e.draggerBottomMiddle.GetSvg())
 
 	e.draggerLeftMiddle = e.draggerButton.GetNew()
@@ -339,6 +339,8 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	//e.draggerLeftMiddle.SetCursor("ew-resize")
 	e.draggerLeftMiddle.SetCX(x - e.draggerLeftMiddle.GetSpace())
 	e.draggerLeftMiddle.SetCY(y + height/2)
+	e.draggerLeftMiddle.SetRotation(180)
+	e.draggerLeftMiddle.SetVisible(false)
 	e.ideStage.Append(e.draggerLeftMiddle.GetSvg())
 
 	e.draggerRightMiddle = e.draggerButton.GetNew()
@@ -346,6 +348,8 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	//e.draggerRightMiddle.SetCursor("ew-resize")
 	e.draggerRightMiddle.SetCX(x + width + e.draggerRightMiddle.GetSpace())
 	e.draggerRightMiddle.SetCY(y + height/2)
+	e.draggerRightMiddle.SetRotation(0)
+	e.draggerRightMiddle.SetVisible(false)
 	e.ideStage.Append(e.draggerRightMiddle.GetSvg())
 }
 

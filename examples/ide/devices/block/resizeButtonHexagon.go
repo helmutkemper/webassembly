@@ -280,7 +280,10 @@ func (e *ResizeButtonHexagon) SetCX(cx rulesDensity.Density) {
 	// Only update position if SVG is already initialized
 	// Atualiza a posição apenas se o SVG já estiver inicializado
 	if e.svg != nil {
+
+		e.svg.Get().Call("removeAttribute", "transform")
 		e.svg.X(cx.GetInt() - e.size.GetInt())
+		e.svg.Transform(new(html.TransformFunctions).Rotate(e.rotation, e.cx.GetFloat(), e.cy.GetFloat()))
 	}
 }
 
@@ -301,7 +304,9 @@ func (e *ResizeButtonHexagon) SetCY(cy rulesDensity.Density) {
 	// Only update position if SVG is already initialized
 	// Atualiza a posição apenas se o SVG já estiver inicializado
 	if e.svg != nil {
+		e.svg.Get().Call("removeAttribute", "transform")
 		e.svg.Y(cy.GetInt() - e.size.GetInt())
+		e.svg.Transform(new(html.TransformFunctions).Rotate(e.rotation, e.cx.GetFloat(), e.cy.GetFloat()))
 	}
 }
 
@@ -355,6 +360,10 @@ func (e *ResizeButtonHexagon) SetSize(size rulesDensity.Density) {
 //	Define o ângulo de rotação em radianos.
 func (e *ResizeButtonHexagon) SetRotation(rot float64) {
 	e.rotation = rot
+
+	if e.svg != nil {
+		e.svg.Transform(new(html.TransformFunctions).Rotate(e.rotation, e.cx.GetFloat(), e.cy.GetFloat()))
+	}
 }
 
 // SetFillColor

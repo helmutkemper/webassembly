@@ -295,8 +295,8 @@ func (e *StatementLoop) Init() (err error) {
 	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmLoop")
 
-	e.defaultWidth = 200
-	e.defaultHeight = 150
+	e.defaultWidth = 400
+	e.defaultHeight = 300
 
 	defaultWidth, defaultHeight := e.gridAdjust.AdjustCenter(e.defaultWidth.GetInt(), e.defaultHeight.GetInt())
 	e.defaultWidth, e.defaultHeight = rulesDensity.Convert(defaultWidth), rulesDensity.Convert(defaultHeight)
@@ -314,7 +314,7 @@ func (e *StatementLoop) Init() (err error) {
 	e.block.SetName("StatementLoop")
 	e.id = rulesSequentialId.GetIdFromBase(e.block.GetName())
 
-	e.block.SetDrag(true)
+	//e.block.SetDrag(true)
 	//e.block.SetEnableResize(true)
 	//e.block.SetSelected(true)
 	e.block.SetMinimumWidth(e.horizontalMinimumSize)

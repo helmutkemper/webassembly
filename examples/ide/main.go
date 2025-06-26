@@ -213,11 +213,11 @@ func main() {
 	//resizeButton.Init()
 
 	draggerButton := new(block.ResizeButtonHexagon)
-	draggerButton.SetSize(10)
-	draggerButton.SetSpace(5)
+	draggerButton.SetSize(20)
+	draggerButton.SetSpace(10)
 	draggerButton.SetSides(3)
-	draggerButton.SetFillColor("red")
-	draggerButton.SetStrokeColor("green")
+	draggerButton.SetFillColor(color.RGBA{R: 0x00, G: 0x80, B: 0x00, A: 0x20})
+	draggerButton.SetStrokeColor("none")
 	draggerButton.SetStrokeWidth(2)
 
 	//mainStage.Append(resizeButton.GetSvg())
@@ -238,7 +238,7 @@ func main() {
 	stmAdd.SetDraggerButton(draggerButton)
 	stmAdd.SetGridAdjust(hex)
 	stmAdd.SetMainSvg(mainSvg)
-	stmAdd.SetPosition(270, 270)
+	stmAdd.SetPosition(300, 150)
 	_ = stmAdd.Init()
 	//url := stmAdd.ToPng()
 

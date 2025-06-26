@@ -107,9 +107,10 @@ func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
 			Type: "grid",
 			Items: []components.MenuOptions{
 				{
-					Label:  "Cat 1",
-					Icon:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
-					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
+					Label: "Cat 1",
+					Icon:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/81_INF_DIV_SSI.jpg/50px-81_INF_DIV_SSI.jpg",
+					//Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} { log.Printf("cat 1"); return nil }),
+					Submenu: e.block.GetMenuDebug(),
 				},
 				{
 					Label:  "Cat 2",
@@ -282,7 +283,7 @@ func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
 		},
 	}
 
-	content = append(e.block.GetMenuDebug(), content...)
+	//content = append(e.block.GetMenuDebug(), content...)
 	return
 }
 

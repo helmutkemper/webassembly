@@ -142,7 +142,7 @@ type ResizeButton interface {
 	// Português:
 	//
 	//  Define a visibilidade do botão hexagonal. Um valor verdadeiro o torna visível, enquanto falso o oculta.
-	SetVisible(visible bool)
+	SetVisible(visible bool, father html.Compatible)
 
 	// GetSvg
 	//
@@ -181,8 +181,9 @@ type ResizeButton interface {
 //	Representa um botão SVG redimensionável em forma de hexágono,
 //	com lados, tamanho, rotação, cor de preenchimento, cor da borda e espessura da borda personalizáveis.
 type ResizeButtonHexagon struct {
-	svg    *html.TagSvg     // SVG container element / Elemento container SVG
-	button *html.TagSvgPath // SVG path element / Elemento de caminho SVG
+	svgAppended bool
+	svg         *html.TagSvg     // SVG container element / Elemento container SVG
+	button      *html.TagSvgPath // SVG path element / Elemento de caminho SVG
 
 	colorFill   any                  // Fill color / Cor de preenchimento
 	colorStroke any                  // Stroke color / Cor da borda
@@ -280,7 +281,6 @@ func (e *ResizeButtonHexagon) SetCX(cx rulesDensity.Density) {
 	// Only update position if SVG is already initialized
 	// Atualiza a posição apenas se o SVG já estiver inicializado
 	if e.svg != nil {
-
 		e.svg.Get().Call("removeAttribute", "transform")
 		e.svg.X(cx.GetInt() - e.size.GetInt())
 		e.svg.Transform(new(html.TransformFunctions).Rotate(e.rotation, e.cx.GetFloat(), e.cy.GetFloat()))
@@ -443,7 +443,15 @@ func (e *ResizeButtonHexagon) SetCursor(cursor any) {
 // Português:
 //
 //	Define a visibilidade do botão hexagonal. Um valor verdadeiro o torna visível, enquanto falso o oculta.
-func (e *ResizeButtonHexagon) SetVisible(visible bool) {
+func (e *ResizeButtonHexagon) SetVisible(visible bool, father html.Compatible) {
+	if visible {
+		e.svgAppended = true
+		father.Get().Call("appendChild", e.svg.Get())
+	} else if e.svgAppended {
+		e.svgAppended = false
+		father.Get().Call("removeChild", e.svg.Get())
+	}
+
 	e.svg.AddStyleConditional(visible, "display", "block", "none")
 }
 

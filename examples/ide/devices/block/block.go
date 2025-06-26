@@ -44,9 +44,11 @@ type Block struct {
 	resizerColor      color.RGBA
 	resizerFlashColor color.RGBA
 
-	ideStage *html.TagSvg
-	block    *html.TagSvg
-	main     *html.TagSvg
+	ideStage          *html.TagSvg
+	block             *html.TagSvg
+	selectDivAppended bool
+	selectDiv         *html.TagSvgRect
+	main              *html.TagSvg
 
 	resizerButton ResizeButton
 	draggerButton ResizeButton
@@ -65,8 +67,6 @@ type Block struct {
 	draggerBottomMiddle ResizeButton
 	draggerLeftMiddle   ResizeButton
 	draggerRightMiddle  ResizeButton
-
-	selectDiv *html.TagSvgRect
 
 	ornament ornament.Draw
 
@@ -143,10 +143,10 @@ func (e *Block) SetDrag(enabled bool) {
 		e.dragEnabled = false
 	}
 
-	e.draggerTopMiddle.GetSvg().AddStyleConditional(e.dragEnabled, "display", "block", "none")
-	e.draggerRightMiddle.GetSvg().AddStyleConditional(e.dragEnabled, "display", "block", "none")
-	e.draggerBottomMiddle.GetSvg().AddStyleConditional(e.dragEnabled, "display", "block", "none")
-	e.draggerLeftMiddle.GetSvg().AddStyleConditional(e.dragEnabled, "display", "block", "none")
+	e.draggerTopMiddle.SetVisible(e.dragEnabled, e.ideStage)
+	e.draggerRightMiddle.SetVisible(e.dragEnabled, e.ideStage)
+	e.draggerBottomMiddle.SetVisible(e.dragEnabled, e.ideStage)
+	e.draggerLeftMiddle.SetVisible(e.dragEnabled, e.ideStage)
 
 	e.dragCursorChange()
 }
@@ -226,7 +226,15 @@ func (e *Block) SetSelected(selected bool) {
 		e.selected = false
 	}
 
-	e.ornament.SetSelected(selected)
+	if e.selected {
+		e.selectDivAppended = true
+		e.ideStage.Append(e.selectDiv)
+	} else if e.selectDivAppended {
+		e.selectDivAppended = false
+		e.ideStage.Get().Call("removeChild", e.selectDiv.Get())
+	}
+
+	e.ornament.SetSelected(e.selected)
 	e.selectDiv.AddStyleConditional(e.selected, "display", "block", "none")
 	e.SetResize(false)
 }
@@ -244,6 +252,9 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 		Y(y.GetInt()).
 		Width(width.GetInt()).
 		Height(height.GetInt())
+
+	// Append, js appendChild, it should be used only in the necessary elements on the stage.
+	// Any other visual element should be attached only when necessary.
 	e.ideStage.Append(e.block)
 
 	e.selectDiv = factoryBrowser.NewTagSvgRect().
@@ -254,35 +265,30 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 		Fill("none").Stroke("red").
 		StrokeDasharray([]int{16, 4}).
 		StrokeWidth(rulesDensity.Density(3).GetInt())
-	e.ideStage.Append(e.selectDiv)
 
 	e.resizerTopLeft = e.resizerButton.GetNew()
 	e.resizerTopLeft.SetName("top-left")
 	e.resizerTopLeft.SetCursor("nwse-resize")
 	e.resizerTopLeft.SetCX(x - e.resizerTopLeft.GetSpace())
 	e.resizerTopLeft.SetCY(y - e.resizerTopLeft.GetSpace())
-	e.ideStage.Append(e.resizerTopLeft.GetSvg())
 
 	e.resizerTopRight = e.resizerButton.GetNew()
 	e.resizerTopRight.SetName("top-right")
 	e.resizerTopRight.SetCursor("nesw-resize")
 	e.resizerTopRight.SetCX(x + width + e.resizerTopRight.GetSpace())
 	e.resizerTopRight.SetCY(y - e.resizerTopRight.GetSpace())
-	e.ideStage.Append(e.resizerTopRight.GetSvg())
 
 	e.resizerBottomLeft = e.resizerButton.GetNew()
 	e.resizerBottomLeft.SetName("bottom-left")
 	e.resizerBottomLeft.SetCursor("nesw-resize")
 	e.resizerBottomLeft.SetCX(x - e.resizerBottomLeft.GetSpace())
 	e.resizerBottomLeft.SetCY(y + height + e.resizerBottomLeft.GetSpace())
-	e.ideStage.Append(e.resizerBottomLeft.GetSvg())
 
 	e.resizerBottomRight = e.resizerButton.GetNew()
 	e.resizerBottomRight.SetName("bottom-right")
 	e.resizerBottomRight.SetCursor("nwse-resize")
 	e.resizerBottomRight.SetCX(x + width + e.resizerBottomRight.GetSpace())
 	e.resizerBottomRight.SetCY(y + height + e.resizerBottomRight.GetSpace())
-	e.ideStage.Append(e.resizerBottomRight.GetSvg())
 
 	//----------------------------------------------------
 
@@ -291,66 +297,50 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	e.resizerTopMiddle.SetCursor("ns-resize")
 	e.resizerTopMiddle.SetCX(x + width/2)
 	e.resizerTopMiddle.SetCY(y - e.resizerTopMiddle.GetSpace())
-	e.ideStage.Append(e.resizerTopMiddle.GetSvg())
 
 	e.resizerBottomMiddle = e.resizerButton.GetNew()
 	e.resizerBottomMiddle.SetName("bottom-middle")
 	e.resizerBottomMiddle.SetCursor("ns-resize")
 	e.resizerBottomMiddle.SetCX(x + width/2)
 	e.resizerBottomMiddle.SetCY(y + height + e.resizerBottomMiddle.GetSpace())
-	e.ideStage.Append(e.resizerBottomMiddle.GetSvg())
 
 	e.resizerLeftMiddle = e.resizerButton.GetNew()
 	e.resizerLeftMiddle.SetName("left-middle")
 	e.resizerLeftMiddle.SetCursor("ew-resize")
 	e.resizerLeftMiddle.SetCX(x - e.resizerLeftMiddle.GetSpace())
 	e.resizerLeftMiddle.SetCY(y + height/2)
-	e.ideStage.Append(e.resizerLeftMiddle.GetSvg())
 
 	e.resizerRightMiddle = e.resizerButton.GetNew()
 	e.resizerRightMiddle.SetName("right-middle")
 	e.resizerRightMiddle.SetCursor("ew-resize")
 	e.resizerRightMiddle.SetCX(x + width + e.resizerRightMiddle.GetSpace())
 	e.resizerRightMiddle.SetCY(y + height/2)
-	e.ideStage.Append(e.resizerRightMiddle.GetSvg())
 
 	//----------------------------------------------------------
 
 	e.draggerTopMiddle = e.draggerButton.GetNew()
 	e.draggerTopMiddle.SetName("top-middle")
-	//e.draggerTopMiddle.SetCursor("ns-resize")
 	e.draggerTopMiddle.SetCX(x + width/2)
 	e.draggerTopMiddle.SetCY(y - e.draggerTopMiddle.GetSpace())
 	e.draggerTopMiddle.SetRotation(-90)
-	e.draggerTopMiddle.SetVisible(false)
-	e.ideStage.Append(e.draggerTopMiddle.GetSvg())
 
 	e.draggerBottomMiddle = e.draggerButton.GetNew()
 	e.draggerBottomMiddle.SetName("bottom-middle")
-	//e.draggerBottomMiddle.SetCursor("ns-resize")
 	e.draggerBottomMiddle.SetCX(x + width/2)
 	e.draggerBottomMiddle.SetCY(y + height + e.draggerBottomMiddle.GetSpace())
 	e.draggerBottomMiddle.SetRotation(90)
-	e.draggerBottomMiddle.SetVisible(false)
-	e.ideStage.Append(e.draggerBottomMiddle.GetSvg())
 
 	e.draggerLeftMiddle = e.draggerButton.GetNew()
 	e.draggerLeftMiddle.SetName("left-middle")
-	//e.draggerLeftMiddle.SetCursor("ew-resize")
 	e.draggerLeftMiddle.SetCX(x - e.draggerLeftMiddle.GetSpace())
 	e.draggerLeftMiddle.SetCY(y + height/2)
 	e.draggerLeftMiddle.SetRotation(180)
-	e.draggerLeftMiddle.SetVisible(false)
-	e.ideStage.Append(e.draggerLeftMiddle.GetSvg())
 
 	e.draggerRightMiddle = e.draggerButton.GetNew()
 	e.draggerRightMiddle.SetName("right-middle")
-	//e.draggerRightMiddle.SetCursor("ew-resize")
 	e.draggerRightMiddle.SetCX(x + width + e.draggerRightMiddle.GetSpace())
 	e.draggerRightMiddle.SetCY(y + height/2)
 	e.draggerRightMiddle.SetRotation(0)
-	e.draggerRightMiddle.SetVisible(false)
-	e.ideStage.Append(e.draggerRightMiddle.GetSvg())
 }
 
 // dragCursorChange Change the cursor when the device is being dragged
@@ -623,19 +613,6 @@ func (e *Block) initEvents() {
 		moveResizersAndDraggersX()
 		moveResizersAndDraggersY()
 		return
-
-		//newLeftD, newWidthD := rulesDensity.Convert(newLeft), rulesDensity.Convert(newWidth)
-		//newLeft, newWidth = e.adjustXYToGrid(newLeftD.GetInt(), newWidthD.GetInt())
-		//
-		//e.x = rulesDensity.Convert(newLeft)
-		//e.width = rulesDensity.Convert(newWidth)
-		//
-		//e.block.X(e.x.GetInt())
-		//e.block.Width(e.width.GetInt())
-		//e.selectDiv.X(e.x.GetInt())
-		//e.selectDiv.Width(e.width.GetInt())
-		//
-		//moveResizersX()
 	}
 
 	resizeVertical := func(args []js.Value, name string) (newTop, newHeight int) {
@@ -690,19 +667,6 @@ func (e *Block) initEvents() {
 		moveResizersAndDraggersX()
 		moveResizersAndDraggersY()
 		return
-
-		//newHeightD, newTopD := rulesDensity.Convert(newHeight), rulesDensity.Convert(newTop)
-		//newHeight, newTop = e.adjustXYToGrid(newHeightD.GetInt(), newTopD.GetInt())
-		//
-		//e.y = rulesDensity.Convert(newTop)
-		//e.height = rulesDensity.Convert(newHeight)
-		//
-		//e.block.Y(e.y.GetInt())
-		//e.block.Height(e.height.GetInt())
-		//e.selectDiv.Y(e.y.GetInt())
-		//e.selectDiv.Height(e.height.GetInt())
-		//
-		//moveResizersY()
 	}
 
 	resizeMouseMove = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
@@ -714,16 +678,8 @@ func (e *Block) initEvents() {
 		resizeHorizontal(args, resizerName)
 		resizeVertical(args, resizerName)
 
-		//e.SetPosition(rulesDensity.Convert(newLeft), rulesDensity.Convert(newTop))
-		//e.SetSize(rulesDensity.Convert(newWidth), rulesDensity.Convert(newHeight))
-		//
-		//moveResizersX()
-		//moveResizersY()
-
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 
-		//width := rulesDensity.Convert(e.block.GetOffsetWidth())
-		//height := rulesDensity.Convert(e.block.GetOffsetHeight())
 		e.OnResize(args, e.width, e.height)
 
 		return nil
@@ -832,15 +788,15 @@ func (e *Block) resizeEnabledDraw() {
 		return
 	}
 
-	e.resizerTopLeft.SetVisible(e.resizeEnabled)
-	e.resizerTopRight.SetVisible(e.resizeEnabled)
-	e.resizerBottomLeft.SetVisible(e.resizeEnabled)
-	e.resizerBottomRight.SetVisible(e.resizeEnabled)
+	e.resizerTopLeft.SetVisible(e.resizeEnabled, e.ideStage)
+	e.resizerTopRight.SetVisible(e.resizeEnabled, e.ideStage)
+	e.resizerBottomLeft.SetVisible(e.resizeEnabled, e.ideStage)
+	e.resizerBottomRight.SetVisible(e.resizeEnabled, e.ideStage)
 
-	e.resizerTopMiddle.SetVisible(e.resizeEnabled)
-	e.resizerBottomMiddle.SetVisible(e.resizeEnabled)
-	e.resizerLeftMiddle.SetVisible(e.resizeEnabled)
-	e.resizerRightMiddle.SetVisible(e.resizeEnabled)
+	e.resizerTopMiddle.SetVisible(e.resizeEnabled, e.ideStage)
+	e.resizerBottomMiddle.SetVisible(e.resizeEnabled, e.ideStage)
+	e.resizerLeftMiddle.SetVisible(e.resizeEnabled, e.ideStage)
+	e.resizerRightMiddle.SetVisible(e.resizeEnabled, e.ideStage)
 }
 
 // SetFatherId Receives the div ID used as a stage for the IDE and puts it to occupy the entire browser area

@@ -29,7 +29,7 @@ func main() {
 	}()
 
 	var geo = factoryBrowser.NewGeoLocation()
-	geo.GetPosition(&coordinate)
+	geo.GetPosition(coordinate)
 
 	done := make(chan struct{}, 0)
 	<-done

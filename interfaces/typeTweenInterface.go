@@ -413,5 +413,5 @@ type TweenInterface interface {
 	//
 	//	Saída:
 	//	  object: referência para o objeto Tween corrente.
-	Stop() (object TweenInterface)
+	//Stop() (object TweenInterface)
 }

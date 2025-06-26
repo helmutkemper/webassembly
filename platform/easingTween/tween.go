@@ -11,6 +11,7 @@ import (
 // https://github.com/ai/easings.net/blob/master/src/easings/easingsFunctions.ts
 
 type Tween struct {
+	end                bool
 	chanEnd            chan struct{}
 	engineHasFunction  bool
 	startValue         float64
@@ -491,7 +492,10 @@ func (el *Tween) tickerRunnerRun() {
 
 	if elapsed >= el.duration {
 
-		el.End()
+		if !el.end {
+			el.end = true
+			el.End()
+		}
 
 		//if el.repeat == 0 && el.onEnd != nil {
 		//	el.onEnd(value, el.arguments)
@@ -537,10 +541,11 @@ func (el *Tween) tickerRunnerRun() {
 //	   object: referência para o objeto Tween corrente.
 func (el *Tween) Start() (object interfaces.TweenInterface) {
 	el.chanEnd = make(chan struct{}, 2)
+	el.end = false
 
-	//if el.engineHasFunction {
-	//	el.End()
-	//}
+	if el.engineHasFunction {
+		el.End()
+	}
 
 	if el.tweenFunc == nil {
 		el.tweenFunc = KLinear
@@ -592,10 +597,10 @@ func (el *Tween) End() (object interfaces.TweenInterface) {
 //	Saída:
 //	  object: referência para o objeto Tween corrente.
 func (el *Tween) Stop() (object interfaces.TweenInterface) {
-	select {
-	case el.chanEnd <- struct{}{}:
-	default:
-	}
+	//select {
+	//case el.chanEnd <- struct{}{}:
+	//default:
+	//}
 
 	return el
 }

@@ -17,6 +17,7 @@ import (
 	"log"
 	"math"
 	"syscall/js"
+	"time"
 )
 
 type MenuOptions struct {
@@ -141,14 +142,16 @@ func main() {
 		Width(rulesDensity.Density(screenWidth).GetInt()).
 		Height(rulesDensity.Density(screenHeight).GetInt())
 
-	splashScreen.Load(mainSvg, "./splashScreen/splashScreen.png")
+	splash := new(splashScreen.Control)
+	splash.Init(mainSvg)
 
-	done := make(chan struct{})
-	<-done
+	splash.AddText("Creating Density System for Multiple Screens")
 
-	size := rulesDensity.Density(2)
+	size := rulesDensity.Density(3)
 	hex := new(rulesStage.Hexagon)
 	hex.Init(0, 0, size)
+
+	splash.AddText("Creating Coordinate System")
 
 	cellCanvas := new(CanvasCell)
 	cellCanvas.SetCalcSystem(hex)
@@ -156,12 +159,33 @@ func main() {
 	cellCanvas.SetHeight(rulesDensity.Density(screenHeight))
 	cellCanvas.CanvasInit()
 
+	splash.AddText("Drawing work environment")
+
 	hexCanvas := new(HexagonDraw)
 	hexCanvas.SetDrawSystem(cellCanvas)
 	hexCanvas.Init()
 
-	for col := 0; col < int(rulesDensity.Density(screenWidth).GetFloat()/(float64(size)*2.0*3.0/4.0))+2; col += 1 {
-		for row := 0; row < int(rulesDensity.Density(screenHeight).GetFloat()/(float64(size)*math.Sqrt(3))+2)*2; row += 1 {
+	colT := int(rulesDensity.Density(screenWidth).GetFloat()/(float64(size)*2.0*3.0/4.0)) + 2
+	rowT := int(rulesDensity.Density(screenHeight).GetFloat()/(float64(size)*math.Sqrt(3))+2) * 2
+
+	counter := 0
+	for col := 0; col < colT; col += 1 {
+		for row := 0; row < rowT; row += 1 {
+			switch float64(counter) {
+			case float64(colT*rowT) * 0.2:
+				splash.AddText("Drawing work environment 20%")
+				time.Sleep(time.Nanosecond)
+			case float64(colT*rowT) * 0.4:
+				splash.AddText("Drawing work environment 40%")
+				time.Sleep(time.Nanosecond)
+			case float64(colT*rowT) * 0.6:
+				splash.AddText("Drawing work environment 60%")
+				time.Sleep(time.Nanosecond)
+			case float64(colT*rowT) * 0.8:
+				splash.AddText("Drawing work environment 80%")
+				time.Sleep(time.Nanosecond)
+			}
+			counter += 1
 
 			if (col+row)%2 != 0 {
 				continue
@@ -172,32 +196,50 @@ func main() {
 			//time.Sleep(time.Nanosecond)
 		}
 	}
+	splash.AddText("Drawing work environment 100%")
+
+	splash.AddText("Preparing design elements")
 
 	resizeButton := new(block.ResizeButtonHexagon)
-	resizeButton.SetSize(15)
+	resizeButton.SetSize(10)
+	resizeButton.SetSpace(30)
 	resizeButton.SetSides(6)
 	resizeButton.SetFillColor("red")
 	resizeButton.SetStrokeColor("green")
 	resizeButton.SetStrokeWidth(2)
-	resizeButton.SetSpace(20)
 	//resizeButton.SetRotation(math.Pi / 4)
 	//resizeButton.SetCX(30)
 	//resizeButton.SetCY(30)
 	//resizeButton.Init()
 
+	draggerButton := new(block.ResizeButtonHexagon)
+	draggerButton.SetSize(10)
+	draggerButton.SetSpace(5)
+	draggerButton.SetSides(3)
+	draggerButton.SetFillColor("red")
+	draggerButton.SetStrokeColor("green")
+	draggerButton.SetStrokeWidth(2)
+
 	//mainStage.Append(resizeButton.GetSvg())
 
+	splash.Hide()
+
 	stmLoop := new(devices.StatementLoop)
-	stmLoop.SetResizeButton(resizeButton)
+	stmLoop.SetResizerButton(resizeButton)
+	stmLoop.SetDraggerButton(draggerButton)
 	stmLoop.SetGridAdjust(hex)
 	stmLoop.SetMainSvg(mainSvg)
-	stmLoop.SetPosition(50, 50)
+	stmLoop.SetPosition(150, 50)
 	_ = stmLoop.Init()
 	//url := stmLoop.ToPng()
 
-	//stmAdd := new(devices.StatementAdd)
-	//stmAdd.SetPosition(300, 300)
-	//_ = stmAdd.Init()
+	stmAdd := new(devices.StatementAdd)
+	stmAdd.SetResizerButton(resizeButton)
+	stmAdd.SetDraggerButton(draggerButton)
+	stmAdd.SetGridAdjust(hex)
+	stmAdd.SetMainSvg(mainSvg)
+	stmAdd.SetPosition(270, 270)
+	_ = stmAdd.Init()
 	//url := stmAdd.ToPng()
 
 	if _, err = GlobalControlPanel.Init(); err != nil {
@@ -252,6 +294,8 @@ func main() {
 	//	}
 	//}
 
+	done := make(chan struct{})
+	<-done
 }
 
 type CanvasCell struct {

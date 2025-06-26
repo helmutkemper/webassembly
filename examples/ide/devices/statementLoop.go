@@ -35,8 +35,12 @@ func (e *StatementLoop) SetMainSvg(svg *html.TagSvg) {
 	e.block.SetMainSvg(svg)
 }
 
-func (e *StatementLoop) SetResizeButton(resizeButton block.ResizeButton) {
-	e.block.SetResizeButton(resizeButton)
+func (e *StatementLoop) SetResizerButton(resizeButton block.ResizeButton) {
+	e.block.SetResizerButton(resizeButton)
+}
+
+func (e *StatementLoop) SetDraggerButton(draggerButton block.ResizeButton) {
+	e.block.SetDraggerButton(draggerButton)
 }
 
 func (e *StatementLoop) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
@@ -282,18 +286,23 @@ func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
 	return
 }
 
+//func (e *StatementLoop) SetSelected(selected bool) {
+//	e.block.SetSelected(selected)
+//	e.ornamentDraw.SetSelected(selected)
+//}
+
 func (e *StatementLoop) Init() (err error) {
 	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmLoop")
 
 	e.defaultWidth = 200
-	e.defaultHeight = 100
+	e.defaultHeight = 150
 
 	defaultWidth, defaultHeight := e.gridAdjust.AdjustCenter(e.defaultWidth.GetInt(), e.defaultHeight.GetInt())
 	e.defaultWidth, e.defaultHeight = rulesDensity.Convert(defaultWidth), rulesDensity.Convert(defaultHeight)
 
-	e.horizontalMinimumSize = 80
-	e.verticalMinimumSize = 60
+	e.horizontalMinimumSize = 150
+	e.verticalMinimumSize = 150
 
 	horizontalMinimumSize, verticalMinimumSize := e.gridAdjust.AdjustCenter(e.horizontalMinimumSize.GetInt(), e.verticalMinimumSize.GetInt())
 	e.horizontalMinimumSize, e.verticalMinimumSize = rulesDensity.Convert(horizontalMinimumSize), rulesDensity.Convert(verticalMinimumSize)
@@ -385,7 +394,7 @@ func (e *StatementLoop) Init() (err error) {
 	e.menu.SetContentFunc(e.getMenu)
 	e.menu.Init()
 
-	e.block.SetResize(true)
+	//e.block.SetResize(true)
 	//e.block.SetSelected(true)
 
 	return nil

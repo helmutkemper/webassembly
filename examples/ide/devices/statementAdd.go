@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/math"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
@@ -16,16 +17,35 @@ type StatementAdd struct {
 	block block.Block
 	menu  Menu
 
-	defaultWidth          int
-	defaultHeight         int
-	horizontalMinimumSize int
-	verticalMinimumSize   int
-	ornamentDraw          *_math.OrnamentAdd
+	defaultWidth          rulesDensity.Density
+	defaultHeight         rulesDensity.Density
+	horizontalMinimumSize rulesDensity.Density
+	verticalMinimumSize   rulesDensity.Density
+	ornamentDraw          *math.OrnamentAdd
 	id                    string
 	//inputA                *connection.Connection
 	//inputB                *connection.Connection
 	//output                *connection.Connection
 	debugMode bool
+
+	gridAdjust rulesStage.GridAdjust
+}
+
+func (e *StatementAdd) SetMainSvg(svg *html.TagSvg) {
+	e.block.SetMainSvg(svg)
+}
+
+func (e *StatementAdd) SetResizerButton(resizeButton block.ResizeButton) {
+	e.block.SetResizerButton(resizeButton)
+}
+
+func (e *StatementAdd) SetDraggerButton(draggerButton block.ResizeButton) {
+	e.block.SetDraggerButton(draggerButton)
+}
+
+func (e *StatementAdd) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
+	e.gridAdjust = gridAdjust
+	e.block.SetGridAdjust(gridAdjust)
 }
 
 func (e *StatementAdd) ToPng() (pngData js.Value) {
@@ -57,11 +77,11 @@ func (e *StatementAdd) SetName(name string) {
 	e.block.SetName(name)
 }
 
-func (e *StatementAdd) SetPosition(x, y int) {
+func (e *StatementAdd) SetPosition(x, y rulesDensity.Density) {
 	e.block.SetPosition(x, y)
 }
 
-func (e *StatementAdd) SetSize(wight, height int) {
+func (e *StatementAdd) SetSize(wight, height rulesDensity.Density) {
 	e.block.SetSize(wight, height)
 }
 
@@ -263,7 +283,7 @@ func (e *StatementAdd) Init() (err error) {
 	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmAdd")
 
-	size := 60
+	size := rulesDensity.Density(60)
 	e.defaultWidth = size
 	e.defaultHeight = size
 	e.horizontalMinimumSize = size
@@ -288,7 +308,7 @@ func (e *StatementAdd) Init() (err error) {
 	e.block.SetMinimumWidth(e.horizontalMinimumSize)
 	e.block.SetMinimumHeight(e.verticalMinimumSize)
 
-	e.ornamentDraw = new(_math.OrnamentAdd)
+	e.ornamentDraw = new(math.OrnamentAdd)
 	e.ornamentDraw.SetWarningMarkMargin(0)
 
 	inputXSetup := connection.Setup{

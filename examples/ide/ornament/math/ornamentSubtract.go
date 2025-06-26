@@ -1,4 +1,4 @@
-package _math
+package math
 
 type OrnamentSubtract struct {
 	OrnamentOpAmpSymbol

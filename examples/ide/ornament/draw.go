@@ -21,6 +21,8 @@ type Draw interface {
 	// SetWarning sets the visibility of the warning mark
 	SetWarning(warning bool)
 
+	SetSelected(selected bool)
+
 	// ToPngResized
 	//
 	// English:

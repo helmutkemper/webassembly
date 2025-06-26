@@ -17,8 +17,15 @@ import (
 type DoubleLoopArrow struct {
 	ornament.WarningMarkExclamation
 
-	arrowColor      color.RGBA
-	backgroundColor color.RGBA
+	arrowNormalColor            color.RGBA
+	backgroundNormalColor       color.RGBA
+	stopButtonCircleNormalColor color.RGBA
+	stopButtonBorderNormalColor color.RGBA
+
+	arrowSelectedColor            color.RGBA
+	backgroundSelectedColor       color.RGBA
+	stopButtonCircleSelectedColor color.RGBA
+	stopButtonBorderSelectedColor color.RGBA
 
 	svg                      *html.TagSvg
 	backgroundContent        *html.TagSvgPath
@@ -46,16 +53,42 @@ func (e *DoubleLoopArrow) SetWarning(warning bool) {
 	e.WarningMarkExclamation.SetWarning(warning)
 }
 
+func (e *DoubleLoopArrow) SetSelected(selected bool) {
+	if selected {
+		e.backgroundContent.Fill(e.backgroundSelectedColor)
+		e.borderArrow.Stroke(e.arrowSelectedColor)
+		e.stopButtonCircle.Fill(e.stopButtonCircleSelectedColor)
+		e.stopButtonCircle.Stroke(e.stopButtonCircleSelectedColor)
+		e.stopButtonBorder.Stroke(e.stopButtonBorderSelectedColor)
+		return
+	}
+
+	e.backgroundContent.Fill(e.backgroundNormalColor)
+	e.borderArrow.Stroke(e.arrowNormalColor)
+	e.stopButtonCircle.Fill(e.stopButtonCircleNormalColor)
+	e.stopButtonCircle.Stroke(e.stopButtonCircleNormalColor)
+	e.stopButtonBorder.Stroke(e.stopButtonBorderNormalColor)
+}
+
+func (e *DoubleLoopArrow) SetStopButtonColor(border, circle color.RGBA) {
+	e.stopButtonBorderNormalColor = border
+	e.stopButtonCircleNormalColor = circle
+
+	e.stopButtonBorder.Stroke(e.stopButtonBorderNormalColor)
+	e.stopButtonCircle.Fill(e.stopButtonCircleNormalColor)
+	e.stopButtonCircle.Stroke(e.stopButtonCircleNormalColor)
+}
+
 // SetArrowColor defines the color of the arrow used as a border.
 func (e *DoubleLoopArrow) SetArrowColor(color color.RGBA) {
-	e.arrowColor = color
-	e.borderArrow.Stroke(e.arrowColor)
+	e.arrowNormalColor = color
+	e.borderArrow.Stroke(e.arrowNormalColor)
 }
 
 // SetBackgroundColor defines the color of the background.
 func (e *DoubleLoopArrow) SetBackgroundColor(color color.RGBA) {
-	e.backgroundColor = color
-	e.backgroundContent.Fill(e.backgroundColor)
+	e.backgroundNormalColor = color
+	e.backgroundContent.Fill(e.backgroundNormalColor)
 }
 
 // GetSvg Returns the SVG tag with the element design
@@ -67,20 +100,27 @@ func (e *DoubleLoopArrow) GetSvg() (svg *html.TagSvg) {
 func (e *DoubleLoopArrow) Init() (err error) {
 	_ = e.WarningMarkExclamation.Init()
 
-	e.arrowColor = color.RGBA{R: 255, G: 120, B: 0, A: 255}
-	e.backgroundColor = color.RGBA{R: 255, G: 240, B: 240, A: 255}
+	e.arrowSelectedColor = color.RGBA{R: 255, G: 80, B: 0, A: 255}
+	e.backgroundSelectedColor = color.RGBA{R: 255, G: 200, B: 200, A: 255}
+	e.stopButtonCircleSelectedColor = color.RGBA{R: 255, G: 0, B: 0, A: 255}
+	e.stopButtonBorderSelectedColor = color.RGBA{R: 0, G: 0, B: 255, A: 255}
+
+	e.arrowNormalColor = color.RGBA{R: 255, G: 120, B: 0, A: 255}
+	e.backgroundNormalColor = color.RGBA{R: 255, G: 240, B: 240, A: 255}
+	e.stopButtonCircleNormalColor = color.RGBA{R: 255, G: 0, B: 0, A: 255}
+	e.stopButtonBorderNormalColor = color.RGBA{R: 0, G: 0, B: 255, A: 255}
 
 	e.svg = factoryBrowser.NewTagSvg()
 
 	e.backgroundContent = factoryBrowser.NewTagSvgPath().
-		Fill(e.backgroundColor).
+		Fill(e.backgroundNormalColor).
 		Stroke("none").
 		MarkerEnd("url(#backgroundContent)")
 	e.svg.Append(e.backgroundContent)
 
 	e.borderArrow = factoryBrowser.NewTagSvgPath().
 		Fill("none").
-		Stroke(e.arrowColor).
+		Stroke(e.arrowNormalColor).
 		StrokeWidth(rulesDensity.NewInt(5).GetInt()).
 		StrokeLineCap(html.KSvgStrokeLinecapRound).
 		StrokeLineJoin(html.KSvgStrokeLinejoinRound).
@@ -88,15 +128,15 @@ func (e *DoubleLoopArrow) Init() (err error) {
 	e.svg.Append(e.borderArrow)
 
 	e.stopButtonCircle = factoryBrowser.NewTagSvgPath().
-		Fill("red").
-		Stroke("red").
+		Fill(e.stopButtonCircleNormalColor).
+		Stroke(e.stopButtonCircleNormalColor).
 		StrokeWidth(rulesDensity.NewInt(2).GetInt()).
 		MarkerEnd("url(#stopButtonCircle)")
 	e.svg.Append(e.stopButtonCircle)
 
 	e.stopButtonBorder = factoryBrowser.NewTagSvgPath().
 		Fill("none").
-		Stroke("blue").
+		Stroke(e.stopButtonBorderNormalColor).
 		StrokeWidth(rulesDensity.NewInt(2).GetInt()).
 		MarkerEnd("url(#stopButtonBorder)")
 	e.svg.Append(e.stopButtonBorder)
@@ -191,16 +231,16 @@ func (e *DoubleLoopArrow) Update(x, y, width, height rulesDensity.Density) (err 
 
 	// Define the path data for the stop button border
 	stopButtonBorderPath := []string{
-		fmt.Sprintf("M %v %v", xp-cr-rulesDensity.Density(5), yp-cr-rulesDensity.Density(5)),                                                   //-----------------------
-		fmt.Sprintf("M %v %v", xp+rulesDensity.Density(5), yp),                                                                                 //-----------------------
-		fmt.Sprintf("h %v", L-rulesDensity.Density(10)),                                                                                        //-----------------------
-		fmt.Sprintf("a %v,%v 0 0 1 %v,%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)), //---------------------
-		fmt.Sprintf("v %v", L-(10)), //-----------------------
-		fmt.Sprintf("a %v,%v 0 0 1 -%v,%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)), //---------------------
-		fmt.Sprintf("h -%v", L-rulesDensity.Density(10)), //-----------------------
+		fmt.Sprintf("M %v %v", xp-cr-rulesDensity.Density(5), yp-cr-rulesDensity.Density(5)),                                                     //-----------------------
+		fmt.Sprintf("M %v %v", xp+rulesDensity.Density(5), yp),                                                                                   //-----------------------
+		fmt.Sprintf("h %v", L-rulesDensity.Density(10)),                                                                                          //-----------------------
+		fmt.Sprintf("a %v,%v 0 0 1 %v,%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)),   //---------------------
+		fmt.Sprintf("v %v", L-rulesDensity.Density(10)),                                                                                          //-----------------------
+		fmt.Sprintf("a %v,%v 0 0 1 -%v,%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)),  //---------------------
+		fmt.Sprintf("h -%v", L-rulesDensity.Density(10)),                                                                                         //-----------------------
 		fmt.Sprintf("a %v,%v 0 0 1 -%v,-%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)), //---------------------
-		fmt.Sprintf("v -%v", L-(10)), //-----------------------
-		fmt.Sprintf("a %v,%v 0 0 1 %v,-%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)), //---------------------
+		fmt.Sprintf("v -%v", L-rulesDensity.Density(10)),                                                                                         //-----------------------
+		fmt.Sprintf("a %v,%v 0 0 1 %v,-%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)),  //---------------------
 		"z",
 	}
 	e.stopButtonBorder.D(stopButtonBorderPath)

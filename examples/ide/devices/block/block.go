@@ -11,7 +11,6 @@ import (
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"image/color"
-	"log"
 	"syscall/js"
 )
 
@@ -49,7 +48,8 @@ type Block struct {
 	block    *html.TagSvg
 	main     *html.TagSvg
 
-	resizeButton ResizeButton
+	resizerButton ResizeButton
+	draggerButton ResizeButton
 
 	resizerTopLeft     ResizeButton
 	resizerTopRight    ResizeButton
@@ -60,6 +60,11 @@ type Block struct {
 	resizerBottomMiddle ResizeButton
 	resizerLeftMiddle   ResizeButton
 	resizerRightMiddle  ResizeButton
+
+	draggerTopMiddle    ResizeButton
+	draggerBottomMiddle ResizeButton
+	draggerLeftMiddle   ResizeButton
+	draggerRightMiddle  ResizeButton
 
 	selectDiv *html.TagSvgRect
 
@@ -74,8 +79,12 @@ func (e *Block) SetMainSvg(svg *html.TagSvg) {
 	e.main = svg
 }
 
-func (e *Block) SetResizeButton(resizeButton ResizeButton) {
-	e.resizeButton = resizeButton
+func (e *Block) SetResizerButton(resizerButton ResizeButton) {
+	e.resizerButton = resizerButton
+}
+
+func (e *Block) SetDraggerButton(draggerButton ResizeButton) {
+	e.draggerButton = draggerButton
 }
 
 func (e *Block) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
@@ -220,7 +229,8 @@ func (e *Block) SetSelected(selected bool) {
 		e.selected = false
 	}
 
-	//e.selectDiv.AddStyleConditional(e.selected, "display", "block", "none") // todo: descomentar
+	e.ornament.SetSelected(selected)
+	e.selectDiv.AddStyleConditional(e.selected, "display", "block", "none") // todo: descomentar
 	e.SetResize(false)
 }
 
@@ -245,33 +255,32 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 		Width(width.GetInt()).
 		Height(height.GetInt()).
 		Fill("none").Stroke("red").
-		StrokeDasharray([]int{4}).
-		StrokeWidth(1)
+		StrokeDasharray([]int{16, 4}).
+		StrokeWidth(rulesDensity.Density(3).GetInt())
 	e.ideStage.Append(e.selectDiv)
 
-	e.resizerTopLeft = e.resizeButton.GetNew()
+	e.resizerTopLeft = e.resizerButton.GetNew()
 	e.resizerTopLeft.SetName("top-left")
 	e.resizerTopLeft.SetCursor("nwse-resize")
 	e.resizerTopLeft.SetCX(x - e.resizerTopLeft.GetSpace())
 	e.resizerTopLeft.SetCY(y - e.resizerTopLeft.GetSpace())
 	e.ideStage.Append(e.resizerTopLeft.GetSvg())
 
-	e.resizerTopRight = e.resizeButton.GetNew()
+	e.resizerTopRight = e.resizerButton.GetNew()
 	e.resizerTopRight.SetName("top-right")
 	e.resizerTopRight.SetCursor("nesw-resize")
 	e.resizerTopRight.SetCX(x + width + e.resizerTopRight.GetSpace())
 	e.resizerTopRight.SetCY(y - e.resizerTopRight.GetSpace())
 	e.ideStage.Append(e.resizerTopRight.GetSvg())
 
-	log.Printf("y: %v height: %v", y.GetInt(), height.GetInt())
-	e.resizerBottomLeft = e.resizeButton.GetNew()
+	e.resizerBottomLeft = e.resizerButton.GetNew()
 	e.resizerBottomLeft.SetName("bottom-left")
 	e.resizerBottomLeft.SetCursor("nesw-resize")
 	e.resizerBottomLeft.SetCX(x - e.resizerBottomLeft.GetSpace())
 	e.resizerBottomLeft.SetCY(y + height + e.resizerBottomLeft.GetSpace())
 	e.ideStage.Append(e.resizerBottomLeft.GetSvg())
 
-	e.resizerBottomRight = e.resizeButton.GetNew()
+	e.resizerBottomRight = e.resizerButton.GetNew()
 	e.resizerBottomRight.SetName("bottom-right")
 	e.resizerBottomRight.SetCursor("nwse-resize")
 	e.resizerBottomRight.SetCX(x + width + e.resizerBottomRight.GetSpace())
@@ -280,33 +289,64 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 
 	//----------------------------------------------------
 
-	e.resizerTopMiddle = e.resizeButton.GetNew()
+	e.resizerTopMiddle = e.resizerButton.GetNew()
 	e.resizerTopMiddle.SetName("top-middle")
 	e.resizerTopMiddle.SetCursor("ns-resize")
 	e.resizerTopMiddle.SetCX(x + width/2)
 	e.resizerTopMiddle.SetCY(y - e.resizerTopMiddle.GetSpace())
 	e.ideStage.Append(e.resizerTopMiddle.GetSvg())
 
-	e.resizerBottomMiddle = e.resizeButton.GetNew()
+	e.resizerBottomMiddle = e.resizerButton.GetNew()
 	e.resizerBottomMiddle.SetName("bottom-middle")
 	e.resizerBottomMiddle.SetCursor("ns-resize")
 	e.resizerBottomMiddle.SetCX(x + width/2)
 	e.resizerBottomMiddle.SetCY(y + height + e.resizerBottomMiddle.GetSpace())
 	e.ideStage.Append(e.resizerBottomMiddle.GetSvg())
 
-	e.resizerLeftMiddle = e.resizeButton.GetNew()
+	e.resizerLeftMiddle = e.resizerButton.GetNew()
 	e.resizerLeftMiddle.SetName("left-middle")
 	e.resizerLeftMiddle.SetCursor("ew-resize")
 	e.resizerLeftMiddle.SetCX(x - e.resizerLeftMiddle.GetSpace())
 	e.resizerLeftMiddle.SetCY(y + height/2)
 	e.ideStage.Append(e.resizerLeftMiddle.GetSvg())
 
-	e.resizerRightMiddle = e.resizeButton.GetNew()
+	e.resizerRightMiddle = e.resizerButton.GetNew()
 	e.resizerRightMiddle.SetName("right-middle")
 	e.resizerRightMiddle.SetCursor("ew-resize")
 	e.resizerRightMiddle.SetCX(x + width + e.resizerRightMiddle.GetSpace())
 	e.resizerRightMiddle.SetCY(y + height/2)
 	e.ideStage.Append(e.resizerRightMiddle.GetSvg())
+
+	//----------------------------------------------------------
+
+	e.draggerTopMiddle = e.draggerButton.GetNew()
+	e.draggerTopMiddle.SetName("top-middle")
+	//e.draggerTopMiddle.SetCursor("ns-resize")
+	e.draggerTopMiddle.SetCX(x + width/2)
+	e.draggerTopMiddle.SetCY(y - e.draggerTopMiddle.GetSpace())
+	e.draggerTopMiddle.SetRotation(10)
+	e.ideStage.Append(e.draggerTopMiddle.GetSvg())
+
+	e.draggerBottomMiddle = e.draggerButton.GetNew()
+	e.draggerBottomMiddle.SetName("bottom-middle")
+	//e.draggerBottomMiddle.SetCursor("ns-resize")
+	e.draggerBottomMiddle.SetCX(x + width/2)
+	e.draggerBottomMiddle.SetCY(y + height + e.draggerBottomMiddle.GetSpace())
+	e.ideStage.Append(e.draggerBottomMiddle.GetSvg())
+
+	e.draggerLeftMiddle = e.draggerButton.GetNew()
+	e.draggerLeftMiddle.SetName("left-middle")
+	//e.draggerLeftMiddle.SetCursor("ew-resize")
+	e.draggerLeftMiddle.SetCX(x - e.draggerLeftMiddle.GetSpace())
+	e.draggerLeftMiddle.SetCY(y + height/2)
+	e.ideStage.Append(e.draggerLeftMiddle.GetSvg())
+
+	e.draggerRightMiddle = e.draggerButton.GetNew()
+	e.draggerRightMiddle.SetName("right-middle")
+	//e.draggerRightMiddle.SetCursor("ew-resize")
+	e.draggerRightMiddle.SetCX(x + width + e.draggerRightMiddle.GetSpace())
+	e.draggerRightMiddle.SetCY(y + height/2)
+	e.ideStage.Append(e.draggerRightMiddle.GetSvg())
 }
 
 // dragCursorChange Change the cursor when the device is being dragged
@@ -402,7 +442,7 @@ func (e *Block) initEvents() {
 	// add / remove event listener requires pointers, so the variable should be initialized in this way
 	var drag, stopDrag, resizeMouseMove, stopResize js.Func
 
-	moveResizersX := func() {
+	moveResizersAndDraggersX := func() {
 		// todo: este bloco vai para setCoordinate e setSize
 		e.selectDiv.X(e.x.GetInt())
 		e.selectDiv.Width(e.width.GetInt())
@@ -416,9 +456,14 @@ func (e *Block) initEvents() {
 		e.resizerBottomMiddle.SetCX(e.x + e.width/2)
 		e.resizerLeftMiddle.SetCX(e.x - e.resizerLeftMiddle.GetSpace())
 		e.resizerRightMiddle.SetCX(e.x + e.width + e.resizerRightMiddle.GetSpace())
+
+		e.draggerTopMiddle.SetCX(e.x + e.width/2)
+		e.draggerBottomMiddle.SetCX(e.x + e.width/2)
+		e.draggerLeftMiddle.SetCX(e.x - e.draggerLeftMiddle.GetSpace())
+		e.draggerRightMiddle.SetCX(e.x + e.width + e.draggerRightMiddle.GetSpace())
 	}
 
-	moveResizersY := func() {
+	moveResizersAndDraggersY := func() {
 		// todo: este bloco vai para setCoordinate e setSize
 		e.selectDiv.Y(e.y.GetInt())
 		e.selectDiv.Height(e.height.GetInt())
@@ -432,6 +477,11 @@ func (e *Block) initEvents() {
 		e.resizerBottomMiddle.SetCY(e.y + e.height + e.resizerBottomMiddle.GetSpace())
 		e.resizerLeftMiddle.SetCY(e.y + e.height/2)
 		e.resizerRightMiddle.SetCY(e.y + e.height/2)
+
+		e.draggerTopMiddle.SetCY(e.y - e.draggerTopMiddle.GetSpace())
+		e.draggerBottomMiddle.SetCY(e.y + e.height + e.draggerBottomMiddle.GetSpace())
+		e.draggerLeftMiddle.SetCY(e.y + e.height/2)
+		e.draggerRightMiddle.SetCY(e.y + e.height/2)
 	}
 
 	// Joins the calculations of X and Y of the drag
@@ -455,8 +505,8 @@ func (e *Block) initEvents() {
 
 		e.SetPosition(rulesDensity.Convert(newLeft), rulesDensity.Convert(newTop))
 
-		moveResizersX()
-		moveResizersY()
+		moveResizersAndDraggersX()
+		moveResizersAndDraggersY()
 
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 		return nil
@@ -562,6 +612,12 @@ func (e *Block) initEvents() {
 		}
 
 		newWidth = e.max(e.blockMinimumWidth.GetInt(), newWidth)
+
+		e.SetX(rulesDensity.Convert(newLeft))
+		e.SetWidth(rulesDensity.Convert(newWidth))
+
+		moveResizersAndDraggersX()
+		moveResizersAndDraggersY()
 		return
 
 		//newLeftD, newWidthD := rulesDensity.Convert(newLeft), rulesDensity.Convert(newWidth)
@@ -623,6 +679,12 @@ func (e *Block) initEvents() {
 		}
 
 		newHeight = e.max(e.blockMinimumHeight.GetInt(), newHeight)
+
+		e.SetY(rulesDensity.Convert(newTop))
+		e.SetHeight(rulesDensity.Convert(newHeight))
+
+		moveResizersAndDraggersX()
+		moveResizersAndDraggersY()
 		return
 
 		//newHeightD, newTopD := rulesDensity.Convert(newHeight), rulesDensity.Convert(newTop)
@@ -645,14 +707,14 @@ func (e *Block) initEvents() {
 		}
 
 		resizerName := e.block.Get().Get("dataset").Get("resizeName").String()
-		newLeft, newWidth := resizeHorizontal(args, resizerName)
-		newTop, newHeight := resizeVertical(args, resizerName)
+		resizeHorizontal(args, resizerName)
+		resizeVertical(args, resizerName)
 
-		e.SetPosition(rulesDensity.Convert(newLeft), rulesDensity.Convert(newTop))
-		e.SetSize(rulesDensity.Convert(newWidth), rulesDensity.Convert(newHeight))
-		log.Printf("a x: %v", e.x)
-		moveResizersX()
-		moveResizersY()
+		//e.SetPosition(rulesDensity.Convert(newLeft), rulesDensity.Convert(newTop))
+		//e.SetSize(rulesDensity.Convert(newWidth), rulesDensity.Convert(newHeight))
+		//
+		//moveResizersX()
+		//moveResizersY()
 
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 
@@ -819,6 +881,34 @@ func (e *Block) SetOrnament(ornament ornament.Draw) {
 	e.ornament = ornament
 }
 
+func (e *Block) SetX(x rulesDensity.Density) {
+	y := e.y
+	xInt, _ := e.adjustXYToGrid(x.GetInt(), y.GetInt())
+	x = rulesDensity.Convert(xInt)
+
+	e.x = x
+
+	if !e.initialized {
+		return
+	}
+
+	e.block.X(x.GetInt())
+}
+
+func (e *Block) SetY(y rulesDensity.Density) {
+	x := e.x
+	_, yInt := e.adjustXYToGrid(x.GetInt(), y.GetInt())
+	y = rulesDensity.Convert(yInt)
+
+	e.y = y
+
+	if !e.initialized {
+		return
+	}
+
+	e.block.Y(y.GetInt())
+}
+
 // SetPosition Defines the coordinates (x, y) of the device
 func (e *Block) SetPosition(x, y rulesDensity.Density) {
 	xInt, yInt := e.adjustXYToGrid(x.GetInt(), y.GetInt())
@@ -835,20 +925,40 @@ func (e *Block) SetPosition(x, y rulesDensity.Density) {
 	e.block.Y(y.GetInt())
 }
 
-// SetSize Defines the height and width of the device
-func (e *Block) SetSize(width, height rulesDensity.Density) {
-	widthInt, heightInt := e.adjustXYToGrid(width.GetInt(), height.GetInt())
-	width, height = rulesDensity.Convert(widthInt), rulesDensity.Convert(heightInt)
+func (e *Block) SetWidth(width rulesDensity.Density) {
+	height := e.height
+
+	widthInt, _ := e.adjustXYToGrid(width.GetInt(), height.GetInt())
+	width = rulesDensity.Convert(widthInt)
 
 	e.width = width
-	e.height = height
 
 	if !e.initialized {
 		return
 	}
 
 	e.block.Width(width.GetInt())
+}
+
+func (e *Block) SetHeight(height rulesDensity.Density) {
+	width := e.width
+
+	_, heightInt := e.adjustXYToGrid(width.GetInt(), height.GetInt())
+	height = rulesDensity.Convert(heightInt)
+
+	e.height = height
+
+	if !e.initialized {
+		return
+	}
+
 	e.block.Height(height.GetInt())
+}
+
+// SetSize Defines the height and width of the device
+func (e *Block) SetSize(width, height rulesDensity.Density) {
+	e.SetWidth(width)
+	e.SetHeight(height)
 }
 
 func (e *Block) getMenuLabel(condition bool, labelTrue, labelFalse string) (label string) {

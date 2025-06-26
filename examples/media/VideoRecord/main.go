@@ -33,12 +33,12 @@ func main() {
 	stage := factoryBrowser.NewStage()
 
 	left := factoryBrowser.NewTagDiv().Class("left").Append(
-		factoryBrowser.NewTagDiv().Reference(&startButton).AddListenerClick(&clickStart).Id("startButton").Class("button").Text("Start Recording"),
+		factoryBrowser.NewTagDiv().Reference(&startButton).AddListenerDoubleClick(clickStart).Id("startButton").Class("button").Text("Start Recording"),
 		factoryBrowser.NewTagH2().Text("Preview"),
 		factoryBrowser.NewTagVideo().Reference(&videoPreview).Id("preview").Width(160).Height(120).AutoPlay(true).Muted(true),
 	)
 	right := factoryBrowser.NewTagDiv().Class("right").Append(
-		factoryBrowser.NewTagDiv().Reference(&stopButton).AddListenerClick(&clickStop).Id("stopButton").Class("button").Text("Stop Recording"),
+		factoryBrowser.NewTagDiv().Reference(&stopButton).AddListenerDoubleClick(clickStop).Id("stopButton").Class("button").Text("Stop Recording"),
 		factoryBrowser.NewTagH2().Text("Recording"),
 		factoryBrowser.NewTagVideo().Reference(&videoRecording).Id("recording").Width(160).Height(120).Controls(true),
 		factoryBrowser.NewTagA().Reference(&downloadButton).Id("downloadButton").Class("button").Text("Download"),

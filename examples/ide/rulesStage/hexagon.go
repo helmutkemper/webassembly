@@ -74,6 +74,13 @@ func (e *Hexagon) AdjustCenter(x, y int) (cx, cy int) {
 	return int(point.X), int(point.Y)
 }
 
+// GetCowRowByXY Returns the line and column as a function of coordinates x, y
+func (e *Hexagon) GetCowRowByXY(x, y rulesDensity.Density) (col, row int) {
+	hex := e.colHexToRow(hexagon.Point{X: x.GetFloat(), Y: y.GetFloat()})
+	cord := hexagon.QDoubledFromCube(hex)
+	return cord.Col, cord.Row
+}
+
 // SetPixelXY sets the hexagon's column and row based on the provided pixel coordinates (x, y).
 func (e *Hexagon) SetPixelXY(x, y rulesDensity.Density) {
 	hex := e.colHexToRow(hexagon.Point{X: x.GetFloat(), Y: y.GetFloat()})

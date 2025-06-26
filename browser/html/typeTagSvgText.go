@@ -5164,13 +5164,3 @@ func (e *TagSvgText) ListenerRemove(event string) (ref *TagSvgText) {
 	e.commonEvents.ListenerRemove(event)
 	return e
 }
-
-func (e *TagSvgText) Width(value any) (ref *TagSvgText) {
-	e.selfElement.Set("width", value)
-	return e
-}
-
-func (e *TagSvgText) Height(value any) (ref *TagSvgText) {
-	e.selfElement.Set("height", value)
-	return e
-}

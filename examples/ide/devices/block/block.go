@@ -80,24 +80,80 @@ type Block struct {
 	ruleAdjustToGrid bool
 }
 
+// initRules
+//
+// English:
+//
+//	Organises complex rules, mainly business rules and visual rules.
+//
+//	All rules must be straightforward and respect the single responsibility of the function, and the function must be
+//	self-contained, that is, enabling something already enabled does not have an adverse effect on the
+//	functioning of the code.
+//
+//	All functions must be straightforward.
+//
+// Português:
+//
+//	Organiza as regras complexas, principalmente regras de negócios e regras visuais.
+//
+//	Todas as regras devem ser simples e respeitar a responsabilidade única da função, e a função deve ser
+//	autocontida, ou seja, habilitar algo que já está habilitado não gera efeito adverso ao funcionamento do código.
+//
+//	Todas as funções devem ser simples
 func (e *Block) initRules() {
 	e.rules = make(map[string]func())
 
+	// Rule: adjustToGrid
+	//
+	// English:
+	//
+	//  Snaps the top-left corner and bottom-right corner to the stage positioning grid.
+	//
+	// Português:
+	//
+	//  Ajusta a ponta top-left e a ponta bottom-right ao grid de posicionamento do palco.
 	e.rules["adjustToGrid"] = func() {
 		e.adjustToGridRuleOn()
-		//e.adjustToGridRuleOff()
 	}
 
+	// Rule: setWarningOn
+	//
+	// English:
+	//
+	//  Activates the warning mark that something is wrong.
+	//
+	// Português:
+	//
+	//  Ativa a marca de advertência de que alguma coisa está errada.
 	e.rules["setWarningOn"] = func() {
 		e.setWarningOn()
 		e.setWarningFlashOn()
 	}
 
+	// Rule: setWarningOff
+	//
+	// English:
+	//
+	//  Deactivates the warning mark that something is wrong.
+	//
+	// Português:
+	//
+	//  Desativa a marca de advertência de que alguma coisa está errada.
 	e.rules["setWarningOff"] = func() {
 		e.setWarningOff()
 		e.setWarningFlashOff()
 	}
 
+	// Rule: setDragOn
+	//
+	// English:
+	//
+	//  Enables the drag repositioning tool
+	//
+	// Português:
+	//
+	//  Habilita a ferramenta de reposicionamento por arrasto
+	//
 	e.rules["setDragOn"] = func() {
 		e.rules["setResizeOff"]()
 		e.rules["setSelectOff"]()
@@ -106,6 +162,15 @@ func (e *Block) initRules() {
 		e.setDragCursorOn()
 	}
 
+	// Rule: setDragOff
+	//
+	// English:
+	//
+	//  Disables the drag repositioning tool
+	//
+	// Português:
+	//
+	//  Desabilita a ferramenta de reposicionamento por arrasto
 	e.rules["setDragOff"] = func() {
 		e.dragEnabled = false
 
@@ -113,6 +178,15 @@ func (e *Block) initRules() {
 		e.setDragCursorOff()
 	}
 
+	// Rule: setResizeOn
+	//
+	// English:
+	//
+	//  Enables the resizing tool
+	//
+	// Português:
+	//
+	//  Habilita a ferramenta de redimensionamento
 	e.rules["setResizeOn"] = func() {
 		e.rules["setDragOff"]()
 		e.rules["setSelectOff"]()
@@ -120,12 +194,30 @@ func (e *Block) initRules() {
 		e.setResizeOrnamentVisibleOn()
 	}
 
+	// Rule: setResizeOff
+	//
+	// English:
+	//
+	//  Disables the resizing tool
+	//
+	// Português:
+	//
+	//  Desabilita a ferramenta de redimensionamento
 	e.rules["setResizeOff"] = func() {
 		e.resizeEnabled = false
 
 		e.setResizeOrnamentVisibleOff()
 	}
 
+	// Rule: setSelectOn
+	//
+	// English:
+	//
+	//  Enables the selection tool
+	//
+	// Português:
+	//
+	//  Habilita a ferramenta de seleção
 	e.rules["setSelectOn"] = func() {
 		e.selectEnable = false
 
@@ -136,6 +228,15 @@ func (e *Block) initRules() {
 		e.setSelectOrnamentAttentionColorOn()
 	}
 
+	// Rule: setSelectOff
+	//
+	// English:
+	//
+	//  Disables the selection tool
+	//
+	// Português:
+	//
+	//  Desabilita a ferramenta de seleção
 	e.rules["setSelectOff"] = func() {
 		e.setSelectRectangleOrnamentOff()
 		e.setSelectOrnamentAttentionColorOff()
@@ -198,10 +299,6 @@ func (e *Block) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
 
 func (e *Block) adjustToGridRuleOn() {
 	e.ruleAdjustToGrid = true
-}
-
-func (e *Block) adjustToGridRuleOff() {
-	e.ruleAdjustToGrid = false
 }
 
 func (e *Block) adjustXYToGrid(x, y int) (cx, cy int) {

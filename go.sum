@@ -1,3 +1,5 @@
+github.com/gorilla/websocket v1.5.3 h1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aNNg=
+github.com/gorilla/websocket v1.5.3/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/helmutkemper/iotmaker.platform.webbrowser v0.0.0-20200208001228-b665b1f435bb/go.mod h1:QUbS2Rmofhi8TU3QHKxdbydS0e3bOzOMKlKNY5F1zmM=
 github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go v0.0.0-20200120233119-9d62fed13020/go.mod h1:HA3lnQ50R+4hrCjx5MYkUvvHFX7WJjTBjJ5+0xqxW1I=
 github.com/helmutkemper/iotmaker.santa_isabel_theater.channels-go v0.0.0-20210626181330-090ff97f89e5 h1:L58byX5/tAlpnNc8ot0T/w4JLBBZqwrxmqKaMy5AM20=

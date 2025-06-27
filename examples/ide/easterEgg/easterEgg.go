@@ -78,8 +78,8 @@ func (e *MorseCode) FlashEnd() {
 	}
 }
 
-// FlashMarkErrorMsg Faz um SVG piscar enviando um SOS
-func (e *MorseCode) FlashMarkErrorMsg(svg *html.TagSvg) {
+// FlashErrorMsg Faz um SVG piscar enviando um SOS
+func (e *MorseCode) FlashErrorMsg(svg *html.TagSvg) {
 
 	viewingStandard, _ := e.TextToMorse("please, correct the error before running this code.  ")
 
@@ -88,6 +88,7 @@ func (e *MorseCode) FlashMarkErrorMsg(svg *html.TagSvg) {
 		e.flashStop <- struct{}{}
 	}
 
+	e.flashStop = make(chan struct{}, 1)
 	e.ticker = time.NewTicker(time.Duration(e.flashInterval) * time.Millisecond)
 
 	go func() {
@@ -123,14 +124,13 @@ func (e *MorseCode) FlashMarkErrorMsg(svg *html.TagSvg) {
 			}
 		}
 	}()
-
 }
 
 // Init Monta o alfabeto Morse
 func (e *MorseCode) Init() {
 
 	// Waiting time for each boolean used on code morse
-	e.flashInterval = 60
+	e.flashInterval = 200
 
 	e.dit = []bool{true, true, false, false}
 	// The duration of a dah is three times the duration of a dit

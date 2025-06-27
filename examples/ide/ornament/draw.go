@@ -19,7 +19,7 @@ type Draw interface {
 	GetSvg() (svg *html.TagSvg)
 
 	// SetWarning sets the visibility of the warning mark
-	SetWarning(warning bool)
+	//SetWarning(warning bool)
 
 	SetSelected(selected bool)
 

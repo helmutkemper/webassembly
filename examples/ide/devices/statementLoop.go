@@ -4,6 +4,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
+	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
@@ -63,6 +64,7 @@ func (e *StatementLoop) ToPng() (pngData js.Value) {
 // SetWarning sets the visibility of the warning mark
 func (e *StatementLoop) SetWarning(warning bool) {
 	if !e.block.GetInitialized() {
+		log.Println("Warning: block is't initialized")
 		return
 	}
 
@@ -293,6 +295,12 @@ func (e *StatementLoop) getMenu() (content []components.MenuOptions) {
 //}
 
 func (e *StatementLoop) Init() (err error) {
+
+	warningMark := new(ornament.WarningMarkExclamation)
+	warningMark.SetMargin(15)
+	_ = warningMark.Init()
+	e.block.SetWarningMark(warningMark)
+
 	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmLoop")
 
@@ -322,7 +330,6 @@ func (e *StatementLoop) Init() (err error) {
 	e.block.SetMinimumHeight(e.verticalMinimumSize)
 
 	e.ornamentDraw = new(doubleLoopArrow.DoubleLoopArrow)
-	e.ornamentDraw.SetWarningMarkMargin(15)
 
 	stopButton := connection.Setup{
 		FatherId:           e.id,

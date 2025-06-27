@@ -31,18 +31,17 @@ type Block struct {
 
 	classListName string
 
-	isResizing      bool
-	resizeEnabled   bool
-	resizeBlocked   bool
-	resizerFlashing bool
-	selectFlashing  bool
-	selected        bool
-	selectBlocked   bool
-	dragEnabled     bool
-	dragBlocked     bool
+	isResizing    bool
+	resizeEnabled bool
+	resizeLocked  bool
+	selectEnable  bool
+	selectLocked  bool
+	dragEnabled   bool
+	dragLocked    bool
 
-	resizerColor      color.RGBA
-	resizerFlashColor color.RGBA
+	resizerColor     color.RGBA
+	resizerLine      []int
+	resizerLineWidth int
 
 	ideStage          *html.TagSvg
 	block             *html.TagSvg
@@ -70,9 +69,115 @@ type Block struct {
 
 	ornament ornament.Draw
 
+	warningMarkAppended bool
+	warningMark         ornament.WarningMark
+
 	onResizeFunc func(args []js.Value, width, height rulesDensity.Density)
 
 	gridAdjust rulesStage.GridAdjust
+
+	rules            map[string]func()
+	ruleAdjustToGrid bool
+}
+
+func (e *Block) initRules() {
+	e.rules = make(map[string]func())
+
+	e.rules["adjustToGrid"] = func() {
+		e.adjustToGridRuleOn()
+		//e.adjustToGridRuleOff()
+	}
+
+	e.rules["setWarningOn"] = func() {
+		e.setWarningOn()
+		e.setWarningFlashOn()
+	}
+
+	e.rules["setWarningOff"] = func() {
+		e.setWarningOff()
+		e.setWarningFlashOff()
+	}
+
+	e.rules["setDragOn"] = func() {
+		e.rules["setResizeOff"]()
+		e.rules["setSelectOff"]()
+
+		e.setDragOrnamentOn()
+		e.setDragCursorOn()
+	}
+
+	e.rules["setDragOff"] = func() {
+		e.dragEnabled = false
+
+		e.setDragOrnamentOff()
+		e.setDragCursorOff()
+	}
+
+	e.rules["setResizeOn"] = func() {
+		e.rules["setDragOff"]()
+		e.rules["setSelectOff"]()
+
+		e.setResizeOrnamentVisibleOn()
+	}
+
+	e.rules["setResizeOff"] = func() {
+		e.resizeEnabled = false
+
+		e.setResizeOrnamentVisibleOff()
+	}
+
+	e.rules["setSelectOn"] = func() {
+		e.selectEnable = false
+
+		e.rules["setDragOff"]()
+		e.rules["setResizeOff"]()
+
+		e.setSelectRectangleOrnamentOn()
+		e.setSelectOrnamentAttentionColorOn()
+	}
+
+	e.rules["setSelectOff"] = func() {
+		e.setSelectRectangleOrnamentOff()
+		e.setSelectOrnamentAttentionColorOff()
+	}
+
+	e.rules["adjustToGrid"]()
+}
+
+func (e *Block) SetWarningMark(warningMark ornament.WarningMark) {
+	e.warningMark = warningMark
+}
+
+// SetWarning sets the visibility of the warning mark
+func (e *Block) SetWarning(warning bool) {
+	if warning {
+		e.rules["setWarningOn"]()
+		return
+	}
+
+	e.rules["setWarningOff"]()
+}
+
+func (e *Block) setWarningOn() {
+	e.warningMarkAppended = true
+	e.block.Append(e.warningMark.GetSvg())
+	_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
+}
+func (e *Block) setWarningOff() {
+	if !e.warningMarkAppended {
+		return
+	}
+
+	e.warningMarkAppended = false
+	e.block.Get().Call("removeChild", e.warningMark.GetSvg().Get())
+}
+
+func (e *Block) setWarningFlashOn() {
+	e.warningMark.Flash(true)
+}
+
+func (e *Block) setWarningFlashOff() {
+	e.warningMark.Flash(false)
 }
 
 func (e *Block) SetMainSvg(svg *html.TagSvg) {
@@ -91,9 +196,19 @@ func (e *Block) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
 	e.gridAdjust = gridAdjust
 }
 
+func (e *Block) adjustToGridRuleOn() {
+	e.ruleAdjustToGrid = true
+}
+
+func (e *Block) adjustToGridRuleOff() {
+	e.ruleAdjustToGrid = false
+}
+
 func (e *Block) adjustXYToGrid(x, y int) (cx, cy int) {
-	//return x, y
-	return e.gridAdjust.AdjustCenter(x, y)
+	if e.ruleAdjustToGrid {
+		return e.gridAdjust.AdjustCenter(x, y)
+	}
+	return x, y
 }
 
 // GetInitialized Returns if the instance is ready for use
@@ -101,24 +216,19 @@ func (e *Block) GetInitialized() bool {
 	return e.initialized
 }
 
-// SetWarning sets the visibility of the warning mark
-func (e *Block) SetWarning(warning bool) {
-	e.ornament.SetWarning(warning)
-}
-
 // SetDragBlocked Disables the use of the drag tool
 func (e *Block) SetDragBlocked(blocked bool) {
-	e.dragBlocked = blocked
+	e.dragLocked = blocked
 }
 
 // DragBlockedInvert Invert the drag tool enable status. Note: Used in the menu
 func (e *Block) DragBlockedInvert() {
-	e.dragBlocked = !e.dragBlocked
+	e.dragLocked = !e.dragLocked
 }
 
 // GetDragBlocked Return the drag tool enable status
 func (e *Block) GetDragBlocked() (blocked bool) {
-	return e.dragBlocked
+	return e.dragLocked
 }
 
 // GetDrag Return the drag tool status
@@ -131,24 +241,66 @@ func (e *Block) SetDragInvert() {
 	e.dragEnabled = !e.dragEnabled
 }
 
-// SetDrag Enables the device's drag tool
-func (e *Block) SetDrag(enabled bool) {
-	e.dragEnabled = enabled
-
+func (e *Block) setDragOrnamentOn() {
 	if !e.initialized {
 		return
 	}
 
-	if e.dragBlocked {
-		e.dragEnabled = false
+	e.draggerTopMiddle.SetVisible(true, e.ideStage)
+	e.draggerRightMiddle.SetVisible(true, e.ideStage)
+	e.draggerBottomMiddle.SetVisible(true, e.ideStage)
+	e.draggerLeftMiddle.SetVisible(true, e.ideStage)
+}
+
+func (e *Block) setDragOrnamentOff() {
+	if !e.initialized {
+		return
 	}
 
-	e.draggerTopMiddle.SetVisible(e.dragEnabled, e.ideStage)
-	e.draggerRightMiddle.SetVisible(e.dragEnabled, e.ideStage)
-	e.draggerBottomMiddle.SetVisible(e.dragEnabled, e.ideStage)
-	e.draggerLeftMiddle.SetVisible(e.dragEnabled, e.ideStage)
+	e.draggerTopMiddle.SetVisible(false, e.ideStage)
+	e.draggerRightMiddle.SetVisible(false, e.ideStage)
+	e.draggerBottomMiddle.SetVisible(false, e.ideStage)
+	e.draggerLeftMiddle.SetVisible(false, e.ideStage)
+}
 
-	e.dragCursorChange()
+func (e *Block) setDragLockedOn() {
+	e.dragLocked = true
+}
+func (e *Block) setDragLockedOff() {
+	e.dragLocked = false
+}
+
+// SetDrag Enables the device's drag tool
+func (e *Block) SetDrag(enabled bool) {
+	if e.dragLocked {
+		e.dragEnabled = false // todo: fazer a regra
+		return
+	}
+
+	e.dragEnabled = enabled
+
+	if e.dragEnabled {
+		e.rules["setDragOn"]()
+		return
+	}
+
+	e.rules["setDragOff"]()
+}
+
+func (e *Block) setDragCursorOn() {
+	if !e.initialized {
+		return
+	}
+
+	e.block.AddStyleConditional(true, "cursor", "grab", "")
+}
+
+func (e *Block) setDragCursorOff() {
+	if !e.initialized {
+		return
+	}
+
+	e.block.AddStyleConditional(false, "cursor", "grab", "")
 }
 
 // ResizeInverter Invert the resize tool status
@@ -163,85 +315,120 @@ func (e *Block) GetResize() (enabled bool) {
 
 // SetResize Defines the resize tool status
 func (e *Block) SetResize(enabled bool) {
-	e.resizeEnabled = enabled
-
-	if !e.initialized {
+	if e.resizeLocked {
+		e.resizeEnabled = false // todo: fazer a regra
 		return
 	}
 
-	if e.resizeBlocked {
-		e.resizeEnabled = false
+	e.resizeEnabled = enabled
+
+	if e.resizeEnabled {
+		e.rules["setResizeOn"]()
+		return
 	}
 
-	e.resizeEnabledDraw()
-	if enabled && e.selected {
-		e.SetSelected(false)
-	}
+	e.rules["setResizeOff"]()
+
+	//if enabled && e.selectEnable {
+	//	e.SetSelected(false) // todo: fazer a regra
+	//}
 }
 
 // ResizeBlockedInvert Invert the status from disables resize tool. Note: Used in the menu
 func (e *Block) ResizeBlockedInvert() {
-	e.resizeBlocked = !e.resizeBlocked
+	e.resizeLocked = !e.resizeLocked
 }
 
 // GetResizeBlocked Return the status from disables resize tool
 func (e *Block) GetResizeBlocked() (blocked bool) {
-	return e.resizeBlocked
+	return e.resizeLocked
 }
 
-// SetResizeBlocked Disables the use of the resize tool
+// SetResizeBlocked Disables the resize tool
 func (e *Block) SetResizeBlocked(blocked bool) {
-	e.resizeBlocked = blocked
+	e.resizeLocked = blocked
 }
 
 // SelectBlockedInvert Invert the status of the selection tool lock. Note: Used in the menu
 func (e *Block) SelectBlockedInvert() {
-	e.selectBlocked = !e.selectBlocked
+	e.selectLocked = !e.selectLocked
 }
 
 // GetSelectBlocked Returns the status of the selection tool lock
 func (e *Block) GetSelectBlocked() (blocked bool) {
-	return e.selectBlocked
+	return e.selectLocked
 }
 
-// SetSelectBlocked Lock the use of the selection tool
+// SetSelectBlocked Lock the selection tool
 func (e *Block) SetSelectBlocked(blocked bool) {
-	e.selectBlocked = blocked
+	e.selectLocked = blocked
 }
 
 // SelectedInvert Invert the status of the selection tool. Note: Used in the menu
 func (e *Block) SelectedInvert() {
-	e.SetSelected(!e.selected)
+	e.SetSelected(!e.selectEnable)
 }
 
-// SetSelected Defines if the device selection tool is active
-func (e *Block) SetSelected(selected bool) {
-	e.selected = selected
-
+func (e *Block) setSelectRectangleOrnamentOn() {
 	if !e.initialized {
 		return
 	}
 
-	if e.selectBlocked {
-		e.selected = false
+	e.selectDivAppended = true
+	e.ideStage.Append(e.selectDiv)
+}
+
+func (e *Block) setSelectRectangleOrnamentOff() {
+	if !e.initialized {
+		return
 	}
 
-	if e.selected {
-		e.selectDivAppended = true
-		e.ideStage.Append(e.selectDiv)
-	} else if e.selectDivAppended {
-		e.selectDivAppended = false
-		e.ideStage.Get().Call("removeChild", e.selectDiv.Get())
+	if !e.selectDivAppended {
+		return
 	}
 
-	e.ornament.SetSelected(e.selected)
-	e.selectDiv.AddStyleConditional(e.selected, "display", "block", "none")
-	e.SetResize(false)
+	e.selectDivAppended = false
+	e.ideStage.Get().Call("removeChild", e.selectDiv.Get())
+}
+
+func (e *Block) setSelectOrnamentAttentionColorOn() {
+	if !e.initialized {
+		return
+	}
+
+	e.ornament.SetSelected(true)
+}
+
+func (e *Block) setSelectOrnamentAttentionColorOff() {
+	if !e.initialized {
+		return
+	}
+
+	e.ornament.SetSelected(false)
+}
+
+// SetSelected Defines if the device selection tool is active
+func (e *Block) SetSelected(selected bool) {
+	e.selectEnable = selected
+
+	if e.selectLocked {
+		e.selectEnable = false // todo: fazer a regra
+		return
+	}
+
+	if e.selectEnable {
+		e.rules["setSelectOn"]()
+		return
+	}
+
+	e.rules["setSelectOff"]()
+
+	//e.SetResize(false) // todo: fazer a regra
 }
 
 // GetSelected Return the select tool status
 func (e *Block) GetSelected() (selected bool) {
-	return e.selected
+	return e.selectEnable
 }
 
 // createBlock Prepare all divs and CSS
@@ -262,9 +449,9 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 		Y(y.GetInt()).
 		Width(width.GetInt()).
 		Height(height.GetInt()).
-		Fill("none").Stroke("red").
-		StrokeDasharray([]int{16, 4}).
-		StrokeWidth(rulesDensity.Density(3).GetInt())
+		Fill("none").Stroke(e.resizerColor).
+		StrokeDasharray(e.resizerLine).
+		StrokeWidth(rulesDensity.Density(e.resizerLineWidth).GetInt())
 
 	e.resizerTopLeft = e.resizerButton.GetNew()
 	e.resizerTopLeft.SetName("top-left")
@@ -343,15 +530,6 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	e.draggerRightMiddle.SetRotation(0)
 }
 
-// dragCursorChange Change the cursor when the device is being dragged
-func (e *Block) dragCursorChange() {
-	if !e.initialized {
-		return
-	}
-
-	e.block.AddStyleConditional(e.dragEnabled, "cursor", "grab", "")
-}
-
 // GetDeviceDiv Returns the div from device
 func (e *Block) GetDeviceDiv() (element *html.TagSvg) {
 	return e.block
@@ -394,6 +572,8 @@ func (e *Block) GetY() (y rulesDensity.Density) {
 
 // Init Initializes the generic functions of the device
 func (e *Block) Init() (err error) {
+	e.initRules()
+
 	var id string
 	id = rulesSequentialId.GetIdFromBase(e.name)
 	if e.id, err = utils.VerifyUniqueId(id); err != nil {
@@ -404,11 +584,9 @@ func (e *Block) Init() (err error) {
 
 	e.classListName = "block"
 
-	e.resizerFlashing = true
-	e.selectFlashing = true
-
-	e.resizerFlashColor = factoryColor.NewYellow()
 	e.resizerColor = factoryColor.NewRed()
+	e.resizerLine = []int{16, 4}
+	e.resizerLineWidth = 3
 
 	e.createBlock(e.x, e.y, e.width, e.height)
 	e.initEvents()
@@ -418,12 +596,11 @@ func (e *Block) Init() (err error) {
 	if e.ornament != nil {
 		svg := e.ornament.GetSvg()
 		e.block.Append(svg)
+
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 	}
 
-	e.dragCursorChange()
-	e.resizeEnabledDraw()
-	e.SetSelected(e.selected)
+	e.SetSelected(e.selectEnable)
 
 	return
 }
@@ -502,6 +679,9 @@ func (e *Block) initEvents() {
 		moveResizersAndDraggersX()
 		moveResizersAndDraggersY()
 
+		if e.warningMarkAppended {
+			_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
+		}
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 		return nil
 	})
@@ -678,6 +858,9 @@ func (e *Block) initEvents() {
 		resizeHorizontal(args, resizerName)
 		resizeVertical(args, resizerName)
 
+		if e.warningMarkAppended {
+			_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
+		}
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 
 		e.OnResize(args, e.width, e.height)
@@ -744,14 +927,6 @@ func (e *Block) initEvents() {
 }
 
 // max Returns the maximum value
-func (e *Block) maxD(a, b rulesDensity.Density) (max rulesDensity.Density) {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-// max Returns the maximum value
 func (e *Block) max(a, b int) (max int) {
 	if a > b {
 		return a
@@ -767,36 +942,43 @@ func (e *Block) min(a, b int) (min int) {
 	return b
 }
 
-// min Returns the minimum value
-func (e *Block) minD(a, b rulesDensity.Density) (min rulesDensity.Density) {
-	if a < b {
-		return a
-	}
-	return b
-}
-
 // OnResize cannot be shadowed by the main instance, so the function in SetOnResize
 func (e *Block) OnResize(args []js.Value, width, height rulesDensity.Density) {
-	if e.onResizeFunc != nil {
+	if e.onResizeFunc != nil { // todo: revisar isto
 		e.onResizeFunc(args, width, height)
 	}
 }
 
-// resizeEnabledDraw Show/hide the resizing blocks on the screen
-func (e *Block) resizeEnabledDraw() {
+func (e *Block) setResizeOrnamentVisibleOn() {
 	if !e.initialized {
 		return
 	}
 
-	e.resizerTopLeft.SetVisible(e.resizeEnabled, e.ideStage)
-	e.resizerTopRight.SetVisible(e.resizeEnabled, e.ideStage)
-	e.resizerBottomLeft.SetVisible(e.resizeEnabled, e.ideStage)
-	e.resizerBottomRight.SetVisible(e.resizeEnabled, e.ideStage)
+	e.resizerTopLeft.SetVisible(true, e.ideStage)
+	e.resizerTopRight.SetVisible(true, e.ideStage)
+	e.resizerBottomLeft.SetVisible(true, e.ideStage)
+	e.resizerBottomRight.SetVisible(true, e.ideStage)
 
-	e.resizerTopMiddle.SetVisible(e.resizeEnabled, e.ideStage)
-	e.resizerBottomMiddle.SetVisible(e.resizeEnabled, e.ideStage)
-	e.resizerLeftMiddle.SetVisible(e.resizeEnabled, e.ideStage)
-	e.resizerRightMiddle.SetVisible(e.resizeEnabled, e.ideStage)
+	e.resizerTopMiddle.SetVisible(true, e.ideStage)
+	e.resizerBottomMiddle.SetVisible(true, e.ideStage)
+	e.resizerLeftMiddle.SetVisible(true, e.ideStage)
+	e.resizerRightMiddle.SetVisible(true, e.ideStage)
+}
+
+func (e *Block) setResizeOrnamentVisibleOff() {
+	if !e.initialized {
+		return
+	}
+
+	e.resizerTopLeft.SetVisible(false, e.ideStage)
+	e.resizerTopRight.SetVisible(false, e.ideStage)
+	e.resizerBottomLeft.SetVisible(false, e.ideStage)
+	e.resizerBottomRight.SetVisible(false, e.ideStage)
+
+	e.resizerTopMiddle.SetVisible(false, e.ideStage)
+	e.resizerBottomMiddle.SetVisible(false, e.ideStage)
+	e.resizerLeftMiddle.SetVisible(false, e.ideStage)
+	e.resizerRightMiddle.SetVisible(false, e.ideStage)
 }
 
 // SetFatherId Receives the div ID used as a stage for the IDE and puts it to occupy the entire browser area

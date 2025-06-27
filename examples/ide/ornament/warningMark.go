@@ -12,6 +12,17 @@ import (
 	"time"
 )
 
+type WarningMark interface {
+	// GetSvg returns the SVG element of the warning mark
+	GetSvg() (svg *html.TagSvg)
+
+	// Update Draw the image
+	Update(x, y, width, height rulesDensity.Density) (err error)
+
+	// Flash Makes the warning indication blinking
+	Flash(warning bool)
+}
+
 // WarningMarkExclamation Responsible for drawing the alert plate symbol, with an exclamation in the middle, warning
 // in case of error
 type WarningMarkExclamation struct {
@@ -27,44 +38,25 @@ type WarningMarkExclamation struct {
 	warningOpacity          float64
 	flashTicker             *time.Ticker
 	stopTicker              *time.Ticker
-	svgWarning              *html.TagSvg
+	svg                     *html.TagSvg
 	hexagonRed              *html.TagSvgPath
 	hexagonWhite            *html.TagSvgPath
 	exclamation             *html.TagSvgPath
 }
 
-// SetWarningMarkMargin sets the margin, in pixels, of the warning mark
-func (e *WarningMarkExclamation) SetWarningMarkMargin(margin rulesDensity.Density) {
+// SetMargin sets the margin, in pixels, of the warning mark
+func (e *WarningMarkExclamation) SetMargin(margin rulesDensity.Density) {
 	e.warningMarkMargin = margin
 }
 
-// GetWarningMarkMargin returns the margin, in pixels, of the warning mark
-func (e *WarningMarkExclamation) GetWarningMarkMargin() rulesDensity.Density {
+// GetMargin returns the margin, in pixels, of the warning mark
+func (e *WarningMarkExclamation) GetMargin() rulesDensity.Density {
 	return e.warningMarkMargin
 }
 
-// GetWarningMark returns the SVG element of the warning mark
-func (e *WarningMarkExclamation) GetWarningMark() *html.TagSvg {
-	return e.svgWarning
-}
-
-// SetWarning sets the visibility of the warning mark
-func (e *WarningMarkExclamation) SetWarning(warning bool) {
-	if warning == e.warningEnabled {
-		e.svgWarning.AddStyle("visibility", "hidden")
-		return
-	}
-
-	// Update the state and visibility
-	e.warningEnabled = warning
-	visibility := "hidden"
-	if warning {
-		visibility = "visible"
-	}
-	e.svgWarning.AddStyle("visibility", visibility)
-
-	// Trigger the flash mark functionality
-	e.flashMark(warning)
+// GetSvg returns the SVG element of the warning mark
+func (e *WarningMarkExclamation) GetSvg() (svg *html.TagSvg) {
+	return e.svg
 }
 
 // GetWarning returns the visibility of the warning mark
@@ -83,7 +75,7 @@ func (e *WarningMarkExclamation) Init() (err error) {
 
 	e.warningEnabled = false
 
-	e.svgWarning = factoryBrowser.NewTagSvg().
+	e.svg = factoryBrowser.NewTagSvg().
 		Opacity(e.warningOpacity).
 		Id("uniqueid") //.
 	//Visibility("hidden")
@@ -92,18 +84,18 @@ func (e *WarningMarkExclamation) Init() (err error) {
 		Fill(e.warningBorderColor).
 		FillRule("evenodd").
 		Stroke("none")
-	e.svgWarning.Append(e.hexagonRed)
+	e.svg.Append(e.hexagonRed)
 
 	e.hexagonWhite = factoryBrowser.NewTagSvgPath().
 		Fill(e.warningBackgroundColor).
 		FillRule("evenodd").
 		Stroke("none")
-	e.svgWarning.Append(e.hexagonWhite)
+	e.svg.Append(e.hexagonWhite)
 
 	e.exclamation = factoryBrowser.NewTagSvgPath().
 		Fill(e.warningExclamationColor).
 		FillRule("evenodd")
-	e.svgWarning.Append(e.exclamation)
+	e.svg.Append(e.exclamation)
 
 	return
 }
@@ -129,7 +121,7 @@ func (e *WarningMarkExclamation) Update(_, _, width, height rulesDensity.Density
 	e.width = width
 	e.height = height
 
-	//e.svgWarning.ViewBox([]int{0, 0, width, height})
+	//e.svg.ViewBox([]int{0, 0, width, height})
 	marginInternal := rulesDensity.Density(0)
 	r := e.min(width-marginInternal-2.0*e.warningMarkMargin, height-marginInternal-2.0*e.warningMarkMargin) / 2.0
 	rotation := 0.0 // -math.Pi / 2;
@@ -170,10 +162,10 @@ func (e *WarningMarkExclamation) Update(_, _, width, height rulesDensity.Density
 	return
 }
 
-// flashMark Makes the warning indication blinking
-func (e *WarningMarkExclamation) flashMark(warning bool) {
+// Flash Makes the warning indication blinking
+func (e *WarningMarkExclamation) Flash(warning bool) {
 	if warning {
-		e.MorseCode.FlashMarkErrorMsg(e.svgWarning)
+		e.MorseCode.FlashErrorMsg(e.svg)
 		return
 	}
 

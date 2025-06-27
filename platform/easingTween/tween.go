@@ -2,7 +2,6 @@ package easingTween
 
 import (
 	"github.com/helmutkemper/webassembly/interfaces"
-	"log"
 	"syscall/js"
 	"time"
 )
@@ -463,7 +462,6 @@ func (el *Tween) tickerRunnerPrepare(startValue, endValue float64) {
 			for {
 				select {
 				case <-el.chanEnd:
-					log.Printf("end channel")
 					el.engineHasFunction = false
 					el.chanEnd = make(chan struct{}, 2)
 					return

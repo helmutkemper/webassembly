@@ -6,7 +6,6 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/connection/factoryConnection"
-	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"image/color"
@@ -16,7 +15,7 @@ import (
 // OrnamentOpAmpSymbol Responsible for drawing the operational amplifier symbol used in analog electronics for mathematical
 // operations
 type OrnamentOpAmpSymbol struct {
-	ornament.WarningMarkExclamation
+	//ornament.WarningMarkExclamation
 
 	deviceBorderNormalColor     color.RGBA
 	deviceBackgroundNormalColor color.RGBA
@@ -86,7 +85,7 @@ func (e *OrnamentOpAmpSymbol) SetSelected(selected bool) {
 
 // SetWarning sets the visibility of the warning mark
 func (e *OrnamentOpAmpSymbol) SetWarning(warning bool) {
-	e.WarningMarkExclamation.SetWarning(warning)
+	//e.WarningMarkExclamation.SetWarning(warning) // todo: fazer
 }
 
 // SetAdjustX defines the X adjustment of the symbol
@@ -221,7 +220,7 @@ func (e *OrnamentOpAmpSymbol) GetSymbolSelectedColor() color.RGBA {
 
 // Init Initializes the SVG element and its content
 func (e *OrnamentOpAmpSymbol) Init() (err error) {
-	_ = e.WarningMarkExclamation.Init()
+	//_ = e.WarningMarkExclamation.Init()
 
 	e.deviceBorderNormalColor = color.RGBA{R: 15, G: 48, B: 216, A: 255}
 	e.deviceBackgroundNormalColor = color.RGBA{R: 253, G: 255, B: 23, A: 255}
@@ -276,7 +275,7 @@ func (e *OrnamentOpAmpSymbol) Init() (err error) {
 	e.outputConnectionArea.Init("url(#stopButtonConnection)")
 	e.svg.Append(e.outputConnectionArea.GetSvgPath())
 
-	e.svg.Append(e.WarningMarkExclamation.GetWarningMark())
+	//e.svg.Append(e.WarningMarkExclamation.GetSvg())
 	e.SetWarning(false)
 	return
 }
@@ -291,7 +290,7 @@ func (e *OrnamentOpAmpSymbol) Update(x, y, width, height rulesDensity.Density) (
 	e.width = width
 	e.height = height
 
-	_ = e.WarningMarkExclamation.Update(x, y, width, height)
+	//_ = e.WarningMarkExclamation.Update(x, y, width, height)
 
 	//e.svg.ViewBox([]int{0.0, 0.0, width, height})
 

@@ -3,6 +3,7 @@ module github.com/helmutkemper/webassembly
 go 1.22.4
 
 require (
+	github.com/gorilla/websocket v1.5.3
 	github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig v0.0.0-20210626132318-c33958e83e03
 	github.com/helmutkemper/iotmaker.santa_isabel_theater.platform v0.0.7
 	github.com/paulmach/go.geojson v1.5.0

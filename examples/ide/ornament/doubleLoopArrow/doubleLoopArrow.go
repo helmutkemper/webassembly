@@ -6,7 +6,6 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/connection/factoryConnection"
-	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConnection"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"image/color"
@@ -15,7 +14,7 @@ import (
 
 // DoubleLoopArrow Responsible for drawing the ornament used in the loop function, a box with two rounded arrows
 type DoubleLoopArrow struct {
-	ornament.WarningMarkExclamation
+	//ornament.WarningMarkExclamation
 
 	arrowNormalColor            color.RGBA
 	backgroundNormalColor       color.RGBA
@@ -46,11 +45,6 @@ func (e *DoubleLoopArrow) StopButtonSetup(setup connection.Setup) {
 
 func (e *DoubleLoopArrow) ToPngResized(width, height float64) (pngData js.Value) {
 	return e.svg.ToPngResized(width, height)
-}
-
-// SetWarning sets the visibility of the warning mark
-func (e *DoubleLoopArrow) SetWarning(warning bool) {
-	e.WarningMarkExclamation.SetWarning(warning)
 }
 
 func (e *DoubleLoopArrow) SetSelected(selected bool) {
@@ -98,7 +92,6 @@ func (e *DoubleLoopArrow) GetSvg() (svg *html.TagSvg) {
 
 // Init Initializes the element design
 func (e *DoubleLoopArrow) Init() (err error) {
-	_ = e.WarningMarkExclamation.Init()
 
 	e.arrowSelectedColor = color.RGBA{R: 255, G: 80, B: 0, A: 255}
 	e.backgroundSelectedColor = color.RGBA{R: 255, G: 200, B: 200, A: 255}
@@ -147,15 +140,11 @@ func (e *DoubleLoopArrow) Init() (err error) {
 	e.stopButtonConnectionArea.Init("url(#stopButtonConnectionArea)")
 	e.svg.Append(e.stopButtonConnectionArea.GetSvgPath())
 
-	e.svg.Append(e.GetWarningMark())
-	e.SetWarning(false)
-
 	return
 }
 
 // Update Draw the element design
 func (e *DoubleLoopArrow) Update(x, y, width, height rulesDensity.Density) (err error) {
-	_ = e.WarningMarkExclamation.Update(x, y, width, height)
 	//e.svg.ViewBox([]int{0, 0, width, height})
 
 	margin := rulesDensity.Density(10)

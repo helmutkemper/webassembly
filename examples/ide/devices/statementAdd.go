@@ -4,6 +4,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
+	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/math"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
@@ -283,6 +284,11 @@ func (e *StatementAdd) Init() (err error) {
 	e.SetFatherId(rulesStage.KStageId)
 	e.SetName("stmAdd")
 
+	warningMark := new(ornament.WarningMarkExclamation)
+	warningMark.SetMargin(0)
+	_ = warningMark.Init()
+	e.block.SetWarningMark(warningMark)
+
 	size := rulesDensity.Density(60)
 	e.defaultWidth = size
 	e.defaultHeight = size
@@ -309,7 +315,6 @@ func (e *StatementAdd) Init() (err error) {
 	e.block.SetMinimumHeight(e.verticalMinimumSize)
 
 	e.ornamentDraw = new(math.OrnamentAdd)
-	e.ornamentDraw.SetWarningMarkMargin(0)
 
 	inputXSetup := connection.Setup{
 		FatherId:           e.id,

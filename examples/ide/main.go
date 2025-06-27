@@ -231,7 +231,6 @@ func main() {
 	stmLoop.SetMainSvg(mainSvg)
 	stmLoop.SetPosition(150, 50)
 	_ = stmLoop.Init()
-	//url := stmLoop.ToPng()
 
 	stmAdd := new(devices.StatementAdd)
 	stmAdd.SetResizerButton(resizeButton)
@@ -240,16 +239,10 @@ func main() {
 	stmAdd.SetMainSvg(mainSvg)
 	stmAdd.SetPosition(300, 150)
 	_ = stmAdd.Init()
-	//url := stmAdd.ToPng()
 
 	if _, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)
 	}
-
-	//document := js.Global().Get("document")
-	//document.Call("getElementById", "test").Set("src", url)
-	//document.Call("getElementById", "test").Get("style").Set("width", stmLoop.GetWidth())
-	//document.Call("getElementById", "test").Get("style").Set("height", stmLoop.GetHeight())
 
 	//mainStage.Append(panel)
 

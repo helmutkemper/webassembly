@@ -7,7 +7,6 @@ import (
 	"github.com/helmutkemper/webassembly/utilsText"
 	"github.com/helmutkemper/webassembly/utilsWindow"
 	"image/color"
-	"log"
 	"reflect"
 	"sync"
 	"syscall/js"
@@ -47,8 +46,7 @@ func (e *Control) Hide() {
 	wg := new(sync.WaitGroup)
 	wg.Add(1)
 	new(easingTween.Tween).
-		SetDuration(1*time.Second).
-		SetValues(0, 1000000).
+		SetDuration(1 * time.Second).
 		SetOnStepFunc(func(value, percentToComplete float64, arguments interface{}) {
 			e.svgGroup.AddStyle("opacity", 1.0-percentToComplete)
 		}).
@@ -60,7 +58,6 @@ func (e *Control) Hide() {
 			e.Clear()
 			e.svgGroup.AddStyle("opacity", 1)
 			e.stage.Get().Call("removeChild", e.svgGroup.Get())
-			log.Printf("onHideEnd")
 			wg.Done()
 		}).
 		Start()

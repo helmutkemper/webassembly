@@ -2,7 +2,6 @@ package rulesDensity
 
 import (
 	"github.com/helmutkemper/webassembly/utilsBrowser"
-	"log"
 	"strconv"
 )
 
@@ -35,7 +34,6 @@ func init() {
 			return
 		}
 		density = float64(scale)
-		log.Printf("density: %v", density)
 	}
 }
 

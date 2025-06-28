@@ -71,6 +71,7 @@ type Block struct {
 
 	warningMarkAppended bool
 	warningMark         ornament.WarningMark
+	warningMarkEnabled  bool
 
 	onResizeFunc func(args []js.Value, width, height rulesDensity.Density)
 
@@ -140,6 +141,11 @@ func (e *Block) initRules() {
 	//
 	//  Desativa a marca de advertência de que alguma coisa está errada.
 	e.rules["setWarningOff"] = func() {
+		// This rule may be called by another rule, so update the status here
+		//
+		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
+		e.warningMarkEnabled = false
+
 		e.setWarningOff()
 		e.setWarningFlashOff()
 	}
@@ -153,12 +159,12 @@ func (e *Block) initRules() {
 	// Português:
 	//
 	//  Habilita a ferramenta de reposicionamento por arrasto
-	//
 	e.rules["setDragOn"] = func() {
 		e.rules["setResizeOff"]()
 		e.rules["setSelectOff"]()
 
-		e.setDragOrnamentOn()
+		//e.setDragOrnamentOn()
+		e.setSelectOrnamentAttentionColorOn()
 		e.setDragCursorOn()
 	}
 
@@ -172,9 +178,13 @@ func (e *Block) initRules() {
 	//
 	//  Desabilita a ferramenta de reposicionamento por arrasto
 	e.rules["setDragOff"] = func() {
+		// This rule may be called by another rule, so update the status here
+		//
+		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
 		e.dragEnabled = false
 
-		e.setDragOrnamentOff()
+		//e.setDragOrnamentOff()
+		e.setSelectOrnamentAttentionColorOff()
 		e.setDragCursorOff()
 	}
 
@@ -204,6 +214,9 @@ func (e *Block) initRules() {
 	//
 	//  Desabilita a ferramenta de redimensionamento
 	e.rules["setResizeOff"] = func() {
+		// This rule may be called by another rule, so update the status here
+		//
+		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
 		e.resizeEnabled = false
 
 		e.setResizeOrnamentVisibleOff()
@@ -219,8 +232,6 @@ func (e *Block) initRules() {
 	//
 	//  Habilita a ferramenta de seleção
 	e.rules["setSelectOn"] = func() {
-		e.selectEnable = false
-
 		e.rules["setDragOff"]()
 		e.rules["setResizeOff"]()
 
@@ -238,6 +249,11 @@ func (e *Block) initRules() {
 	//
 	//  Desabilita a ferramenta de seleção
 	e.rules["setSelectOff"] = func() {
+		// This rule may be called by another rule, so update the status here
+		//
+		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
+		e.selectEnable = false
+
 		e.setSelectRectangleOrnamentOff()
 		e.setSelectOrnamentAttentionColorOff()
 	}
@@ -249,8 +265,14 @@ func (e *Block) SetWarningMark(warningMark ornament.WarningMark) {
 	e.warningMark = warningMark
 }
 
-// SetWarning sets the visibility of the warning mark
+// GetWarning Returns the visibility of the warning mark
+func (e *Block) GetWarning() (warning bool) {
+	return e.warningMarkEnabled
+}
+
+// SetWarning Sets the visibility of the warning mark
 func (e *Block) SetWarning(warning bool) {
+	e.warningMarkEnabled = warning
 	if warning {
 		e.rules["setWarningOn"]()
 		return
@@ -1108,7 +1130,7 @@ func (e *Block) SetName(name string) {
 
 // SetOnResize Receives the pointer to a function to be invoked during resizing
 //
-//	This function is due to the fact that the OnResize function cannot be shadowed by the main instance
+//	This function is because the main instance cannot shadow the OnResize function
 func (e *Block) SetOnResize(f func(args []js.Value, width, height rulesDensity.Density)) {
 	e.onResizeFunc = f
 }

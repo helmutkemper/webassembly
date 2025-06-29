@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/event/mouse"
 	"image/color"
 	"log"
+	"math"
 	"reflect"
 	"strconv"
 	"sync"
@@ -5495,4 +5496,123 @@ func (e *TagSvg) ToPngResized(width, height float64) (pngData js.Value) {
 //	    js.Global().Get("document").Call("getElementById", "test").Set("src", url)
 func (e *TagSvg) ToPng() (pngData js.Value) {
 	return e.ToPngResized(0.0, 0.0)
+}
+
+// SetAttribute
+//
+// English:
+//
+//	Sets an attribute on the tag element with the specified key and value.
+//
+// Português:
+//
+//	Define um atributo no elemento da tag com a chave e valor especificada.
+func (e *TagSvg) SetAttribute(key string, value any) (ref *TagSvg) {
+	e.selfElement.Call("setAttribute", key, value)
+	return e
+}
+
+// GetAttribute
+//
+// English:
+//
+//	Gets an attribute on the tag element with the specified key and value.
+//
+// Português:
+//
+//	Retorna um atributo no elemento da tag com a chave e valor especificada.
+func (e *TagSvg) GetAttribute(key string) (value string) {
+	return e.selfElement.Call("getAttribute", key).String()
+}
+
+// RemoveAttribute
+//
+// English:
+//
+//	Remove an attribute from the tag element.
+//
+// Português:
+//
+//	Remove um atributo no elemento da tag.
+func (e *TagSvg) RemoveAttribute(key string) (value string) {
+	return e.selfElement.Call("removeAttribute", key).String()
+}
+
+// Remove
+//
+// English:
+//
+//	Removes a child node from the DOM and returns the removed node.
+//
+// Português:
+//
+//	Remove um nó filho do DOM e retorna o nó removido.
+func (e *TagSvg) Remove(elements ...Compatible) (ref *TagSvg) {
+	for _, element := range elements {
+		e.selfElement.Call("removeChild", element)
+	}
+
+	return e
+}
+
+// SetZIndex
+//
+// English:
+//
+//	The z-index CSS property sets the z-order of a positioned element and its descendants or flex and grid items.
+//
+// Overlapping elements with a larger z-index cover those with a smaller one.
+//
+// Português:
+//
+//	A propriedade CSS z-index define a ordem z de um elemento posicionado e seus descendentes ou itens flexíveis e de
+//	grade.
+//
+// Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
+func (e *TagSvg) SetZIndex(index int) (ref *TagSvg) {
+	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	return e
+}
+
+// GetZIndex
+//
+// English:
+//
+//	The z-index CSS property sets the z-order of a positioned element and its descendants or flex and grid items.
+//
+// Overlapping elements with a larger z-index cover those with a smaller one.
+//
+// Português:
+//
+//	A propriedade CSS z-index define a ordem z de um elemento posicionado e seus descendentes ou itens flexíveis e de
+//	grade.
+//
+// Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
+func (e *TagSvg) GetZIndex() (index int) {
+	z := e.selfElement.Call("getAttribute", "zIndex").String()
+	if z == "auto" {
+		return math.MinInt
+	}
+
+	index, _ = strconv.Atoi(z)
+	return
+}
+
+// RemoveZIndex
+//
+// English:
+//
+//	The z-index CSS property sets the z-order of a positioned element and its descendants or flex and grid items.
+//
+// Overlapping elements with a larger z-index cover those with a smaller one.
+//
+// Português:
+//
+//	A propriedade CSS z-index define a ordem z de um elemento posicionado e seus descendentes ou itens flexíveis e de
+//	grade.
+//
+// Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
+func (e *TagSvg) RemoveZIndex() (ref *TagSvg) {
+	e.selfElement.Call("removeAttribute", "zIndex")
+	return e
 }

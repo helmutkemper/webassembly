@@ -3003,3 +3003,20 @@ func (e *TagSvgFeColorMatrix) Reference(reference **TagSvgFeColorMatrix) (ref *T
 	*reference = e
 	return e
 }
+
+// Remove
+//
+// English:
+//
+//	Removes a child node from the DOM and returns the removed node.
+//
+// Português:
+//
+//	Remove um nó filho do DOM e retorna o nó removido.
+func (e *TagSvgFeColorMatrix) Remove(elements ...Compatible) (ref *TagSvgFeColorMatrix) {
+	for _, element := range elements {
+		e.selfElement.Call("removeChild", element)
+	}
+
+	return e
+}

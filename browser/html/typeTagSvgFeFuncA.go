@@ -667,3 +667,20 @@ func (e *TagSvgFeFuncA) Reference(reference **TagSvgFeFuncA) (ref *TagSvgFeFuncA
 	*reference = e
 	return e
 }
+
+// Remove
+//
+// English:
+//
+//	Removes a child node from the DOM and returns the removed node.
+//
+// Português:
+//
+//	Remove um nó filho do DOM e retorna o nó removido.
+func (e *TagSvgFeFuncA) Remove(elements ...Compatible) (ref *TagSvgFeFuncA) {
+	for _, element := range elements {
+		e.selfElement.Call("removeChild", element)
+	}
+
+	return e
+}

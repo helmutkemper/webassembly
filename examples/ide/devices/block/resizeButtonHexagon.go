@@ -3,6 +3,7 @@ package block
 import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/stage"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/utilsDraw"
 )
@@ -482,7 +483,8 @@ func (e *ResizeButtonHexagon) init() {
 		Height(2*e.size.GetInt()).
 		X(e.cx.GetInt()-e.size.GetInt()).
 		Y(e.cy.GetInt()).
-		DataKey("name", e.name)
+		DataKey("name", e.name).
+		SetAttribute("zIndex", stage.GetNextZIndex())
 
 	// Create and configure the path element
 	// Cria e configura o elemento de caminho SVG
@@ -490,7 +492,8 @@ func (e *ResizeButtonHexagon) init() {
 		Fill(e.colorFill).
 		Stroke(e.colorStroke).
 		StrokeWidth(e.StrokeWidth.GetInt()).
-		D(path)
+		D(path).
+		SetAttribute("z-index", stage.GetNextZIndex())
 
 	// Add the path to the SVG
 	// Adiciona o caminho ao SVG

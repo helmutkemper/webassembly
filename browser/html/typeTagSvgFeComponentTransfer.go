@@ -2841,3 +2841,20 @@ func (e *TagSvgFeComponentTransfer) Reference(reference **TagSvgFeComponentTrans
 	*reference = e
 	return e
 }
+
+// Remove
+//
+// English:
+//
+//	Removes a child node from the DOM and returns the removed node.
+//
+// Português:
+//
+//	Remove um nó filho do DOM e retorna o nó removido.
+func (e *TagSvgFeComponentTransfer) Remove(elements ...Compatible) (ref *TagSvgFeComponentTransfer) {
+	for _, element := range elements {
+		e.selfElement.Call("removeChild", element)
+	}
+
+	return e
+}

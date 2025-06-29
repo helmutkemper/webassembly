@@ -3068,3 +3068,20 @@ func (e *TagSvgMask) ListenerRemove(event string) (ref *TagSvgMask) {
 	e.commonEvents.ListenerRemove(event)
 	return e
 }
+
+// Remove
+//
+// English:
+//
+//	Removes a child node from the DOM and returns the removed node.
+//
+// Português:
+//
+//	Remove um nó filho do DOM e retorna o nó removido.
+func (e *TagSvgMask) Remove(elements ...Compatible) (ref *TagSvgMask) {
+	for _, element := range elements {
+		e.selfElement.Call("removeChild", element)
+	}
+
+	return e
+}

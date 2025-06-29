@@ -3159,3 +3159,20 @@ func (e *TagSvgTextPath) ListenerRemove(event string) (ref *TagSvgTextPath) {
 	e.commonEvents.ListenerRemove(event)
 	return e
 }
+
+// Remove
+//
+// English:
+//
+//	Removes a child node from the DOM and returns the removed node.
+//
+// Português:
+//
+//	Remove um nó filho do DOM e retorna o nó removido.
+func (e *TagSvgTextPath) Remove(elements ...Compatible) (ref *TagSvgTextPath) {
+	for _, element := range elements {
+		e.selfElement.Call("removeChild", element)
+	}
+
+	return e
+}

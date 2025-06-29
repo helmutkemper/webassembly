@@ -1421,3 +1421,20 @@ func (e *TagSvgSet) ListenerRemove(event string) (ref *TagSvgSet) {
 	e.commonEvents.ListenerRemove(event)
 	return e
 }
+
+// Remove
+//
+// English:
+//
+//	Removes a child node from the DOM and returns the removed node.
+//
+// Português:
+//
+//	Remove um nó filho do DOM e retorna o nó removido.
+func (e *TagSvgSet) Remove(elements ...Compatible) (ref *TagSvgSet) {
+	for _, element := range elements {
+		e.selfElement.Call("removeChild", element)
+	}
+
+	return e
+}

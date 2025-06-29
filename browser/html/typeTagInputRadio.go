@@ -5,6 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/interfaces"
 	"github.com/helmutkemper/webassembly/platform/algorithm"
 	"log"
+	"math"
 	"reflect"
 	"strconv"
 	"strings"
@@ -1737,5 +1738,124 @@ func (e *TagInputRadio) ListenerAddReflect(event string, params []interface{}, f
 //	  toggle:       Fired when the element is a popover, just after it is hidden or shown.
 func (e *TagInputRadio) ListenerRemove(event string) (ref *TagInputRadio) {
 	e.commonEvents.ListenerRemove(event)
+	return e
+}
+
+// SetAttribute
+//
+// English:
+//
+//	Sets an attribute on the tag element with the specified key and value.
+//
+// Português:
+//
+//	Define um atributo no elemento da tag com a chave e valor especificada.
+func (e *TagInputRadio) SetAttribute(key string, value any) (ref *TagInputRadio) {
+	e.selfElement.Call("setAttribute", key, value)
+	return e
+}
+
+// GetAttribute
+//
+// English:
+//
+//	Gets an attribute on the tag element with the specified key and value.
+//
+// Português:
+//
+//	Retorna um atributo no elemento da tag com a chave e valor especificada.
+func (e *TagInputRadio) GetAttribute(key string) (value string) {
+	return e.selfElement.Call("getAttribute", key).String()
+}
+
+// RemoveAttribute
+//
+// English:
+//
+//	Remove an attribute from the tag element.
+//
+// Português:
+//
+//	Remove um atributo no elemento da tag.
+func (e *TagInputRadio) RemoveAttribute(key string) (value string) {
+	return e.selfElement.Call("removeAttribute", key).String()
+}
+
+// Remove
+//
+// English:
+//
+//	Removes a child node from the DOM and returns the removed node.
+//
+// Português:
+//
+//	Remove um nó filho do DOM e retorna o nó removido.
+func (e *TagInputRadio) Remove(elements ...Compatible) (ref *TagInputRadio) {
+	for _, element := range elements {
+		e.selfElement.Call("removeChild", element)
+	}
+
+	return e
+}
+
+// SetZIndex
+//
+// English:
+//
+//	The z-index CSS property sets the z-order of a positioned element and its descendants or flex and grid items.
+//
+// Overlapping elements with a larger z-index cover those with a smaller one.
+//
+// Português:
+//
+//	A propriedade CSS z-index define a ordem z de um elemento posicionado e seus descendentes ou itens flexíveis e de
+//	grade.
+//
+// Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
+func (e *TagInputRadio) SetZIndex(index int) (ref *TagInputRadio) {
+	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	return e
+}
+
+// GetZIndex
+//
+// English:
+//
+//	The z-index CSS property sets the z-order of a positioned element and its descendants or flex and grid items.
+//
+// Overlapping elements with a larger z-index cover those with a smaller one.
+//
+// Português:
+//
+//	A propriedade CSS z-index define a ordem z de um elemento posicionado e seus descendentes ou itens flexíveis e de
+//	grade.
+//
+// Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
+func (e *TagInputRadio) GetZIndex() (index int) {
+	z := e.selfElement.Call("getAttribute", "zIndex").String()
+	if z == "auto" {
+		return math.MinInt
+	}
+
+	index, _ = strconv.Atoi(z)
+	return
+}
+
+// RemoveZIndex
+//
+// English:
+//
+//	The z-index CSS property sets the z-order of a positioned element and its descendants or flex and grid items.
+//
+// Overlapping elements with a larger z-index cover those with a smaller one.
+//
+// Português:
+//
+//	A propriedade CSS z-index define a ordem z de um elemento posicionado e seus descendentes ou itens flexíveis e de
+//	grade.
+//
+// Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
+func (e *TagInputRadio) RemoveZIndex() (ref *TagInputRadio) {
+	e.selfElement.Call("removeAttribute", "zIndex")
 	return e
 }

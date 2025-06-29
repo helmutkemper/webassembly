@@ -3,6 +3,8 @@ package block
 import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
+	"github.com/helmutkemper/webassembly/browser/stage"
+	"github.com/helmutkemper/webassembly/examples/ide/managerCollision"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
@@ -11,6 +13,7 @@ import (
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"image/color"
+	"strconv"
 	"syscall/js"
 )
 
@@ -77,11 +80,11 @@ type Block struct {
 
 	gridAdjust rulesStage.GridAdjust
 
-	rules            map[string]func()
+	ruleBook         map[string]func()
 	ruleAdjustToGrid bool
 }
 
-// initRules
+// initRuleBook
 //
 // English:
 //
@@ -101,8 +104,12 @@ type Block struct {
 //	autocontida, ou seja, habilitar algo que já está habilitado não gera efeito adverso ao funcionamento do código.
 //
 //	Todas as funções devem ser simples
-func (e *Block) initRules() {
-	e.rules = make(map[string]func())
+func (e *Block) initRuleBook() {
+	e.ruleBook = make(map[string]func())
+
+	e.ruleBook["onInit"] = func() {
+		e.Register()
+	}
 
 	// Rule: adjustToGrid
 	//
@@ -113,7 +120,7 @@ func (e *Block) initRules() {
 	// Português:
 	//
 	//  Ajusta a ponta top-left e a ponta bottom-right ao grid de posicionamento do palco.
-	e.rules["adjustToGrid"] = func() {
+	e.ruleBook["adjustToGrid"] = func() {
 		e.adjustToGridRuleOn()
 	}
 
@@ -126,7 +133,7 @@ func (e *Block) initRules() {
 	// Português:
 	//
 	//  Ativa a marca de advertência de que alguma coisa está errada.
-	e.rules["setWarningOn"] = func() {
+	e.ruleBook["setWarningOn"] = func() {
 		e.setWarningOn()
 		e.setWarningFlashOn()
 	}
@@ -140,7 +147,7 @@ func (e *Block) initRules() {
 	// Português:
 	//
 	//  Desativa a marca de advertência de que alguma coisa está errada.
-	e.rules["setWarningOff"] = func() {
+	e.ruleBook["setWarningOff"] = func() {
 		// This rule may be called by another rule, so update the status here
 		//
 		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
@@ -159,13 +166,15 @@ func (e *Block) initRules() {
 	// Português:
 	//
 	//  Habilita a ferramenta de reposicionamento por arrasto
-	e.rules["setDragOn"] = func() {
-		e.rules["setResizeOff"]()
-		e.rules["setSelectOff"]()
+	e.ruleBook["setDragOn"] = func() {
+		e.ruleBook["setResizeOff"]()
+		e.ruleBook["setSelectOff"]()
 
 		//e.setDragOrnamentOn()
 		e.setSelectOrnamentAttentionColorOn()
 		e.setDragCursorOn()
+		e.selectForDragOn()
+		e.setDraggingKeyOn()
 	}
 
 	// Rule: setDragOff
@@ -177,7 +186,7 @@ func (e *Block) initRules() {
 	// Português:
 	//
 	//  Desabilita a ferramenta de reposicionamento por arrasto
-	e.rules["setDragOff"] = func() {
+	e.ruleBook["setDragOff"] = func() {
 		// This rule may be called by another rule, so update the status here
 		//
 		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
@@ -186,6 +195,8 @@ func (e *Block) initRules() {
 		//e.setDragOrnamentOff()
 		e.setSelectOrnamentAttentionColorOff()
 		e.setDragCursorOff()
+		e.selectForDragOff()
+		e.setDraggingKeyOff()
 	}
 
 	// Rule: setResizeOn
@@ -197,9 +208,9 @@ func (e *Block) initRules() {
 	// Português:
 	//
 	//  Habilita a ferramenta de redimensionamento
-	e.rules["setResizeOn"] = func() {
-		e.rules["setDragOff"]()
-		e.rules["setSelectOff"]()
+	e.ruleBook["setResizeOn"] = func() {
+		e.ruleBook["setDragOff"]()
+		e.ruleBook["setSelectOff"]()
 
 		e.setResizeOrnamentVisibleOn()
 	}
@@ -213,7 +224,7 @@ func (e *Block) initRules() {
 	// Português:
 	//
 	//  Desabilita a ferramenta de redimensionamento
-	e.rules["setResizeOff"] = func() {
+	e.ruleBook["setResizeOff"] = func() {
 		// This rule may be called by another rule, so update the status here
 		//
 		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
@@ -231,9 +242,9 @@ func (e *Block) initRules() {
 	// Português:
 	//
 	//  Habilita a ferramenta de seleção
-	e.rules["setSelectOn"] = func() {
-		e.rules["setDragOff"]()
-		e.rules["setResizeOff"]()
+	e.ruleBook["setSelectOn"] = func() {
+		e.ruleBook["setDragOff"]()
+		e.ruleBook["setResizeOff"]()
 
 		e.setSelectRectangleOrnamentOn()
 		e.setSelectOrnamentAttentionColorOn()
@@ -248,7 +259,7 @@ func (e *Block) initRules() {
 	// Português:
 	//
 	//  Desabilita a ferramenta de seleção
-	e.rules["setSelectOff"] = func() {
+	e.ruleBook["setSelectOff"] = func() {
 		// This rule may be called by another rule, so update the status here
 		//
 		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
@@ -258,7 +269,7 @@ func (e *Block) initRules() {
 		e.setSelectOrnamentAttentionColorOff()
 	}
 
-	e.rules["adjustToGrid"]()
+	e.ruleBook["adjustToGrid"]()
 }
 
 func (e *Block) SetWarningMark(warningMark ornament.WarningMark) {
@@ -274,11 +285,23 @@ func (e *Block) GetWarning() (warning bool) {
 func (e *Block) SetWarning(warning bool) {
 	e.warningMarkEnabled = warning
 	if warning {
-		e.rules["setWarningOn"]()
+		e.ruleBook["setWarningOn"]()
 		return
 	}
 
-	e.rules["setWarningOff"]()
+	e.ruleBook["setWarningOff"]()
+}
+
+func (e *Block) setDraggingKeyOn() {
+	e.block.DataKey("dragging", "on")
+}
+
+func (e *Block) getDraggingKey() {
+	e.block.GetData("dragging")
+}
+
+func (e *Block) setDraggingKeyOff() {
+	e.block.DataKey("dragging", "off")
 }
 
 func (e *Block) setWarningOn() {
@@ -286,6 +309,7 @@ func (e *Block) setWarningOn() {
 	e.block.Append(e.warningMark.GetSvg())
 	_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
 }
+
 func (e *Block) setWarningOff() {
 	if !e.warningMarkAppended {
 		return
@@ -331,11 +355,11 @@ func (e *Block) adjustXYToGrid(x, y int) (cx, cy int) {
 }
 
 // GetInitialized Returns if the instance is ready for use
-func (e *Block) GetInitialized() bool {
+func (e *Block) GetInitialized() (initialized bool) {
 	return e.initialized
 }
 
-// SetDragBlocked Disables the use of the drag tool
+// SetDragBlocked Disables the drag tool
 func (e *Block) SetDragBlocked(blocked bool) {
 	e.dragLocked = blocked
 }
@@ -350,8 +374,8 @@ func (e *Block) GetDragBlocked() (blocked bool) {
 	return e.dragLocked
 }
 
-// GetDrag Return the drag tool status
-func (e *Block) GetDrag() (enabled bool) {
+// GetDragEnable Return the drag tool status
+func (e *Block) GetDragEnable() (enabled bool) {
 	return e.dragEnabled
 }
 
@@ -390,7 +414,7 @@ func (e *Block) setDragLockedOff() {
 }
 
 // SetDrag Enables the device's drag tool
-func (e *Block) SetDrag(enabled bool) {
+func (e *Block) SetDragEnable(enabled bool) {
 	if e.dragLocked {
 		e.dragEnabled = false // todo: fazer a regra
 		return
@@ -399,11 +423,11 @@ func (e *Block) SetDrag(enabled bool) {
 	e.dragEnabled = enabled
 
 	if e.dragEnabled {
-		e.rules["setDragOn"]()
+		e.ruleBook["setDragOn"]()
 		return
 	}
 
-	e.rules["setDragOff"]()
+	e.ruleBook["setDragOff"]()
 }
 
 func (e *Block) setDragCursorOn() {
@@ -442,11 +466,11 @@ func (e *Block) SetResize(enabled bool) {
 	e.resizeEnabled = enabled
 
 	if e.resizeEnabled {
-		e.rules["setResizeOn"]()
+		e.ruleBook["setResizeOn"]()
 		return
 	}
 
-	e.rules["setResizeOff"]()
+	e.ruleBook["setResizeOff"]()
 
 	//if enabled && e.selectEnable {
 	//	e.SetSelected(false) // todo: fazer a regra
@@ -495,6 +519,8 @@ func (e *Block) setSelectRectangleOrnamentOn() {
 
 	e.selectDivAppended = true
 	e.ideStage.Append(e.selectDiv)
+
+	e.selectDiv.SetZIndex(stage.GetNextZIndex())
 }
 
 func (e *Block) setSelectRectangleOrnamentOff() {
@@ -507,7 +533,8 @@ func (e *Block) setSelectRectangleOrnamentOff() {
 	}
 
 	e.selectDivAppended = false
-	e.ideStage.Get().Call("removeChild", e.selectDiv.Get())
+	e.selectDiv.RemoveZIndex()
+	e.ideStage.Get().Call("removeChild", e.selectDiv.Get()) //todo: colocar tag
 }
 
 func (e *Block) setSelectOrnamentAttentionColorOn() {
@@ -536,11 +563,11 @@ func (e *Block) SetSelected(selected bool) {
 	}
 
 	if e.selectEnable {
-		e.rules["setSelectOn"]()
+		e.ruleBook["setSelectOn"]()
 		return
 	}
 
-	e.rules["setSelectOff"]()
+	e.ruleBook["setSelectOff"]()
 
 	//e.SetResize(false) // todo: fazer a regra
 }
@@ -550,6 +577,12 @@ func (e *Block) GetSelected() (selected bool) {
 	return e.selectEnable
 }
 
+func (e *Block) GetZIndex() (zIndex int) {
+	z := e.block.Get().Call("getAttribute", "zIndex").String()
+	zStr, _ := strconv.Atoi(z)
+	return zStr
+}
+
 // createBlock Prepare all divs and CSS
 func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	e.block = factoryBrowser.NewTagSvg().
@@ -557,7 +590,8 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 		X(x.GetInt()).
 		Y(y.GetInt()).
 		Width(width.GetInt()).
-		Height(height.GetInt())
+		Height(height.GetInt()).
+		SetZIndex(stage.GetNextZIndex())
 
 	// Append, js appendChild, it should be used only in the necessary elements on the stage.
 	// Any other visual element should be attached only when necessary.
@@ -570,7 +604,8 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 		Height(height.GetInt()).
 		Fill("none").Stroke(e.resizerColor).
 		StrokeDasharray(e.resizerLine).
-		StrokeWidth(rulesDensity.Density(e.resizerLineWidth).GetInt())
+		StrokeWidth(rulesDensity.Density(e.resizerLineWidth).GetInt()).
+		SetZIndex(stage.GetNextZIndex())
 
 	e.resizerTopLeft = e.resizerButton.GetNew()
 	e.resizerTopLeft.SetName("top-left")
@@ -691,7 +726,7 @@ func (e *Block) GetY() (y rulesDensity.Density) {
 
 // Init Initializes the generic functions of the device
 func (e *Block) Init() (err error) {
-	e.initRules()
+	e.initRuleBook()
 
 	var id string
 	id = rulesSequentialId.GetIdFromBase(e.name)
@@ -719,9 +754,16 @@ func (e *Block) Init() (err error) {
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 	}
 
-	e.SetSelected(e.selectEnable)
-
+	e.ruleBook["onInit"]()
 	return
+}
+
+func (e *Block) Register() {
+	managerCollision.Collision.Register(e)
+}
+
+func (e *Block) Unregister() {
+	managerCollision.Collision.Unregister(e)
 }
 
 // initEvents initialize mouse events
@@ -1268,9 +1310,9 @@ func (e *Block) GetMenuDebug() (options []components.MenuOptions) {
 					}),
 				},
 				{
-					Label: e.getMenuLabel(e.GetDrag(), "Drag disable", "Drag enable"),
+					Label: e.getMenuLabel(e.GetDragEnable(), "Drag disable", "Drag enable"),
 					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						e.SetDrag(!e.GetDrag())
+						e.SetDragEnable(!e.GetDragEnable())
 						return nil
 					}),
 				},
@@ -1286,4 +1328,24 @@ func (e *Block) GetMenuDebug() (options []components.MenuOptions) {
 	}
 
 	return
+}
+
+func (e *Block) selectForDragOn() {
+	_, total := managerCollision.Collision.Detect(e)
+	zIndex := e.GetZIndex()
+	for _, v := range total {
+		if !v.GetDragEnable() && zIndex < v.GetZIndex() {
+			v.SetDragEnable(true)
+		}
+	}
+}
+
+func (e *Block) selectForDragOff() {
+	_, total := managerCollision.Collision.Detect(e)
+	zIndex := e.GetZIndex()
+	for _, v := range total {
+		if v.GetDragEnable() && zIndex < v.GetZIndex() {
+			v.SetDragEnable(false)
+		}
+	}
 }

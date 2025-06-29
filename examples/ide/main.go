@@ -240,6 +240,14 @@ func main() {
 	stmAdd.SetPosition(300, 150)
 	_ = stmAdd.Init()
 
+	stmAdd = new(devices.StatementAdd)
+	stmAdd.SetResizerButton(resizeButton)
+	stmAdd.SetDraggerButton(draggerButton)
+	stmAdd.SetGridAdjust(hex)
+	stmAdd.SetMainSvg(mainSvg)
+	stmAdd.SetPosition(300, 350)
+	_ = stmAdd.Init()
+
 	if _, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)
 	}

@@ -75,7 +75,7 @@ func NewInt(value int) (p *Density) {
 //
 //	Converte um valor inteiro para um valor Density removendo o efeito da escala.
 func Convert(value int) (p Density) {
-	return Density(float64(value) / float64(density))
+	return Density(float64(value) / density)
 }
 
 // Density type

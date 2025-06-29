@@ -13,6 +13,7 @@ import (
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"image/color"
+	"math"
 	"strconv"
 	"syscall/js"
 )
@@ -26,6 +27,14 @@ type Block struct {
 	y      rulesDensity.Density
 	width  rulesDensity.Density
 	height rulesDensity.Density
+
+	dragDeltaTop  rulesDensity.Density
+	dragDeltaLeft rulesDensity.Density
+
+	resizeLimitTop    rulesDensity.Density
+	resizeLimitBottom rulesDensity.Density
+	resizeLimitLeft   rulesDensity.Density
+	resizeLimitRight  rulesDensity.Density
 
 	initialized bool
 
@@ -64,6 +73,8 @@ type Block struct {
 	resizerBottomMiddle ResizeButton
 	resizerLeftMiddle   ResizeButton
 	resizerRightMiddle  ResizeButton
+
+	resizerMoveBorderLimit rulesDensity.Density
 
 	draggerTopMiddle    ResizeButton
 	draggerBottomMiddle ResizeButton
@@ -166,7 +177,7 @@ func (e *Block) initRuleBook() {
 	// Português:
 	//
 	//  Habilita a ferramenta de reposicionamento por arrasto
-	e.ruleBook["setDragOn"] = func() {
+	e.ruleBook["setDragEnableOn"] = func() {
 		e.ruleBook["setResizeOff"]()
 		e.ruleBook["setSelectOff"]()
 
@@ -174,7 +185,10 @@ func (e *Block) initRuleBook() {
 		e.setSelectOrnamentAttentionColorOn()
 		e.setDragCursorOn()
 		e.selectForDragOn()
-		e.setDraggingKeyOn()
+	}
+
+	e.ruleBook["setDraggingEventOn"] = func() {
+		e.draggingMoveSelectedOn()
 	}
 
 	// Rule: setDragOff
@@ -186,7 +200,7 @@ func (e *Block) initRuleBook() {
 	// Português:
 	//
 	//  Desabilita a ferramenta de reposicionamento por arrasto
-	e.ruleBook["setDragOff"] = func() {
+	e.ruleBook["setDragEnableOff"] = func() {
 		// This rule may be called by another rule, so update the status here
 		//
 		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
@@ -196,7 +210,6 @@ func (e *Block) initRuleBook() {
 		e.setSelectOrnamentAttentionColorOff()
 		e.setDragCursorOff()
 		e.selectForDragOff()
-		e.setDraggingKeyOff()
 	}
 
 	// Rule: setResizeOn
@@ -209,10 +222,24 @@ func (e *Block) initRuleBook() {
 	//
 	//  Habilita a ferramenta de redimensionamento
 	e.ruleBook["setResizeOn"] = func() {
-		e.ruleBook["setDragOff"]()
+		e.ruleBook["setDragEnableOff"]()
 		e.ruleBook["setSelectOff"]()
 
 		e.setResizeOrnamentVisibleOn()
+	}
+
+	// Rule: setResizingOn
+	//
+	// English:
+	//
+	//  Event occurs during resizing
+	//
+	// Português:
+	//
+	//  Evento ocorre durante o redimensionamento
+	e.ruleBook["setResizingOn"] = func() {
+		e.resizerMoveBorderLimit = rulesDensity.Convert(30)
+		e.calculateLimitForResizeOn()
 	}
 
 	// Rule: setResizeOff
@@ -243,7 +270,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Habilita a ferramenta de seleção
 	e.ruleBook["setSelectOn"] = func() {
-		e.ruleBook["setDragOff"]()
+		e.ruleBook["setDragEnableOff"]()
 		e.ruleBook["setResizeOff"]()
 
 		e.setSelectRectangleOrnamentOn()
@@ -290,18 +317,6 @@ func (e *Block) SetWarning(warning bool) {
 	}
 
 	e.ruleBook["setWarningOff"]()
-}
-
-func (e *Block) setDraggingKeyOn() {
-	e.block.DataKey("dragging", "on")
-}
-
-func (e *Block) getDraggingKey() {
-	e.block.GetData("dragging")
-}
-
-func (e *Block) setDraggingKeyOff() {
-	e.block.DataKey("dragging", "off")
 }
 
 func (e *Block) setWarningOn() {
@@ -423,11 +438,11 @@ func (e *Block) SetDragEnable(enabled bool) {
 	e.dragEnabled = enabled
 
 	if e.dragEnabled {
-		e.ruleBook["setDragOn"]()
+		e.ruleBook["setDragEnableOn"]()
 		return
 	}
 
-	e.ruleBook["setDragOff"]()
+	e.ruleBook["setDragEnableOff"]()
 }
 
 func (e *Block) setDragCursorOn() {
@@ -727,6 +742,7 @@ func (e *Block) GetY() (y rulesDensity.Density) {
 // Init Initializes the generic functions of the device
 func (e *Block) Init() (err error) {
 	e.initRuleBook()
+	e.resetLimitForResize()
 
 	var id string
 	id = rulesSequentialId.GetIdFromBase(e.name)
@@ -738,9 +754,9 @@ func (e *Block) Init() (err error) {
 
 	e.classListName = "block"
 
-	e.resizerColor = factoryColor.NewRed()
+	e.resizerColor = factoryColor.NewRed() // todo: organizar - início
 	e.resizerLine = []int{16, 4}
-	e.resizerLineWidth = 3
+	e.resizerLineWidth = 3 // todo: organizar - fim
 
 	e.createBlock(e.x, e.y, e.width, e.height)
 	e.initEvents()
@@ -766,6 +782,48 @@ func (e *Block) Unregister() {
 	managerCollision.Collision.Unregister(e)
 }
 
+func (e *Block) moveResizersAndDraggersX() {
+	// todo: este bloco vai para setCoordinate e setSize
+	e.selectDiv.X(e.x.GetInt())
+	e.selectDiv.Width(e.width.GetInt())
+
+	e.resizerTopLeft.SetCX(e.x - e.resizerTopLeft.GetSpace())
+	e.resizerTopRight.SetCX(e.x + e.width + e.resizerTopRight.GetSpace())
+	e.resizerBottomLeft.SetCX(e.x - e.resizerBottomLeft.GetSpace())
+	e.resizerBottomRight.SetCX(e.x + e.width + e.resizerBottomRight.GetSpace())
+
+	e.resizerTopMiddle.SetCX(e.x + e.width/2)
+	e.resizerBottomMiddle.SetCX(e.x + e.width/2)
+	e.resizerLeftMiddle.SetCX(e.x - e.resizerLeftMiddle.GetSpace())
+	e.resizerRightMiddle.SetCX(e.x + e.width + e.resizerRightMiddle.GetSpace())
+
+	e.draggerTopMiddle.SetCX(e.x + e.width/2)
+	e.draggerBottomMiddle.SetCX(e.x + e.width/2)
+	e.draggerLeftMiddle.SetCX(e.x - e.draggerLeftMiddle.GetSpace())
+	e.draggerRightMiddle.SetCX(e.x + e.width + e.draggerRightMiddle.GetSpace())
+}
+
+func (e *Block) moveResizersAndDraggersY() {
+	// todo: este bloco vai para setCoordinate e setSize
+	e.selectDiv.Y(e.y.GetInt())
+	e.selectDiv.Height(e.height.GetInt())
+
+	e.resizerTopLeft.SetCY(e.y - e.resizerTopLeft.GetSpace())
+	e.resizerTopRight.SetCY(e.y - e.resizerTopRight.GetSpace())
+	e.resizerBottomLeft.SetCY(e.y + e.height + e.resizerBottomLeft.GetSpace())
+	e.resizerBottomRight.SetCY(e.y + e.height + e.resizerBottomRight.GetSpace())
+
+	e.resizerTopMiddle.SetCY(e.y - e.resizerTopMiddle.GetSpace())
+	e.resizerBottomMiddle.SetCY(e.y + e.height + e.resizerBottomMiddle.GetSpace())
+	e.resizerLeftMiddle.SetCY(e.y + e.height/2)
+	e.resizerRightMiddle.SetCY(e.y + e.height/2)
+
+	e.draggerTopMiddle.SetCY(e.y - e.draggerTopMiddle.GetSpace())
+	e.draggerBottomMiddle.SetCY(e.y + e.height + e.draggerBottomMiddle.GetSpace())
+	e.draggerLeftMiddle.SetCY(e.y + e.height/2)
+	e.draggerRightMiddle.SetCY(e.y + e.height/2)
+}
+
 // initEvents initialize mouse events
 func (e *Block) initEvents() {
 	var isDragging, isResizing bool
@@ -774,55 +832,13 @@ func (e *Block) initEvents() {
 	// add / remove event listener requires pointers, so the variable should be initialized in this way
 	var drag, stopDrag, resizeMouseMove, stopResize js.Func
 
-	moveResizersAndDraggersX := func() {
-		// todo: este bloco vai para setCoordinate e setSize
-		e.selectDiv.X(e.x.GetInt())
-		e.selectDiv.Width(e.width.GetInt())
-
-		e.resizerTopLeft.SetCX(e.x - e.resizerTopLeft.GetSpace())
-		e.resizerTopRight.SetCX(e.x + e.width + e.resizerTopRight.GetSpace())
-		e.resizerBottomLeft.SetCX(e.x - e.resizerBottomLeft.GetSpace())
-		e.resizerBottomRight.SetCX(e.x + e.width + e.resizerBottomRight.GetSpace())
-
-		e.resizerTopMiddle.SetCX(e.x + e.width/2)
-		e.resizerBottomMiddle.SetCX(e.x + e.width/2)
-		e.resizerLeftMiddle.SetCX(e.x - e.resizerLeftMiddle.GetSpace())
-		e.resizerRightMiddle.SetCX(e.x + e.width + e.resizerRightMiddle.GetSpace())
-
-		e.draggerTopMiddle.SetCX(e.x + e.width/2)
-		e.draggerBottomMiddle.SetCX(e.x + e.width/2)
-		e.draggerLeftMiddle.SetCX(e.x - e.draggerLeftMiddle.GetSpace())
-		e.draggerRightMiddle.SetCX(e.x + e.width + e.draggerRightMiddle.GetSpace())
-	}
-
-	moveResizersAndDraggersY := func() {
-		// todo: este bloco vai para setCoordinate e setSize
-		e.selectDiv.Y(e.y.GetInt())
-		e.selectDiv.Height(e.height.GetInt())
-
-		e.resizerTopLeft.SetCY(e.y - e.resizerTopLeft.GetSpace())
-		e.resizerTopRight.SetCY(e.y - e.resizerTopRight.GetSpace())
-		e.resizerBottomLeft.SetCY(e.y + e.height + e.resizerBottomLeft.GetSpace())
-		e.resizerBottomRight.SetCY(e.y + e.height + e.resizerBottomRight.GetSpace())
-
-		e.resizerTopMiddle.SetCY(e.y - e.resizerTopMiddle.GetSpace())
-		e.resizerBottomMiddle.SetCY(e.y + e.height + e.resizerBottomMiddle.GetSpace())
-		e.resizerLeftMiddle.SetCY(e.y + e.height/2)
-		e.resizerRightMiddle.SetCY(e.y + e.height/2)
-
-		e.draggerTopMiddle.SetCY(e.y - e.draggerTopMiddle.GetSpace())
-		e.draggerBottomMiddle.SetCY(e.y + e.height + e.draggerBottomMiddle.GetSpace())
-		e.draggerLeftMiddle.SetCY(e.y + e.height/2)
-		e.draggerRightMiddle.SetCY(e.y + e.height/2)
-	}
-
 	// Joins the calculations of X and Y of the drag
 	drag = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		if !isDragging {
 			return nil
 		}
 
-		e.block.AddStyle("cursor", "grabbing")
+		e.block.AddStyle("cursor", "grabbing") // todo: ruleBook
 
 		dx, dy := e.block.GetPointerPosition(args, e.main)
 
@@ -830,20 +846,22 @@ func (e *Block) initEvents() {
 		dy -= startY
 
 		newTop := e.min(e.max(0, startTop+dy), e.ideStage.GetClientHeight()-e.block.GetOffsetHeight())
-		dx, newTop = e.adjustXYToGrid(dx, newTop)
-
 		newLeft := e.min(e.max(0, startLeft+dx), e.ideStage.GetClientWidth()-e.block.GetOffsetWidth())
+
+		dx, newTop = e.adjustXYToGrid(dx, newTop)
 		newLeft, dy = e.adjustXYToGrid(newLeft, dy)
+
+		// Get the coordinate (x,y) before the dragging effect to calculate (dx,dy)
+		preLeft := e.x
+		preTop := e.y
 
 		e.SetPosition(rulesDensity.Convert(newLeft), rulesDensity.Convert(newTop))
 
-		moveResizersAndDraggersX()
-		moveResizersAndDraggersY()
+		// Calculate (dx,dy) before dragging effect
+		e.dragDeltaLeft = e.x - preLeft
+		e.dragDeltaTop = e.y - preTop
 
-		if e.warningMarkAppended {
-			_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
-		}
-		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
+		e.ruleBook["setDraggingEventOn"]()
 		return nil
 	})
 
@@ -855,7 +873,7 @@ func (e *Block) initEvents() {
 	})
 	pFunc = func() {
 		isDragging = false
-		e.block.AddStyle("cursor", "grab")
+		e.block.AddStyle("cursor", "grab") // todo: ruleBook
 
 		js.Global().Call("removeEventListener", "mousemove", drag)
 		js.Global().Call("removeEventListener", "touchmove", drag, false)
@@ -948,11 +966,17 @@ func (e *Block) initEvents() {
 
 		newWidth = e.max(e.blockMinimumWidth.GetInt(), newWidth)
 
+		if e.resizeLimitLeft != math.MaxFloat32 && newLeft > e.resizeLimitLeft.GetInt() {
+			return
+		}
+
+		if e.resizeLimitRight != math.MaxFloat32 && newLeft+newWidth < e.resizeLimitRight.GetInt() {
+			return
+		}
+
 		e.SetX(rulesDensity.Convert(newLeft))
 		e.SetWidth(rulesDensity.Convert(newWidth))
 
-		moveResizersAndDraggersX()
-		moveResizersAndDraggersY()
 		return
 	}
 
@@ -1002,11 +1026,16 @@ func (e *Block) initEvents() {
 
 		newHeight = e.max(e.blockMinimumHeight.GetInt(), newHeight)
 
+		if e.resizeLimitTop != math.MaxFloat32 && newTop > e.resizeLimitTop.GetInt() {
+			return
+		}
+
+		if e.resizeLimitBottom != math.MaxFloat32 && newTop+newHeight < e.resizeLimitBottom.GetInt() {
+			return
+		}
+
 		e.SetY(rulesDensity.Convert(newTop))
 		e.SetHeight(rulesDensity.Convert(newHeight))
-
-		moveResizersAndDraggersX()
-		moveResizersAndDraggersY()
 		return
 	}
 
@@ -1014,6 +1043,8 @@ func (e *Block) initEvents() {
 		if !isResizing {
 			return nil
 		}
+
+		e.ruleBook["setResizingOn"]()
 
 		resizerName := e.block.Get().Get("dataset").Get("resizeName").String()
 		resizeHorizontal(args, resizerName)
@@ -1095,8 +1126,24 @@ func (e *Block) max(a, b int) (max int) {
 	return b
 }
 
+// max Returns the maximum value
+func (e *Block) maxD(a, b rulesDensity.Density) (max rulesDensity.Density) {
+	if a > b {
+		return a
+	}
+	return b
+}
+
 // min Returns the minimum value
 func (e *Block) min(a, b int) (min int) {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// min Returns the minimum value
+func (e *Block) minD(a, b rulesDensity.Density) (min rulesDensity.Density) {
 	if a < b {
 		return a
 	}
@@ -1196,6 +1243,14 @@ func (e *Block) SetX(x rulesDensity.Density) {
 	}
 
 	e.block.X(x.GetInt())
+
+	e.moveResizersAndDraggersX()
+	e.moveResizersAndDraggersY()
+
+	if e.warningMarkAppended {
+		_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
+	}
+	_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 }
 
 func (e *Block) SetY(y rulesDensity.Density) {
@@ -1210,6 +1265,14 @@ func (e *Block) SetY(y rulesDensity.Density) {
 	}
 
 	e.block.Y(y.GetInt())
+
+	e.moveResizersAndDraggersX()
+	e.moveResizersAndDraggersY()
+
+	if e.warningMarkAppended {
+		_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
+	}
+	_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 }
 
 // SetPosition Defines the coordinates (x, y) of the device
@@ -1226,6 +1289,14 @@ func (e *Block) SetPosition(x, y rulesDensity.Density) {
 
 	e.block.X(x.GetInt())
 	e.block.Y(y.GetInt())
+
+	e.moveResizersAndDraggersX()
+	e.moveResizersAndDraggersY()
+
+	if e.warningMarkAppended {
+		_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
+	}
+	_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 }
 
 func (e *Block) SetWidth(width rulesDensity.Density) {
@@ -1241,6 +1312,14 @@ func (e *Block) SetWidth(width rulesDensity.Density) {
 	}
 
 	e.block.Width(width.GetInt())
+
+	e.moveResizersAndDraggersX()
+	e.moveResizersAndDraggersY()
+
+	if e.warningMarkAppended {
+		_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
+	}
+	_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 }
 
 func (e *Block) SetHeight(height rulesDensity.Density) {
@@ -1256,6 +1335,14 @@ func (e *Block) SetHeight(height rulesDensity.Density) {
 	}
 
 	e.block.Height(height.GetInt())
+
+	e.moveResizersAndDraggersX()
+	e.moveResizersAndDraggersY()
+
+	if e.warningMarkAppended {
+		_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
+	}
+	_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 }
 
 // SetSize Defines the height and width of the device
@@ -1330,6 +1417,38 @@ func (e *Block) GetMenuDebug() (options []components.MenuOptions) {
 	return
 }
 
+func (e *Block) resetLimitForResize() {
+	e.resizeLimitLeft = math.MaxFloat32
+	e.resizeLimitRight = -math.MaxFloat32
+	e.resizeLimitTop = math.MaxFloat32
+	e.resizeLimitBottom = -math.MaxFloat32
+}
+
+func (e *Block) calculateLimitForResizeOn() {
+	e.resetLimitForResize()
+
+	_, total := managerCollision.Collision.Detect(e)
+	zIndex := e.GetZIndex()
+	for _, v := range total {
+		if zIndex < v.GetZIndex() {
+			x := v.GetX()
+			y := v.GetY()
+			width := v.GetWidth()
+			height := v.GetHeight()
+
+			e.resizeLimitLeft = e.minD(e.resizeLimitLeft, x)
+			e.resizeLimitRight = e.maxD(e.resizeLimitRight, x+width)
+			e.resizeLimitTop = e.minD(e.resizeLimitTop, y)
+			e.resizeLimitBottom = e.maxD(e.resizeLimitBottom, y+height)
+		}
+	}
+
+	e.resizeLimitLeft -= e.resizerMoveBorderLimit
+	e.resizeLimitRight += e.resizerMoveBorderLimit
+	e.resizeLimitTop -= e.resizerMoveBorderLimit
+	e.resizeLimitBottom += e.resizerMoveBorderLimit
+}
+
 func (e *Block) selectForDragOn() {
 	_, total := managerCollision.Collision.Detect(e)
 	zIndex := e.GetZIndex()
@@ -1346,6 +1465,21 @@ func (e *Block) selectForDragOff() {
 	for _, v := range total {
 		if v.GetDragEnable() && zIndex < v.GetZIndex() {
 			v.SetDragEnable(false)
+		}
+	}
+}
+
+func (e *Block) draggingMoveSelectedOn() {
+	_, total := managerCollision.Collision.Detect(e)
+	zIndex := e.GetZIndex()
+	for _, v := range total {
+		if v.GetDragEnable() && zIndex < v.GetZIndex() {
+			x := v.GetX()
+			y := v.GetY()
+			x += e.dragDeltaLeft
+			y += e.dragDeltaTop
+			v.SetX(x)
+			v.SetY(y)
 		}
 	}
 }

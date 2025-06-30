@@ -113,7 +113,7 @@ type Block struct {
 //	Organiza as regras complexas, principalmente regras de negócios e regras visuais.
 //
 //	Todas as regras devem ser simples e respeitar a responsabilidade única da função, e a função deve ser
-//	autocontida, ou seja, habilitar algo que já está habilitado não gera efeito adverso ao funcionamento do código.
+//	auto contida, ou seja, habilitar algo que já está habilitado não gera efeito adverso ao funcionamento do código.
 //
 //	Todas as funções devem ser simples
 func (e *Block) initRuleBook() {
@@ -125,6 +125,7 @@ func (e *Block) initRuleBook() {
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
 
+		// Register the device in the general record of the system
 		e.Register()
 	}
 
@@ -143,6 +144,7 @@ func (e *Block) initRuleBook() {
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
 
+		// Adjusts coordinates (x,y) and (width,height) to the center of the grid
 		e.adjustToGridRuleOn()
 	}
 
@@ -207,7 +209,7 @@ func (e *Block) initRuleBook() {
 		e.ruleBook["setResizeOff"]()
 		e.ruleBook["setSelectOff"]()
 
-		//e.setDragOrnamentOn()
+		e.setDragOrnamentOn()
 		e.setSelectOrnamentAttentionColorOn()
 		e.setDragCursorOn()
 		e.selectForDragOn()
@@ -243,7 +245,7 @@ func (e *Block) initRuleBook() {
 		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
 		e.dragEnabled = false
 
-		//e.setDragOrnamentOff()
+		e.setDragOrnamentOff()
 		e.setSelectOrnamentAttentionColorOff()
 		e.setDragCursorOff()
 		e.selectForDragOff()
@@ -361,16 +363,41 @@ func (e *Block) initRuleBook() {
 	e.ruleBook["adjustToGrid"]()
 }
 
+// SetWarningMark
+//
+// English:
+//
+//	Defines the instance responsible for warning ornamentation, in case of error.
+//
+// Português:
+//
+//	Define a instância responsável pela ornamentação de atenção, em caso de erro.
 func (e *Block) SetWarningMark(warningMark ornament.WarningMark) {
 	e.warningMark = warningMark
 }
 
-// GetWarning Returns the visibility of the warning mark
+// GetWarning
+//
+// English:
+//
+//	Returns the visibility of the warning mark
+//
+// Português:
+//
+//	Retorna a visibilidade da marca de aviso
 func (e *Block) GetWarning() (warning bool) {
 	return e.warningMarkEnabled
 }
 
-// SetWarning Sets the visibility of the warning mark
+// SetWarning
+//
+// English:
+//
+//	Sets the visibility of the warning mark
+//
+// Português:
+//
+//	Define a visibilidade da marca de aviso
 func (e *Block) SetWarning(warning bool) {
 	e.warningMarkEnabled = warning
 	if warning {
@@ -381,12 +408,30 @@ func (e *Block) SetWarning(warning bool) {
 	e.ruleBook["setWarningOff"]()
 }
 
+// setWarningOn
+//
+// English:
+//
+//	Makes the warning mark visible and adjusts the dimensions and coordinates
+//
+// Português:
+//
+//	Faz a marca de aviso ficar visível e ajusta as dimensões e coordenadas
 func (e *Block) setWarningOn() {
 	e.warningMarkAppended = true
 	e.block.Append(e.warningMark.GetSvg())
 	_ = e.warningMark.Update(e.x, e.y, e.width, e.height)
 }
 
+// setWarningOff
+//
+// English:
+//
+//	Hides the warning mark
+//
+// Português:
+//
+//	Esconde a marca de aviso
 func (e *Block) setWarningOff() {
 	if !e.warningMarkAppended {
 		return
@@ -396,34 +441,106 @@ func (e *Block) setWarningOff() {
 	e.block.Get().Call("removeChild", e.warningMark.GetSvg().Get())
 }
 
+// setWarningFlashOn
+//
+// English:
+//
+//	Makes the warning mark blink to get the user's attention, usually an easter egg
+//
+// Português:
+//
+//	Faz a marca de aviso piscar para chamar atenção do usuário, geralmente um easter egg
 func (e *Block) setWarningFlashOn() {
 	e.warningMark.Flash(true)
 }
 
+// setWarningFlashOff
+//
+// English:
+//
+//	Stops the warning mark from flashing
+//
+// Português:
+//
+//	Faz a marca de aviso parar de piscar
 func (e *Block) setWarningFlashOff() {
 	e.warningMark.Flash(false)
 }
 
+// SetMainSvg
+//
+// English:
+//
+//	Defines the Main svg, where the stage is drawn
+//
+// Português:
+//
+//	Define o svg Principal, onde o palco é desenhado
 func (e *Block) SetMainSvg(svg *html.TagSvg) {
 	e.main = svg
 }
 
+// SetResizerButton
+//
+// English:
+//
+//	Defines the instance object responsible for drawing the resize buttons
+//
+// Português:
+//
+//	Define o objeto da instância responsável por desenhar os botões de redimensionamento
 func (e *Block) SetResizerButton(resizerButton ResizeButton) {
 	e.resizerButton = resizerButton
 }
 
+// SetDraggerButton
+//
+// English:
+//
+//	Defines the instance object responsible for drawing the drag indicator buttons
+//
+// Português:
+//
+//	Define o objeto da instância responsável por desenhar os botões indicadores de arrasto
 func (e *Block) SetDraggerButton(draggerButton ResizeButton) {
 	e.draggerButton = draggerButton
 }
 
+// SetGridAdjust
+//
+// English:
+//
+//	Makes dragged content snap to grid
+//
+// Português:
+//
+//	Faz o conteúdo arrastado ser ajustado ao grid
 func (e *Block) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
 	e.gridAdjust = gridAdjust
 }
 
+// adjustToGridRuleOn
+//
+// English:
+//
+//	Adjusts coordinates (x, y) and (width, height) to the center of the grid
+//
+// Português:
+//
+//	Ajusta as coordenadas (x, y) e (width, height) ao centro do grid
 func (e *Block) adjustToGridRuleOn() {
 	e.ruleAdjustToGrid = true
 }
 
+// adjustXYToGrid
+//
+// English:
+//
+//	Receives (x, y) and returns the center coordinate of the grid element
+//
+// Português:
+//
+//	Recebe (x, y) e devolve a coordenada de centro do elemento do grid
 func (e *Block) adjustXYToGrid(x, y int) (cx, cy int) {
 	if e.ruleAdjustToGrid {
 		return e.gridAdjust.AdjustCenter(x, y)
@@ -431,36 +548,65 @@ func (e *Block) adjustXYToGrid(x, y int) (cx, cy int) {
 	return x, y
 }
 
-// GetInitialized Returns if the instance is ready for use
+// GetInitialized
+//
+// English:
+//
+//	Returns if the instance is ready for use
+//
+// Português:
+//
+//	Retorna se a instância está pronta para uso
 func (e *Block) GetInitialized() (initialized bool) {
 	return e.initialized
 }
 
-// SetDragBlocked Disables the drag tool
+// SetDragBlocked
+//
+// English:
+//
+//	Prevents the user from enabling the drag tool
+//
+// Português:
+//
+//	Impede o usuário de habilitar a ferramenta de arrasto
 func (e *Block) SetDragBlocked(blocked bool) {
 	e.dragLocked = blocked
 }
 
-// DragBlockedInvert Invert the drag tool enable status. Note: Used in the menu
-func (e *Block) DragBlockedInvert() {
-	e.dragLocked = !e.dragLocked
-}
-
 // GetDragBlocked Return the drag tool enable status
+
+// GetDragBlocked
+//
+// English:
+//
+//	Returns whether the user is blocked from using the drag tool
+//
+// Português:
+//
+//	Retorna se o usuário está impedido de usar a ferramenta de arrasto
 func (e *Block) GetDragBlocked() (blocked bool) {
 	return e.dragLocked
 }
 
-// GetDragEnable Return the drag tool status
+// GetDragEnable
+//
+// English:
+//
+//	Return the drag tool status
+//
+// Português:
+//
+//	Retorne o status da ferramenta de arrasto
 func (e *Block) GetDragEnable() (enabled bool) {
 	return e.dragEnabled
 }
 
-// SetDragInvert Invert the drag tool status. Note: Used in the menu
-func (e *Block) SetDragInvert() {
-	e.dragEnabled = !e.dragEnabled
-}
-
+// setDragOrnamentOn
+//
+// English:
+//
+// Português:
 func (e *Block) setDragOrnamentOn() {
 	if !e.initialized {
 		return
@@ -472,6 +618,9 @@ func (e *Block) setDragOrnamentOn() {
 	e.draggerLeftMiddle.SetVisible(true, e.ideStage)
 }
 
+// English:
+//
+// Português:
 func (e *Block) setDragOrnamentOff() {
 	if !e.initialized {
 		return
@@ -483,14 +632,25 @@ func (e *Block) setDragOrnamentOff() {
 	e.draggerLeftMiddle.SetVisible(false, e.ideStage)
 }
 
+// English:
+//
+// Português:
 func (e *Block) setDragLockedOn() {
 	e.dragLocked = true
 }
+
+// English:
+//
+// Português:
 func (e *Block) setDragLockedOff() {
 	e.dragLocked = false
 }
 
 // SetDrag Enables the device's drag tool
+
+// English:
+//
+// Português:
 func (e *Block) SetDragEnable(enabled bool) {
 	if e.dragLocked {
 		e.dragEnabled = false // todo: fazer a regra
@@ -507,6 +667,9 @@ func (e *Block) SetDragEnable(enabled bool) {
 	e.ruleBook["setDragEnableOff"]()
 }
 
+// English:
+//
+// Português:
 func (e *Block) setDragCursorOn() {
 	if !e.initialized {
 		return
@@ -515,6 +678,9 @@ func (e *Block) setDragCursorOn() {
 	e.block.AddStyleConditional(true, "cursor", "grab", "")
 }
 
+// English:
+//
+// Português:
 func (e *Block) setDragCursorOff() {
 	if !e.initialized {
 		return
@@ -524,16 +690,28 @@ func (e *Block) setDragCursorOff() {
 }
 
 // ResizeInverter Invert the resize tool status
+
+// English:
+//
+// Português:
 func (e *Block) ResizeInverter() {
 	e.resizeEnabled = !e.resizeEnabled
 }
 
 // GetResizeEnable Return the resize tool status
+
+// English:
+//
+// Português:
 func (e *Block) GetResizeEnable() (enabled bool) {
 	return e.resizeEnabled
 }
 
 // SetResizeEnable Defines the resize tool status
+
+// English:
+//
+// Português:
 func (e *Block) SetResizeEnable(enabled bool) {
 	if e.resizeLocked {
 		e.resizeEnabled = false // todo: fazer a regra
@@ -555,40 +733,71 @@ func (e *Block) SetResizeEnable(enabled bool) {
 }
 
 // ResizeBlockedInvert Invert the status from disables resize tool. Note: Used in the menu
+
+// English:
+//
+// Português:
 func (e *Block) ResizeBlockedInvert() {
 	e.resizeLocked = !e.resizeLocked
 }
 
 // GetResizeBlocked Return the status from disables resize tool
+
+// English:
+//
+// Português:
 func (e *Block) GetResizeBlocked() (blocked bool) {
 	return e.resizeLocked
 }
 
 // SetResizeBlocked Disables the resize tool
+
+// English:
+//
+// Português:
 func (e *Block) SetResizeBlocked(blocked bool) {
 	e.resizeLocked = blocked
 }
 
 // SelectBlockedInvert Invert the status of the selection tool lock. Note: Used in the menu
+
+// English:
+//
+// Português:
 func (e *Block) SelectBlockedInvert() {
 	e.selectLocked = !e.selectLocked
 }
 
 // GetSelectBlocked Returns the status of the selection tool lock
+
+// English:
+//
+// Português:
 func (e *Block) GetSelectBlocked() (blocked bool) {
 	return e.selectLocked
 }
 
 // SetSelectBlocked Lock the selection tool
+
+// English:
+//
+// Português:
 func (e *Block) SetSelectBlocked(blocked bool) {
 	e.selectLocked = blocked
 }
 
 // SelectedInvert Invert the status of the selection tool. Note: Used in the menu
+
+// English:
+//
+// Português:
 func (e *Block) SelectedInvert() {
 	e.SetSelected(!e.selectEnable)
 }
 
+// English:
+//
+// Português:
 func (e *Block) setSelectRectangleOrnamentOn() {
 	if !e.initialized {
 		return
@@ -600,6 +809,9 @@ func (e *Block) setSelectRectangleOrnamentOn() {
 	e.selectDiv.SetZIndex(stage.GetNextZIndex())
 }
 
+// English:
+//
+// Português:
 func (e *Block) setSelectRectangleOrnamentOff() {
 	if !e.initialized {
 		return
@@ -614,6 +826,9 @@ func (e *Block) setSelectRectangleOrnamentOff() {
 	e.ideStage.Get().Call("removeChild", e.selectDiv.Get()) //todo: colocar tag
 }
 
+// English:
+//
+// Português:
 func (e *Block) setSelectOrnamentAttentionColorOn() {
 	if !e.initialized {
 		return
@@ -622,6 +837,9 @@ func (e *Block) setSelectOrnamentAttentionColorOn() {
 	e.ornament.SetSelected(true)
 }
 
+// English:
+//
+// Português:
 func (e *Block) setSelectOrnamentAttentionColorOff() {
 	if !e.initialized {
 		return
@@ -631,6 +849,10 @@ func (e *Block) setSelectOrnamentAttentionColorOff() {
 }
 
 // SetSelected Defines if the device selection tool is active
+
+// English:
+//
+// Português:
 func (e *Block) SetSelected(selected bool) {
 	e.selectEnable = selected
 
@@ -650,10 +872,17 @@ func (e *Block) SetSelected(selected bool) {
 }
 
 // GetSelected Return the select tool status
+
+// English:
+//
+// Português:
 func (e *Block) GetSelected() (selected bool) {
 	return e.selectEnable
 }
 
+// English:
+//
+// Português:
 func (e *Block) GetZIndex() (zIndex int) {
 	z := e.block.Get().Call("getAttribute", "zIndex").String()
 	zStr, _ := strconv.Atoi(z)
@@ -661,6 +890,10 @@ func (e *Block) GetZIndex() (zIndex int) {
 }
 
 // createBlock Prepare all divs and CSS
+
+// English:
+//
+// Português:
 func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	e.block = factoryBrowser.NewTagSvg().
 		Id(e.id).
@@ -762,46 +995,82 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 }
 
 // GetDeviceDiv Returns the div from device
+
+// English:
+//
+// Português:
 func (e *Block) GetDeviceDiv() (element *html.TagSvg) {
 	return e.block
 }
 
 // GetHeight returns the current height of the device.
+
+// English:
+//
+// Português:
 func (e *Block) GetHeight() (height rulesDensity.Density) {
 	return e.height
 }
 
 // GetID Returns the device's div ID
+
+// English:
+//
+// Português:
 func (e *Block) GetID() (id string) {
 	return e.id
 }
 
 // GetIdeStage Returns to Div where IDE is drawn
+
+// English:
+//
+// Português:
 func (e *Block) GetIdeStage() (ideStage *html.TagSvg) {
 	return e.ideStage
 }
 
 // GetName Returns the single name of the device
+
+// English:
+//
+// Português:
 func (e *Block) GetName() (name string) {
 	return e.name
 }
 
 // GetWidth returns the current width of the device.
+
+// English:
+//
+// Português:
 func (e *Block) GetWidth() (width rulesDensity.Density) {
 	return e.width
 }
 
 // GetX Returns to coordinate X of the browser screen
+
+// English:
+//
+// Português:
 func (e *Block) GetX() (x rulesDensity.Density) {
 	return e.x
 }
 
 // GetY Returns to coordinate Y of the browser screen
+
+// English:
+//
+// Português:
 func (e *Block) GetY() (y rulesDensity.Density) {
 	return e.y
 }
 
 // Init Initializes the generic functions of the device
+
+// English:
+//
+// Português:
 func (e *Block) Init() (err error) {
 	e.initRuleBook()
 	e.resetLimitForResize()
@@ -836,14 +1105,35 @@ func (e *Block) Init() (err error) {
 	return
 }
 
+// Register
+//
+// English:
+//
+//	Records the element in the global identification record
+//
+// Português:
+//
+//	Registra o elemento no registro global de identificação
 func (e *Block) Register() {
 	manager.Manager.Register(e)
 }
 
+// Unregister
+//
+// English:
+//
+//	Unrecords the element in the global identification record
+//
+// Português:
+//
+//	Remove o registro do elemento no registro global de identificação
 func (e *Block) Unregister() {
-	manager.Manager.Unregister(e)
+	_ = manager.Manager.Unregister(e)
 }
 
+// English:
+//
+// Português:
 func (e *Block) moveResizersAndDraggersX() {
 	// todo: este bloco vai para setCoordinate e setSize
 	e.selectDiv.X(e.x.GetInt())
@@ -865,6 +1155,9 @@ func (e *Block) moveResizersAndDraggersX() {
 	e.draggerRightMiddle.SetCX(e.x + e.width + e.draggerRightMiddle.GetSpace())
 }
 
+// English:
+//
+// Português:
 func (e *Block) moveResizersAndDraggersY() {
 	// todo: este bloco vai para setCoordinate e setSize
 	e.selectDiv.Y(e.y.GetInt())
@@ -887,6 +1180,10 @@ func (e *Block) moveResizersAndDraggersY() {
 }
 
 // initEvents initialize mouse events
+
+// English:
+//
+// Português:
 func (e *Block) initEvents() {
 	var isDragging, isResizing bool
 	var startX, startY, startWidth, startHeight, startLeft, startTop int
@@ -1181,6 +1478,10 @@ func (e *Block) initEvents() {
 }
 
 // max Returns the maximum value
+
+// English:
+//
+// Português:
 func (e *Block) max(a, b int) (max int) {
 	if a > b {
 		return a
@@ -1189,6 +1490,10 @@ func (e *Block) max(a, b int) (max int) {
 }
 
 // max Returns the maximum value
+
+// English:
+//
+// Português:
 func (e *Block) maxD(a, b rulesDensity.Density) (max rulesDensity.Density) {
 	if a > b {
 		return a
@@ -1197,6 +1502,10 @@ func (e *Block) maxD(a, b rulesDensity.Density) (max rulesDensity.Density) {
 }
 
 // min Returns the minimum value
+
+// English:
+//
+// Português:
 func (e *Block) min(a, b int) (min int) {
 	if a < b {
 		return a
@@ -1205,6 +1514,10 @@ func (e *Block) min(a, b int) (min int) {
 }
 
 // min Returns the minimum value
+
+// English:
+//
+// Português:
 func (e *Block) minD(a, b rulesDensity.Density) (min rulesDensity.Density) {
 	if a < b {
 		return a
@@ -1213,12 +1526,19 @@ func (e *Block) minD(a, b rulesDensity.Density) (min rulesDensity.Density) {
 }
 
 // OnResize cannot be shadowed by the main instance, so the function in SetOnResize
+
+// English:
+//
+// Português:
 func (e *Block) OnResize(args []js.Value, width, height rulesDensity.Density) {
 	if e.onResizeFunc != nil { // todo: revisar isto
 		e.onResizeFunc(args, width, height)
 	}
 }
 
+// English:
+//
+// Português:
 func (e *Block) setResizeOrnamentVisibleOn() {
 	if !e.initialized {
 		return
@@ -1235,6 +1555,9 @@ func (e *Block) setResizeOrnamentVisibleOn() {
 	e.resizerRightMiddle.SetVisible(true, e.ideStage)
 }
 
+// English:
+//
+// Português:
 func (e *Block) setResizeOrnamentVisibleOff() {
 	if !e.initialized {
 		return
@@ -1252,28 +1575,48 @@ func (e *Block) setResizeOrnamentVisibleOff() {
 }
 
 // SetFatherId Receives the div ID used as a stage for the IDE and puts it to occupy the entire browser area
+
+// English:
+//
+// Português:
 func (e *Block) SetFatherId(fatherId string) {
 	e.ideStage = factoryBrowser.NewTagSvg().
 		Import(fatherId)
 }
 
 // SetID Define the device's div ID
+
+// English:
+//
+// Português:
 func (e *Block) SetID(id string) (err error) {
 	e.id, err = utils.VerifyUniqueId(id)
 	return
 }
 
 // SetMinimumHeight Defines the minimum height of the device
+
+// English:
+//
+// Português:
 func (e *Block) SetMinimumHeight(height rulesDensity.Density) {
 	e.blockMinimumHeight = height
 }
 
 // SetMinimumWidth Defines the minimum width of the device
+
+// English:
+//
+// Português:
 func (e *Block) SetMinimumWidth(width rulesDensity.Density) {
 	e.blockMinimumWidth = width
 }
 
 // SetName Defines a unique name for the device [compulsory]
+
+// English:
+//
+// Português:
 func (e *Block) SetName(name string) {
 	e.name = rulesSequentialId.GetIdFromBase(name)
 	return
@@ -1282,6 +1625,10 @@ func (e *Block) SetName(name string) {
 // SetOnResize Receives the pointer to a function to be invoked during resizing
 //
 //	This function is because the main instance cannot shadow the OnResize function
+
+// English:
+//
+// Português:
 func (e *Block) SetOnResize(f func(args []js.Value, width, height rulesDensity.Density)) {
 	e.onResizeFunc = f
 }
@@ -1289,10 +1636,17 @@ func (e *Block) SetOnResize(f func(args []js.Value, width, height rulesDensity.D
 // SetOrnament Sets the ornament draw object
 //
 //	ornament draw object is the instance in charge of making the SVG design of the device
+
+// English:
+//
+// Português:
 func (e *Block) SetOrnament(ornament ornament.Draw) {
 	e.ornament = ornament
 }
 
+// English:
+//
+// Português:
 func (e *Block) SetX(x rulesDensity.Density) {
 	y := e.y
 	xInt, _ := e.adjustXYToGrid(x.GetInt(), y.GetInt())
@@ -1315,6 +1669,9 @@ func (e *Block) SetX(x rulesDensity.Density) {
 	_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 }
 
+// English:
+//
+// Português:
 func (e *Block) SetY(y rulesDensity.Density) {
 	x := e.x
 	_, yInt := e.adjustXYToGrid(x.GetInt(), y.GetInt())
@@ -1338,6 +1695,10 @@ func (e *Block) SetY(y rulesDensity.Density) {
 }
 
 // SetPosition Defines the coordinates (x, y) of the device
+
+// English:
+//
+// Português:
 func (e *Block) SetPosition(x, y rulesDensity.Density) {
 	xInt, yInt := e.adjustXYToGrid(x.GetInt(), y.GetInt())
 	x, y = rulesDensity.Convert(xInt), rulesDensity.Convert(yInt)
@@ -1361,6 +1722,9 @@ func (e *Block) SetPosition(x, y rulesDensity.Density) {
 	_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 }
 
+// English:
+//
+// Português:
 func (e *Block) SetWidth(width rulesDensity.Density) {
 	height := e.height
 
@@ -1384,6 +1748,9 @@ func (e *Block) SetWidth(width rulesDensity.Density) {
 	_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 }
 
+// English:
+//
+// Português:
 func (e *Block) SetHeight(height rulesDensity.Density) {
 	width := e.width
 
@@ -1408,11 +1775,18 @@ func (e *Block) SetHeight(height rulesDensity.Density) {
 }
 
 // SetSize Defines the height and width of the device
+
+// English:
+//
+// Português:
 func (e *Block) SetSize(width, height rulesDensity.Density) {
 	e.SetWidth(width)
 	e.SetHeight(height)
 }
 
+// English:
+//
+// Português:
 func (e *Block) getMenuLabel(condition bool, labelTrue, labelFalse string) (label string) {
 	if condition {
 		return labelTrue

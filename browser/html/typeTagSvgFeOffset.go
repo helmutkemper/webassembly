@@ -3043,7 +3043,7 @@ func (e *TagSvgFeOffset) Reference(reference **TagSvgFeOffset) (ref *TagSvgFeOff
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgFeOffset) Remove(elements ...Compatible) (ref *TagSvgFeOffset) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

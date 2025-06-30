@@ -2884,7 +2884,7 @@ func (e *TagSvgFilter) Reference(reference **TagSvgFilter) (ref *TagSvgFilter) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgFilter) Remove(elements ...Compatible) (ref *TagSvgFilter) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

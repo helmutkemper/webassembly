@@ -3170,7 +3170,7 @@ func (e *TagSvgFeConvolveMatrix) Reference(reference **TagSvgFeConvolveMatrix) (
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgFeConvolveMatrix) Remove(elements ...Compatible) (ref *TagSvgFeConvolveMatrix) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

@@ -4823,7 +4823,7 @@ func (e *TagSvgPolygon) RemoveAttribute(key string) (value string) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgPolygon) Remove(elements ...Compatible) (ref *TagSvgPolygon) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

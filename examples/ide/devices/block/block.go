@@ -60,6 +60,7 @@ type Block struct {
 	block             *html.TagSvg
 	selectDivAppended bool
 	selectDiv         *html.TagSvgRect
+	resizeBox         *html.TagSvgRect
 	main              *html.TagSvg
 
 	resizerButton ResizeButton
@@ -120,7 +121,7 @@ func (e *Block) initRuleBook() {
 	e.ruleBook = make(map[string]func())
 
 	e.ruleBook["onInit"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -139,7 +140,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Ajusta a ponta top-left e a ponta bottom-right ao grid de posicionamento do palco.
 	e.ruleBook["adjustToGrid"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -158,7 +159,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Ativa a marca de advertência de que alguma coisa está errada.
 	e.ruleBook["setWarningOn"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -177,7 +178,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Desativa a marca de advertência de que alguma coisa está errada.
 	e.ruleBook["setWarningOff"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -201,7 +202,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Habilita a ferramenta de reposicionamento por arrasto
 	e.ruleBook["setDragEnableOn"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -209,20 +210,22 @@ func (e *Block) initRuleBook() {
 		e.ruleBook["setResizeOff"]()
 		e.ruleBook["setSelectOff"]()
 
-		e.setDragOrnamentOn()
+		//e.setDragOrnamentOn()
 		e.setSelectOrnamentAttentionColorOn()
 		e.setDragCursorOn()
 		e.selectForDragOn()
 	}
 
 	e.ruleBook["setOnDraggingEvent"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
 
+		// rule, only one - start
 		//e.draggingMoveDraggingSelectedOn()
 		e.draggingMoveSelectedOnStage()
+		// rule, only one - end
 	}
 
 	// Rule: setDragOff
@@ -235,7 +238,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Desabilita a ferramenta de reposicionamento por arrasto
 	e.ruleBook["setDragEnableOff"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -245,7 +248,7 @@ func (e *Block) initRuleBook() {
 		// Pode ser que esta regra seja chamada por outra regra, por isto, atualizar o status aqui
 		e.dragEnabled = false
 
-		e.setDragOrnamentOff()
+		//e.setDragOrnamentOff()
 		e.setSelectOrnamentAttentionColorOff()
 		e.setDragCursorOff()
 		e.selectForDragOff()
@@ -261,7 +264,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Habilita a ferramenta de redimensionamento
 	e.ruleBook["setResizeOn"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -282,7 +285,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Evento ocorre durante o redimensionamento
 	e.ruleBook["setResizingOn"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -301,7 +304,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Desabilita a ferramenta de redimensionamento
 	e.ruleBook["setResizeOff"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -324,7 +327,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Habilita a ferramenta de seleção
 	e.ruleBook["setSelectOn"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -334,6 +337,7 @@ func (e *Block) initRuleBook() {
 
 		e.setSelectRectangleOrnamentOn()
 		e.setSelectOrnamentAttentionColorOn()
+		e.selectAllElementsInsideBlockOn()
 	}
 
 	// Rule: setSelectOff
@@ -346,7 +350,7 @@ func (e *Block) initRuleBook() {
 	//
 	//  Desabilita a ferramenta de seleção
 	e.ruleBook["setSelectOff"] = func() {
-		// English:   Within the rules block, do not delete the commented functions, just comment or uncomment
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
@@ -358,6 +362,7 @@ func (e *Block) initRuleBook() {
 
 		e.setSelectRectangleOrnamentOff()
 		e.setSelectOrnamentAttentionColorOff()
+		e.selectAllElementsInsideBlockOff()
 	}
 
 	e.ruleBook["adjustToGrid"]()
@@ -438,7 +443,7 @@ func (e *Block) setWarningOff() {
 	}
 
 	e.warningMarkAppended = false
-	e.block.Get().Call("removeChild", e.warningMark.GetSvg().Get())
+	e.block.Remove(e.warningMark.GetSvg())
 }
 
 // setWarningFlashOn
@@ -561,7 +566,7 @@ func (e *Block) GetInitialized() (initialized bool) {
 	return e.initialized
 }
 
-// SetDragBlocked
+// SetDragLocked
 //
 // English:
 //
@@ -570,22 +575,22 @@ func (e *Block) GetInitialized() (initialized bool) {
 // Português:
 //
 //	Impede o usuário de habilitar a ferramenta de arrasto
-func (e *Block) SetDragBlocked(blocked bool) {
-	e.dragLocked = blocked
+func (e *Block) SetDragLocked(locked bool) {
+	e.dragLocked = locked
 }
 
-// GetDragBlocked Return the drag tool enable status
+// GetDragLocked Return the drag tool enable status
 
-// GetDragBlocked
+// GetDragLocked
 //
 // English:
 //
-//	Returns whether the user is blocked from using the drag tool
+//	Returns whether the user is locked from using the drag tool
 //
 // Português:
 //
 //	Retorna se o usuário está impedido de usar a ferramenta de arrasto
-func (e *Block) GetDragBlocked() (blocked bool) {
+func (e *Block) GetDragLocked() (locked bool) {
 	return e.dragLocked
 }
 
@@ -606,7 +611,11 @@ func (e *Block) GetDragEnable() (enabled bool) {
 //
 // English:
 //
+//	Makes the drag ornaments visible
+//
 // Português:
+//
+//	Torna os ornamentos de arrasto visíveis
 func (e *Block) setDragOrnamentOn() {
 	if !e.initialized {
 		return
@@ -618,9 +627,15 @@ func (e *Block) setDragOrnamentOn() {
 	e.draggerLeftMiddle.SetVisible(true, e.ideStage)
 }
 
+// setDragOrnamentOff
+//
 // English:
 //
+//	Removes the ornaments of drag from the DOM
+//
 // Português:
+//
+//	Remove os ornamentos de arrasto do DOM
 func (e *Block) setDragOrnamentOff() {
 	if !e.initialized {
 		return
@@ -632,25 +647,41 @@ func (e *Block) setDragOrnamentOff() {
 	e.draggerLeftMiddle.SetVisible(false, e.ideStage)
 }
 
+// setDragLockedOn
+//
 // English:
 //
+//	Activates the lock that prevents the user from enabling the drag tool
+//
 // Português:
+//
+//	Ativa o bloqueio que impede o usuário de habilitar a ferramenta de arrasto
 func (e *Block) setDragLockedOn() {
 	e.dragLocked = true
 }
 
+// setDragLockedOff
+//
 // English:
 //
+//	Deactivates the lock that prevents the user from enabling the drag tool
+//
 // Português:
+//
+//	Desativa o bloqueio que impede o usuário de habilitar a ferramenta de arrasto
 func (e *Block) setDragLockedOff() {
 	e.dragLocked = false
 }
 
-// SetDrag Enables the device's drag tool
-
+// SetDragEnable
+//
 // English:
 //
+//	Enables the device's drag tool
+//
 // Português:
+//
+//	Habilita a ferramenta de arrasto
 func (e *Block) SetDragEnable(enabled bool) {
 	if e.dragLocked {
 		e.dragEnabled = false // todo: fazer a regra
@@ -667,56 +698,69 @@ func (e *Block) SetDragEnable(enabled bool) {
 	e.ruleBook["setDragEnableOff"]()
 }
 
+// setDragCursorOn
+//
 // English:
 //
+//	Transforms the cursor into "grab"
+//
 // Português:
+//
+//	Transforma o cursor em "grab"
 func (e *Block) setDragCursorOn() {
 	if !e.initialized {
 		return
 	}
 
-	e.block.AddStyleConditional(true, "cursor", "grab", "")
+	e.block.AddStyle("cursor", "grab")
 }
 
+// setDragCursorOff
+//
 // English:
 //
+//	Transforms the cursor into the default cursor, chosen by the browser
+//
 // Português:
+//
+//	Transforma o cursor no cursor padrão, escolhido pelo navegador
 func (e *Block) setDragCursorOff() {
 	if !e.initialized {
 		return
 	}
 
-	e.block.AddStyleConditional(false, "cursor", "grab", "")
+	e.block.AddStyle("cursor", "")
 }
 
-// ResizeInverter Invert the resize tool status
-
+// GetResizeEnable
+//
 // English:
 //
-// Português:
-func (e *Block) ResizeInverter() {
-	e.resizeEnabled = !e.resizeEnabled
-}
-
-// GetResizeEnable Return the resize tool status
-
-// English:
+//	Return the resize tool status
 //
 // Português:
+//
+//	Retorne o status da ferramenta de redimensionamento
 func (e *Block) GetResizeEnable() (enabled bool) {
 	return e.resizeEnabled
 }
 
-// SetResizeEnable Defines the resize tool status
-
+// SetResizeEnable
+//
 // English:
 //
+//	Enables the resizing tool
+//
 // Português:
+//
+//	Habilita a ferramenta de redimensionamento
 func (e *Block) SetResizeEnable(enabled bool) {
 	if e.resizeLocked {
 		e.resizeEnabled = false // todo: fazer a regra
 		return
 	}
+
+	e.block.Append(e.resizeBox)
 
 	e.resizeEnabled = enabled
 
@@ -726,64 +770,55 @@ func (e *Block) SetResizeEnable(enabled bool) {
 	}
 
 	e.ruleBook["setResizeOff"]()
-
-	//if enabled && e.selectEnable {
-	//	e.SetSelected(false) // todo: fazer a regra
-	//}
 }
 
-// ResizeBlockedInvert Invert the status from disables resize tool. Note: Used in the menu
-
+// GetResizeLocked
+//
 // English:
 //
-// Português:
-func (e *Block) ResizeBlockedInvert() {
-	e.resizeLocked = !e.resizeLocked
-}
-
-// GetResizeBlocked Return the status from disables resize tool
-
-// English:
+//	Returns the status of the user's resize tool lock
 //
 // Português:
-func (e *Block) GetResizeBlocked() (blocked bool) {
+//
+//	Retorna o status do bloqueio da ferramenta de redimensionamento do usuário
+func (e *Block) GetResizeLocked() (locked bool) {
 	return e.resizeLocked
 }
 
-// SetResizeBlocked Disables the resize tool
-
+// SetResizeLocked Disables the resize tool
+//
 // English:
 //
 // Português:
-func (e *Block) SetResizeBlocked(blocked bool) {
-	e.resizeLocked = blocked
+func (e *Block) SetResizeLocked(locked bool) {
+	e.resizeLocked = locked
 }
 
-// SelectBlockedInvert Invert the status of the selection tool lock. Note: Used in the menu
+// SelectLockedInvert Invert the status of the selection tool lock. Note: Used in the menu
 
 // English:
 //
 // Português:
-func (e *Block) SelectBlockedInvert() {
+func (e *Block) SelectLockedInvert() {
 	e.selectLocked = !e.selectLocked
 }
 
-// GetSelectBlocked Returns the status of the selection tool lock
+// GetSelectLocked Returns the status of the selection tool lock
 
 // English:
 //
 // Português:
-func (e *Block) GetSelectBlocked() (blocked bool) {
+func (e *Block) GetSelectLocked() (locked bool) {
 	return e.selectLocked
 }
 
-// SetSelectBlocked Lock the selection tool
+// SetSelectLocked Lock the selection tool
 
 // English:
 //
 // Português:
-func (e *Block) SetSelectBlocked(blocked bool) {
-	e.selectLocked = blocked
+func (e *Block) SetSelectLocked(locked bool) {
+	e.selectLocked = locked
 }
 
 // SelectedInvert Invert the status of the selection tool. Note: Used in the menu
@@ -823,7 +858,7 @@ func (e *Block) setSelectRectangleOrnamentOff() {
 
 	e.selectDivAppended = false
 	e.selectDiv.RemoveZIndex()
-	e.ideStage.Get().Call("removeChild", e.selectDiv.Get()) //todo: colocar tag
+	e.ideStage.Remove(e.selectDiv)
 }
 
 // English:
@@ -908,6 +943,16 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 	e.ideStage.Append(e.block)
 
 	e.selectDiv = factoryBrowser.NewTagSvgRect().
+		X(x.GetInt()).
+		Y(y.GetInt()).
+		Width(width.GetInt()).
+		Height(height.GetInt()).
+		Fill("none").Stroke(e.resizerColor).
+		StrokeDasharray(e.resizerLine).
+		StrokeWidth(rulesDensity.Density(e.resizerLineWidth).GetInt()).
+		SetZIndex(stage.GetNextZIndex())
+
+	e.resizeBox = factoryBrowser.NewTagSvgRect().
 		X(x.GetInt()).
 		Y(y.GetInt()).
 		Width(width.GetInt()).
@@ -1226,6 +1271,7 @@ func (e *Block) initEvents() {
 
 	var pFunc func()
 	// Removes events when the drag ends
+	// First create the pointer address, then define where it will be used. Don't simplify, it gave an error.
 	stopDrag = js.FuncOf(func(this js.Value, args []js.Value) interface{} { // feito
 		pFunc()
 		return nil
@@ -1287,14 +1333,17 @@ func (e *Block) initEvents() {
 
 		newLeft = startLeft
 		newWidth = startWidth
+		changingLeft := true
 
 		if name == "bottom-right" {
 			newWidth = e.min(startWidth+dx, e.ideStage.GetClientWidth()-startLeft)
+			changingLeft = false
 		} else if name == "bottom-left" {
 			newWidth = e.min(startWidth-dx, startLeft+startWidth)
 			newLeft = e.max(0, startLeft+dx)
 		} else if name == "top-right" {
 			newWidth = e.min(startWidth+dx, e.ideStage.GetClientWidth()-startLeft)
+			changingLeft = false
 		} else if name == "top-left" {
 			newWidth = e.min(startWidth-dx, startLeft+startWidth)
 			newLeft = e.max(0, startLeft+dx)
@@ -1307,7 +1356,10 @@ func (e *Block) initEvents() {
 			newLeft = e.max(0, startLeft+dx)
 		} else if name == "right-middle" {
 			newWidth = e.min(startWidth+dx, e.ideStage.GetClientWidth()-startLeft)
+			changingLeft = false
 		}
+
+		newWidth = e.max(e.blockMinimumWidth.GetInt(), newWidth)
 
 		// [tl]           [tr]
 		//    +-----------+
@@ -1323,13 +1375,31 @@ func (e *Block) initEvents() {
 			return
 		}
 
-		newWidth = e.max(e.blockMinimumWidth.GetInt(), newWidth)
-
-		if e.resizeLimitLeft != math.MaxFloat32 && newLeft > e.resizeLimitLeft.GetInt() {
+		// Prevents functionality from crashing when the device is on top of the resizer box
+		//
+		// a := initialized value
+		a := e.resizeLimitLeft != math.MaxFloat32
+		// b := size
+		b := newLeft > e.resizeLimitLeft.GetInt()
+		// c := the resize button is on the left side
+		c := changingLeft
+		// d := direction right, decreasing the size of the box
+		d := dx > 0
+		if a && b && c && d {
 			return
 		}
 
-		if e.resizeLimitRight != math.MaxFloat32 && newLeft+newWidth < e.resizeLimitRight.GetInt() {
+		// Prevents functionality from crashing when the device is on top of the resizer box
+		//
+		// a := initialized value
+		a = e.resizeLimitRight != math.MaxFloat32
+		// b := size
+		b = newLeft+newWidth < e.resizeLimitRight.GetInt()
+		// c := the resize button is on the right site
+		c = !changingLeft
+		// d := direction left, decreasing the size of the box
+		d = dx < 0
+		if a && b && c && d {
 			return
 		}
 
@@ -1347,11 +1417,14 @@ func (e *Block) initEvents() {
 
 		newTop = startTop
 		newHeight = startHeight
+		changingTop := true
 
 		if name == "bottom-right" {
 			newHeight = e.min(startHeight+dy, e.ideStage.GetClientHeight()-startTop)
+			changingTop = false
 		} else if name == "bottom-left" {
 			newHeight = e.min(startHeight+dy, e.ideStage.GetClientHeight()-newTop)
+			changingTop = false
 		} else if name == "top-right" {
 			newHeight = e.min(startHeight-dy, startTop+startHeight)
 			newTop = e.max(0, startTop+dy)
@@ -1363,11 +1436,14 @@ func (e *Block) initEvents() {
 			newTop = e.max(0, startTop+dy)
 		} else if name == "bottom-middle" {
 			newHeight = e.min(startHeight+dy, e.ideStage.GetClientHeight()-newTop)
+			changingTop = false
 		} else if name == "left-middle" {
 			return
 		} else if name == "right-middle" {
 			return
 		}
+
+		newHeight = e.max(e.blockMinimumHeight.GetInt(), newHeight)
 
 		// [tl]           [tr]
 		//    +-----------+
@@ -1383,13 +1459,31 @@ func (e *Block) initEvents() {
 			return
 		}
 
-		newHeight = e.max(e.blockMinimumHeight.GetInt(), newHeight)
-
-		if e.resizeLimitTop != math.MaxFloat32 && newTop > e.resizeLimitTop.GetInt() {
+		// Prevents functionality from crashing when the device is on top of the resizer box
+		//
+		// a := initialized value
+		a := e.resizeLimitTop != math.MaxFloat32
+		// b := size
+		b := newTop > e.resizeLimitTop.GetInt()
+		// c := the resize button is on the top side
+		c := changingTop
+		// d := direction down, decreasing the size of the box
+		d := dy > 0
+		if a && b && c && d {
 			return
 		}
 
-		if e.resizeLimitBottom != math.MaxFloat32 && newTop+newHeight < e.resizeLimitBottom.GetInt() {
+		// Prevents functionality from crashing when the device is on top of the resizer box
+		//
+		// a := initialized value
+		a = e.resizeLimitBottom != math.MaxFloat32
+		// b := size
+		b = newTop+newHeight < e.resizeLimitBottom.GetInt()
+		// c := the resize button is on the bottom side
+		c = !changingTop
+		// d := direction up, decreasing the size of the box
+		d = dy < 0
+		if a && b && c && d {
 			return
 		}
 
@@ -1812,9 +1906,9 @@ func (e *Block) GetMenuDebug() (options []components.MenuOptions) {
 					}),
 				},
 				{
-					Label: e.getMenuLabel(e.GetSelectBlocked(), "Select lock disable", "Select lock enable"),
+					Label: e.getMenuLabel(e.GetSelectLocked(), "Select lock disable", "Select lock enable"),
 					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						e.SetSelectBlocked(!e.GetSelectBlocked())
+						e.SetSelectLocked(!e.GetSelectLocked())
 						return nil
 					}),
 				},
@@ -1826,9 +1920,9 @@ func (e *Block) GetMenuDebug() (options []components.MenuOptions) {
 					}),
 				},
 				{
-					Label: e.getMenuLabel(e.GetResizeBlocked(), "Resize lock disable", "Resize lock enable"),
+					Label: e.getMenuLabel(e.GetResizeLocked(), "Resize lock disable", "Resize lock enable"),
 					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						e.SetResizeBlocked(!e.GetResizeBlocked())
+						e.SetResizeLocked(!e.GetResizeLocked())
 						return nil
 					}),
 				},
@@ -1840,9 +1934,9 @@ func (e *Block) GetMenuDebug() (options []components.MenuOptions) {
 					}),
 				},
 				{
-					Label: e.getMenuLabel(e.GetDragBlocked(), "Drag lock disable", "Drag lock enable"),
+					Label: e.getMenuLabel(e.GetDragLocked(), "Drag lock disable", "Drag lock enable"),
 					Action: js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-						e.SetDragBlocked(!e.GetDragBlocked())
+						e.SetDragLocked(!e.GetDragLocked())
 						return nil
 					}),
 				},
@@ -1883,9 +1977,9 @@ func (e *Block) resetLimitForResize() {
 func (e *Block) calculateLimitForResizeOn() {
 	e.resetLimitForResize()
 
-	_, total := managerCollision.Collision.Detect(e)
+	list := managerCollision.Collision.DetectBoxContained(e)
 	zIndex := e.GetZIndex()
-	for _, v := range total {
+	for _, v := range list {
 		if zIndex < v.GetZIndex() {
 			x := v.GetX()
 			y := v.GetY()
@@ -1903,6 +1997,12 @@ func (e *Block) calculateLimitForResizeOn() {
 	e.resizeLimitRight += e.resizerMoveBorderLimit
 	e.resizeLimitTop -= e.resizerMoveBorderLimit
 	e.resizeLimitBottom += e.resizerMoveBorderLimit
+
+	e.resizeBox.
+		X((e.resizeLimitLeft - e.x).GetInt()).
+		Y((e.resizeLimitTop - e.y).GetInt()).
+		Width((e.resizeLimitRight - e.resizeLimitLeft).GetInt()).
+		Height((e.resizeLimitBottom - e.resizeLimitTop).GetInt())
 }
 
 // selectForDragOn
@@ -1916,9 +2016,9 @@ func (e *Block) calculateLimitForResizeOn() {
 //	Seleciona todos os blocos em cima (colisão e zIndex maior que) do bloco principal e habilita a ferramenta de
 //	arrasto do mouse.
 func (e *Block) selectForDragOn() {
-	_, total := managerCollision.Collision.Detect(e)
+	list := managerCollision.Collision.DetectBoxContained(e)
 	zIndex := e.GetZIndex()
-	for _, v := range total {
+	for _, v := range list {
 		if !v.GetDragEnable() && zIndex < v.GetZIndex() {
 			v.SetDragEnable(true)
 		}
@@ -1936,9 +2036,9 @@ func (e *Block) selectForDragOn() {
 //	Seleciona todos os blocos em cima (colisão e zIndex maior que) do bloco principal e desabilita a ferramenta de
 //	arrasto do mouse.
 func (e *Block) selectForDragOff() {
-	_, total := managerCollision.Collision.Detect(e)
+	list := managerCollision.Collision.DetectBoxContained(e)
 	zIndex := e.GetZIndex()
-	for _, v := range total {
+	for _, v := range list {
 		if v.GetDragEnable() && zIndex < v.GetZIndex() {
 			v.SetDragEnable(false)
 		}
@@ -1955,9 +2055,9 @@ func (e *Block) selectForDragOff() {
 //
 //	Pega todos os blocos em cima (colisão e zIndex maior que) do bloco principal e os move (dx,dy).
 func (e *Block) draggingMoveDraggingSelectedOn() {
-	_, total := managerCollision.Collision.Detect(e)
+	list := managerCollision.Collision.DetectBoxContained(e)
 	zIndex := e.GetZIndex()
-	for _, v := range total {
+	for _, v := range list {
 		if v.GetDragEnable() && zIndex < v.GetZIndex() {
 			x := v.GetX()
 			y := v.GetY()
@@ -1988,6 +2088,26 @@ func (e *Block) draggingMoveSelectedOnStage() {
 			y += e.dragDeltaTop
 			v.SetX(x)
 			v.SetY(y)
+		}
+	}
+}
+
+func (e *Block) selectAllElementsInsideBlockOn() {
+	list := managerCollision.Collision.DetectBoxContained(e)
+	zIndex := e.GetZIndex()
+	for _, v := range list {
+		if !v.GetSelected() && zIndex < v.GetZIndex() {
+			v.SetSelected(true)
+		}
+	}
+}
+
+func (e *Block) selectAllElementsInsideBlockOff() {
+	list := managerCollision.Collision.DetectBoxContained(e)
+	zIndex := e.GetZIndex()
+	for _, v := range list {
+		if v.GetSelected() && zIndex < v.GetZIndex() {
+			v.SetSelected(false)
 		}
 	}
 }

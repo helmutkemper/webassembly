@@ -2500,7 +2500,7 @@ func (e *TagSvgTitle) RemoveAttribute(key string) (value string) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgTitle) Remove(elements ...Compatible) (ref *TagSvgTitle) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

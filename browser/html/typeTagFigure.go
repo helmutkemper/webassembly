@@ -2069,7 +2069,7 @@ func (e *TagFigure) RemoveAttribute(key string) (value string) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagFigure) Remove(elements ...Compatible) (ref *TagFigure) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

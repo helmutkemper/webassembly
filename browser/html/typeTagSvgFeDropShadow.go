@@ -3040,7 +3040,7 @@ func (e *TagSvgFeDropShadow) Reference(reference **TagSvgFeDropShadow) (ref *Tag
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgFeDropShadow) Remove(elements ...Compatible) (ref *TagSvgFeDropShadow) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

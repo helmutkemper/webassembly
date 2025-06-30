@@ -262,7 +262,7 @@ func (e *TagHead) CssAppend() (ref *TagHead) {
 //
 //	Remove um nó filho do DOM e retorna o nó removido.
 //
-// Remove
+// # Remove
 //
 // English:
 //
@@ -273,7 +273,7 @@ func (e *TagHead) CssAppend() (ref *TagHead) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagHead) Remove(elements ...Compatible) (ref *TagHead) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

@@ -1378,7 +1378,7 @@ func (e *TagOutput) RemoveAttribute(key string) (value string) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagOutput) Remove(elements ...Compatible) (ref *TagOutput) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

@@ -2923,7 +2923,7 @@ func (e *TagSvgFeSpecularLighting) Reference(reference **TagSvgFeSpecularLightin
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgFeSpecularLighting) Remove(elements ...Compatible) (ref *TagSvgFeSpecularLighting) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

@@ -247,6 +247,16 @@ func main() {
 	stmAdd.SetMainSvg(mainSvg)
 	stmAdd.SetPosition(300, 350)
 	_ = stmAdd.Init()
+	go func() {
+		time.Sleep(2 * time.Second)
+		stmAdd.SetWarning(true)
+		time.Sleep(2 * time.Second)
+		stmAdd.SetWarning(false)
+		time.Sleep(2 * time.Second)
+		stmAdd.SetWarning(true)
+		time.Sleep(2 * time.Second)
+		stmAdd.SetWarning(false)
+	}()
 
 	if _, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)

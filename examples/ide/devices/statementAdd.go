@@ -303,12 +303,12 @@ func (e *StatementAdd) Init() (err error) {
 		e.block.SetHeight(e.defaultHeight)
 	}
 
-	e.block.SetName("StatementAdd")
+	//e.block.SetName("StatementAdd")
 
 	e.id = rulesSequentialId.GetIdFromBase(e.block.GetName())
 
 	//e.block.SetDrag(true)
-	e.block.SetResizeBlocked(true)
+	e.block.SetResizeLocked(true)
 	//e.block.SetEnableResize(true)
 	//e.block.SetSelected(true)
 	e.block.SetMinimumWidth(e.horizontalMinimumSize)

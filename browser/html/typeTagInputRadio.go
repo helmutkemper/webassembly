@@ -1792,7 +1792,7 @@ func (e *TagInputRadio) RemoveAttribute(key string) (value string) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagInputRadio) Remove(elements ...Compatible) (ref *TagInputRadio) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

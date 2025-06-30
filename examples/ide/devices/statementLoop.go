@@ -320,7 +320,7 @@ func (e *StatementLoop) Init() (err error) {
 		e.block.SetSize(e.defaultWidth, e.defaultHeight)
 	}
 
-	e.block.SetName("StatementLoop")
+	//e.block.SetName("StatementLoop")
 	e.id = rulesSequentialId.GetIdFromBase(e.block.GetName())
 
 	//e.block.SetDrag(true)

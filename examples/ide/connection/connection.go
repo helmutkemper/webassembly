@@ -99,8 +99,8 @@ func (e *Connection) getConnectionFunc(_ js.Value, _ []js.Value) interface{} {
 		"AcceptNotConnected": e.GetAcceptNotConnected(),
 		"LookedUp":           e.GetConnectionLockedUp(),
 		"IsADataInput":       e.GetAsDataInput(),
-		"Top":                e.GetX(),
-		"Left":               e.GetY(),
+		"Top":                e.GetX().GetInt(),
+		"Left":               e.GetY().GetInt(),
 	}
 	return e.mapToJsObject(ret)
 }

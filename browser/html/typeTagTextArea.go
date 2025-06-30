@@ -1636,7 +1636,7 @@ func (e *TagTextArea) RemoveAttribute(key string) (value string) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagTextArea) Remove(elements ...Compatible) (ref *TagTextArea) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

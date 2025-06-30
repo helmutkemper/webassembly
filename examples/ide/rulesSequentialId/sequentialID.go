@@ -50,7 +50,7 @@ func (e *sequentialId) getId(base string) (id string) {
 		e.mapData[base] = 0
 	}
 	count := e.mapData[base]
-	e.mapData[base]++
 	id = fmt.Sprintf("%s_%d", base, count)
+	e.mapData[base]++
 	return
 }

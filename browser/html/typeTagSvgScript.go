@@ -586,7 +586,7 @@ func (e *TagSvgScript) ListenerRemove(event string) (ref *TagSvgScript) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgScript) Remove(elements ...Compatible) (ref *TagSvgScript) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

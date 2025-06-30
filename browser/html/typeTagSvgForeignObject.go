@@ -283,7 +283,7 @@ func (e *TagSvgForeignObject) Append(elements ...Compatible) (ref *TagSvgForeign
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgForeignObject) Remove(elements ...Compatible) (ref *TagSvgForeignObject) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

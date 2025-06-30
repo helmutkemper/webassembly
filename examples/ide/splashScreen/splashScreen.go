@@ -57,7 +57,7 @@ func (e *Control) Hide() {
 		SetOnEndFunc(func(_ float64, _ interface{}) {
 			e.Clear()
 			e.svgGroup.AddStyle("opacity", 1)
-			e.stage.Get().Call("removeChild", e.svgGroup.Get())
+			e.stage.Remove(e.svgGroup)
 			wg.Done()
 		}).
 		Start()

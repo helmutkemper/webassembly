@@ -13,9 +13,8 @@ func init() {
 type collision struct {
 }
 
-func (e *collision) Detect(element manager.BBox) (partial, total []manager.BBox) {
-	partial = make([]manager.BBox, 0)
-	total = make([]manager.BBox, 0)
+func (e *collision) DetectBoxContained(element manager.BBox) (list []manager.BBox) {
+	list = make([]manager.BBox, 0)
 
 	aId := element.GetID()
 	for _, value := range manager.Manager.Get() {
@@ -24,55 +23,73 @@ func (e *collision) Detect(element manager.BBox) (partial, total []manager.BBox)
 			continue
 		}
 
-		if e.detectTotal(element, value) {
-			total = append(total, value)
-			continue
-		}
-
-		if e.detectOnlyPartial(element, value) {
-			partial = append(partial, value)
+		if e.contained(element, value) {
+			list = append(list, value)
 		}
 	}
 
 	return
 }
 
-func (e *collision) detectTotal(a, b manager.BBox) bool {
-	// Calculates the limits of a
-	leftA, topA := a.GetX(), a.GetY()
-	rightA, bottomA := leftA+a.GetWidth(), topA+a.GetHeight()
+func (e *collision) DetectBoxCollision(element manager.BBox) (list []manager.BBox) {
+	list = make([]manager.BBox, 0)
 
-	// Calculates the limits of b
-	leftB, topB := b.GetX(), b.GetY()
-	rightB, bottomB := leftB+b.GetWidth(), topB+b.GetHeight()
+	aId := element.GetID()
+	for _, value := range manager.Manager.Get() {
+		bId := value.GetID()
+		if aId == bId {
+			continue
+		}
 
-	// There is partial or total collision if there is *overlap* both on the x axis and the y axis:
-	horizontalOverlap := leftA < rightB && rightA > leftB
-	verticalOverlap := topA < bottomB && bottomA > topB
+		if e.collision(element, value) {
+			list = append(list, value)
+		}
+	}
 
-	return horizontalOverlap && verticalOverlap
+	return
 }
 
-func (e *collision) detectOnlyPartial(a, b manager.BBox) bool {
-	if !e.detectTotal(a, b) {
-		return false
+func (e *collision) DetectBoxCollisionNotContained(element manager.BBox) (list []manager.BBox) {
+	list = make([]manager.BBox, 0)
+
+	aId := element.GetID()
+	for _, value := range manager.Manager.Get() {
+		bId := value.GetID()
+		if aId == bId {
+			continue
+		}
+
+		if e.contained(element, value) {
+			continue
+		}
+
+		if e.collision(element, value) {
+			list = append(list, value)
+		}
 	}
 
-	// Detects total containment A in B
-	if a.GetX() >= b.GetX() &&
-		a.GetY() >= b.GetY() &&
-		a.GetX()+a.GetWidth() <= b.GetX()+b.GetWidth() &&
-		a.GetY()+a.GetHeight() <= b.GetY()+b.GetHeight() {
-		return false
-	}
+	return
+}
 
-	// Detects total containment B in a
-	if b.GetX() >= a.GetX() &&
-		b.GetY() >= a.GetY() &&
-		b.GetX()+b.GetWidth() <= a.GetX()+a.GetWidth() &&
-		b.GetY()+b.GetHeight() <= a.GetY()+a.GetHeight() {
-		return false
-	}
+// detectTotal Checks if boxA is entirely contained within boxB.
+func (e *collision) contained(b, a manager.BBox) bool {
+	xA, yA := a.GetX(), a.GetY()
+	widthA, heightA := a.GetWidth(), a.GetHeight()
 
-	return true
+	xB, yB := b.GetX(), b.GetY()
+	widthB, heightB := b.GetWidth(), b.GetHeight()
+
+	return xA >= xB && xA+widthA <= xB+widthB &&
+		yA >= yB && yA+heightA <= yB+heightB
+}
+
+func (e *collision) collision(a, b manager.BBox) bool {
+	xA, yA := a.GetX(), a.GetY()
+	widthA, heightA := a.GetWidth(), a.GetHeight()
+
+	xB, yB := b.GetX(), b.GetY()
+	widthB, heightB := b.GetWidth(), b.GetHeight()
+
+	return xA < xB+widthB && xA+widthA > xB &&
+		yA < yB+heightB && yA+heightA > yB
 }

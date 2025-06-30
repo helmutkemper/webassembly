@@ -2798,7 +2798,7 @@ func (e *TagSvgFeFlood) Reference(reference **TagSvgFeFlood) (ref *TagSvgFeFlood
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgFeFlood) Remove(elements ...Compatible) (ref *TagSvgFeFlood) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

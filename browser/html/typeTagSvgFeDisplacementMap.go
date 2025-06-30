@@ -2975,7 +2975,7 @@ func (e *TagSvgFeDisplacementMap) Reference(reference **TagSvgFeDisplacementMap)
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgFeDisplacementMap) Remove(elements ...Compatible) (ref *TagSvgFeDisplacementMap) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

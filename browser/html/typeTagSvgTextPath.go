@@ -3171,7 +3171,7 @@ func (e *TagSvgTextPath) ListenerRemove(event string) (ref *TagSvgTextPath) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgTextPath) Remove(elements ...Compatible) (ref *TagSvgTextPath) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

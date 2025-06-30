@@ -2911,7 +2911,7 @@ func (e *TagSvgFeGaussianBlur) Reference(reference **TagSvgFeGaussianBlur) (ref 
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgFeGaussianBlur) Remove(elements ...Compatible) (ref *TagSvgFeGaussianBlur) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

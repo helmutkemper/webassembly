@@ -1636,7 +1636,7 @@ func (e *TagInputSearch) RemoveAttribute(key string) (value string) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagInputSearch) Remove(elements ...Compatible) (ref *TagInputSearch) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

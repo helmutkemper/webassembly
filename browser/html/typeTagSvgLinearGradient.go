@@ -3018,7 +3018,7 @@ func (e *TagSvgLinearGradient) RemoveAttribute(key string) (value string) {
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgLinearGradient) Remove(elements ...Compatible) (ref *TagSvgLinearGradient) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

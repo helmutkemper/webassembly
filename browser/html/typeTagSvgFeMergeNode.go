@@ -386,7 +386,7 @@ func (e *TagSvgFeMergeNode) Reference(reference **TagSvgFeMergeNode) (ref *TagSv
 //	Remove um nó filho do DOM e retorna o nó removido.
 func (e *TagSvgFeMergeNode) Remove(elements ...Compatible) (ref *TagSvgFeMergeNode) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element)
+		e.selfElement.Call("removeChild", element.Get())
 	}
 
 	return e

@@ -42,8 +42,6 @@ type Block struct {
 	blockMinimumWidth  rulesDensity.Density
 	blockMinimumHeight rulesDensity.Density
 
-	classListName string
-
 	isResizing    bool
 	resizeEnabled bool
 	resizeLocked  bool
@@ -60,6 +58,7 @@ type Block struct {
 	block             *html.TagSvg
 	selectDivAppended bool
 	selectDiv         *html.TagSvgRect
+	resizeBoxAppended bool
 	resizeBox         *html.TagSvgRect
 	main              *html.TagSvg
 
@@ -273,6 +272,44 @@ func (e *Block) initRuleBook() {
 		e.ruleBook["setSelectOff"]()
 
 		e.setResizeOrnamentVisibleOn()
+
+	}
+
+	// Rule: setOnEventResizeStart
+	//
+	// English:
+	//
+	//  The event is fired when the user starts resizing the parent element
+	//
+	// Português:
+	//
+	//  O evento é disparado quando o usuário começa o redimensionamento do elemento principal
+	e.ruleBook["setOnEventResizeStart"] = func() {
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
+		//            the desired function.
+		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
+		//            função desejada.
+
+		e.calculateLimitForResizeOn()
+		e.resizeBoxShow()
+	}
+
+	// Rule: setOnEventResizeEnd
+	//
+	// English:
+	//
+	//  The event is fired when the user ends resizing the parent element
+	//
+	// Português:
+	//
+	//  O evento é disparado quando o usuário termina o redimensionamento do elemento principal
+	e.ruleBook["setOnEventResizeEnd"] = func() {
+		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
+		//            the desired function.
+		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
+		//            função desejada.
+
+		e.resizeBoxHide()
 	}
 
 	// Rule: setResizingOn
@@ -284,13 +321,13 @@ func (e *Block) initRuleBook() {
 	// Português:
 	//
 	//  Evento ocorre durante o redimensionamento
-	e.ruleBook["setResizingOn"] = func() {
+	e.ruleBook["setOnEventResizingOn"] = func() {
 		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
 		//            the desired function.
 		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
 		//            função desejada.
 
-		e.resizerMoveBorderLimit = rulesDensity.Convert(30)
+		e.resizerMoveBorderLimit = rulesDensity.Convert(30) // todo: não deveria está aqui
 		e.calculateLimitForResizeOn()
 	}
 
@@ -366,6 +403,43 @@ func (e *Block) initRuleBook() {
 	}
 
 	e.ruleBook["adjustToGrid"]()
+}
+
+// resizeBoxShow
+//
+// English:
+//
+//	Show the resize box limit
+//
+// Português:
+//
+//	Mostra a caixa de limite do redimensionamento
+func (e *Block) resizeBoxShow() {
+	// size of resize bix is undefined
+	if e.getResetStatusForLimitBox() {
+		return
+	}
+
+	e.resizeBoxAppended = true
+	e.block.Append(e.resizeBox)
+}
+
+// resizeBoxHide
+//
+// English:
+//
+//	Hide the resize box limit
+//
+// Português:
+//
+//	Esconde a caixa de limite do redimensionamento
+func (e *Block) resizeBoxHide() {
+	if !e.resizeBoxAppended {
+		return
+	}
+
+	e.resizeBoxAppended = false
+	e.block.Remove(e.resizeBox)
 }
 
 // SetWarningMark
@@ -760,8 +834,6 @@ func (e *Block) SetResizeEnable(enabled bool) {
 		return
 	}
 
-	e.block.Append(e.resizeBox)
-
 	e.resizeEnabled = enabled
 
 	if e.resizeEnabled {
@@ -785,29 +857,28 @@ func (e *Block) GetResizeLocked() (locked bool) {
 	return e.resizeLocked
 }
 
-// SetResizeLocked Disables the resize tool
+// SetResizeLocked
 //
 // English:
 //
+//	Prevents the user from enabling the resize tool
+//
 // Português:
+//
+//	Impede o usuário de habilitar a ferramenta de redimensionamento
 func (e *Block) SetResizeLocked(locked bool) {
 	e.resizeLocked = locked
 }
 
-// SelectLockedInvert Invert the status of the selection tool lock. Note: Used in the menu
-
+// GetSelectLocked
+//
 // English:
 //
-// Português:
-func (e *Block) SelectLockedInvert() {
-	e.selectLocked = !e.selectLocked
-}
-
-// GetSelectLocked Returns the status of the selection tool lock
-
-// English:
+//	Returns the status of the functionality that prevents the user from enabling the resize tool
 //
 // Português:
+//
+//	Retorna o status da funcionalidade que impede o usuário de habilitar a ferramenta de redimensionamento
 func (e *Block) GetSelectLocked() (locked bool) {
 	return e.selectLocked
 }
@@ -947,7 +1018,8 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 		Y(y.GetInt()).
 		Width(width.GetInt()).
 		Height(height.GetInt()).
-		Fill("none").Stroke(e.resizerColor).
+		Fill("none").
+		Stroke(e.resizerColor).
 		StrokeDasharray(e.resizerLine).
 		StrokeWidth(rulesDensity.Density(e.resizerLineWidth).GetInt()).
 		SetZIndex(stage.GetNextZIndex())
@@ -959,7 +1031,7 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 		Height(height.GetInt()).
 		Fill("none").Stroke(e.resizerColor).
 		StrokeDasharray(e.resizerLine).
-		StrokeWidth(rulesDensity.Density(e.resizerLineWidth).GetInt()).
+		StrokeWidth(rulesDensity.Density(e.resizerLineWidth - 2).GetInt()).
 		SetZIndex(stage.GetNextZIndex())
 
 	e.resizerTopLeft = e.resizerButton.GetNew()
@@ -1127,8 +1199,6 @@ func (e *Block) Init() (err error) {
 	}
 
 	e.autoId = utils.GetRandomId()
-
-	e.classListName = "block"
 
 	e.resizerColor = factoryColor.NewRed() // todo: organizar - início
 	e.resizerLine = []int{16, 4}
@@ -1497,7 +1567,7 @@ func (e *Block) initEvents() {
 			return nil
 		}
 
-		e.ruleBook["setResizingOn"]()
+		e.ruleBook["setOnEventResizingOn"]()
 
 		resizerName := e.block.Get().Get("dataset").Get("resizeName").String()
 		resizeHorizontal(args, resizerName)
@@ -1521,6 +1591,8 @@ func (e *Block) initEvents() {
 		js.Global().Call("removeEventListener", "touchmove", resizeMouseMove, false)
 		js.Global().Call("removeEventListener", "touchend", stopResize, false)
 		js.Global().Call("removeEventListener", "touchcancel", stopResize, false)
+
+		e.ruleBook["setOnEventResizeEnd"]()
 		return nil
 	})
 
@@ -1547,6 +1619,8 @@ func (e *Block) initEvents() {
 		js.Global().Call("addEventListener", "touchmove", resizeMouseMove, map[string]any{"passive": true})
 		js.Global().Call("addEventListener", "touchend", stopResize, map[string]any{"passive": true})
 		js.Global().Call("addEventListener", "touchcancel", stopResize, map[string]any{"passive": true})
+
+		e.ruleBook["setOnEventResizeStart"]()
 		return nil
 	})
 
@@ -1963,6 +2037,10 @@ func (e *Block) resetLimitForResize() {
 	e.resizeLimitBottom = -math.MaxFloat32
 }
 
+func (e *Block) getResetStatusForLimitBox() (reset bool) {
+	return e.resizeLimitLeft == math.MaxFloat32
+}
+
 // calculateLimitForResizeOn
 //
 // English:
@@ -1993,16 +2071,18 @@ func (e *Block) calculateLimitForResizeOn() {
 		}
 	}
 
+	if !e.getResetStatusForLimitBox() {
+		e.resizeBox.
+			X((e.resizeLimitLeft - e.x).GetInt()).
+			Y((e.resizeLimitTop - e.y).GetInt()).
+			Width((e.resizeLimitRight - e.resizeLimitLeft).GetInt()).
+			Height((e.resizeLimitBottom - e.resizeLimitTop).GetInt())
+	}
+
 	e.resizeLimitLeft -= e.resizerMoveBorderLimit
 	e.resizeLimitRight += e.resizerMoveBorderLimit
 	e.resizeLimitTop -= e.resizerMoveBorderLimit
 	e.resizeLimitBottom += e.resizerMoveBorderLimit
-
-	e.resizeBox.
-		X((e.resizeLimitLeft - e.x).GetInt()).
-		Y((e.resizeLimitTop - e.y).GetInt()).
-		Width((e.resizeLimitRight - e.resizeLimitLeft).GetInt()).
-		Height((e.resizeLimitBottom - e.resizeLimitTop).GetInt())
 }
 
 // selectForDragOn

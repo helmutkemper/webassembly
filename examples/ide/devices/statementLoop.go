@@ -402,7 +402,7 @@ func (e *StatementLoop) Init() (err error) {
 	e.menu.SetContentFunc(e.getMenu)
 	e.menu.Init()
 
-	//e.block.SetResize(true)
+	e.block.SetResizeEnable(true)
 	//e.block.SetSelected(true)
 
 	return nil

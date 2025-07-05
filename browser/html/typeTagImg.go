@@ -4,6 +4,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/css"
 	"github.com/helmutkemper/webassembly/interfaces"
 	"github.com/helmutkemper/webassembly/platform/algorithm"
+	"github.com/helmutkemper/webassembly/utilsDebug"
 	"log"
 	"math"
 	"reflect"
@@ -1309,7 +1310,9 @@ func (e *TagImg) Src(src any, waitLoad bool) (ref *TagImg) {
 			"error",
 			js.FuncOf(
 				func(this js.Value, args []js.Value) interface{} {
-					log.Print("image load error", e.id)
+					log.Print("image src, load error:")
+					utilsDebug.ObjectToLog("args", args)
+					utilsDebug.ObjectToLog("this", this)
 					waitGroup.Done()
 					return nil
 				},

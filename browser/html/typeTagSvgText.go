@@ -1307,7 +1307,7 @@ func (e *TagSvgText) FontSize(fontSize interface{}) (ref *TagSvgText) {
 //	 Notes:
 //	   * As a presentation attribute, font-size-adjust can be used as a CSS property. See the css font-size-adjust
 //	     property for more information.
-func (e *TagSvgText) FontSizeAdjust(fontSizeAdjust float64) (ref *TagSvgText) {
+func (e *TagSvgText) FontSizeAdjust(fontSizeAdjust int) (ref *TagSvgText) {
 	e.selfElement.Call("setAttribute", "font-size-adjust", fontSizeAdjust)
 	return e
 }

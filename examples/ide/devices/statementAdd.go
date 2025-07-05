@@ -1,15 +1,18 @@
 package devices
 
 import (
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/math"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesIcon"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
+	"github.com/helmutkemper/webassembly/utilsDraw"
 	"log"
 	"syscall/js"
 )
@@ -22,8 +25,11 @@ type StatementAdd struct {
 	defaultHeight         rulesDensity.Density
 	horizontalMinimumSize rulesDensity.Density
 	verticalMinimumSize   rulesDensity.Density
-	ornamentDraw          *math.OrnamentAdd
-	id                    string
+
+	ornamentDraw     *math.OrnamentAdd
+	ornamentDrawIcon *math.OrnamentAdd
+
+	id string
 	//inputA                *connection.Connection
 	//inputB                *connection.Connection
 	//output                *connection.Connection
@@ -315,6 +321,7 @@ func (e *StatementAdd) Init() (err error) {
 	e.block.SetMinimumHeight(e.verticalMinimumSize)
 
 	e.ornamentDraw = new(math.OrnamentAdd)
+	e.ornamentDrawIcon = new(math.OrnamentAdd)
 
 	inputXSetup := connection.Setup{
 		FatherId:           e.id,
@@ -395,6 +402,7 @@ func (e *StatementAdd) Init() (err error) {
 	e.ornamentDraw.OutputSetup(outputSetup)
 
 	_ = e.ornamentDraw.Init()
+	_ = e.ornamentDrawIcon.Init()
 
 	e.block.SetOrnament(e.ornamentDraw)
 
@@ -416,4 +424,52 @@ func (e *StatementAdd) Init() (err error) {
 	e.menu.Init()
 
 	return nil
+}
+
+func (e *StatementAdd) GetIconName() (name string) {
+	return "Add"
+}
+
+func (e *StatementAdd) GetIconCategory() (name string) {
+	return "Math"
+}
+
+func (e *StatementAdd) GetIcon(disabled bool) (icon js.Value) {
+	xc := rulesIcon.Width / 4
+	yc := rulesIcon.Height * 0.15
+	wOrn := rulesIcon.Width / 2
+	ornamentSvg := e.ornamentDrawIcon.
+		GetSvg().
+		X(xc.GetInt() + 5).
+		Y(yc.GetInt())
+
+	if disabled {
+		ornamentSvg.Filter("url(#iconBlur)")
+	}
+
+	_ = e.ornamentDrawIcon.Update(0, 0, wOrn, wOrn)
+
+	path := utilsDraw.PolygonPath(6, wOrn, wOrn, wOrn, 0)
+	iconPath := factoryBrowser.NewTagSvgPath().
+		StrokeWidth(rulesIcon.BorderWidth.GetInt()).
+		Stroke(rulesIcon.BorderColor).
+		Fill(rulesIcon.FillColor).
+		D(path)
+
+	iconText := factoryBrowser.NewTagSvgText().
+		X(85).
+		Y(rulesIcon.TextY.GetInt()).
+		Text("Add").
+		Fill(rulesIcon.TextColor).
+		FontFamily(rulesIcon.FontFamily).
+		//Filter("url(#textBlur)").
+		FontSize(rulesIcon.FontSize.GetInt())
+
+	iconSvg := factoryBrowser.NewTagSvg().
+		Width(rulesIcon.Width.GetFloat()).Height(rulesIcon.Height.GetFloat()).
+		Append(iconPath, ornamentSvg, iconText, rulesIcon.FilterIcon, rulesIcon.FilterText)
+
+	w := rulesIcon.Width.GetFloat() * rulesIcon.SizeRatio
+	h := rulesIcon.Height.GetFloat() * rulesIcon.SizeRatio
+	return iconSvg.ToPngResized(w, h)
 }

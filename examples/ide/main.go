@@ -240,13 +240,29 @@ func main() {
 	stmAdd.SetPosition(300, 150)
 	_ = stmAdd.Init()
 
-	stmAdd = new(devices.StatementAdd)
-	stmAdd.SetResizerButton(resizeButton)
-	stmAdd.SetDraggerButton(draggerButton)
-	stmAdd.SetGridAdjust(hex)
-	stmAdd.SetMainSvg(mainSvg)
-	stmAdd.SetPosition(400, 250)
-	_ = stmAdd.Init()
+	stmSub := new(devices.StatementSub)
+	stmSub.SetResizerButton(resizeButton)
+	stmSub.SetDraggerButton(draggerButton)
+	stmSub.SetGridAdjust(hex)
+	stmSub.SetMainSvg(mainSvg)
+	stmSub.SetPosition(400, 250)
+	_ = stmSub.Init()
+
+	stmDiv := new(devices.StatementDiv)
+	stmDiv.SetResizerButton(resizeButton)
+	stmDiv.SetDraggerButton(draggerButton)
+	stmDiv.SetGridAdjust(hex)
+	stmDiv.SetMainSvg(mainSvg)
+	stmDiv.SetPosition(400, 450)
+	_ = stmDiv.Init()
+
+	stmMul := new(devices.StatementMul)
+	stmMul.SetResizerButton(resizeButton)
+	stmMul.SetDraggerButton(draggerButton)
+	stmMul.SetGridAdjust(hex)
+	stmMul.SetMainSvg(mainSvg)
+	stmMul.SetPosition(200, 450)
+	_ = stmMul.Init()
 
 	if _, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)
@@ -254,7 +270,7 @@ func main() {
 
 	//mainStage.Append(panel)
 
-	factoryBrowser.NewTagImg().Import("imgTest").Src(mainSvg.ToPng(), true)
+	factoryBrowser.NewTagImg().Import("imgTest").Src(stmLoop.GetIcon(false), true)
 
 	doc := js.Global().Get("document")
 
@@ -273,10 +289,10 @@ func main() {
 
 	img := doc.Call("getElementById", "imgTest")
 	img.Get("style").Set("position", "absolute")
-	img.Get("style").Set("top", "0")
-	img.Get("style").Set("left", "0")
-	img.Get("style").Set("zIndex", "-1")
-	img.Get("style").Set("visibility", "hidden")
+	img.Get("style").Set("top", "100")
+	img.Get("style").Set("left", "100")
+	img.Get("style").Set("zIndex", "10")
+	//img.Get("style").Set("visibility", "hidden")
 
 	//for a := 0; a != 300; a += 15 {
 	//	for b := 0; b != 300; b += 15 {

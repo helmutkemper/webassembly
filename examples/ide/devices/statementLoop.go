@@ -1,15 +1,18 @@
 package devices
 
 import (
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesIcon"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
+	"github.com/helmutkemper/webassembly/utilsDraw"
 	"log"
 	"syscall/js"
 )
@@ -25,6 +28,7 @@ type StatementLoop struct {
 	horizontalMinimumSize rulesDensity.Density
 	verticalMinimumSize   rulesDensity.Density
 	ornamentDraw          *doubleLoopArrow.DoubleLoopArrow
+	ornamentDrawIcon      *doubleLoopArrow.DoubleLoopArrow
 	id                    string
 	//connStop              *connection.Connection
 	debugMode bool
@@ -330,6 +334,7 @@ func (e *StatementLoop) Init() (err error) {
 	e.block.SetMinimumHeight(e.verticalMinimumSize)
 
 	e.ornamentDraw = new(doubleLoopArrow.DoubleLoopArrow)
+	e.ornamentDrawIcon = new(doubleLoopArrow.DoubleLoopArrow)
 
 	stopButton := connection.Setup{
 		FatherId:           e.id,
@@ -363,9 +368,9 @@ func (e *StatementLoop) Init() (err error) {
 	}
 
 	_ = e.ornamentDraw.Init()
+	_ = e.ornamentDrawIcon.Init()
 
 	e.block.SetOrnament(e.ornamentDraw)
-
 	_ = e.block.Init()
 
 	if err = e.block.SetID(e.id); err != nil {
@@ -402,10 +407,58 @@ func (e *StatementLoop) Init() (err error) {
 	e.menu.SetContentFunc(e.getMenu)
 	e.menu.Init()
 
-	e.block.SetResizeEnable(true)
+	//e.block.SetResizeEnable(true)
 	//e.block.SetSelected(true)
 
 	return nil
+}
+
+func (e *StatementLoop) GetIconName() (name string) {
+	return "Loop"
+}
+
+func (e *StatementLoop) GetIconCategory() (name string) {
+	return "Loop"
+}
+
+func (e *StatementLoop) GetIcon(disabled bool) (icon js.Value) {
+	xc := rulesIcon.Width / 4
+	yc := rulesIcon.Height * 0.15
+	wOrn := rulesIcon.Width / 2
+	ornamentSvg := e.ornamentDrawIcon.
+		GetSvg().
+		X(xc.GetInt()).
+		Y(yc.GetInt())
+
+	if disabled {
+		ornamentSvg.Filter("url(#iconBlur)")
+	}
+
+	_ = e.ornamentDrawIcon.Update(0, 0, wOrn, wOrn)
+
+	path := utilsDraw.PolygonPath(6, wOrn, wOrn, wOrn, 0)
+	iconPath := factoryBrowser.NewTagSvgPath().
+		StrokeWidth(rulesIcon.BorderWidth.GetInt()).
+		Stroke(rulesIcon.BorderColor).
+		Fill(rulesIcon.FillColor).
+		D(path)
+
+	iconText := factoryBrowser.NewTagSvgText().
+		X(75).
+		Y(rulesIcon.TextY.GetInt()).
+		Text("Loop").
+		Fill(rulesIcon.TextColor).
+		FontFamily(rulesIcon.FontFamily).
+		//Filter("url(#textBlur)").
+		FontSize(rulesIcon.FontSize.GetInt())
+
+	iconSvg := factoryBrowser.NewTagSvg().
+		Width(rulesIcon.Width.GetFloat()).Height(rulesIcon.Height.GetFloat()).
+		Append(iconPath, ornamentSvg, iconText, rulesIcon.FilterIcon, rulesIcon.FilterText)
+
+	w := rulesIcon.Width.GetFloat() * rulesIcon.SizeRatio
+	h := rulesIcon.Height.GetFloat() * rulesIcon.SizeRatio
+	return iconSvg.ToPngResized(w, h)
 }
 
 func (e *StatementLoop) onConnectionClick() {}

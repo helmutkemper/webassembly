@@ -5427,6 +5427,11 @@ func (e *TagSvg) ListenerRemove(event string) (ref *TagSvg) {
 //		     document.Call("getElementById", "test").Get("style").Set("width", svg.GetWidth())
 //		     document.Call("getElementById", "test").Get("style").Set("height", svg.GetHeight())
 func (e *TagSvg) ToPngResized(width, height float64) (pngData js.Value) {
+	if (width == 0.0 || height == 0.0) &&
+		(e.width == 0.0 || e.height == 0.0) {
+		log.Print("ToPng().warning: tag svg has width or height equal to zero")
+	}
+
 	serializer := js.Global().Get("XMLSerializer").New()
 	svgText := serializer.Call("serializeToString", e.selfElement)
 
@@ -5448,6 +5453,7 @@ func (e *TagSvg) ToPngResized(width, height float64) (pngData js.Value) {
 
 		ctx := canvas.Call("getContext", "2d")
 
+		// todo: melhorar isto e verificar valores iguais a zero
 		if width == 0.0 && height == 0.0 {
 			canvas.Set("width", e.width)
 			canvas.Set("height", e.height)

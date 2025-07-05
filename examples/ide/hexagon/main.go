@@ -3,17 +3,23 @@ package main
 import (
 	"fmt"
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/factoryFontFamily"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesConversion"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/hexagon"
+	"github.com/helmutkemper/webassembly/utilsDraw"
 	"github.com/helmutkemper/webassembly/utilsText"
 	"github.com/helmutkemper/webassembly/utilsWindow"
 	"math"
+	"strings"
+	"syscall/js"
 	"time"
 )
 
 type CalcSystem interface {
 	GetColRow() (col, row int)
+	GetLayout() (layout hexagon.Layout)
 	GetCenter() (x, y int)
 	SetRowCol(col, row int)
 	GetPath() (path []string)
@@ -23,14 +29,17 @@ type CalcSystem interface {
 type DrawCell interface {
 	Init()
 	SetColRow(col, row int)
+	SetImg(src string, width, height rulesDensity.Density)
 	SetText(text string)
 	GetElement() (tagCanvas any)
+	ToPng() (img js.Value)
 }
 
 type CanvasCell struct {
 	canvas                    *html.TagCanvas
 	canvasWidth, canvasHeight int
 
+	fontIcon   string
 	fontFamily string
 	fontSize   int
 	fontWeight html.FontWeightRule
@@ -53,7 +62,8 @@ func (e *CanvasCell) SetCalcSystem(calcSystem CalcSystem) {
 
 func (e *CanvasCell) CanvasInit() {
 	e.fontSize = 24
-	e.fontFamily = utilsText.KFontAwesomeSolid
+	e.fontIcon = utilsText.KFontAwesomeSolid
+	e.fontFamily = factoryFontFamily.NewArial()
 	e.fontWeight = html.KFontWeightRuleNormal
 	e.fontStyle = html.KFontStyleRuleNormal
 
@@ -121,9 +131,16 @@ func (e *CanvasCell) GetElement() (tagCanvas any) {
 type SvgCell struct {
 	svg      *html.TagSvg
 	svgGroup *html.TagSvgG
-	svgPath  *html.TagSvgPath
+	svgPath1 *html.TagSvgPath
+	svgPath2 *html.TagSvgPath
 	svgText  *html.TagSvgText
+	svgImg   *html.TagSvgImage
 
+	iconBorder rulesDensity.Density
+	iconBottom rulesDensity.Density
+	cellHeight rulesDensity.Density
+
+	fontIcon   string
 	fontFamily string
 	fontSize   int
 	fontWeight html.FontWeightRule
@@ -137,8 +154,13 @@ func (e *SvgCell) SetCalcSystem(calcSystem CalcSystem) {
 }
 
 func (e *SvgCell) Init() {
-	e.fontSize = 12
-	e.fontFamily = utilsText.KFontAwesomeSolid
+	e.iconBorder = rulesDensity.Convert(5)
+
+	e.cellHeight = rulesDensity.Convert(int(math.Sqrt(3) * e.calcSystem.GetLayout().Size.X))
+
+	e.fontSize = 16
+	e.fontFamily = factoryFontFamily.NewArial()
+	e.fontIcon = utilsText.KFontAwesomeSolid
 	e.fontWeight = html.KFontWeightRuleNormal
 	e.fontStyle = html.KFontStyleRuleNormal
 
@@ -148,26 +170,35 @@ func (e *SvgCell) Init() {
 				factoryBrowser.NewTagSvgFeOffset().Dx(1).Dy(1),
 				factoryBrowser.NewTagSvgFeBlend().In2(html.KSvgIn2SourceAlpha),
 				factoryBrowser.NewTagSvgFeGaussianBlur().
-					StdDeviation(2).In(html.KSvgInStrokePaint),
+					StdDeviation(3).In(html.KSvgInStrokePaint),
 			),
-			//	factoryBrowser.NewTagSvgFilter().Id("blur2").Append(
-			//		factoryBrowser.NewTagSvgFeOffset().Dx(2).Dy(2),
-			//		factoryBrowser.NewTagSvgFeBlend().In2("offOut"),
-			//		factoryBrowser.NewTagSvgFeGaussianBlur().StdDeviation(2),
-			//	),
-			//	factoryBrowser.NewTagSvgFilter().Id("blur3").Append(
-			//		factoryBrowser.NewTagSvgFeGaussianBlur().StdDeviation(0.5),
-			//	),
+			//factoryBrowser.NewTagSvgFilter().Id("blur2").Append(
+			//	factoryBrowser.NewTagSvgFeOffset().Dx(2).Dy(2),
+			//	factoryBrowser.NewTagSvgFeBlend().In2("offOut"),
+			//	factoryBrowser.NewTagSvgFeGaussianBlur().StdDeviation(2),
+			//),
+			//factoryBrowser.NewTagSvgFilter().Id("blur3").Append(
+			//	factoryBrowser.NewTagSvgFeGaussianBlur().StdDeviation(0.5),
+			//),
 		)
 
 	e.svgGroup = factoryBrowser.NewTagSvgG()
 
-	e.svgPath = factoryBrowser.NewTagSvgPath().
-		Fill("yellow").
+	e.svgPath1 = factoryBrowser.NewTagSvgPath().
+		Fill("black").
 		Stroke("black").
-		StrokeWidth(1) //.
-	//Filter("url(#blur1)")
-	e.svgGroup.Append(e.svgPath)
+		StrokeWidth(1).
+		Filter("url(#blur1)")
+	e.svgGroup.Append(e.svgPath1)
+
+	e.svgPath2 = factoryBrowser.NewTagSvgPath().
+		Fill("yellow").
+		Stroke("none").
+		StrokeWidth(1)
+	e.svgGroup.Append(e.svgPath2)
+
+	e.svgImg = factoryBrowser.NewTagSvgImage()
+	e.svgGroup.Append(e.svgImg)
 
 	e.svgText = factoryBrowser.NewTagSvgText().
 		FontSize(e.fontSize).
@@ -179,6 +210,10 @@ func (e *SvgCell) Init() {
 	e.svg.Append(e.svgGroup)
 }
 
+func (e *SvgCell) ToPng() (img js.Value) {
+	return e.svg.ToPng()
+}
+
 // SetColRow
 //
 // Sets the column and row in the calculation system and updates the SVG path.
@@ -188,23 +223,90 @@ func (e *SvgCell) Init() {
 func (e *SvgCell) SetColRow(col, row int) {
 	e.calcSystem.SetRowCol(col, row)
 	path := e.calcSystem.GetPath()
-	e.svgPath.D(path)
+	e.svgPath1.D(path)
+	e.svgPath2.D(path)
+}
+
+func (e *SvgCell) SetImg(src string, width, height rulesDensity.Density) {
+	x, y := e.calcSystem.GetCenter()
+
+	y = y - int(e.cellHeight/2) + e.iconBorder.GetInt()
+
+	e.svgImg.HRef(src).
+		X(x - width.GetInt()/2).
+		Y(y).
+		Width(width.GetInt()).
+		Height(height.GetInt())
+
+	e.iconBottom = rulesDensity.Convert(int(height.GetFloat() + float64(y)))
 }
 
 func (e *SvgCell) SetText(text string) {
 	fontWeight := e.fontWeight.String()
 	fontStyle := e.fontStyle.String()
 
-	width, height := utilsText.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize)
-
 	cx, cy := e.calcSystem.GetCenter()
 
-	e.svgText.X(cx - width/2).
-		Y(cy + height/2 - height/5).
-		Text(text).
-		FontSize(e.fontSize).
-		FontFamily(e.fontFamily).
-		FontWeight(fontWeight)
+	hexBottomWidth := e.calcSystem.GetLayout().Size.X
+	textHorizontalSpace := rulesDensity.Convert(15)
+	iconSpace := rulesDensity.Convert(100) + 2*e.iconBorder
+	yHexagonTop := rulesDensity.Convert(cy) - e.cellHeight/2
+	yHexagonBottom := float64(rulesDensity.Convert(cy) + e.cellHeight/2)
+
+	var calcWidth float64
+	var textHeight int
+	var yText rulesDensity.Density
+	var counterLine = 0
+	for {
+		_, textHeight = utilsText.GetTextSize(text, e.fontFamily, fontWeight, fontStyle, e.fontSize)
+
+		// TEXT INSIDE HEX
+		// ____    +--------- yHexBottomToTextBottom
+		// \   |   |  |   / <- triangleSpace
+		//  \  | <-+  |  /
+		//   \ |      | /
+		//    \|______|/
+
+		yText = yHexagonTop + iconSpace + rulesDensity.Convert(textHeight*counterLine) + textHorizontalSpace
+		yHexBottomToTextBottom := yHexagonBottom - yText.GetFloat()
+		triangleSpace := math.Sin(math.Pi/5) * yHexBottomToTextBottom
+
+		calcWidth = 2*triangleSpace + hexBottomWidth - 5 //todo: 5 = border
+		if calcWidth <= hexBottomWidth {
+			return
+		}
+
+		lines := utilsText.WrapText(text, calcWidth, e.fontFamily, fontWeight, fontStyle, e.fontSize)
+		if len(lines) == 0 {
+			return
+		}
+
+		counterLine += 1
+		line := lines[0]
+		text = strings.Replace(text, line, "", 1)
+
+		//svgLine := factoryBrowser.NewTagSvgLine().
+		//	StrokeWidth(2).
+		//	Stroke("red").
+		//	X1(cx - int(calcWidth/2.0)).
+		//	X2(cx + int(calcWidth/2.0)).
+		//	Y1(yText.GetInt()).
+		//	Y2(yText.GetInt())
+		//e.svgGroup.Append(svgLine)
+
+		textWidth, _ := utilsText.GetTextSize(line, e.fontFamily, fontWeight, fontStyle, e.fontSize)
+
+		svgText := factoryBrowser.NewTagSvgText().
+			FontSize(e.fontSize).
+			FontFamily(e.fontFamily).
+			FontStyle(fontStyle).
+			FontWeight(fontWeight).
+			X(cx - textWidth/2).
+			Y(yText.GetInt()).
+			Text(line)
+
+		e.svgGroup.Append(svgText)
+	}
 }
 
 func (e *SvgCell) GetElement() (tagSvg any) {
@@ -255,6 +357,10 @@ func (e *Hexagon) Init(x, y, size int) {
 		Size:        hexagon.Point{X: float64(size), Y: float64(size)},
 		Origin:      hexagon.Point{X: float64(x), Y: float64(y)},
 	}
+}
+
+func (e *Hexagon) GetLayout() (layout hexagon.Layout) {
+	return e.layout
 }
 
 // GetColRow returns the column and row indices of the hexagon in the grid coordinate system.
@@ -310,14 +416,17 @@ func (e *Hexagon) convertManager(col, row int) {
 
 // GetPath generates a path for the hexagon's outline as a series of SVG-compatible commands based on its corners.
 func (e *Hexagon) GetPath() (path []string) {
-	points := hexagon.PolygonCorners(e.layout, e.hex)
+	//points := hexagon.PolygonCorners(e.layout, e.hex)
+
+	points := utilsDraw.Polygon(6, rulesDensity.Convert(int(e.layout.Size.X)-5), rulesDensity.Convert(e.cx), rulesDensity.Convert(e.cy), 0)
+
 	for k, point := range points {
 		if k == 0 {
-			path = append(path, fmt.Sprintf("M %.2f,%.2f ", point.X, point.Y))
+			path = append(path, fmt.Sprintf("M %.2f,%.2f ", point[0], point[1]))
 			continue
 		}
 
-		path = append(path, fmt.Sprintf("L %.2f,%.2f ", point.X, point.Y))
+		path = append(path, fmt.Sprintf("L %.2f,%.2f ", point[0], point[1]))
 	}
 	path = append(path, "z")
 	return
@@ -371,8 +480,21 @@ func (e *HexagonDraw) Draw(col, row int) {
 	}
 }
 
+func (e *HexagonDraw) SetImg(src string, width, height rulesDensity.Density) {
+	e.drawSystem.SetImg(src, width, height)
+}
+
 func (e *HexagonDraw) GetSvg() (tagSvg *html.TagSvg) {
 	return e.svg
+}
+
+type CellMenu struct {
+	Col        int
+	Row        int
+	Icon       string
+	IconWidth  rulesDensity.Density
+	IconHeight rulesDensity.Density
+	Text       string
 }
 
 func main() {
@@ -388,7 +510,7 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	size := 60
+	size := 100
 	hex := new(Hexagon)
 	hex.Init(0, 0, size)
 
@@ -405,34 +527,57 @@ func main() {
 	hexSvg.SetDrawSystem(cellSvg)
 	hexSvg.Init()
 
-	hexCanvas := new(HexagonDraw)
-	hexCanvas.SetDrawSystem(cellCanvas)
-	hexCanvas.Init()
+	//hexCanvas := new(HexagonDraw)
+	//hexCanvas.SetDrawSystem(cellCanvas)
+	//hexCanvas.Init()
 
-	mainSvg := factoryBrowser.NewTagSvg().ResizeToWindow()
+	mainSvg := factoryBrowser.NewTagSvg().Import("svg").ResizeToWindow()
 
-	for col := 0; col < int(float64(screenWidth)/(float64(size)*2.0*3.0/4.0))+2; col += 1 {
-		for row := 0; row < int(float64(screenHeight)/(float64(size)*math.Sqrt(3))+2)*2; row += 1 {
-
-			if (col+row)%2 != 0 {
-				continue
-			}
-
-			hexSvg.Draw(col, row)
-			hexSvg.DrawText(fmt.Sprintf("%v,%v", col, row))
-			mainSvg.Append(hexSvg.GetSvg())
-
-			hexCanvas.Draw(col, row)
-			hexCanvas.DrawText(fmt.Sprintf("%v, %v", col, row))
-			//time.Sleep(time.Nanosecond)
-		}
+	cellList := []CellMenu{
+		{Col: 2, Row: 2, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "simple loop"},
+		//{Col: 2, Row: 4, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "loop"},
+		//{Col: 1, Row: 3, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "loop"},
+		//{Col: 3, Row: 3, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "loop"},
+		//{1, 3}, {3, 3},
+		//{2, 4},
+		//{1, 5}, {3, 5},
+		//{2, 6},
 	}
 
-	stage.Append(mainSvg)
+	for _, cell := range cellList {
+		hexSvg.Draw(cell.Col, cell.Row)
+
+		hexSvg.SetImg(cell.Icon, cell.IconWidth, cell.IconHeight)
+		hexSvg.DrawText(cell.Text)
+		mainSvg.Append(hexSvg.GetSvg())
+
+		//hexCanvas.Draw(col, row)
+		//hexCanvas.DrawText(fmt.Sprintf("%v, %v", col, row))
+	}
+
+	//for col := 0; col < int(float64(screenWidth)/(float64(size)*2.0*3.0/4.0))+2; col += 1 {
+	//	for row := 0; row < int(float64(screenHeight)/(float64(size)*math.Sqrt(3))+2)*2; row += 1 {
+	//
+	//		if (col+row)%2 != 0 {
+	//			continue
+	//		}
+	//
+	//		hexSvg.Draw(col, row)
+	//		hexSvg.DrawText(fmt.Sprintf("%v,%v", col, row))
+	//		mainSvg.Append(hexSvg.GetSvg())
+	//
+	//		hexCanvas.Draw(col, row)
+	//		hexCanvas.DrawText(fmt.Sprintf("%v, %v", col, row))
+	//		//time.Sleep(time.Nanosecond)
+	//	}
+	//}
 
 	img := factoryBrowser.NewTagImg().Import("img")
+	time.Sleep(1000 * time.Millisecond)
 	img.Src(mainSvg.ToPng(), true)
 	stage.Append(img)
+
+	stage.Append(mainSvg)
 	//url := mainSvg.ToPngResized(0.5, 0.5)
 
 	//document.Call("getElementById", "test").Set("src", url)

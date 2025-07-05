@@ -7,9 +7,10 @@ type OrnamentSubtract struct {
 	AdjustY int
 }
 
-func (e *OrnamentSubtract) Init() {
+func (e *OrnamentSubtract) Init() (err error) {
 	e.OrnamentOpAmpSymbol.Init()
 	e.OrnamentOpAmpSymbol.SetSymbol("-")
 	e.OrnamentOpAmpSymbol.SetAdjustX(0)
-	e.OrnamentOpAmpSymbol.SetAdjustY(3)
+	e.OrnamentOpAmpSymbol.SetAdjustY(0)
+	return
 }

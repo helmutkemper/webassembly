@@ -98,7 +98,7 @@ func (e *DoubleLoopArrow) Init() (err error) {
 	e.stopButtonCircleSelectedColor = color.RGBA{R: 255, G: 0, B: 0, A: 255}
 	e.stopButtonBorderSelectedColor = color.RGBA{R: 0, G: 0, B: 255, A: 255}
 
-	e.arrowNormalColor = color.RGBA{R: 255, G: 120, B: 0, A: 255}
+	e.arrowNormalColor = color.RGBA{R: 255, G: 100, B: 0, A: 255}
 	e.backgroundNormalColor = color.RGBA{R: 255, G: 240, B: 240, A: 255}
 	e.stopButtonCircleNormalColor = color.RGBA{R: 255, G: 0, B: 0, A: 255}
 	e.stopButtonBorderNormalColor = color.RGBA{R: 0, G: 0, B: 255, A: 255}
@@ -148,7 +148,7 @@ func (e *DoubleLoopArrow) Update(x, y, width, height rulesDensity.Density) (err 
 	//e.svg.ViewBox([]int{0, 0, width, height})
 
 	margin := rulesDensity.Density(10)
-	r := rulesDensity.Density(30)
+	r := rulesDensity.Density(20)
 	s := rulesDensity.Density(40)
 
 	// Define the double loop arrow path data

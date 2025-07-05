@@ -14,10 +14,27 @@ import (
 // Português:
 //
 //	Exibe um objeto JavaScript convertido para JSON, útil para depuração.
-func ObjectToLog(label string, value js.Value) {
-	json := js.Global().Get("JSON")
-	str := json.Call("stringify", value)
-	log.Printf("%s: %s", label, str.String())
+func ObjectToLog(label string, value any) {
+	switch converted := value.(type) {
+	case js.Value:
+		json := js.Global().Get("JSON")
+		str := json.Call("stringify", converted)
+		log.Printf("%s: %s", label, str.String())
+	case []js.Value:
+		counter := 0
+		for {
+			tmp := converted[0]
+			json := js.Global().Get("JSON")
+			str := json.Call("stringify", tmp)
+			log.Printf("%s[%v]: %s", label, counter, str.String())
+
+			converted = converted[1:]
+			if len(converted) == 0 {
+				break
+			}
+			counter += 1
+		}
+	}
 }
 
 // ObjectTransformToLog

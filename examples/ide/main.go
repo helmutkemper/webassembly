@@ -6,6 +6,8 @@ import (
 	"github.com/helmutkemper/webassembly/browser/stage"
 	"github.com/helmutkemper/webassembly/examples/ide/devices"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
+	"github.com/helmutkemper/webassembly/examples/ide/hexagonMenu"
+	"github.com/helmutkemper/webassembly/examples/ide/manager"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/examples/ide/splashScreen"
@@ -222,45 +224,58 @@ func main() {
 
 	//mainStage.Append(resizeButton.GetSvg())
 
-	splash.Hide()
+	splash.AddText("Registering devices and functions")
 
 	stmLoop := new(devices.StatementLoop)
 	stmLoop.SetResizerButton(resizeButton)
 	stmLoop.SetDraggerButton(draggerButton)
 	stmLoop.SetGridAdjust(hex)
 	stmLoop.SetMainSvg(mainSvg)
-	stmLoop.SetPosition(150, 50)
-	_ = stmLoop.Init()
+	manager.Manager.Register(stmLoop)
 
 	stmAdd := new(devices.StatementAdd)
 	stmAdd.SetResizerButton(resizeButton)
 	stmAdd.SetDraggerButton(draggerButton)
 	stmAdd.SetGridAdjust(hex)
 	stmAdd.SetMainSvg(mainSvg)
-	stmAdd.SetPosition(300, 150)
-	_ = stmAdd.Init()
+	manager.Manager.Register(stmAdd)
 
 	stmSub := new(devices.StatementSub)
 	stmSub.SetResizerButton(resizeButton)
 	stmSub.SetDraggerButton(draggerButton)
 	stmSub.SetGridAdjust(hex)
 	stmSub.SetMainSvg(mainSvg)
-	stmSub.SetPosition(400, 250)
-	_ = stmSub.Init()
+	manager.Manager.Register(stmSub)
 
 	stmDiv := new(devices.StatementDiv)
 	stmDiv.SetResizerButton(resizeButton)
 	stmDiv.SetDraggerButton(draggerButton)
 	stmDiv.SetGridAdjust(hex)
 	stmDiv.SetMainSvg(mainSvg)
-	stmDiv.SetPosition(400, 450)
-	_ = stmDiv.Init()
+	manager.Manager.Register(stmDiv)
 
 	stmMul := new(devices.StatementMul)
 	stmMul.SetResizerButton(resizeButton)
 	stmMul.SetDraggerButton(draggerButton)
 	stmMul.SetGridAdjust(hex)
 	stmMul.SetMainSvg(mainSvg)
+	manager.Manager.Register(stmMul)
+
+	splash.Hide()
+
+	//-------------------------------------------------
+	stmLoop.SetPosition(150, 50)
+	_ = stmLoop.Init()
+
+	stmAdd.SetPosition(300, 150)
+	_ = stmAdd.Init()
+
+	stmSub.SetPosition(400, 250)
+	_ = stmSub.Init()
+
+	stmDiv.SetPosition(400, 450)
+	_ = stmDiv.Init()
+
 	stmMul.SetPosition(200, 450)
 	_ = stmMul.Init()
 
@@ -270,7 +285,9 @@ func main() {
 
 	//mainStage.Append(panel)
 
-	factoryBrowser.NewTagImg().Import("imgTest").Src(stmLoop.GetIcon(false), true)
+	ic := new(hexagonMenu.MakeIcon).GoBack()
+
+	factoryBrowser.NewTagImg().Import("imgTest").Src(ic, true)
 
 	doc := js.Global().Get("document")
 
@@ -461,3 +478,20 @@ func (e *HexagonDraw) Draw(col, row int) {
 func (e *HexagonDraw) GetSvg() (tagSvg *html.TagSvg) {
 	return e.svg
 }
+
+/*
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+<path d=
+
+"M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96l160 0 0 32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32l0 32L160 64C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96l-160 0 0-32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-32 160 0c88.4 0 160-71.6 160-160z"
+
+/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="100" y="100" width="200" height="200"><style xmlns="http://www.w3.org/2000/svg">
+@font-face {
+	font-family: "FASolid";
+	src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/webfonts/fa-solid-900.woff2") format("woff2");
+	font-style: normal;
+}
+</style><path stroke-width="4" stroke="rgba(95,95,95,1)" fill="rgba(180,180,255,1)" d="M 200 100 L 150 186.60254 L 50 186.60254 L 0 100 L 50 13.39746 L 150 13.39746 L 200 100 z"></path><text xmlns="http://www.w3.org/2000/svg" font-family="FASolid" font-size="90" fill="white" x="55" y="110"></text><text xmlns="http://www.w3.org/2000/svg" font-family="Helvetica" font-size="20" fill="rgba(0,0,0,1)" x="75" y="160">Loop</text></svg>
+*/

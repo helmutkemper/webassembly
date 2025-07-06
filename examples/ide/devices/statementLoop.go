@@ -456,9 +456,93 @@ func (e *StatementLoop) GetIcon(disabled bool) (icon js.Value) {
 		Width(rulesIcon.Width.GetFloat()).Height(rulesIcon.Height.GetFloat()).
 		Append(iconPath, ornamentSvg, iconText, rulesIcon.FilterIcon, rulesIcon.FilterText)
 
-	w := rulesIcon.Width.GetFloat() * rulesIcon.SizeRatio
-	h := rulesIcon.Height.GetFloat() * rulesIcon.SizeRatio
-	return iconSvg.ToPngResized(w, h)
+	w := rulesIcon.Width * rulesIcon.SizeRatio
+	h := rulesIcon.Height * rulesIcon.SizeRatio
+	return iconSvg.ToPngResized(w.GetFloat(), h.GetFloat())
+}
+
+func (e *StatementLoop) GetInitialized() (initialized bool) {
+	return e.block.GetInitialized()
+}
+
+func (e *StatementLoop) GetWarning() (warning bool) {
+	return e.block.GetWarning()
+}
+
+func (e *StatementLoop) GetDragBlocked() (blocked bool) {
+	return e.block.GetDragLocked()
+}
+
+func (e *StatementLoop) GetDragEnable() (enabled bool) {
+	return e.block.GetDragEnable()
+}
+
+func (e *StatementLoop) GetResize() (enabled bool) {
+	return e.block.GetResizeEnable()
+}
+
+func (e *StatementLoop) GetResizeBlocked() (blocked bool) {
+	return e.block.GetResizeLocked()
+}
+
+func (e *StatementLoop) GetSelectBlocked() (blocked bool) {
+	return e.block.GetSelectLocked()
+}
+
+func (e *StatementLoop) GetSelected() (selected bool) {
+	return e.block.GetSelected()
 }
 
 func (e *StatementLoop) onConnectionClick() {}
+
+func (e *StatementLoop) GetID() (id string) {
+	return e.block.GetID()
+}
+
+func (e *StatementLoop) GetName() (name string) {
+	return e.block.GetName()
+}
+
+func (e *StatementLoop) GetX() (x rulesDensity.Density) {
+	return e.block.GetX()
+}
+
+func (e *StatementLoop) GetY() (y rulesDensity.Density) {
+	return e.block.GetY()
+}
+
+func (e *StatementLoop) SetX(x rulesDensity.Density) {
+	e.block.SetX(x)
+}
+
+func (e *StatementLoop) SetY(y rulesDensity.Density) {
+	e.block.SetY(y)
+}
+
+func (e *StatementLoop) SetWidth(width rulesDensity.Density) {
+	e.block.SetWidth(width)
+}
+
+func (e *StatementLoop) SetHeight(height rulesDensity.Density) {
+	e.block.SetHeight(height)
+}
+
+func (e *StatementLoop) SetSelected(selected bool) {
+	e.block.SetSelected(selected)
+}
+
+func (e *StatementLoop) SetDragEnable(enabled bool) {
+	e.block.SetDragEnable(enabled)
+}
+
+func (e *StatementLoop) GetResizeEnable() (enabled bool) {
+	return e.block.GetResizeEnable()
+}
+
+func (e *StatementLoop) SetResizeEnable(enabled bool) {
+	e.block.SetResizeEnable(enabled)
+}
+
+func (e *StatementLoop) GetZIndex() (zIndex int) {
+	return e.block.GetZIndex()
+}

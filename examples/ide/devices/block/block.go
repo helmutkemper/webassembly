@@ -119,16 +119,6 @@ type Block struct {
 func (e *Block) initRuleBook() {
 	e.ruleBook = make(map[string]func())
 
-	e.ruleBook["onInit"] = func() {
-		// English:   Inside the rules block, do not delete the commented functions, just comment or uncomment
-		//            the desired function.
-		// Português: Dentro do bloco de regras, não apague as funções comentadas, apenas comente ou descomente a
-		//            função desejada.
-
-		// Register the device in the general record of the system
-		e.Register()
-	}
-
 	// Rule: adjustToGrid
 	//
 	// English:
@@ -222,8 +212,8 @@ func (e *Block) initRuleBook() {
 		//            função desejada.
 
 		// rule, only one - start
-		e.draggingMoveDraggingSelectedOn()
-		//e.draggingMoveSelectedOnStage()
+		//e.draggingMoveDraggingSelectedOn()
+		e.draggingMoveSelectedOnStage()
 		// rule, only one - end
 	}
 
@@ -1216,34 +1206,7 @@ func (e *Block) Init() (err error) {
 		_ = e.ornament.Update(e.x, e.y, e.width, e.height)
 	}
 
-	e.ruleBook["onInit"]()
 	return
-}
-
-// Register
-//
-// English:
-//
-//	Records the element in the global identification record
-//
-// Português:
-//
-//	Registra o elemento no registro global de identificação
-func (e *Block) Register() {
-	manager.Manager.Register(e)
-}
-
-// Unregister
-//
-// English:
-//
-//	Unrecords the element in the global identification record
-//
-// Português:
-//
-//	Remove o registro do elemento no registro global de identificação
-func (e *Block) Unregister() {
-	_ = manager.Manager.Unregister(e)
 }
 
 // English:
@@ -2161,13 +2124,13 @@ func (e *Block) draggingMoveDraggingSelectedOn() {
 func (e *Block) draggingMoveSelectedOnStage() {
 	all := manager.Manager.Get()
 	for _, v := range all {
-		if v.GetDragEnable() && e.id != v.GetID() {
-			x := v.GetX()
-			y := v.GetY()
+		if v.(manager.BBox).GetDragEnable() && e.id != v.(manager.BBox).GetID() {
+			x := v.(manager.BBox).GetX()
+			y := v.(manager.BBox).GetY()
 			x += e.dragDeltaLeft
 			y += e.dragDeltaTop
-			v.SetX(x)
-			v.SetY(y)
+			v.(manager.BBox).SetX(x)
+			v.(manager.BBox).SetY(y)
 		}
 	}
 }
@@ -2188,33 +2151,6 @@ func (e *Block) selectAllElementsInsideBlockOff() {
 	for _, v := range list {
 		if v.GetSelected() && zIndex < v.GetZIndex() {
 			v.SetSelected(false)
-		}
-	}
-}
-
-func (e *Block) stageSelectDisableAll() {
-	all := manager.Manager.Get()
-	for _, v := range all {
-		if v.GetSelected() {
-			v.SetSelected(false)
-		}
-	}
-}
-
-func (e *Block) stageDragDisableAll() {
-	all := manager.Manager.Get()
-	for _, v := range all {
-		if v.GetDragEnable() {
-			v.SetDragEnable(false)
-		}
-	}
-}
-
-func (e *Block) stageResizeDisableAll() {
-	all := manager.Manager.Get()
-	for _, v := range all {
-		if v.GetResizeEnable() {
-			v.SetResizeEnable(false)
 		}
 	}
 }

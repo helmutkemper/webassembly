@@ -18,13 +18,13 @@ func (e *collision) DetectBoxContained(element manager.BBox) (list []manager.BBo
 
 	aId := element.GetID()
 	for _, value := range manager.Manager.Get() {
-		bId := value.GetID()
+		bId := value.(manager.BBox).GetID()
 		if aId == bId {
 			continue
 		}
 
-		if e.contained(element, value) {
-			list = append(list, value)
+		if e.contained(element, value.(manager.BBox)) {
+			list = append(list, value.(manager.BBox))
 		}
 	}
 
@@ -36,13 +36,13 @@ func (e *collision) DetectBoxCollision(element manager.BBox) (list []manager.BBo
 
 	aId := element.GetID()
 	for _, value := range manager.Manager.Get() {
-		bId := value.GetID()
+		bId := value.(manager.BBox).GetID()
 		if aId == bId {
 			continue
 		}
 
-		if e.collision(element, value) {
-			list = append(list, value)
+		if e.collision(element, value.(manager.BBox)) {
+			list = append(list, value.(manager.BBox))
 		}
 	}
 
@@ -54,17 +54,17 @@ func (e *collision) DetectBoxCollisionNotContained(element manager.BBox) (list [
 
 	aId := element.GetID()
 	for _, value := range manager.Manager.Get() {
-		bId := value.GetID()
+		bId := value.(manager.BBox).GetID()
 		if aId == bId {
 			continue
 		}
 
-		if e.contained(element, value) {
+		if e.contained(element, value.(manager.BBox)) {
 			continue
 		}
 
-		if e.collision(element, value) {
-			list = append(list, value)
+		if e.collision(element, value.(manager.BBox)) {
+			list = append(list, value.(manager.BBox))
 		}
 	}
 

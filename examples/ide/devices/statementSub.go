@@ -435,12 +435,12 @@ func (e *StatementSub) GetIconCategory() (name string) {
 }
 
 func (e *StatementSub) GetIcon(disabled bool) (icon js.Value) {
-	xc := rulesIcon.Width / 4
-	yc := rulesIcon.Height * 0.15
-	wOrn := rulesIcon.Width / 2
+	xc := rulesIcon.Width / rulesDensity.Density(4)
+	yc := rulesIcon.Height * rulesDensity.Density(0.15)
+	wOrn := rulesIcon.Width / rulesDensity.Density(2)
 	ornamentSvg := e.ornamentDrawIcon.
 		GetSvg().
-		X(xc.GetInt() + 5).
+		X(xc.GetInt() + rulesDensity.Density(5).GetInt()).
 		Y(yc.GetInt())
 
 	if disabled {
@@ -457,7 +457,7 @@ func (e *StatementSub) GetIcon(disabled bool) (icon js.Value) {
 		D(path)
 
 	iconText := factoryBrowser.NewTagSvgText().
-		X(85).
+		X(rulesDensity.Density(85).GetInt()).
 		Y(rulesIcon.TextY.GetInt()).
 		Text("Sub").
 		Fill(rulesIcon.TextColor).
@@ -469,7 +469,99 @@ func (e *StatementSub) GetIcon(disabled bool) (icon js.Value) {
 		Width(rulesIcon.Width.GetFloat()).Height(rulesIcon.Height.GetFloat()).
 		Append(iconPath, ornamentSvg, iconText, rulesIcon.FilterIcon, rulesIcon.FilterText)
 
-	w := rulesIcon.Width.GetFloat() * rulesIcon.SizeRatio
-	h := rulesIcon.Height.GetFloat() * rulesIcon.SizeRatio
-	return iconSvg.ToPngResized(w, h)
+	w := rulesIcon.Width * rulesIcon.SizeRatio
+	h := rulesIcon.Height * rulesIcon.SizeRatio
+	return iconSvg.ToPngResized(w.GetFloat(), h.GetFloat())
+}
+
+func (e *StatementSub) GetInitialized() (initialized bool) {
+	return e.block.GetInitialized()
+}
+
+func (e *StatementSub) GetWarning() (warning bool) {
+	return e.block.GetWarning()
+}
+
+func (e *StatementSub) GetDragBlocked() (blocked bool) {
+	return e.block.GetDragLocked()
+}
+
+func (e *StatementSub) GetDragEnable() (enabled bool) {
+	return e.block.GetDragEnable()
+}
+
+func (e *StatementSub) GetResize() (enabled bool) {
+	return e.block.GetResizeEnable()
+}
+
+func (e *StatementSub) GetResizeBlocked() (blocked bool) {
+	return e.block.GetResizeLocked()
+}
+
+func (e *StatementSub) GetSelectBlocked() (blocked bool) {
+	return e.block.GetSelectLocked()
+}
+
+func (e *StatementSub) GetSelected() (selected bool) {
+	return e.block.GetSelected()
+}
+
+func (e *StatementSub) GetID() (id string) {
+	return e.block.GetID()
+}
+
+func (e *StatementSub) GetName() (name string) {
+	return e.block.GetName()
+}
+
+func (e *StatementSub) GetWidth() (width rulesDensity.Density) {
+	return e.block.GetWidth()
+}
+
+func (e *StatementSub) GetHeight() (height rulesDensity.Density) {
+	return e.block.GetHeight()
+}
+
+func (e *StatementSub) GetX() (x rulesDensity.Density) {
+	return e.block.GetX()
+}
+
+func (e *StatementSub) GetY() (y rulesDensity.Density) {
+	return e.block.GetY()
+}
+
+func (e *StatementSub) SetX(x rulesDensity.Density) {
+	e.block.SetX(x)
+}
+
+func (e *StatementSub) SetY(y rulesDensity.Density) {
+	e.block.SetY(y)
+}
+
+func (e *StatementSub) SetWidth(width rulesDensity.Density) {
+	e.block.SetWidth(width)
+}
+
+func (e *StatementSub) SetHeight(height rulesDensity.Density) {
+	e.block.SetHeight(height)
+}
+
+func (e *StatementSub) SetSelected(selected bool) {
+	e.block.SetSelected(selected)
+}
+
+func (e *StatementSub) SetDragEnable(enabled bool) {
+	e.block.SetDragEnable(enabled)
+}
+
+func (e *StatementSub) GetResizeEnable() (enabled bool) {
+	return e.block.GetResizeEnable()
+}
+
+func (e *StatementSub) SetResizeEnable(enabled bool) {
+	e.block.SetResizeEnable(enabled)
+}
+
+func (e *StatementSub) GetZIndex() (zIndex int) {
+	return e.block.GetZIndex()
 }

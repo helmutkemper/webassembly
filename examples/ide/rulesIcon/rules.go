@@ -10,15 +10,22 @@ import (
 var BorderColor = color.RGBA{R: 0x5F, G: 0x5F, B: 0x5F, A: 0xFF}
 var FillColor = color.RGBA{R: 180, G: 180, B: 255, A: 255}
 var TextColor = color.RGBA{R: 0, G: 0, B: 0, A: 255}
-var BorderWidth = rulesDensity.Convert(4)
-var TextY = rulesDensity.Convert(160)
+var CategoryIconColor = color.RGBA{R: 0xf8, G: 0xf8, B: 0xef, A: 0xff}
+var BorderWidth = rulesDensity.Density(4)
+var TextY = rulesDensity.Density(160)
 var FontFamily = "Helvetica"
-var FontSize = rulesDensity.Convert(20)
-var Width = rulesDensity.Convert(200)
-var Height = rulesDensity.Convert(200)
-var SizeRatio = 0.5
+var FontWeight = "normal"
+var FontStyle = "normal"
+var FontSize = rulesDensity.Density(20)
+var Width = rulesDensity.Density(200)
+var Height = rulesDensity.Density(200)
+var SizeRatio = rulesDensity.Density(0.5)
 var FilterIcon *html.TagSvgFilter
 var FilterText *html.TagSvgFilter
+var IconX = rulesDensity.Density(60)
+var IconY = rulesDensity.Density(40)
+var IconWidth = rulesDensity.Density(80)
+var IconHeight = rulesDensity.Density(80)
 
 func init() {
 	FilterIcon = factoryBrowser.NewTagSvgFilter().Id("iconBlur").Append(

@@ -78,6 +78,10 @@ func Convert(value int) (p Density) {
 	return Density(float64(value) / density)
 }
 
+func ConvertFlt(value float64) (p Density) {
+	return Density(value / density)
+}
+
 // Density type
 //
 // English:

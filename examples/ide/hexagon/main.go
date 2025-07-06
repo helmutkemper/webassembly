@@ -533,44 +533,44 @@ func main() {
 
 	mainSvg := factoryBrowser.NewTagSvg().Import("svg").ResizeToWindow()
 
-	cellList := []CellMenu{
-		{Col: 2, Row: 2, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "simple loop"},
-		//{Col: 2, Row: 4, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "loop"},
-		//{Col: 1, Row: 3, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "loop"},
-		//{Col: 3, Row: 3, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "loop"},
-		//{1, 3}, {3, 3},
-		//{2, 4},
-		//{1, 5}, {3, 5},
-		//{2, 6},
-	}
-
-	for _, cell := range cellList {
-		hexSvg.Draw(cell.Col, cell.Row)
-
-		hexSvg.SetImg(cell.Icon, cell.IconWidth, cell.IconHeight)
-		hexSvg.DrawText(cell.Text)
-		mainSvg.Append(hexSvg.GetSvg())
-
-		//hexCanvas.Draw(col, row)
-		//hexCanvas.DrawText(fmt.Sprintf("%v, %v", col, row))
-	}
-
-	//for col := 0; col < int(float64(screenWidth)/(float64(size)*2.0*3.0/4.0))+2; col += 1 {
-	//	for row := 0; row < int(float64(screenHeight)/(float64(size)*math.Sqrt(3))+2)*2; row += 1 {
-	//
-	//		if (col+row)%2 != 0 {
-	//			continue
-	//		}
-	//
-	//		hexSvg.Draw(col, row)
-	//		hexSvg.DrawText(fmt.Sprintf("%v,%v", col, row))
-	//		mainSvg.Append(hexSvg.GetSvg())
-	//
-	//		hexCanvas.Draw(col, row)
-	//		hexCanvas.DrawText(fmt.Sprintf("%v, %v", col, row))
-	//		//time.Sleep(time.Nanosecond)
-	//	}
+	//cellList := []CellMenu{
+	//	{Col: 2, Row: 2, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "simple loop"},
+	//	//{Col: 2, Row: 4, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "loop"},
+	//	//{Col: 1, Row: 3, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "loop"},
+	//	//{Col: 3, Row: 3, Icon: "./icon.png", IconWidth: 100, IconHeight: 100, Text: "loop"},
+	//	//{1, 3}, {3, 3},
+	//	//{2, 4},
+	//	//{1, 5}, {3, 5},
+	//	//{2, 6},
 	//}
+
+	//for _, cell := range cellList {
+	//	hexSvg.Draw(cell.Col, cell.Row)
+	//
+	//	hexSvg.SetImg(cell.Icon, cell.IconWidth, cell.IconHeight)
+	//	hexSvg.DrawText(cell.Text)
+	//	mainSvg.Append(hexSvg.GetSvg())
+	//
+	//	//hexCanvas.Draw(col, row)
+	//	//hexCanvas.DrawText(fmt.Sprintf("%v, %v", col, row))
+	//}
+
+	for col := 0; col < int(float64(screenWidth)/(float64(size)*2.0*3.0/4.0))+2; col += 1 {
+		for row := 0; row < int(float64(screenHeight)/(float64(size)*math.Sqrt(3))+2)*2; row += 1 {
+
+			if (col+row)%2 != 0 {
+				continue
+			}
+
+			hexSvg.Draw(col, row)
+			hexSvg.DrawText(fmt.Sprintf("%v,%v", col, row))
+			mainSvg.Append(hexSvg.GetSvg())
+
+			//hexCanvas.Draw(col, row)
+			//hexCanvas.DrawText(fmt.Sprintf("%v, %v", col, row))
+			//time.Sleep(time.Nanosecond)
+		}
+	}
 
 	img := factoryBrowser.NewTagImg().Import("img")
 	time.Sleep(1000 * time.Millisecond)

@@ -976,6 +976,14 @@ func (e *Block) GetSelected() (selected bool) {
 	return e.selectEnable
 }
 
+func (e *Block) Append() {
+	e.ideStage.Append(e.block)
+}
+
+func (e *Block) Remove() {
+	e.ideStage.Remove(e.block)
+}
+
 // English:
 //
 // Português:
@@ -1001,7 +1009,7 @@ func (e *Block) createBlock(x, y, width, height rulesDensity.Density) {
 
 	// Append, js appendChild, it should be used only in the necessary elements on the stage.
 	// Any other visual element should be attached only when necessary.
-	e.ideStage.Append(e.block)
+	//e.ideStage.Append(e.block)
 
 	e.selectDiv = factoryBrowser.NewTagSvgRect().
 		X(x.GetInt()).

@@ -1,18 +1,15 @@
 package devices
 
 import (
-	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/math"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
-	"github.com/helmutkemper/webassembly/examples/ide/rulesIcon"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
-	"github.com/helmutkemper/webassembly/utilsDraw"
 	"log"
 	"syscall/js"
 )
@@ -38,6 +35,14 @@ type StatementSub struct {
 	gridAdjust rulesStage.GridAdjust
 }
 
+func (e *StatementSub) Append() {
+	e.block.Append()
+}
+
+func (e *StatementSub) Remove() {
+	e.block.Remove()
+}
+
 func (e *StatementSub) SetMainSvg(svg *html.TagSvg) {
 	e.block.SetMainSvg(svg)
 }
@@ -53,10 +58,6 @@ func (e *StatementSub) SetDraggerButton(draggerButton block.ResizeButton) {
 func (e *StatementSub) SetGridAdjust(gridAdjust rulesStage.GridAdjust) {
 	e.gridAdjust = gridAdjust
 	e.block.SetGridAdjust(gridAdjust)
-}
-
-func (e *StatementSub) ToPng() (pngData js.Value) {
-	return e.ornamentDraw.ToPngResized(float64(e.block.GetWidth()), float64(e.block.GetHeight()))
 }
 
 // SetWarning sets the visibility of the warning mark
@@ -434,45 +435,45 @@ func (e *StatementSub) GetIconCategory() (name string) {
 	return "Math"
 }
 
-func (e *StatementSub) GetIcon(disabled bool) (icon js.Value) {
-	xc := rulesIcon.Width / rulesDensity.Density(4)
-	yc := rulesIcon.Height * rulesDensity.Density(0.15)
-	wOrn := rulesIcon.Width / rulesDensity.Density(2)
-	ornamentSvg := e.ornamentDrawIcon.
-		GetSvg().
-		X(xc.GetInt() + rulesDensity.Density(5).GetInt()).
-		Y(yc.GetInt())
-
-	if disabled {
-		ornamentSvg.Filter("url(#iconBlur)")
-	}
-
-	_ = e.ornamentDrawIcon.Update(0, 0, wOrn, wOrn)
-
-	path := utilsDraw.PolygonPath(6, wOrn, wOrn, wOrn, 0)
-	iconPath := factoryBrowser.NewTagSvgPath().
-		StrokeWidth(rulesIcon.BorderWidth.GetInt()).
-		Stroke(rulesIcon.BorderColor).
-		Fill(rulesIcon.FillColor).
-		D(path)
-
-	iconText := factoryBrowser.NewTagSvgText().
-		X(rulesDensity.Density(85).GetInt()).
-		Y(rulesIcon.TextY.GetInt()).
-		Text("Sub").
-		Fill(rulesIcon.TextColor).
-		FontFamily(rulesIcon.FontFamily).
-		//Filter("url(#textBlur)").
-		FontSize(rulesIcon.FontSize.GetInt())
-
-	iconSvg := factoryBrowser.NewTagSvg().
-		Width(rulesIcon.Width.GetFloat()).Height(rulesIcon.Height.GetFloat()).
-		Append(iconPath, ornamentSvg, iconText, rulesIcon.FilterIcon, rulesIcon.FilterText)
-
-	w := rulesIcon.Width * rulesIcon.SizeRatio
-	h := rulesIcon.Height * rulesIcon.SizeRatio
-	return iconSvg.ToPngResized(w.GetFloat(), h.GetFloat())
-}
+//func (e *StatementSub) GetIcon(disabled bool) (icon []js.Value) {
+//	xc := rulesIcon.Width / rulesDensity.Density(4)
+//	yc := rulesIcon.Height * rulesDensity.Density(0.15)
+//	wOrn := rulesIcon.Width / rulesDensity.Density(2)
+//	ornamentSvg := e.ornamentDrawIcon.
+//		GetSvg().
+//		X(xc.GetInt() + rulesDensity.Density(5).GetInt()).
+//		Y(yc.GetInt())
+//
+//	if disabled {
+//		ornamentSvg.Filter("url(#iconBlur)")
+//	}
+//
+//	_ = e.ornamentDrawIcon.Update(0, 0, wOrn, wOrn)
+//
+//	path := utilsDraw.PolygonPath(6, wOrn, wOrn, wOrn, 0)
+//	iconPath := factoryBrowser.NewTagSvgPath().
+//		StrokeWidth(rulesIcon.BorderWidth.GetInt()).
+//		Stroke(rulesIcon.BorderColor).
+//		Fill(rulesIcon.FillColor).
+//		D(path)
+//
+//	iconText := factoryBrowser.NewTagSvgText().
+//		X(rulesDensity.Density(85).GetInt()).
+//		Y(rulesIcon.TextY.GetInt()).
+//		Text("Sub").
+//		Fill(rulesIcon.TextColor).
+//		FontFamily(rulesIcon.FontFamily).
+//		//Filter("url(#textBlur)").
+//		FontSize(rulesIcon.FontSize.GetInt())
+//
+//	iconSvg := factoryBrowser.NewTagSvg().
+//		Width(rulesIcon.Width.GetFloat()).Height(rulesIcon.Height.GetFloat()).
+//		Append(iconPath, ornamentSvg, iconText, rulesIcon.FilterIcon, rulesIcon.FilterText)
+//
+//	w := rulesIcon.Width * rulesIcon.SizeRatio
+//	h := rulesIcon.Height * rulesIcon.SizeRatio
+//	return iconSvg.ToCanvas(w.GetFloat(), h.GetFloat())
+//}
 
 func (e *StatementSub) GetInitialized() (initialized bool) {
 	return e.block.GetInitialized()

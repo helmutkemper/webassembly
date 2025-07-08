@@ -1,3 +1,54 @@
+//         ⋯⋯⋯⋯⋯⋯⋯⋯⋯⋯
+//      ⋰              ⋱
+//    ⋰                  ⋱
+//  ⋰                      ⋱
+// ⋮                        ⋮
+// ⋮                        ⋮
+// ⋮                        ⋮
+//  ⋱                      ⋰
+//    ⋱                  ⋰
+//      ⋱              ⋰
+//         ⋯⋯⋯⋯⋯⋯⋯⋯⋯⋯
+
+//       ⋯⋯⋯⋯⋯⋯⋯
+//    ⋰           ⋱
+//  ⋰               ⋱
+// ⋮                 ⋮
+// ⋮                 ⋮
+//  ⋱               ⋰
+//    ⋱           ⋰
+//       ⋯⋯⋯⋯⋯⋯⋯
+
+//     ⋯⋯⋯
+//  ⋰       ⋱
+// ⋮         ⋮
+//  ⋱       ⋰
+//     ⋯⋯⋯
+
+//  ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰
+//   ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮
+//  ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱
+// ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮
+//  ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰
+//   ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮
+//  ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱
+// ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮
+//  ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰
+//   ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮
+//  ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱
+// ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮
+//  ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰
+//   ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮
+//  ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱
+// ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮
+//  ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰
+//   ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮
+//  ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱
+// ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮
+//  ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰
+//   ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮         ⋮ ⋯⋯⋯ ⋮
+//  ⋰       ⋱       ⋰       ⋱       ⋰       ⋱       ⋰       ⋱
+
 package hexagonMenu
 
 import (
@@ -10,6 +61,7 @@ import (
 	"github.com/helmutkemper/webassembly/utilsDraw"
 	"github.com/helmutkemper/webassembly/utilsText"
 	"image/color"
+	"log"
 	"reflect"
 	"syscall/js"
 )
@@ -60,6 +112,12 @@ const (
 	// viewBox="0 0 512 512" source: https://fontawesome.com/icons/rotate-left?f=classic&s=solid
 	kFontAwesomeRotate = "M48.5 224L40 224c-13.3 0-24-10.7-24-24L16 72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8L48.5 224z"
 
+	// viewBox="0 0 448 512" source: https://fontawesome.com/icons/bars?f=classic&s=solid
+	kFontAwesomeBars = "M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"
+
+	// viewBox="0 0 512 512" source: https://fontawesome.com/icons/bug?f=classic&s=solid
+	kFontAwesomeBug = "M256 0c53 0 96 43 96 96l0 3.6c0 15.7-12.7 28.4-28.4 28.4l-135.1 0c-15.7 0-28.4-12.7-28.4-28.4l0-3.6c0-53 43-96 96-96zM41.4 105.4c12.5-12.5 32.8-12.5 45.3 0l64 64c.7 .7 1.3 1.4 1.9 2.1c14.2-7.3 30.4-11.4 47.5-11.4l112 0c17.1 0 33.2 4.1 47.5 11.4c.6-.7 1.2-1.4 1.9-2.1l64-64c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-64 64c-.7 .7-1.4 1.3-2.1 1.9c6.2 12 10.1 25.3 11.1 39.5l64.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c0 24.6-5.5 47.8-15.4 68.6c2.2 1.3 4.2 2.9 6 4.8l64 64c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0l-63.1-63.1c-24.5 21.8-55.8 36.2-90.3 39.6L272 240c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 239.2c-34.5-3.4-65.8-17.8-90.3-39.6L86.6 502.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l64-64c1.9-1.9 3.9-3.4 6-4.8C101.5 367.8 96 344.6 96 320l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64.3 0c1.1-14.1 5-27.5 11.1-39.5c-.7-.6-1.4-1.2-2.1-1.9l-64-64c-12.5-12.5-12.5-32.8 0-45.3z"
+
 	// https://fontawesome.com/icons/user-check?f=classic&s=solid
 	// https://fontawesome.com/icons/user-minus?f=classic&s=solid
 	// https://fontawesome.com/icons/user-plus?f=classic&s=solid
@@ -70,7 +128,11 @@ const (
 	// https://fontawesome.com/icons/shoe-prints?f=classic&s=solid
 )
 
-//
+var Menu *makeIcon
+
+func init() {
+	Menu = new(makeIcon)
+}
 
 type data struct {
 	iconX           rulesDensity.Density
@@ -90,63 +152,86 @@ type data struct {
 	category        string
 }
 
-type MakeIcon struct{}
+type makeIcon struct{}
 
-func (e MakeIcon) Process(mainSvg *html.TagSvg) {
+func (e makeIcon) Process(mainSvg *html.TagSvg) {
+	e.register()
+
 	size := rulesDensity.Density(50 + 6)
 	hexMenu := new(rulesStage.Hexagon)
 	hexMenu.Init(0, 0, size)
 
-	menuSvg := factoryBrowser.NewTagSvg().Width(rulesDensity.Density(600).GetInt()).Height(rulesDensity.Density(800).GetInt())
-	mainSvg.Append(menuSvg)
+	canvas := factoryBrowser.NewTagCanvas(800, 600).Import("canvas")
+	//menuSvg := factoryBrowser.NewTagSvg().Width(rulesDensity.Density(600).GetInt()).Height(rulesDensity.Density(800).GetInt())
+	//mainSvg.Append(menuSvg)
 
 	menuOrder := map[string]map[string][]int{
-		"Menu": {
-			"SysMath":   {2, 2},
-			"SysLoop":   {3, 3},
-			"SysDonate": {4, 4},
-			"SysSave":   {5, 5},
-			"SysUpload": {6, 6},
+		"MainMenu": {
+			"SysMenu":  {2, 2},
+			"SysBug":   {4, 2},
+			"SysTools": {5, 3},
 		},
+		//"Menu": {
+		//	"SysMath":   {1, 1},
+		//	"SysLoop":   {3, 1},
+		//	"SysDonate": {2, 2},
+		//	"SysSave":   {1, 3},
+		//	"SysUpload": {3, 3},
+		//},
 		"Loop": {
-			"SysLoop":   {3, 3},
-			"Loop":      {2, 4},
-			"SysGoBack": {4, 4},
+			//"SysLoop":   {2, 4},
+			"Loop": {1, 3},
+			//"SysGoBack": {1, 5},
 		},
 		"Math": {
-			"SysMath":   {2, 2},
-			"Add":       {2, 2},
-			"Sub":       {2, 4},
-			"Mul":       {1, 3},
-			"Div":       {3, 3},
+			//	"SysMath":   {2, 2},
+			"Add":       {3, 3},
+			"Sub":       {1, 5},
+			"Mul":       {2, 4},
+			"Div":       {3, 5},
 			"SysGoBack": {4, 4},
 		},
 	}
-	for category, categoryList := range menuOrder {
-		for name, position := range categoryList {
 
+	icons := manager.Manager.GetIcons()
+	for category, categoryList := range icons {
+		for name := range categoryList {
+			log.Printf("%v, %v", category, name)
 		}
 	}
 
-	for category, categoryList := range manager.Manager.GetMenu() {
-		for name, control := range categoryList {
-			position, found := menuOrder[category][name]
+	for category, categoryList := range menuOrder {
+		for name, position := range categoryList {
+			systemIcon, found := icons[category][name]
+
+			//log.Printf("category: %v", category)
+			//log.Printf("name: %v", name)
+			//log.Printf("found: %v", found)
+
+			if !found {
+				systemIcon, found = icons["Main"][name]
+			}
+
 			if !found {
 				continue
 			}
 
+			//log.Printf("found sys: %v", found)
+
 			hexMenu.SetRowCol(position[0], position[1])
 			cx, cy := hexMenu.GetCenter()
-			icon := factoryBrowser.NewTagSvgImage().
-				HRef(control.Icon).
-				X(cx.GetInt()).
-				Y(cy.GetInt())
-			menuSvg.Append(icon)
+			//icon := factoryBrowser.NewTagSvgImage().
+			//	//AddStyle("opacity", 0.0).
+			//	HRef(systemIcon).
+			//	X(cx.GetInt()).
+			//	Y(cy.GetInt())
+			canvas.DrawImage(systemIcon[kPipeLineAttention1], cx.GetInt(), cy.GetInt())
+			//menuSvg.Append(icon)
 		}
 	}
 }
 
-func (e MakeIcon) getIcon(data data) (png js.Value) {
+func (e makeIcon) getIcon(data data) (png js.Value) {
 
 	if data.iconViewBox == nil {
 		data.iconViewBox = []int{0, 0, 512, 512}
@@ -254,144 +339,374 @@ func (e MakeIcon) getIcon(data data) (png js.Value) {
 
 	w := rulesIcon.Width * rulesIcon.SizeRatio
 	h := rulesIcon.Height * rulesIcon.SizeRatio
-	return svgIcon.ToPngResized(w.GetFloat(), h.GetFloat())
+	return svgIcon.ToCanvas(w.GetFloat(), h.GetFloat())
 }
 
-func (e MakeIcon) register() {
-
+func (e makeIcon) register() {
+	manager.Manager.RegisterIcon(e.getBug())
+	//manager.Manager.RegisterIcon(e.getMath())
+	//manager.Manager.RegisterIcon(e.getLoop())
+	//manager.Manager.RegisterIcon(e.getTools())
+	//manager.Manager.RegisterIcon(e.getConfig())
+	//manager.Manager.RegisterIcon(e.getGraph())
+	//manager.Manager.RegisterIcon(e.getMenu())
+	//manager.Manager.RegisterIcon(e.getDonate())
+	//manager.Manager.RegisterIcon(e.getSave())
+	//manager.Manager.RegisterIcon(e.getShare())
+	//manager.Manager.RegisterIcon(e.getRetweet())
+	//manager.Manager.RegisterIcon(e.getServer())
+	//manager.Manager.RegisterIcon(e.getUpload())
+	//manager.Manager.RegisterIcon(e.getGoBack())
 }
 
-func (e MakeIcon) GetMath() (png js.Value) {
-	return e.getIcon(
+const (
+	kPipeLineNormal int = iota
+	kPipeLineDisabled
+	kPipeLineSelected
+	kPipeLineAttention1
+	kPipeLineAttention2
+)
+
+func (e makeIcon) getBug() (register *Register) {
+	name := "SysBug"
+	category := "Main"
+	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine[kPipeLineNormal] = e.getIcon(
 		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Math",
-			path:        kFontAwesomeSquareRootVariable,
-			name:        "SysMath",
-			category:    "Main",
+			label:    "Bug",
+			path:     kFontAwesomeBug,
+			name:     name,
+			category: category,
 		},
 	)
-}
-
-func (e MakeIcon) GetLoop() (png js.Value) {
-	return e.getIcon(
+	iconPipeLine[kPipeLineDisabled] = e.getIcon(
 		data{
-			label:    "Loop",
-			path:     kFontAwesomeRepeat,
-			name:     "SysLoop",
-			category: "Main",
+			label:      "Bug",
+			path:       kFontAwesomeBug,
+			name:       name,
+			category:   category,
+			colorIcon:  rulesIcon.CategoryIconColorDisabled,
+			colorLabel: rulesIcon.TextColorDisabled,
 		},
 	)
-}
-
-func (e MakeIcon) GetTools() (png js.Value) {
-	return e.getIcon(
+	iconPipeLine[kPipeLineSelected] = e.getIcon(
 		data{
-			label:    "Tools",
-			path:     kFontAwesomeScrewDriverWrench,
-			name:     "SysTools",
-			category: "Main",
+			label:      "Bug",
+			path:       kFontAwesomeBug,
+			name:       name,
+			category:   category,
+			colorIcon:  rulesIcon.CategoryIconColorSelected,
+			colorLabel: rulesIcon.TextColorSelected,
 		},
 	)
-}
-
-func (e MakeIcon) GetConfig() (png js.Value) {
-	return e.getIcon(
+	iconPipeLine[kPipeLineAttention1] = e.getIcon(
 		data{
-			label:    "Config",
-			path:     kFontAwesomeSliders,
-			name:     "SysConfig",
-			category: "Main",
+			label:           "Bug",
+			path:            kFontAwesomeBug,
+			name:            name,
+			category:        category,
+			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+			colorBorder:     color.RGBA{R: 255, G: 0, B: 0, A: 255},
 		},
 	)
-}
-
-func (e MakeIcon) GetGraph() (png js.Value) {
-	return e.getIcon(
+	iconPipeLine[kPipeLineAttention2] = e.getIcon(
 		data{
-			iconViewBox: []int{0, 0, 640, 512},
-			label:       "Graph",
-			path:        kFontAwesomeWaveSquare,
-			name:        "SysGraph",
-			category:    "Hidden",
+			label:           "Bug",
+			path:            kFontAwesomeBug,
+			name:            name,
+			category:        category,
+			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+			colorLabel:      color.RGBA{R: 255, G: 0, B: 0, A: 255},
 		},
 	)
+
+	register = new(Register)
+	register.SetName(name)
+	register.SetCategory(category)
+	register.SetIcon(iconPipeLine)
+	return register
 }
 
-func (e MakeIcon) GetDonate() (png js.Value) {
-	return e.getIcon(
-		data{
-			label:    "Donate",
-			path:     kFontAwesomeSackDollar,
-			name:     "SysDonate",
-			category: "Hidden",
-		},
-	)
+//func (e makeIcon) getMath() (register *Register) {
+//	name := "SysMath"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			iconViewBox: []int{0, 0, 576, 512},
+//			label:       "Math",
+//			path:        kFontAwesomeSquareRootVariable,
+//			name:        name,
+//			category:    category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getLoop() (register *Register) {
+//	name := "SysLoop"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			label:    "Loop",
+//			path:     kFontAwesomeRepeat,
+//			name:     name,
+//			category: category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getTools() (register *Register) {
+//	name := "SysTools"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			label:    "Tools",
+//			path:     kFontAwesomeScrewDriverWrench,
+//			name:     name,
+//			category: category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getConfig() (register *Register) {
+//	name := "SysConfig"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			label:    "Config",
+//			path:     kFontAwesomeSliders,
+//			name:     name,
+//			category: category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getGraph() (register *Register) {
+//	name := "SysGraph"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			iconViewBox: []int{0, 0, 640, 512},
+//			label:       "Graph",
+//			path:        kFontAwesomeWaveSquare,
+//			name:        name,
+//			category:    category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getMenu() (register *Register) {
+//	name := "SysMenu"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			iconViewBox:     []int{0, 0, 448, 512},
+//			label:           "Menu",
+//			path:            kFontAwesomeBars,
+//			name:            name,
+//			category:        category,
+//			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+//			colorBorder:     color.RGBA{R: 255, G: 0, B: 0, A: 255},
+//			//colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getDonate() (register *Register) {
+//	name := "SysDonate"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			label:    "Donate",
+//			path:     kFontAwesomeSackDollar,
+//			name:     name,
+//			category: category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getSave() (register *Register) {
+//	name := "SysSave"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			label:    "Save",
+//			path:     kFontAwesomeDownload,
+//			name:     name,
+//			category: category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getShare() (register *Register) {
+//	name := "SysShare"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			label:    "Share",
+//			path:     kFontAwesomeShareNodes,
+//			name:     name,
+//			category: category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getRetweet() (register *Register) {
+//	name := "SysRetweet"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			iconViewBox: []int{0, 0, 576, 512},
+//			label:       "Retweet",
+//			path:        kFontAwesomeReTweet,
+//			name:        name,
+//			category:    category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getServer() (register *Register) {
+//	name := "SysServer"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			label:    "Server",
+//			path:     kFontAwesomeServer,
+//			name:     name,
+//			category: category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getUpload() (register *Register) {
+//	name := "SysUpload"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			label:    "Upload",
+//			path:     kFontAwesomeUpload,
+//			name:     name,
+//			category: category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+//
+//func (e makeIcon) getGoBack() (register *Register) {
+//	name := "SysGoBack"
+//	category := "Main"
+//	icon := e.getIcon(
+//		data{
+//			label:    "Back",
+//			path:     kFontAwesomeRotate,
+//			name:     name,
+//			category: category,
+//		},
+//	)
+//
+//	register = new(Register)
+//	register.SetName(name)
+//	register.SetCategory(category)
+//	register.SetIcon(icon)
+//	return register
+//}
+
+type Register struct {
+	icon     []js.Value
+	name     string
+	category string
 }
 
-func (e MakeIcon) GetSave() (png js.Value) {
-	return e.getIcon(
-		data{
-			label:    "Save",
-			path:     kFontAwesomeDownload,
-			name:     "SysSave",
-			category: "Main",
-		},
-	)
+func (e *Register) SetName(name string) {
+	e.name = name
 }
 
-func (e MakeIcon) GetShare() (png js.Value) {
-	return e.getIcon(
-		data{
-			label:    "Share",
-			path:     kFontAwesomeShareNodes,
-			name:     "SysShare",
-			category: "Main",
-		},
-	)
+func (e *Register) SetCategory(category string) {
+	e.category = category
 }
 
-func (e MakeIcon) GetRetweet() (png js.Value) {
-	return e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Retweet",
-			path:        kFontAwesomeReTweet,
-			name:        "SysRetweet",
-			category:    "Hidden",
-		},
-	)
+func (e *Register) SetIcon(icon []js.Value) {
+	e.icon = icon
 }
 
-func (e MakeIcon) GetServer() (png js.Value) {
-	return e.getIcon(
-		data{
-			label:    "Server",
-			path:     kFontAwesomeServer,
-			name:     "SysServer",
-			category: "Hidden",
-		},
-	)
+func (e *Register) GetIconName() (name string) {
+	return e.name
 }
 
-func (e MakeIcon) GetUpload() (png js.Value) {
-	return e.getIcon(
-		data{
-			label:    "Upload",
-			path:     kFontAwesomeUpload,
-			name:     "SysUpload",
-			category: "Hidden",
-		},
-	)
+func (e *Register) GetIconCategory() (category string) {
+	return e.category
 }
 
-func (e MakeIcon) GoBack() (png js.Value) {
-	return e.getIcon(
-		data{
-			label:    "Back",
-			path:     kFontAwesomeRotate,
-			name:     "SysGoBack",
-			category: "Generic",
-		},
-	)
+func (e *Register) GetIcon() (icon []js.Value) {
+	return e.icon
 }

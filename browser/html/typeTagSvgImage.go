@@ -2699,6 +2699,64 @@ func (e *TagSvgImage) Style(value string) (ref *TagSvgImage) {
 	return e
 }
 
+func (e *TagSvgImage) AddStyle(key string, value any) (ref *TagSvgImage) {
+	switch converted := value.(type) {
+	case string:
+		e.selfElement.Get("style").Set(key, converted)
+	case color.RGBA:
+		e.selfElement.Get("style").Set(key, RGBAToJs(converted))
+	default:
+		e.selfElement.Get("style").Set(key, converted)
+	}
+	return e
+}
+
+func (e *TagSvgImage) AddStyleConditional(condition bool, key string, trueValue, falseValue any) (ref *TagSvgImage) {
+	var value any
+	if condition {
+		value = trueValue
+	} else {
+		value = falseValue
+	}
+
+	switch converted := value.(type) {
+	case string:
+		e.selfElement.Get("style").Set(key, converted)
+	case color.RGBA:
+		e.selfElement.Get("style").Set(key, RGBAToJs(converted))
+	default:
+		e.selfElement.Get("style").Set(key, converted)
+	}
+	return e
+}
+
+func (e *TagSvgImage) GetStyleInt(key string) (value int) {
+	valueStr := e.selfElement.Get("style").Get(key).String()
+	i := len(valueStr) - 1
+	for ; i > 0; i -= 1 {
+		char := valueStr[i]
+		if char >= 0x30 && char <= 0x39 {
+			break
+		}
+	}
+	valueI64, err := strconv.ParseInt(valueStr[:i+1], 10, 64)
+	if err != nil {
+		log.Printf("GetStyleInt().ParseInt(%v).error: %v", valueStr[:i+1], err)
+		return
+	}
+
+	return int(valueI64)
+	return e.selfElement.Get("style").Get(key).Int()
+}
+
+func (e *TagSvgImage) GetStyle(key string) (value string) {
+	if e.selfElement.Get("style").Get(key).IsUndefined() {
+		return ""
+	}
+
+	return e.selfElement.Get("style").Get(key).String()
+}
+
 // #styling end -------------------------------------------------------------------------------------------------------
 
 // X

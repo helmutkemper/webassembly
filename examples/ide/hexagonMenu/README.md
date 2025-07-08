@@ -17,27 +17,47 @@ Depois procure por `<path d="M0 128C0 92.7 28.7 64 64...` e transforme em consta
 Em seguida, monte uma função, ajustando os parâmetros de acordo com as suas necessidades
 
 ```go
-func (e MakeIcon) GetUpload() (png js.Value) {
-	return e.getIcon(
-		data{
-			label:       "Upload",
-			path:        kFontAwesomeUpload,
-		},
-	)
+func (e makeIcon) getUpload() (register *Register) {
+  name := "SysUpload"
+  category := "Main"
+  icon := e.getIcon(
+    data{
+      label:    "Upload",
+      path:     kFontAwesomeUpload,
+      name:     name,
+      category: category,
+    },
+  )
+
+  register = new(Register)
+  register.SetName(name)
+  register.SetCategory(category)
+  register.SetIcon(icon)
+  return register
 }
 ```
 
 Caso o `viewBox`seja diferente, monte-o como no exemplo abaixo:
 
 ```go
-func (e MakeIcon) GetUpload() (png js.Value) {
-	return e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Upload",
-			path:        kFontAwesomeUpload,
-		},
-	)
+func (e makeIcon) getRetweet() (register *Register) {
+  name := "SysRetweet"
+  category := "Main"
+  icon := e.getIcon(
+    data{
+      iconViewBox: []int{0, 0, 576, 512},
+      label:       "Retweet",
+      path:        kFontAwesomeReTweet,
+      name:        name,
+      category:    category,
+    },
+  )
+
+  register = new(Register)
+  register.SetName(name)
+  register.SetCategory(category)
+  register.SetIcon(icon)
+  return register
 }
 ```
 
@@ -54,9 +74,11 @@ type data struct {
 	labelFontSize   rulesDensity.Density // [opcional]
 	labelY          rulesDensity.Density // [opcional]
 	path            string               // [obrigatório]
-	ColorIcon       color.RGBA           // [opcional]
-	ColorBorder     color.RGBA           // [opcional]
-	ColorLabel      color.RGBA           // [opcional]
-	ColorBackground color.RGBA           // [opcional]
+  colorIcon       color.RGBA           // [opcional]
+  colorBorder     color.RGBA           // [opcional]
+  colorLabel      color.RGBA           // [opcional]
+  colorBackground color.RGBA           // [opcional]
+  name            string               // [obrigatório]
+  category        string               // [obrigatório]
 }
 ```

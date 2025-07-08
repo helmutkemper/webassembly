@@ -57,6 +57,7 @@ func init() {
 
 type manager struct {
 	elements []any
+	icons    map[string]map[string][]js.Value
 }
 
 func (e *manager) Get() (elements []any) {
@@ -65,6 +66,7 @@ func (e *manager) Get() (elements []any) {
 
 func (e *manager) init() {
 	e.elements = make([]any, len(e.elements))
+	e.icons = make(map[string]map[string][]js.Value)
 }
 
 func (e *manager) Unregister(element any) (err error) {
@@ -82,26 +84,23 @@ func (e *manager) Unregister(element any) (err error) {
 
 func (e *manager) Register(element any) {
 	e.elements = append(e.elements, element)
+	e.RegisterIcon(element.(Icon))
 }
 
-func (e *manager) GetMenu() (menu map[string]map[string]Control) {
-	menu = make(map[string]map[string]Control)
-	for _, element := range e.elements {
-		category := element.(Icon).GetIconCategory()
-		name := element.(Icon).GetIconName()
-		icon := element.(Icon).GetIcon(false)
+func (e *manager) RegisterIcon(element Icon) {
+	category := element.(Icon).GetIconCategory()
+	name := element.(Icon).GetIconName()
+	icon := element.(Icon).GetIcon()
 
-		if menu[category] == nil {
-			menu[category] = make(map[string]Control)
-		}
-
-		menu[category][name] = Control{
-			Icon:    icon,
-			ToStage: element.(interfaces.ToStage),
-		}
+	if e.icons[category] == nil {
+		e.icons[category] = make(map[string][]js.Value)
 	}
 
-	return
+	e.icons[category][name] = icon
+}
+
+func (e *manager) GetIcons() (iconList map[string]map[string][]js.Value) {
+	return e.icons
 }
 
 type Control struct {

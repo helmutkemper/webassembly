@@ -5485,6 +5485,65 @@ func (e *TagSvg) ToPngResized(width, height float64) (pngData js.Value) {
 	return pngData
 }
 
+func (e *TagSvg) ToCanvas(width, height float64) (pngData js.Value) {
+	if (width == 0.0 || height == 0.0) &&
+		(e.width == 0.0 || e.height == 0.0) {
+		log.Print("ToPng().warning: tag svg has width or height equal to zero")
+	}
+
+	serializer := js.Global().Get("XMLSerializer").New()
+	svgText := serializer.Call("serializeToString", e.selfElement)
+
+	blob := js.Global().Get("Blob").New(
+		[]interface{}{svgText},
+		map[string]interface{}{
+			"type": "image/svg+xml;charset=utf-8",
+		},
+	)
+	url := js.Global().Get("URL").Call("createObjectURL", blob)
+
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+
+	canvas := js.Global().Get("document").Call("createElement", "canvas")
+
+	img := js.Global().Get("Image").New()
+	img.Set("onload", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+
+		ctx := canvas.Call("getContext", "2d")
+
+		// todo: melhorar isto e verificar valores iguais a zero
+		if width == 0.0 && height == 0.0 {
+			canvas.Set("width", e.width)
+			canvas.Set("height", e.height)
+			ctx.Call("drawImage", img, 0, 0)
+		} else if width <= 5.0 && height <= 5.0 {
+			width = float64(e.width) * width
+			height = float64(e.height) * height
+
+			canvas.Set("width", width)
+			canvas.Set("height", height)
+
+			ctx.Call("drawImage", img, 0, 0, int(width), int(height))
+		} else {
+			canvas.Set("width", width)
+			canvas.Set("height", height)
+
+			ctx.Call("drawImage", img, 0, 0, int(width), int(height))
+		}
+
+		pngData = canvas.Call("toDataURL", "image/png")
+		js.Global().Get("URL").Call("revokeObjectURL", url)
+
+		wg.Done()
+		return nil
+	}))
+	img.Set("src", url)
+
+	wg.Wait()
+	return canvas
+}
+
 // ToPng
 //
 // English:

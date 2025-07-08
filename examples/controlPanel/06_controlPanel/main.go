@@ -386,7 +386,7 @@ type OsmConf struct {
 	Latitude  float64         `wasmPanel:"type:latitude;default:-27.428935"`
 	Longitude float64         `wasmPanel:"type:longitude;default:-48.465274"`
 	Zoom      int64           `wasmPanel:"type:zoom;width:300;height:300;default:13"`
-	Url       string          `wasmPanel:"type:url;default:https\://tile.openstreetmap.org/%d/%d/%d.png"`
+	Url       string          `wasmPanel:"type:url;default:https://tile.openstreetmap.org/%d/%d/%d.png"`
 	Change    *OnOsmEvent     `wasmPanel:"type:listener;event:click;func:OnChangeEvent"`
 }
 

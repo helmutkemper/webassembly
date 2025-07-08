@@ -456,53 +456,81 @@ func (el *TagCanvas) DrawQRCodeColor(size int, content string, recoveryLevel qrc
 //
 // English:
 //
-//		Draws a preloaded image on the canvas element.
+//			Draws a preloaded image on the canvas element.
 //
-//		 Input:
-//		   image: js.Value object with a preloaded image.
+//			 Input:
+//			   image: js.Value object with a preloaded image.
+//	      coordinates:
+//	        option 1: image, dx, dy
+//	        option 2: image, dx, dy, dWidth, dHeight
+//	        option 3: image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
 //
-//	 Notes:
-//	   * Make sure the image is preloaded before calling this function.
+//		 Notes:
+//		   * Make sure the image is preloaded before calling this function.
 //
 // Português:
 //
-//		Desenha uma imagem pre carregada no elemento canvas.
+//			Desenha uma imagem pre carregada no elemento canvas.
 //
-//		 Entrada:
-//		   image: objeto js.Value com uma imagem pré carregada.
+//			 Entrada:
+//			   image: objeto js.Value com uma imagem pré carregada.
+//	      coordenadas:
+//	        opção 1: image, dx, dy
+//	        opção 2: image, dx, dy, dWidth, dHeight
+//	        opção 3: image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
 //
-//	 Notas:
-//	   * Garanta o pré carregamento da imagem antes de chamar esta função.
+//		 Notas:
+//		   * Garanta o pré carregamento da imagem antes de chamar esta função.
 func (el *TagCanvas) DrawImage(image interface{}, dataRect ...any) (ref *TagCanvas) {
-	// todo: documentar
-	var x, y, width, height any
-
-	/*
-		drawImage(image, dx, dy)
-		drawImage(image, dx, dy, dWidth, dHeight)
-		drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-	*/
-	//x = 0
-	//y = 0
-	//width = el.width
-	//height = el.height
-
-	switch len(dataRect) {
-	case 2:
-		x = dataRect[0]
-		y = dataRect[1]
-	case 4:
-		x = dataRect[0]
-		y = dataRect[1]
-		width = dataRect[2]
-		height = dataRect[3]
-	}
-
 	switch converted := image.(type) {
 	case Compatible:
-		el.context.Call("drawImage", converted.Get(), x, y, width, height)
+		switch len(dataRect) {
+		case 2:
+			dX := dataRect[0]
+			dY := dataRect[1]
+			el.context.Call("drawImage", converted.Get(), dX, dY)
+		case 4:
+			dX := dataRect[0]
+			dY := dataRect[1]
+			dWidth := dataRect[2]
+			dHeight := dataRect[3]
+			el.context.Call("drawImage", converted.Get(), dX, dY, dWidth, dHeight)
+		case 8:
+			sX := dataRect[0]
+			sY := dataRect[1]
+			sWidth := dataRect[2]
+			sHeight := dataRect[3]
+			dX := dataRect[4]
+			dY := dataRect[5]
+			dWidth := dataRect[6]
+			dHeight := dataRect[7]
+			el.context.Call("drawImage", converted.Get(), sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight)
+		}
+
 	case js.Value:
-		el.context.Call("drawImage", converted, x, y, width, height)
+		switch len(dataRect) {
+		case 2:
+			dX := dataRect[0]
+			dY := dataRect[1]
+			el.context.Call("drawImage", converted, dX, dY)
+		case 4:
+			dX := dataRect[0]
+			dY := dataRect[1]
+			dWidth := dataRect[2]
+			dHeight := dataRect[3]
+			el.context.Call("drawImage", converted, dX, dY, dWidth, dHeight)
+		case 8:
+			sX := dataRect[0]
+			sY := dataRect[1]
+			sWidth := dataRect[2]
+			sHeight := dataRect[3]
+			dX := dataRect[4]
+			dY := dataRect[5]
+			dWidth := dataRect[6]
+			dHeight := dataRect[7]
+			el.context.Call("drawImage", converted, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight)
+		}
+
 	case []byte:
 		err := el.byteToCanvas(converted, dataRect...)
 		if err != nil {

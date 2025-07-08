@@ -7,7 +7,6 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/devices"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/hexagonMenu"
-	"github.com/helmutkemper/webassembly/examples/ide/manager"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/examples/ide/splashScreen"
@@ -155,17 +154,17 @@ func main() {
 
 	splash.AddText("Creating Coordinate System")
 
-	cellCanvas := new(CanvasCell)
-	cellCanvas.SetCalcSystem(hex)
-	cellCanvas.SetWidth(rulesDensity.Density(screenWidth))
-	cellCanvas.SetHeight(rulesDensity.Density(screenHeight))
-	cellCanvas.CanvasInit()
+	//cellCanvas := new(CanvasCell)
+	//cellCanvas.SetCalcSystem(hex)
+	//cellCanvas.SetWidth(rulesDensity.Density(screenWidth))
+	//cellCanvas.SetHeight(rulesDensity.Density(screenHeight))
+	//cellCanvas.CanvasInit()
 
 	splash.AddText("Drawing work environment")
 
-	hexCanvas := new(HexagonDraw)
-	hexCanvas.SetDrawSystem(cellCanvas)
-	hexCanvas.Init()
+	//hexCanvas := new(HexagonDraw)
+	//hexCanvas.SetDrawSystem(cellCanvas)
+	//hexCanvas.Init()
 
 	colT := int(rulesDensity.Density(screenWidth).GetFloat()/(float64(size)*2.0*3.0/4.0)) + 2
 	rowT := int(rulesDensity.Density(screenHeight).GetFloat()/(float64(size)*math.Sqrt(3))+2) * 2
@@ -193,7 +192,7 @@ func main() {
 				continue
 			}
 
-			hexCanvas.Draw(col, row)
+			//hexCanvas.Draw(col, row)
 			//hexCanvas.DrawText(fmt.Sprintf("%v, %v", col, row))
 			//time.Sleep(time.Nanosecond)
 		}
@@ -231,53 +230,58 @@ func main() {
 	stmLoop.SetDraggerButton(draggerButton)
 	stmLoop.SetGridAdjust(hex)
 	stmLoop.SetMainSvg(mainSvg)
-	manager.Manager.Register(stmLoop)
+	_ = stmLoop.Init()
+	//manager.Manager.Register(stmLoop)
 
 	stmAdd := new(devices.StatementAdd)
 	stmAdd.SetResizerButton(resizeButton)
 	stmAdd.SetDraggerButton(draggerButton)
 	stmAdd.SetGridAdjust(hex)
 	stmAdd.SetMainSvg(mainSvg)
-	manager.Manager.Register(stmAdd)
+	_ = stmAdd.Init()
+	//manager.Manager.Register(stmAdd)
 
 	stmSub := new(devices.StatementSub)
 	stmSub.SetResizerButton(resizeButton)
 	stmSub.SetDraggerButton(draggerButton)
 	stmSub.SetGridAdjust(hex)
 	stmSub.SetMainSvg(mainSvg)
-	manager.Manager.Register(stmSub)
+	_ = stmSub.Init()
+	//manager.Manager.Register(stmSub)
 
 	stmDiv := new(devices.StatementDiv)
 	stmDiv.SetResizerButton(resizeButton)
 	stmDiv.SetDraggerButton(draggerButton)
 	stmDiv.SetGridAdjust(hex)
 	stmDiv.SetMainSvg(mainSvg)
-	manager.Manager.Register(stmDiv)
+	_ = stmDiv.Init()
+	//manager.Manager.Register(stmDiv)
 
 	stmMul := new(devices.StatementMul)
 	stmMul.SetResizerButton(resizeButton)
 	stmMul.SetDraggerButton(draggerButton)
 	stmMul.SetGridAdjust(hex)
 	stmMul.SetMainSvg(mainSvg)
-	manager.Manager.Register(stmMul)
+	_ = stmMul.Init()
+	//manager.Manager.Register(stmMul)
 
 	splash.Hide()
 
 	//-------------------------------------------------
 	stmLoop.SetPosition(150, 50)
-	_ = stmLoop.Init()
+	//stmLoop.Append()
 
 	stmAdd.SetPosition(300, 150)
-	_ = stmAdd.Init()
+	//stmAdd.Append()
 
 	stmSub.SetPosition(400, 250)
-	_ = stmSub.Init()
+	//stmSub.Append()
 
 	stmDiv.SetPosition(400, 450)
-	_ = stmDiv.Init()
+	//stmDiv.Append()
 
 	stmMul.SetPosition(200, 450)
-	_ = stmMul.Init()
+	//stmMul.Append()
 
 	if _, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)
@@ -285,9 +289,10 @@ func main() {
 
 	//mainStage.Append(panel)
 
-	ic := new(hexagonMenu.MakeIcon).GoBack()
+	//ic := new(hexagonMenu.MakeIcon).GoBack()
+	//factoryBrowser.NewTagImg().Import("imgTest").Src(ic.GetIcon(false), true)
 
-	factoryBrowser.NewTagImg().Import("imgTest").Src(ic, true)
+	hexagonMenu.Menu.Process(mainSvg)
 
 	doc := js.Global().Get("document")
 

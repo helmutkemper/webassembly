@@ -302,7 +302,7 @@ func (q *QRCode) Image(size int) image.Image {
 	}
 
 	// Output image.
-	rect := image.Rectangle{Min: image.Point{0, 0}, Max: image.Point{size, size}}
+	rect := image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: size, Y: size}}
 
 	// Saves a few bytes to have them in this order
 	p := color.Palette([]color.Color{q.BackgroundColor, q.ForegroundColor})

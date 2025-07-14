@@ -447,6 +447,7 @@ func (el *Tween) tickerRunnerPrepare(startValue, endValue float64) {
 		animationFrame = js.FuncOf(func(this js.Value, args []js.Value) any {
 			select {
 			case <-el.chanEnd:
+				js.Global().Call("requestAnimationFrame", animationFrame)
 				el.engineHasFunction = false
 				el.chanEnd = make(chan struct{}, 2)
 				return nil
@@ -457,20 +458,6 @@ func (el *Tween) tickerRunnerPrepare(startValue, endValue float64) {
 			return nil
 		})
 		js.Global().Call("requestAnimationFrame", animationFrame)
-
-		go func(el *Tween) {
-			for {
-				select {
-				case <-el.chanEnd:
-					el.engineHasFunction = false
-					el.chanEnd = make(chan struct{}, 2)
-					return
-				default:
-					el.tickerRunnerRun()
-					time.Sleep(time.Nanosecond)
-				}
-			}
-		}(el)
 	}
 }
 
@@ -494,10 +481,6 @@ func (el *Tween) tickerRunnerRun() {
 			el.end = true
 			el.End()
 		}
-
-		//if el.repeat == 0 && el.onEnd != nil {
-		//	el.onEnd(value, el.arguments)
-		//}
 
 		if el.repeat != 0 {
 			el.startTime = time.Now()

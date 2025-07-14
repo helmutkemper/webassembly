@@ -58,12 +58,15 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesIcon"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
+	"github.com/helmutkemper/webassembly/platform/easingTween"
 	"github.com/helmutkemper/webassembly/utilsDraw"
 	"github.com/helmutkemper/webassembly/utilsText"
 	"image/color"
 	"log"
+	"math"
 	"reflect"
 	"syscall/js"
+	"time"
 )
 
 const (
@@ -161,7 +164,7 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 	hexMenu := new(rulesStage.Hexagon)
 	hexMenu.Init(0, 0, size)
 
-	canvas := factoryBrowser.NewTagCanvas(800, 600).Import("canvas")
+	canvas := factoryBrowser.NewTagCanvas(1200, 600).Import("canvas")
 	//menuSvg := factoryBrowser.NewTagSvg().Width(rulesDensity.Density(600).GetInt()).Height(rulesDensity.Density(800).GetInt())
 	//mainSvg.Append(menuSvg)
 
@@ -225,7 +228,34 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 			//	HRef(systemIcon).
 			//	X(cx.GetInt()).
 			//	Y(cy.GetInt())
-			canvas.DrawImage(systemIcon[kPipeLineAttention1], cx.GetInt(), cy.GetInt())
+
+			new(easingTween.Tween).
+				SetDuration(5*time.Second).
+				SetValues(0, 1).
+				SetOnStepFunc(func(value, percentToComplete float64, arguments interface{}) {
+					canvas.ClearRect(0, 0, 1200, 600)
+					canvas.GetContext().Set("globalAlpha", math.Abs(value))
+					canvas.DrawImage(systemIcon[kPipeLineAttention1], int(500*value)+cx.GetInt(), cy.GetInt())
+					canvas.GetContext().Set("globalAlpha", 1)
+					canvas.DrawImage(systemIcon[kPipeLineAttention1], int(500*value)+cx.GetInt(), cy.GetInt()+100)
+				}).
+				SetLoops(-1).
+				//SetDoNotReverseMotion().
+				SetTweenFunc(easingTween.KEaseInOutBack).
+				Start()
+			//go func() {
+			//	for {
+			//		for i := 3; i != 5; i++ {
+			//			canvas.DrawImage(systemIcon[i], cx.GetInt(), cy.GetInt())
+			//			time.Sleep(1500 * time.Millisecond)
+			//		}
+			//	}
+			//}()
+			//canvas.DrawImage(systemIcon[kPipeLineSelected], 100+cx.GetInt(), cy.GetInt())
+			//canvas.DrawImage(systemIcon[kPipeLineNormal], 100+cx.GetInt(), 100+cy.GetInt())
+			//canvas.DrawImage(systemIcon[kPipeLineDisabled], cx.GetInt(), 100+cy.GetInt())
+			//canvas.DrawImage(systemIcon[kPipeLineAttention1], 100+cx.GetInt(), 200+cy.GetInt())
+			//canvas.DrawImage(systemIcon[kPipeLineAttention2], cx.GetInt(), 200+cy.GetInt())
 			//menuSvg.Append(icon)
 		}
 	}
@@ -406,17 +436,17 @@ func (e makeIcon) getBug() (register *Register) {
 			name:            name,
 			category:        category,
 			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorBorder:     color.RGBA{R: 255, G: 0, B: 0, A: 255},
 		},
 	)
 	iconPipeLine[kPipeLineAttention2] = e.getIcon(
 		data{
-			label:           "Bug",
-			path:            kFontAwesomeBug,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:      color.RGBA{R: 255, G: 0, B: 0, A: 255},
+			label:    "Bug",
+			path:     kFontAwesomeBug,
+			name:     name,
+			category: category,
+			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
+			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
 		},
 	)
 

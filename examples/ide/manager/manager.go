@@ -57,7 +57,7 @@ func init() {
 
 type manager struct {
 	elements []any
-	icons    map[string]map[string][]js.Value
+	icons    map[string]map[string]Icon
 }
 
 func (e *manager) Get() (elements []any) {
@@ -66,7 +66,7 @@ func (e *manager) Get() (elements []any) {
 
 func (e *manager) init() {
 	e.elements = make([]any, len(e.elements))
-	e.icons = make(map[string]map[string][]js.Value)
+	e.icons = make(map[string]map[string]Icon)
 }
 
 func (e *manager) Unregister(element any) (err error) {
@@ -88,18 +88,17 @@ func (e *manager) Register(element any) {
 }
 
 func (e *manager) RegisterIcon(element Icon) {
-	category := element.(Icon).GetIconCategory()
-	name := element.(Icon).GetIconName()
-	icon := element.(Icon).GetIcon()
+	category := element.GetIconCategory()
+	name := element.GetIconName()
 
 	if e.icons[category] == nil {
-		e.icons[category] = make(map[string][]js.Value)
+		e.icons[category] = make(map[string]Icon)
 	}
 
-	e.icons[category][name] = icon
+	e.icons[category][name] = element
 }
 
-func (e *manager) GetIcons() (iconList map[string]map[string][]js.Value) {
+func (e *manager) GetIcons() (iconList map[string]map[string]Icon) {
 	return e.icons
 }
 

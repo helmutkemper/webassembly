@@ -61,8 +61,6 @@ import (
 	"github.com/helmutkemper/webassembly/utilsDraw"
 	"github.com/helmutkemper/webassembly/utilsText"
 	"image/color"
-	"log"
-	"reflect"
 	"syscall/js"
 	"time"
 )
@@ -141,24 +139,6 @@ func init() {
 	Menu = new(makeIcon)
 }
 
-type data struct {
-	iconX           rulesDensity.Density
-	iconY           rulesDensity.Density
-	iconWidth       rulesDensity.Density
-	iconHeight      rulesDensity.Density
-	iconViewBox     []int
-	label           string
-	labelFontSize   rulesDensity.Density
-	labelY          rulesDensity.Density
-	path            string
-	colorIcon       color.RGBA
-	colorBorder     color.RGBA
-	colorLabel      color.RGBA
-	colorBackground color.RGBA
-	name            string
-	category        string
-}
-
 type makeIcon struct{}
 
 func (e makeIcon) Process(mainSvg *html.TagSvg) {
@@ -175,47 +155,37 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 	menuOrder := map[string]map[string][]int{
 		"MainMenu": {
 			"SysFileImport": {1, 1},
-			"SysMenu":       {2, 2},
-			"SysBug":        {4, 2},
-			"SysTools":      {5, 3},
+			"SysMenu":       {1, 3},
+			"SysBug":        {1, 5},
+			"SysTools":      {1, 7},
+			"SysBlank":      {5, 7},
 		},
 		"Menu": {
-			"SysMath":   {4, 2},
-			"SysLoop":   {3, 1},
+			"SysMath":   {1, 9},
+			"SysLoop":   {4, 8},
 			"SysDonate": {2, 2},
-			"SysSave":   {1, 3},
-			"SysUpload": {3, 3},
+			"SysSave":   {2, 4},
+			"SysUpload": {2, 6},
 		},
 		"Loop": {
-			"SysLoop":   {2, 4},
-			"Loop":      {1, 3},
-			"SysGoBack": {1, 5},
+			"SysLoop":   {2, 8},
+			"Loop":      {3, 1},
+			"SysGoBack": {3, 3},
 		},
 		"Math": {
-			"SysMath":   {4, 2},
-			"Add":       {3, 3},
-			"Sub":       {1, 5},
-			"Mul":       {2, 4},
-			"Div":       {3, 5},
+			"SysMath":   {3, 5},
+			"Add":       {3, 7},
+			"Sub":       {3, 9},
+			"Mul":       {3, 11},
+			"Div":       {4, 2},
 			"SysGoBack": {4, 4},
 		},
 	}
 
 	icons := manager.Manager.GetIcons()
-	for category, categoryList := range icons {
-		for name := range categoryList {
-			log.Printf("%v, %v", category, name)
-		}
-	}
-
 	for category, categoryList := range menuOrder {
 		for name, position := range categoryList {
 			systemIcon, found := icons[category][name]
-			_ = systemIcon
-
-			//log.Printf("category: %v", category)
-			//log.Printf("name: %v", name)
-			//log.Printf("found: %v", found)
 
 			if !found {
 				systemIcon, found = icons["Main"][name]
@@ -229,13 +199,8 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 
 			hexMenu.SetRowCol(position[0], position[1])
 			cx, cy := hexMenu.GetCenter()
-			systemIcon.SetStatus(int(kPipeLineNormal))
+			//systemIcon.SetStatus(int(KPipeLineNormal))
 			canvas.DrawImage(systemIcon.GetIcon(), cx.GetInt(), cy.GetInt())
-			//icon := factoryBrowser.NewTagSvgImage().
-			//	//AddStyle("opacity", 0.0).
-			//	HRef(systemIcon).
-			//	X(cx.GetInt()).
-			//	Y(cy.GetInt())
 
 			//new(easingTween.Tween).
 			//	SetDuration(5*time.Second).
@@ -254,17 +219,17 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 
 			//go func() {
 			//	for {
-			//		systemIcon.SetStatus(int(kPipeLineSelected))
+			//		systemIcon.SetStatus(int(KPipeLineSelected))
 			//		canvas.DrawImage(systemIcon.GetIcon(), cx.GetInt(), cy.GetInt())
-			//		systemIcon.SetStatus(int(kPipeLineNormal))
+			//		systemIcon.SetStatus(int(KPipeLineNormal))
 			//		canvas.DrawImage(systemIcon.GetIcon(), 100+cx.GetInt(), cy.GetInt())
-			//		systemIcon.SetStatus(int(kPipeLineDisabled))
+			//		systemIcon.SetStatus(int(KPipeLineDisabled))
 			//		canvas.DrawImage(systemIcon.GetIcon(), 200+cx.GetInt(), cy.GetInt())
-			//		systemIcon.SetStatus(int(kPipeLineAlert))
+			//		systemIcon.SetStatus(int(KPipeLineAlert))
 			//		canvas.DrawImage(systemIcon.GetIcon(), cx.GetInt(), 100+cy.GetInt())
-			//		systemIcon.SetStatus(int(kPipeLineAttention1))
+			//		systemIcon.SetStatus(int(KPipeLineAttention1))
 			//		canvas.DrawImage(systemIcon.GetIcon(), 100+cx.GetInt(), 100+cy.GetInt())
-			//		systemIcon.SetStatus(int(kPipeLineAttention2))
+			//		systemIcon.SetStatus(int(KPipeLineAttention2))
 			//		canvas.DrawImage(systemIcon.GetIcon(), 200+cx.GetInt(), 100+cy.GetInt())
 			//		time.Sleep(time.Nanosecond)
 			//	}
@@ -273,53 +238,9 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 	}
 }
 
-func (e makeIcon) getIcon(data data) (png js.Value) {
+func (e makeIcon) getIcon(data rulesIcon.Data) (png js.Value) {
 
-	if data.iconViewBox == nil {
-		data.iconViewBox = []int{0, 0, 512, 512}
-	}
-
-	if data.iconX == 0 {
-		data.iconX = rulesIcon.IconX
-	}
-
-	if data.iconY == 0 {
-		data.iconY = rulesIcon.IconY
-	}
-
-	if data.iconWidth == 0 {
-		data.iconWidth = rulesIcon.IconWidth
-	}
-
-	if data.iconHeight == 0 {
-		data.iconHeight = rulesIcon.IconHeight
-	}
-
-	if data.labelFontSize == 0 {
-		data.labelFontSize = rulesIcon.FontSize
-	}
-
-	if data.labelY == 0 {
-		data.labelY = rulesIcon.TextY
-	}
-
-	if reflect.DeepEqual(data.colorIcon, color.RGBA{}) {
-		//data.ColorIcon = rulesIcon.CategoryIconColor
-		data.colorIcon = rulesIcon.FillColor
-	}
-
-	if reflect.DeepEqual(data.colorBorder, color.RGBA{}) {
-		data.colorBorder = rulesIcon.BorderColor
-	}
-
-	if reflect.DeepEqual(data.colorLabel, color.RGBA{}) {
-		data.colorLabel = rulesIcon.TextColor
-	}
-
-	if reflect.DeepEqual(data.colorBackground, color.RGBA{}) {
-		//data.ColorBackground = rulesIcon.FillColor
-		data.colorBackground = rulesIcon.CategoryIconColor
-	}
+	data = rulesIcon.DataVerifySystemIcon(data)
 
 	// icon body
 	svgIcon := factoryBrowser.NewTagSvg().
@@ -340,31 +261,31 @@ func (e makeIcon) getIcon(data data) (png js.Value) {
 	// svg hexagon
 	hexDraw := factoryBrowser.NewTagSvgPath().
 		StrokeWidth(rulesIcon.BorderWidth.GetInt()).
-		Stroke(data.colorBorder).
-		Fill(data.colorBackground).
+		Stroke(data.ColorBorder).
+		Fill(data.ColorBackground).
 		D(hexPath)
 
 	// icon svg font awesome, body
 	icon := factoryBrowser.NewTagSvg().
-		ViewBox(data.iconViewBox).
-		X(data.iconX.GetInt()).
-		Y(data.iconY.GetInt()).
-		Width(data.iconWidth.GetInt()).
-		Height(data.iconHeight.GetInt())
+		ViewBox(data.IconViewBox).
+		X(data.IconX.GetInt()).
+		Y(data.IconY.GetInt()).
+		Width(data.IconWidth.GetInt()).
+		Height(data.IconHeight.GetInt())
 
 	// icon svg font awesome, path svg
 	iconPath := factoryBrowser.NewTagSvgPath().
-		Fill(data.colorIcon).
-		D(data.path)
+		Fill(data.ColorIcon).
+		D(data.Path)
 	icon.Append(iconPath)
 
 	// calc width label
 	widthLabel, _ := utilsText.GetTextSize(
-		data.label,
+		data.Label,
 		rulesIcon.FontFamily,
 		rulesIcon.FontWeight,
 		rulesIcon.FontStyle,
-		data.labelFontSize.GetInt(),
+		data.LabelFontSize.GetInt(),
 	)
 
 	// label, svg text
@@ -372,11 +293,11 @@ func (e makeIcon) getIcon(data data) (png js.Value) {
 		FontFamily(rulesIcon.FontFamily).
 		FontWeight(rulesIcon.FontWeight).
 		FontStyle(rulesIcon.FontStyle).
-		FontSize(data.labelFontSize.GetInt()).
-		Text(data.label).
-		Fill(data.colorLabel).
+		FontSize(data.LabelFontSize.GetInt()).
+		Text(data.Label).
+		Fill(data.ColorLabel).
 		X((rulesIcon.Width / 2).GetInt() - widthLabel/2).
-		Y(data.labelY.GetInt())
+		Y(data.LabelY.GetInt())
 	svgIcon.Append(hexDraw, icon, label)
 
 	w := rulesIcon.Width * rulesIcon.SizeRatio
@@ -385,6 +306,7 @@ func (e makeIcon) getIcon(data data) (png js.Value) {
 }
 
 func (e makeIcon) register() {
+	manager.Manager.RegisterIcon(e.getBlank())
 	manager.Manager.RegisterIcon(e.getBug())
 	manager.Manager.RegisterIcon(e.getMath())
 	manager.Manager.RegisterIcon(e.getLoop())
@@ -405,64 +327,61 @@ func (e makeIcon) register() {
 type IconStatus int
 
 const (
-	kPipeLineNormal IconStatus = iota
-	kPipeLineDisabled
-	kPipeLineSelected
-	kPipeLineAttention1
-	kPipeLineAttention2
-	kPipeLineAlert
+	KPipeLineNormal IconStatus = iota
+	KPipeLineDisabled
+	KPipeLineSelected
+	KPipeLineAttention1
+	KPipeLineAttention2
+	KPipeLineAlert
 )
 
-func (e makeIcon) getBug() (register *Register) {
-	name := "SysBug"
+func (e makeIcon) getBlank() (register *Register) {
+	name := "SysBlank"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			label:    "Bug",
-			path:     kFontAwesomeBug,
-			name:     name,
-			category: category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:          int(KPipeLineNormal),
+			Name:            name,
+			Category:        category,
+			ColorBackground: color.RGBA{R: 0xf8, G: 0xf8, B: 0xef, A: 0x8a},
+			ColorBorder:     color.RGBA{R: 0x5F, G: 0x5F, B: 0x5F, A: 0x8a},
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			label:      "Bug",
-			path:       kFontAwesomeBug,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorDisabled,
-			colorLabel: rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:          int(KPipeLineDisabled),
+			Name:            name,
+			Category:        category,
+			ColorBackground: color.RGBA{R: 0xf8, G: 0xf8, B: 0xef, A: 0x8a},
+			ColorBorder:     color.RGBA{R: 0x5F, G: 0x5F, B: 0x5F, A: 0x8a},
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			label:      "Bug",
-			path:       kFontAwesomeBug,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorSelected,
-			colorLabel: rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:          int(KPipeLineSelected),
+			Name:            name,
+			Category:        category,
+			ColorBackground: color.RGBA{R: 0xf8, G: 0xf8, B: 0xef, A: 0x8a},
+			ColorBorder:     color.RGBA{R: 0x5F, G: 0x5F, B: 0x5F, A: 0x8a},
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			label:           "Bug",
-			path:            kFontAwesomeBug,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:          int(KPipeLineAttention1),
+			Name:            name,
+			Category:        category,
+			ColorBackground: color.RGBA{R: 0xf8, G: 0xf8, B: 0xef, A: 0x8a},
+			ColorBorder:     color.RGBA{R: 0x5F, G: 0x5F, B: 0x5F, A: 0x8a},
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			label:    "Bug",
-			path:     kFontAwesomeBug,
-			name:     name,
-			category: category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:          int(KPipeLineAttention2),
+			Name:            name,
+			Category:        category,
+			ColorBackground: color.RGBA{R: 0xf8, G: 0xf8, B: 0xef, A: 0x8a},
+			//ColorBorder:     color.RGBA{R: 0x5F, G: 0x5F, B: 0x5F, A: 0x8a},
 		},
 	)
 
@@ -470,7 +389,63 @@ func (e makeIcon) getBug() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
+	return register
+}
+
+func (e makeIcon) getBug() (register *Register) {
+	name := "SysBug"
+	category := "Main"
+	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineNormal),
+			Label:    "Bug",
+			Path:     kFontAwesomeBug,
+			Name:     name,
+			Category: category,
+		},
+	)
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineDisabled),
+			Label:    "Bug",
+			Path:     kFontAwesomeBug,
+			Name:     name,
+			Category: category,
+		},
+	)
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineSelected),
+			Label:    "Bug",
+			Path:     kFontAwesomeBug,
+			Name:     name,
+			Category: category,
+		},
+	)
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention1),
+			Label:    "Bug",
+			Path:     kFontAwesomeBug,
+			Name:     name,
+			Category: category,
+		},
+	)
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention2),
+			Label:    "Bug",
+			Path:     kFontAwesomeBug,
+			Name:     name,
+			Category: category,
+		},
+	)
+
+	register = new(Register)
+	register.SetName(name)
+	register.SetCategory(category)
+	register.SetIcon(iconPipeLine)
 	return register
 }
 
@@ -478,57 +453,54 @@ func (e makeIcon) getMath() (register *Register) {
 	name := "SysMath"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Math",
-			path:        kFontAwesomeSquareRootVariable,
-			name:        name,
-			category:    category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineNormal),
+			IconViewBox: []int{0, 0, 576, 512},
+			Label:       "Math",
+			Path:        kFontAwesomeSquareRootVariable,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Math",
-			path:        kFontAwesomeSquareRootVariable,
-			name:        name,
-			category:    category,
-			colorIcon:   rulesIcon.CategoryIconColorDisabled,
-			colorLabel:  rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineDisabled),
+			IconViewBox: []int{0, 0, 576, 512},
+			Label:       "Math",
+			Path:        kFontAwesomeSquareRootVariable,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Math",
-			path:        kFontAwesomeSquareRootVariable,
-			name:        name,
-			category:    category,
-			colorIcon:   rulesIcon.CategoryIconColorSelected,
-			colorLabel:  rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineSelected),
+			IconViewBox: []int{0, 0, 576, 512},
+			Label:       "Math",
+			Path:        kFontAwesomeSquareRootVariable,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			iconViewBox:     []int{0, 0, 576, 512},
-			label:           "Math",
-			path:            kFontAwesomeSquareRootVariable,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineAttention1),
+			IconViewBox: []int{0, 0, 576, 512},
+			Label:       "Math",
+			Path:        kFontAwesomeSquareRootVariable,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Math",
-			path:        kFontAwesomeSquareRootVariable,
-			name:        name,
-			category:    category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineAttention2),
+			IconViewBox: []int{0, 0, 576, 512},
+			Label:       "Math",
+			Path:        kFontAwesomeSquareRootVariable,
+			Name:        name,
+			Category:    category,
 		},
 	)
 
@@ -536,7 +508,6 @@ func (e makeIcon) getMath() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -544,52 +515,49 @@ func (e makeIcon) getLoop() (register *Register) {
 	name := "SysLoop"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			label:    "Loop",
-			path:     kFontAwesomeRepeat,
-			name:     name,
-			category: category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineNormal),
+			Label:    "Loop",
+			Path:     kFontAwesomeRepeat,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			label:      "Loop",
-			path:       kFontAwesomeRepeat,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorDisabled,
-			colorLabel: rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineDisabled),
+			Label:    "Loop",
+			Path:     kFontAwesomeRepeat,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			label:      "Loop",
-			path:       kFontAwesomeRepeat,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorSelected,
-			colorLabel: rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineSelected),
+			Label:    "Loop",
+			Path:     kFontAwesomeRepeat,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			label:           "Loop",
-			path:            kFontAwesomeRepeat,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention1),
+			Label:    "Loop",
+			Path:     kFontAwesomeRepeat,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			label:    "Loop",
-			path:     kFontAwesomeRepeat,
-			name:     name,
-			category: category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention2),
+			Label:    "Loop",
+			Path:     kFontAwesomeRepeat,
+			Name:     name,
+			Category: category,
 		},
 	)
 
@@ -597,7 +565,6 @@ func (e makeIcon) getLoop() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -605,52 +572,49 @@ func (e makeIcon) getTools() (register *Register) {
 	name := "SysTools"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			label:    "Tools",
-			path:     kFontAwesomeScrewDriverWrench,
-			name:     name,
-			category: category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineNormal),
+			Label:    "Tools",
+			Path:     kFontAwesomeScrewDriverWrench,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			label:      "Tools",
-			path:       kFontAwesomeScrewDriverWrench,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorDisabled,
-			colorLabel: rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineDisabled),
+			Label:    "Tools",
+			Path:     kFontAwesomeScrewDriverWrench,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			label:      "Tools",
-			path:       kFontAwesomeScrewDriverWrench,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorSelected,
-			colorLabel: rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineSelected),
+			Label:    "Tools",
+			Path:     kFontAwesomeScrewDriverWrench,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			label:           "Tools",
-			path:            kFontAwesomeScrewDriverWrench,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention1),
+			Label:    "Tools",
+			Path:     kFontAwesomeScrewDriverWrench,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			label:    "Tools",
-			path:     kFontAwesomeScrewDriverWrench,
-			name:     name,
-			category: category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention2),
+			Label:    "Tools",
+			Path:     kFontAwesomeScrewDriverWrench,
+			Name:     name,
+			Category: category,
 		},
 	)
 
@@ -658,7 +622,6 @@ func (e makeIcon) getTools() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -666,52 +629,49 @@ func (e makeIcon) getConfig() (register *Register) {
 	name := "SysConfig"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			label:    "Config",
-			path:     kFontAwesomeSliders,
-			name:     name,
-			category: category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineNormal),
+			Label:    "Config",
+			Path:     kFontAwesomeSliders,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			label:      "Config",
-			path:       kFontAwesomeSliders,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorDisabled,
-			colorLabel: rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineDisabled),
+			Label:    "Config",
+			Path:     kFontAwesomeSliders,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			label:      "Config",
-			path:       kFontAwesomeSliders,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorSelected,
-			colorLabel: rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineSelected),
+			Label:    "Config",
+			Path:     kFontAwesomeSliders,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			label:           "Config",
-			path:            kFontAwesomeSliders,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention1),
+			Label:    "Config",
+			Path:     kFontAwesomeSliders,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			label:    "Config",
-			path:     kFontAwesomeSliders,
-			name:     name,
-			category: category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention2),
+			Label:    "Config",
+			Path:     kFontAwesomeSliders,
+			Name:     name,
+			Category: category,
 		},
 	)
 
@@ -719,7 +679,6 @@ func (e makeIcon) getConfig() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -727,57 +686,54 @@ func (e makeIcon) getGraph() (register *Register) {
 	name := "SysGraph"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 640, 512},
-			label:       "Graph",
-			path:        kFontAwesomeWaveSquare,
-			name:        name,
-			category:    category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineNormal),
+			IconViewBox: []int{0, 0, 640, 512},
+			Label:       "Graph",
+			Path:        kFontAwesomeWaveSquare,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 640, 512},
-			label:       "Graph",
-			path:        kFontAwesomeWaveSquare,
-			name:        name,
-			category:    category,
-			colorIcon:   rulesIcon.CategoryIconColorDisabled,
-			colorLabel:  rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineDisabled),
+			IconViewBox: []int{0, 0, 640, 512},
+			Label:       "Graph",
+			Path:        kFontAwesomeWaveSquare,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 640, 512},
-			label:       "Graph",
-			path:        kFontAwesomeWaveSquare,
-			name:        name,
-			category:    category,
-			colorIcon:   rulesIcon.CategoryIconColorSelected,
-			colorLabel:  rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineSelected),
+			IconViewBox: []int{0, 0, 640, 512},
+			Label:       "Graph",
+			Path:        kFontAwesomeWaveSquare,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			iconViewBox:     []int{0, 0, 640, 512},
-			label:           "Graph",
-			path:            kFontAwesomeWaveSquare,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineAttention1),
+			IconViewBox: []int{0, 0, 640, 512},
+			Label:       "Graph",
+			Path:        kFontAwesomeWaveSquare,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 640, 512},
-			label:       "Graph",
-			path:        kFontAwesomeWaveSquare,
-			name:        name,
-			category:    category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineAttention2),
+			IconViewBox: []int{0, 0, 640, 512},
+			Label:       "Graph",
+			Path:        kFontAwesomeWaveSquare,
+			Name:        name,
+			Category:    category,
 		},
 	)
 
@@ -785,7 +741,6 @@ func (e makeIcon) getGraph() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -793,60 +748,54 @@ func (e makeIcon) getMenu() (register *Register) {
 	name := "SysMenu"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			iconViewBox:     []int{0, 0, 448, 512},
-			label:           "Menu",
-			path:            kFontAwesomeBars,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorBorder:     color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			//colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineNormal),
+			IconViewBox: []int{0, 0, 448, 512},
+			Label:       "Menu",
+			Path:        kFontAwesomeBars,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 448, 512},
-			label:       "Menu",
-			path:        kFontAwesomeBars,
-			name:        name,
-			category:    category,
-			colorIcon:   rulesIcon.CategoryIconColorDisabled,
-			colorLabel:  rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineDisabled),
+			IconViewBox: []int{0, 0, 448, 512},
+			Label:       "Menu",
+			Path:        kFontAwesomeBars,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 448, 512},
-			label:       "Menu",
-			path:        kFontAwesomeBars,
-			name:        name,
-			category:    category,
-			colorIcon:   rulesIcon.CategoryIconColorSelected,
-			colorLabel:  rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineSelected),
+			IconViewBox: []int{0, 0, 448, 512},
+			Label:       "Menu",
+			Path:        kFontAwesomeBars,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			iconViewBox:     []int{0, 0, 448, 512},
-			label:           "Menu",
-			path:            kFontAwesomeBars,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineAttention1),
+			IconViewBox: []int{0, 0, 448, 512},
+			Label:       "Menu",
+			Path:        kFontAwesomeBars,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 448, 512},
-			label:       "Menu",
-			path:        kFontAwesomeBars,
-			name:        name,
-			category:    category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineAttention2),
+			IconViewBox: []int{0, 0, 448, 512},
+			Label:       "Menu",
+			Path:        kFontAwesomeBars,
+			Name:        name,
+			Category:    category,
 		},
 	)
 
@@ -854,7 +803,6 @@ func (e makeIcon) getMenu() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -862,52 +810,49 @@ func (e makeIcon) getDonate() (register *Register) {
 	name := "SysDonate"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			label:    "Donate",
-			path:     kFontAwesomeSackDollar,
-			name:     name,
-			category: category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineNormal),
+			Label:    "Donate",
+			Path:     kFontAwesomeSackDollar,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			label:      "Donate",
-			path:       kFontAwesomeSackDollar,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorDisabled,
-			colorLabel: rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineDisabled),
+			Label:    "Donate",
+			Path:     kFontAwesomeSackDollar,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			label:      "Donate",
-			path:       kFontAwesomeSackDollar,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorSelected,
-			colorLabel: rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineSelected),
+			Label:    "Donate",
+			Path:     kFontAwesomeSackDollar,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			label:           "Donate",
-			path:            kFontAwesomeSackDollar,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention1),
+			Label:    "Donate",
+			Path:     kFontAwesomeSackDollar,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			label:    "Donate",
-			path:     kFontAwesomeSackDollar,
-			name:     name,
-			category: category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention2),
+			Label:    "Donate",
+			Path:     kFontAwesomeSackDollar,
+			Name:     name,
+			Category: category,
 		},
 	)
 
@@ -915,7 +860,6 @@ func (e makeIcon) getDonate() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -923,52 +867,49 @@ func (e makeIcon) getSave() (register *Register) {
 	name := "SysSave"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			label:    "Save",
-			path:     kFontAwesomeDownload,
-			name:     name,
-			category: category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineNormal),
+			Label:    "Save",
+			Path:     kFontAwesomeDownload,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			label:      "Save",
-			path:       kFontAwesomeDownload,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorDisabled,
-			colorLabel: rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineDisabled),
+			Label:    "Save",
+			Path:     kFontAwesomeDownload,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			label:      "Save",
-			path:       kFontAwesomeDownload,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorSelected,
-			colorLabel: rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineSelected),
+			Label:    "Save",
+			Path:     kFontAwesomeDownload,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			label:           "Save",
-			path:            kFontAwesomeDownload,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention1),
+			Label:    "Save",
+			Path:     kFontAwesomeDownload,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			label:    "Save",
-			path:     kFontAwesomeDownload,
-			name:     name,
-			category: category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention2),
+			Label:    "Save",
+			Path:     kFontAwesomeDownload,
+			Name:     name,
+			Category: category,
 		},
 	)
 
@@ -976,7 +917,6 @@ func (e makeIcon) getSave() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -984,52 +924,49 @@ func (e makeIcon) getShare() (register *Register) {
 	name := "SysShare"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			label:    "Share",
-			path:     kFontAwesomeShareNodes,
-			name:     name,
-			category: category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineNormal),
+			Label:    "Share",
+			Path:     kFontAwesomeShareNodes,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			label:      "Share",
-			path:       kFontAwesomeShareNodes,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorDisabled,
-			colorLabel: rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineDisabled),
+			Label:    "Share",
+			Path:     kFontAwesomeShareNodes,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			label:      "Share",
-			path:       kFontAwesomeShareNodes,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorSelected,
-			colorLabel: rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineSelected),
+			Label:    "Share",
+			Path:     kFontAwesomeShareNodes,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			label:           "Share",
-			path:            kFontAwesomeShareNodes,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention1),
+			Label:    "Share",
+			Path:     kFontAwesomeShareNodes,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			label:    "Share",
-			path:     kFontAwesomeShareNodes,
-			name:     name,
-			category: category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention2),
+			Label:    "Share",
+			Path:     kFontAwesomeShareNodes,
+			Name:     name,
+			Category: category,
 		},
 	)
 
@@ -1037,7 +974,6 @@ func (e makeIcon) getShare() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -1045,57 +981,54 @@ func (e makeIcon) getRetweet() (register *Register) {
 	name := "SysRetweet"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Retweet",
-			path:        kFontAwesomeReTweet,
-			name:        name,
-			category:    category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineNormal),
+			IconViewBox: []int{0, 0, 576, 512},
+			Label:       "Retweet",
+			Path:        kFontAwesomeReTweet,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Retweet",
-			path:        kFontAwesomeReTweet,
-			name:        name,
-			category:    category,
-			colorIcon:   rulesIcon.CategoryIconColorDisabled,
-			colorLabel:  rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineDisabled),
+			IconViewBox: []int{0, 0, 576, 512},
+			Label:       "Retweet",
+			Path:        kFontAwesomeReTweet,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Retweet",
-			path:        kFontAwesomeReTweet,
-			name:        name,
-			category:    category,
-			colorIcon:   rulesIcon.CategoryIconColorSelected,
-			colorLabel:  rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineSelected),
+			IconViewBox: []int{0, 0, 576, 512},
+			Label:       "Retweet",
+			Path:        kFontAwesomeReTweet,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			iconViewBox:     []int{0, 0, 576, 512},
-			label:           "Retweet",
-			path:            kFontAwesomeReTweet,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineAttention1),
+			IconViewBox: []int{0, 0, 576, 512},
+			Label:       "Retweet",
+			Path:        kFontAwesomeReTweet,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 576, 512},
-			label:       "Retweet",
-			path:        kFontAwesomeReTweet,
-			name:        name,
-			category:    category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineAttention2),
+			IconViewBox: []int{0, 0, 576, 512},
+			Label:       "Retweet",
+			Path:        kFontAwesomeReTweet,
+			Name:        name,
+			Category:    category,
 		},
 	)
 
@@ -1103,7 +1036,6 @@ func (e makeIcon) getRetweet() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -1111,52 +1043,49 @@ func (e makeIcon) getServer() (register *Register) {
 	name := "SysServer"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			label:    "Server",
-			path:     kFontAwesomeServer,
-			name:     name,
-			category: category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineNormal),
+			Label:    "Server",
+			Path:     kFontAwesomeServer,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			label:      "Server",
-			path:       kFontAwesomeServer,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorDisabled,
-			colorLabel: rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineDisabled),
+			Label:    "Server",
+			Path:     kFontAwesomeServer,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			label:      "Server",
-			path:       kFontAwesomeServer,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorSelected,
-			colorLabel: rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineSelected),
+			Label:    "Server",
+			Path:     kFontAwesomeServer,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			label:           "Server",
-			path:            kFontAwesomeServer,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention1),
+			Label:    "Server",
+			Path:     kFontAwesomeServer,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			label:    "Server",
-			path:     kFontAwesomeServer,
-			name:     name,
-			category: category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention2),
+			Label:    "Server",
+			Path:     kFontAwesomeServer,
+			Name:     name,
+			Category: category,
 		},
 	)
 
@@ -1164,7 +1093,6 @@ func (e makeIcon) getServer() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -1172,52 +1100,49 @@ func (e makeIcon) getUpload() (register *Register) {
 	name := "SysUpload"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			label:    "Upload",
-			path:     kFontAwesomeUpload,
-			name:     name,
-			category: category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineNormal),
+			Label:    "Upload",
+			Path:     kFontAwesomeUpload,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			label:      "Upload",
-			path:       kFontAwesomeUpload,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorDisabled,
-			colorLabel: rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineDisabled),
+			Label:    "Upload",
+			Path:     kFontAwesomeUpload,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			label:      "Upload",
-			path:       kFontAwesomeUpload,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorSelected,
-			colorLabel: rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineSelected),
+			Label:    "Upload",
+			Path:     kFontAwesomeUpload,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			label:           "Upload",
-			path:            kFontAwesomeUpload,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention1),
+			Label:    "Upload",
+			Path:     kFontAwesomeUpload,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			label:    "Upload",
-			path:     kFontAwesomeUpload,
-			name:     name,
-			category: category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention2),
+			Label:    "Upload",
+			Path:     kFontAwesomeUpload,
+			Name:     name,
+			Category: category,
 		},
 	)
 
@@ -1225,7 +1150,6 @@ func (e makeIcon) getUpload() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -1233,52 +1157,49 @@ func (e makeIcon) getGoBack() (register *Register) {
 	name := "SysGoBack"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			label:    "Back",
-			path:     kFontAwesomeRotate,
-			name:     name,
-			category: category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineNormal),
+			Label:    "Back",
+			Path:     kFontAwesomeRotate,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			label:      "Back",
-			path:       kFontAwesomeRotate,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorDisabled,
-			colorLabel: rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineDisabled),
+			Label:    "Back",
+			Path:     kFontAwesomeRotate,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			label:      "Back",
-			path:       kFontAwesomeRotate,
-			name:       name,
-			category:   category,
-			colorIcon:  rulesIcon.CategoryIconColorSelected,
-			colorLabel: rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineSelected),
+			Label:    "Back",
+			Path:     kFontAwesomeRotate,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			label:           "Back",
-			path:            kFontAwesomeRotate,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention1),
+			Label:    "Back",
+			Path:     kFontAwesomeRotate,
+			Name:     name,
+			Category: category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			label:    "Back",
-			path:     kFontAwesomeRotate,
-			name:     name,
-			category: category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(KPipeLineAttention2),
+			Label:    "Back",
+			Path:     kFontAwesomeRotate,
+			Name:     name,
+			Category: category,
 		},
 	)
 
@@ -1286,7 +1207,6 @@ func (e makeIcon) getGoBack() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -1294,57 +1214,54 @@ func (e makeIcon) getFileImport() (register *Register) {
 	name := "SysFileImport"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[kPipeLineNormal] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 640, 640},
-			label:       "Load",
-			path:        kFontAwesomeFileImport,
-			name:        name,
-			category:    category,
+	iconPipeLine[KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineNormal),
+			IconViewBox: []int{0, 0, 640, 640},
+			Label:       "Load",
+			Path:        kFontAwesomeFileImport,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineDisabled] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 640, 640},
-			label:       "Load",
-			path:        kFontAwesomeFileImport,
-			name:        name,
-			category:    category,
-			colorIcon:   rulesIcon.CategoryIconColorDisabled,
-			colorLabel:  rulesIcon.TextColorDisabled,
+	iconPipeLine[KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineDisabled),
+			IconViewBox: []int{0, 0, 640, 640},
+			Label:       "Load",
+			Path:        kFontAwesomeFileImport,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineSelected] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 640, 640},
-			label:       "Load",
-			path:        kFontAwesomeFileImport,
-			name:        name,
-			category:    category,
-			colorIcon:   rulesIcon.CategoryIconColorSelected,
-			colorLabel:  rulesIcon.TextColorSelected,
+	iconPipeLine[KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineSelected),
+			IconViewBox: []int{0, 0, 640, 640},
+			Label:       "Load",
+			Path:        kFontAwesomeFileImport,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention1] = e.getIcon(
-		data{
-			iconViewBox:     []int{0, 0, 640, 640},
-			label:           "Load",
-			path:            kFontAwesomeFileImport,
-			name:            name,
-			category:        category,
-			colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
+	iconPipeLine[KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineAttention1),
+			IconViewBox: []int{0, 0, 640, 640},
+			Label:       "Load",
+			Path:        kFontAwesomeFileImport,
+			Name:        name,
+			Category:    category,
 		},
 	)
-	iconPipeLine[kPipeLineAttention2] = e.getIcon(
-		data{
-			iconViewBox: []int{0, 0, 640, 640},
-			label:       "Load",
-			path:        kFontAwesomeFileImport,
-			name:        name,
-			category:    category,
-			//colorBackground: color.RGBA{R: 255, G: 180, B: 180, A: 255},
-			colorLabel:  color.RGBA{R: 255, G: 0, B: 0, A: 255},
-			colorBorder: color.RGBA{R: 255, G: 0, B: 0, A: 255},
+	iconPipeLine[KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:      int(KPipeLineAttention2),
+			IconViewBox: []int{0, 0, 640, 640},
+			Label:       "Load",
+			Path:        kFontAwesomeFileImport,
+			Name:        name,
+			Category:    category,
 		},
 	)
 
@@ -1352,7 +1269,6 @@ func (e makeIcon) getFileImport() (register *Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(kPipeLineAlert))
 	return register
 }
 
@@ -1398,11 +1314,11 @@ func (e *Register) GetIcon() (icon js.Value) {
 	elapsed := time.Since(e.time)
 	cycle := elapsed % (time.Millisecond * 2 * interval)
 	switch e.status {
-	case kPipeLineAlert:
+	case KPipeLineAlert:
 		if cycle < time.Millisecond*interval {
-			return e.icon[kPipeLineAttention1]
+			return e.icon[KPipeLineAttention1]
 		}
-		return e.icon[kPipeLineAttention2]
+		return e.icon[KPipeLineAttention2]
 	default:
 		return e.icon[e.status]
 	}

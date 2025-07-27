@@ -302,8 +302,10 @@ func (e *SvgCell) SetText(text string) {
 			FontStyle(fontStyle).
 			FontWeight(fontWeight).
 			X(cx - textWidth/2).
-			Y(yText.GetInt()).
+			Y(cy + textHeight/2).
 			Text(line)
+
+		//Y(yText.GetInt()).
 
 		e.svgGroup.Append(svgText)
 	}
@@ -510,7 +512,7 @@ func main() {
 
 	stage := factoryBrowser.NewStage()
 
-	size := 100
+	size := 80
 	hex := new(Hexagon)
 	hex.Init(0, 0, size)
 

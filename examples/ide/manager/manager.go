@@ -56,16 +56,16 @@ func init() {
 }
 
 type manager struct {
-	elements []any
+	elements []Icon
 	icons    map[string]map[string]Icon
 }
 
-func (e *manager) Get() (elements []any) {
+func (e *manager) Get() (elements []Icon) {
 	return e.elements
 }
 
 func (e *manager) init() {
-	e.elements = make([]any, len(e.elements))
+	e.elements = make([]Icon, len(e.elements))
 	e.icons = make(map[string]map[string]Icon)
 }
 
@@ -82,9 +82,9 @@ func (e *manager) Unregister(element any) (err error) {
 	return
 }
 
-func (e *manager) Register(element any) {
+func (e *manager) Register(element Icon) {
 	e.elements = append(e.elements, element)
-	e.RegisterIcon(element.(Icon))
+	e.RegisterIcon(element)
 }
 
 func (e *manager) RegisterIcon(element Icon) {

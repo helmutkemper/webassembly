@@ -7,6 +7,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/devices"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
 	"github.com/helmutkemper/webassembly/examples/ide/hexagonMenu"
+	"github.com/helmutkemper/webassembly/examples/ide/manager"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/examples/ide/splashScreen"
@@ -231,7 +232,7 @@ func main() {
 	stmLoop.SetGridAdjust(hex)
 	stmLoop.SetMainSvg(mainSvg)
 	_ = stmLoop.Init()
-	//manager.Manager.Register(stmLoop)
+	manager.Manager.RegisterIcon(stmLoop.GetIcon())
 
 	stmAdd := new(devices.StatementAdd)
 	stmAdd.SetResizerButton(resizeButton)

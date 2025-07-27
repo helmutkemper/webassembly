@@ -220,16 +220,16 @@ func (e *DoubleLoopArrow) Update(x, y, width, height rulesDensity.Density) (err 
 
 	// Define the path data for the stop button border
 	stopButtonBorderPath := []string{
-		fmt.Sprintf("M %v %v", xp-cr-rulesDensity.Density(5), yp-cr-rulesDensity.Density(5)),                                                     //-----------------------
-		fmt.Sprintf("M %v %v", xp+rulesDensity.Density(5), yp),                                                                                   //-----------------------
-		fmt.Sprintf("h %v", L-rulesDensity.Density(10)),                                                                                          //-----------------------
-		fmt.Sprintf("a %v,%v 0 0 1 %v,%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)),   //---------------------
-		fmt.Sprintf("v %v", L-rulesDensity.Density(10)),                                                                                          //-----------------------
-		fmt.Sprintf("a %v,%v 0 0 1 -%v,%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)),  //---------------------
-		fmt.Sprintf("h -%v", L-rulesDensity.Density(10)),                                                                                         //-----------------------
-		fmt.Sprintf("a %v,%v 0 0 1 -%v,-%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)), //---------------------
-		fmt.Sprintf("v -%v", L-rulesDensity.Density(10)),                                                                                         //-----------------------
-		fmt.Sprintf("a %v,%v 0 0 1 %v,-%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)),  //---------------------
+		fmt.Sprintf("M %v %v", xp-cr-rulesDensity.Density(5), yp-cr-rulesDensity.Density(5)),
+		fmt.Sprintf("M %v %v", xp+rulesDensity.Density(5), yp),
+		fmt.Sprintf("h %v", L-rulesDensity.Density(10)),
+		fmt.Sprintf("a %v,%v 0 0 1 %v,%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)),
+		fmt.Sprintf("v %v", L-rulesDensity.Density(10)),
+		fmt.Sprintf("a %v,%v 0 0 1 -%v,%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)),
+		fmt.Sprintf("h -%v", L-rulesDensity.Density(10)),
+		fmt.Sprintf("a %v,%v 0 0 1 -%v,-%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)),
+		fmt.Sprintf("v -%v", L-rulesDensity.Density(10)),
+		fmt.Sprintf("a %v,%v 0 0 1 %v,-%v", rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5), rulesDensity.Density(5)),
 		"z",
 	}
 	e.stopButtonBorder.D(stopButtonBorderPath)

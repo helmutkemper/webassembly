@@ -438,8 +438,8 @@ func (e *StatementLoop) GetStatus() (staus int) {
 }
 
 func (e *StatementLoop) GetIcon() (register *hexagonMenu.Register) {
-	name := "Loop"
-	category := "Loop"
+	name := e.GetIconName()
+	category := e.GetIconCategory()
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[hexagonMenu.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
@@ -486,7 +486,6 @@ func (e *StatementLoop) GetIcon() (register *hexagonMenu.Register) {
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)
-	register.SetStatus(int(hexagonMenu.KPipeLineAttention2))
 	return register
 }
 

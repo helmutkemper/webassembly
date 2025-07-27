@@ -1,15 +1,20 @@
 package devices
 
 import (
+	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
+	"github.com/helmutkemper/webassembly/examples/ide/hexagonMenu"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/math"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
+	"github.com/helmutkemper/webassembly/examples/ide/rulesIcon"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/platform/components"
+	"github.com/helmutkemper/webassembly/utilsDraw"
+	"github.com/helmutkemper/webassembly/utilsText"
 	"log"
 	"syscall/js"
 )
@@ -33,6 +38,8 @@ type StatementAdd struct {
 	debugMode bool
 
 	gridAdjust rulesStage.GridAdjust
+
+	iconStatus int
 }
 
 func (e *StatementAdd) Append() {
@@ -435,42 +442,128 @@ func (e *StatementAdd) GetIconCategory() (name string) {
 	return "Math"
 }
 
-//func (e *StatementAdd) GetIcon() (icon []js.Value) {
-//	xc := rulesIcon.Width / rulesDensity.Density(4)
-//	yc := rulesIcon.Height * rulesDensity.Density(0.15)
-//	wOrn := rulesIcon.Width / rulesDensity.Density(2)
-//	ornamentSvg := e.ornamentDrawIcon.
-//		GetSvg().
-//		X(xc.GetInt() + rulesDensity.Density(5).GetInt()).
-//		Y(yc.GetInt())
-//
-//	_ = e.ornamentDrawIcon.Update(0, 0, wOrn, wOrn)
-//
-//	path := utilsDraw.PolygonPath(6, wOrn, wOrn, wOrn, 0)
-//	iconPath := factoryBrowser.NewTagSvgPath().
-//		StrokeWidth(rulesIcon.BorderWidth.GetInt()).
-//		Stroke(rulesIcon.BorderColor).
-//		Fill(rulesIcon.FillColor).
-//		D(path)
-//
-//	iconText := factoryBrowser.NewTagSvgText().
-//		X(rulesDensity.Density(85).GetInt()).
-//		Y(rulesIcon.TextY.GetInt()).
-//		Text("Add").
-//		Fill(rulesIcon.TextColor).
-//		FontFamily(rulesIcon.FontFamily).
-//		//Filter("url(#textBlur)").
-//		FontSize(rulesIcon.FontSize.GetInt())
-//
-//	iconSvg := factoryBrowser.NewTagSvg().
-//		Width(rulesIcon.Width.GetFloat()).
-//		Height(rulesIcon.Height.GetFloat()).
-//		Append(iconPath, ornamentSvg, iconText, rulesIcon.FilterIcon, rulesIcon.FilterText)
-//
-//	w := rulesIcon.Width * rulesIcon.SizeRatio
-//	h := rulesIcon.Height * rulesIcon.SizeRatio
-//	return iconSvg.ToCanvas(w.GetFloat(), h.GetFloat())
-//}
+func (e *StatementAdd) SetStatus(status int) {
+	e.iconStatus = status
+}
+
+func (e *StatementAdd) GetStatus() (staus int) {
+	return e.iconStatus
+}
+
+func (e *StatementAdd) GetIcon() (register *hexagonMenu.Register) {
+	name := e.GetIconName()
+	category := e.GetIconCategory()
+	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine[hexagonMenu.KPipeLineNormal] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(hexagonMenu.KPipeLineNormal),
+			Name:     name,
+			Category: category,
+			Label:    name,
+		},
+	)
+	iconPipeLine[hexagonMenu.KPipeLineDisabled] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(hexagonMenu.KPipeLineDisabled),
+			Name:     name,
+			Category: category,
+			Label:    name,
+		},
+	)
+	iconPipeLine[hexagonMenu.KPipeLineSelected] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(hexagonMenu.KPipeLineSelected),
+			Name:     name,
+			Category: category,
+			Label:    name,
+		},
+	)
+	iconPipeLine[hexagonMenu.KPipeLineAttention1] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(hexagonMenu.KPipeLineAttention1),
+			Name:     name,
+			Category: category,
+			Label:    name,
+		},
+	)
+	iconPipeLine[hexagonMenu.KPipeLineAttention2] = e.getIcon(
+		rulesIcon.Data{
+			Status:   int(hexagonMenu.KPipeLineAttention2),
+			Name:     name,
+			Category: category,
+			Label:    name,
+		},
+	)
+
+	register = new(hexagonMenu.Register)
+	register.SetName(name)
+	register.SetCategory(category)
+	register.SetIcon(iconPipeLine)
+	return register
+}
+
+func (e *StatementAdd) getIcon(data rulesIcon.Data) (png js.Value) {
+
+	data = rulesIcon.DataVerifyElementIcon(data)
+
+	// icon body
+	svgIcon := factoryBrowser.NewTagSvg().
+		X(rulesIcon.Width.GetInt() / 2).
+		Y(rulesIcon.Height.GetInt() / 2).
+		Width(rulesIcon.Width.GetInt()).
+		Height(rulesIcon.Height.GetInt())
+
+	// hexagon maker
+	hexPath := utilsDraw.PolygonPath(
+		6,
+		rulesIcon.Width/2,
+		rulesIcon.Width/2,
+		rulesIcon.Width/2,
+		0,
+	)
+
+	// svg hexagon
+	hexDraw := factoryBrowser.NewTagSvgPath().
+		StrokeWidth(rulesIcon.BorderWidth.GetInt()).
+		Stroke(data.ColorBorder).
+		Fill(data.ColorBackground).
+		D(hexPath)
+
+	xc := rulesIcon.Width / rulesDensity.Density(4)
+	yc := rulesIcon.Height * rulesDensity.Density(0.15)
+	wOrn := rulesIcon.Width / rulesDensity.Density(2)
+	icon := e.ornamentDrawIcon.
+		GetSvg().
+		X(xc.GetInt() + rulesDensity.Density(5).GetInt()).
+		Y(yc.GetInt())
+
+	_ = e.ornamentDrawIcon.Update(0, 0, wOrn, wOrn)
+
+	// calc width label
+	widthLabel, _ := utilsText.GetTextSize(
+		data.Label,
+		rulesIcon.FontFamily,
+		rulesIcon.FontWeight,
+		rulesIcon.FontStyle,
+		data.LabelFontSize.GetInt(),
+	)
+
+	// label, svg text
+	label := factoryBrowser.NewTagSvgText().
+		FontFamily(rulesIcon.FontFamily).
+		FontWeight(rulesIcon.FontWeight).
+		FontStyle(rulesIcon.FontStyle).
+		FontSize(data.LabelFontSize.GetInt()).
+		Text(data.Label).
+		Fill(data.ColorLabel).
+		X((rulesIcon.Width / 2).GetInt() - widthLabel/2).
+		Y(data.LabelY.GetInt())
+	svgIcon.Append(hexDraw, icon, label)
+
+	w := rulesIcon.Width * rulesIcon.SizeRatio
+	h := rulesIcon.Height * rulesIcon.SizeRatio
+	return svgIcon.ToCanvas(w.GetFloat(), h.GetFloat())
+}
 
 func (e *StatementAdd) GetInitialized() (initialized bool) {
 	return e.block.GetInitialized()

@@ -153,32 +153,41 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 	//mainSvg.Append(menuSvg)
 
 	menuOrder := map[string]map[string][]int{
-		"MainMenu": {
-			"SysFileImport": {1, 1},
-			"SysMenu":       {1, 3},
-			"SysBug":        {1, 5},
-			"SysTools":      {1, 7},
-			"SysBlank":      {5, 7},
-		},
-		"Menu": {
-			"SysMath":   {1, 9},
-			"SysLoop":   {4, 8},
-			"SysDonate": {2, 2},
-			"SysSave":   {2, 4},
-			"SysUpload": {2, 6},
-		},
-		"Loop": {
-			"SysLoop":   {2, 8},
-			"Loop":      {3, 1},
-			"SysGoBack": {3, 3},
-		},
+		//"MainMenu": {
+		//	"SysFileImport": {1, 1},
+		//	"SysMenu":       {1, 3},
+		//	"SysBug":        {1, 5},
+		//	"SysTools":      {1, 7},
+		//	"SysBlank":      {5, 7},
+		//},
+		//"Menu": {
+		//	"SysMath":   {1, 9},
+		//	"SysLoop":   {4, 8},
+		//	"SysDonate": {2, 2},
+		//	"SysSave":   {2, 4},
+		//	"SysUpload": {2, 6},
+		//},
+		//"Loop": {
+		//	"SysLoop":   {2, 8},
+		//	"Loop":      {3, 1},
+		//	"SysGoBack": {3, 3},
+		//},
+		//"Math": {
+		//	"SysMath":   {3, 5},
+		//	"Add":       {3, 7},
+		//	"Sub":       {3, 9},
+		//	"Mul":       {4, 6},
+		//	"Div":       {4, 2},
+		//	"SysGoBack": {4, 4},
+		//},
 		"Math": {
-			"SysMath":   {3, 5},
-			"Add":       {3, 7},
-			"Sub":       {3, 9},
-			"Mul":       {3, 11},
-			"Div":       {4, 2},
-			"SysGoBack": {4, 4},
+			"SysMath":   {5, 5},
+			"Add":       {4, 6},
+			"Sub":       {4, 8},
+			"Mul":       {6, 6},
+			"Div":       {6, 8},
+			"SysGoBack": {5, 9},
+			"SysBlank":  {5, 7},
 		},
 	}
 

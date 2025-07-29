@@ -1,13 +1,16 @@
 module github.com/helmutkemper/webassembly
 
-go 1.22.4
+go 1.23.0
 
 require (
+	github.com/BurntSushi/toml v1.5.0
 	github.com/gorilla/websocket v1.5.3
 	github.com/helmutkemper/iotmaker.santa_isabel_theater.globalConfig v0.0.0-20210626132318-c33958e83e03
 	github.com/helmutkemper/iotmaker.santa_isabel_theater.platform v0.0.7
+	github.com/nicksnyder/go-i18n/v2 v2.6.0
 	github.com/paulmach/go.geojson v1.5.0
 	golang.org/x/image v0.19.0
+	golang.org/x/text v0.23.0
 )
 
 require (

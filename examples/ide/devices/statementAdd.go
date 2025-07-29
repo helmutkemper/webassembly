@@ -12,9 +12,11 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/rulesIcon"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesSequentialId"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
+	"github.com/helmutkemper/webassembly/examples/ide/translate"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/utilsDraw"
 	"github.com/helmutkemper/webassembly/utilsText"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"log"
 	"syscall/js"
 )
@@ -451,6 +453,19 @@ func (e *StatementAdd) GetStatus() (staus int) {
 }
 
 func (e *StatementAdd) GetIcon() (register *hexagonMenu.Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconDeviceAdd",
+				Other: "Add",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Add"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := e.GetIconName()
 	category := e.GetIconCategory()
 	iconPipeLine := make([]js.Value, 5)
@@ -459,7 +474,7 @@ func (e *StatementAdd) GetIcon() (register *hexagonMenu.Register) {
 			Status:   int(hexagonMenu.KPipeLineNormal),
 			Name:     name,
 			Category: category,
-			Label:    name,
+			Label:    translated,
 		},
 	)
 	iconPipeLine[hexagonMenu.KPipeLineDisabled] = e.getIcon(
@@ -467,7 +482,7 @@ func (e *StatementAdd) GetIcon() (register *hexagonMenu.Register) {
 			Status:   int(hexagonMenu.KPipeLineDisabled),
 			Name:     name,
 			Category: category,
-			Label:    name,
+			Label:    translated,
 		},
 	)
 	iconPipeLine[hexagonMenu.KPipeLineSelected] = e.getIcon(
@@ -475,7 +490,7 @@ func (e *StatementAdd) GetIcon() (register *hexagonMenu.Register) {
 			Status:   int(hexagonMenu.KPipeLineSelected),
 			Name:     name,
 			Category: category,
-			Label:    name,
+			Label:    translated,
 		},
 	)
 	iconPipeLine[hexagonMenu.KPipeLineAttention1] = e.getIcon(
@@ -483,7 +498,7 @@ func (e *StatementAdd) GetIcon() (register *hexagonMenu.Register) {
 			Status:   int(hexagonMenu.KPipeLineAttention1),
 			Name:     name,
 			Category: category,
-			Label:    name,
+			Label:    translated,
 		},
 	)
 	iconPipeLine[hexagonMenu.KPipeLineAttention2] = e.getIcon(
@@ -491,7 +506,7 @@ func (e *StatementAdd) GetIcon() (register *hexagonMenu.Register) {
 			Status:   int(hexagonMenu.KPipeLineAttention2),
 			Name:     name,
 			Category: category,
-			Label:    name,
+			Label:    translated,
 		},
 	)
 

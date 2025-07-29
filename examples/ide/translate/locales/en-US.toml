@@ -1,0 +1,60 @@
+[IconSystemBug]
+description = "Menu incons. label: bug (please try to keep it to about three to five letters)"
+other = "Bug"
+[IconSystemMath]
+description = "Menu incons. label: math (please try to keep it to about three to five letters)"
+other = "Math"
+[IconSystemLoop]
+description = "Menu incons. label: loop (please try to keep it to about three to five letters)"
+other = "Loop"
+[IconSystemTools]
+description = "Menu incons. label: tools (please try to keep it to about three to five letters)"
+other = "Tools"
+[IconSystemConfig]
+description = "Menu incons. label: config (please try to keep it to about three to five letters)"
+other = "Config"
+[IconSystemGraph]
+description = "Menu incons. label: graph (please try to keep it to about three to five letters)"
+other = "Graph"
+[IconSystemMenu]
+description = "Menu incons. label: menu (please try to keep it to about three to five letters)"
+other = "Menu"
+[IconSystemDonate]
+description = "Menu incons. label: donate (please try to keep it to about three to five letters)"
+other = "Donate"
+[IconSystemSave]
+description = "Menu incons. label: save (please try to keep it to about three to five letters)"
+other = "Save"
+[IconSystemShare]
+description = "Menu incons. label: share (please try to keep it to about three to five letters)"
+other = "Share"
+[IconSystemRetweet]
+description = "Menu incons. label: retweet (please try to keep it to about three to five letters)"
+other = "Retweet"
+[IconSystemServer]
+description = "Menu incons. label: server (please try to keep it to about three to five letters)"
+other = "Server"
+[IconSystemUpload]
+description = "Menu incons. label: upload (please try to keep it to about three to five letters)"
+other = "Upload"
+[IconSystemGoBack]
+description = "Menu incons. label: GoBack (please try to keep it to about three to five letters)"
+other = "go back"
+[IconSystemLoad]
+description = "Menu incons. label: load (please try to keep it to about three to five letters)"
+other = "Load"
+[IconDeviceLoop]
+description = "Device menu incons. label: loop (please try to keep it to about three to five letters)"
+other = "Loop"
+[IconDeviceAdd]
+description = "Device menu incons. label: add (please try to keep it to about three to five letters)"
+other = "Add"
+[IconDeviceSub]
+description = "Device menu incons. label: sub (please try to keep it to about three to five letters)"
+other = "Sub"
+[IconDeviceDiv]
+description = "Device menu incons. label: div (please try to keep it to about three to five letters)"
+other = "Div"
+[IconDeviceMul]
+description = "Device menu incons. label: div (please try to keep it to about three to five letters)"
+other = "Mul"

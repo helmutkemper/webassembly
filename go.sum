@@ -1,3 +1,5 @@
+github.com/BurntSushi/toml v1.5.0 h1:W5quZX/G/csjUnuI8SUYlsHs9M38FC7znL0lIO+DvMg=
+github.com/BurntSushi/toml v1.5.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/gorilla/websocket v1.5.3 h1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aNNg=
 github.com/gorilla/websocket v1.5.3/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/helmutkemper/iotmaker.platform.webbrowser v0.0.0-20200208001228-b665b1f435bb/go.mod h1:QUbS2Rmofhi8TU3QHKxdbydS0e3bOzOMKlKNY5F1zmM=
@@ -29,7 +31,13 @@ github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser v0.0.0
 github.com/helmutkemper/iotmaker.santa_isabel_theater.platform.webbrowser v0.0.0-20210621023938-040b0e4765a8/go.mod h1:t/UulIhA8RbQ4o0oiQ4WPWSUFfHxaFXAyZx6ijMSETk=
 github.com/helmutkemper/iotmaker.threadsafe v0.0.0-20210620234632-1a603bd2be2f/go.mod h1:klVZ+lxbfNIsQXmmX6N8cTaRB4NvAZfV1brQAf1a/Cs=
 github.com/helmutkemper/iotmaker.threadsafe v0.0.0-20210621011301-fcb8f6690506/go.mod h1:wpB5SnU8ghdm5dT6Hwvyii1ccLE7T4SIzSzgMaHbkWA=
+github.com/nicksnyder/go-i18n/v2 v2.6.0 h1:C/m2NNWNiTB6SK4Ao8df5EWm3JETSTIGNXBpMJTxzxQ=
+github.com/nicksnyder/go-i18n/v2 v2.6.0/go.mod h1:88sRqr0C6OPyJn0/KRNaEz1uWorjxIKP7rUUcvycecE=
 github.com/paulmach/go.geojson v1.5.0 h1:7mhpMK89SQdHFcEGomT7/LuJhwhEgfmpWYVlVmLEdQw=
 github.com/paulmach/go.geojson v1.5.0/go.mod h1:DgdUy2rRVDDVgKqrjMe2vZAHMfhDTrjVKt3LmHIXGbU=
 golang.org/x/image v0.19.0 h1:D9FX4QWkLfkeqaC62SonffIIuYdOk/UE2XKUBgRIBIQ=
 golang.org/x/image v0.19.0/go.mod h1:y0zrRqlQRWQ5PXaYCOMLTW2fpsxZ8Qh9I/ohnInJEys=
+golang.org/x/text v0.23.0 h1:D71I7dUrlY+VX0gQShAThNGHFxZ13dGLBHQLVl1mJlY=
+golang.org/x/text v0.23.0/go.mod h1:/BLNzu4aZCJ1+kcD0DNRotWKage4q2rGVAg4o22unh4=
+gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
+gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=

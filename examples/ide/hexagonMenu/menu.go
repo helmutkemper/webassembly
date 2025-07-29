@@ -58,9 +58,12 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesIcon"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
+	"github.com/helmutkemper/webassembly/examples/ide/translate"
 	"github.com/helmutkemper/webassembly/utilsDraw"
 	"github.com/helmutkemper/webassembly/utilsText"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"image/color"
+	"log"
 	"syscall/js"
 	"time"
 )
@@ -153,98 +156,88 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 	//mainSvg.Append(menuSvg)
 
 	menuOrder := map[string]map[string][]int{
-		//"MainMenu": {
-		//	"SysFileImport": {1, 1},
-		//	"SysMenu":       {1, 3},
-		//	"SysBug":        {1, 5},
-		//	"SysTools":      {1, 7},
-		//	"SysBlank":      {5, 7},
-		//},
-		//"Menu": {
-		//	"SysMath":   {1, 9},
-		//	"SysLoop":   {4, 8},
-		//	"SysDonate": {2, 2},
-		//	"SysSave":   {2, 4},
-		//	"SysUpload": {2, 6},
-		//},
-		//"Loop": {
-		//	"SysLoop":   {2, 8},
-		//	"Loop":      {3, 1},
-		//	"SysGoBack": {3, 3},
-		//},
-		//"Math": {
-		//	"SysMath":   {3, 5},
-		//	"Add":       {3, 7},
-		//	"Sub":       {3, 9},
-		//	"Mul":       {4, 6},
-		//	"Div":       {4, 2},
-		//	"SysGoBack": {4, 4},
-		//},
-		"Math": {
-			"SysMath":   {5, 5},
-			"Add":       {4, 6},
-			"Sub":       {4, 8},
-			"Mul":       {6, 6},
-			"Div":       {6, 8},
-			"SysGoBack": {5, 9},
-			"SysBlank":  {5, 7},
+		"MainMenu": {
+			"SysFileLoad": {1, 1},
+			"SysMenu":     {1, 3},
+			"SysBug":      {1, 5},
+			"SysTools":    {1, 7},
+			"SysBlank":    {5, 7},
 		},
+		"Menu": {
+			"SysMath":   {1, 9},
+			"SysLoop":   {4, 8},
+			"SysDonate": {2, 2},
+			"SysSave":   {2, 4},
+			"SysUpload": {2, 6},
+		},
+		"Loop": {
+			"SysLoop":   {2, 8},
+			"Loop":      {3, 1},
+			"SysGoBack": {3, 3},
+		},
+		"Math": {
+			"SysMath":   {3, 5},
+			"Add":       {3, 7},
+			"Sub":       {3, 9},
+			"Mul":       {4, 6},
+			"Div":       {4, 2},
+			"SysGoBack": {4, 4},
+		},
+		//"Math": {
+		//	//"SysMath": {5, 5},
+		//	"Add": {4, 6},
+		//	"Sub": {4, 8},
+		//	"Mul": {6, 6},
+		//	"Div": {6, 8},
+		//	//"SysGoBack": {5, 9},
+		//	//"SysBlank":  {5, 7},
+		//	//"SysMenu": {5, 7},
+		//	"SysGoBack": {5, 7},
+		//},
 	}
 
-	icons := manager.Manager.GetIcons()
-	for category, categoryList := range menuOrder {
-		for name, position := range categoryList {
-			systemIcon, found := icons[category][name]
+	go func() {
+		for {
+			icons := manager.Manager.GetIcons()
+			for category, categoryList := range menuOrder {
+				for name, position := range categoryList {
+					systemIcon, found := icons[category][name]
 
-			if !found {
-				systemIcon, found = icons["Main"][name]
+					if !found {
+						systemIcon, found = icons["Main"][name]
+					}
+
+					if !found {
+						continue
+					}
+
+					//log.Printf("found sys: %v", found)
+
+					hexMenu.SetRowCol(position[0], position[1])
+					cx, cy := hexMenu.GetCenter()
+					//systemIcon.SetStatus(int(KPipeLineNormal))
+					canvas.DrawImage(systemIcon.GetIcon(), cx.GetInt(), cy.GetInt())
+
+					//new(easingTween.Tween).
+					//	SetDuration(5*time.Second).
+					//	SetValues(0, 1).
+					//	SetOnStepFunc(func(value, percentToComplete float64, arguments interface{}) {
+					//		canvas.ClearRect(0, 0, 1200, 600)
+					//		canvas.GetContext().Set("globalAlpha", math.Abs(value))
+					//		canvas.DrawImage(icons["Main"]["SysBug"].GetIcon(), int(500*value)+cx.GetInt(), cy.GetInt())
+					//		canvas.GetContext().Set("globalAlpha", 1)
+					//		canvas.DrawImage(systemIcon.GetIcon(), int(500*value)+cx.GetInt(), cy.GetInt()+100)
+					//	}).
+					//	SetLoops(-1).
+					//	//SetDoNotReverseMotion().
+					//	SetTweenFunc(easingTween.KEaseInOutBack).
+					//	Start()
+					time.Sleep(time.Microsecond)
+				}
 			}
-
-			if !found {
-				continue
-			}
-
-			//log.Printf("found sys: %v", found)
-
-			hexMenu.SetRowCol(position[0], position[1])
-			cx, cy := hexMenu.GetCenter()
-			//systemIcon.SetStatus(int(KPipeLineNormal))
-			canvas.DrawImage(systemIcon.GetIcon(), cx.GetInt(), cy.GetInt())
-
-			//new(easingTween.Tween).
-			//	SetDuration(5*time.Second).
-			//	SetValues(0, 1).
-			//	SetOnStepFunc(func(value, percentToComplete float64, arguments interface{}) {
-			//		canvas.ClearRect(0, 0, 1200, 600)
-			//		canvas.GetContext().Set("globalAlpha", math.Abs(value))
-			//		canvas.DrawImage(icons["Main"]["SysBug"].GetIcon(), int(500*value)+cx.GetInt(), cy.GetInt())
-			//		canvas.GetContext().Set("globalAlpha", 1)
-			//		canvas.DrawImage(systemIcon.GetIcon(), int(500*value)+cx.GetInt(), cy.GetInt()+100)
-			//	}).
-			//	SetLoops(-1).
-			//	//SetDoNotReverseMotion().
-			//	SetTweenFunc(easingTween.KEaseInOutBack).
-			//	Start()
-
-			//go func() {
-			//	for {
-			//		systemIcon.SetStatus(int(KPipeLineSelected))
-			//		canvas.DrawImage(systemIcon.GetIcon(), cx.GetInt(), cy.GetInt())
-			//		systemIcon.SetStatus(int(KPipeLineNormal))
-			//		canvas.DrawImage(systemIcon.GetIcon(), 100+cx.GetInt(), cy.GetInt())
-			//		systemIcon.SetStatus(int(KPipeLineDisabled))
-			//		canvas.DrawImage(systemIcon.GetIcon(), 200+cx.GetInt(), cy.GetInt())
-			//		systemIcon.SetStatus(int(KPipeLineAlert))
-			//		canvas.DrawImage(systemIcon.GetIcon(), cx.GetInt(), 100+cy.GetInt())
-			//		systemIcon.SetStatus(int(KPipeLineAttention1))
-			//		canvas.DrawImage(systemIcon.GetIcon(), 100+cx.GetInt(), 100+cy.GetInt())
-			//		systemIcon.SetStatus(int(KPipeLineAttention2))
-			//		canvas.DrawImage(systemIcon.GetIcon(), 200+cx.GetInt(), 100+cy.GetInt())
-			//		time.Sleep(time.Nanosecond)
-			//	}
-			//}()
 		}
-	}
+	}()
+
 }
 
 func (e makeIcon) getIcon(data rulesIcon.Data) (png js.Value) {
@@ -402,13 +395,31 @@ func (e makeIcon) getBlank() (register *Register) {
 }
 
 func (e makeIcon) getBug() (register *Register) {
+	//var count int = 0
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID: "IconSystemBug",
+			},
+			//TemplateData: map[string]interface{}{
+			//	"Name":  "Nick",
+			//	"Count": count,
+			//},
+			//PluralCount: count,
+		},
+	)
+	if err != nil {
+		translated = "Bug"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysBug"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineNormal),
-			Label:    "Bug",
+			Label:    translated,
 			Path:     kFontAwesomeBug,
 			Name:     name,
 			Category: category,
@@ -417,7 +428,7 @@ func (e makeIcon) getBug() (register *Register) {
 	iconPipeLine[KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineDisabled),
-			Label:    "Bug",
+			Label:    translated,
 			Path:     kFontAwesomeBug,
 			Name:     name,
 			Category: category,
@@ -426,7 +437,7 @@ func (e makeIcon) getBug() (register *Register) {
 	iconPipeLine[KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineSelected),
-			Label:    "Bug",
+			Label:    translated,
 			Path:     kFontAwesomeBug,
 			Name:     name,
 			Category: category,
@@ -435,7 +446,7 @@ func (e makeIcon) getBug() (register *Register) {
 	iconPipeLine[KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention1),
-			Label:    "Bug",
+			Label:    translated,
 			Path:     kFontAwesomeBug,
 			Name:     name,
 			Category: category,
@@ -444,7 +455,7 @@ func (e makeIcon) getBug() (register *Register) {
 	iconPipeLine[KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention2),
-			Label:    "Bug",
+			Label:    translated,
 			Path:     kFontAwesomeBug,
 			Name:     name,
 			Category: category,
@@ -459,6 +470,19 @@ func (e makeIcon) getBug() (register *Register) {
 }
 
 func (e makeIcon) getMath() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemMath",
+				Other: "Math",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Math"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysMath"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
@@ -466,7 +490,7 @@ func (e makeIcon) getMath() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineNormal),
 			IconViewBox: []int{0, 0, 576, 512},
-			Label:       "Math",
+			Label:       translated,
 			Path:        kFontAwesomeSquareRootVariable,
 			Name:        name,
 			Category:    category,
@@ -476,7 +500,7 @@ func (e makeIcon) getMath() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineDisabled),
 			IconViewBox: []int{0, 0, 576, 512},
-			Label:       "Math",
+			Label:       translated,
 			Path:        kFontAwesomeSquareRootVariable,
 			Name:        name,
 			Category:    category,
@@ -486,7 +510,7 @@ func (e makeIcon) getMath() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineSelected),
 			IconViewBox: []int{0, 0, 576, 512},
-			Label:       "Math",
+			Label:       translated,
 			Path:        kFontAwesomeSquareRootVariable,
 			Name:        name,
 			Category:    category,
@@ -496,7 +520,7 @@ func (e makeIcon) getMath() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineAttention1),
 			IconViewBox: []int{0, 0, 576, 512},
-			Label:       "Math",
+			Label:       translated,
 			Path:        kFontAwesomeSquareRootVariable,
 			Name:        name,
 			Category:    category,
@@ -506,7 +530,7 @@ func (e makeIcon) getMath() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineAttention2),
 			IconViewBox: []int{0, 0, 576, 512},
-			Label:       "Math",
+			Label:       translated,
 			Path:        kFontAwesomeSquareRootVariable,
 			Name:        name,
 			Category:    category,
@@ -521,13 +545,26 @@ func (e makeIcon) getMath() (register *Register) {
 }
 
 func (e makeIcon) getLoop() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemLoop",
+				Other: "Math",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Loop"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysLoop"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineNormal),
-			Label:    "Loop",
+			Label:    translated,
 			Path:     kFontAwesomeRepeat,
 			Name:     name,
 			Category: category,
@@ -536,7 +573,7 @@ func (e makeIcon) getLoop() (register *Register) {
 	iconPipeLine[KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineDisabled),
-			Label:    "Loop",
+			Label:    translated,
 			Path:     kFontAwesomeRepeat,
 			Name:     name,
 			Category: category,
@@ -545,7 +582,7 @@ func (e makeIcon) getLoop() (register *Register) {
 	iconPipeLine[KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineSelected),
-			Label:    "Loop",
+			Label:    translated,
 			Path:     kFontAwesomeRepeat,
 			Name:     name,
 			Category: category,
@@ -554,7 +591,7 @@ func (e makeIcon) getLoop() (register *Register) {
 	iconPipeLine[KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention1),
-			Label:    "Loop",
+			Label:    translated,
 			Path:     kFontAwesomeRepeat,
 			Name:     name,
 			Category: category,
@@ -563,7 +600,7 @@ func (e makeIcon) getLoop() (register *Register) {
 	iconPipeLine[KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention2),
-			Label:    "Loop",
+			Label:    translated,
 			Path:     kFontAwesomeRepeat,
 			Name:     name,
 			Category: category,
@@ -578,13 +615,26 @@ func (e makeIcon) getLoop() (register *Register) {
 }
 
 func (e makeIcon) getTools() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemTools",
+				Other: "Tools",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Tools"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysTools"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineNormal),
-			Label:    "Tools",
+			Label:    translated,
 			Path:     kFontAwesomeScrewDriverWrench,
 			Name:     name,
 			Category: category,
@@ -593,7 +643,7 @@ func (e makeIcon) getTools() (register *Register) {
 	iconPipeLine[KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineDisabled),
-			Label:    "Tools",
+			Label:    translated,
 			Path:     kFontAwesomeScrewDriverWrench,
 			Name:     name,
 			Category: category,
@@ -602,7 +652,7 @@ func (e makeIcon) getTools() (register *Register) {
 	iconPipeLine[KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineSelected),
-			Label:    "Tools",
+			Label:    translated,
 			Path:     kFontAwesomeScrewDriverWrench,
 			Name:     name,
 			Category: category,
@@ -611,7 +661,7 @@ func (e makeIcon) getTools() (register *Register) {
 	iconPipeLine[KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention1),
-			Label:    "Tools",
+			Label:    translated,
 			Path:     kFontAwesomeScrewDriverWrench,
 			Name:     name,
 			Category: category,
@@ -620,7 +670,7 @@ func (e makeIcon) getTools() (register *Register) {
 	iconPipeLine[KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention2),
-			Label:    "Tools",
+			Label:    translated,
 			Path:     kFontAwesomeScrewDriverWrench,
 			Name:     name,
 			Category: category,
@@ -635,13 +685,26 @@ func (e makeIcon) getTools() (register *Register) {
 }
 
 func (e makeIcon) getConfig() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemConfig",
+				Other: "Config",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Config"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysConfig"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineNormal),
-			Label:    "Config",
+			Label:    translated,
 			Path:     kFontAwesomeSliders,
 			Name:     name,
 			Category: category,
@@ -650,7 +713,7 @@ func (e makeIcon) getConfig() (register *Register) {
 	iconPipeLine[KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineDisabled),
-			Label:    "Config",
+			Label:    translated,
 			Path:     kFontAwesomeSliders,
 			Name:     name,
 			Category: category,
@@ -659,7 +722,7 @@ func (e makeIcon) getConfig() (register *Register) {
 	iconPipeLine[KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineSelected),
-			Label:    "Config",
+			Label:    translated,
 			Path:     kFontAwesomeSliders,
 			Name:     name,
 			Category: category,
@@ -668,7 +731,7 @@ func (e makeIcon) getConfig() (register *Register) {
 	iconPipeLine[KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention1),
-			Label:    "Config",
+			Label:    translated,
 			Path:     kFontAwesomeSliders,
 			Name:     name,
 			Category: category,
@@ -677,7 +740,7 @@ func (e makeIcon) getConfig() (register *Register) {
 	iconPipeLine[KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention2),
-			Label:    "Config",
+			Label:    translated,
 			Path:     kFontAwesomeSliders,
 			Name:     name,
 			Category: category,
@@ -692,6 +755,19 @@ func (e makeIcon) getConfig() (register *Register) {
 }
 
 func (e makeIcon) getGraph() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemGraph",
+				Other: "Graph",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Graph"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysGraph"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
@@ -699,7 +775,7 @@ func (e makeIcon) getGraph() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineNormal),
 			IconViewBox: []int{0, 0, 640, 512},
-			Label:       "Graph",
+			Label:       translated,
 			Path:        kFontAwesomeWaveSquare,
 			Name:        name,
 			Category:    category,
@@ -709,7 +785,7 @@ func (e makeIcon) getGraph() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineDisabled),
 			IconViewBox: []int{0, 0, 640, 512},
-			Label:       "Graph",
+			Label:       translated,
 			Path:        kFontAwesomeWaveSquare,
 			Name:        name,
 			Category:    category,
@@ -719,7 +795,7 @@ func (e makeIcon) getGraph() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineSelected),
 			IconViewBox: []int{0, 0, 640, 512},
-			Label:       "Graph",
+			Label:       translated,
 			Path:        kFontAwesomeWaveSquare,
 			Name:        name,
 			Category:    category,
@@ -729,7 +805,7 @@ func (e makeIcon) getGraph() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineAttention1),
 			IconViewBox: []int{0, 0, 640, 512},
-			Label:       "Graph",
+			Label:       translated,
 			Path:        kFontAwesomeWaveSquare,
 			Name:        name,
 			Category:    category,
@@ -739,7 +815,7 @@ func (e makeIcon) getGraph() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineAttention2),
 			IconViewBox: []int{0, 0, 640, 512},
-			Label:       "Graph",
+			Label:       translated,
 			Path:        kFontAwesomeWaveSquare,
 			Name:        name,
 			Category:    category,
@@ -754,6 +830,19 @@ func (e makeIcon) getGraph() (register *Register) {
 }
 
 func (e makeIcon) getMenu() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemMenu",
+				Other: "Menu",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Menu"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysMenu"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
@@ -761,7 +850,7 @@ func (e makeIcon) getMenu() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineNormal),
 			IconViewBox: []int{0, 0, 448, 512},
-			Label:       "Menu",
+			Label:       translated,
 			Path:        kFontAwesomeBars,
 			Name:        name,
 			Category:    category,
@@ -771,7 +860,7 @@ func (e makeIcon) getMenu() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineDisabled),
 			IconViewBox: []int{0, 0, 448, 512},
-			Label:       "Menu",
+			Label:       translated,
 			Path:        kFontAwesomeBars,
 			Name:        name,
 			Category:    category,
@@ -781,7 +870,7 @@ func (e makeIcon) getMenu() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineSelected),
 			IconViewBox: []int{0, 0, 448, 512},
-			Label:       "Menu",
+			Label:       translated,
 			Path:        kFontAwesomeBars,
 			Name:        name,
 			Category:    category,
@@ -791,7 +880,7 @@ func (e makeIcon) getMenu() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineAttention1),
 			IconViewBox: []int{0, 0, 448, 512},
-			Label:       "Menu",
+			Label:       translated,
 			Path:        kFontAwesomeBars,
 			Name:        name,
 			Category:    category,
@@ -801,7 +890,7 @@ func (e makeIcon) getMenu() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineAttention2),
 			IconViewBox: []int{0, 0, 448, 512},
-			Label:       "Menu",
+			Label:       translated,
 			Path:        kFontAwesomeBars,
 			Name:        name,
 			Category:    category,
@@ -816,13 +905,26 @@ func (e makeIcon) getMenu() (register *Register) {
 }
 
 func (e makeIcon) getDonate() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemDonate",
+				Other: "Donate",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Donate"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysDonate"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineNormal),
-			Label:    "Donate",
+			Label:    translated,
 			Path:     kFontAwesomeSackDollar,
 			Name:     name,
 			Category: category,
@@ -831,7 +933,7 @@ func (e makeIcon) getDonate() (register *Register) {
 	iconPipeLine[KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineDisabled),
-			Label:    "Donate",
+			Label:    translated,
 			Path:     kFontAwesomeSackDollar,
 			Name:     name,
 			Category: category,
@@ -840,7 +942,7 @@ func (e makeIcon) getDonate() (register *Register) {
 	iconPipeLine[KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineSelected),
-			Label:    "Donate",
+			Label:    translated,
 			Path:     kFontAwesomeSackDollar,
 			Name:     name,
 			Category: category,
@@ -849,7 +951,7 @@ func (e makeIcon) getDonate() (register *Register) {
 	iconPipeLine[KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention1),
-			Label:    "Donate",
+			Label:    translated,
 			Path:     kFontAwesomeSackDollar,
 			Name:     name,
 			Category: category,
@@ -858,7 +960,7 @@ func (e makeIcon) getDonate() (register *Register) {
 	iconPipeLine[KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention2),
-			Label:    "Donate",
+			Label:    translated,
 			Path:     kFontAwesomeSackDollar,
 			Name:     name,
 			Category: category,
@@ -873,13 +975,26 @@ func (e makeIcon) getDonate() (register *Register) {
 }
 
 func (e makeIcon) getSave() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemSave",
+				Other: "Save",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Save"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysSave"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineNormal),
-			Label:    "Save",
+			Label:    translated,
 			Path:     kFontAwesomeDownload,
 			Name:     name,
 			Category: category,
@@ -888,7 +1003,7 @@ func (e makeIcon) getSave() (register *Register) {
 	iconPipeLine[KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineDisabled),
-			Label:    "Save",
+			Label:    translated,
 			Path:     kFontAwesomeDownload,
 			Name:     name,
 			Category: category,
@@ -897,7 +1012,7 @@ func (e makeIcon) getSave() (register *Register) {
 	iconPipeLine[KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineSelected),
-			Label:    "Save",
+			Label:    translated,
 			Path:     kFontAwesomeDownload,
 			Name:     name,
 			Category: category,
@@ -906,7 +1021,7 @@ func (e makeIcon) getSave() (register *Register) {
 	iconPipeLine[KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention1),
-			Label:    "Save",
+			Label:    translated,
 			Path:     kFontAwesomeDownload,
 			Name:     name,
 			Category: category,
@@ -915,7 +1030,7 @@ func (e makeIcon) getSave() (register *Register) {
 	iconPipeLine[KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention2),
-			Label:    "Save",
+			Label:    translated,
 			Path:     kFontAwesomeDownload,
 			Name:     name,
 			Category: category,
@@ -930,13 +1045,26 @@ func (e makeIcon) getSave() (register *Register) {
 }
 
 func (e makeIcon) getShare() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemShare",
+				Other: "Share",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Share"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysShare"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineNormal),
-			Label:    "Share",
+			Label:    translated,
 			Path:     kFontAwesomeShareNodes,
 			Name:     name,
 			Category: category,
@@ -945,7 +1073,7 @@ func (e makeIcon) getShare() (register *Register) {
 	iconPipeLine[KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineDisabled),
-			Label:    "Share",
+			Label:    translated,
 			Path:     kFontAwesomeShareNodes,
 			Name:     name,
 			Category: category,
@@ -954,7 +1082,7 @@ func (e makeIcon) getShare() (register *Register) {
 	iconPipeLine[KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineSelected),
-			Label:    "Share",
+			Label:    translated,
 			Path:     kFontAwesomeShareNodes,
 			Name:     name,
 			Category: category,
@@ -963,7 +1091,7 @@ func (e makeIcon) getShare() (register *Register) {
 	iconPipeLine[KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention1),
-			Label:    "Share",
+			Label:    translated,
 			Path:     kFontAwesomeShareNodes,
 			Name:     name,
 			Category: category,
@@ -972,7 +1100,7 @@ func (e makeIcon) getShare() (register *Register) {
 	iconPipeLine[KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention2),
-			Label:    "Share",
+			Label:    translated,
 			Path:     kFontAwesomeShareNodes,
 			Name:     name,
 			Category: category,
@@ -987,6 +1115,19 @@ func (e makeIcon) getShare() (register *Register) {
 }
 
 func (e makeIcon) getRetweet() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemRetweet",
+				Other: "Retweet",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Retweet"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysRetweet"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
@@ -994,7 +1135,7 @@ func (e makeIcon) getRetweet() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineNormal),
 			IconViewBox: []int{0, 0, 576, 512},
-			Label:       "Retweet",
+			Label:       translated,
 			Path:        kFontAwesomeReTweet,
 			Name:        name,
 			Category:    category,
@@ -1004,7 +1145,7 @@ func (e makeIcon) getRetweet() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineDisabled),
 			IconViewBox: []int{0, 0, 576, 512},
-			Label:       "Retweet",
+			Label:       translated,
 			Path:        kFontAwesomeReTweet,
 			Name:        name,
 			Category:    category,
@@ -1014,7 +1155,7 @@ func (e makeIcon) getRetweet() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineSelected),
 			IconViewBox: []int{0, 0, 576, 512},
-			Label:       "Retweet",
+			Label:       translated,
 			Path:        kFontAwesomeReTweet,
 			Name:        name,
 			Category:    category,
@@ -1024,7 +1165,7 @@ func (e makeIcon) getRetweet() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineAttention1),
 			IconViewBox: []int{0, 0, 576, 512},
-			Label:       "Retweet",
+			Label:       translated,
 			Path:        kFontAwesomeReTweet,
 			Name:        name,
 			Category:    category,
@@ -1034,7 +1175,7 @@ func (e makeIcon) getRetweet() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineAttention2),
 			IconViewBox: []int{0, 0, 576, 512},
-			Label:       "Retweet",
+			Label:       translated,
 			Path:        kFontAwesomeReTweet,
 			Name:        name,
 			Category:    category,
@@ -1049,13 +1190,26 @@ func (e makeIcon) getRetweet() (register *Register) {
 }
 
 func (e makeIcon) getServer() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemServer",
+				Other: "Server",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Server"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysServer"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineNormal),
-			Label:    "Server",
+			Label:    translated,
 			Path:     kFontAwesomeServer,
 			Name:     name,
 			Category: category,
@@ -1064,7 +1218,7 @@ func (e makeIcon) getServer() (register *Register) {
 	iconPipeLine[KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineDisabled),
-			Label:    "Server",
+			Label:    translated,
 			Path:     kFontAwesomeServer,
 			Name:     name,
 			Category: category,
@@ -1073,7 +1227,7 @@ func (e makeIcon) getServer() (register *Register) {
 	iconPipeLine[KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineSelected),
-			Label:    "Server",
+			Label:    translated,
 			Path:     kFontAwesomeServer,
 			Name:     name,
 			Category: category,
@@ -1082,7 +1236,7 @@ func (e makeIcon) getServer() (register *Register) {
 	iconPipeLine[KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention1),
-			Label:    "Server",
+			Label:    translated,
 			Path:     kFontAwesomeServer,
 			Name:     name,
 			Category: category,
@@ -1091,7 +1245,7 @@ func (e makeIcon) getServer() (register *Register) {
 	iconPipeLine[KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention2),
-			Label:    "Server",
+			Label:    translated,
 			Path:     kFontAwesomeServer,
 			Name:     name,
 			Category: category,
@@ -1106,13 +1260,26 @@ func (e makeIcon) getServer() (register *Register) {
 }
 
 func (e makeIcon) getUpload() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemUpload",
+				Other: "Upload",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Upload"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysUpload"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineNormal),
-			Label:    "Upload",
+			Label:    translated,
 			Path:     kFontAwesomeUpload,
 			Name:     name,
 			Category: category,
@@ -1121,7 +1288,7 @@ func (e makeIcon) getUpload() (register *Register) {
 	iconPipeLine[KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineDisabled),
-			Label:    "Upload",
+			Label:    translated,
 			Path:     kFontAwesomeUpload,
 			Name:     name,
 			Category: category,
@@ -1130,7 +1297,7 @@ func (e makeIcon) getUpload() (register *Register) {
 	iconPipeLine[KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineSelected),
-			Label:    "Upload",
+			Label:    translated,
 			Path:     kFontAwesomeUpload,
 			Name:     name,
 			Category: category,
@@ -1139,7 +1306,7 @@ func (e makeIcon) getUpload() (register *Register) {
 	iconPipeLine[KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention1),
-			Label:    "Upload",
+			Label:    translated,
 			Path:     kFontAwesomeUpload,
 			Name:     name,
 			Category: category,
@@ -1148,7 +1315,7 @@ func (e makeIcon) getUpload() (register *Register) {
 	iconPipeLine[KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention2),
-			Label:    "Upload",
+			Label:    translated,
 			Path:     kFontAwesomeUpload,
 			Name:     name,
 			Category: category,
@@ -1163,13 +1330,26 @@ func (e makeIcon) getUpload() (register *Register) {
 }
 
 func (e makeIcon) getGoBack() (register *Register) {
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemGoBack",
+				Other: "Go back",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Back"
+		log.Printf("icon translation error: %v", err)
+	}
+
 	name := "SysGoBack"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineNormal),
-			Label:    "Back",
+			Label:    translated,
 			Path:     kFontAwesomeRotate,
 			Name:     name,
 			Category: category,
@@ -1178,7 +1358,7 @@ func (e makeIcon) getGoBack() (register *Register) {
 	iconPipeLine[KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineDisabled),
-			Label:    "Back",
+			Label:    translated,
 			Path:     kFontAwesomeRotate,
 			Name:     name,
 			Category: category,
@@ -1187,7 +1367,7 @@ func (e makeIcon) getGoBack() (register *Register) {
 	iconPipeLine[KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineSelected),
-			Label:    "Back",
+			Label:    translated,
 			Path:     kFontAwesomeRotate,
 			Name:     name,
 			Category: category,
@@ -1196,7 +1376,7 @@ func (e makeIcon) getGoBack() (register *Register) {
 	iconPipeLine[KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention1),
-			Label:    "Back",
+			Label:    translated,
 			Path:     kFontAwesomeRotate,
 			Name:     name,
 			Category: category,
@@ -1205,7 +1385,7 @@ func (e makeIcon) getGoBack() (register *Register) {
 	iconPipeLine[KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(KPipeLineAttention2),
-			Label:    "Back",
+			Label:    translated,
 			Path:     kFontAwesomeRotate,
 			Name:     name,
 			Category: category,
@@ -1220,14 +1400,27 @@ func (e makeIcon) getGoBack() (register *Register) {
 }
 
 func (e makeIcon) getFileImport() (register *Register) {
-	name := "SysFileImport"
+	translated, err := translate.Localizer.Localize(
+		&i18n.LocalizeConfig{
+			DefaultMessage: &i18n.Message{
+				ID:    "IconSystemLoad",
+				Other: "Load",
+			},
+		},
+	)
+	if err != nil {
+		translated = "Load"
+		log.Printf("icon translation error: %v", err)
+	}
+
+	name := "SysFileLoad"
 	category := "Main"
 	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(KPipeLineNormal),
 			IconViewBox: []int{0, 0, 640, 640},
-			Label:       "Load",
+			Label:       translated,
 			Path:        kFontAwesomeFileImport,
 			Name:        name,
 			Category:    category,
@@ -1237,7 +1430,7 @@ func (e makeIcon) getFileImport() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineDisabled),
 			IconViewBox: []int{0, 0, 640, 640},
-			Label:       "Load",
+			Label:       translated,
 			Path:        kFontAwesomeFileImport,
 			Name:        name,
 			Category:    category,
@@ -1247,7 +1440,7 @@ func (e makeIcon) getFileImport() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineSelected),
 			IconViewBox: []int{0, 0, 640, 640},
-			Label:       "Load",
+			Label:       translated,
 			Path:        kFontAwesomeFileImport,
 			Name:        name,
 			Category:    category,
@@ -1257,7 +1450,7 @@ func (e makeIcon) getFileImport() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineAttention1),
 			IconViewBox: []int{0, 0, 640, 640},
-			Label:       "Load",
+			Label:       translated,
 			Path:        kFontAwesomeFileImport,
 			Name:        name,
 			Category:    category,
@@ -1267,7 +1460,7 @@ func (e makeIcon) getFileImport() (register *Register) {
 		rulesIcon.Data{
 			Status:      int(KPipeLineAttention2),
 			IconViewBox: []int{0, 0, 640, 640},
-			Label:       "Load",
+			Label:       translated,
 			Path:        kFontAwesomeFileImport,
 			Name:        name,
 			Category:    category,

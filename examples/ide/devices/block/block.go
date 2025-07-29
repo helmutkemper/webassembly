@@ -212,8 +212,8 @@ func (e *Block) initRuleBook() {
 		//            função desejada.
 
 		// rule, only one - start
-		//e.draggingMoveDraggingSelectedOn()
-		e.draggingMoveSelectedOnStage()
+		e.draggingMoveDraggingSelectedOn()
+		//e.draggingMoveSelectedOnStage()
 		// rule, only one - end
 	}
 

@@ -11,6 +11,7 @@ import (
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesStage"
 	"github.com/helmutkemper/webassembly/examples/ide/splashScreen"
+	"github.com/helmutkemper/webassembly/examples/ide/translate"
 	"github.com/helmutkemper/webassembly/hexagon"
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/utilsText"
@@ -129,6 +130,8 @@ var mainStage *stage.Stage
 
 func main() {
 	var err error
+
+	translate.Load()
 
 	utilsWindow.InjectBodyNoMargin()
 	utilsText.InjectFontAwesomeCSS()
@@ -270,19 +273,19 @@ func main() {
 
 	//-------------------------------------------------
 	stmLoop.SetPosition(150, 50)
-	//stmLoop.Append()
+	stmLoop.Append()
 
 	stmAdd.SetPosition(300, 150)
-	//stmAdd.Append()
+	stmAdd.Append()
 
 	stmSub.SetPosition(400, 250)
-	//stmSub.Append()
+	stmSub.Append()
 
 	stmDiv.SetPosition(400, 450)
-	//stmDiv.Append()
+	stmDiv.Append()
 
 	stmMul.SetPosition(200, 450)
-	//stmMul.Append()
+	stmMul.Append()
 
 	if _, err = GlobalControlPanel.Init(); err != nil {
 		panic(err)

@@ -1,16 +1,11 @@
 package manager
 
 import (
-	"errors"
 	"github.com/helmutkemper/webassembly/examples/ide/interfaces"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
+	"log"
 	"syscall/js"
 )
-
-type Id interface {
-	GetID() (id string)
-	GetName() (name string)
-}
 
 type BBox interface {
 	GetID() (id string)
@@ -48,60 +43,94 @@ type Flags interface {
 	GetSelected() (selected bool)
 }
 
+// English:
+//
+// Português:
 var Manager *manager
 
+// English:
+//
+// Português:
 func init() {
 	Manager = new(manager)
 	Manager.init()
 }
 
+// English:
+//
+// Português:
 type manager struct {
-	elements []Icon
-	icons    map[string]map[string]Icon
+	bbox     []BBox
+	icons    []Icon
+	mapIcons map[string]map[string]Icon
 }
 
-func (e *manager) Get() (elements []Icon) {
-	return e.elements
-}
-
+// English:
+//
+// Português:
 func (e *manager) init() {
-	e.elements = make([]Icon, len(e.elements))
-	e.icons = make(map[string]map[string]Icon)
+	e.bbox = make([]BBox, 0)
+	e.icons = make([]Icon, 0)
+	e.mapIcons = make(map[string]map[string]Icon)
 }
 
-func (e *manager) Unregister(element any) (err error) {
-	id := element.(Id).GetID()
-	for key, value := range e.elements {
-		if id == value.(Id).GetID() {
-			e.elements = append(e.elements[:key], e.elements[key+1:]...)
-			return
-		}
+// English:
+//
+// Português:
+func (e *manager) Register(element any) {
+	var ok bool
+	var bbox BBox
+	var icon Icon
+
+	if bbox, ok = element.(BBox); ok {
+		e.bbox = append(e.bbox, bbox)
 	}
 
-	err = errors.New("element not found")
-	return
+	if icon, ok = element.(Icon); ok {
+		e.icons = append(e.icons, icon)
+		e.registerIcon(icon)
+	}
 }
 
-func (e *manager) Register(element Icon) {
-	e.elements = append(e.elements, element)
-	e.RegisterIcon(element)
-}
-
-func (e *manager) RegisterIcon(element Icon) {
+// English:
+//
+// Português:
+func (e *manager) registerIcon(element Icon) {
 	category := element.GetIconCategory()
 	name := element.GetIconName()
 
-	if e.icons[category] == nil {
-		e.icons[category] = make(map[string]Icon)
+	if e.mapIcons[category] == nil {
+		e.mapIcons[category] = make(map[string]Icon)
 	}
 
-	e.icons[category][name] = element
+	e.mapIcons[category][name] = element
 }
 
-func (e *manager) GetIcons() (iconList map[string]map[string]Icon) {
+// English:
+//
+// Português:
+func (e *manager) GetBBox() (elements []BBox) {
+	log.Printf("bbox: %+v", e.bbox)
+	return e.bbox
+}
+
+// English:
+//
+// Português:
+func (e *manager) GetIcons() (elements []Icon) {
 	return e.icons
 }
 
+// English:
+//
+// Português:
+func (e *manager) GetMapIcons() (iconList map[string]map[string]Icon) {
+	return e.mapIcons
+}
+
+// English:
+//
+// Português:
 type Control struct {
 	Icon    js.Value
 	ToStage interfaces.ToStage

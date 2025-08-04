@@ -14,6 +14,7 @@ import (
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"image/color"
+	"log"
 	"math"
 	"strconv"
 	"syscall/js"
@@ -212,8 +213,8 @@ func (e *Block) initRuleBook() {
 		//            função desejada.
 
 		// rule, only one - start
-		e.draggingMoveDraggingSelectedOn()
-		//e.draggingMoveSelectedOnStage()
+		//e.draggingMoveDraggingSelectedOn()
+		e.draggingMoveSelectedOnStage()
 		// rule, only one - end
 	}
 
@@ -2068,6 +2069,7 @@ func (e *Block) calculateLimitForResizeOn() {
 //	arrasto do mouse.
 func (e *Block) selectForDragOn() {
 	list := managerCollision.Collision.DetectBoxContained(e)
+	log.Printf("list: %+v", list)
 	zIndex := e.GetZIndex()
 	for _, v := range list {
 		if !v.GetDragEnable() && zIndex < v.GetZIndex() {
@@ -2130,15 +2132,15 @@ func (e *Block) draggingMoveDraggingSelectedOn() {
 //
 //	Pega todos os blocos marcados para arrasto e os move
 func (e *Block) draggingMoveSelectedOnStage() {
-	all := manager.Manager.Get()
+	all := manager.Manager.GetBBox()
 	for _, v := range all {
-		if v.(manager.BBox).GetDragEnable() && e.id != v.(manager.BBox).GetID() {
-			x := v.(manager.BBox).GetX()
-			y := v.(manager.BBox).GetY()
+		if v.GetDragEnable() && e.id != v.GetID() {
+			x := v.GetX()
+			y := v.GetY()
 			x += e.dragDeltaLeft
 			y += e.dragDeltaTop
-			v.(manager.BBox).SetX(x)
-			v.(manager.BBox).SetY(y)
+			v.SetX(x)
+			v.SetY(y)
 		}
 	}
 }

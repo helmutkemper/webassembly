@@ -235,7 +235,8 @@ func main() {
 	stmLoop.SetGridAdjust(hex)
 	stmLoop.SetMainSvg(mainSvg)
 	_ = stmLoop.Init()
-	manager.Manager.RegisterIcon(stmLoop.GetIcon())
+	manager.Manager.Register(stmLoop)
+	manager.Manager.Register(stmLoop.GetIcon())
 
 	stmAdd := new(devices.StatementAdd)
 	stmAdd.SetResizerButton(resizeButton)
@@ -243,7 +244,8 @@ func main() {
 	stmAdd.SetGridAdjust(hex)
 	stmAdd.SetMainSvg(mainSvg)
 	_ = stmAdd.Init()
-	manager.Manager.RegisterIcon(stmAdd.GetIcon())
+	manager.Manager.Register(stmAdd)
+	manager.Manager.Register(stmAdd.GetIcon())
 
 	stmSub := new(devices.StatementSub)
 	stmSub.SetResizerButton(resizeButton)
@@ -251,7 +253,8 @@ func main() {
 	stmSub.SetGridAdjust(hex)
 	stmSub.SetMainSvg(mainSvg)
 	_ = stmSub.Init()
-	manager.Manager.RegisterIcon(stmSub.GetIcon())
+	manager.Manager.Register(stmSub)
+	manager.Manager.Register(stmSub.GetIcon())
 
 	stmDiv := new(devices.StatementDiv)
 	stmDiv.SetResizerButton(resizeButton)
@@ -259,7 +262,8 @@ func main() {
 	stmDiv.SetGridAdjust(hex)
 	stmDiv.SetMainSvg(mainSvg)
 	_ = stmDiv.Init()
-	manager.Manager.RegisterIcon(stmDiv.GetIcon())
+	manager.Manager.Register(stmDiv)
+	manager.Manager.Register(stmDiv.GetIcon())
 
 	stmMul := new(devices.StatementMul)
 	stmMul.SetResizerButton(resizeButton)
@@ -267,7 +271,8 @@ func main() {
 	stmMul.SetGridAdjust(hex)
 	stmMul.SetMainSvg(mainSvg)
 	_ = stmMul.Init()
-	manager.Manager.RegisterIcon(stmMul.GetIcon())
+	manager.Manager.Register(stmMul)
+	manager.Manager.Register(stmMul.GetIcon())
 
 	splash.Hide()
 

@@ -2,6 +2,7 @@ package managerCollision
 
 import (
 	"github.com/helmutkemper/webassembly/examples/ide/manager"
+	"log"
 )
 
 var Collision *collision
@@ -15,16 +16,16 @@ type collision struct {
 
 func (e *collision) DetectBoxContained(element manager.BBox) (list []manager.BBox) {
 	list = make([]manager.BBox, 0)
-
+	log.Printf("bbox: %+v", manager.Manager.GetBBox())
 	aId := element.GetID()
-	for _, value := range manager.Manager.Get() {
-		bId := value.(manager.BBox).GetID()
+	for _, value := range manager.Manager.GetBBox() {
+		bId := value.GetID()
 		if aId == bId {
 			continue
 		}
 
-		if e.contained(element, value.(manager.BBox)) {
-			list = append(list, value.(manager.BBox))
+		if e.contained(element, value) {
+			list = append(list, value)
 		}
 	}
 
@@ -35,14 +36,14 @@ func (e *collision) DetectBoxCollision(element manager.BBox) (list []manager.BBo
 	list = make([]manager.BBox, 0)
 
 	aId := element.GetID()
-	for _, value := range manager.Manager.Get() {
-		bId := value.(manager.BBox).GetID()
+	for _, value := range manager.Manager.GetBBox() {
+		bId := value.GetID()
 		if aId == bId {
 			continue
 		}
 
-		if e.collision(element, value.(manager.BBox)) {
-			list = append(list, value.(manager.BBox))
+		if e.collision(element, value) {
+			list = append(list, value)
 		}
 	}
 
@@ -53,13 +54,13 @@ func (e *collision) DetectBoxCollisionNotContained(element manager.BBox) (list [
 	list = make([]manager.BBox, 0)
 
 	aId := element.GetID()
-	for _, value := range manager.Manager.Get() {
-		bId := value.(manager.BBox).GetID()
+	for _, value := range manager.Manager.GetBBox() {
+		bId := value.GetID()
 		if aId == bId {
 			continue
 		}
 
-		if e.contained(element, value.(manager.BBox)) {
+		if e.contained(element, value) {
 			continue
 		}
 

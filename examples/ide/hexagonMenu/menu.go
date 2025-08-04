@@ -198,7 +198,7 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 
 	go func() {
 		for {
-			icons := manager.Manager.GetIcons()
+			icons := manager.Manager.GetMapIcons()
 			for category, categoryList := range menuOrder {
 				for name, position := range categoryList {
 					systemIcon, found := icons[category][name]
@@ -308,22 +308,24 @@ func (e makeIcon) getIcon(data rulesIcon.Data) (png js.Value) {
 }
 
 func (e makeIcon) register() {
-	manager.Manager.RegisterIcon(e.getBlank())
-	manager.Manager.RegisterIcon(e.getBug())
-	manager.Manager.RegisterIcon(e.getMath())
-	manager.Manager.RegisterIcon(e.getLoop())
-	manager.Manager.RegisterIcon(e.getTools())
-	manager.Manager.RegisterIcon(e.getConfig())
-	manager.Manager.RegisterIcon(e.getGraph())
-	manager.Manager.RegisterIcon(e.getMenu())
-	manager.Manager.RegisterIcon(e.getDonate())
-	manager.Manager.RegisterIcon(e.getSave())
-	manager.Manager.RegisterIcon(e.getShare())
-	manager.Manager.RegisterIcon(e.getRetweet())
-	manager.Manager.RegisterIcon(e.getServer())
-	manager.Manager.RegisterIcon(e.getUpload())
-	manager.Manager.RegisterIcon(e.getGoBack())
-	manager.Manager.RegisterIcon(e.getFileImport())
+	log.Print("inicio --------------------------------------------------------")
+	manager.Manager.Register(e.getBlank())
+	manager.Manager.Register(e.getBug())
+	manager.Manager.Register(e.getMath())
+	manager.Manager.Register(e.getLoop())
+	manager.Manager.Register(e.getTools())
+	manager.Manager.Register(e.getConfig())
+	manager.Manager.Register(e.getGraph())
+	manager.Manager.Register(e.getMenu())
+	manager.Manager.Register(e.getDonate())
+	manager.Manager.Register(e.getSave())
+	manager.Manager.Register(e.getShare())
+	manager.Manager.Register(e.getRetweet())
+	manager.Manager.Register(e.getServer())
+	manager.Manager.Register(e.getUpload())
+	manager.Manager.Register(e.getGoBack())
+	manager.Manager.Register(e.getFileImport())
+	log.Print("fim --------------------------------------------------------")
 }
 
 type IconStatus int

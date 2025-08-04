@@ -5,7 +5,7 @@ import (
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/connection"
 	"github.com/helmutkemper/webassembly/examples/ide/devices/block"
-	"github.com/helmutkemper/webassembly/examples/ide/hexagonMenu"
+	"github.com/helmutkemper/webassembly/examples/ide/manager"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament"
 	"github.com/helmutkemper/webassembly/examples/ide/ornament/doubleLoopArrow"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
@@ -439,7 +439,7 @@ func (e *StatementLoop) GetStatus() (staus int) {
 	return e.iconStatus
 }
 
-func (e *StatementLoop) GetIcon() (register *hexagonMenu.Register) {
+func (e *StatementLoop) GetIcon() (register *manager.RegisterIcon) {
 	translated, err := translate.Localizer.Localize(
 		&i18n.LocalizeConfig{
 			DefaultMessage: &i18n.Message{
@@ -456,48 +456,48 @@ func (e *StatementLoop) GetIcon() (register *hexagonMenu.Register) {
 	name := e.GetIconName()
 	category := e.GetIconCategory()
 	iconPipeLine := make([]js.Value, 5)
-	iconPipeLine[hexagonMenu.KPipeLineNormal] = e.getIcon(
+	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
-			Status:   int(hexagonMenu.KPipeLineNormal),
+			Status:   int(manager.KPipeLineNormal),
 			Name:     name,
 			Category: category,
 			Label:    translated,
 		},
 	)
-	iconPipeLine[hexagonMenu.KPipeLineDisabled] = e.getIcon(
+	iconPipeLine[manager.KPipeLineDisabled] = e.getIcon(
 		rulesIcon.Data{
-			Status:   int(hexagonMenu.KPipeLineDisabled),
+			Status:   int(manager.KPipeLineDisabled),
 			Name:     name,
 			Category: category,
 			Label:    translated,
 		},
 	)
-	iconPipeLine[hexagonMenu.KPipeLineSelected] = e.getIcon(
+	iconPipeLine[manager.KPipeLineSelected] = e.getIcon(
 		rulesIcon.Data{
-			Status:   int(hexagonMenu.KPipeLineSelected),
+			Status:   int(manager.KPipeLineSelected),
 			Name:     name,
 			Category: category,
 			Label:    translated,
 		},
 	)
-	iconPipeLine[hexagonMenu.KPipeLineAttention1] = e.getIcon(
+	iconPipeLine[manager.KPipeLineAttention1] = e.getIcon(
 		rulesIcon.Data{
-			Status:   int(hexagonMenu.KPipeLineAttention1),
+			Status:   int(manager.KPipeLineAttention1),
 			Name:     name,
 			Category: category,
 			Label:    translated,
 		},
 	)
-	iconPipeLine[hexagonMenu.KPipeLineAttention2] = e.getIcon(
+	iconPipeLine[manager.KPipeLineAttention2] = e.getIcon(
 		rulesIcon.Data{
-			Status:   int(hexagonMenu.KPipeLineAttention2),
+			Status:   int(manager.KPipeLineAttention2),
 			Name:     name,
 			Category: category,
 			Label:    translated,
 		},
 	)
 
-	register = new(hexagonMenu.Register)
+	register = new(manager.RegisterIcon)
 	register.SetName(name)
 	register.SetCategory(category)
 	register.SetIcon(iconPipeLine)

@@ -3,7 +3,6 @@ package manager
 import (
 	"github.com/helmutkemper/webassembly/examples/ide/interfaces"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
-	"log"
 	"syscall/js"
 	"time"
 )
@@ -174,7 +173,6 @@ func (e *manager) registerIcon(element Icon) {
 //
 // Português:
 func (e *manager) GetBBox() (elements []BBox) {
-	log.Printf("bbox: %+v", e.bbox)
 	return e.bbox
 }
 

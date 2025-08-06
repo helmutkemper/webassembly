@@ -308,7 +308,6 @@ func (e makeIcon) getIcon(data rulesIcon.Data) (png js.Value) {
 }
 
 func (e makeIcon) register() {
-	log.Print("inicio --------------------------------------------------------")
 	manager.Manager.Register(e.getBlank())
 	manager.Manager.Register(e.getBug())
 	manager.Manager.Register(e.getMath())
@@ -325,7 +324,6 @@ func (e makeIcon) register() {
 	manager.Manager.Register(e.getUpload())
 	manager.Manager.Register(e.getGoBack())
 	manager.Manager.Register(e.getFileImport())
-	log.Print("fim --------------------------------------------------------")
 }
 
 func (e makeIcon) getBlank() (register *manager.RegisterIcon) {

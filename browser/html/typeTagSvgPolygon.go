@@ -4844,7 +4844,8 @@ func (e *TagSvgPolygon) Remove(elements ...Compatible) (ref *TagSvgPolygon) {
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
 func (e *TagSvgPolygon) SetZIndex(index int) (ref *TagSvgPolygon) {
-	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	style := e.selfElement.Get("style")
+	style.Set("zIndex", strconv.FormatInt(int64(index), 10))
 	return e
 }
 

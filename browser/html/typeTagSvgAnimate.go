@@ -2077,7 +2077,8 @@ func (e *TagSvgAnimate) Remove(elements ...Compatible) (ref *TagSvgAnimate) {
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
 func (e *TagSvgAnimate) SetZIndex(index int) (ref *TagSvgAnimate) {
-	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	style := e.selfElement.Get("style")
+	style.Set("zIndex", strconv.FormatInt(int64(index), 10))
 	return e
 }
 

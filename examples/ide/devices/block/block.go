@@ -14,7 +14,6 @@ import (
 	"github.com/helmutkemper/webassembly/platform/components"
 	"github.com/helmutkemper/webassembly/platform/factoryColor"
 	"image/color"
-	"log"
 	"math"
 	"strconv"
 	"syscall/js"
@@ -2069,7 +2068,6 @@ func (e *Block) calculateLimitForResizeOn() {
 //	arrasto do mouse.
 func (e *Block) selectForDragOn() {
 	list := managerCollision.Collision.DetectBoxContained(e)
-	log.Printf("list: %+v", list)
 	zIndex := e.GetZIndex()
 	for _, v := range list {
 		if !v.GetDragEnable() && zIndex < v.GetZIndex() {

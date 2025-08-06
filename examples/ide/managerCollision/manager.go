@@ -2,7 +2,6 @@ package managerCollision
 
 import (
 	"github.com/helmutkemper/webassembly/examples/ide/manager"
-	"log"
 )
 
 var Collision *collision
@@ -16,7 +15,6 @@ type collision struct {
 
 func (e *collision) DetectBoxContained(element manager.BBox) (list []manager.BBox) {
 	list = make([]manager.BBox, 0)
-	log.Printf("bbox: %+v", manager.Manager.GetBBox())
 	aId := element.GetID()
 	for _, value := range manager.Manager.GetBBox() {
 		bId := value.GetID()

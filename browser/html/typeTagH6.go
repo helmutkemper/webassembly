@@ -2109,7 +2109,8 @@ func (e *TagH6) Remove(elements ...Compatible) (ref *TagH6) {
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
 func (e *TagH6) SetZIndex(index int) (ref *TagH6) {
-	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	style := e.selfElement.Get("style")
+	style.Set("zIndex", strconv.FormatInt(int64(index), 10))
 	return e
 }
 

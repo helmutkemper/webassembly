@@ -1590,7 +1590,8 @@ func (e *TagInputCheckBox) Remove(elements ...Compatible) (ref *TagInputCheckBox
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
 func (e *TagInputCheckBox) SetZIndex(index int) (ref *TagInputCheckBox) {
-	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	style := e.selfElement.Get("style")
+	style.Set("zIndex", strconv.FormatInt(int64(index), 10))
 	return e
 }
 

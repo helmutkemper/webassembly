@@ -535,7 +535,8 @@ func (e *TagSvgMPath) Remove(elements ...Compatible) (ref *TagSvgMPath) {
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
 func (e *TagSvgMPath) SetZIndex(index int) (ref *TagSvgMPath) {
-	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	style := e.selfElement.Get("style")
+	style.Set("zIndex", strconv.FormatInt(int64(index), 10))
 	return e
 }
 

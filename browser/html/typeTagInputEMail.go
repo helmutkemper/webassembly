@@ -1631,7 +1631,8 @@ func (e *TagInputMail) Remove(elements ...Compatible) (ref *TagInputMail) {
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
 func (e *TagInputMail) SetZIndex(index int) (ref *TagInputMail) {
-	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	style := e.selfElement.Get("style")
+	style.Set("zIndex", strconv.FormatInt(int64(index), 10))
 	return e
 }
 

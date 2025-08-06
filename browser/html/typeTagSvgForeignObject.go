@@ -4946,7 +4946,8 @@ func (e *TagSvgForeignObject) RemoveAttribute(key string) (value string) {
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
 func (e *TagSvgForeignObject) SetZIndex(index int) (ref *TagSvgForeignObject) {
-	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	style := e.selfElement.Get("style")
+	style.Set("zIndex", strconv.FormatInt(int64(index), 10))
 	return e
 }
 

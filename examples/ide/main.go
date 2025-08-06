@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/factoryFontFamily"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/browser/stage"
 	"github.com/helmutkemper/webassembly/examples/ide/devices"
@@ -309,7 +310,7 @@ func main() {
 	canvas.Get("style").Set("position", "absolute")
 	canvas.Get("style").Set("top", "0")
 	canvas.Get("style").Set("left", "0")
-	canvas.Get("style").Set("zIndex", "0")
+	//canvas.Get("style").Set("zIndex", "1000")
 
 	svg := doc.Call("getElementById", "hexagonIde")
 	svg.Get("style").Set("position", "absolute")
@@ -342,9 +343,169 @@ func main() {
 	//	}
 	//}
 
+	tagCanvas := factoryBrowser.NewTagCanvas(800, 600).
+		Import("canvas").
+		SetWidth(800).
+		SetHeight(600).
+		SetZIndex(1000)
+
+	//start := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	//	log.Printf("start")
+	//	var font html.Font
+	//	font.Family = factoryFontFamily.NewArial()
+	//	font.Size = 17
+	//	tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("start", 25, 25, -1)
+	//	return nil
+	//})
+	//end := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	//	log.Printf("end")
+	//	var font html.Font
+	//	font.Family = factoryFontFamily.NewArial()
+	//	font.Size = 17
+	//	tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("end", 25, 25, -1)
+	//	return nil
+	//})
+	//
+	//js.Global().Call("addEventListener", "mousedown", start)
+	//js.Global().Call("addEventListener", "mouseup", end)
+	//
+	//js.Global().Call("addEventListener", "touchstart", start, map[string]any{"passive": true})
+	//js.Global().Call("addEventListener", "touchend", end, map[string]any{"passive": true})
+
+	DisableCanvasSelection(canvas)
+
+	// registra callbacks de click e double-click
+	// register click and double-click callbacks
+	RegisterCanvasClickHandlers(canvas,
+		func(x, y int) {
+			var font html.Font
+			font.Family = factoryFontFamily.NewArial()
+			font.Size = 17
+			tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("click", 25, 25, -1)
+		},
+		func(x, y int) {
+			var font html.Font
+			font.Family = factoryFontFamily.NewArial()
+			font.Size = 17
+			tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("dbl click", 25, 25, -1)
+		},
+	)
+
 	done := make(chan struct{})
 	<-done
 }
+
+// -------------------------------------------------------------------------------------------------------
+const doubleClickDelay = 500 * time.Millisecond // Tempo máximo entre dois cliques para duplo clique / Max time between two clicks for double click
+
+// RegisterCanvasClickHandlers configura os eventos necessários no canvas para detectar click e double-click.
+// RegisterCanvasClickHandlers sets up the necessary events on the canvas to detect click and double-click.
+func RegisterCanvasClickHandlers(
+	canvas js.Value,
+	onClick func(x, y int),
+	onDoubleClick func(x, y int),
+) {
+
+	tagCanvas := factoryBrowser.NewTagCanvas(800, 600).
+		Import("canvas").
+		SetWidth(800).
+		SetHeight(600).
+		SetZIndex(1000)
+
+	var pointerDown bool
+	var clickTimer *time.Timer
+
+	// evento de “pressionar” (mouse ou touch) inicia a flag pointerDown
+	// “press” event (mouse or touch) sets pointerDown flag
+	downCb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		args[0].Call("preventDefault")
+
+		var font html.Font
+		font.Family = factoryFontFamily.NewArial()
+		font.Size = 17
+		tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("down", 25, 25, -1)
+
+		pointerDown = true
+		return nil
+	})
+
+	// evento de “soltar” (mouse ou touch) trata como click se pointerDown == true
+	// “release” event (mouse or touch) treated as click if pointerDown == true
+	upCb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		args[0].Call("preventDefault")
+
+		var font html.Font
+		font.Family = factoryFontFamily.NewArial()
+		font.Size = 17
+		tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("up", 25, 25, -1)
+
+		if !pointerDown {
+			return nil
+		}
+		pointerDown = false
+
+		//ev := args[0]
+		// calcula coordenadas relativas ao canvas
+		// calculate coordinates relative to the canvas
+		//rect := canvas.Call("getBoundingClientRect")
+		//x := int(ev.Get("clientX").Float() - rect.Get("left").Float())
+		//y := int(ev.Get("clientY").Float() - rect.Get("top").Float())
+		x := 0
+		y := 0
+
+		if clickTimer == nil {
+			// primeiro clique: aguarda tempo para ver se vem um segundo
+			// first click: wait to see if a second click comes
+			clickTimer = time.AfterFunc(doubleClickDelay, func() {
+				onClick(x, y)
+				clickTimer = nil
+			})
+		} else {
+			// segundo clique dentro do intervalo: é um double click
+			// second click within interval: it’s a double click
+			clickTimer.Stop()
+			clickTimer = nil
+			onDoubleClick(x, y)
+		}
+		return nil
+	})
+
+	// associa listeners
+	// attach listeners
+	canvas.Call("addEventListener", "mousedown", downCb)
+	canvas.Call("addEventListener", "mouseup", upCb)
+	canvas.Call("addEventListener", "touchstart", downCb, map[string]any{"passive": true})
+	canvas.Call("addEventListener", "touchend", upCb, map[string]any{"passive": true})
+}
+
+func DisableCanvasSelection(canvas js.Value) {
+	style := canvas.Get("style")
+	// Desabilita seleção de texto
+	// Disable text selection
+	style.Call("setProperty", "user-select", "none", "")
+	style.Call("setProperty", "-webkit-user-select", "none", "")
+	// Desabilita callout (menu de contexto de toque longo no iOS)
+	// Disable touch-callout (long-press context menu on iOS)
+	style.Call("setProperty", "-webkit-touch-callout", "none", "")
+	// Evita gestos de zoom/pan que possam selecionar ou arrastar o canvas
+	// Prevent zoom/pan gestures that may select or drag the canvas
+	style.Call("setProperty", "touch-action", "none", "")
+	// Opcional: impede arrastar imagens dentro do canvas
+	// Optional: prevent image dragging inside the canvas
+	style.Call("setProperty", "-webkit-user-drag", "none", "")
+
+	// Bloqueia eventos que disparam seleção ou menu de contexto
+	// Block events that trigger selection or context menu
+	block := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		args[0].Call("preventDefault")
+		return nil
+	})
+	for _, evt := range []string{"touchstart", "touchmove", "touchend", "contextmenu"} {
+		canvas.Call("addEventListener", evt, block)
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------
 
 type CanvasCell struct {
 	canvas                    *html.TagCanvas
@@ -492,20 +653,3 @@ func (e *HexagonDraw) Draw(col, row int) {
 func (e *HexagonDraw) GetSvg() (tagSvg *html.TagSvg) {
 	return e.svg
 }
-
-/*
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-<!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-<path d=
-
-"M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96l160 0 0 32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32l0 32L160 64C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96l-160 0 0-32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-32 160 0c88.4 0 160-71.6 160-160z"
-
-/></svg>
-<svg xmlns="http://www.w3.org/2000/svg" x="100" y="100" width="200" height="200"><style xmlns="http://www.w3.org/2000/svg">
-@font-face {
-	font-family: "FASolid";
-	src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/webfonts/fa-solid-900.woff2") format("woff2");
-	font-style: normal;
-}
-</style><path stroke-width="4" stroke="rgba(95,95,95,1)" fill="rgba(180,180,255,1)" d="M 200 100 L 150 186.60254 L 50 186.60254 L 0 100 L 50 13.39746 L 150 13.39746 L 200 100 z"></path><text xmlns="http://www.w3.org/2000/svg" font-family="FASolid" font-size="90" fill="white" x="55" y="110"></text><text xmlns="http://www.w3.org/2000/svg" font-family="Helvetica" font-size="20" fill="rgba(0,0,0,1)" x="75" y="160">Loop</text></svg>
-*/

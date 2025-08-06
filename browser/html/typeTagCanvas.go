@@ -101,8 +101,11 @@ func (el *TagCanvas) Import(tagId string) (ref *TagCanvas) {
 	el.selfElement = toImport
 
 	el.context = el.selfElement.Call("getContext", "2d")
-	el.selfElement.Set("width", el.width)
-	el.selfElement.Set("height", el.height)
+	el.width = el.selfElement.Get("width").Int()
+	el.height = el.selfElement.Get("height").Int()
+
+	el.selfElement.Set("width", fmt.Sprintf("%vpx", el.width))
+	el.selfElement.Set("height", fmt.Sprintf("%vpx", el.height))
 
 	return el
 }
@@ -151,6 +154,65 @@ func (el *TagCanvas) Init(width, height int) (ref *TagCanvas) {
 	}
 
 	return el
+}
+
+// GetPointerPosition #replicar
+//
+// English:
+//
+//	Converts mouse or touch coordinates to canvas coordinates using DOMPoint,
+//	compatible with modern browsers (recommended).
+//
+//	  Input:
+//	    args: args from listener
+//	    viewBoxFrom: canvas element that contains an viewBox, usually the main canvas element
+//
+// Português:
+//
+//	Converte coordenadas do mouse ou toque para coordenadas do canvas usando DOMPoint,
+//	compatível com navegadores modernos (recomendado).
+//
+//	  Entrada:
+//	    args: args do listener
+//	    viewBoxFrom: elemento canvas que contém um viewBox, geralmente o elemento canvas principal
+func (el *TagCanvas) GetPointerPosition(args []js.Value, viewBoxFrom Compatible) (x, y int) {
+	var clientX, clientY int
+	event := args[0]
+
+	touch := event.Get("changedTouches")
+	if !touch.IsUndefined() {
+		event = touch.Index(0)
+	}
+
+	clientX = event.Get("clientX").Int()
+	clientY = event.Get("clientY").Int()
+
+	// Cria um DOMPoint com as coordenadas
+	var domPointConstructor js.Value
+	if js.Global().Get("DOMPoint").Truthy() {
+		domPointConstructor = js.Global().Get("DOMPoint")
+	} else if js.Global().Get("DOMPointReadOnly").Truthy() {
+		domPointConstructor = js.Global().Get("DOMPointReadOnly")
+	} else {
+		log.Println("DOMPoint not available in this environment")
+		return clientX, clientY
+	}
+
+	if domPointConstructor.IsUndefined() {
+		log.Printf("domPointConstructor is undefined")
+		return clientX, clientY
+	}
+
+	point := domPointConstructor.New(clientX, clientY)
+
+	// Aplica a matriz de transformação inversa
+	matrix := viewBoxFrom.Get().Call("getScreenCTM").Call("inverse")
+	coords := point.Call("matrixTransform", matrix)
+
+	newX := coords.Get("x").Int()
+	newY := coords.Get("y").Int()
+
+	return newX, newY
 }
 
 func (el *TagCanvas) getPngData() (pngDataJs js.Value) {
@@ -1800,7 +1862,7 @@ func (el *TagCanvas) FillRect(x, y, width, height int) (ref *TagCanvas) {
 //	    para renderizar o texto em outra cor/gradiente;
 //	  * A cor padrão do texto é preto.
 func (el *TagCanvas) FillText(text string, x, y, maxWidth int) (ref *TagCanvas) {
-	if maxWidth == 0 {
+	if maxWidth <= 0 {
 		el.context.Call("fillText", text, x, y)
 		return el
 	}
@@ -3885,9 +3947,9 @@ func (el *TagCanvas) pixelXYToLatLongOSM(pixelX, pixelY int, zoomLevel int) (lat
 // Português:
 //
 //	Define um atributo no elemento da tag com a chave e valor especificada.
-func (e *TagCanvas) SetAttribute(key string, value any) (ref *TagCanvas) {
-	e.selfElement.Call("setAttribute", key, value)
-	return e
+func (el *TagCanvas) SetAttribute(key string, value any) (ref *TagCanvas) {
+	el.selfElement.Call("setAttribute", key, value)
+	return el
 }
 
 // GetAttribute
@@ -3899,8 +3961,8 @@ func (e *TagCanvas) SetAttribute(key string, value any) (ref *TagCanvas) {
 // Português:
 //
 //	Retorna um atributo no elemento da tag com a chave e valor especificada.
-func (e *TagCanvas) GetAttribute(key string) (value string) {
-	return e.selfElement.Call("getAttribute", key).String()
+func (el *TagCanvas) GetAttribute(key string) (value string) {
+	return el.selfElement.Call("getAttribute", key).String()
 }
 
 // RemoveAttribute
@@ -3912,8 +3974,8 @@ func (e *TagCanvas) GetAttribute(key string) (value string) {
 // Português:
 //
 //	Remove um atributo no elemento da tag.
-func (e *TagCanvas) RemoveAttribute(key string) (value string) {
-	return e.selfElement.Call("removeAttribute", key).String()
+func (el *TagCanvas) RemoveAttribute(key string) (value string) {
+	return el.selfElement.Call("removeAttribute", key).String()
 }
 
 // Remove
@@ -3925,12 +3987,12 @@ func (e *TagCanvas) RemoveAttribute(key string) (value string) {
 // Português:
 //
 //	Remove um nó filho do DOM e retorna o nó removido.
-func (e *TagCanvas) Remove(elements ...Compatible) (ref *TagCanvas) {
+func (el *TagCanvas) Remove(elements ...Compatible) (ref *TagCanvas) {
 	for _, element := range elements {
-		e.selfElement.Call("removeChild", element.Get())
+		el.selfElement.Call("removeChild", element.Get())
 	}
 
-	return e
+	return el
 }
 
 // SetZIndex
@@ -3947,9 +4009,10 @@ func (e *TagCanvas) Remove(elements ...Compatible) (ref *TagCanvas) {
 //	grade.
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
-func (e *TagCanvas) SetZIndex(index int) (ref *TagCanvas) {
-	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
-	return e
+func (el *TagCanvas) SetZIndex(index int) (ref *TagCanvas) {
+	style := el.selfElement.Get("style")
+	style.Set("zIndex", strconv.FormatInt(int64(index), 10))
+	return el
 }
 
 // GetZIndex
@@ -3966,8 +4029,8 @@ func (e *TagCanvas) SetZIndex(index int) (ref *TagCanvas) {
 //	grade.
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
-func (e *TagCanvas) GetZIndex() (index int) {
-	z := e.selfElement.Call("getAttribute", "zIndex").String()
+func (el *TagCanvas) GetZIndex() (index int) {
+	z := el.selfElement.Call("getAttribute", "zIndex").String()
 	if z == "auto" {
 		return math.MinInt
 	}
@@ -3990,7 +4053,7 @@ func (e *TagCanvas) GetZIndex() (index int) {
 //	grade.
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
-func (e *TagCanvas) RemoveZIndex() (ref *TagCanvas) {
-	e.selfElement.Call("removeAttribute", "zIndex")
-	return e
+func (el *TagCanvas) RemoveZIndex() (ref *TagCanvas) {
+	el.selfElement.Call("removeAttribute", "zIndex")
+	return el
 }

@@ -1657,7 +1657,8 @@ func (e *TagTextArea) Remove(elements ...Compatible) (ref *TagTextArea) {
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
 func (e *TagTextArea) SetZIndex(index int) (ref *TagTextArea) {
-	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	style := e.selfElement.Get("style")
+	style.Set("zIndex", strconv.FormatInt(int64(index), 10))
 	return e
 }
 

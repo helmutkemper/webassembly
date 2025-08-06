@@ -1717,7 +1717,8 @@ func (e *TagSelect) Remove(elements ...Compatible) (ref *TagSelect) {
 //
 // Elementos sobrepostos com um z-index maior cobrem aqueles com um z-index menor.
 func (e *TagSelect) SetZIndex(index int) (ref *TagSelect) {
-	e.selfElement.Call("setAttribute", "zIndex", strconv.FormatInt(int64(index), 10))
+	style := e.selfElement.Get("style")
+	style.Set("zIndex", strconv.FormatInt(int64(index), 10))
 	return e
 }
 

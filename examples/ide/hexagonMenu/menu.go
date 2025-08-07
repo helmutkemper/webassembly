@@ -240,7 +240,7 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 
 }
 
-func (e makeIcon) getIcon(data rulesIcon.Data) (png js.Value) {
+func (e makeIcon) getIcon(data rulesIcon.Data) (png []js.Value) {
 
 	data = rulesIcon.DataVerifySystemIcon(data)
 
@@ -304,12 +304,24 @@ func (e makeIcon) getIcon(data rulesIcon.Data) (png js.Value) {
 
 	w := rulesIcon.Width * rulesIcon.SizeRatio
 	h := rulesIcon.Height * rulesIcon.SizeRatio
-	return svgIcon.ToCanvas(
-		html.CanvasData{
-			Width:  w.GetInt(),
-			Height: h.GetInt(),
-		},
-	)
+
+	png = make([]js.Value, 101)
+	for i := 0; i <= 100; i += 1 {
+		png[i] = svgIcon.ToCanvas(
+			html.CanvasData{
+				Width:               w.GetInt(),
+				Height:              h.GetInt(),
+				ZoomHorizontal:      float64(i) / 100.0,
+				ZoomHorizontalForce: true,
+				ZoomVertical:        float64(i) / 100.0,
+				ZoomVerticalForce:   true,
+				Alpha:               float64(i) / 100.0,
+				AlphaForce:          true,
+			},
+		)
+	}
+
+	return png
 }
 
 func (e makeIcon) register() {
@@ -334,7 +346,7 @@ func (e makeIcon) register() {
 func (e makeIcon) getBlank() (register *manager.RegisterIcon) {
 	name := "SysBlank"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:          int(manager.KPipeLineNormal),
@@ -409,7 +421,7 @@ func (e makeIcon) getBug() (register *manager.RegisterIcon) {
 
 	name := "SysBug"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -479,7 +491,7 @@ func (e makeIcon) getMath() (register *manager.RegisterIcon) {
 
 	name := "SysMath"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(manager.KPipeLineNormal),
@@ -554,7 +566,7 @@ func (e makeIcon) getLoop() (register *manager.RegisterIcon) {
 
 	name := "SysLoop"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -624,7 +636,7 @@ func (e makeIcon) getTools() (register *manager.RegisterIcon) {
 
 	name := "SysTools"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -694,7 +706,7 @@ func (e makeIcon) getConfig() (register *manager.RegisterIcon) {
 
 	name := "SysConfig"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -764,7 +776,7 @@ func (e makeIcon) getGraph() (register *manager.RegisterIcon) {
 
 	name := "SysGraph"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(manager.KPipeLineNormal),
@@ -839,7 +851,7 @@ func (e makeIcon) getMenu() (register *manager.RegisterIcon) {
 
 	name := "SysMenu"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(manager.KPipeLineNormal),
@@ -914,7 +926,7 @@ func (e makeIcon) getDonate() (register *manager.RegisterIcon) {
 
 	name := "SysDonate"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -984,7 +996,7 @@ func (e makeIcon) getSave() (register *manager.RegisterIcon) {
 
 	name := "SysSave"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -1054,7 +1066,7 @@ func (e makeIcon) getShare() (register *manager.RegisterIcon) {
 
 	name := "SysShare"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -1124,7 +1136,7 @@ func (e makeIcon) getRetweet() (register *manager.RegisterIcon) {
 
 	name := "SysRetweet"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(manager.KPipeLineNormal),
@@ -1199,7 +1211,7 @@ func (e makeIcon) getServer() (register *manager.RegisterIcon) {
 
 	name := "SysServer"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -1269,7 +1281,7 @@ func (e makeIcon) getUpload() (register *manager.RegisterIcon) {
 
 	name := "SysUpload"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -1339,7 +1351,7 @@ func (e makeIcon) getGoBack() (register *manager.RegisterIcon) {
 
 	name := "SysGoBack"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -1409,7 +1421,7 @@ func (e makeIcon) getFileImport() (register *manager.RegisterIcon) {
 
 	name := "SysFileLoad"
 	category := "Main"
-	iconPipeLine := make([]js.Value, 5)
+	iconPipeLine := make([][]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(manager.KPipeLineNormal),

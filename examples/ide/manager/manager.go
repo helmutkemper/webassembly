@@ -57,7 +57,7 @@ const (
 
 type RegisterIcon struct {
 	status   IconStatus
-	icon     []js.Value
+	icon     [][]js.Value
 	name     string
 	category string
 	time     time.Time
@@ -79,7 +79,7 @@ func (e *RegisterIcon) SetCategory(category string) {
 	e.category = category
 }
 
-func (e *RegisterIcon) SetIcon(icon []js.Value) {
+func (e *RegisterIcon) SetIcon(icon [][]js.Value) {
 	e.icon = icon
 	e.time = time.Now()
 }
@@ -96,14 +96,16 @@ func (e *RegisterIcon) GetIcon() (icon js.Value) {
 	interval := time.Duration(500)
 	elapsed := time.Since(e.time)
 	cycle := elapsed % (time.Millisecond * 2 * interval)
+	log.Printf("icon: %v", e.icon[e.status][100])
+	return e.icon[e.status][100] // todo: remover esta linha
 	switch e.status {
 	case KPipeLineAlert:
 		if cycle < time.Millisecond*interval {
-			return e.icon[KPipeLineAttention1]
+			return e.icon[KPipeLineAttention1][99]
 		}
-		return e.icon[KPipeLineAttention2]
+		return e.icon[KPipeLineAttention2][99]
 	default:
-		return e.icon[e.status]
+		return e.icon[e.status][99]
 	}
 }
 
@@ -147,12 +149,10 @@ func (e *manager) Register(element any) {
 	var icon Icon
 
 	if bbox, ok = element.(BBox); ok {
-		log.Printf("bbox name: %v", bbox.GetName())
 		e.bbox = append(e.bbox, bbox)
 	}
 
 	if icon, ok = element.(Icon); ok {
-		log.Printf("icon name: %v", icon.GetIconName())
 		e.icons = append(e.icons, icon)
 		e.registerIcon(icon)
 	}

@@ -410,7 +410,7 @@ func RegisterCanvasClickHandlers(
 		Import("canvas").
 		SetWidth(800).
 		SetHeight(600).
-		SetZIndex(-100)
+		SetZIndex(100)
 
 	var pointerDown bool
 	var clickTimer *time.Timer
@@ -418,7 +418,7 @@ func RegisterCanvasClickHandlers(
 	// evento de “pressionar” (mouse ou touch) inicia a flag pointerDown
 	// “press” event (mouse or touch) sets pointerDown flag
 	downCb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		args[0].Call("preventDefault")
+		//args[0].Call("preventDefault")
 
 		var font html.Font
 		font.Family = factoryFontFamily.NewArial()
@@ -432,7 +432,7 @@ func RegisterCanvasClickHandlers(
 	// evento de “soltar” (mouse ou touch) trata como click se pointerDown == true
 	// “release” event (mouse or touch) treated as click if pointerDown == true
 	upCb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		args[0].Call("preventDefault")
+		//args[0].Call("preventDefault")
 
 		var font html.Font
 		font.Family = factoryFontFamily.NewArial()
@@ -472,8 +472,8 @@ func RegisterCanvasClickHandlers(
 
 	// associa listeners
 	// attach listeners
-	canvas.Call("addEventListener", "mousedown", downCb)
-	canvas.Call("addEventListener", "mouseup", upCb)
+	canvas.Call("addEventListener", "mousedown", downCb, map[string]any{"passive": true})
+	canvas.Call("addEventListener", "mouseup", upCb, map[string]any{"passive": true})
 	canvas.Call("addEventListener", "touchstart", downCb, map[string]any{"passive": true})
 	canvas.Call("addEventListener", "touchend", upCb, map[string]any{"passive": true})
 }

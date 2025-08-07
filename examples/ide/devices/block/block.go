@@ -988,7 +988,7 @@ func (e *Block) Remove() {
 //
 // Português:
 func (e *Block) GetZIndex() (zIndex int) {
-	z := e.block.Get().Call("getAttribute", "zIndex").String()
+	z := e.block.Get().Get("style").Get("zIndex").String()
 	zStr, _ := strconv.Atoi(z)
 	return zStr
 }
@@ -2070,7 +2070,7 @@ func (e *Block) selectForDragOn() {
 	list := managerCollision.Collision.DetectBoxContained(e)
 	zIndex := e.GetZIndex()
 	for _, v := range list {
-		if !v.GetDragEnable() && zIndex < v.GetZIndex() {
+		if !v.GetDragEnable() && zIndex <= v.GetZIndex() {
 			v.SetDragEnable(true)
 		}
 	}
@@ -2090,7 +2090,7 @@ func (e *Block) selectForDragOff() {
 	list := managerCollision.Collision.DetectBoxContained(e)
 	zIndex := e.GetZIndex()
 	for _, v := range list {
-		if v.GetDragEnable() && zIndex < v.GetZIndex() {
+		if v.GetDragEnable() && zIndex <= v.GetZIndex() {
 			v.SetDragEnable(false)
 		}
 	}
@@ -2109,7 +2109,7 @@ func (e *Block) draggingMoveDraggingSelectedOn() {
 	list := managerCollision.Collision.DetectBoxContained(e)
 	zIndex := e.GetZIndex()
 	for _, v := range list {
-		if v.GetDragEnable() && zIndex < v.GetZIndex() {
+		if v.GetDragEnable() && zIndex <= v.GetZIndex() {
 			x := v.GetX()
 			y := v.GetY()
 			x += e.dragDeltaLeft
@@ -2147,7 +2147,7 @@ func (e *Block) selectAllElementsInsideBlockOn() {
 	list := managerCollision.Collision.DetectBoxContained(e)
 	zIndex := e.GetZIndex()
 	for _, v := range list {
-		if !v.GetSelected() && zIndex < v.GetZIndex() {
+		if !v.GetSelected() && zIndex <= v.GetZIndex() {
 			v.SetSelected(true)
 		}
 	}
@@ -2157,7 +2157,7 @@ func (e *Block) selectAllElementsInsideBlockOff() {
 	list := managerCollision.Collision.DetectBoxContained(e)
 	zIndex := e.GetZIndex()
 	for _, v := range list {
-		if v.GetSelected() && zIndex < v.GetZIndex() {
+		if v.GetSelected() && zIndex <= v.GetZIndex() {
 			v.SetSelected(false)
 		}
 	}

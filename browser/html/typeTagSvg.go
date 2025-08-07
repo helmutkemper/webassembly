@@ -5485,10 +5485,10 @@ func (e *TagSvg) ToPngResized(width, height float64) (pngData js.Value) {
 	return pngData
 }
 
-func (e *TagSvg) ToCanvas(width, height float64) (pngData js.Value) {
-	if (width == 0.0 || height == 0.0) &&
+func (e *TagSvg) ToCanvas(data CanvasData) (pngData js.Value) {
+	if (data.Width == 0.0 || data.Height == 0.0) &&
 		(e.width == 0.0 || e.height == 0.0) {
-		log.Print("ToPng().warning: tag svg has width or height equal to zero")
+		log.Print("ToPng().warning: tag svg has 'width' or 'height' properties equal to zero")
 	}
 
 	serializer := js.Global().Get("XMLSerializer").New()
@@ -5512,25 +5512,35 @@ func (e *TagSvg) ToCanvas(width, height float64) (pngData js.Value) {
 
 		ctx := canvas.Call("getContext", "2d")
 
-		// todo: melhorar isto e verificar valores iguais a zero
-		if width == 0.0 && height == 0.0 {
-			canvas.Set("width", e.width)
-			canvas.Set("height", e.height)
-			ctx.Call("drawImage", img, 0, 0)
-		} else if width <= 5.0 && height <= 5.0 {
-			width = float64(e.width) * width
-			height = float64(e.height) * height
+		width := float64(e.width)
+		height := float64(e.height)
 
-			canvas.Set("width", width)
-			canvas.Set("height", height)
-
-			ctx.Call("drawImage", img, 0, 0, int(width), int(height))
-		} else {
-			canvas.Set("width", width)
-			canvas.Set("height", height)
-
-			ctx.Call("drawImage", img, 0, 0, int(width), int(height))
+		if data.Width != 0.0 {
+			width = float64(data.Width)
 		}
+
+		if data.Height != 0.0 {
+			height = float64(data.Height)
+		}
+
+		if data.ZoomHorizontal != 0.0 || data.ZoomHorizontalForce {
+			width *= data.ZoomHorizontal
+		}
+
+		if data.ZoomVertical != 0.0 || data.ZoomVerticalForce {
+			height *= data.ZoomVertical
+		}
+
+		if data.Alpha == 0.0 && !data.AlphaForce {
+			data.Alpha = 1.0
+		}
+
+		canvas.Set("width", width)
+		canvas.Set("height", height)
+
+		ctx.Set("globalAlpha", data.Alpha)
+		ctx.Call("drawImage", img, 0, 0, int(width), int(height))
+		ctx.Set("globalAlpha", 1.0)
 
 		pngData = canvas.Call("toDataURL", "image/png")
 		js.Global().Get("URL").Call("revokeObjectURL", url)

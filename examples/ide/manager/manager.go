@@ -3,6 +3,7 @@ package manager
 import (
 	"github.com/helmutkemper/webassembly/examples/ide/interfaces"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
+	"log"
 	"syscall/js"
 	"time"
 )
@@ -146,10 +147,12 @@ func (e *manager) Register(element any) {
 	var icon Icon
 
 	if bbox, ok = element.(BBox); ok {
+		log.Printf("bbox name: %v", bbox.GetName())
 		e.bbox = append(e.bbox, bbox)
 	}
 
 	if icon, ok = element.(Icon); ok {
+		log.Printf("icon name: %v", icon.GetIconName())
 		e.icons = append(e.icons, icon)
 		e.registerIcon(icon)
 	}

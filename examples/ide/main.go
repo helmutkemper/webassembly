@@ -347,7 +347,7 @@ func main() {
 		Import("canvas").
 		SetWidth(800).
 		SetHeight(600).
-		SetZIndex(1000)
+		SetZIndex(-100)
 
 	//start := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 	//	log.Printf("start")
@@ -410,7 +410,7 @@ func RegisterCanvasClickHandlers(
 		Import("canvas").
 		SetWidth(800).
 		SetHeight(600).
-		SetZIndex(1000)
+		SetZIndex(-100)
 
 	var pointerDown bool
 	var clickTimer *time.Timer

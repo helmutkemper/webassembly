@@ -564,7 +564,12 @@ func (e *StatementLoop) getIcon(data rulesIcon.Data) (png js.Value) {
 
 	w := rulesIcon.Width * rulesIcon.SizeRatio
 	h := rulesIcon.Height * rulesIcon.SizeRatio
-	return svgIcon.ToCanvas(w.GetFloat(), h.GetFloat())
+	return svgIcon.ToCanvas(
+		html.CanvasData{
+			Width:  w.GetInt(),
+			Height: h.GetInt(),
+		},
+	)
 }
 
 func (e *StatementLoop) GetInitialized() (initialized bool) {

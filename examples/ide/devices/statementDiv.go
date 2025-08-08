@@ -468,7 +468,7 @@ func (e *StatementDiv) GetIcon() (register *manager.RegisterIcon) {
 
 	name := e.GetIconName()
 	category := e.GetIconCategory()
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -517,7 +517,7 @@ func (e *StatementDiv) GetIcon() (register *manager.RegisterIcon) {
 	return register
 }
 
-func (e *StatementDiv) getIcon(data rulesIcon.Data) (png []js.Value) {
+func (e *StatementDiv) getIcon(data rulesIcon.Data) (png js.Value) {
 
 	data = rulesIcon.DataVerifyElementIcon(data)
 
@@ -577,24 +577,12 @@ func (e *StatementDiv) getIcon(data rulesIcon.Data) (png []js.Value) {
 
 	w := rulesIcon.Width * rulesIcon.SizeRatio
 	h := rulesIcon.Height * rulesIcon.SizeRatio
-
-	png = make([]js.Value, 101)
-	for i := 0; i <= 100; i += 1 {
-		png[i] = svgIcon.ToCanvas(
-			html.CanvasData{
-				Width:               w.GetInt(),
-				Height:              h.GetInt(),
-				ZoomHorizontal:      float64(i) / 100.0,
-				ZoomHorizontalForce: true,
-				ZoomVertical:        float64(i) / 100.0,
-				ZoomVerticalForce:   true,
-				Alpha:               float64(i) / 100.0,
-				AlphaForce:          true,
-			},
-		)
-	}
-
-	return png
+	return svgIcon.ToCanvas(
+		html.CanvasData{
+			Width:  w.GetInt(),
+			Height: h.GetInt(),
+		},
+	)
 }
 
 func (e *StatementDiv) GetInitialized() (initialized bool) {

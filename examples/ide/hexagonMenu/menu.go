@@ -64,6 +64,7 @@ import (
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"image/color"
 	"log"
+	"math"
 	"syscall/js"
 	"time"
 )
@@ -144,6 +145,16 @@ func init() {
 
 type makeIcon struct{}
 
+type CategoryIcon struct {
+	Name string
+	Menu []MenuIcon
+}
+type MenuIcon struct {
+	Col  int
+	Row  int
+	Name string
+}
+
 func (e makeIcon) Process(mainSvg *html.TagSvg) {
 	e.register()
 
@@ -155,92 +166,205 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 	//menuSvg := factoryBrowser.NewTagSvg().Width(rulesDensity.Density(600).GetInt()).Height(rulesDensity.Density(800).GetInt())
 	//mainSvg.Append(menuSvg)
 
-	menuOrder := map[string]map[string][]int{
-		"MainMenu": {
-			"SysFileLoad": {1, 1},
-			"SysMenu":     {1, 3},
-			"SysBug":      {1, 5},
-			"SysTools":    {1, 7},
-			"SysBlank":    {5, 7},
+	menuOrder := []CategoryIcon{
+		{
+			Name: "MainMenu",
+			Menu: []MenuIcon{
+				{
+					Col:  1,
+					Row:  1,
+					Name: "SysFileLoad",
+				},
+				{
+					Col:  1,
+					Row:  3,
+					Name: "SysMenu",
+				},
+				{
+					Col:  1,
+					Row:  5,
+					Name: "SysBug",
+				},
+				{
+					Col:  1,
+					Row:  7,
+					Name: "SysTools",
+				},
+				{
+					Col:  1,
+					Row:  9,
+					Name: "SysBlank",
+				},
+			},
 		},
-		"Menu": {
-			"SysMath":   {1, 9},
-			"SysLoop":   {4, 8},
-			"SysDonate": {2, 2},
-			"SysSave":   {2, 4},
-			"SysUpload": {2, 6},
+		{
+			Name: "Menu",
+			Menu: []MenuIcon{
+				{
+					Col:  2,
+					Row:  2,
+					Name: "SysMath",
+				},
+				{
+					Col:  2,
+					Row:  4,
+					Name: "SysLoop",
+				},
+				{
+					Col:  2,
+					Row:  6,
+					Name: "SysDonate",
+				},
+				{
+					Col:  2,
+					Row:  8,
+					Name: "SysSave",
+				},
+				{
+					Col:  2,
+					Row:  10,
+					Name: "SysUpload",
+				},
+			},
 		},
-		"Loop": {
-			"SysLoop":   {2, 8},
-			"Loop":      {3, 1},
-			"SysGoBack": {3, 3},
+		{
+			Name: "Loop",
+			Menu: []MenuIcon{
+				{
+					Col:  2,
+					Row:  12,
+					Name: "SysLoop",
+				},
+				{
+					Col:  2,
+					Row:  14,
+					Name: "Loop",
+				},
+				{
+					Col:  2,
+					Row:  16,
+					Name: "SysGoBack",
+				},
+			},
 		},
-		"Math": {
-			"SysMath":   {3, 5},
-			"Add":       {3, 7},
-			"Sub":       {3, 9},
-			"Mul":       {4, 6},
-			"Div":       {4, 2},
-			"SysGoBack": {4, 4},
-		},
-		//"Math": {
-		//	//"SysMath": {5, 5},
-		//	"Add": {4, 6},
-		//	"Sub": {4, 8},
-		//	"Mul": {6, 6},
-		//	"Div": {6, 8},
-		//	//"SysGoBack": {5, 9},
-		//	//"SysBlank":  {5, 7},
-		//	//"SysMenu": {5, 7},
-		//	"SysGoBack": {5, 7},
+		//{
+		//	Name: "Math",
+		//	Menu: []MenuIcon{
+		//		{
+		//			Col:  5,
+		//			Row:  7,
+		//			Name: "SysGoBack",
+		//		},
+		//		{
+		//			Col:  4,
+		//			Row:  6,
+		//			Name: "Add",
+		//		},
+		//		{
+		//			Col:  4,
+		//			Row:  8,
+		//			Name: "Sub",
+		//		},
+		//		{
+		//			Col:  6,
+		//			Row:  6,
+		//			Name: "Mul",
+		//		},
+		//		{
+		//			Col:  6,
+		//			Row:  8,
+		//			Name: "Div",
+		//		},
+		//	},
 		//},
 	}
 
+	//"MainMenu": {
+	//	"SysFileLoad": {1, 1},
+	//	"SysMenu":     {1, 3},
+	//	"SysBug":      {1, 5},
+	//	"SysTools":    {1, 7},
+	//	"SysBlank":    {5, 7},
+	//},
+	//"Menu": {
+	//	"SysMath":   {1, 9},
+	//	"SysLoop":   {4, 8},
+	//	"SysDonate": {2, 2},
+	//	"SysSave":   {2, 4},
+	//	"SysUpload": {2, 6},
+	//},
+	//"Loop": {
+	//	"SysLoop":   {2, 8},
+	//	"Loop":      {3, 1},
+	//	"SysGoBack": {3, 3},
+	//},
+	//"Math": {
+	//	"SysMath":   {3, 5},
+	//	"Add":       {3, 7},
+	//	"Sub":       {3, 9},
+	//	"Mul":       {4, 6},
+	//	"Div":       {4, 2},
+	//	"SysGoBack": {4, 4},
+	//},
+	//"Math": {
+	//"SysMath": {5, 5},
+	//"Add": {4, 6},
+	//"Sub": {4, 8},
+	//"Mul": {6, 6},
+	//"Div": {6, 8},
+	//"SysGoBack": {5, 9},
+	//"SysBlank":  {5, 7},
+	//"SysMenu": {5, 7},
+	//"SysGoBack": {5, 7},
+	//},
+	//}
+
 	go func() {
+		start := time.Now()
+		icons := manager.Manager.GetMapIcons()
+		v := float64(200)
+
 		for {
-			icons := manager.Manager.GetMapIcons()
-			for category, categoryList := range menuOrder {
-				for name, position := range categoryList {
+			counter := 0.0
+			for _, categoryList := range menuOrder {
+				category := categoryList.Name
+				for _, iconData := range categoryList.Menu {
+					name := iconData.Name
+					since := time.Since(start)
+					t := math.Min(math.Max(float64(since.Milliseconds())-counter, 0)/v, 1.0)
+					counter += 50
+					if t == 0 {
+						continue
+					}
+
 					systemIcon, found := icons[category][name]
 
 					if !found {
 						systemIcon, found = icons["Main"][name]
 					}
 
+					if name == "Loop" {
+						systemIcon.SetStatus(5)
+					}
+
 					if !found {
 						continue
 					}
 
-					//log.Printf("found sys: %v", found)
-
-					hexMenu.SetRowCol(position[0], position[1])
+					hexMenu.SetRowCol(iconData.Col, iconData.Row)
 					cx, cy := hexMenu.GetCenter()
-					//systemIcon.SetStatus(int(KPipeLineNormal))
-					canvas.DrawImage(systemIcon.GetIcon(), cx.GetInt(), cy.GetInt())
-
-					//new(easingTween.Tween).
-					//	SetDuration(5*time.Second).
-					//	SetValues(0, 1).
-					//	SetOnStepFunc(func(value, percentToComplete float64, arguments interface{}) {
-					//		canvas.ClearRect(0, 0, 1200, 600)
-					//		canvas.GetContext().Set("globalAlpha", math.Abs(value))
-					//		canvas.DrawImage(icons["Main"]["SysBug"].GetIcon(), int(500*value)+cx.GetInt(), cy.GetInt())
-					//		canvas.GetContext().Set("globalAlpha", 1)
-					//		canvas.DrawImage(systemIcon.GetIcon(), int(500*value)+cx.GetInt(), cy.GetInt()+100)
-					//	}).
-					//	SetLoops(-1).
-					//	//SetDoNotReverseMotion().
-					//	SetTweenFunc(easingTween.KEaseInOutBack).
-					//	Start()
-					time.Sleep(time.Microsecond)
+					w := rulesIcon.Width * rulesIcon.SizeRatio * rulesDensity.Density(t)
+					h := rulesIcon.Height * rulesIcon.SizeRatio * rulesDensity.Density(t)
+					canvas.DrawImage(systemIcon.GetIcon(), cx.GetInt()+int((100.0-w.GetFloat())/2.0), cy.GetInt()+int((100.0-h.GetFloat())/2.0), w.GetFloat(), h.GetFloat())
 				}
+				time.Sleep(time.Microsecond)
 			}
 		}
 	}()
 
 }
 
-func (e makeIcon) getIcon(data rulesIcon.Data) (png []js.Value) {
+func (e makeIcon) getIcon(data rulesIcon.Data) (png js.Value) {
 
 	data = rulesIcon.DataVerifySystemIcon(data)
 
@@ -304,24 +428,12 @@ func (e makeIcon) getIcon(data rulesIcon.Data) (png []js.Value) {
 
 	w := rulesIcon.Width * rulesIcon.SizeRatio
 	h := rulesIcon.Height * rulesIcon.SizeRatio
-
-	png = make([]js.Value, 101)
-	for i := 0; i <= 100; i += 1 {
-		png[i] = svgIcon.ToCanvas(
-			html.CanvasData{
-				Width:               w.GetInt(),
-				Height:              h.GetInt(),
-				ZoomHorizontal:      float64(i) / 100.0,
-				ZoomHorizontalForce: true,
-				ZoomVertical:        float64(i) / 100.0,
-				ZoomVerticalForce:   true,
-				Alpha:               float64(i) / 100.0,
-				AlphaForce:          true,
-			},
-		)
-	}
-
-	return png
+	return svgIcon.ToCanvas(
+		html.CanvasData{
+			Width:  w.GetInt(),
+			Height: h.GetInt(),
+		},
+	)
 }
 
 func (e makeIcon) register() {
@@ -346,7 +458,7 @@ func (e makeIcon) register() {
 func (e makeIcon) getBlank() (register *manager.RegisterIcon) {
 	name := "SysBlank"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:          int(manager.KPipeLineNormal),
@@ -421,7 +533,7 @@ func (e makeIcon) getBug() (register *manager.RegisterIcon) {
 
 	name := "SysBug"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -491,7 +603,7 @@ func (e makeIcon) getMath() (register *manager.RegisterIcon) {
 
 	name := "SysMath"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(manager.KPipeLineNormal),
@@ -566,7 +678,7 @@ func (e makeIcon) getLoop() (register *manager.RegisterIcon) {
 
 	name := "SysLoop"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -636,7 +748,7 @@ func (e makeIcon) getTools() (register *manager.RegisterIcon) {
 
 	name := "SysTools"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -706,7 +818,7 @@ func (e makeIcon) getConfig() (register *manager.RegisterIcon) {
 
 	name := "SysConfig"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -776,7 +888,7 @@ func (e makeIcon) getGraph() (register *manager.RegisterIcon) {
 
 	name := "SysGraph"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(manager.KPipeLineNormal),
@@ -851,7 +963,7 @@ func (e makeIcon) getMenu() (register *manager.RegisterIcon) {
 
 	name := "SysMenu"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(manager.KPipeLineNormal),
@@ -926,7 +1038,7 @@ func (e makeIcon) getDonate() (register *manager.RegisterIcon) {
 
 	name := "SysDonate"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -996,7 +1108,7 @@ func (e makeIcon) getSave() (register *manager.RegisterIcon) {
 
 	name := "SysSave"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -1066,7 +1178,7 @@ func (e makeIcon) getShare() (register *manager.RegisterIcon) {
 
 	name := "SysShare"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -1136,7 +1248,7 @@ func (e makeIcon) getRetweet() (register *manager.RegisterIcon) {
 
 	name := "SysRetweet"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(manager.KPipeLineNormal),
@@ -1211,7 +1323,7 @@ func (e makeIcon) getServer() (register *manager.RegisterIcon) {
 
 	name := "SysServer"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -1281,7 +1393,7 @@ func (e makeIcon) getUpload() (register *manager.RegisterIcon) {
 
 	name := "SysUpload"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -1351,7 +1463,7 @@ func (e makeIcon) getGoBack() (register *manager.RegisterIcon) {
 
 	name := "SysGoBack"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:   int(manager.KPipeLineNormal),
@@ -1421,7 +1533,7 @@ func (e makeIcon) getFileImport() (register *manager.RegisterIcon) {
 
 	name := "SysFileLoad"
 	category := "Main"
-	iconPipeLine := make([][]js.Value, 5)
+	iconPipeLine := make([]js.Value, 5)
 	iconPipeLine[manager.KPipeLineNormal] = e.getIcon(
 		rulesIcon.Data{
 			Status:      int(manager.KPipeLineNormal),

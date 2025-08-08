@@ -5538,9 +5538,10 @@ func (e *TagSvg) ToCanvas(data CanvasData) (pngData js.Value) {
 		canvas.Set("width", width)
 		canvas.Set("height", height)
 
+		ctx.Call("save")
 		ctx.Set("globalAlpha", data.Alpha)
 		ctx.Call("drawImage", img, 0, 0, int(width), int(height))
-		ctx.Set("globalAlpha", 1.0)
+		ctx.Call("restore")
 
 		pngData = canvas.Call("toDataURL", "image/png")
 		js.Global().Get("URL").Call("revokeObjectURL", url)

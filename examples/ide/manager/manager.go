@@ -3,7 +3,6 @@ package manager
 import (
 	"github.com/helmutkemper/webassembly/examples/ide/interfaces"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
-	"log"
 	"syscall/js"
 	"time"
 )
@@ -57,7 +56,7 @@ const (
 
 type RegisterIcon struct {
 	status   IconStatus
-	icon     [][]js.Value
+	icon     []js.Value
 	name     string
 	category string
 	time     time.Time
@@ -79,7 +78,7 @@ func (e *RegisterIcon) SetCategory(category string) {
 	e.category = category
 }
 
-func (e *RegisterIcon) SetIcon(icon [][]js.Value) {
+func (e *RegisterIcon) SetIcon(icon []js.Value) {
 	e.icon = icon
 	e.time = time.Now()
 }
@@ -96,16 +95,14 @@ func (e *RegisterIcon) GetIcon() (icon js.Value) {
 	interval := time.Duration(500)
 	elapsed := time.Since(e.time)
 	cycle := elapsed % (time.Millisecond * 2 * interval)
-	log.Printf("icon: %v", e.icon[e.status][100])
-	return e.icon[e.status][100] // todo: remover esta linha
 	switch e.status {
 	case KPipeLineAlert:
 		if cycle < time.Millisecond*interval {
-			return e.icon[KPipeLineAttention1][99]
+			return e.icon[KPipeLineAttention1]
 		}
-		return e.icon[KPipeLineAttention2][99]
+		return e.icon[KPipeLineAttention2]
 	default:
-		return e.icon[e.status][99]
+		return e.icon[e.status]
 	}
 }
 

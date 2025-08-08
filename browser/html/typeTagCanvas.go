@@ -110,6 +110,44 @@ func (el *TagCanvas) Import(tagId string) (ref *TagCanvas) {
 	return el
 }
 
+// DisableSelection #replicar
+//
+// English:
+//
+// # Prevents the extended touch on Apple tables select the HTML element
+//
+// Português:
+//
+// Impede que o touch prolongado nos tables da Apple selecionem o elemento html
+func (el *TagCanvas) DisableSelection() (ref *TagCanvas) {
+	style := el.selfElement.Get("style")
+	// Desabilita seleção de texto
+	// Disable text selection
+	style.Call("setProperty", "user-select", "none", "")
+	style.Call("setProperty", "-webkit-user-select", "none", "")
+	// Desabilita callout (menu de contexto de toque longo no iOS)
+	// Disable touch-callout (long-press context menu on iOS)
+	style.Call("setProperty", "-webkit-touch-callout", "none", "")
+	// Evita gestos de zoom/pan que possam selecionar ou arrastar o canvas
+	// Prevent zoom/pan gestures that may select or drag the canvas
+	style.Call("setProperty", "touch-action", "none", "")
+	// Opcional: impede arrastar imagens dentro do canvas
+	// Optional: prevent image dragging inside the canvas
+	style.Call("setProperty", "-webkit-user-drag", "none", "")
+
+	// Bloqueia eventos que disparam seleção ou menu de contexto
+	// Block events that trigger selection or context menu
+	block := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		args[0].Call("preventDefault")
+		return nil
+	})
+	for _, evt := range []string{"touchstart", "touchmove", "touchend", "contextmenu"} {
+		el.selfElement.Call("addEventListener", evt, block)
+	}
+
+	return el
+}
+
 // Reference
 //
 // English:

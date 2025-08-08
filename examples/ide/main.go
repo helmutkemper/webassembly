@@ -345,6 +345,7 @@ func main() {
 
 	tagCanvas := factoryBrowser.NewTagCanvas(800, 600).
 		Import("canvas").
+		DisableSelection().
 		SetWidth(800).
 		SetHeight(600).
 		SetZIndex(-100)
@@ -372,7 +373,7 @@ func main() {
 	//js.Global().Call("addEventListener", "touchstart", start, map[string]any{"passive": true})
 	//js.Global().Call("addEventListener", "touchend", end, map[string]any{"passive": true})
 
-	DisableCanvasSelection(canvas)
+	//DisableCanvasSelection(canvas)
 
 	// registra callbacks de click e double-click
 	// register click and double-click callbacks
@@ -409,7 +410,7 @@ func RegisterCanvasClickHandlers(
 	tagCanvas := factoryBrowser.NewTagCanvas(800, 600).
 		Import("canvas").
 		SetWidth(800).
-		SetHeight(600).
+		SetHeight(900).
 		SetZIndex(100)
 
 	var pointerDown bool

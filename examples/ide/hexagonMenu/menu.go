@@ -53,6 +53,7 @@ package hexagonMenu
 
 import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
+	"github.com/helmutkemper/webassembly/browser/factoryFontFamily"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/examples/ide/manager"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
@@ -64,7 +65,6 @@ import (
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"image/color"
 	"log"
-	"math"
 	"syscall/js"
 	"time"
 )
@@ -146,13 +146,96 @@ func init() {
 type makeIcon struct{}
 
 type CategoryIcon struct {
-	Name string
-	Menu []MenuIcon
+	CategoryName string
+	Menu         []MenuIcon
 }
 type MenuIcon struct {
 	Col  int
 	Row  int
 	Name string
+}
+
+// -------------------------------------------------------------------------------------------------------
+const doubleClickDelay = 500 * time.Millisecond // Tempo máximo entre dois cliques para duplo clique / Max time between two clicks for double click
+
+// RegisterCanvasClickHandlers configura os eventos necessários no canvas para detectar click e double-click.
+// RegisterCanvasClickHandlers sets up the necessary events on the canvas to detect click and double-click.
+func RegisterCanvasClickHandlers(
+	canvas js.Value,
+	onClick func(x, y int),
+	onDoubleClick func(x, y int),
+) {
+
+	tagCanvas := factoryBrowser.NewTagCanvas(800, 600).
+		Import("canvas").
+		SetWidth(800).
+		SetHeight(900).
+		SetZIndex(100)
+
+	var pointerDown bool
+	var clickTimer *time.Timer
+
+	// evento de “pressionar” (mouse ou touch) inicia a flag pointerDown
+	// “press” event (mouse or touch) sets pointerDown flag
+	downCb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		//args[0].Call("preventDefault")
+
+		var font html.Font
+		font.Family = factoryFontFamily.NewArial()
+		font.Size = 17
+		tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("down", 25, 25, -1)
+
+		pointerDown = true
+		return nil
+	})
+
+	// evento de “soltar” (mouse ou touch) trata como click se pointerDown == true
+	// “release” event (mouse or touch) treated as click if pointerDown == true
+	upCb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		//args[0].Call("preventDefault")
+
+		var font html.Font
+		font.Family = factoryFontFamily.NewArial()
+		font.Size = 17
+		tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("up", 25, 25, -1)
+
+		if !pointerDown {
+			return nil
+		}
+		pointerDown = false
+
+		//ev := args[0]
+		// calcula coordenadas relativas ao canvas
+		// calculate coordinates relative to the canvas
+		//rect := canvas.Call("getBoundingClientRect")
+		//x := int(ev.Get("clientX").Float() - rect.Get("left").Float())
+		//y := int(ev.Get("clientY").Float() - rect.Get("top").Float())
+		x := 0
+		y := 0
+
+		if clickTimer == nil {
+			// primeiro clique: aguarda tempo para ver se vem um segundo
+			// first click: wait to see if a second click comes
+			clickTimer = time.AfterFunc(doubleClickDelay, func() {
+				onClick(x, y)
+				clickTimer = nil
+			})
+		} else {
+			// segundo clique dentro do intervalo: é um double click
+			// second click within interval: it’s a double click
+			clickTimer.Stop()
+			clickTimer = nil
+			onDoubleClick(x, y)
+		}
+		return nil
+	})
+
+	// associa listeners
+	// attach listeners
+	canvas.Call("addEventListener", "mousedown", downCb, map[string]any{"passive": true})
+	canvas.Call("addEventListener", "mouseup", upCb, map[string]any{"passive": true})
+	canvas.Call("addEventListener", "touchstart", downCb, map[string]any{"passive": true})
+	canvas.Call("addEventListener", "touchend", upCb, map[string]any{"passive": true})
 }
 
 func (e makeIcon) Process(mainSvg *html.TagSvg) {
@@ -168,7 +251,7 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 
 	menuOrder := []CategoryIcon{
 		{
-			Name: "MainMenu",
+			CategoryName: "MainMenu",
 			Menu: []MenuIcon{
 				{
 					Col:  1,
@@ -198,7 +281,7 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 			},
 		},
 		{
-			Name: "Menu",
+			CategoryName: "Menu",
 			Menu: []MenuIcon{
 				{
 					Col:  2,
@@ -228,55 +311,50 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 			},
 		},
 		{
-			Name: "Loop",
+			CategoryName: "Loop",
 			Menu: []MenuIcon{
 				{
 					Col:  2,
 					Row:  12,
-					Name: "SysLoop",
-				},
-				{
-					Col:  2,
-					Row:  14,
 					Name: "Loop",
 				},
 				{
 					Col:  2,
-					Row:  16,
+					Row:  14,
 					Name: "SysGoBack",
 				},
 			},
 		},
-		//{
-		//	Name: "Math",
-		//	Menu: []MenuIcon{
-		//		{
-		//			Col:  5,
-		//			Row:  7,
-		//			Name: "SysGoBack",
-		//		},
-		//		{
-		//			Col:  4,
-		//			Row:  6,
-		//			Name: "Add",
-		//		},
-		//		{
-		//			Col:  4,
-		//			Row:  8,
-		//			Name: "Sub",
-		//		},
-		//		{
-		//			Col:  6,
-		//			Row:  6,
-		//			Name: "Mul",
-		//		},
-		//		{
-		//			Col:  6,
-		//			Row:  8,
-		//			Name: "Div",
-		//		},
-		//	},
-		//},
+		{
+			CategoryName: "Math",
+			Menu: []MenuIcon{
+				{
+					Col:  5,
+					Row:  7,
+					Name: "SysGoBack",
+				},
+				{
+					Col:  4,
+					Row:  6,
+					Name: "Add",
+				},
+				{
+					Col:  4,
+					Row:  8,
+					Name: "Sub",
+				},
+				{
+					Col:  6,
+					Row:  6,
+					Name: "Mul",
+				},
+				{
+					Col:  6,
+					Row:  8,
+					Name: "Div",
+				},
+			},
+		},
 	}
 
 	//"MainMenu": {
@@ -319,32 +397,70 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 	//},
 	//}
 
+	// registra callbacks de click e double-click
+	// register click and double-click callbacks
+	//RegisterCanvasClickHandlers(canvas,
+	//	func(x, y int) {
+	//
+	//		tagCanvas := factoryBrowser.NewTagCanvas(800, 600).
+	//			Import("canvas").
+	//			DisableSelection().
+	//			SetWidth(800).
+	//			SetHeight(600).
+	//			SetZIndex(-100)
+	//
+	//		var font html.Font
+	//		font.Family = factoryFontFamily.NewArial()
+	//		font.Size = 17
+	//		tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("click", 25, 25, -1)
+	//	},
+	//	func(x, y int) {
+	//
+	//		tagCanvas := factoryBrowser.NewTagCanvas(800, 600).
+	//			Import("canvas").
+	//			DisableSelection().
+	//			SetWidth(800).
+	//			SetHeight(600).
+	//			SetZIndex(-100)
+	//
+	//		var font html.Font
+	//		font.Family = factoryFontFamily.NewArial()
+	//		font.Size = 17
+	//		tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("dbl click", 25, 25, -1)
+	//	},
+	//)
+
+	var test func()
+	var status = 1
+
 	go func() {
-		start := time.Now()
 		icons := manager.Manager.GetMapIcons()
-		v := float64(200)
 
 		for {
-			counter := 0.0
+			//counter := 0.0
+			canvas.ClearRect(0, 0, 800, 900)
+
 			for _, categoryList := range menuOrder {
-				category := categoryList.Name
+				category := categoryList.CategoryName
 				for _, iconData := range categoryList.Menu {
 					name := iconData.Name
-					since := time.Since(start)
-					t := math.Min(math.Max(float64(since.Milliseconds())-counter, 0)/v, 1.0)
-					counter += 50
-					if t == 0 {
-						continue
-					}
-
 					systemIcon, found := icons[category][name]
 
 					if !found {
 						systemIcon, found = icons["Main"][name]
 					}
 
-					if name == "Loop" {
-						systemIcon.SetStatus(5)
+					if name == "Loop--" {
+						//systemIcon.SetStatus(5)
+						if test == nil {
+							test = func() {
+								time.Sleep(time.Millisecond * 1000 * 10)
+								systemIcon.SetOpening(status)
+								status *= -1
+								defer test()
+							}
+							go test()
+						}
 					}
 
 					if !found {
@@ -352,13 +468,11 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 					}
 
 					hexMenu.SetRowCol(iconData.Col, iconData.Row)
-					cx, cy := hexMenu.GetCenter()
-					w := rulesIcon.Width * rulesIcon.SizeRatio * rulesDensity.Density(t)
-					h := rulesIcon.Height * rulesIcon.SizeRatio * rulesDensity.Density(t)
-					canvas.DrawImage(systemIcon.GetIcon(), cx.GetInt()+int((100.0-w.GetFloat())/2.0), cy.GetInt()+int((100.0-h.GetFloat())/2.0), w.GetFloat(), h.GetFloat())
+					x, y := hexMenu.GetCenter()
+					canvas.DrawImage(systemIcon.GetIcon(), x.GetInt()+systemIcon.GetX(), y.GetInt()+systemIcon.GetY(), systemIcon.GetWidth(), systemIcon.GetHeight())
 				}
-				time.Sleep(time.Microsecond)
 			}
+			time.Sleep(time.Microsecond)
 		}
 	}()
 

@@ -3,6 +3,8 @@ package manager
 import (
 	"github.com/helmutkemper/webassembly/examples/ide/interfaces"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
+	"log"
+	"math"
 	"syscall/js"
 	"time"
 )
@@ -60,6 +62,98 @@ type RegisterIcon struct {
 	name     string
 	category string
 	time     time.Time
+
+	inverter         float64
+	delayMS          float64
+	durationMS       float64
+	start            time.Time
+	statusOpening    int
+	percentageOfTime float64
+	size             float64
+	x                rulesDensity.Density
+	y                rulesDensity.Density
+	width            rulesDensity.Density
+	height           rulesDensity.Density
+}
+
+func (e *RegisterIcon) Init() {
+	e.SetOpening(1)
+	e.SetDelay(5 * 1000.0)
+	e.SetDuration(200.0)
+	e.SetWidth(100)
+	e.SetHeight(100)
+
+	log.Printf("init name: %v, %v", e.GetIconName(), e.GetIconCategory())
+}
+
+func (e *RegisterIcon) calculateSize() {
+	since := time.Since(e.start)
+	e.percentageOfTime = math.Min(math.Max(float64(since.Milliseconds())-e.delayMS, 0)/e.durationMS, 1.0)
+}
+
+func (e *RegisterIcon) SetDelay(delay float64) {
+	e.delayMS = delay
+}
+
+func (e *RegisterIcon) SetDuration(duration float64) {
+	e.durationMS = duration
+}
+
+func (e *RegisterIcon) SetX(x rulesDensity.Density) {
+	e.x = x
+}
+
+func (e *RegisterIcon) GetX() (x int) {
+	return int((e.width.GetFloat() - e.width.GetFloat()*e.getPercentageOfTime()) / 2.0)
+}
+
+func (e *RegisterIcon) SetY(y rulesDensity.Density) {
+	e.y = y
+}
+
+func (e *RegisterIcon) GetY() (y int) {
+	return int((e.height.GetFloat() - e.height.GetFloat()*e.getPercentageOfTime()) / 2.0)
+}
+
+func (e *RegisterIcon) SetWidth(width rulesDensity.Density) {
+	e.width = width
+}
+
+func (e *RegisterIcon) GetWidth() (width int) {
+	e.calculateSize()
+	return int(e.width.GetFloat() * e.getPercentageOfTime())
+}
+
+func (e *RegisterIcon) SetHeight(height rulesDensity.Density) {
+	e.height = height
+}
+
+func (e *RegisterIcon) GetHeight() (height int) {
+	e.calculateSize()
+	return int(e.height.GetFloat() * e.getPercentageOfTime())
+}
+
+func (e *RegisterIcon) getPercentageOfTime() (percent float64) {
+	return e.inverter - e.percentageOfTime
+}
+
+func (e *RegisterIcon) SetSize(size float64) {
+	e.size = size
+}
+
+func (e *RegisterIcon) SetOpening(statusOpening int) {
+	if e.statusOpening == statusOpening {
+		return
+	}
+
+	e.start = time.Now()
+	e.statusOpening = statusOpening
+
+	if statusOpening == 1 {
+		e.inverter = 0.0
+	} else if statusOpening == -1 {
+		e.inverter = 1.0
+	}
 }
 
 func (e *RegisterIcon) SetStatus(status int) {
@@ -92,6 +186,8 @@ func (e *RegisterIcon) GetIconCategory() (category string) {
 }
 
 func (e *RegisterIcon) GetIcon() (icon js.Value) {
+	e.calculateSize()
+
 	interval := time.Duration(500)
 	elapsed := time.Since(e.time)
 	cycle := elapsed % (time.Millisecond * 2 * interval)
@@ -150,6 +246,7 @@ func (e *manager) Register(element any) {
 	}
 
 	if icon, ok = element.(Icon); ok {
+		icon.Init()
 		e.icons = append(e.icons, icon)
 		e.registerIcon(icon)
 	}

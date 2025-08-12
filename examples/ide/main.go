@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/helmutkemper/webassembly/browser/factoryBrowser"
-	"github.com/helmutkemper/webassembly/browser/factoryFontFamily"
 	"github.com/helmutkemper/webassembly/browser/html"
 	"github.com/helmutkemper/webassembly/browser/stage"
 	"github.com/helmutkemper/webassembly/examples/ide/devices"
@@ -343,12 +342,12 @@ func main() {
 	//	}
 	//}
 
-	tagCanvas := factoryBrowser.NewTagCanvas(800, 600).
+	factoryBrowser.NewTagCanvas(800, 600).
 		Import("canvas").
 		DisableSelection().
 		SetWidth(800).
-		SetHeight(600).
-		SetZIndex(-100)
+		SetHeight(900).
+		SetZIndex(100)
 
 	//start := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 	//	log.Printf("start")
@@ -373,137 +372,8 @@ func main() {
 	//js.Global().Call("addEventListener", "touchstart", start, map[string]any{"passive": true})
 	//js.Global().Call("addEventListener", "touchend", end, map[string]any{"passive": true})
 
-	//DisableCanvasSelection(canvas)
-
-	// registra callbacks de click e double-click
-	// register click and double-click callbacks
-	RegisterCanvasClickHandlers(canvas,
-		func(x, y int) {
-			var font html.Font
-			font.Family = factoryFontFamily.NewArial()
-			font.Size = 17
-			tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("click", 25, 25, -1)
-		},
-		func(x, y int) {
-			var font html.Font
-			font.Family = factoryFontFamily.NewArial()
-			font.Size = 17
-			tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("dbl click", 25, 25, -1)
-		},
-	)
-
 	done := make(chan struct{})
 	<-done
-}
-
-// -------------------------------------------------------------------------------------------------------
-const doubleClickDelay = 500 * time.Millisecond // Tempo máximo entre dois cliques para duplo clique / Max time between two clicks for double click
-
-// RegisterCanvasClickHandlers configura os eventos necessários no canvas para detectar click e double-click.
-// RegisterCanvasClickHandlers sets up the necessary events on the canvas to detect click and double-click.
-func RegisterCanvasClickHandlers(
-	canvas js.Value,
-	onClick func(x, y int),
-	onDoubleClick func(x, y int),
-) {
-
-	tagCanvas := factoryBrowser.NewTagCanvas(800, 600).
-		Import("canvas").
-		SetWidth(800).
-		SetHeight(900).
-		SetZIndex(100)
-
-	var pointerDown bool
-	var clickTimer *time.Timer
-
-	// evento de “pressionar” (mouse ou touch) inicia a flag pointerDown
-	// “press” event (mouse or touch) sets pointerDown flag
-	downCb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		//args[0].Call("preventDefault")
-
-		var font html.Font
-		font.Family = factoryFontFamily.NewArial()
-		font.Size = 17
-		tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("down", 25, 25, -1)
-
-		pointerDown = true
-		return nil
-	})
-
-	// evento de “soltar” (mouse ou touch) trata como click se pointerDown == true
-	// “release” event (mouse or touch) treated as click if pointerDown == true
-	upCb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		//args[0].Call("preventDefault")
-
-		var font html.Font
-		font.Family = factoryFontFamily.NewArial()
-		font.Size = 17
-		tagCanvas.ClearRect(0, 0, 100, 30).Font(font).FillText("up", 25, 25, -1)
-
-		if !pointerDown {
-			return nil
-		}
-		pointerDown = false
-
-		//ev := args[0]
-		// calcula coordenadas relativas ao canvas
-		// calculate coordinates relative to the canvas
-		//rect := canvas.Call("getBoundingClientRect")
-		//x := int(ev.Get("clientX").Float() - rect.Get("left").Float())
-		//y := int(ev.Get("clientY").Float() - rect.Get("top").Float())
-		x := 0
-		y := 0
-
-		if clickTimer == nil {
-			// primeiro clique: aguarda tempo para ver se vem um segundo
-			// first click: wait to see if a second click comes
-			clickTimer = time.AfterFunc(doubleClickDelay, func() {
-				onClick(x, y)
-				clickTimer = nil
-			})
-		} else {
-			// segundo clique dentro do intervalo: é um double click
-			// second click within interval: it’s a double click
-			clickTimer.Stop()
-			clickTimer = nil
-			onDoubleClick(x, y)
-		}
-		return nil
-	})
-
-	// associa listeners
-	// attach listeners
-	canvas.Call("addEventListener", "mousedown", downCb, map[string]any{"passive": true})
-	canvas.Call("addEventListener", "mouseup", upCb, map[string]any{"passive": true})
-	canvas.Call("addEventListener", "touchstart", downCb, map[string]any{"passive": true})
-	canvas.Call("addEventListener", "touchend", upCb, map[string]any{"passive": true})
-}
-
-func DisableCanvasSelection(canvas js.Value) {
-	style := canvas.Get("style")
-	// Desabilita seleção de texto
-	// Disable text selection
-	style.Call("setProperty", "user-select", "none", "")
-	style.Call("setProperty", "-webkit-user-select", "none", "")
-	// Desabilita callout (menu de contexto de toque longo no iOS)
-	// Disable touch-callout (long-press context menu on iOS)
-	style.Call("setProperty", "-webkit-touch-callout", "none", "")
-	// Evita gestos de zoom/pan que possam selecionar ou arrastar o canvas
-	// Prevent zoom/pan gestures that may select or drag the canvas
-	style.Call("setProperty", "touch-action", "none", "")
-	// Opcional: impede arrastar imagens dentro do canvas
-	// Optional: prevent image dragging inside the canvas
-	style.Call("setProperty", "-webkit-user-drag", "none", "")
-
-	// Bloqueia eventos que disparam seleção ou menu de contexto
-	// Block events that trigger selection or context menu
-	block := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		args[0].Call("preventDefault")
-		return nil
-	})
-	for _, evt := range []string{"touchstart", "touchmove", "touchend", "contextmenu"} {
-		canvas.Call("addEventListener", evt, block)
-	}
 }
 
 //-------------------------------------------------------------------------------------------------------

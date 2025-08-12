@@ -1615,8 +1615,6 @@ func (el *TagCanvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y int) (ref *TagCa
 //	   width: The width of the rectangle to clear, in pixels
 //	   height: The height of the rectangle to clear, in pixels
 //
-//	   The ClearRect() method clears the specified pixels within a given rectangle.
-//
 // Português:
 //
 //	Limpa os pixels especificados em um determinado retângulo.
@@ -1624,12 +1622,47 @@ func (el *TagCanvas) BezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y int) (ref *TagCa
 //	   y: A coordenada y do canto superior esquerdo do retângulo para limpar;
 //	   width: A largura do retângulo a ser limpo, em pixels;
 //	   height: A altura do retângulo a ser limpo, em pixels.
-//
-//	   O método ClearRect() limpa os pixels especificados em um determinado retângulo.
 func (el *TagCanvas) ClearRect(x, y, width, height int) (ref *TagCanvas) {
 	el.context.Call("clearRect", x, y, width, height)
 	return el
 }
+
+// ClearCircle
+//
+// English:
+//
+//	Clears the specified pixels within a given circle.
+//	   x: The x-coordinate of the center of the circle to clear
+//	   y: The y-coordinate of the center of the circle to clear
+//	   r: The radius of the circle to clear, in pixels
+//
+// Português:
+//
+//	Limpa os pixels especificados em um determinado círculo.
+//	   x: A coordenada x do centro do circulo para limpar;
+//	   y: A coordenada y do centro do circulo para limpar;
+//	   r: O raio do círculo a ser limpo, em pixels;
+//func (el *TagCanvas) ClearCircle(cx, cy, r int) (ref *TagCanvas) {
+//	imageData := el.context.Call("getImageData", cx-r, cy-r, 2*r, 2*r)
+//	data := imageData.Get("data")
+//
+//	for i := 0; i <= 2*r; i++ {
+//		for j := 0; j <= 2*r; j++ {
+//			distance := math.Sqrt(math.Pow(float64(j-r), 2.0) + math.Pow(float64(i-r), 2.0))
+//			if distance <= float64(r) {
+//
+//				index := (i*2*r + j) * 4
+//				//data.SetIndex(index, 0)   // Red
+//				//data.SetIndex(index+1, 0) // Green
+//				//data.SetIndex(index+2, 0) // Blue
+//				data.SetIndex(index+3, 0) // Alpha
+//			}
+//		}
+//	}
+//
+//	el.context.Call("putImageData", imageData, cx-r, cy-r)
+//	return el
+//}
 
 // Clip
 //

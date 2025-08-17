@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8" />
+        <title>Go WASM SVG Rectangle</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>body{margin:0;padding:16px;font-family:system-ui,Arial}</style>
+    </head>
+    <body>
+        <h1>Canvas controlado por Go WASM</h1>
+        <canvas id="c"></canvas>
+        <script>
+            const canvas = document.getElementById('c');
+
+            // Defina o tamanho ANTES de transferir!
+            function fit() {
+                canvas.width = innerWidth;
+                canvas.height = innerHeight;
+            }
+            fit();
+
+            // Transfere o controle para o worker
+            const off = canvas.transferControlToOffscreen();
+
+            const worker = new Worker('worker.js'); // clássico (sem {type:'module'})
+            worker.postMessage({ type: 'init', canvas: off }, [off]);
+
+            // Redimensionamento: nunca redimensione o <canvas> original após transferir!
+            addEventListener('resize', () => {
+                worker.postMessage({ type: 'resize', width: innerWidth, height: innerHeight });
+            });
+        </script>
+        <script src="./wasm_exec.js"></script>
+    </body>
+</html>

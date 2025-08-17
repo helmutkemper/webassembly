@@ -1627,6 +1627,20 @@ func (el *TagCanvas) ClearRect(x, y, width, height int) (ref *TagCanvas) {
 	return el
 }
 
+// ClearAll
+//
+// English:
+//
+//	Clear the canvas for a new drawing
+//
+// Português:
+//
+//	Limpa o canvas para um novo desenho
+func (el *TagCanvas) ClearAll() (ref *TagCanvas) {
+	el.context.Call("clearRect", 0, 0, el.width, el.height)
+	return el
+}
+
 // ClearCircle
 //
 // English:

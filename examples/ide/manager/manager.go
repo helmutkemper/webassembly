@@ -3,7 +3,6 @@ package manager
 import (
 	"github.com/helmutkemper/webassembly/examples/ide/interfaces"
 	"github.com/helmutkemper/webassembly/examples/ide/rulesDensity"
-	"log"
 	"math"
 	"syscall/js"
 	"time"
@@ -78,12 +77,10 @@ type RegisterIcon struct {
 
 func (e *RegisterIcon) Init() {
 	e.SetOpening(1)
-	e.SetDelay(5 * 1000.0)
+	//e.SetDelay(5 * 1000.0)
 	e.SetDuration(200.0)
 	e.SetWidth(100)
 	e.SetHeight(100)
-
-	log.Printf("init name: %v, %v", e.GetIconName(), e.GetIconCategory())
 }
 
 func (e *RegisterIcon) calculateSize() {

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <title>Go WASM SVG Rectangle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>body{margin:0;padding:16px;font-family:system-ui,Arial}</style>
+</head>
+<body>
+<h1>Canvas controlado por Go WASM</h1>
+<div id="canvas"></div>
+
+<script src="./wasm_exec.js"></script>
+<script>
+    const go = new Go();
+    WebAssembly.instantiateStreaming(fetch("./main.wasm"), go.importObject)
+        .then(result => go.run(result.instance));
+</script>
+</body>
+</html>

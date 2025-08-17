@@ -430,15 +430,11 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 	//	},
 	//)
 
-	var test func()
-	var status = 1
-
 	go func() {
 		icons := manager.Manager.GetMapIcons()
 
 		for {
-			//counter := 0.0
-			canvas.ClearRect(0, 0, 800, 900)
+			canvas.ClearAll()
 
 			for _, categoryList := range menuOrder {
 				category := categoryList.CategoryName
@@ -448,19 +444,6 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 
 					if !found {
 						systemIcon, found = icons["Main"][name]
-					}
-
-					if name == "Loop--" {
-						//systemIcon.SetStatus(5)
-						if test == nil {
-							test = func() {
-								time.Sleep(time.Millisecond * 1000 * 10)
-								systemIcon.SetOpening(status)
-								status *= -1
-								defer test()
-							}
-							go test()
-						}
 					}
 
 					if !found {
@@ -475,6 +458,10 @@ func (e makeIcon) Process(mainSvg *html.TagSvg) {
 			time.Sleep(time.Microsecond)
 		}
 	}()
+
+}
+
+func (e makeIcon) OpenMenu(iconList map[string]map[string]manager.Icon) {
 
 }
 
